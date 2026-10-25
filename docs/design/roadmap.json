@@ -1,0 +1,4810 @@
+{
+ "source": "https://parker-interview-senior-fe.vercel.app/api/practice (+ /api/practice/step/pNN)",
+ "snapshotDate": "2026-10-25",
+ "version": 1,
+ "title": {
+  "en": "Practice: build the portfolio",
+  "vi": "Practice: xây portfolio"
+ },
+ "intro": {
+  "en": "A standalone module next to Docs, Plan, and Interview. You build one real portfolio monorepo — Next.js, NestJS, MySQL in Docker — from toolchain to deploy. Each step is one commit. Parker is new to backend, databases, and Docker, so the path is fundamentals first. Nothing visible is hard-coded: every string and image comes from the API. No phone numbers or personal emails anywhere.",
+  "vi": "Module độc lập, nằm cạnh Docs, Plan và Interview. Bạn xây một monorepo portfolio thật (Next.js, NestJS, MySQL trong Docker) từ toolchain tới lúc deploy. Mỗi bước là một commit. Parker chưa rành backend, database và Docker, nên lộ trình đi từ nền tảng trước. Không hard-code thứ gì hiện trên trang: mọi chữ và ảnh đều lấy từ API. Không số điện thoại hay email cá nhân ở bất cứ đâu."
+ },
+ "milestones": [
+  {
+   "id": "m0",
+   "title": {
+    "en": "M0 — Groundwork",
+    "vi": "M0: Nền tảng"
+   },
+   "goal": {
+    "en": "Install the tools, put MySQL in Docker, write SQL by hand, and stand up a Next.js shell with tokens and theme.",
+    "vi": "Cài tool, chạy MySQL trong Docker, viết SQL bằng tay, và dựng shell Next.js với token cùng theme."
+   },
+   "outcome": {
+    "en": "A portfolio/ monorepo, a healthy MySQL container, SQL notes, and a themed Next.js placeholder at /.",
+    "vi": "Monorepo portfolio/, container MySQL healthy, ghi chú SQL, và trang Next.js placeholder có theme tại /."
+   },
+   "steps": [
+    "p01",
+    "p02",
+    "p03",
+    "p04"
+   ]
+  },
+  {
+   "id": "m1",
+   "title": {
+    "en": "M1 — First API",
+    "vi": "M1: API đầu tiên"
+   },
+   "goal": {
+    "en": "Add NestJS, Prisma, public read endpoints, shared zod contracts, and render home from the API.",
+    "vi": "Thêm NestJS, Prisma, endpoint đọc public, contract zod dùng chung, và render trang chủ từ API."
+   },
+   "outcome": {
+    "en": "Changing a seed row and re-seeding changes the home page. A stopped API shows Error, not a crash.",
+    "vi": "Sửa một dòng seed rồi seed lại thì trang chủ đổi. API tắt thì hiện Error, không crash."
+   },
+   "steps": [
+    "p05",
+    "p06",
+    "p07",
+    "p08",
+    "p09"
+   ]
+  },
+  {
+   "id": "m2",
+   "title": {
+    "en": "M2 — Content graph",
+    "vi": "M2: Đồ thị nội dung"
+   },
+   "goal": {
+    "en": "Model relations, tags, posts with content blocks, list query params, and data-driven public pages.",
+    "vi": "Model quan hệ, tag, post với content block, query param cho list, và trang public lấy từ data."
+   },
+   "outcome": {
+    "en": "About, projects, and blog pages exist. Grep for CV strings in the web app returns 0 hits.",
+    "vi": "Có trang About, projects và blog. Grep chuỗi CV trong web app ra 0 hits."
+   },
+   "steps": [
+    "p10",
+    "p11",
+    "p12",
+    "p13",
+    "p14"
+   ]
+  },
+  {
+   "id": "m3",
+   "title": {
+    "en": "M3 — Write side",
+    "vi": "M3: Phía ghi"
+   },
+   "goal": {
+    "en": "Add CRUD, transactions for reorder, and indexes proven with EXPLAIN.",
+    "vi": "Thêm CRUD, transaction cho reorder, và index kiểm chứng bằng EXPLAIN."
+   },
+   "outcome": {
+    "en": "Every write route is in api.http. A forced mid-transaction failure leaves the DB unchanged. List queries use indexes.",
+    "vi": "Mọi route ghi nằm trong api.http. Cố ý fail giữa transaction thì DB không đổi. Query list dùng index."
+   },
+   "steps": [
+    "p15",
+    "p16",
+    "p17"
+   ]
+  },
+  {
+   "id": "m4",
+   "title": {
+    "en": "M4 — Auth + admin CMS",
+    "vi": "M4: Auth + CMS admin"
+   },
+   "goal": {
+    "en": "Session auth, guards and CSRF, then a Linear-style admin shell with tables and editors.",
+    "vi": "Auth bằng session, guard và CSRF, rồi shell admin kiểu Linear với table và editor."
+   },
+   "outcome": {
+    "en": "Logged-out /admin redirects to login. Shared zod schemas validate in the browser and on the server.",
+    "vi": "Chưa login mà vào /admin thì redirect sang login. Schema zod dùng chung validate cả browser lẫn server."
+   },
+   "steps": [
+    "p18",
+    "p19",
+    "p20",
+    "p21",
+    "p22"
+   ]
+  },
+  {
+   "id": "m5",
+   "title": {
+    "en": "M5 — Realtime, media, publishing",
+    "vi": "M5: Realtime, media, publish"
+   },
+   "goal": {
+    "en": "Contact form with an SSE inbox, image uploads, and draft/publish with on-demand revalidation.",
+    "vi": "Form liên hệ với inbox SSE, upload ảnh, và draft/publish kèm revalidate theo nhu cầu."
+   },
+   "outcome": {
+    "en": "Submitting contact updates the inbox without a reload. Publishing shows on the public page in under 5 s.",
+    "vi": "Gửi form liên hệ thì inbox cập nhật không cần reload. Publish hiện trên trang public dưới 5 giây."
+   },
+   "steps": [
+    "p23",
+    "p24",
+    "p25"
+   ]
+  },
+  {
+   "id": "m6",
+   "title": {
+    "en": "M6 — Quality",
+    "vi": "M6: Chất lượng"
+   },
+   "goal": {
+    "en": "SEO from the CMS, first-party analytics and an audit log, tests in CI, then an a11y and performance audit.",
+    "vi": "SEO từ CMS, analytics tự host và audit log, test trong CI, rồi audit a11y và hiệu năng."
+   },
+   "outcome": {
+    "en": "Lighthouse SEO 100 on key pages. pnpm test is green. axe reports 0 serious issues.",
+    "vi": "Lighthouse SEO 100 trên các trang chính. pnpm test xanh. axe báo 0 lỗi serious."
+   },
+   "steps": [
+    "p26",
+    "p27",
+    "p28",
+    "p29"
+   ]
+  },
+  {
+   "id": "m7",
+   "title": {
+    "en": "M7 — Ship",
+    "vi": "M7: Ship"
+   },
+   "goal": {
+    "en": "Production Compose, hardening and backups, real CMS content, then deploy to a custom domain.",
+    "vi": "Compose production, hardening và backup, nội dung CMS thật, rồi deploy lên domain riêng."
+   },
+   "outcome": {
+    "en": "HTTPS on the custom domain, deploys from a push to main, production DB has 0 placeholder rows.",
+    "vi": "HTTPS trên domain riêng, deploy khi push lên main, DB production còn 0 hàng placeholder."
+   },
+   "steps": [
+    "p30",
+    "p31",
+    "p32",
+    "p33"
+   ]
+  }
+ ],
+ "steps": [
+  {
+   "kind": "practice-step",
+   "id": "p01",
+   "milestone": "m0",
+   "order": 1,
+   "title": {
+    "en": "Toolchain + monorepo skeleton",
+    "vi": "Toolchain + khung monorepo"
+   },
+   "summary": {
+    "en": "A single repo with a fixed layout means every later step has a known place to go.",
+    "vi": "Một repo với layout cố định giúp mọi bước sau đều biết file nằm chỗ nào."
+   },
+   "estimateMin": 90,
+   "prereqs": [],
+   "tags": [
+    "monorepo",
+    "pnpm",
+    "toolchain"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Monorepo",
+      "vi": "Monorepo"
+     },
+     "explain": {
+      "en": "One git repo that holds several apps and packages. Here: apps/web, apps/api, and packages/shared.",
+      "vi": "Một git repo chứa nhiều app và package. Ở đây là apps/web, apps/api và packages/shared."
+     }
+    },
+    {
+     "term": {
+      "en": "pnpm workspace",
+      "vi": "pnpm workspace"
+     },
+     "explain": {
+      "en": "pnpm reads pnpm-workspace.yaml and links local packages so web and api can import shared without publishing.",
+      "vi": "pnpm đọc pnpm-workspace.yaml và link package local để web và api import shared mà không cần publish."
+     }
+    },
+    {
+     "term": {
+      "en": "corepack",
+      "vi": "corepack"
+     },
+     "explain": {
+      "en": "Node's built-in tool that pins pnpm to the version in package.json. Avoid a global npm i -g pnpm that drifts.",
+      "vi": "Tool có sẵn trong Node, ghim pnpm đúng version khai báo trong package.json. Đừng cài global bằng npm i -g pnpm, version sẽ bị lệch."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "devops",
+     "label": {
+      "en": "DevOps",
+      "vi": "DevOps"
+     }
+    },
+    {
+     "slug": "build-tools",
+     "label": {
+      "en": "Build Tools",
+      "vi": "Công cụ build"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "monorepo-strategy",
+     "label": {
+      "en": "When does a monorepo help frontend teams?",
+      "vi": "Khi nào monorepo có ích cho team frontend?"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Install Node 22, pnpm, Docker Desktop, and git",
+      "vi": "Cài Node 22, pnpm, Docker Desktop và git"
+     },
+     "detail": {
+      "en": "Use an official Node 22 installer or nvm. Then enable pnpm through corepack so it matches the repo. Confirm Docker Desktop starts, and git is on your PATH.",
+      "vi": "Cài Node 22 bằng installer chính thức hoặc nvm. Sau đó bật pnpm qua corepack để đúng version của repo. Kiểm tra Docker Desktop khởi động được và git đã có trong PATH."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "corepack enable\ncorepack prepare pnpm@latest --activate\nnode -v\npnpm -v\ndocker compose version\ngit --version"
+     }
+    },
+    {
+     "title": {
+      "en": "Create the portfolio/ workspace",
+      "vi": "Tạo workspace portfolio/"
+     },
+     "detail": {
+      "en": "Make a new folder portfolio/ with pnpm-workspace.yaml listing apps/* and packages/*, plus empty apps/ and packages/ directories. Add .nvmrc with 22 and an .editorconfig (utf-8, lf, 2-space indent).",
+      "vi": "Tạo thư mục mới portfolio/ có pnpm-workspace.yaml khai báo apps/* và packages/*, kèm hai thư mục trống apps/ và packages/. Thêm .nvmrc ghi 22 và một file .editorconfig (utf-8, lf, indent 2 space)."
+     },
+     "code": {
+      "lang": "yaml",
+      "text": "packages:\n  - \"apps/*\"\n  - \"packages/*\""
+     }
+    },
+    {
+     "title": {
+      "en": "Add a root README of commands",
+      "vi": "Thêm README gốc liệt kê lệnh"
+     },
+     "detail": {
+      "en": "Write a short README that lists the commands you will grow later: pnpm install, pnpm dev, docker compose up. Keep it as a cheat sheet, not a novel.",
+      "vi": "Viết một README ngắn liệt kê các lệnh sẽ dùng dần về sau: pnpm install, pnpm dev, docker compose up. Coi nó là cheat sheet, đừng viết thành tiểu thuyết."
+     }
+    },
+    {
+     "title": {
+      "en": "First commit",
+      "vi": "Commit đầu tiên"
+     },
+     "detail": {
+      "en": "git init, add the skeleton files, and commit. Later steps each add one more commit on this history.",
+      "vi": "git init, add các file khung rồi commit. Mỗi bước sau sẽ thêm đúng một commit nối tiếp history này."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "git init\ngit add .\ngit commit -m \"chore: init portfolio monorepo\""
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "`pnpm -v`, `docker compose version`, and `node -v` all work, and `node -v` prints 22.x.",
+     "vi": "`pnpm -v`, `docker compose version` và `node -v` đều chạy, và `node -v` in 22.x."
+    },
+    {
+     "en": "`git log` shows the first commit `chore: init portfolio monorepo`.",
+     "vi": "`git log` hiện commit đầu tiên `chore: init portfolio monorepo`."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "A global `npm i -g pnpm` that then fights corepack. Use `corepack enable` and the version pinned in package.json.",
+     "vi": "Cài pnpm global bằng `npm i -g pnpm` rồi bị xung đột với corepack. Hãy dùng `corepack enable` và version đã ghim trong package.json."
+    }
+   ],
+   "commit": "chore: init portfolio monorepo"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p02",
+   "milestone": "m0",
+   "order": 2,
+   "title": {
+    "en": "Docker basics + MySQL in Compose",
+    "vi": "Docker cơ bản + MySQL trong Compose"
+   },
+   "summary": {
+    "en": "The database runs in a container so it behaves the same on every machine and can be thrown away safely.",
+    "vi": "Database chạy trong container nên mọi máy đều giống nhau, vứt đi cũng an toàn."
+   },
+   "estimateMin": 120,
+   "prereqs": [
+    "p01"
+   ],
+   "tags": [
+    "docker",
+    "mysql",
+    "compose"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Image vs container",
+      "vi": "Image vs container"
+     },
+     "explain": {
+      "en": "An image is a packaged program (mysql:8). A container is one running copy of that image.",
+      "vi": "Image là chương trình đã đóng gói (mysql:8). Container là một bản đang chạy của image đó."
+     }
+    },
+    {
+     "term": {
+      "en": "Volume",
+      "vi": "Volume"
+     },
+     "explain": {
+      "en": "A folder Docker keeps outside the container. Data in a named volume survives `docker compose down`.",
+      "vi": "Thư mục Docker giữ bên ngoài container. Data trong named volume vẫn còn sau `docker compose down`."
+     }
+    },
+    {
+     "term": {
+      "en": "Port mapping",
+      "vi": "Port mapping"
+     },
+     "explain": {
+      "en": "`3306:3306` means your laptop's port 3306 forwards to the container's MySQL port. If a local MySQL already uses 3306, the new container will fail to bind.",
+      "vi": "`3306:3306` nghĩa là cổng 3306 trên laptop bạn forward vào cổng MySQL trong container. Nếu MySQL local đã chiếm 3306, container mới sẽ không bind được."
+     }
+    },
+    {
+     "term": {
+      "en": ".env vs .env.example",
+      "vi": ".env vs .env.example"
+     },
+     "explain": {
+      "en": ".env holds real secrets and stays gitignored. .env.example lists the keys with dummy values so the next machine knows what to set.",
+      "vi": ".env chứa secret thật và bị gitignore. .env.example liệt kê các key với giá trị giả để máy khác biết cần set gì."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "devops",
+     "label": {
+      "en": "DevOps",
+      "vi": "DevOps"
+     }
+    }
+   ],
+   "questionLinks": [],
+   "specRefs": [
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Learn image, container, and volume",
+      "vi": "Học image, container và volume"
+     },
+     "detail": {
+      "en": "Read the glossary in spec §1.6. In your own words: an image is the recipe, a container is the running cake, a volume is the fridge that keeps leftovers.",
+      "vi": "Đọc glossary trong spec §1.6. Nói bằng lời của bạn: image là công thức, container là chiếc bánh đang chạy, volume là tủ lạnh giữ đồ thừa."
+     }
+    },
+    {
+     "title": {
+      "en": "Write docker-compose.yml with a db service",
+      "vi": "Viết docker-compose.yml với service db"
+     },
+     "detail": {
+      "en": "Add a `db` service: image mysql:8, a named volume for /var/lib/mysql, a healthcheck (`mysqladmin ping`), and port 3306. Set MYSQL_DATABASE and MYSQL_ROOT_PASSWORD from env.",
+      "vi": "Thêm một service `db`: image mysql:8, named volume cho /var/lib/mysql, healthcheck (`mysqladmin ping`), và port 3306. Set MYSQL_DATABASE và MYSQL_ROOT_PASSWORD lấy từ env."
+     },
+     "code": {
+      "lang": "yaml",
+      "text": "services:\n  db:\n    image: mysql:8\n    ports:\n      - \"3306:3306\"\n    volumes:\n      - db_data:/var/lib/mysql\n    healthcheck:\n      test: [\"CMD\", \"mysqladmin\", \"ping\", \"-h\", \"127.0.0.1\"]\n      interval: 5s\n      timeout: 5s\n      retries: 10\nvolumes:\n  db_data:"
+     }
+    },
+    {
+     "title": {
+      "en": "Add .env.example and gitignore .env",
+      "vi": "Thêm .env.example và gitignore .env"
+     },
+     "detail": {
+      "en": "Put DATABASE_URL in .env.example (mysql://…@localhost:3306/portfolio). Copy it to .env locally. Add `.env` to .gitignore so secrets never land in git.",
+      "vi": "Ghi DATABASE_URL vào .env.example (mysql://…@localhost:3306/portfolio). Copy sang .env trên máy. Thêm `.env` vào .gitignore để secrets không lọt vào git."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "DATABASE_URL=\"mysql://app:app@localhost:3306/portfolio\""
+     }
+    },
+    {
+     "title": {
+      "en": "Up, healthy, down, up again",
+      "vi": "Up, healthy, down, rồi up lại"
+     },
+     "detail": {
+      "en": "Start only the db service. Wait until health is healthy. Stop it, start it again, and confirm the data directory was not wiped — that is the volume doing its job.",
+      "vi": "Chỉ start service db. Đợi health thành healthy. Stop rồi start lại, xác nhận thư mục data không bị xóa sạch. Đó là volume đang làm đúng việc."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "docker compose up -d db\ndocker compose ps\ndocker compose down\ndocker compose up -d db"
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "`docker compose up -d db` reaches `healthy` in `docker compose ps`.",
+     "vi": "`docker compose up -d db` đạt `healthy` trong `docker compose ps`."
+    },
+    {
+     "en": "`docker compose down` then `up` keeps the data because of the named volume.",
+     "vi": "`docker compose down` rồi lệnh `up` vẫn giữ data nhờ named volume."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Committing `.env`. Keep secrets in `.env` and only commit `.env.example`.",
+     "vi": "Commit `.env`. Giữ secrets trong `.env`, chỉ commit `.env.example`."
+    },
+    {
+     "en": "Port 3306 already taken by a local MySQL. Stop the local service, or map a different host port.",
+     "vi": "Port 3306 đã bị MySQL local chiếm sẵn. Tắt service local, hoặc map sang host port khác."
+    }
+   ],
+   "commit": "chore(infra): mysql via docker compose"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p03",
+   "milestone": "m0",
+   "order": 3,
+   "title": {
+    "en": "SQL by hand",
+    "vi": "SQL viết tay"
+   },
+   "summary": {
+    "en": "Prisma writes SQL for you later, so you need to recognise what it generates.",
+    "vi": "Prisma sẽ viết SQL giúp bạn sau này, nên bạn cần nhận ra SQL nó generate."
+   },
+   "estimateMin": 120,
+   "prereqs": [
+    "p02"
+   ],
+   "tags": [
+    "sql",
+    "mysql",
+    "schema"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Primary key",
+      "vi": "Primary key"
+     },
+     "explain": {
+      "en": "The column that uniquely identifies a row, usually `id`. Two rows cannot share the same primary key.",
+      "vi": "Cột định danh duy nhất một hàng, thường là `id`. Hai hàng không được trùng primary key."
+     }
+    },
+    {
+     "term": {
+      "en": "Foreign key",
+      "vi": "Foreign key"
+     },
+     "explain": {
+      "en": "A column that points at another table's primary key, for example `experience.profileId` → `profile.id`. The database refuses (or cascades) when the parent is missing.",
+      "vi": "Cột trỏ tới primary key của bảng khác, ví dụ `experience.profileId` → `profile.id`. Database từ chối (hoặc cascade) khi parent không còn."
+     }
+    },
+    {
+     "term": {
+      "en": "JOIN",
+      "vi": "JOIN"
+     },
+     "explain": {
+      "en": "A query that combines rows from two tables using the foreign key. `SELECT … FROM experience JOIN profile ON …` returns experiences with their profile.",
+      "vi": "Câu query ghép hàng từ hai bảng nhờ foreign key. `SELECT … FROM experience JOIN profile ON …` trả về các experience kèm profile."
+     }
+    },
+    {
+     "term": {
+      "en": "utf8mb4",
+      "vi": "utf8mb4"
+     },
+     "explain": {
+      "en": "The MySQL charset that stores full Unicode, including Vietnamese diacritics and emoji. `utf8` (three-byte) is not enough.",
+      "vi": "Charset MySQL lưu đủ Unicode, gồm dấu tiếng Việt và emoji. `utf8` (3 byte) không đủ."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "system-design",
+     "label": {
+      "en": "System Design",
+      "vi": "Thiết kế hệ thống"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "n-plus-one",
+     "label": {
+      "en": "N+1 query problem",
+      "vi": "Vấn đề N+1 query"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.5",
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Open a MySQL shell in the container",
+      "vi": "Mở shell MySQL trong container"
+     },
+     "detail": {
+      "en": "With the db service healthy, exec into it. You are now typing SQL against the same engine Prisma will use later.",
+      "vi": "Khi service db đã healthy, exec vào. Bạn đang gõ SQL trên đúng engine mà Prisma sẽ dùng sau này."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "docker compose exec db mysql -u root -p"
+     }
+    },
+    {
+     "title": {
+      "en": "Create profile and experience tables",
+      "vi": "Tạo bảng profile và experience"
+     },
+     "detail": {
+      "en": "CREATE TABLE both with utf8mb4. Give experience a foreign key to profile. This is the 1-to-many you will later see in Prisma as `Experience[]` on Profile.",
+      "vi": "CREATE TABLE cả hai với utf8mb4. Cho experience một foreign key tới profile. Đây là quan hệ 1-nhiều mà sau này bạn sẽ thấy trong Prisma là `Experience[]` trên Profile."
+     },
+     "code": {
+      "lang": "sql",
+      "text": "CREATE TABLE profile (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  display_name VARCHAR(120) NOT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n\nCREATE TABLE experience (\n  id INT PRIMARY KEY AUTO_INCREMENT,\n  profile_id INT NOT NULL,\n  company VARCHAR(120) NOT NULL,\n  CONSTRAINT fk_experience_profile\n    FOREIGN KEY (profile_id) REFERENCES profile(id)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"
+     }
+    },
+    {
+     "title": {
+      "en": "INSERT, SELECT JOIN, UPDATE, DELETE",
+      "vi": "INSERT, SELECT JOIN, UPDATE, DELETE"
+     },
+     "detail": {
+      "en": "Insert one profile and two experiences. JOIN them. UPDATE a company name. Try DELETE on the profile and watch the FK block it (or CASCADE if you chose that — then write down why).",
+      "vi": "Insert một profile và hai experience. JOIN chúng. UPDATE tên của một company. Thử DELETE profile và xem FK chặn nó (hoặc CASCADE nếu bạn chọn vậy, thì ghi rõ lý do)."
+     },
+     "code": {
+      "lang": "sql",
+      "text": "INSERT INTO profile (display_name) VALUES ('Parker Vu');\nINSERT INTO experience (profile_id, company) VALUES (1, 'Kobizo'), (1, 'CMC Global');\nSELECT p.display_name, e.company\nFROM experience e\nJOIN profile p ON p.id = e.profile_id;"
+     }
+    },
+    {
+     "title": {
+      "en": "Save the queries",
+      "vi": "Lưu các câu query"
+     },
+     "detail": {
+      "en": "Copy every statement you ran into docs/sql-notes.sql, including the DELETE attempt and what happened. These notes are the study sheet for Prisma later.",
+      "vi": "Copy mọi statement bạn đã chạy vào docs/sql-notes.sql, gồm lần thử DELETE và chuyện gì xảy ra. Đây là tài liệu ôn cho Prisma sau này."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "A JOIN query returns the experiences for one profile.",
+     "vi": "Một câu JOIN trả về các experience của một profile."
+    },
+    {
+     "en": "Deleting the profile is blocked by the FK, or it cascades and you explain that choice in docs/sql-notes.sql.",
+     "vi": "Xóa profile bị FK chặn, hoặc nó cascade và bạn giải thích lựa chọn đó trong docs/sql-notes.sql."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Forgetting `utf8mb4`, which breaks Vietnamese text. Set it at table creation, not as an afterthought.",
+     "vi": "Quên `utf8mb4` thì chữ tiếng Việt bị hỏng. Set ngay lúc tạo bảng, đừng nghĩ sau."
+    }
+   ],
+   "commit": "docs: sql fundamentals notes"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p04",
+   "milestone": "m0",
+   "order": 4,
+   "title": {
+    "en": "Next.js shell + tokens + theme",
+    "vi": "Shell Next.js + tokens + theme"
+   },
+   "summary": {
+    "en": "Tokens first means every later screen inherits clear typography and light/dark for free.",
+    "vi": "Làm token trước thì mọi màn sau thừa hưởng typography rõ và light/dark luôn."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p01"
+   ],
+   "tags": [
+    "nextjs",
+    "shadcn",
+    "theme",
+    "tokens"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Design tokens",
+      "vi": "Design tokens"
+     },
+     "explain": {
+      "en": "Named CSS variables for color, type, space, and motion (spec §3). Components use `bg-background` and `text-primary`, never raw `#0F766E`.",
+      "vi": "Biến CSS có tên cho màu, chữ, khoảng cách và motion (spec §3). Component dùng `bg-background` và `text-primary`, không dùng raw `#0F766E`."
+     }
+    },
+    {
+     "term": {
+      "en": "class strategy (next-themes)",
+      "vi": "class strategy (next-themes)"
+     },
+     "explain": {
+      "en": "Dark mode is a `.dark` class on `<html>`. shadcn reads that class. Set `attribute=\"class\"` and `suppressHydrationWarning` on `<html>` so the first paint matches the saved theme.",
+      "vi": "Dark mode là class `.dark` trên `<html>`. shadcn đọc class đó. Set `attribute=\"class\"` và `suppressHydrationWarning` trên `<html>` để lần paint đầu khớp theme đã lưu."
+     }
+    },
+    {
+     "term": {
+      "en": "prefers-reduced-motion",
+      "vi": "prefers-reduced-motion"
+     },
+     "explain": {
+      "en": "An OS setting that means \"do not animate\". Spec §3.4: durations collapse, orbs stay still, content is visible immediately.",
+      "vi": "Setting hệ điều hành nghĩa là \"đừng animate\". Spec §3.4: duration co về 0, orb đứng yên, nội dung hiện ngay."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "nextjs",
+     "label": {
+      "en": "Next.js",
+      "vi": "Next.js"
+     }
+    },
+    {
+     "slug": "css-layout",
+     "label": {
+      "en": "CSS Layout",
+      "vi": "Layout CSS"
+     }
+    },
+    {
+     "slug": "accessibility",
+     "label": {
+      "en": "Accessibility",
+      "vi": "Khả năng truy cập"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "design-system-strategy",
+     "label": {
+      "en": "How would you grow a frontend design system?",
+      "vi": "Bạn phát triển design system frontend thế nào?"
+     }
+    },
+    {
+     "id": "accessibility-forms-keyboard",
+     "label": {
+      "en": "Accessibility basics for forms and interactive UI",
+      "vi": "Accessibility cơ bản cho form và interactive UI"
+     }
+    }
+   ],
+   "specRefs": [
+    "§3",
+    "§3.1",
+    "§3.2",
+    "§3.4",
+    "§3.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "create-next-app into apps/web",
+      "vi": "create-next-app vào apps/web"
+     },
+     "detail": {
+      "en": "Scaffold Next.js (App Router, TypeScript, Tailwind) at apps/web inside the workspace. Do not put the app at the repo root.",
+      "vi": "Scaffold Next.js (App Router, TypeScript, Tailwind) tại apps/web bên trong workspace. Đừng đặt app ở root của repo."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "pnpm dlx create-next-app@latest apps/web --typescript --tailwind --app --src-dir=false"
+     }
+    },
+    {
+     "title": {
+      "en": "shadcn init and map spec §3 tokens",
+      "vi": "shadcn init và map token spec §3"
+     },
+     "detail": {
+      "en": "Run shadcn init (class strategy, CSS variables). Replace the generated colors with the hex tokens from spec §3.6 so contrast matches the measured table. Add the extensions (`--subtle-foreground`, `--band`, domain hues).",
+      "vi": "Chạy shadcn init (class strategy, CSS variables). Thay màu generate bằng hex token ở spec §3.6 để contrast khớp bảng đã đo. Thêm các extension (`--subtle-foreground`, `--band`, domain hues)."
+     }
+    },
+    {
+     "title": {
+      "en": "Load fonts with next/font",
+      "vi": "Load font bằng next/font"
+     },
+     "detail": {
+      "en": "Be Vietnam Pro (headings), Inter (body), JetBrains Mono (code). Subsets latin + latin-ext + vietnamese, `display: 'swap'`. Expose `--font-heading`, `--font-sans`, `--font-mono` as in spec §3.2.",
+      "vi": "Be Vietnam Pro (heading), Inter (body), JetBrains Mono (code). Subset latin + latin-ext + vietnamese, `display: 'swap'`. Gán `--font-heading`, `--font-sans`, `--font-mono` như spec §3.2."
+     }
+    },
+    {
+     "title": {
+      "en": "Theme toggle and reduced-motion guard",
+      "vi": "Toggle theme và chặn reduced-motion"
+     },
+     "detail": {
+      "en": "Add next-themes (`attribute=\"class\"`, default `system`, `disableTransitionOnChange`). Put `suppressHydrationWarning` on `<html>`. In globals.css, collapse motion under `prefers-reduced-motion` as spec §3.4.",
+      "vi": "Thêm next-themes (`attribute=\"class\"`, default `system`, `disableTransitionOnChange`). Gắn `suppressHydrationWarning` trên `<html>`. Trong globals.css, co motion khi `prefers-reduced-motion` như spec §3.4."
+     }
+    },
+    {
+     "title": {
+      "en": "Placeholder at /",
+      "vi": "Trang placeholder tại /"
+     },
+     "detail": {
+      "en": "Render a short heading and body using the type scale (`text-title`, `text-prose`). Toggle light/dark. Check contrast in DevTools (AA). Use the Vietnamese QA string from spec §3.2 to confirm diacritics are not clipped.",
+      "vi": "Render một heading ngắn và đoạn body theo type scale (`text-title`, `text-prose`). Toggle light/dark. Kiểm tra contrast trong DevTools (AA). Dùng chuỗi QA tiếng Việt ở spec §3.2 để chắc dấu không bị cắt."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "The `/` placeholder renders in both themes with AA contrast checked in DevTools.",
+     "vi": "Placeholder `/` render được cả hai theme, contrast AA đã kiểm trong DevTools."
+    },
+    {
+     "en": "Font sizes match the spec type scale (`text-title` / `text-prose`), and Vietnamese marks on the QA string are not clipped.",
+     "vi": "Cỡ chữ khớp type scale trong spec (`text-title` / `text-prose`), và dấu tiếng Việt trên chuỗi QA không bị cắt."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "A flash of the wrong theme on load. Use `suppressHydrationWarning` on `<html>` and let next-themes set the class before paint.",
+     "vi": "Flash sai theme lúc load trang. Dùng `suppressHydrationWarning` trên `<html>` và để next-themes set class trước khi paint."
+    }
+   ],
+   "commit": "feat(web): next shell, tokens, theme"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p05",
+   "milestone": "m1",
+   "order": 5,
+   "title": {
+    "en": "NestJS basics",
+    "vi": "NestJS cơ bản"
+   },
+   "summary": {
+    "en": "Nest gives the backend a fixed structure (module, controller, service), so you don't have to invent one.",
+    "vi": "Nest cho backend một cấu trúc cố định (module, controller, service), nên bạn không phải tự nghĩ ra."
+   },
+   "estimateMin": 120,
+   "prereqs": [
+    "p01"
+   ],
+   "tags": [
+    "nestjs",
+    "api",
+    "health"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Module / controller / service",
+      "vi": "Module / controller / service"
+     },
+     "explain": {
+      "en": "A feature folder / the class that maps URLs to methods / the class with the actual logic. Controllers stay thin.",
+      "vi": "Thư mục của một feature / class map các URL sang method / class chứa logic. Controller giữ mỏng."
+     }
+    },
+    {
+     "term": {
+      "en": "Global prefix",
+      "vi": "Global prefix"
+     },
+     "explain": {
+      "en": "`app.setGlobalPrefix('api')` means every route starts with `/api`. The web app will later rewrite `/api/*` here.",
+      "vi": "`app.setGlobalPrefix('api')` nghĩa là mọi route bắt đầu bằng `/api`. Web app sau này sẽ rewrite `/api/*` tới đây."
+     }
+    },
+    {
+     "term": {
+      "en": "ConfigModule",
+      "vi": "ConfigModule"
+     },
+     "explain": {
+      "en": "Reads `.env` once and injects values (`PORT`, `DATABASE_URL`, `WEB_ORIGIN`). Do not `process.env` in random files.",
+      "vi": "Đọc `.env` một lần và inject giá trị (`PORT`, `DATABASE_URL`, `WEB_ORIGIN`). Đừng gọi `process.env` rải rác."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "architecture",
+     "label": {
+      "en": "Architecture",
+      "vi": "Kiến trúc"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "bff-when",
+     "label": {
+      "en": "When would you introduce a BFF?",
+      "vi": "Khi nào bạn đưa một BFF vào?"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Scaffold Nest into apps/api",
+      "vi": "Scaffold Nest vào apps/api"
+     },
+     "detail": {
+      "en": "From the workspace root, create a Nest app at apps/api (TypeScript). Add it to the pnpm workspace if create-nest-app did not. The API listens on port 4000.",
+      "vi": "Từ root của workspace, tạo một Nest app tại apps/api (TypeScript). Thêm nó vào pnpm workspace nếu create-nest-app chưa làm. API listen trên port 4000."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "pnpm dlx @nestjs/cli new apps/api --package-manager pnpm"
+     }
+    },
+    {
+     "title": {
+      "en": "Add HealthModule",
+      "vi": "Thêm HealthModule"
+     },
+     "detail": {
+      "en": "Create a HealthModule with a controller and a service. `GET /health` (after the prefix: `/api/health`) returns `{ status: \"ok\" }`. The service owns that object; the controller only calls it.",
+      "vi": "Tạo một HealthModule với controller và service. `GET /health` (sau prefix: `/api/health`) trả `{ status: \"ok\" }`. Service chịu trách nhiệm object đó; controller chỉ gọi nó."
+     }
+    },
+    {
+     "title": {
+      "en": "Global prefix, CORS, ConfigModule",
+      "vi": "Global prefix, CORS, ConfigModule"
+     },
+     "detail": {
+      "en": "Set global prefix `api`. Enable CORS for the web origin (http://localhost:3000). Load ConfigModule globally so later modules can read `.env`.",
+      "vi": "Set global prefix `api`. Bật CORS cho origin của web (http://localhost:3000). Load ConfigModule global để module sau đọc được `.env`."
+     },
+     "code": {
+      "lang": "ts",
+      "text": "app.setGlobalPrefix('api');\napp.enableCors({ origin: process.env.WEB_ORIGIN || 'http://localhost:3000' });"
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "`curl localhost:4000/api/health` returns `{status:\"ok\"}`.",
+     "vi": "`curl localhost:4000/api/health` trả `{status:\"ok\"}`."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Putting logic in controllers. Controllers only map HTTP to a service call.",
+     "vi": "Nhét logic vào controller. Controller chỉ map HTTP sang một lời gọi service."
+    }
+   ],
+   "commit": "feat(api): nest app + health"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p06",
+   "milestone": "m1",
+   "order": 6,
+   "title": {
+    "en": "Prisma schema, migrate, seed",
+    "vi": "Prisma schema, migrate, seed"
+   },
+   "summary": {
+    "en": "The schema file is the single source of truth for tables, and migrations are its history.",
+    "vi": "File schema là source of truth cho các bảng, migration là lịch sử của nó."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p03",
+    "p05"
+   ],
+   "tags": [
+    "prisma",
+    "mysql",
+    "migrations"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "schema.prisma",
+      "vi": "schema.prisma"
+     },
+     "explain": {
+      "en": "One file that lists every model and field. Prisma uses it to generate the client and the SQL. You do not invent tables in the SQL shell after this step.",
+      "vi": "Một file liệt kê mọi model và field. Prisma dùng nó để generate client và SQL. Sau bước này bạn không tự tạo bảng trong SQL shell nữa."
+     }
+    },
+    {
+     "term": {
+      "en": "Migration",
+      "vi": "Migration"
+     },
+     "explain": {
+      "en": "A versioned SQL file in prisma/migrations/. `migrate dev` writes it, you commit it, `migrate deploy` runs it in production. Never `db push` after this step.",
+      "vi": "File SQL có version trong prisma/migrations/. `migrate dev` ghi ra, bạn commit, `migrate deploy` chạy trên production. Không dùng `db push` sau bước này."
+     }
+    },
+    {
+     "term": {
+      "en": "Seed",
+      "vi": "Seed"
+     },
+     "explain": {
+      "en": "A script that fills starting rows (CV placeholders). Safe to re-run after `migrate reset`. No phone numbers or personal emails.",
+      "vi": "Script đổ hàng dữ liệu ban đầu (placeholder CV). Chạy lại an toàn sau `migrate reset`. Không số điện thoại hay email cá nhân."
+     }
+    },
+    {
+     "term": {
+      "en": "PrismaService",
+      "vi": "PrismaService"
+     },
+     "explain": {
+      "en": "A Nest provider that wraps `PrismaClient` and connects on module init. Other services inject it instead of creating their own client.",
+      "vi": "Provider Nest bọc `PrismaClient` và connect khi module init. Service khác inject nó, không tự new client của mình."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "system-design",
+     "label": {
+      "en": "System Design",
+      "vi": "Thiết kế hệ thống"
+     }
+    }
+   ],
+   "questionLinks": [],
+   "specRefs": [
+    "§1.5",
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "prisma init for MySQL",
+      "vi": "prisma init cho MySQL"
+     },
+     "detail": {
+      "en": "Inside apps/api, run prisma init with the mysql provider. Point datasource url at env DATABASE_URL from p02. Confirm the generated schema uses `provider = \"mysql\"`.",
+      "vi": "Trong apps/api, chạy prisma init với provider mysql. Trỏ datasource url vào env DATABASE_URL từ p02. Xác nhận schema generate dùng `provider = \"mysql\"`."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "pnpm prisma init --datasource-provider mysql"
+     }
+    },
+    {
+     "title": {
+      "en": "Add SiteSettings, Profile, Experience",
+      "vi": "Thêm SiteSettings, Profile, Experience"
+     },
+     "detail": {
+      "en": "Follow spec §1.5 conventions: `id` autoincrement, `createdAt`/`updatedAt`, `titleEn`/`titleVi` pairs, `sortOrder`. SiteSettings and Profile are singletons (seed `id = 1`). Experience has `company`, `roleEn`/`roleVi`, dates. Skip phone and contact-address fields.",
+      "vi": "Làm theo convention ở spec §1.5: `id` autoincrement, `createdAt`/`updatedAt`, cặp `titleEn`/`titleVi`, `sortOrder`. SiteSettings và Profile là singleton (seed `id = 1`). Experience có `company`, `roleEn`/`roleVi`, ngày tháng. Bỏ field số điện thoại và địa chỉ liên hệ."
+     }
+    },
+    {
+     "title": {
+      "en": "First migration",
+      "vi": "Migration đầu tiên"
+     },
+     "detail": {
+      "en": "Run migrate dev with name init. Open the generated SQL and match it to the CREATE TABLE notes from p03 (utf8mb4, PK, FK). Commit the migration folder; never edit an applied file.",
+      "vi": "Chạy migrate dev với name init. Mở SQL được generate, đối chiếu với ghi chú CREATE TABLE ở p03 (utf8mb4, PK, FK). Commit thư mục migration. Không sửa file đã apply."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "pnpm prisma migrate dev --name init"
+     }
+    },
+    {
+     "title": {
+      "en": "Seed CV placeholders and PrismaService",
+      "vi": "Seed placeholder CV và PrismaService"
+     },
+     "detail": {
+      "en": "Add prisma/seed.ts with site name, profile (display name, headline en/vi, city), and 4 experience rows from spec §1.3. No phone, no personal inbox address. Wire PrismaService so Nest can query the same DB.",
+      "vi": "Thêm prisma/seed.ts với tên site, profile (display name, headline en/vi, city), và 4 hàng experience từ spec §1.3. Không số điện thoại, không địa chỉ inbox cá nhân. Gắn PrismaService để Nest query cùng DB."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "`pnpm prisma migrate reset` recreates the tables and seeds them.",
+     "vi": "`pnpm prisma migrate reset` tạo lại bảng rồi seed."
+    },
+    {
+     "en": "Prisma Studio shows the SiteSettings, Profile, and Experience rows.",
+     "vi": "Prisma Studio hiện các hàng SiteSettings, Profile và Experience."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Editing an applied migration. Always create a new one with `migrate dev --name …`.",
+     "vi": "Sửa migration đã apply. Luôn tạo migration mới bằng `migrate dev --name …`."
+    },
+    {
+     "en": "`prisma db push` after this step. Push skips migration history; production needs `migrate deploy`.",
+     "vi": "`prisma db push` sau bước này. Push bỏ qua lịch sử migration. Production cần `migrate deploy`."
+    }
+   ],
+   "commit": "feat(api): prisma schema + seed"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p07",
+   "milestone": "m1",
+   "order": 7,
+   "title": {
+    "en": "Read API",
+    "vi": "API đọc"
+   },
+   "summary": {
+    "en": "The public site only needs GET endpoints first, which keeps risk low.",
+    "vi": "Site public lúc đầu chỉ cần endpoint GET, nên rủi ro thấp."
+   },
+   "estimateMin": 120,
+   "prereqs": [
+    "p06"
+   ],
+   "tags": [
+    "api",
+    "dto",
+    "locale"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "DTO",
+      "vi": "DTO"
+     },
+     "explain": {
+      "en": "The JSON shape you actually return. Map Prisma rows to DTOs so `passwordHash` and other internals never leak.",
+      "vi": "Shape JSON bạn trả về. Map hàng Prisma sang DTO để `passwordHash` và field nội bộ không bị lộ."
+     }
+    },
+    {
+     "term": {
+      "en": "Public vs admin shape",
+      "vi": "Shape public vs admin"
+     },
+     "explain": {
+      "en": "Spec §1.5: public GET with `?locale=vi` returns flat `title` (server picks the language, fallback to en). Admin later returns both `titleEn` and `titleVi`.",
+      "vi": "Spec §1.5: GET public với `?locale=vi` trả một field `title` (server chọn ngôn ngữ, fallback en). Admin về sau trả cả `titleEn` và `titleVi`."
+     }
+    },
+    {
+     "term": {
+      "en": "404",
+      "vi": "404"
+     },
+     "explain": {
+      "en": "A missing singleton or id is not an empty `{}`. Return 404 with the shared error shape you will lock in p08.",
+      "vi": "Thiếu singleton hoặc id thì không trả `{}` rỗng. Trả 404 với error shape chung, sẽ chốt ở p08."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "networking",
+     "label": {
+      "en": "Networking",
+      "vi": "Mạng và giao thức"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "http-basics-status-codes",
+     "label": {
+      "en": "HTTP basics and status codes",
+      "vi": "HTTP cơ bản và status code"
+     }
+    },
+    {
+     "id": "cors-basics",
+     "label": {
+      "en": "CORS at a practical level",
+      "vi": "CORS ở mức thực tế"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.5"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "GET /settings and GET /profile",
+      "vi": "GET /settings và GET /profile"
+     },
+     "detail": {
+      "en": "Add modules that load the singleton rows (`id = 1`). Return DTOs, not the Prisma model. Honor `?locale=en|vi` by picking `*En` / `*Vi` fields on the server.",
+      "vi": "Thêm module đọc hàng singleton (`id = 1`). Trả DTO, không trả model Prisma. Xử lý `?locale=en|vi`: server chọn field `*En` / `*Vi`."
+     }
+    },
+    {
+     "title": {
+      "en": "GET /experiences ordered",
+      "vi": "GET /experiences theo thứ tự"
+     },
+     "detail": {
+      "en": "List experiences with `orderBy: { sortOrder: 'asc' }` (then startDate). Hide rows with `isVisible = false`. Locale pick is the same as settings.",
+      "vi": "List experience với `orderBy: { sortOrder: 'asc' }` (rồi startDate). Ẩn hàng `isVisible = false`. Chọn locale giống settings."
+     }
+    },
+    {
+     "title": {
+      "en": "Map to DTOs and 404",
+      "vi": "Map sang DTO và 404"
+     },
+     "detail": {
+      "en": "If the profile row is missing, return 404. Do not send `createdAt` internals unless the DTO needs them. Curl each route and paste the JSON next to the seed so you can see the mapping.",
+      "vi": "Nếu thiếu hàng profile, trả 404. Đừng gửi field nội bộ như `createdAt` trừ khi DTO cần. Curl từng route rồi dán JSON cạnh seed để thấy mapping."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "curl 'localhost:4000/api/settings?locale=en'\ncurl 'localhost:4000/api/profile?locale=vi'\ncurl 'localhost:4000/api/experiences?locale=en'"
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Each endpoint returns the seeded JSON (locale fields already picked).",
+     "vi": "Mỗi endpoint trả JSON đã seed (field locale đã chọn sẵn)."
+    },
+    {
+     "en": "A missing row returns 404 with the shared error shape (code + message).",
+     "vi": "Thiếu hàng thì trả 404 với error shape chung (code + message)."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Returning Prisma models directly, which leaks internal fields. Map them to DTOs.",
+     "vi": "Trả thẳng model Prisma sẽ lộ field nội bộ. Map sang DTO."
+    }
+   ],
+   "commit": "feat(api): public read endpoints"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p08",
+   "milestone": "m1",
+   "order": 8,
+   "title": {
+    "en": "Validation + error shape",
+    "vi": "Validation + error shape"
+   },
+   "summary": {
+    "en": "Never trust input. One error format makes the frontend simple.",
+    "vi": "Đừng tin input. Một format lỗi giúp frontend đơn giản."
+   },
+   "estimateMin": 90,
+   "prereqs": [
+    "p07"
+   ],
+   "tags": [
+    "zod",
+    "validation",
+    "shared"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "zod schema",
+      "vi": "zod schema"
+     },
+     "explain": {
+      "en": "A runtime description of the data. The same schema can type-check in TypeScript and reject bad JSON on the server.",
+      "vi": "Mô tả data lúc runtime. Cùng schema vừa type-check TypeScript vừa chặn JSON sai trên server."
+     }
+    },
+    {
+     "term": {
+      "en": "packages/shared",
+      "vi": "packages/shared"
+     },
+     "explain": {
+      "en": "A workspace package both apps import. One source for request/response types. Two copies will drift.",
+      "vi": "Package trong workspace, cả hai app đều import. Một nguồn cho type request/response. Hai bản copy sẽ lệch."
+     }
+    },
+    {
+     "term": {
+      "en": "Exception filter",
+      "vi": "Exception filter"
+     },
+     "explain": {
+      "en": "Nest hook that turns every thrown error into `{ error: { code, message, fields? } }`. The web app only has to read that one shape.",
+      "vi": "Hook Nest biến mọi error bị throw thành `{ error: { code, message, fields? } }`. Web app chỉ cần đọc đúng một shape."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "security",
+     "label": {
+      "en": "Security",
+      "vi": "Bảo mật"
+     }
+    },
+    {
+     "slug": "typescript",
+     "label": {
+      "en": "TypeScript",
+      "vi": "TypeScript"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "ts-designing-api-props",
+     "label": {
+      "en": "Designing TypeScript types for APIs",
+      "vi": "Thiết kế type TypeScript cho API"
+     }
+    },
+    {
+     "id": "ts-narrowing-typeguards",
+     "label": {
+      "en": "Narrowing and custom type guards",
+      "vi": "Narrowing và custom type guard"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Create packages/shared with zod schemas",
+      "vi": "Tạo packages/shared với schema zod"
+     },
+     "detail": {
+      "en": "Add a small package exported as `@portfolio/shared`. Put locale query (`en` | `vi`) and the error envelope there. Web and api both depend on it in package.json.",
+      "vi": "Thêm package nhỏ export `@portfolio/shared`. Đặt query locale (`en` | `vi`) và error envelope ở đó. Cả web và api đều depend trong package.json."
+     }
+    },
+    {
+     "title": {
+      "en": "ZodValidationPipe",
+      "vi": "ZodValidationPipe"
+     },
+     "detail": {
+      "en": "A Nest pipe that parses query/body with a zod schema. On failure, throw 400 and include `fields` (path → message) from zod's issues.",
+      "vi": "Pipe Nest parse query/body bằng schema zod. Fail thì throw 400 và gắn `fields` (path → message) từ issue của zod."
+     }
+    },
+    {
+     "title": {
+      "en": "Global exception filter",
+      "vi": "Exception filter global"
+     },
+     "detail": {
+      "en": "Catch HttpException and unknown errors. Always respond `{ error: { code, message, fields? } }`. Map 404/400 from previous endpoints onto this shape.",
+      "vi": "Bắt HttpException và lỗi lạ. Luôn trả `{ error: { code, message, fields? } }`. Map 404/400 từ endpoint trước sang shape này."
+     },
+     "code": {
+      "lang": "json",
+      "text": "{ \"error\": { \"code\": \"BAD_QUERY\", \"message\": \"Invalid locale\", \"fields\": { \"locale\": \"Expected en or vi\" } } }"
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Bad query params (`?locale=fr`) return 400 with field errors in the shared shape.",
+     "vi": "Query param sai (`?locale=fr`) trả 400 với field error theo shape chung."
+    },
+    {
+     "en": "`packages/shared` types are imported by both apps/web and apps/api.",
+     "vi": "Cả apps/web và apps/api đều import type từ `packages/shared`."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Two schema copies drifting apart. Import from `shared` only.",
+     "vi": "Hai bản schema lệch nhau. Chỉ import từ `shared`."
+    }
+   ],
+   "commit": "feat(shared): zod contracts + error filter"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p09",
+   "milestone": "m1",
+   "order": 9,
+   "title": {
+    "en": "Web reads the API",
+    "vi": "Web đọc API"
+   },
+   "summary": {
+    "en": "This is the first end-to-end slice, where the DB row appears on screen.",
+    "vi": "Đây là slice end-to-end đầu tiên: hàng trong DB hiện lên màn hình."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p04",
+    "p07"
+   ],
+   "tags": [
+    "tanstack-query",
+    "rsc",
+    "states"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "apiClient",
+      "vi": "apiClient"
+     },
+     "explain": {
+      "en": "One typed fetch helper that talks to `/api`, parses JSON, and throws on the shared error shape. Pages do not call `fetch` ad hoc.",
+      "vi": "Một helper fetch có type, gọi `/api`, parse JSON, và throw khi gặp error shape chung. Page không tự `fetch` lung tung."
+     }
+    },
+    {
+     "term": {
+      "en": "TanStack Query",
+      "vi": "TanStack Query"
+     },
+     "explain": {
+      "en": "Client cache for server data: loading, error, refetch. Use it in Client Components. Server Components can `fetch` with `next.tags` instead (spec §0).",
+      "vi": "Cache phía client cho data server: loading, error, refetch. Dùng trong Client Component. Server Component thì `fetch` với `next.tags` (spec §0)."
+     }
+    },
+    {
+     "term": {
+      "en": "Skeleton / Empty / Error",
+      "vi": "Skeleton / Empty / Error"
+     },
+     "explain": {
+      "en": "Spec §4 and §5.0: every screen names these three states. Home is a seeded singleton so Empty is rare; Error must still render when the API is down.",
+      "vi": "Spec §4 và §5.0: mọi màn phải nêu ba state này. Home là singleton đã seed nên Empty hiếm. Error vẫn phải render khi API tắt."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "react",
+     "label": {
+      "en": "React",
+      "vi": "React"
+     }
+    },
+    {
+     "slug": "state-management-react",
+     "label": {
+      "en": "State Management (React)",
+      "vi": "Quản lý state (React)"
+     }
+    },
+    {
+     "slug": "performance",
+     "label": {
+      "en": "Performance",
+      "vi": "Hiệu năng"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "tanstack-query-vs-global-store",
+     "label": {
+      "en": "TanStack Query vs a global store",
+      "vi": "TanStack Query vs global store"
+     }
+    },
+    {
+     "id": "useeffect",
+     "label": {
+      "en": "What is useEffect?",
+      "vi": "useEffect là gì?"
+     }
+    },
+    {
+     "id": "next-data-fetching-cache-revalidation",
+     "label": {
+      "en": "Data fetching, caching, and revalidation in App Router",
+      "vi": "Data fetching, caching và revalidation trong App Router"
+     }
+    }
+   ],
+   "specRefs": [
+    "§4",
+    "§5.0",
+    "§5.1"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Typed apiClient + QueryClientProvider",
+      "vi": "apiClient có type + QueryClientProvider"
+     },
+     "detail": {
+      "en": "Wrap the app with QueryClientProvider. apiClient uses the shared types from packages/shared. Point it at localhost:4000/api in dev (or a Next rewrite).",
+      "vi": "Bọc app bằng QueryClientProvider. apiClient dùng type từ packages/shared. Lúc dev trỏ tới localhost:4000/api (hoặc rewrite của Next)."
+     }
+    },
+    {
+     "title": {
+      "en": "Home hero and nav from the API",
+      "vi": "Hero và nav trang chủ từ API"
+     },
+     "detail": {
+      "en": "Render display name, headline, and nav labels from GET /profile and GET /settings. No CV strings in the component file. Changing seed data must be enough to change the page.",
+      "vi": "Render display name, headline và nhãn nav từ GET /profile và GET /settings. Không ghi chuỗi CV trong file component. Đổi seed là đủ để trang đổi."
+     }
+    },
+    {
+     "title": {
+      "en": "Skeleton, Empty, Error",
+      "vi": "Skeleton, Empty, Error"
+     },
+     "detail": {
+      "en": "Build the three spec §4 states and use them on home. Skeleton while loading, Error with retry when the request fails, Empty if a list is missing (nav with 0 items shows the logo only).",
+      "vi": "Làm ba state spec §4 rồi dùng trên trang chủ. Skeleton khi loading, Error có retry khi request fail, Empty nếu thiếu list (nav 0 item chỉ hiện logo)."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Changing a seed value and re-seeding changes the home page.",
+     "vi": "Sửa một giá trị seed rồi seed lại thì trang chủ đổi."
+    },
+    {
+     "en": "A stopped API shows the Error state (not a crash or a blank white screen).",
+     "vi": "API tắt thì hiện Error (không crash, không màn hình trắng)."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Fetching in `useEffect`. Use RSC `fetch` or `useQuery`.",
+     "vi": "Fetch trong `useEffect`. Dùng RSC `fetch` hoặc `useQuery`."
+    }
+   ],
+   "commit": "feat(web): home from api + states"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p10",
+   "milestone": "m2",
+   "order": 10,
+   "title": {
+    "en": "One-to-many relations",
+    "vi": "Quan hệ one-to-many"
+   },
+   "summary": {
+    "en": "Real data is connected, for example one experience has many projects.",
+    "vi": "Data thật thì có liên kết, ví dụ một experience có nhiều project."
+   },
+   "estimateMin": 120,
+   "prereqs": [
+    "p06"
+   ],
+   "tags": [
+    "prisma",
+    "relations",
+    "projects"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "One-to-many",
+      "vi": "One-to-many"
+     },
+     "explain": {
+      "en": "One parent row, many children. `Experience` 1──* `Project` via `experienceId`. The FK lives on the many side.",
+      "vi": "Một hàng cha, nhiều hàng con. `Experience` 1──* `Project` qua `experienceId`. FK nằm ở phía many."
+     }
+    },
+    {
+     "term": {
+      "en": "onDelete",
+      "vi": "onDelete"
+     },
+     "explain": {
+      "en": "What the database does if you delete the parent. `Restrict` (default) refuses; `Cascade` deletes children. Pick one and write the reason next to the field.",
+      "vi": "Database làm gì khi xóa hàng cha. `Restrict` (mặc định) thì từ chối. `Cascade` thì xóa con. Chọn một và ghi lý do cạnh field."
+     }
+    },
+    {
+     "term": {
+      "en": "include vs select",
+      "vi": "include vs select"
+     },
+     "explain": {
+      "en": "`include` loads a relation in the same query. `select` picks fields. Looping `findUnique` inside `map` is N+1 — use include instead.",
+      "vi": "`include` load quan hệ trong cùng query. `select` chọn field. Lặp `findUnique` trong `map` là N+1. Dùng include."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "system-design",
+     "label": {
+      "en": "System Design",
+      "vi": "Thiết kế hệ thống"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "n-plus-one",
+     "label": {
+      "en": "N+1 query problem",
+      "vi": "Vấn đề N+1 query"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.5"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Add the Project model",
+      "vi": "Thêm model Project"
+     },
+     "detail": {
+      "en": "Fields from spec §1.5 that you need now: `slug` unique, `titleEn`/`titleVi`, `taglineEn`/`taglineVi`, `status`, `publishedAt`, `sortOrder`, optional `experienceId`. Set `onDelete` and comment why.",
+      "vi": "Field từ spec §1.5 cần lúc này: `slug` unique, `titleEn`/`titleVi`, `taglineEn`/`taglineVi`, `status`, `publishedAt`, `sortOrder`, `experienceId` tùy chọn. Set `onDelete` và ghi chú lý do."
+     }
+    },
+    {
+     "title": {
+      "en": "Migrate and read the SQL",
+      "vi": "Migrate và đọc SQL"
+     },
+     "detail": {
+      "en": "Create a new migration (do not edit init). Open the SQL: you should see the FK and an index on `experienceId` / `slug`.",
+      "vi": "Tạo migration mới (đừng sửa init). Mở SQL: phải thấy FK và index trên `experienceId` / `slug`."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "pnpm prisma migrate dev --name add-project"
+     }
+    },
+    {
+     "title": {
+      "en": "GET /projects and GET /projects/:slug",
+      "vi": "GET /projects và GET /projects/:slug"
+     },
+     "detail": {
+      "en": "List published projects ordered by sortOrder. Detail uses `include: { experience: true }` so one query returns the parent. Seed at least one project linked to Particula / Kobizo.",
+      "vi": "List các project đã published, xếp theo sortOrder. Detail dùng `include: { experience: true }` để một query trả luôn experience cha. Seed ít nhất một project gắn Particula / Kobizo."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "`GET /projects/:slug` includes the parent experience in one response.",
+     "vi": "`GET /projects/:slug` trả kèm experience cha trong một response."
+    },
+    {
+     "en": "The new migration SQL shows the foreign key and an index.",
+     "vi": "SQL của migration mới hiện foreign key và một index."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "N+1 queries in loops. Use `include` / `select`, not a query per row.",
+     "vi": "N+1 query trong vòng lặp. Dùng `include` / `select`, đừng query từng hàng."
+    }
+   ],
+   "commit": "feat(api): projects relation"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p11",
+   "milestone": "m2",
+   "order": 11,
+   "title": {
+    "en": "Many-to-many (skills, tags)",
+    "vi": "Many-to-many (skill, tag)"
+   },
+   "summary": {
+    "en": "A project uses many skills and a skill appears in many projects, so a join table is needed.",
+    "vi": "Một project dùng nhiều skill, một skill xuất hiện ở nhiều project, nên cần bảng join."
+   },
+   "estimateMin": 120,
+   "prereqs": [
+    "p10"
+   ],
+   "tags": [
+    "prisma",
+    "m2m",
+    "skills",
+    "tags"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Many-to-many",
+      "vi": "Many-to-many"
+     },
+     "explain": {
+      "en": "Neither side owns the other. You store pairs in a join table: project 3 ↔ skill `nuxt`.",
+      "vi": "Không bên nào là owner của bên kia. Bạn lưu từng cặp trong bảng join: project 3 ↔ skill `nuxt`."
+     }
+    },
+    {
+     "term": {
+      "en": "Explicit join table",
+      "vi": "Bảng join tường minh"
+     },
+     "explain": {
+      "en": "Prisma can hide the join (`skills Skill[]`). Hide it only when you have no extra columns. We need `order` on ProjectSkill, so model the join yourself.",
+      "vi": "Prisma có thể giấu bảng join (`skills Skill[]`). Chỉ giấu khi không có cột thêm. Cần `order` trên ProjectSkill, nên tự model join."
+     }
+    },
+    {
+     "term": {
+      "en": "Filter query",
+      "vi": "Filter query"
+     },
+     "explain": {
+      "en": "`GET /projects?skill=nuxt` is a WHERE on the join: only projects that have that skill slug. Keep it a server filter, not a client `.filter`.",
+      "vi": "`GET /projects?skill=nuxt` là WHERE trên bảng join: chỉ project có skill slug đó. Filter trên server, đừng `.filter` ở client."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "system-design",
+     "label": {
+      "en": "System Design",
+      "vi": "Thiết kế hệ thống"
+     }
+    }
+   ],
+   "questionLinks": [],
+   "specRefs": [
+    "§1.5"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Add Skill, Tag, and join tables",
+      "vi": "Thêm Skill, Tag và bảng join"
+     },
+     "detail": {
+      "en": "Skill: `name`, `slug` unique, `depth` (DAILY/SHIPPED/GROWING). Tag: `slug`, `nameEn`/`nameVi`. ProjectSkill is explicit with `order`. Project↔Tag can stay implicit unless you need extra columns.",
+      "vi": "Skill: `name`, `slug` unique, `depth` (DAILY/SHIPPED/GROWING). Tag: `slug`, `nameEn`/`nameVi`. ProjectSkill khai báo tường minh với `order`. Project↔Tag cứ để implicit, trừ khi bạn cần cột thêm."
+     }
+    },
+    {
+     "title": {
+      "en": "Seed skills and tags",
+      "vi": "Seed skill và tag"
+     },
+     "detail": {
+      "en": "Seed grouped skills from spec §1.4 (Daily / Shipped / Growing). Attach Vue, Nuxt, TypeScript to Particula. Confirm join rows in Prisma Studio.",
+      "vi": "Seed skill theo nhóm spec §1.4 (Daily / Shipped / Growing). Gắn Vue, Nuxt, TypeScript vào Particula. Xác nhận hàng join trong Prisma Studio."
+     }
+    },
+    {
+     "title": {
+      "en": "Filter GET /projects?skill=",
+      "vi": "Filter GET /projects?skill="
+     },
+     "detail": {
+      "en": "Parse `skill` as a slug. Return only matching published projects. Unknown slugs return an empty list, not 500.",
+      "vi": "Parse `skill` như slug. Chỉ trả project published khớp. Slug lạ thì list rỗng, không 500."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "curl 'localhost:4000/api/projects?skill=nuxt'"
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "`GET /projects?skill=nuxt` returns only matching projects.",
+     "vi": "`GET /projects?skill=nuxt` chỉ trả project khớp."
+    },
+    {
+     "en": "Join rows (`ProjectSkill`) are visible in Prisma Studio.",
+     "vi": "Hàng join (`ProjectSkill`) hiện trong Prisma Studio."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Implicit m2m when you need extra columns. Use explicit join tables for `order`.",
+     "vi": "m2m implicit khi bạn cần cột thêm. Dùng bảng join tường minh cho `order`."
+    }
+   ],
+   "commit": "feat(api): skills/tags m2m"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p12",
+   "milestone": "m2",
+   "order": 12,
+   "title": {
+    "en": "Posts + rich content blocks",
+    "vi": "Post + rich content block"
+   },
+   "summary": {
+    "en": "Blog and case studies share one block format, so one renderer serves both.",
+    "vi": "Blog và case study dùng chung một format block, nên một renderer lo cả hai."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p11"
+   ],
+   "tags": [
+    "posts",
+    "blocks",
+    "zod"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Content blocks",
+      "vi": "Content blocks"
+     },
+     "explain": {
+      "en": "A JSON array of typed chunks (heading, paragraph, list, code, callout) instead of one HTML string. The renderer switches on `type`. Never `dangerouslySetInnerHTML`.",
+      "vi": "Một mảng JSON các chunk có type (heading, paragraph, list, code, callout), không phải một chuỗi HTML. Renderer switch theo `type`. Không bao giờ `dangerouslySetInnerHTML`."
+     }
+    },
+    {
+     "term": {
+      "en": "status + publishedAt",
+      "vi": "status + publishedAt"
+     },
+     "explain": {
+      "en": "`DRAFT | PUBLISHED | ARCHIVED`. Public GET returns PUBLISHED only. `publishedAt` is set on publish, not on create.",
+      "vi": "`DRAFT | PUBLISHED | ARCHIVED`. GET public chỉ trả PUBLISHED. `publishedAt` set lúc publish, không phải lúc create."
+     }
+    },
+    {
+     "term": {
+      "en": "zod for JSON columns",
+      "vi": "zod cho cột JSON"
+     },
+     "explain": {
+      "en": "Prisma type `Json` is `any`. Parse it with a zod discriminated union on `type` at seed and at write time so invalid blocks never land.",
+      "vi": "Type Prisma `Json` là `any`. Parse bằng discriminated union của zod theo `type` lúc seed và lúc ghi, để block sai không lọt vào."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "security",
+     "label": {
+      "en": "Security",
+      "vi": "Bảo mật"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "security-xss-csrf-csp",
+     "label": {
+      "en": "XSS, CSRF, and CSP in frontend terms",
+      "vi": "XSS, CSRF và CSP theo góc nhìn frontend"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.5"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Add the Post model",
+      "vi": "Thêm model Post"
+     },
+     "detail": {
+      "en": "`slug` unique, `titleEn`/`titleVi`, `excerptEn`/`excerptVi`, `status`, `publishedAt`, `blocks` Json, tags m2m. Migrate. Public list hides drafts.",
+      "vi": "`slug` unique, `titleEn`/`titleVi`, `excerptEn`/`excerptVi`, `status`, `publishedAt`, `blocks` Json, tags m2m. Migrate. List public ẩn draft."
+     }
+    },
+    {
+     "title": {
+      "en": "Validate blocks with zod in shared",
+      "vi": "Validate block bằng zod trong shared"
+     },
+     "detail": {
+      "en": "Allow a small set: heading, paragraph, list, code, callout. Reject unknown `type` and missing localized text. Use the same schema in the seed.",
+      "vi": "Chỉ cho một tập nhỏ: heading, paragraph, list, code, callout. Từ chối `type` lạ và thiếu text theo locale. Seed dùng cùng schema."
+     }
+    },
+    {
+     "title": {
+      "en": "GET /posts and GET /posts/:slug",
+      "vi": "GET /posts và GET /posts/:slug"
+     },
+     "detail": {
+      "en": "Published only. Detail 404s for drafts and unknown slugs. Seed one published post and one draft so you can prove the filter.",
+      "vi": "Chỉ lấy published. Detail trả 404 với draft và slug lạ. Seed một post published và một draft để chứng minh filter."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "curl 'localhost:4000/api/posts'\ncurl 'localhost:4000/api/posts/a-draft-slug'"
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "A draft post is invisible on `GET /posts` and `GET /posts/:slug` returns 404.",
+     "vi": "Post draft không hiện trên `GET /posts` và `GET /posts/:slug` trả 404."
+    },
+    {
+     "en": "Invalid block JSON is rejected at seed or write time (zod error, not a 500 HTML dump).",
+     "vi": "JSON block sai bị từ chối lúc seed hoặc lúc ghi (lỗi zod, không phải dump HTML 500)."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Rendering raw HTML from content. Allow block types only and never `dangerouslySetInnerHTML`.",
+     "vi": "Render HTML thô từ content. Chỉ cho phép các block type, không bao giờ `dangerouslySetInnerHTML`."
+    }
+   ],
+   "commit": "feat(api): posts with blocks"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p13",
+   "milestone": "m2",
+   "order": 13,
+   "title": {
+    "en": "Query params: pagination, sort, search",
+    "vi": "Query param: pagination, sort, search"
+   },
+   "summary": {
+    "en": "Lists grow, and cursor pagination keeps them fast and stable.",
+    "vi": "List sẽ dài ra, cursor pagination giữ chúng nhanh và ổn định."
+   },
+   "estimateMin": 120,
+   "prereqs": [
+    "p12"
+   ],
+   "tags": [
+    "pagination",
+    "cursor",
+    "zod"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Cursor pagination",
+      "vi": "Cursor pagination"
+     },
+     "explain": {
+      "en": "Each page returns `nextCursor`. The next request says \"give me rows after this id/date\". New inserts do not shift page 2 like offset pagination does.",
+      "vi": "Mỗi trang trả `nextCursor`. Request sau nói “cho hàng sau id/date này”. Hàng insert mới không đẩy lệch trang 2 như offset pagination."
+     }
+    },
+    {
+     "term": {
+      "en": "ListQuery",
+      "vi": "ListQuery"
+     },
+     "explain": {
+      "en": "One zod object in packages/shared: `cursor`, `limit` (default 20, max 50), `sort`, `q`, `tag`. Both posts and projects parse with it.",
+      "vi": "Một object zod trong packages/shared: `cursor`, `limit` (mặc định 20, tối đa 50), `sort`, `q`, `tag`. Cả posts và projects đều parse bằng nó."
+     }
+    },
+    {
+     "term": {
+      "en": "Offset pagination",
+      "vi": "Offset pagination"
+     },
+     "explain": {
+      "en": "`LIMIT 20 OFFSET 40` looks simple and breaks when rows are inserted above the window (duplicates/gaps). Skip it for these lists.",
+      "vi": "`LIMIT 20 OFFSET 40` trông đơn giản, nhưng gãy khi có hàng insert phía trên đoạn đang lấy (trùng hoặc hổng). Đừng dùng cho các list này."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "networking",
+     "label": {
+      "en": "Networking",
+      "vi": "Mạng và giao thức"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "http-basics-status-codes",
+     "label": {
+      "en": "HTTP basics and status codes",
+      "vi": "HTTP basics và status code"
+     }
+    },
+    {
+     "id": "api-caching",
+     "label": {
+      "en": "API caching trade-offs",
+      "vi": "Trade-off khi cache API"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Shared ListQuery zod",
+      "vi": "ListQuery zod dùng chung"
+     },
+     "detail": {
+      "en": "In packages/shared, define `cursor` (string optional), `limit` (int, 1–50), `sort` (allowlist), `q`, `tag`. Wire it through ZodValidationPipe.",
+      "vi": "Trong packages/shared, định nghĩa `cursor` (string tùy chọn), `limit` (int, 1–50), `sort` (allowlist), `q`, `tag`. Gắn qua ZodValidationPipe."
+     }
+    },
+    {
+     "title": {
+      "en": "Apply to posts and projects",
+      "vi": "Áp dụng cho posts và projects"
+     },
+     "detail": {
+      "en": "Response shape `{ items, nextCursor }`. `nextCursor` is null on the last page. Search `q` matches title/excerpt; `tag` filters by tag slug.",
+      "vi": "Shape response `{ items, nextCursor }`. `nextCursor` là null ở trang cuối. Search `q` khớp title/excerpt; `tag` lọc theo slug tag."
+     },
+     "code": {
+      "lang": "json",
+      "text": "{ \"items\": [], \"nextCursor\": null }"
+     }
+    },
+    {
+     "title": {
+      "en": "Prove paging and the limit cap",
+      "vi": "Chứng tỏ paging và trần limit"
+     },
+     "detail": {
+      "en": "Seed enough posts to fill two pages. Walk cursors: no duplicate ids, no gaps. `limit=500` must 400 via zod, not silently cap.",
+      "vi": "Seed đủ post để phủ hai trang. Đi lần lượt theo cursor: không trùng id, không hổng. `limit=500` phải ra 400 nhờ zod, không lặng lẽ cắt."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "curl 'localhost:4000/api/posts?limit=2'\ncurl 'localhost:4000/api/posts?limit=500'"
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Paging through all posts returns no duplicates or gaps.",
+     "vi": "Lướt hết post không trùng, không hổng hàng."
+    },
+    {
+     "en": "`limit=500` gives a 400 with a field error on `limit`.",
+     "vi": "`limit=500` trả 400 với field error trên `limit`."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Offset pagination on changing data (duplicates and skipped rows).",
+     "vi": "Offset pagination trên data đang đổi (trùng hàng và bỏ sót hàng)."
+    }
+   ],
+   "commit": "feat(api): list query contract"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p14",
+   "milestone": "m2",
+   "order": 14,
+   "title": {
+    "en": "Public pages",
+    "vi": "Trang public"
+   },
+   "summary": {
+    "en": "The visitor-facing site is now fully driven by data.",
+    "vi": "Site phía visitor giờ chạy hoàn toàn bằng data."
+   },
+   "estimateMin": 240,
+   "prereqs": [
+    "p09",
+    "p13"
+   ],
+   "tags": [
+    "nextjs",
+    "a11y",
+    "motion"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "BlockRenderer",
+      "vi": "BlockRenderer"
+     },
+     "explain": {
+      "en": "A component that switches on block `type` and renders tokens-only UI. Case study sections and posts both pass their `blocks` through it.",
+      "vi": "Component switch theo `type` của block và render UI chỉ dùng token. Section case study và post đều đẩy `blocks` qua nó."
+     }
+    },
+    {
+     "term": {
+      "en": "useInfiniteQuery",
+      "vi": "useInfiniteQuery"
+     },
+     "explain": {
+      "en": "TanStack Query helper for `{ items, nextCursor }`. `getNextPageParam` returns `nextCursor`. Pair it with a \"Load more\" button that is a real `<button>`.",
+      "vi": "Helper TanStack Query cho `{ items, nextCursor }`. `getNextPageParam` trả `nextCursor`. Ghép với nút “Load more” là `<button>` thật."
+     }
+    },
+    {
+     "term": {
+      "en": "v2 rich layer",
+      "vi": "v2 rich layer"
+     },
+     "explain": {
+      "en": "Spec §3.4 / §6 v2: section reveal, card hover lift, reduced-motion fallback (content visible, no transform). Atmosphere only on home hero/CTA, not behind prose.",
+      "vi": "Spec §3.4 / §6 v2: reveal section, hover lift trên card, fallback reduced-motion (nội dung hiện, không transform). Atmosphere chỉ ở hero/CTA trang chủ, không nằm sau đoạn prose."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "nextjs",
+     "label": {
+      "en": "Next.js",
+      "vi": "Next.js"
+     }
+    },
+    {
+     "slug": "accessibility",
+     "label": {
+      "en": "Accessibility",
+      "vi": "Khả năng truy cập"
+     }
+    },
+    {
+     "slug": "performance",
+     "label": {
+      "en": "Performance",
+      "vi": "Hiệu năng"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "next-app-router-rsc",
+     "label": {
+      "en": "React Server Components and the App Router",
+      "vi": "React Server Components và App Router"
+     }
+    },
+    {
+     "id": "accessibility-forms-keyboard",
+     "label": {
+      "en": "Accessibility basics for forms and interactive UI",
+      "vi": "Accessibility cơ bản cho form và interactive UI"
+     }
+    },
+    {
+     "id": "core-web-vitals",
+     "label": {
+      "en": "Core Web Vitals",
+      "vi": "Core Web Vitals"
+     }
+    }
+   ],
+   "specRefs": [
+    "§5",
+    "§5.2",
+    "§5.3",
+    "§5.4",
+    "§5.5",
+    "§3.4",
+    "§6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "About, projects list, project case study",
+      "vi": "About, list project, case study project"
+     },
+     "detail": {
+      "en": "Build `/about`, `/projects`, `/projects/[slug]` from the API (spec §5.2–§5.4). Case study uses BlockRenderer plus key-facts / fact chips when those fields exist. 404 via `notFound()` for unknown slugs.",
+      "vi": "Làm `/about`, `/projects`, `/projects/[slug]` từ API (spec §5.2–§5.4). Case study dùng BlockRenderer kèm key-facts / fact chips khi có field đó. Slug lạ thì 404 qua `notFound()`."
+     }
+    },
+    {
+     "title": {
+      "en": "Blog list and post",
+      "vi": "List blog và post"
+     },
+     "detail": {
+      "en": "Build `/blog` and `/blog/[slug]` with BlockRenderer. Lists use `useInfiniteQuery` against the ListQuery contract. Section headings come from SiteSettings / PageSection, not string literals.",
+      "vi": "Làm `/blog` và `/blog/[slug]` với BlockRenderer. List dùng `useInfiniteQuery` theo contract ListQuery. Heading của section lấy từ SiteSettings / PageSection, không phải string literal."
+     }
+    },
+    {
+     "title": {
+      "en": "v2 motion + reduced-motion fallback",
+      "vi": "Motion v2 + fallback reduced-motion"
+     },
+     "detail": {
+      "en": "Add the spec §3.4 reveal (opacity + translateY, once) on home/about sections and card hover lift. Under `prefers-reduced-motion`, content is visible immediately and hover does not lift.",
+      "vi": "Thêm reveal spec §3.4 (opacity + translateY, một lần) cho section home/about và hover lift trên card. Khi `prefers-reduced-motion`, nội dung hiện ngay và hover không lift."
+     }
+    },
+    {
+     "title": {
+      "en": "Keyboard pass and content grep",
+      "vi": "Lượt bàn phím và grep nội dung"
+     },
+     "detail": {
+      "en": "Tab through header, cards, and post. Focus rings from tokens. Grep apps/web for CV strings (Particula, LitGroup, Samsung SDS, Parker Vu): 0 hits in component files.",
+      "vi": "Tab qua header, card và post. Focus ring lấy từ token. Grep apps/web tìm chuỗi CV (Particula, LitGroup, Samsung SDS, Parker Vu): 0 hits trong file component."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "rg -n \"Particula|LitGroup|Samsung SDS|Parker Vu\" apps/web --glob '!*.md'"
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Every text on these pages traces to an API field (grep the web app for CV strings: 0 hits).",
+     "vi": "Mọi chữ trên các trang này đều tới từ field API (grep web app tìm chuỗi CV: 0 hits)."
+    },
+    {
+     "en": "Keyboard-only navigation works (Tab order, visible focus, cards activatable with Enter).",
+     "vi": "Điều hướng chỉ bằng bàn phím hoạt động (thứ tự Tab, focus nhìn thấy, card kích hoạt bằng Enter)."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Hard-coding section headings. They also come from `SiteSettings` / `PageSection`.",
+     "vi": "Hard-code heading của section. Chúng cũng lấy từ `SiteSettings` / `PageSection`."
+    }
+   ],
+   "commit": "feat(web): public pages from api"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p15",
+   "milestone": "m3",
+   "order": 15,
+   "title": {
+    "en": "Write API",
+    "vi": "API ghi"
+   },
+   "summary": {
+    "en": "The admin CMS needs POST, PATCH and DELETE with the same contracts.",
+    "vi": "CMS admin cần POST, PATCH và DELETE với cùng contract."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p13"
+   ],
+   "tags": [
+    "crud",
+    "http",
+    "zod"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "POST / PATCH / DELETE",
+      "vi": "POST / PATCH / DELETE"
+     },
+     "explain": {
+      "en": "POST creates (201 + body). PATCH updates some fields (200 + body). DELETE removes or archives (204 empty). PUT would replace the whole row — skip it.",
+      "vi": "POST tạo mới (201 + body). PATCH sửa một số field (200 + body). DELETE xóa hoặc archive (204 trống). PUT sẽ thay cả hàng, đừng dùng."
+     }
+    },
+    {
+     "term": {
+      "en": "P2002 → 409",
+      "vi": "P2002 → 409"
+     },
+     "explain": {
+      "en": "Prisma code P2002 is a unique constraint (duplicate slug). Map it to HTTP 409 and a field error on `slug`, not a 500.",
+      "vi": "Mã Prisma P2002 là unique constraint (slug trùng). Map sang HTTP 409 và field error trên `slug`, không phải 500."
+     }
+    },
+    {
+     "term": {
+      "en": "Partial schema",
+      "vi": "Partial schema"
+     },
+     "explain": {
+      "en": "Create uses the full zod input. PATCH uses `.partial()` so omitted fields stay unchanged.",
+      "vi": "Create dùng full zod input. PATCH dùng `.partial()` nên field không gửi thì giữ nguyên."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "networking",
+     "label": {
+      "en": "Networking",
+      "vi": "Mạng và giao thức"
+     }
+    },
+    {
+     "slug": "security",
+     "label": {
+      "en": "Security",
+      "vi": "Bảo mật"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "http-basics-status-codes",
+     "label": {
+      "en": "HTTP basics and status codes",
+      "vi": "HTTP basics và status code"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.5",
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Shared input DTOs",
+      "vi": "DTO input dùng chung"
+     },
+     "detail": {
+      "en": "In packages/shared, add create/patch schemas for projects, posts, skills, tags, and experience. Patch schemas are partial. Status and slug rules live here, not in the controller.",
+      "vi": "Trong packages/shared, thêm schema create/patch cho project, post, skill, tag và experience. Schema patch là partial. Rule status và slug nằm ở đây, không nằm trong controller."
+     }
+    },
+    {
+     "title": {
+      "en": "Create, update, delete routes",
+      "vi": "Route create, update, delete"
+     },
+     "detail": {
+      "en": "POST / PATCH / DELETE for projects, posts, skills, tags, experience. Return 201 / 200 / 204. Catch P2002 and respond 409 `{ error: { code, message, fields: { slug } } }`.",
+      "vi": "POST / PATCH / DELETE cho project, post, skill, tag, experience. Trả 201 / 200 / 204. Bắt P2002 và trả 409 `{ error: { code, message, fields: { slug } } }`."
+     }
+    },
+    {
+     "title": {
+      "en": "api.http rest file",
+      "vi": "File REST api.http"
+     },
+     "detail": {
+      "en": "Add apps/api/api.http with one request per route (happy path + duplicate slug). REST Client / curl against it so you do not click around in Studio for writes.",
+      "vi": "Thêm apps/api/api.http với một request mỗi route (happy path + slug trùng). Dùng REST Client / curl, đừng click lung tung trong Studio để ghi."
+     },
+     "code": {
+      "lang": "text",
+      "text": "### duplicate slug\nPOST http://localhost:4000/api/projects\nContent-Type: application/json\n\n{ \"slug\": \"particula-v2\", \"titleEn\": \"Again\" }"
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "The REST client file `api.http` exercises every create/update/delete route.",
+     "vi": "File REST client `api.http` chạy qua mọi route create/update/delete."
+    },
+    {
+     "en": "A duplicate slug returns 409 with a field error on `slug`.",
+     "vi": "Slug trùng trả 409 với field error trên `slug`."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Using PUT semantics for partial updates. Use PATCH with partial schemas.",
+     "vi": "Dùng semantics PUT cho update một phần. Hãy dùng PATCH với schema partial."
+    }
+   ],
+   "commit": "feat(api): crud endpoints"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p16",
+   "milestone": "m3",
+   "order": 16,
+   "title": {
+    "en": "Transactions + ordering",
+    "vi": "Transaction + thứ tự"
+   },
+   "summary": {
+    "en": "Multi-row changes such as reordering or replacing tags must succeed or fail together.",
+    "vi": "Thay đổi nhiều hàng, kiểu reorder hay thay tag, phải cùng thành công hoặc cùng fail."
+   },
+   "estimateMin": 120,
+   "prereqs": [
+    "p15"
+   ],
+   "tags": [
+    "transactions",
+    "prisma",
+    "ordering"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Transaction",
+      "vi": "Transaction"
+     },
+     "explain": {
+      "en": "Several writes that commit as one. If any write throws, none of them stay. Use `prisma.$transaction`.",
+      "vi": "Nhiều lệnh ghi commit như một. Nếu một lệnh throw thì không lệnh nào được giữ. Dùng `prisma.$transaction`."
+     }
+    },
+    {
+     "term": {
+      "en": "tx client",
+      "vi": "tx client"
+     },
+     "explain": {
+      "en": "The callback receives `tx`. Every query inside must use `tx`, not the outer `prisma`. Awaiting `prisma.*` inside the callback is outside the transaction.",
+      "vi": "Callback nhận `tx`. Mọi query bên trong phải dùng `tx`, không dùng `prisma` bên ngoài. Await `prisma.*` trong callback là nằm ngoài transaction."
+     }
+    },
+    {
+     "term": {
+      "en": "Tag replacement",
+      "vi": "Thay tag"
+     },
+     "explain": {
+      "en": "Delete old join rows and insert the new set in the same transaction so you never persist a half-updated tag list.",
+      "vi": "Xóa hàng join cũ và insert bộ mới trong cùng transaction để không bao giờ persist list tag dở dang."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "system-design",
+     "label": {
+      "en": "System Design",
+      "vi": "Thiết kế hệ thống"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "debug-production-fe-be",
+     "label": {
+      "en": "Debugging a production issue (FE vs BE)",
+      "vi": "Debug production issue (FE vs BE)"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "PATCH /projects/order",
+      "vi": "PATCH /projects/order"
+     },
+     "detail": {
+      "en": "Accept an ordered list of ids. Inside `$transaction`, write `sortOrder` 0..n-1 for each. Reject unknown ids before writing.",
+      "vi": "Nhận list id đã sắp xếp. Trong `$transaction`, ghi `sortOrder` 0..n-1 cho từng id. Từ chối id lạ trước khi ghi."
+     },
+     "code": {
+      "lang": "ts",
+      "text": "await prisma.$transaction(async (tx) => {\n  for (const [index, id] of ids.entries()) {\n    await tx.project.update({ where: { id }, data: { sortOrder: index } });\n  }\n});"
+     }
+    },
+    {
+     "title": {
+      "en": "Replace tags in a transaction",
+      "vi": "Thay tag trong transaction"
+     },
+     "detail": {
+      "en": "On PATCH project/post tags: delete join rows, insert the new set, using `tx`. One failure rolls both steps back.",
+      "vi": "Khi PATCH tag của project/post: xóa hàng join, insert bộ mới, dùng `tx`. Một bước fail thì cả hai rollback."
+     }
+    },
+    {
+     "title": {
+      "en": "Forced-failure test",
+      "vi": "Test cố ý fail"
+     },
+     "detail": {
+      "en": "Write a test that throws after the first update inside the transaction. Assert sortOrder values are unchanged. This is the proof, not a comment.",
+      "vi": "Viết test throw sau update đầu trong transaction. Assert sortOrder không đổi. Đây là bằng chứng, không phải comment."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "`pnpm test` for the forced-failure case leaves sortOrder and tags unchanged.",
+     "vi": "`pnpm test` cho case cố ý fail thì sortOrder và tag không đổi."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Running awaits outside the transaction client (`tx`). Those writes commit even if the transaction rolls back.",
+     "vi": "Await nằm ngoài transaction client (`tx`). Những lệnh ghi đó vẫn commit dù transaction rollback."
+    }
+   ],
+   "commit": "feat(api): transactional reorder"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p17",
+   "milestone": "m3",
+   "order": 17,
+   "title": {
+    "en": "Indexes + EXPLAIN",
+    "vi": "Index + EXPLAIN"
+   },
+   "summary": {
+    "en": "Indexes make the queries you actually run fast, and EXPLAIN proves it.",
+    "vi": "Index làm nhanh những query bạn đang chạy, và EXPLAIN chứng minh điều đó."
+   },
+   "estimateMin": 90,
+   "prereqs": [
+    "p16"
+   ],
+   "tags": [
+    "indexes",
+    "explain",
+    "mysql"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Index",
+      "vi": "Index"
+     },
+     "explain": {
+      "en": "A lookup structure on a column (or pair of columns). `WHERE` and `ORDER BY` on indexed columns can skip a full table scan.",
+      "vi": "Cấu trúc tìm kiếm trên một (hoặc một cặp) cột. `WHERE` và `ORDER BY` trên cột có index có thể bỏ full table scan."
+     }
+    },
+    {
+     "term": {
+      "en": "EXPLAIN",
+      "vi": "EXPLAIN"
+     },
+     "explain": {
+      "en": "MySQL shows how it will run a query. You want `ref` / `range` on your index, not `ALL` (full scan) for the list query.",
+      "vi": "MySQL cho biết nó sẽ chạy query thế nào. Bạn muốn `ref` / `range` trên index, không phải `ALL` (full scan) cho câu list."
+     }
+    },
+    {
+     "term": {
+      "en": "Composite index",
+      "vi": "Composite index"
+     },
+     "explain": {
+      "en": "`@@index([status, publishedAt])` matches `WHERE status = PUBLISHED ORDER BY publishedAt`. Extra indexes slow writes — only add what EXPLAIN asked for.",
+      "vi": "`@@index([status, publishedAt])` khớp `WHERE status = PUBLISHED ORDER BY publishedAt`. Index thừa làm chậm ghi, chỉ thêm cái EXPLAIN cần."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "performance",
+     "label": {
+      "en": "Performance",
+      "vi": "Hiệu năng"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "n-plus-one",
+     "label": {
+      "en": "N+1 query problem",
+      "vi": "Vấn đề N+1 query"
+     }
+    },
+    {
+     "id": "debug-performance-fe-be",
+     "label": {
+      "en": "Debugging a performance issue",
+      "vi": "Debug performance issue"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.5",
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "EXPLAIN the list and tag filter",
+      "vi": "EXPLAIN câu list và filter tag"
+     },
+     "detail": {
+      "en": "In the MySQL shell, EXPLAIN the post list (`status` + `publishedAt`) and the tag/skill filter. Save the before output in docs/sql-notes.sql.",
+      "vi": "Trong shell MySQL, EXPLAIN câu list post (`status` + `publishedAt`) và filter tag/skill. Lưu output trước khi sửa vào docs/sql-notes.sql."
+     },
+     "code": {
+      "lang": "sql",
+      "text": "EXPLAIN SELECT id, slug FROM post\nWHERE status = 'PUBLISHED'\nORDER BY publishedAt DESC\nLIMIT 20;"
+     }
+    },
+    {
+     "title": {
+      "en": "Add @@index and unique slugs",
+      "vi": "Thêm @@index và slug unique"
+     },
+     "detail": {
+      "en": "On Post: `@@index([status, publishedAt])`. Keep `slug` unique on Post and Project (already there). Migrate — new file, never edit old ones.",
+      "vi": "Trên Post: `@@index([status, publishedAt])`. Giữ `slug` unique trên Post và Project (đã có). Migrate: file mới, không sửa file cũ."
+     }
+    },
+    {
+     "title": {
+      "en": "EXPLAIN again and compare",
+      "vi": "EXPLAIN lại và so sánh"
+     },
+     "detail": {
+      "en": "Re-run the same EXPLAIN. Note `key` and `type` after vs before. Paste both into docs/sql-notes.sql with one sentence on why you did not index every column.",
+      "vi": "Chạy lại đúng câu EXPLAIN. Ghi `key` và `type` sau vs trước. Dán cả hai vào docs/sql-notes.sql kèm một câu vì sao không index mọi cột."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "EXPLAIN shows index use (no full scan `ALL`) for the published post list query.",
+     "vi": "EXPLAIN cho thấy dùng index (không full scan `ALL`) cho câu list post published."
+    },
+    {
+     "en": "Before/after notes are saved in `docs/sql-notes.sql`.",
+     "vi": "Ghi chú trước/sau được lưu trong `docs/sql-notes.sql`."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Indexing every column, which slows writes and bloats the schema. Index the queries you run.",
+     "vi": "Index mọi cột, làm chậm ghi và phình schema. Chỉ index các query bạn chạy."
+    }
+   ],
+   "commit": "perf(db): indexes for list queries"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p18",
+   "milestone": "m4",
+   "order": 18,
+   "title": {
+    "en": "Users, argon2, MySQL sessions",
+    "vi": "User, argon2, session MySQL"
+   },
+   "summary": {
+    "en": "Server sessions are the simplest safe login, and logout really logs out.",
+    "vi": "Session trên server là cách login an toàn dễ nhất, và logout là logout thật."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p15"
+   ],
+   "tags": [
+    "auth",
+    "sessions",
+    "argon2"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Session row",
+      "vi": "Hàng session"
+     },
+     "explain": {
+      "en": "Logged in = a `Session` row exists. The browser only holds an httpOnly cookie with a random id. The DB stores a hash of that id, plus `userId` and `expiresAt`.",
+      "vi": "Đã login = còn một hàng `Session`. Browser chỉ giữ cookie httpOnly với id ngẫu nhiên. DB lưu hash của id đó, kèm `userId` và `expiresAt`."
+     }
+    },
+    {
+     "term": {
+      "en": "argon2id",
+      "vi": "argon2id"
+     },
+     "explain": {
+      "en": "A password hash. You never store the raw password. Verify on login by hashing the attempt and comparing.",
+      "vi": "Hash mật khẩu. Không bao giờ lưu mật khẩu thô. Lúc login hash phần nhập vào rồi so sánh."
+     }
+    },
+    {
+     "term": {
+      "en": "Cookie flags",
+      "vi": "Cookie flags"
+     },
+     "explain": {
+      "en": "`httpOnly` (JS cannot read it), `Secure` (HTTPS only in prod), `SameSite=Lax` (sent on top-level GET, not on CSRF POSTs from other sites).",
+      "vi": "`httpOnly` (JS không đọc được), `Secure` (chỉ HTTPS trên prod), `SameSite=Lax` (gửi kèm GET top-level, không gửi kèm CSRF POST từ site khác)."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "security",
+     "label": {
+      "en": "Security",
+      "vi": "Bảo mật"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "auth-token-storage",
+     "label": {
+      "en": "Where should auth tokens live on the frontend?",
+      "vi": "Auth token nên được lưu ở đâu phía frontend?"
+     }
+    },
+    {
+     "id": "jwt-not-localstorage",
+     "label": {
+      "en": "Why not store JWTs in LocalStorage?",
+      "vi": "Vì sao không nên lưu JWT trong LocalStorage?"
+     }
+    },
+    {
+     "id": "cookies-local-session-storage",
+     "label": {
+      "en": "Cookies vs LocalStorage vs SessionStorage",
+      "vi": "Cookies vs LocalStorage vs SessionStorage"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.5",
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "User and Session models",
+      "vi": "Model User và Session"
+     },
+     "detail": {
+      "en": "User: login name unique, `passwordHash`, `role` (`ADMIN` | `EDITOR`), `isActive`. Session: `tokenHash` unique, `userId`, `expiresAt`, optional ip/ua hash. Migrate. No JWT.",
+      "vi": "User: tên login unique, `passwordHash`, `role` (`ADMIN` | `EDITOR`), `isActive`. Session: `tokenHash` unique, `userId`, `expiresAt`, hash ip/ua tùy chọn. Migrate. Không JWT."
+     }
+    },
+    {
+     "title": {
+      "en": "login, logout, me",
+      "vi": "login, logout, me"
+     },
+     "detail": {
+      "en": "`POST /auth/login` verifies argon2id, inserts a Session, sets the cookie. POST a gitignored `login.json` built from `ADMIN_PASSWORD` in `.env` (never commit that file). `GET /auth/me` returns the user DTO (never `passwordHash`); `POST /auth/logout` deletes the session row and clears the cookie.",
+      "vi": "`POST /auth/login` kiểm tra argon2id, insert Session, set cookie. POST file `login.json` (gitignore, dựng từ `ADMIN_PASSWORD` trong `.env`, đừng commit file đó). `GET /auth/me` trả DTO user (không bao giờ `passwordHash`); `POST /auth/logout` xóa hàng session và xóa cookie."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "curl -i -c cookies.txt -X POST localhost:4000/api/auth/login \\\n  -H 'content-type: application/json' \\\n  -d @login.json\ncurl -b cookies.txt localhost:4000/api/auth/me"
+     }
+    },
+    {
+     "title": {
+      "en": "Seed admin from env",
+      "vi": "Seed admin từ env"
+     },
+     "detail": {
+      "en": "A seed script reads `ADMIN_PASSWORD` from env (gitignore `.env`). Hash with argon2id before insert. Do not commit a password or a personal inbox address.",
+      "vi": "Script seed đọc `ADMIN_PASSWORD` từ env (gitignore `.env`). Hash argon2id trước khi insert. Không commit mật khẩu hay địa chỉ hộp thư cá nhân."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Login sets the httpOnly cookie, and `GET /auth/me` returns the user DTO.",
+     "vi": "Login set cookie httpOnly, và `GET /auth/me` trả DTO user."
+    },
+    {
+     "en": "Logout deletes the session row; an expired session gives 401.",
+     "vi": "Logout xóa hàng session; session hết hạn trả 401."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Logging passwords or raw session ids. Store only the hash of the session id.",
+     "vi": "Log mật khẩu hoặc session id thô. Chỉ lưu hash của session id."
+    }
+   ],
+   "commit": "feat(api): session auth"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p19",
+   "milestone": "m4",
+   "order": 19,
+   "title": {
+    "en": "Guards, roles, CSRF",
+    "vi": "Guard, role, CSRF"
+   },
+   "summary": {
+    "en": "Only the admin can write, and cookies need CSRF protection.",
+    "vi": "Chỉ admin được ghi, và cookie cần chống CSRF."
+   },
+   "estimateMin": 120,
+   "prereqs": [
+    "p18"
+   ],
+   "tags": [
+    "guards",
+    "csrf",
+    "throttle"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Guard",
+      "vi": "Guard"
+     },
+     "explain": {
+      "en": "Nest code that runs before the controller and says yes/no. SessionGuard loads the session; RolesGuard checks `ADMIN` / `EDITOR`.",
+      "vi": "Code Nest chạy trước controller và nói yes/no. SessionGuard load session; RolesGuard check `ADMIN` / `EDITOR`."
+     }
+    },
+    {
+     "term": {
+      "en": "CSRF double-submit",
+      "vi": "CSRF double-submit"
+     },
+     "explain": {
+      "en": "A random token in a readable cookie plus the same value in a header. The server rejects mutating requests when they differ. Extra to SameSite=Lax.",
+      "vi": "Token ngẫu nhiên trong cookie đọc được, kèm cùng giá trị trên header. Server từ chối request ghi khi chúng khác nhau. Bổ sung cho SameSite=Lax."
+     }
+    },
+    {
+     "term": {
+      "en": "@Public()",
+      "vi": "@Public()"
+     },
+     "explain": {
+      "en": "Make the guard global, then opt out login, health, and public GET with `@Public()`. New write routes are protected by default.",
+      "vi": "Để guard chạy global, rồi opt out login, health và GET public bằng `@Public()`. Route ghi mới mặc định đã được bảo vệ."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "security",
+     "label": {
+      "en": "Security",
+      "vi": "Bảo mật"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "security-xss-csrf-csp",
+     "label": {
+      "en": "XSS, CSRF, and CSP in frontend terms",
+      "vi": "XSS, CSRF và CSP theo góc nhìn frontend"
+     }
+    },
+    {
+     "id": "csrf-vs-xss",
+     "label": {
+      "en": "How CSRF and XSS differ with cookie auth",
+      "vi": "CSRF và XSS khác nhau thế nào với cookie auth"
+     }
+    },
+    {
+     "id": "jwt-login-flow",
+     "label": {
+      "en": "Login flow (contrast with sessions)",
+      "vi": "Luồng login (đối chiếu với session)"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "SessionGuard and RolesGuard",
+      "vi": "SessionGuard và RolesGuard"
+     },
+     "detail": {
+      "en": "Register both globally. `@Roles('ADMIN')` on publish/delete if EDITOR should not. Write routes without a session return 401; wrong role returns 403.",
+      "vi": "Đăng ký cả hai global. `@Roles('ADMIN')` trên publish/delete nếu EDITOR không được phép. Route ghi không session trả 401; sai role trả 403."
+     }
+    },
+    {
+     "title": {
+      "en": "CSRF double-submit header",
+      "vi": "Header CSRF double-submit"
+     },
+     "detail": {
+      "en": "Issue a CSRF token on login / GET /auth/me. Require it on POST/PATCH/DELETE (header name documented in README). Missing or mismatch → 403.",
+      "vi": "Cấp CSRF token lúc login / GET /auth/me. Bắt buộc trên POST/PATCH/DELETE (tên header ghi trong README). Thiếu hoặc lệch → 403."
+     }
+    },
+    {
+     "title": {
+      "en": "Throttle login",
+      "vi": "Throttle login"
+     },
+     "detail": {
+      "en": "Add `@nestjs/throttler` on `POST /auth/login`. Five failures in a minute are allowed; the sixth returns 429. POST a gitignored `login-bad.json` whose password does not match `ADMIN_PASSWORD` (never commit that file).",
+      "vi": "Thêm `@nestjs/throttler` trên `POST /auth/login`. Năm lần fail trong một phút vẫn được; lần thứ sáu trả 429. POST file `login-bad.json` đã gitignore, mật khẩu không khớp `ADMIN_PASSWORD` (đừng commit file đó)."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "for i in 1 2 3 4 5 6; do curl -s -o /dev/null -w \"%{http_code}\\n\" \\\n  -X POST localhost:4000/api/auth/login \\\n  -H 'content-type: application/json' \\\n  -d @login-bad.json; done"
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Writes without a session return 401; writes without the CSRF header return 403.",
+     "vi": "Ghi không có session thì trả 401; ghi không có header CSRF thì trả 403."
+    },
+    {
+     "en": "The 6th bad login in a minute returns 429.",
+     "vi": "Lần login sai thứ 6 trong một phút trả 429."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Guarding the controller but forgetting new routes. Make the guard global and add a `@Public()` opt-out.",
+     "vi": "Chỉ gắn guard lên controller rồi quên route mới. Để guard global và thêm `@Public()` để opt-out."
+    }
+   ],
+   "commit": "feat(api): guards + csrf + throttle"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p20",
+   "milestone": "m4",
+   "order": 20,
+   "title": {
+    "en": "Admin shell (Linear-style)",
+    "vi": "Shell admin (kiểu Linear)"
+   },
+   "summary": {
+    "en": "One dense, keyboard-first shell is reused by every admin page.",
+    "vi": "Một shell dày, ưu tiên bàn phím, dùng lại cho mọi trang admin."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p09",
+    "p19"
+   ],
+   "tags": [
+    "admin",
+    "cmdk",
+    "sidebar"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Protected layout",
+      "vi": "Layout được bảo vệ"
+     },
+     "explain": {
+      "en": "The `/admin` layout calls `GET /auth/me` on the server. No session → redirect to `/admin/login`. Client-only checks flash the dashboard first.",
+      "vi": "Layout `/admin` gọi `GET /auth/me` trên server. Không session thì redirect tới `/admin/login`. Check chỉ trên client sẽ flash dashboard trước."
+     }
+    },
+    {
+     "term": {
+      "en": "Command palette (cmdk)",
+      "vi": "Command palette (cmdk)"
+     },
+     "explain": {
+      "en": "Cmd-K / Ctrl-K opens a searchable list of admin routes. Keyboard-first, like Linear. shadcn `command` inside a `dialog`.",
+      "vi": "Cmd-K / Ctrl-K mở list route admin có search. Ưu tiên bàn phím, giống Linear. shadcn `command` trong `dialog`."
+     }
+    },
+    {
+     "term": {
+      "en": "Admin vs public chrome",
+      "vi": "Chrome admin vs public"
+     },
+     "explain": {
+      "en": "Spec §5.11: no atmosphere, orbs, or marquee in `/admin`. Dense sidebar, `text-ui` sizes, tinted dark tokens only.",
+      "vi": "Spec §5.11: không atmosphere, orb hay marquee trong `/admin`. Sidebar dày, cỡ `text-ui`, chỉ dùng token dark đã nhuốm."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "react",
+     "label": {
+      "en": "React",
+      "vi": "React"
+     }
+    },
+    {
+     "slug": "accessibility",
+     "label": {
+      "en": "Accessibility",
+      "vi": "Khả năng truy cập"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "role-permission-ui",
+     "label": {
+      "en": "Role/permission handling in the UI",
+      "vi": "Role/permission handling trong UI"
+     }
+    },
+    {
+     "id": "accessibility-forms-keyboard",
+     "label": {
+      "en": "Accessibility basics for forms and interactive UI",
+      "vi": "Accessibility cơ bản cho form và interactive UI"
+     }
+    }
+   ],
+   "specRefs": [
+    "§5.7",
+    "§5.11"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Login page + protected /admin layout",
+      "vi": "Trang login + layout /admin được bảo vệ"
+     },
+     "detail": {
+      "en": "Build `/admin/login` (account + password, CSRF header on submit). The `/admin` layout server-checks `/auth/me` and redirects when logged out.",
+      "vi": "Làm `/admin/login` (tài khoản + mật khẩu, header CSRF lúc submit). Layout `/admin` check `/auth/me` trên server và redirect khi đã logout."
+     }
+    },
+    {
+     "title": {
+      "en": "shadcn sidebar + command palette",
+      "vi": "Sidebar shadcn + command palette"
+     },
+     "detail": {
+      "en": "Collapsible sidebar (`collapsible=\"icon\"`, `[` toggles). Cmd-K lists dashboard, posts, projects, messages. Focus returns to the opener on close.",
+      "vi": "Sidebar thu gọn (`collapsible=\"icon\"`, `[` để toggle). Cmd-K list dashboard, posts, projects, messages. Đóng xong focus trả về chỗ vừa mở."
+     }
+    },
+    {
+     "title": {
+      "en": "Dashboard counts from the API",
+      "vi": "Số liệu dashboard lấy từ API"
+     },
+     "detail": {
+      "en": "Spec §5.7 / §5.11: cards for post/project counts, inbox unread, content-health lines (projects without a domain, marquee needs 6+ skills). Numbers come from GET /admin/stats, not literals.",
+      "vi": "Spec §5.7 / §5.11: card đếm post/project, inbox chưa đọc, dòng content-health (project thiếu domain, marquee cần 6+ skill). Số liệu lấy từ GET /admin/stats, không hard-code."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Logged out, `/admin` redirects to login (server redirect, not a client flash).",
+     "vi": "Khi đã logout, `/admin` redirect sang login (redirect phía server, không flash phía client)."
+    },
+    {
+     "en": "Cmd-K navigates to an admin route, and dashboard counts match the API.",
+     "vi": "Cmd-K đi tới một route admin, và số trên dashboard khớp API."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Client-only auth checks. Check on the server in the layout.",
+     "vi": "Chỉ check auth trên client. Hãy check trên server trong layout."
+    }
+   ],
+   "commit": "feat(web): admin shell"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p21",
+   "milestone": "m4",
+   "order": 21,
+   "title": {
+    "en": "Admin tables",
+    "vi": "Table admin"
+   },
+   "summary": {
+    "en": "TanStack Table plus the list contract gives sorting, filtering and paging in one pattern.",
+    "vi": "TanStack Table kèm list contract cho sort, filter và paging trong một pattern."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p20",
+    "p13"
+   ],
+   "tags": [
+    "tanstack-table",
+    "admin",
+    "optimistic"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Server pagination",
+      "vi": "Pagination phía server"
+     },
+     "explain": {
+      "en": "The table sends `cursor`, `limit`, `sort`, `q` to the API. It does not sort the current page in the browser and pretend that is the full list.",
+      "vi": "Table gửi `cursor`, `limit`, `sort`, `q` lên API. Không sort trang hiện tại trên browser rồi coi như đó là cả list."
+     }
+    },
+    {
+     "term": {
+      "en": "Optimistic delete",
+      "vi": "Xóa optimistic"
+     },
+     "explain": {
+      "en": "Remove the row in the UI, fire DELETE, roll back if the request fails. Use Query cache + `onError` to put the row back.",
+      "vi": "Gỡ hàng trên UI, gọi DELETE, rollback nếu request fail. Dùng Query cache + `onError` để trả hàng về."
+     }
+    },
+    {
+     "term": {
+      "en": "Generic DataTable",
+      "vi": "DataTable generic"
+     },
+     "explain": {
+      "en": "One component parameterized by columns and a query key. Posts, projects, and messages are configs, not three copy-pasted tables.",
+      "vi": "Một component nhận columns và query key. Posts, projects và messages là config, không phải ba table copy-paste."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "react",
+     "label": {
+      "en": "React",
+      "vi": "React"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "table-50k-rows",
+     "label": {
+      "en": "Designing a table with 50,000 records",
+      "vi": "Thiết kế table 50.000 records"
+     }
+    },
+    {
+     "id": "dashboard-15-apis",
+     "label": {
+      "en": "Dashboard loading from many APIs",
+      "vi": "Dashboard load từ nhiều API"
+     }
+    }
+   ],
+   "specRefs": [
+    "§5.8",
+    "§5.11"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Build generic DataTable",
+      "vi": "Làm DataTable generic"
+     },
+     "detail": {
+      "en": "TanStack Table + shadcn `table`. Props: columns, query fn using ListQuery, row actions. Sticky header, compact density, empty and error states from spec §5.8.",
+      "vi": "TanStack Table + shadcn `table`. Props: columns, hàm query dùng ListQuery, row actions. Sticky header, density compact, empty và error state theo spec §5.8."
+     }
+    },
+    {
+     "title": {
+      "en": "Posts, projects, messages lists",
+      "vi": "List posts, projects, messages"
+     },
+     "detail": {
+      "en": "Three routes share DataTable. Sort, search `q`, and paging must show new Network requests (not only client filtering). Projects get a domain pill column (spec §5.11).",
+      "vi": "Ba route dùng chung DataTable. Sort, search `q` và paging phải hiện request Network mới (không chỉ filter client). Projects có cột domain pill (spec §5.11)."
+     }
+    },
+    {
+     "title": {
+      "en": "Optimistic delete with rollback",
+      "vi": "Xóa optimistic kèm rollback"
+     },
+     "detail": {
+      "en": "Row action Delete → confirm dialog → row disappears. Force the API to 500 (or unplug it) and confirm the row returns with a toast.",
+      "vi": "Row action Delete → dialog xác nhận → hàng biến mất. Cố tình cho API 500 (hoặc tắt API) và xác nhận hàng trở lại kèm toast."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Sort, search and paging hit the API (visible as new requests in the Network tab).",
+     "vi": "Sort, search và paging gọi API (thấy request mới trong tab Network)."
+    },
+    {
+     "en": "A failed delete restores the row (optimistic rollback).",
+     "vi": "Delete fail thì hàng trở lại (rollback optimistic)."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Client-side sorting over a single page of data. Sort is a query param.",
+     "vi": "Sort phía client trên một trang data. Sort là query param."
+    }
+   ],
+   "commit": "feat(web): admin data table"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p22",
+   "milestone": "m4",
+   "order": 22,
+   "title": {
+    "en": "Admin editor forms",
+    "vi": "Form editor admin"
+   },
+   "summary": {
+    "en": "Shared zod schemas plus TanStack Form give the same validation in the browser and on the server.",
+    "vi": "Schema zod dùng chung kèm TanStack Form cho cùng một validation trên browser và trên server."
+   },
+   "estimateMin": 240,
+   "prereqs": [
+    "p21",
+    "p12"
+   ],
+   "tags": [
+    "forms",
+    "zod",
+    "blocks",
+    "admin"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "TanStack Form + zod",
+      "vi": "TanStack Form + zod"
+     },
+     "explain": {
+      "en": "The form uses the same packages/shared schema as the API. Browser errors and server `fields` map onto the same inputs.",
+      "vi": "Form dùng cùng schema packages/shared với API. Lỗi trên browser và `fields` từ server map vào đúng input."
+     }
+    },
+    {
+     "term": {
+      "en": "Block editor list",
+      "vi": "List block editor"
+     },
+     "explain": {
+      "en": "Add / reorder / remove typed blocks. Reorder is a list, not a rich-text HTML dump. The payload is the JSON `blocks` column from p12.",
+      "vi": "Thêm / đổi chỗ / xóa block có type. Reorder là một list, không phải dump HTML rich-text. Payload là cột JSON `blocks` từ p12."
+     }
+    },
+    {
+     "term": {
+      "en": "Dirty guard",
+      "vi": "Dirty guard"
+     },
+     "explain": {
+      "en": "If the form has unsaved changes, navigating away asks to confirm. Save via mutation and `invalidateQueries` so the public page (and after p25, publish) refreshes.",
+      "vi": "Form còn thay đổi chưa lưu thì rời trang phải confirm. Save bằng mutation và `invalidateQueries` để trang public (và sau p25, lúc publish) refresh."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "typescript",
+     "label": {
+      "en": "TypeScript",
+      "vi": "TypeScript"
+     }
+    },
+    {
+     "slug": "react",
+     "label": {
+      "en": "React",
+      "vi": "React"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "ts-designing-api-props",
+     "label": {
+      "en": "Designing TypeScript types for APIs",
+      "vi": "Thiết kế type TypeScript cho API"
+     }
+    }
+   ],
+   "specRefs": [
+    "§5.9",
+    "§5.11"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Post and project editors",
+      "vi": "Editor post và project"
+     },
+     "detail": {
+      "en": "Fields from spec §5.9 / §5.11 v2: locale tabs EN/VI, slug, status, SEO, plus project \"Card & facts\" (domain, key facts 2–4 lines, fact chips ≤ 6). Import schemas from shared.",
+      "vi": "Field từ spec §5.9 / §5.11 v2: tab locale EN/VI, slug, status, SEO, kèm \"Card & facts\" của project (domain, key facts 2–4 dòng, fact chips ≤ 6). Import schema từ shared."
+     }
+    },
+    {
+     "title": {
+      "en": "Block editor (add, reorder, remove)",
+      "vi": "Block editor (thêm, đổi chỗ, xóa)"
+     },
+     "detail": {
+      "en": "A list of blocks with type picker, up/down, delete. Validate with the p12 zod union before save. No raw HTML field.",
+      "vi": "List block với picker type, lên/xuống, xóa. Validate bằng union zod ở p12 trước khi save. Không có field HTML thô."
+     }
+    },
+    {
+     "title": {
+      "en": "Dirty guard and save mutation",
+      "vi": "Dirty guard và mutation save"
+     },
+     "detail": {
+      "en": "Warn on navigation when dirty. Save PATCH, map server `fields` onto inputs, invalidate the entity query. Until p25, a saved published row can show on the public page immediately.",
+      "vi": "Cảnh báo khi rời trang nếu dirty. Save PATCH, map `fields` từ server lên input, invalidate query của entity. Trước p25, hàng published vừa save có thể hiện ngay trên trang public."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Submitting an empty EN title returns 400 and the field error maps onto that input.",
+     "vi": "Gửi title EN trống thì trả 400 và field error gắn đúng input đó."
+    },
+    {
+     "en": "Edits show on the public page after save (after p25: only on publish).",
+     "vi": "Bản sửa hiện trên trang public sau khi save (sau p25: chỉ khi publish)."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Duplicating schemas in the web app. Import from `shared`.",
+     "vi": "Copy schema trong web app. Hãy import từ `shared`."
+    }
+   ],
+   "commit": "feat(web): admin editors"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p23",
+   "milestone": "m5",
+   "order": 23,
+   "title": {
+    "en": "Contact form + SSE inbox",
+    "vi": "Form liên hệ + inbox SSE"
+   },
+   "summary": {
+    "en": "SSE is one-way server push over plain HTTP, so it is simpler than WebSockets for notifications.",
+    "vi": "SSE là server push một chiều trên HTTP thường, nên đơn giản hơn WebSockets cho thông báo."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p19",
+    "p21"
+   ],
+   "tags": [
+    "sse",
+    "contact",
+    "realtime"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "SSE",
+      "vi": "SSE"
+     },
+     "explain": {
+      "en": "`GET /events` stays open. The server writes `event: message.created\\ndata: …\\n\\n`. The browser reconnects by itself. No second auth handshake like WebSockets.",
+      "vi": "`GET /events` giữ kết nối. Server ghi `event: message.created\\ndata: …\\n\\n`. Browser tự reconnect. Không handshake auth lần hai như WebSockets."
+     }
+    },
+    {
+     "term": {
+      "en": "Honeypot",
+      "vi": "Honeypot"
+     },
+     "explain": {
+      "en": "A hidden field humans leave empty. If it is filled, treat the submit as spam (204, no row) instead of creating a Message.",
+      "vi": "Field ẩn người thật để trống. Nếu bị điền, coi submit là spam (204, không tạo hàng) thay vì tạo Message."
+     }
+    },
+    {
+     "term": {
+      "en": "Heartbeat",
+      "vi": "Heartbeat"
+     },
+     "explain": {
+      "en": "SSE comment lines (`: ping`) every ~15s so proxies do not buffer or drop the stream. Also set `Cache-Control: no-cache`.",
+      "vi": "Dòng comment SSE (`: ping`) mỗi ~15s để proxy không buffer hoặc cắt stream. Đồng thời set `Cache-Control: no-cache`."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "web-apis",
+     "label": {
+      "en": "Browser & Web APIs",
+      "vi": "Browser & Web APIs"
+     }
+    },
+    {
+     "slug": "networking",
+     "label": {
+      "en": "Networking",
+      "vi": "Mạng và giao thức"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "design-realtime-chat",
+     "label": {
+      "en": "Approaching a realtime chat UI",
+      "vi": "Cách tiếp cận UI chat realtime"
+     }
+    },
+    {
+     "id": "cors-basics",
+     "label": {
+      "en": "CORS at a practical level",
+      "vi": "CORS ở mức thực tế"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.5",
+    "§1.6",
+    "§5.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "POST /contact + Message model",
+      "vi": "POST /contact + model Message"
+     },
+     "detail": {
+      "en": "Zod body: name, a contact-address field, topic, message, locale, honeypot. Throttle. Insert a Message row (never public). Do not log the address field.",
+      "vi": "Body zod: tên, field địa chỉ liên hệ, topic, message, locale, honeypot. Throttle. Insert hàng Message (không public). Không log field địa chỉ."
+     }
+    },
+    {
+     "title": {
+      "en": "GET /events (SSE, session-guarded)",
+      "vi": "GET /events (SSE, có session guard)"
+     },
+     "detail": {
+      "en": "Nest `@Sse()`. Only logged-in admin. Emit `message.created` after a successful contact insert. Heartbeat comments + `Cache-Control: no-cache`.",
+      "vi": "Nest `@Sse()`. Chỉ admin đã login. Emit `message.created` sau khi contact insert thành công. Comment heartbeat + `Cache-Control: no-cache`."
+     }
+    },
+    {
+     "title": {
+      "en": "Admin inbox subscribes",
+      "vi": "Inbox admin subscribe"
+     },
+     "detail": {
+      "en": "EventSource in the admin layout. On `message.created`, invalidate the messages query. Cleanup on unmount. Public form is spec §5.6 (no address shown as visible text — a copy button if needed).",
+      "vi": "EventSource trong layout admin. Khi `message.created`, invalidate query messages. Cleanup lúc unmount. Form public theo spec §5.6 (không hiện địa chỉ dạng chữ, nếu cần thì nút copy)."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Submitting the public form shows the new row in the inbox without a reload within 2 s.",
+     "vi": "Gửi form public thì inbox hiện hàng mới không cần reload trong 2 giây."
+    },
+    {
+     "en": "Reconnecting after an API restart works (`EventSource` opens again and heartbeats resume).",
+     "vi": "Reconnect sau khi restart API vẫn được (`EventSource` mở lại và heartbeat chạy tiếp)."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Proxies buffering SSE. Set `Cache-Control: no-cache` and send heartbeat comments.",
+     "vi": "Proxy buffer SSE. Set `Cache-Control: no-cache` và gửi comment heartbeat."
+    }
+   ],
+   "commit": "feat: contact + sse inbox"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p24",
+   "milestone": "m5",
+   "order": 24,
+   "title": {
+    "en": "Uploads",
+    "vi": "Upload"
+   },
+   "summary": {
+    "en": "Images are content too, so they are stored with metadata and alt text.",
+    "vi": "Ảnh cũng là nội dung, nên được lưu kèm metadata và alt text."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p19"
+   ],
+   "tags": [
+    "uploads",
+    "media",
+    "sharp"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Magic bytes",
+      "vi": "Magic bytes"
+     },
+     "explain": {
+      "en": "The first bytes of a file say its real type. A renamed `.exe` is not a JPEG. Trust sharp / file signatures, not the extension.",
+      "vi": "Byte đầu file cho biết type thật. File `.exe` đổi tên vẫn không phải JPEG. Tin sharp / chữ ký file, đừng tin extension."
+     }
+    },
+    {
+     "term": {
+      "en": "Media row",
+      "vi": "Hàng Media"
+     },
+     "explain": {
+      "en": "Files live on a Compose volume; MySQL stores `fileName`, mime, size, width/height, `altEn`/`altVi`. Alt is required before anything using the image can publish.",
+      "vi": "File nằm trên volume Compose; MySQL lưu `fileName`, mime, size, width/height, `altEn`/`altVi`. Phải có alt rồi mới được publish thứ gì dùng ảnh đó."
+     }
+    },
+    {
+     "term": {
+      "en": "srcset / webp variants",
+      "vi": "srcset / bản webp"
+     },
+     "explain": {
+      "en": "sharp writes a few widths as webp. `<img>` uses `srcset` so the browser picks one. One original on disk is not enough.",
+      "vi": "sharp ghi vài width dạng webp. `<img>` dùng `srcset` để browser tự chọn. Chỉ một file gốc trên đĩa là không đủ."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "security",
+     "label": {
+      "en": "Security",
+      "vi": "Bảo mật"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "security-xss-csrf-csp",
+     "label": {
+      "en": "XSS, CSRF, and CSP in frontend terms",
+      "vi": "XSS, CSRF và CSP theo góc nhìn frontend"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.5",
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "POST /media with limits",
+      "vi": "POST /media với giới hạn"
+     },
+     "detail": {
+      "en": "multer + session guard. Allow jpeg/png/webp only, size cap well under 20 MB. Reject `.exe` and a 20 MB file with 400. Check magic bytes or sharp metadata, not the filename.",
+      "vi": "multer + session guard. Chỉ nhận jpeg/png/webp, trần size hẳn dưới 20 MB. Từ chối `.exe` và file 20 MB với 400. Check magic bytes hoặc metadata của sharp, đừng tin tên file."
+     }
+    },
+    {
+     "title": {
+      "en": "sharp variants + Media model",
+      "vi": "Variant sharp + model Media"
+     },
+     "detail": {
+      "en": "Resize to webp variants, store on a Compose volume served at `/media/*`. Media columns: alt en/vi, w/h, mime, size. Seed nothing personal.",
+      "vi": "Resize ra các bản webp, lưu trên volume Compose serve tại `/media/*`. Cột Media: alt en/vi, w/h, mime, size. Không seed thông tin cá nhân."
+     }
+    },
+    {
+     "title": {
+      "en": "Picker in the editor",
+      "vi": "Picker trong editor"
+     },
+     "detail": {
+      "en": "From the p22 editors, pick an existing Media row or upload. Public `<img>` must have alt and srcset. Progress bar from spec §4.0.",
+      "vi": "Từ các editor p22, chọn hàng Media có sẵn hoặc upload. `<img>` public phải có alt và srcset. Progress bar theo spec §4.0."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Uploading a JPG creates the webp variants, and `<img>` uses `srcset` plus alt.",
+     "vi": "Upload một JPG thì ra các bản webp, và `<img>` dùng `srcset` kèm alt."
+    },
+    {
+     "en": "A 20 MB upload or a `.exe` is rejected with 400.",
+     "vi": "Upload 20 MB hoặc file `.exe` bị từ chối với 400."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Trusting the file extension. Check magic bytes or the sharp metadata.",
+     "vi": "Tin extension. Check magic bytes hoặc metadata của sharp."
+    }
+   ],
+   "commit": "feat: media uploads"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p25",
+   "milestone": "m5",
+   "order": 25,
+   "title": {
+    "en": "Drafts, publish, revalidate",
+    "vi": "Draft, publish, revalidate"
+   },
+   "summary": {
+    "en": "Public pages are cached for speed, so publishing must explicitly refresh them.",
+    "vi": "Trang public được cache cho nhanh, nên lúc publish phải refresh chúng chủ động."
+   },
+   "estimateMin": 120,
+   "prereqs": [
+    "p22",
+    "p14"
+   ],
+   "tags": [
+    "publish",
+    "revalidate",
+    "preview"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "revalidateTag",
+      "vi": "revalidateTag"
+     },
+     "explain": {
+      "en": "Next cache key per entity (`post:<slug>`). Publishing one post should not flush the whole site.",
+      "vi": "Cache key của Next theo từng entity (`post:<slug>`). Publish một post thì không được xóa cache cả site."
+     }
+    },
+    {
+     "term": {
+      "en": "Preview mode",
+      "vi": "Preview mode"
+     },
+     "explain": {
+      "en": "A signed cookie that lets the owner see DRAFT rows on the public template. Logged-out visitors still get 404.",
+      "vi": "Cookie đã ký cho owner xem hàng DRAFT trên template public. Khách đã logout vẫn nhận 404."
+     }
+    },
+    {
+     "term": {
+      "en": "Publish webhook",
+      "vi": "Webhook publish"
+     },
+     "explain": {
+      "en": "API `POST /posts/:id/publish` sets `publishedAt`, then calls web `POST /api/revalidate` with a secret header. Same for unpublish.",
+      "vi": "API `POST /posts/:id/publish` set `publishedAt`, rồi gọi web `POST /api/revalidate` với header secret. Unpublish cũng vậy."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "nextjs",
+     "label": {
+      "en": "Next.js",
+      "vi": "Next.js"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "next-data-fetching-cache-revalidation",
+     "label": {
+      "en": "Data fetching, caching, and revalidation in App Router",
+      "vi": "Data fetching, caching và revalidation trong App Router"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.5",
+    "§5.5"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "publish and unpublish routes",
+      "vi": "Route publish và unpublish"
+     },
+     "detail": {
+      "en": "`POST /posts/:id/publish` and `/unpublish` (same for projects). Set/clear `publishedAt`. Reject publish when EN required fields are empty or contain `TODO` / `lorem` (spec §5.11).",
+      "vi": "`POST /posts/:id/publish` và `/unpublish` (project cũng vậy). Set/xóa `publishedAt`. Từ chối publish khi field EN bắt buộc trống hoặc chứa `TODO` / `lorem` (spec §5.11)."
+     }
+    },
+    {
+     "title": {
+      "en": "On-demand revalidate",
+      "vi": "Revalidate theo nhu cầu"
+     },
+     "detail": {
+      "en": "Web route `POST /api/revalidate` checks a secret header and runs `revalidateTag('post:<slug>')` (and `project:<slug>`). API calls it after a successful publish.",
+      "vi": "Route web `POST /api/revalidate` check header secret rồi chạy `revalidateTag('post:<slug>')` (và `project:<slug>`). API gọi nó sau khi publish thành công."
+     },
+     "code": {
+      "lang": "ts",
+      "text": "revalidateTag(`post:${slug}`);"
+     }
+    },
+    {
+     "title": {
+      "en": "Preview for drafts",
+      "vi": "Preview cho draft"
+     },
+     "detail": {
+      "en": "An admin-only preview cookie shows the draft on the public template. Without it, `GET /posts/:slug` stays 404 for DRAFT.",
+      "vi": "Cookie preview chỉ dành admin, hiện draft trên template public. Không có cookie thì `GET /posts/:slug` vẫn 404 với DRAFT."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Publishing shows the change on the public page in under 5 s without a redeploy.",
+     "vi": "Publish xong, thay đổi hiện trên trang public dưới 5 giây, không cần redeploy."
+    },
+    {
+     "en": "A draft is visible only in preview (public URL still 404).",
+     "vi": "Draft chỉ thấy được trong preview (URL public vẫn 404)."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Revalidating the whole site. Tag per entity.",
+     "vi": "Revalidate cả site. Tag theo từng entity."
+    }
+   ],
+   "commit": "feat: publish + on-demand revalidate"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p26",
+   "milestone": "m6",
+   "order": 26,
+   "title": {
+    "en": "SEO",
+    "vi": "SEO"
+   },
+   "summary": {
+    "en": "Metadata also comes from the CMS, so sharing a link looks right.",
+    "vi": "Metadata cũng lấy từ CMS, nên share link ra trông đúng."
+   },
+   "estimateMin": 120,
+   "prereqs": [
+    "p14"
+   ],
+   "tags": [
+    "seo",
+    "metadata",
+    "json-ld"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "generateMetadata",
+      "vi": "generateMetadata"
+     },
+     "explain": {
+      "en": "A Next server function per page. Title/description/canonical/OG come from API SEO fields, with SiteSettings as the default.",
+      "vi": "Hàm server của Next cho mỗi trang. Title/description/canonical/OG lấy từ field SEO trên API, SiteSettings là mặc định."
+     }
+    },
+    {
+     "term": {
+      "en": "metadataBase",
+      "vi": "metadataBase"
+     },
+     "explain": {
+      "en": "The site origin used to resolve relative OG URLs. Missing it makes `og:image` a relative path that chat apps cannot fetch.",
+      "vi": "Origin của site dùng để resolve URL OG tương đối. Thiếu nó thì `og:image` thành path tương đối, app chat không fetch được."
+     }
+    },
+    {
+     "term": {
+      "en": "JSON-LD Person",
+      "vi": "JSON-LD Person"
+     },
+     "explain": {
+      "en": "Structured data on home/about: name, job title, GitHub `parker2808`. No personal inbox address, no phone number.",
+      "vi": "Structured data trên home/about: tên, job title, GitHub `parker2808`. Không địa chỉ hộp thư cá nhân, không số điện thoại."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "nextjs",
+     "label": {
+      "en": "Next.js",
+      "vi": "Next.js"
+     }
+    },
+    {
+     "slug": "performance",
+     "label": {
+      "en": "Performance",
+      "vi": "Hiệu năng"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "next-metadata-image-font-deployment",
+     "label": {
+      "en": "Next.js metadata, SEO, image/font, deployment",
+      "vi": "Metadata, SEO, image/font, deployment trên Next.js"
+     }
+    },
+    {
+     "id": "core-web-vitals",
+     "label": {
+      "en": "Core Web Vitals",
+      "vi": "Core Web Vitals"
+     }
+    }
+   ],
+   "specRefs": [
+    "§5"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "generateMetadata per page",
+      "vi": "generateMetadata mỗi trang"
+     },
+     "detail": {
+      "en": "Home, about, project, post: `{page seoTitle} · {siteName}`. Set `metadataBase` from SiteSettings.domain. Fallback to default SEO fields when a row has none.",
+      "vi": "Home, about, project, post: `{page seoTitle} · {siteName}`. Set `metadataBase` từ SiteSettings.domain. Hàng nào không có thì fallback field SEO mặc định."
+     }
+    },
+    {
+     "title": {
+      "en": "sitemap.ts, robots.ts, OG images",
+      "vi": "sitemap.ts, robots.ts, ảnh OG"
+     },
+     "detail": {
+      "en": "Sitemap lists published slugs only (both locales). robots.ts points at the sitemap. `opengraph-image.tsx` draws title from CMS data.",
+      "vi": "Sitemap chỉ list slug đã publish (cả hai locale). robots.ts trỏ tới sitemap. `opengraph-image.tsx` vẽ title từ data CMS."
+     }
+    },
+    {
+     "title": {
+      "en": "JSON-LD Person",
+      "vi": "JSON-LD Person"
+     },
+     "detail": {
+      "en": "On home/about emit Person (name, jobTitle, sameAs GitHub). Do not put a personal inbox address or a phone number in the JSON-LD.",
+      "vi": "Trên home/about emit Person (name, jobTitle, sameAs GitHub). Đừng đưa địa chỉ hộp thư cá nhân hay số điện thoại vào JSON-LD."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Lighthouse SEO prints 100 on home, a post, and a project.",
+     "vi": "Lighthouse SEO in ra 100 trên home, một post và một project."
+    },
+    {
+     "en": "The sitemap lists published slugs only (drafts absent).",
+     "vi": "Sitemap chỉ list slug đã publish (không có draft)."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "The `metadataBase` is missing, which breaks OG URLs.",
+     "vi": "Thiếu `metadataBase` thì URL OG bị gãy."
+    }
+   ],
+   "commit": "feat(web): seo from cms"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p27",
+   "milestone": "m6",
+   "order": 27,
+   "title": {
+    "en": "Analytics + audit log",
+    "vi": "Analytics + audit log"
+   },
+   "summary": {
+    "en": "Own your numbers (no third-party tracker) and know who changed what.",
+    "vi": "Tự giữ số liệu của bạn (không tracker bên thứ ba) và biết ai đã đổi gì."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p19",
+    "p23"
+   ],
+   "tags": [
+    "analytics",
+    "audit",
+    "privacy"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "PageView",
+      "vi": "PageView"
+     },
+     "explain": {
+      "en": "A cookieless hit: path, locale, referrer host, device, a daily visitor hash. Do not store IP. Day-bucket so you can chart 7/30/90d.",
+      "vi": "Hit không cookie: path, locale, referrer host, device, hash visitor theo ngày. Không lưu IP. Gom theo ngày để vẽ chart 7/30/90d."
+     }
+    },
+    {
+     "term": {
+      "en": "AuditLog",
+      "vi": "AuditLog"
+     },
+     "explain": {
+      "en": "Append-only row written in the same transaction as the admin write: actor, action, entity, summary/diff. If the write rolls back, the audit row rolls back too.",
+      "vi": "Hàng append-only, ghi trong cùng transaction với write của admin: actor, action, entity, summary/diff. Write rollback thì hàng audit cũng rollback."
+     }
+    },
+    {
+     "term": {
+      "en": "First-party analytics",
+      "vi": "Analytics first-party"
+     },
+     "explain": {
+      "en": "Your own `POST /analytics/view`. No third-party script, so no extra cookies and no surprise PII.",
+      "vi": "`POST /analytics/view` của bạn. Không script bên thứ ba, nên không thêm cookie và không PII bất ngờ."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "monitoring",
+     "label": {
+      "en": "Monitoring",
+      "vi": "Giám sát và xử lý lỗi"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "observability-frontend",
+     "label": {
+      "en": "What good frontend observability looks like",
+      "vi": "Frontend observability tốt trông như thế nào"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.5",
+    "§5.7"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "POST /analytics/view",
+      "vi": "POST /analytics/view"
+     },
+     "detail": {
+      "en": "Body: path, locale, referrer host, device. Hash the visitor with a salt that changes daily. Never persist IP. Beacon from the public layout once per page.",
+      "vi": "Body: path, locale, referrer host, device. Hash visitor với salt đổi mỗi ngày. Không persist IP. Beacon từ layout public một lần mỗi trang."
+     }
+    },
+    {
+     "title": {
+      "en": "AuditLog on admin writes",
+      "vi": "AuditLog khi admin ghi"
+     },
+     "detail": {
+      "en": "In the same `$transaction` as create/update/publish/archive, insert an AuditLog. Dashboard and `/admin/audit` read it. Skip logging secrets.",
+      "vi": "Trong cùng `$transaction` với create/update/publish/archive, insert AuditLog. Dashboard và `/admin/audit` đọc nó. Không log secret."
+     }
+    },
+    {
+     "title": {
+      "en": "Dashboard charts + audit table",
+      "vi": "Chart dashboard + table audit"
+     },
+     "detail": {
+      "en": "Spec §5.7: views by day, period toggle 7d/30d/90d. Audit table uses the list contract (cursor). Charts from `--chart-*` tokens.",
+      "vi": "Spec §5.7: view theo ngày, toggle period 7d/30d/90d. Table audit dùng list contract (cursor). Chart lấy token `--chart-*`."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "Page views increase on visits (`GET /admin/stats` shows the new count).",
+     "vi": "Page view tăng khi có visit (`GET /admin/stats` hiện count mới)."
+    },
+    {
+     "en": "Every CRUD action creates one audit row (visible in Prisma Studio or `/admin/audit`).",
+     "vi": "Mỗi hành động CRUD tạo một hàng audit (thấy trong Prisma Studio hoặc `/admin/audit`)."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Storing personal data in analytics (IP, raw address fields, names from the contact form).",
+     "vi": "Lưu data cá nhân trong analytics (IP, field địa chỉ thô, tên từ contact form)."
+    }
+   ],
+   "commit": "feat: analytics + audit log"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p28",
+   "milestone": "m6",
+   "order": 28,
+   "title": {
+    "en": "Tests",
+    "vi": "Test"
+   },
+   "summary": {
+    "en": "A small safety net lets you change things later without fear.",
+    "vi": "Một lưới an toàn nhỏ để sau này đổi gì cũng không sợ."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p25"
+   ],
+   "tags": [
+    "vitest",
+    "playwright",
+    "ci"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Test database",
+      "vi": "Database test"
+     },
+     "explain": {
+      "en": "A second MySQL in Compose (`profiles: [test]`). Tests never point at your dev volume. Reset per file so order does not matter.",
+      "vi": "MySQL thứ hai trong Compose (`profiles: [test]`). Test không bao giờ trỏ vào volume dev của bạn. Reset mỗi file để thứ tự không quan trọng."
+     }
+    },
+    {
+     "term": {
+      "en": "supertest",
+      "vi": "supertest"
+     },
+     "explain": {
+      "en": "Calls your Nest app as HTTP in-process. Use it for auth, CRUD, and publish. Faster than clicking; asserts status codes.",
+      "vi": "Gọi Nest app của bạn như HTTP in-process. Dùng cho auth, CRUD và publish. Nhanh hơn click; assert status code."
+     }
+    },
+    {
+     "term": {
+      "en": "Playwright smoke",
+      "vi": "Playwright smoke"
+     },
+     "explain": {
+      "en": "Three browser paths: home renders from API, a published post is readable, admin login reaches the dashboard. Not a full suite.",
+      "vi": "Ba path trên browser: home render từ API, đọc được một post đã publish, login admin tới được dashboard. Không phải suite đầy đủ."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "testing",
+     "label": {
+      "en": "Testing",
+      "vi": "Kiểm thử"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "testing-pyramid",
+     "label": {
+      "en": "A good frontend testing strategy",
+      "vi": "Chiến lược testing frontend tốt"
+     }
+    },
+    {
+     "id": "fe-ci-preview-deploys",
+     "label": {
+      "en": "Preview deploys, env, and rollback",
+      "vi": "Preview deploy, env và rollback"
+     }
+    }
+   ],
+   "specRefs": [
+    "§6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "API tests against a test DB",
+      "vi": "Test API trên DB test"
+     },
+     "detail": {
+      "en": "vitest + supertest. Compose profile `test`. Cover login cookie, CRUD 201/409, publish → public GET. Reset schema per file.",
+      "vi": "vitest + supertest. Compose profile `test`. Viết test cho cookie login, CRUD 201/409, publish → GET public. Reset schema mỗi file."
+     }
+    },
+    {
+     "title": {
+      "en": "Playwright smoke",
+      "vi": "Playwright smoke"
+     },
+     "detail": {
+      "en": "home, one post, admin login. Run headed once so you see it, then headless in CI.",
+      "vi": "home, một post, login admin. Chạy headed một lần để bạn thấy, rồi headless trên CI."
+     }
+    },
+    {
+     "title": {
+      "en": "GitHub Actions workflow",
+      "vi": "Workflow GitHub Actions"
+     },
+     "detail": {
+      "en": "On pull_request: install, migrate the test DB, `pnpm test`. Fail the job if either API or e2e fails.",
+      "vi": "Khi có pull_request: install, migrate DB test, `pnpm test`. Fail job nếu API hoặc e2e fail."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "`pnpm test` is green locally and in CI.",
+     "vi": "`pnpm test` xanh trên máy và trên CI."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Tests sharing state. Reset the DB per file.",
+     "vi": "Test dùng chung state. Reset DB mỗi file."
+    }
+   ],
+   "commit": "test: api + e2e smoke"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p29",
+   "milestone": "m6",
+   "order": 29,
+   "title": {
+    "en": "A11y + performance audit",
+    "vi": "Audit a11y + hiệu năng"
+   },
+   "summary": {
+    "en": "Typography and clarity are the brand (spec §3), so prove them.",
+    "vi": "Typography và độ rõ ràng là brand (spec §3), nên phải chứng minh được."
+   },
+   "estimateMin": 120,
+   "prereqs": [
+    "p26"
+   ],
+   "tags": [
+    "a11y",
+    "lighthouse",
+    "performance"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "axe",
+      "vi": "axe"
+     },
+     "explain": {
+      "en": "An automated a11y checker. Zero serious issues is the bar; it does not replace a keyboard pass.",
+      "vi": "Công cụ a11y tự động. Bar là 0 lỗi serious; không thay được pass bàn phím."
+     }
+    },
+    {
+     "term": {
+      "en": "LCP image priority",
+      "vi": "Ưu tiên ảnh LCP"
+     },
+     "explain": {
+      "en": "The home/case-study cover is likely LCP. `priority` on that `next/image`, plus font `display: swap`, keeps Lighthouse perf up.",
+      "vi": "Ảnh cover home/case-study thường là LCP. `priority` trên `next/image` đó, kèm font `display: swap`, giữ điểm perf Lighthouse."
+     }
+    },
+    {
+     "term": {
+      "en": "Focus ring + skip link",
+      "vi": "Focus ring + skip link"
+     },
+     "explain": {
+      "en": "Visible `:focus-visible` from `--ring`. A skip link to `#main` is the first Tab stop (spec §3.5 z-index `--z-skip`).",
+      "vi": "`:focus-visible` nhìn thấy từ `--ring`. Skip link tới `#main` là Tab stop đầu tiên (spec §3.5 z-index `--z-skip`)."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "accessibility",
+     "label": {
+      "en": "Accessibility",
+      "vi": "Khả năng truy cập"
+     }
+    },
+    {
+     "slug": "performance",
+     "label": {
+      "en": "Performance",
+      "vi": "Hiệu năng"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "a11y-modal-focus-trap",
+     "label": {
+      "en": "Modal Tab focus trap",
+      "vi": "Nhốt focus Tab trong modal"
+     }
+    },
+    {
+     "id": "core-web-vitals",
+     "label": {
+      "en": "Core Web Vitals",
+      "vi": "Core Web Vitals"
+     }
+    },
+    {
+     "id": "accessibility-forms-keyboard",
+     "label": {
+      "en": "Accessibility basics for forms and interactive UI",
+      "vi": "Accessibility cơ bản cho form và interactive UI"
+     }
+    }
+   ],
+   "specRefs": [
+    "§3",
+    "§3.4",
+    "§5"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "axe + Lighthouse on spec §5 screens",
+      "vi": "axe + Lighthouse trên màn spec §5"
+     },
+     "detail": {
+      "en": "Run both themes on home, about, project, post, contact, and the admin dashboard. Write a short list of issues before fixing.",
+      "vi": "Chạy cả hai theme trên home, about, project, post, contact và dashboard admin. Ghi một list lỗi ngắn trước khi sửa."
+     }
+    },
+    {
+     "title": {
+      "en": "Fix focus, skip link, reduced motion",
+      "vi": "Sửa focus, skip link, reduced motion"
+     },
+     "detail": {
+      "en": "Skip link, `:focus-visible` rings, reduced-motion fallbacks from p14. Re-check dark `--muted-foreground` on `--band` (spec §3.1).",
+      "vi": "Skip link, ring `:focus-visible`, fallback reduced-motion từ p14. Check lại `--muted-foreground` dark trên `--band` (spec §3.1)."
+     }
+    },
+    {
+     "title": {
+      "en": "LCP image + font display",
+      "vi": "Ảnh LCP + font display"
+     },
+     "detail": {
+      "en": "Priority on the LCP image. Fonts already `display: swap` from p04 — confirm no extra family slipped in. Re-run Lighthouse mobile on home.",
+      "vi": "Priority cho ảnh LCP. Font đã `display: swap` từ p04: xác nhận không lọt family thừa. Chạy lại Lighthouse mobile trên home."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "`axe` reports 0 serious issues on the audited screens.",
+     "vi": "`axe` báo 0 lỗi serious trên các màn đã audit."
+    },
+    {
+     "en": "Lighthouse prints at least 95 for a11y and perf on mobile for home.",
+     "vi": "Lighthouse in ít nhất 95 cho a11y và perf trên mobile cho home."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Low contrast in dark muted text. Re-check the §3 tokens.",
+     "vi": "Contrast thấp ở chữ muted dark. Check lại token §3."
+    }
+   ],
+   "commit": "fix: a11y + perf audit"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p30",
+   "milestone": "m7",
+   "order": 30,
+   "title": {
+    "en": "Production Compose",
+    "vi": "Compose production"
+   },
+   "summary": {
+    "en": "The same containers locally and in production means no \"works on my machine\".",
+    "vi": "Cùng container trên máy và trên production thì hết chuyện \"works on my machine\"."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p28"
+   ],
+   "tags": [
+    "docker",
+    "compose",
+    "production"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Multi-stage Dockerfile",
+      "vi": "Dockerfile multi-stage"
+     },
+     "explain": {
+      "en": "Build in a fat image, copy only the output into a slim runtime image. Next `output: 'standalone'`. Keep images under 300 MB.",
+      "vi": "Build trong image nặng, chỉ copy output sang image runtime gọn. Next `output: 'standalone'`. Giữ image dưới 300 MB."
+     }
+    },
+    {
+     "term": {
+      "en": "migrate deploy",
+      "vi": "migrate deploy"
+     },
+     "explain": {
+      "en": "Production runs pending migrations only (`prisma migrate deploy`). `migrate dev` is for laptops — it can prompt and rewrite SQL.",
+      "vi": "Production chỉ chạy migration pending (`prisma migrate deploy`). `migrate dev` dành cho laptop: nó có thể hỏi và viết lại SQL."
+     }
+    },
+    {
+     "term": {
+      "en": "depends_on: service_healthy",
+      "vi": "depends_on: service_healthy"
+     },
+     "explain": {
+      "en": "API starts after db healthcheck is green. Web starts after API health. Avoid racing migrations against a closed port.",
+      "vi": "API start sau khi db healthcheck xanh. Web start sau API health. Đừng race migration khi cổng còn đóng."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "devops",
+     "label": {
+      "en": "DevOps",
+      "vi": "DevOps"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "fe-ci-preview-deploys",
+     "label": {
+      "en": "Preview deploys, env, and rollback",
+      "vi": "Preview deploy, env và rollback"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Dockerfiles for web and api",
+      "vi": "Dockerfile cho web và api"
+     },
+     "detail": {
+      "en": "Multi-stage. Web: Next standalone. API: node + compiled Nest. Non-root user comes in p31; leave a TODO comment if you wait, or add it now.",
+      "vi": "Multi-stage. Web: Next standalone. API: node + Nest đã compile. User non-root làm ở p31; để TODO comment nếu chờ, hoặc thêm luôn."
+     }
+    },
+    {
+     "title": {
+      "en": "compose.prod.yml",
+      "vi": "compose.prod.yml"
+     },
+     "detail": {
+      "en": "Services: db, api, web, caddy. Healthchecks, `depends_on: condition: service_healthy`. API command runs `prisma migrate deploy` then the server.",
+      "vi": "Service: db, api, web, caddy. Healthcheck, `depends_on: condition: service_healthy`. Lệnh API chạy `prisma migrate deploy` rồi mới server."
+     }
+    },
+    {
+     "title": {
+      "en": "Build and serve locally",
+      "vi": "Build và serve trên máy"
+     },
+     "detail": {
+      "en": "Bring the stack up, hit home through Caddy, confirm health endpoints. Check image sizes (`docker images`).",
+      "vi": "Bật stack, mở home qua Caddy, xác nhận health endpoint. Check size image (`docker images`)."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "docker compose -f compose.prod.yml up --build"
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "`docker compose -f compose.prod.yml up --build` serves the full site on localhost.",
+     "vi": "`docker compose -f compose.prod.yml up --build` serve được full site trên localhost."
+    },
+    {
+     "en": "The web and api images are under 300 MB each (`docker images`).",
+     "vi": "Image web và api mỗi cái dưới 300 MB (`docker images`)."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Running `migrate dev` in production (prompts, can rewrite history).",
+     "vi": "Chạy `migrate dev` trên production (có prompt, có thể viết lại history)."
+    }
+   ],
+   "commit": "chore(infra): production compose"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p31",
+   "milestone": "m7",
+   "order": 31,
+   "title": {
+    "en": "Hardening + backup",
+    "vi": "Hardening + backup"
+   },
+   "summary": {
+    "en": "A public server is attacked from day one, and backups are only real once you have restored one.",
+    "vi": "Server public bị tấn công từ ngày đầu, và backup chỉ thật khi bạn đã restore được một bản."
+   },
+   "estimateMin": 120,
+   "prereqs": [
+    "p30"
+   ],
+   "tags": [
+    "security",
+    "backup",
+    "csp"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "helmet + CSP",
+      "vi": "helmet + CSP"
+     },
+     "explain": {
+      "en": "HTTP headers that limit what the browser will load. CSP must allow `next/font` and OG images or the site looks broken. Test before deploy.",
+      "vi": "Header HTTP giới hạn thứ browser được load. CSP phải cho phép `next/font` và ảnh OG, không thì site trông gãy. Test trước khi deploy."
+     }
+    },
+    {
+     "term": {
+      "en": "Non-root user",
+      "vi": "User non-root"
+     },
+     "explain": {
+      "en": "The process inside the container is not uid 0. A breakout then has fewer privileges.",
+      "vi": "Process trong container không phải uid 0. Khi bị breakout thì ít quyền hơn."
+     }
+    },
+    {
+     "term": {
+      "en": "mysqldump rotation",
+      "vi": "mysqldump rotation"
+     },
+     "explain": {
+      "en": "A `backup` service dumps daily into a volume and deletes files older than 7 days. `scripts/restore.sh` is the other half — untested dumps are wishes.",
+      "vi": "Service `backup` dump mỗi ngày vào volume và xóa file cũ hơn 7 ngày. `scripts/restore.sh` là nửa còn lại: dump chưa test chỉ là ước."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "security",
+     "label": {
+      "en": "Security",
+      "vi": "Bảo mật"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "security-xss-csrf-csp",
+     "label": {
+      "en": "XSS, CSRF, and CSP in frontend terms",
+      "vi": "XSS, CSRF và CSP theo góc nhìn frontend"
+     }
+    },
+    {
+     "id": "third-party-script-risk",
+     "label": {
+      "en": "Evaluating third-party scripts",
+      "vi": "Đánh giá third-party script"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Headers, CORS, cookie Secure, non-root",
+      "vi": "Header, CORS, cookie Secure, non-root"
+     },
+     "detail": {
+      "en": "helmet + a CSP you actually tested. Strict CORS (site origin only). Cookie `Secure` in prod. USER in Dockerfiles is not root.",
+      "vi": "helmet + CSP bạn đã test. CORS chặt (chỉ origin của site). Cookie `Secure` trên prod. USER trong Dockerfile không phải root."
+     }
+    },
+    {
+     "title": {
+      "en": "Daily dump + 7-day rotation",
+      "vi": "Dump mỗi ngày + rotation 7 ngày"
+     },
+     "detail": {
+      "en": "backup service: `mysqldump` into a volume, delete dumps older than 7 days. Document the schedule in README.",
+      "vi": "Service backup: `mysqldump` vào volume, xóa dump cũ hơn 7 ngày. Ghi lịch vào README."
+     }
+    },
+    {
+     "title": {
+      "en": "Restore drill",
+      "vi": "Diễn tập restore"
+     },
+     "detail": {
+      "en": "Write `scripts/restore.sh`. Restore yesterday's dump into a fresh DB and confirm the site boots. That is the acceptance, not the dump file existing.",
+      "vi": "Viết `scripts/restore.sh`. Restore dump hôm qua vào DB mới và xác nhận site boot lên. Đó mới là acceptance, không phải chỉ có file dump."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "scripts/restore.sh backups/latest.sql"
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "`scripts/restore.sh` into a fresh DB brings the site back.",
+     "vi": "`scripts/restore.sh` vào DB mới thì site chạy lại."
+    },
+    {
+     "en": "securityheaders.com gives grade A on the production origin (or a local Caddy with the same headers).",
+     "vi": "securityheaders.com cho grade A trên origin production (hoặc Caddy local với cùng header)."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "A CSP that blocks `next/font` or OG images. Test before deploying.",
+     "vi": "CSP chặn `next/font` hoặc ảnh OG. Test trước khi deploy."
+    }
+   ],
+   "commit": "chore: hardening + backups"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p32",
+   "milestone": "m7",
+   "order": 32,
+   "title": {
+    "en": "Real content via admin",
+    "vi": "Nội dung thật qua admin"
+   },
+   "summary": {
+    "en": "This proves the \"no hard-coded content\" rule, because all content goes in through the CMS.",
+    "vi": "Chứng minh luật \"không hard-code nội dung\": mọi content đều vào qua CMS."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p22",
+    "p24"
+   ],
+   "tags": [
+    "cms",
+    "content",
+    "i18n"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "CMS as source of truth",
+      "vi": "CMS là source of truth"
+     },
+     "explain": {
+      "en": "Profile, experience, projects, posts, and media exist only as rows. The web app has chrome strings, not CV copy.",
+      "vi": "Profile, experience, project, post và media chỉ tồn tại dạng row. Web app có string chrome, không có copy CV."
+     }
+    },
+    {
+     "term": {
+      "en": "Public vs private fields",
+      "vi": "Field public vs private"
+     },
+     "explain": {
+      "en": "Contact happens through the form. Public rows must not carry a personal inbox address or a phone number. GitHub `parker2808` is fine.",
+      "vi": "Liên hệ đi qua form. Row public không được mang email cá nhân hay số điện thoại. GitHub `parker2808` thì được."
+     }
+    },
+    {
+     "term": {
+      "en": "Placeholder seed",
+      "vi": "Seed placeholder"
+     },
+     "explain": {
+      "en": "Dev seed can stay for local reset. Production seed must not re-insert fake rows after you have typed the real ones.",
+      "vi": "Seed dev có thể giữ để reset local. Seed production không được insert lại row giả sau khi bạn đã nhập row thật."
+     }
+    }
+   ],
+   "kbLinks": [],
+   "questionLinks": [
+    {
+     "id": "self-intro",
+     "label": {
+      "en": "Introduce yourself",
+      "vi": "Giới thiệu bản thân"
+     }
+    },
+    {
+     "id": "recent-project",
+     "label": {
+      "en": "Tell me about a recent project",
+      "vi": "Kể về một project gần đây"
+     }
+    }
+   ],
+   "specRefs": [
+    "§1.1",
+    "§1.2",
+    "§1.3",
+    "§1.5",
+    "§2"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "Enter profile, experience, projects",
+      "vi": "Nhập profile, experience, project"
+     },
+     "detail": {
+      "en": "Through `/admin` only, in en and vi: profile (spec §1.1–1.2), 4 experience rows, 4 projects (spec §1.3 / §2). Media alt in both locales. No phone number, no personal inbox address.",
+      "vi": "Chỉ qua `/admin`, en và vi: profile (spec §1.1–1.2), 4 row experience, 4 project (spec §1.3 / §2). Alt media cả hai locale. Không số điện thoại, không email cá nhân."
+     }
+    },
+    {
+     "title": {
+      "en": "Two posts + publish",
+      "vi": "Hai post + publish"
+     },
+     "detail": {
+      "en": "Write 2 posts (one can be \"Vue → React: what transfers\"). Publish when EN is complete. vi can follow; missing vi is an EN badge, not fake copy.",
+      "vi": "Viết 2 post (một bài có thể là \"Vue → React: what transfers\"). Publish khi EN đủ. vi có thể theo sau; thiếu vi thì badge EN, không bịa copy."
+     }
+    },
+    {
+     "title": {
+      "en": "Strip production placeholders",
+      "vi": "Gỡ placeholder production"
+     },
+     "detail": {
+      "en": "Stop running the fake seed in production. Grep apps/web for CV strings — still 0 hits. Confirm production DB has no leftover \"Sample\" / \"Lorem\" rows.",
+      "vi": "Ngừng chạy seed giả trên production. Grep apps/web tìm chuỗi CV: vẫn 0 hits. Xác nhận DB production không còn row \"Sample\" / \"Lorem\"."
+     },
+     "code": {
+      "lang": "bash",
+      "text": "rg -n \"Particula|LitGroup|Samsung SDS|Parker Vu|Lorem\" apps/web --glob '!*.md'"
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "The production DB returns 0 placeholder rows (Studio / SQL count of Sample/Lorem is 0).",
+     "vi": "DB production trả 0 row placeholder (Studio / SQL đếm Sample/Lorem ra 0)."
+    },
+    {
+     "en": "The web app contains no CV strings (`rg` in apps/web returns 0 hits).",
+     "vi": "Web app không chứa chuỗi CV (`rg` trong apps/web ra 0 hits)."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Adding a personal phone or inbox address to public fields. Use the contact form only.",
+     "vi": "Thêm số điện thoại hay email cá nhân vào field public. Chỉ dùng form liên hệ."
+    }
+   ],
+   "commit": "chore: production seed cleanup"
+  },
+  {
+   "kind": "practice-step",
+   "id": "p33",
+   "milestone": "m7",
+   "order": 33,
+   "title": {
+    "en": "Deploy + launch checklist",
+    "vi": "Deploy + checklist launch"
+   },
+   "summary": {
+    "en": "Shipping is the goal, and a checklist prevents launch-day surprises.",
+    "vi": "Ship là mục tiêu, và checklist tránh bất ngờ ngày launch."
+   },
+   "estimateMin": 180,
+   "prereqs": [
+    "p30",
+    "p31",
+    "p32"
+   ],
+   "tags": [
+    "deploy",
+    "dns",
+    "ci"
+   ],
+   "concepts": [
+    {
+     "term": {
+      "en": "Caddy auto-HTTPS",
+      "vi": "Caddy auto-HTTPS"
+     },
+     "explain": {
+      "en": "Caddy gets a certificate for your domain and terminates TLS. You point DNS A/AAAA at the VPS.",
+      "vi": "Caddy lấy certificate cho domain của bạn rồi terminate TLS. Bạn trỏ DNS A/AAAA về VPS."
+     }
+    },
+    {
+     "term": {
+      "en": "GHCR + ssh pull",
+      "vi": "GHCR + ssh pull"
+     },
+     "explain": {
+      "en": "CI builds images, pushes to GitHub Container Registry, then ssh to the VPS to pull and `compose up`. Secrets stay in GitHub Actions / the server env, not in git.",
+      "vi": "CI build image, push lên GitHub Container Registry, rồi ssh vào VPS để pull và `compose up`. Secret nằm ở GitHub Actions / env trên server, không nằm trong git."
+     }
+    },
+    {
+     "term": {
+      "en": "Launch checklist",
+      "vi": "Checklist launch"
+     },
+     "explain": {
+      "en": "Walk spec §5 screens in both themes and both locales. Home, case study, post, contact, admin login. Uptime ping after.",
+      "vi": "Đi qua các màn spec §5 ở cả hai theme và cả hai locale. Home, case study, post, contact, login admin. Uptime ping để sau."
+     }
+    }
+   ],
+   "kbLinks": [
+    {
+     "slug": "devops",
+     "label": {
+      "en": "DevOps",
+      "vi": "DevOps"
+     }
+    },
+    {
+     "slug": "monitoring",
+     "label": {
+      "en": "Monitoring",
+      "vi": "Giám sát và xử lý lỗi"
+     }
+    }
+   ],
+   "questionLinks": [
+    {
+     "id": "fe-ci-preview-deploys",
+     "label": {
+      "en": "Preview deploys, env, and rollback",
+      "vi": "Preview deploy, env và rollback"
+     }
+    },
+    {
+     "id": "observability-frontend",
+     "label": {
+      "en": "What good frontend observability looks like",
+      "vi": "Frontend observability tốt trông như thế nào"
+     }
+    }
+   ],
+   "specRefs": [
+    "§5",
+    "§1.6"
+   ],
+   "tasks": [
+    {
+     "title": {
+      "en": "VPS, DNS, Caddy, env secrets",
+      "vi": "VPS, DNS, Caddy, secret env"
+     },
+     "detail": {
+      "en": "Provision a VPS, install Docker, point DNS, drop env files on the server (not in the repo). Confirm Caddy serves HTTPS on the custom domain.",
+      "vi": "Dựng một VPS, cài Docker, trỏ DNS, đặt file env trên server (không trong repo). Xác nhận Caddy serve HTTPS trên domain riêng."
+     }
+    },
+    {
+     "title": {
+      "en": "GitHub Actions deploy",
+      "vi": "Deploy bằng GitHub Actions"
+     },
+     "detail": {
+      "en": "On push to `main`: build, push to GHCR, ssh pull + up. Store registry and ssh keys in Actions secrets. No secrets in image layers (`docker history`).",
+      "vi": "Khi push lên `main`: build, push lên GHCR, ssh pull + up. Lưu registry và ssh key trong Actions secrets. Không để secret trong layer image (`docker history`)."
+     }
+    },
+    {
+     "title": {
+      "en": "Uptime + launch checklist",
+      "vi": "Uptime + checklist launch"
+     },
+     "detail": {
+      "en": "Add an uptime ping on `/api/health`. Walk spec §5 screens, both themes, both locales. Fix what breaks before you call it launched.",
+      "vi": "Thêm uptime ping vào `/api/health`. Đi qua các màn spec §5, cả hai theme, cả hai locale. Sửa chỗ gãy trước khi bảo là đã launch."
+     }
+    }
+   ],
+   "doneWhen": [
+    {
+     "en": "The custom domain serves HTTPS (browser padlock, `curl -I` shows 200).",
+     "vi": "Domain riêng serve HTTPS (padlock trên browser, `curl -I` ra 200)."
+    },
+    {
+     "en": "The deploy runs from a push to `main`, and an uptime ping is configured.",
+     "vi": "Deploy chạy từ một push lên `main`, và đã cấu hình uptime ping."
+    }
+   ],
+   "pitfalls": [
+    {
+     "en": "Secrets in the repo or image layers. Scan git history and `docker history` before going live.",
+     "vi": "Secret trong repo hoặc layer image. Soi git history và `docker history` trước khi live."
+    }
+   ],
+   "commit": "chore: deploy pipeline"
+  }
+ ]
+}

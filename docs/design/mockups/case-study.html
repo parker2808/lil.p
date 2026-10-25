@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Particula v2 · Parker Vu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>if (new URLSearchParams(location.search).has('dark')) document.documentElement.classList.add('dark');</script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container inner">
+      <a class="logo" href="home.html"><span class="mark">p</span> parker.dev</a>
+      <nav class="nav-links">
+        <a class="active" href="projects.html">Work</a>
+        <a href="about.html">About</a>
+        <a href="notes.html">Notes</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <div class="search-chip">Search… <kbd class="k">⌘K</kbd></div>
+        <div class="locale"><span class="on">EN</span><span>VI</span></div>
+        <button class="icon-btn" aria-label="Theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg></button>
+        <button class="icon-btn menu-btn" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      </div>
+    </div>
+    <div class="progress" aria-hidden="true"></div>
+  </header>
+
+  <main>
+    <section class="cs-hero atmosphere">
+      <div class="grid-bg"></div>
+      <div class="container">
+        <a class="crumb" href="projects.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M15 18l-6-6 6-6"/></svg>
+          All case studies
+        </a>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+          <span class="domain-pill amber"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/></svg> Fintech / Web3</span>
+          <span class="ver">v1 → <b>v2</b></span>
+        </div>
+        <h1>Particula v2: Vue 2 → Nuxt 3</h1>
+        <p class="text-prose muted" style="max-width:42ch;margin:0">Rewriting an RWA ratings app without stopping delivery.</p>
+        <dl class="meta-grid">
+          <div><dt>Client</dt><dd>Particula · Kobizo</dd></div>
+          <div><dt>Role</dt><dd>Main frontend</dd></div>
+          <div><dt>Team</dt><dd>6</dd></div>
+          <div><dt>Timeline</dt><dd>Feb 2024 — now</dd></div>
+          <div><dt>Stack</dt><dd>Nuxt 3 · TanStack · Playwright</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <div class="container" style="padding-bottom:8px">
+      <div class="ui-frame amber r21">
+        <div class="ui-chrome"><i></i><i></i><i></i><span>particula.app / ratings / asset-classes</span></div>
+        <div class="ui-body">
+          <div class="ui-side"><b></b><b></b><b style="width:70%"></b><b></b><b></b><b style="width:55%"></b></div>
+          <div class="ui-main">
+            <div class="ui-bars" style="height:58%"><i style="height:42%"></i><i style="height:70%"></i><i style="height:55%"></i><i style="height:92%"></i><i style="height:64%"></i><i style="height:78%"></i><i style="height:50%"></i><i style="height:66%"></i></div>
+            <div class="ui-row" style="width:76%"></div>
+            <div class="ui-row" style="width:58%"></div>
+            <div class="ui-row" style="width:68%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container layout-with-toc">
+      <article>
+        <div class="key-facts">
+          <div class="fact"><i></i><span>Strangler migration: Nuxt 3 hosted new routes beside Vue 2.</span></div>
+          <div class="fact"><i></i><span>TanStack Query replaced Axios as the server-state layer.</span></div>
+          <div class="fact"><i></i><span>Core component library rebuilt on PrimeVue tokens.</span></div>
+          <div class="fact"><i></i><span>120 Playwright specs against the ratings contract.</span></div>
+        </div>
+
+        <p class="eyebrow sec-eye">Result</p>
+        <h2>Outcome</h2>
+        <div class="stat-row">
+          <div class="stat"><div class="k">Bundle</div><div class="v"><span style="color:var(--destructive)">−</span> 412kB → 255kB</div></div>
+          <div class="stat"><div class="k">E2E specs</div><div class="v"><span style="color:var(--success)">+</span> 0 → 120</div></div>
+        </div>
+
+        <p class="eyebrow sec-eye">Summary</p>
+        <div class="prose">
+          <h2>Problem</h2>
+          <p>Particula’s investor app rated 20+ real-world asset classes. Vue 2 was end-of-life, the bundle was 412kB, and weekly delivery could not stop. A rewrite in place was not an option.</p>
+        </div>
+
+        <p class="eyebrow sec-eye">Limits</p>
+        <div class="prose">
+          <h2>Constraints</h2>
+          <ul class="b">
+            <li>Zero downtime for existing ratings dashboards</li>
+            <li>Design tokens had to survive the Vue 2 tree until cut-over</li>
+            <li>The Korean and US stakeholders reviewed English copy only</li>
+          </ul>
+        </div>
+
+        <p class="eyebrow sec-eye">Scope</p>
+        <h2>Requirements</h2>
+        <div class="req-grid">
+          <div class="req-card">
+            <h3>Functional</h3>
+            <ul>
+              <li>Ratings dashboards per asset class</li>
+              <li>Carbon-credit detail pages</li>
+              <li>Role-based views for analysts vs investors</li>
+            </ul>
+          </div>
+          <div class="req-card">
+            <h3>Non-functional</h3>
+            <ul>
+              <li>No stale ratings after publish</li>
+              <li>Bundle under 280kB gzip</li>
+              <li>Contract tests on every PR</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="eyebrow sec-eye">How</p>
+        <div class="prose">
+          <h2>Approach</h2>
+          <p>We ran a strangler. Nuxt 3 owned new routes from day one; Vue 2 kept serving the rest. Shared tokens lived in a package both apps imported. After six months the last Vue 2 route moved and we deleted v1.</p>
+        </div>
+
+        <p class="eyebrow sec-eye">Trade-offs</p>
+        <h2>Key decisions</h2>
+        <div class="decision">
+          <h3>Axios → TanStack Query</h3>
+          <dl>
+            <dt>Options</dt><dd>Keep Axios in Pinia · SWR · TanStack Query</dd>
+            <dt>Choice</dt><dd>TanStack Query</dd>
+            <dt>Why</dt><dd>Cache, retries and invalidation match “ratings must not go stale”.</dd>
+            <dt>Cost</dt><dd>Team had to unlearn store-as-server-state.</dd>
+          </dl>
+        </div>
+        <div class="decision">
+          <h3>PrimeVue as the v2 primitive set</h3>
+          <dl>
+            <dt>Options</dt><dd>Custom from scratch · PrimeVue · Naive UI</dd>
+            <dt>Choice</dt><dd>PrimeVue + a thin token layer</dd>
+            <dt>Why</dt><dd>Tables and dense filters ship weekly; we did not have time to own a kit.</dd>
+            <dt>Cost</dt><dd>Some density overrides. Worth it.</dd>
+          </dl>
+        </div>
+
+        <p class="eyebrow sec-eye">Retro</p>
+        <div class="prose">
+          <h2>What I’d do differently</h2>
+          <p>Move the design tokens first, not the first route. Two weeks of shared CSS variables would have saved a month of “why does this page look 4px off”.</p>
+        </div>
+
+        <div class="fact-chips">
+          <span>Vue 2 → Nuxt 3</span>
+          <span>0 downtime</span>
+          <span>6 months</span>
+          <span>team of 6</span>
+          <span>ReFi · RWA</span>
+        </div>
+      </article>
+      <aside class="toc">
+        <p>On this page</p>
+        <a href="#" class="current">Key facts</a>
+        <a href="#">Outcome</a>
+        <a href="#">Problem</a>
+        <a href="#">Requirements</a>
+        <a href="#">Approach</a>
+        <a href="#">Decisions</a>
+        <a href="#">Retro</a>
+        <p style="margin-top:24px">Stack</p>
+        <div class="tags"><span class="badge">Nuxt 3</span><span class="badge">Vue 3</span><span class="badge">TanStack</span><span class="badge">Playwright</span></div>
+      </aside>
+    </div>
+
+    <div class="band">
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <div class="left">
+              <span class="icon-tile amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="8"/></svg></span>
+              <div>
+                <div class="eyebrow">More work</div>
+                <h2>More case studies</h2>
+              </div>
+            </div>
+          </div>
+          <div class="work-grid">
+            <article class="card case-card is-hover">
+              <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+              <div class="ui-frame violet"><div class="ui-chrome"><i></i><i></i><i></i><span>carts.litgroup</span></div><div class="ui-body"><div class="ui-side"><b></b></div><div class="ui-main"><div class="ui-bars"><i style="height:50%"></i><i style="height:80%"></i><i style="height:40%"></i></div></div></div></div>
+              <div class="body">
+                <span class="domain-pill violet">E-commerce</span>
+                <h3>Cart migration tool</h3>
+                <p>Flask APIs + Vue 2 UI for four store platforms.</p>
+                <div class="diff tabular"><span class="plus">+</span> platforms 4</div>
+              </div>
+            </article>
+            <article class="card case-card">
+              <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+              <div class="ui-frame blue"><div class="ui-chrome"><i></i><i></i><i></i><span>sds · NDA</span></div><div class="ui-body"><div class="ui-side"><b></b></div><div class="ui-main"><div class="ui-bars"><i style="height:60%"></i><i style="height:35%"></i><i style="height:70%"></i></div></div></div></div>
+              <div class="body">
+                <span class="domain-pill blue">Enterprise</span>
+                <h3>MSP Advanced</h3>
+                <p>Re-platformed MSP App logic with a 15-person Korean team.</p>
+                <div class="diff tabular"><span class="plus">+</span> team 15 · KR</div>
+              </div>
+            </article>
+          </div>
+          <div class="pager">
+            <a href="#">← Previous<strong>MSP Advanced</strong></a>
+            <a href="#" style="text-align:right">Next →<strong>Cart migration tool</strong></a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container inner">
+      <span>© 2026 Parker Vu · Hung Vu Van — Senior Frontend</span>
+      <nav><a href="projects.html">Work</a><a href="notes.html">Notes</a><a href="#">CV</a></nav>
+      <span>a1b2c3</span>
+    </div>
+  </footer>
+</body>
+</html>
+
+

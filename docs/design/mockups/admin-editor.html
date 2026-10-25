@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Edit Particula v2 · Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="admin">
+    <aside class="sb">
+      <div class="sb-brand"><span class="logo mark" style="width:20px;height:20px;border-radius:5px;display:grid;place-items:center;background:var(--sidebar-primary);color:var(--sidebar-primary-foreground);font-size:11px">P</span> Parker</div>
+      <div class="sb-search">Search… <kbd class="k">⌘K</kbd></div>
+      <a href="admin-dashboard.html">Dashboard</a>
+      <a href="#">Inbox <span class="count">3</span></a>
+      <div class="sb-label">Content</div>
+      <a class="active" href="admin-table.html">Projects</a>
+      <a href="#">Posts</a>
+      <a href="#">Experience</a>
+      <a href="#">Skills</a>
+      <a href="#">Stats</a>
+      <a href="#">Domains</a>
+      <a href="#">Process</a>
+      <div class="sb-label">Site</div>
+      <a href="#">Site settings</a>
+      <a href="#">Profile</a>
+      <a href="#">Media</a>
+    </aside>
+    <div class="admin-main">
+      <div class="topbar">
+        <div class="crumbs">Projects / <strong>Particula v2</strong> <span class="saved">· Saved 4s ago</span></div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="btn btn-sm btn-secondary">Preview</button>
+          <button class="btn btn-sm btn-primary">Publish</button>
+        </div>
+      </div>
+      <div class="editor-shell">
+        <div class="editor-main">
+          <div class="tabs">
+            <button>EN <i class="dot-ok"></i></button>
+            <button>VI <i class="dot-miss"></i></button>
+            <button class="on">Card &amp; facts</button>
+          </div>
+          <div class="field">
+            <label>Domain</label>
+            <select style="height:32px;width:100%;border:1px solid var(--input);border-radius:6px;background:var(--background);color:var(--foreground);font:inherit;font-size:13.5px;padding:0 10px">
+              <option selected>Fintech / Web3 (ReFi) · amber</option>
+              <option>Enterprise platforms · blue</option>
+              <option>E-commerce tooling · violet</option>
+              <option>Developer experience · jade</option>
+            </select>
+            <div class="hue-swatches" style="margin-top:8px">
+              <i class="on" style="background:var(--hue-amber)"></i>
+              <i style="background:var(--hue-blue)"></i>
+              <i style="background:var(--hue-violet)"></i>
+              <i style="background:var(--hue-jade)"></i>
+              <i style="background:var(--hue-rose)"></i>
+            </div>
+          </div>
+          <div class="field">
+            <label>Key facts <span class="counter">4 / 4</span></label>
+            <textarea>Strangler migration: Nuxt 3 hosted new routes beside Vue 2.
+TanStack Query replaced Axios as the server-state layer.
+Core component library rebuilt on PrimeVue tokens.
+120 Playwright specs against the ratings contract.</textarea>
+          </div>
+          <div class="field">
+            <label>Fact chips <span class="counter">5 / 6</span></label>
+            <div class="chip-input">
+              <span class="badge badge-primary">Vue 2 → Nuxt 3 ×</span>
+              <span class="badge badge-primary">0 downtime ×</span>
+              <span class="badge badge-primary">6 months ×</span>
+              <span class="badge badge-primary">team of 6 ×</span>
+              <span class="badge badge-primary">ReFi · RWA ×</span>
+              <span class="badge">+</span>
+            </div>
+          </div>
+          <p style="font-size:12.5px;color:var(--subtle-foreground);margin:8px 0 0">⌘S save · ⌘↵ publish · live preview uses public CaseCard</p>
+        </div>
+        <aside class="editor-props">
+          <div class="preview-toggle">
+            <strong style="font-size:12.5px">Live preview</strong>
+            <div class="seg"><span class="on">Light</span><span>Dark</span></div>
+          </div>
+          <div class="live-preview">
+            <article class="card case-card" style="pointer-events:none">
+              <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+              <div class="ui-frame amber">
+                <div class="ui-chrome"><i></i><i></i><i></i><span>particula.app</span></div>
+                <div class="ui-body"><div class="ui-side"><b></b></div><div class="ui-main"><div class="ui-bars"><i style="height:50%"></i><i style="height:80%"></i><i style="height:40%"></i></div></div></div>
+              </div>
+              <div class="body">
+                <span class="domain-pill amber">Fintech / Web3</span>
+                <h3>Particula v2</h3>
+                <p>Rewriting an RWA ratings app without stopping delivery.</p>
+                <div class="diff tabular"><span class="minus">−</span> bundle 412→255kB</div>
+                <div class="chips"><span class="badge">Nuxt 3</span><span class="badge">TanStack</span></div>
+              </div>
+            </article>
+          </div>
+          <div class="prop" style="margin-top:16px">
+            <label>Status</label>
+            <div><span class="status pub"><i></i> Published</span></div>
+          </div>
+          <div class="prop" style="border:0">
+            <label>Slug</label>
+            <input value="particula-v2" />
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
+
