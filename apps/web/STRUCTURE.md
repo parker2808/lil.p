@@ -106,6 +106,7 @@ app/
 ├── api/revalidate/route.ts        # the only Next-owned /api routes (handlers win over the rewrite)
 ├── api/draft/route.ts
 ├── sitemap.ts, robots.ts
+└── globals.css                    # imports @portfolio/ui tokens + Tailwind @source for packages/ui
 ```
 
 There is no `app/layout.tsx`. `[locale]/layout.tsx` and `admin/layout.tsx` are the two root layouts.

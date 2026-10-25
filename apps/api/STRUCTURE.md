@@ -44,7 +44,7 @@ Keep that order in mind: guards decide whether a request is allowed, pipes check
 | Folder | What it is, in plain words | What goes in it |
 | --- | --- | --- |
 | `prisma/` | The database's source of truth. `schema.prisma` lists every table and column; `migrate dev` turns your edits into SQL files in `migrations/` | `schema.prisma`, `migrations/` (committed, never edited after applying), `seed/` |
-| `prisma/seed/` | Scripts that fill an empty DB with starting rows | `seed.ts` (entry), `profiles/demo.seed.ts` (dev/CI data), `profiles/baseline.seed.ts` (first production boot), `data/*.data.ts` (placeholder rows, `<email>`/`<phone>` only) |
+| `prisma/seed/` | Scripts that fill an empty DB with starting rows | `seed.ts` (entry), `profiles/demo.seed.ts` (dev/CI data), `profiles/baseline.seed.ts` (first production boot), `data/*.data.ts` (placeholder rows, `<email>`/`<phone>` only), `audit.seed.ts` (dev-only bulk rows for performance checks) |
 | `src/config/` | Settings that live outside the code (`.env`). Read once at start-up and validated, so a missing `DATABASE_URL` fails at boot instead of at the first query | `env.schema.ts` (zod), `app-config.service.ts` (typed getters), `config.module.ts` |
 | `src/prisma/` | The code side of Prisma: one shared `PrismaClient` wrapped as a Nest provider. Services inject it instead of creating their own connection | `prisma.module.ts` (global), `prisma.service.ts` |
 | `src/common/guards/` | A guard runs before the controller and answers yes/no | `session.guard.ts` (loads the session from the cookie), `roles.guard.ts` (`OWNER`/`EDITOR`/`VIEWER`), `origin.guard.ts` |
