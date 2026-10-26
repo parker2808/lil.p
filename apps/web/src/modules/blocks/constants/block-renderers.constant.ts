@@ -15,6 +15,10 @@ import {
   FeaturedCaseSkeleton,
 } from '../components/FeaturedCaseBlock/FeaturedCaseBlock';
 import { HeroBlock, HeroSkeleton } from '../components/HeroBlock/HeroBlock';
+import {
+  NotesBrowserBlock,
+  NotesBrowserSkeleton,
+} from '../components/NotesBrowserBlock/NotesBrowserBlock';
 import { PageHeaderBlock, PageHeaderSkeleton } from '../components/PageHeaderBlock/PageHeaderBlock';
 import { PostListBlock, PostListSkeleton } from '../components/PostListBlock/PostListBlock';
 import {
@@ -63,6 +67,7 @@ export const BLOCK_RENDERERS = {
   'cv-download': { component: CvDownloadBlock, skeleton: CvDownloadSkeleton },
   prose: { component: ProseBlock, skeleton: ProseSkeleton },
   'projects-browser': { component: ProjectsBrowserBlock, skeleton: ProjectsBrowserSkeleton },
+  'notes-browser': { component: NotesBrowserBlock, skeleton: NotesBrowserSkeleton },
 } satisfies Record<BlockType, BlockRendererEntry>;
 
 export type BlockRenderers = Record<string, BlockRendererEntry | undefined>;

@@ -66,6 +66,18 @@
     "more": "Thêm case study",
     "live": "Site thật"
   },
+  "notes": {
+    "all": "Tất cả",
+    "search": "Tìm ghi chú",
+    "hint": "Tìm",
+    "clear": "Xóa",
+    "noneFor": "Không có kết quả cho {name}",
+    "previous": "Trước",
+    "next": "Sau",
+    "pagination": "Trang ghi chú",
+    "results": "{count} ghi chú",
+    "note": "Ghi chú"
+  },
   "content": {
     "copy": "Sao chép",
     "copied": "Đã sao chép",

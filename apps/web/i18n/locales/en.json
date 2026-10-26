@@ -66,6 +66,18 @@
     "more": "More case studies",
     "live": "Live site"
   },
+  "notes": {
+    "all": "All",
+    "search": "Search notes",
+    "hint": "Search",
+    "clear": "Clear",
+    "noneFor": "No results for {name}",
+    "previous": "Previous",
+    "next": "Next",
+    "pagination": "Notes pages",
+    "results": "{count} notes",
+    "note": "Note"
+  },
   "content": {
     "copy": "Copy",
     "copied": "Copied",
