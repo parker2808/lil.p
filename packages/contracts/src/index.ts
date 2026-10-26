@@ -200,6 +200,7 @@ export {
   blockSurfaceSchema,
   layoutPresetSchema,
   PAGE_KEY_TO_PRISMA,
+  PAGE_PUBLIC_PATHS,
   pageKeySchema,
   PRISMA_PAGE_KEY_TO_PUBLIC,
   prismaPageKeySchema,
@@ -345,8 +346,12 @@ export type {
   PublicProjectListPage,
   PublicProjectMetric,
 } from './projects/projects.type';
-export { publicSiteSchema } from './public-site/public-site.schema';
-export type { PublicSite } from './public-site/public-site.type';
+export {
+  publicSitemapEntrySchema,
+  publicSitemapSchema,
+  publicSiteSchema,
+} from './public-site/public-site.schema';
+export type { PublicSite, PublicSitemap, PublicSitemapEntry } from './public-site/public-site.type';
 export type { Availability } from './site-settings/site-settings.enum';
 export { availabilitySchema } from './site-settings/site-settings.enum';
 export {

@@ -1,14 +1,20 @@
+import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { hasLocale } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 import { Providers } from '@/modules/core/components/Providers/Providers';
 import { fontClassName } from '@/modules/core/utils/fonts.util';
+import { metadataBase } from '@/modules/seo/utils/site-url.util';
 
 import { routing } from '../../i18n/routing';
 
 import '../globals.css';
+
+export const metadata: Metadata = {
+  metadataBase: metadataBase(),
+};
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

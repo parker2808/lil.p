@@ -6,6 +6,14 @@ import { KeyFacts } from '@portfolio/ui/components/KeyFacts/KeyFacts';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
+import { JsonLd } from '@/modules/seo/components/JsonLd/JsonLd';
+import {
+  breadcrumbListJsonLd,
+  creativeWorkJsonLd,
+  crumbLabel,
+} from '@/modules/seo/utils/json-ld.util';
+import { absoluteUrl } from '@/modules/seo/utils/site-url.util';
+
 import { CaseStudyHeader } from '../components/CaseStudyHeader/CaseStudyHeader';
 import { CaseStudyMeta } from '../components/CaseStudyMeta/CaseStudyMeta';
 import { CaseStudySections, caseStudyToc } from '../components/CaseStudySections/CaseStudySections';
@@ -46,9 +54,18 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
   const period = formatPeriod(project.startDate, project.endDate, locale, t('now'));
   const stack = project.skills.map((skill) => skill.name).join(' · ');
   const hue = project.domain?.hue ?? 'JADE';
+  const crumbs = crumbLabel[locale];
 
   return (
     <article>
+      <JsonLd data={creativeWorkJsonLd(project, locale)} />
+      <JsonLd
+        data={breadcrumbListJsonLd([
+          { name: crumbs.home, url: absoluteUrl(locale, '/') },
+          { name: crumbs.projects, url: absoluteUrl(locale, '/projects') },
+          { name: project.title, url: absoluteUrl(locale, `/projects/${project.slug}`) },
+        ])}
+      />
       <ContentProgress />
       <header className="relative overflow-hidden">
         <div

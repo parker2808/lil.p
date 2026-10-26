@@ -1,6 +1,9 @@
 import type { Locale } from '@portfolio/contracts';
 
 import { BlocksPage } from '@/modules/blocks/views/BlocksPage';
+import { getSite } from '@/modules/core/services/site.service';
+import { JsonLd } from '@/modules/seo/components/JsonLd/JsonLd';
+import { personJsonLd } from '@/modules/seo/utils/json-ld.util';
 
 export async function HomeIndex({
   locale,
@@ -9,5 +12,17 @@ export async function HomeIndex({
   locale: Locale;
   searchParams?: Record<string, string | string[] | undefined>;
 }) {
-  return <BlocksPage pageKey="home" locale={locale} searchParams={searchParams} />;
+  let jsonLd: Record<string, unknown> | null = null;
+  try {
+    jsonLd = personJsonLd(await getSite(locale));
+  } catch {
+    jsonLd = null;
+  }
+
+  return (
+    <>
+      {jsonLd ? <JsonLd data={jsonLd} /> : null}
+      <BlocksPage pageKey="home" locale={locale} searchParams={searchParams} />
+    </>
+  );
 }

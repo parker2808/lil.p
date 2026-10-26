@@ -2,9 +2,12 @@ import type { Locale } from '@portfolio/contracts';
 import { setRequestLocale } from 'next-intl/server';
 
 import { HomeIndex } from '@/modules/home/views/HomeIndex';
+import { buildHomeMetadata } from '@/modules/seo/utils/home-metadata.util';
 
 // Request-time fetch (D23). CI `next build` has no Nest process.
 export const dynamic = 'force-dynamic';
+
+export const generateMetadata = buildHomeMetadata;
 
 export default async function Page({
   params,
