@@ -3,9 +3,9 @@
 import { type ContactInput, contactSchema } from '@portfolio/contracts';
 import { headers } from 'next/headers';
 
-export type ContactActionResult =
-  | { ok: true }
-  | { ok: false; fieldErrors?: Record<string, string[]>; formError?: 'rateLimited' | 'failed' };
+import type { ContactActionResult } from './contact.result';
+
+export type { ContactActionResult } from './contact.result';
 
 function flattenIssues(error: { issues: Array<{ path: PropertyKey[]; message: string }> }) {
   const fieldErrors: Record<string, string[]> = {};
@@ -43,21 +43,39 @@ export async function submitContactForm(
   return submitContact(fromFormData(formData));
 }
 
+function requestOrigin(incoming: { get(name: string): string | null }): string {
+  const origin = incoming.get('origin');
+  if (origin && origin !== 'null') {
+    return origin;
+  }
+  const host = incoming.get('x-forwarded-host') ?? incoming.get('host');
+  if (host) {
+    const proto = incoming.get('x-forwarded-proto') ?? 'http';
+    return `${proto}://${host}`;
+  }
+  return process.env.WEB_ORIGIN ?? 'http://localhost:3000';
+}
+
 async function postContact(body: ContactInput): Promise<ContactActionResult> {
   const incoming = await headers();
   const forwarded = incoming.get('x-forwarded-for') ?? incoming.get('x-real-ip') ?? '';
-  const origin = process.env.WEB_ORIGIN ?? 'http://localhost:3000';
+  const origin = requestOrigin(incoming);
   const apiUrl = process.env.API_URL ?? 'http://127.0.0.1:4000';
-  const response = await fetch(new URL('/api/public/contact', apiUrl), {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      Origin: origin,
-      'x-forwarded-for': forwarded,
-    },
-    body: JSON.stringify(body),
-    cache: 'no-store',
-  });
+  let response: Response;
+  try {
+    response = await fetch(new URL('/api/public/contact', apiUrl), {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        Origin: origin,
+        'x-forwarded-for': forwarded,
+      },
+      body: JSON.stringify(body),
+      cache: 'no-store',
+    });
+  } catch {
+    return { ok: false, formError: 'failed' };
+  }
 
   if (response.status === 201) {
     return { ok: true };

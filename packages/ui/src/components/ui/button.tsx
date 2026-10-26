@@ -49,20 +49,30 @@ export function Button({
     loading?: boolean;
     asChild?: boolean;
   }) {
-  const Comp = asChild ? Slot : 'button';
+  const classes = cn(buttonVariants({ variant, size }), className);
+
+  if (asChild) {
+    return (
+      <Slot data-slot="button" className={classes} {...props}>
+        {children}
+      </Slot>
+    );
+  }
 
   return (
-    <Comp
+    <button
       data-slot="button"
-      className={cn(buttonVariants({ variant, size }), className)}
+      className={classes}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
       {...props}
     >
-      <span className={cn('inline-flex items-center gap-2', loading && 'invisible')}>
+      <span
+        className={cn('pointer-events-none inline-flex items-center gap-2', loading && 'invisible')}
+      >
         {children}
       </span>
       {loading ? <Spinner className="absolute" /> : null}
-    </Comp>
+    </button>
   );
 }

@@ -132,6 +132,7 @@ Imports: `@portfolio/ui/components/CaseCard`, `@portfolio/ui/components/ui/butto
 pnpm install                 # all workspaces (also installs git hooks via Husky)
 pnpm dev                     # web :3000 + api :4000 in parallel (MySQL via docker compose)
 pnpm lint | typecheck | test | build
+pnpm test:e2e                # Playwright (apps/web/e2e) against production builds + demo seed
 pnpm format                  # Prettier --write across the repo (one root config)
 pnpm format:check            # Prettier --check (also runs in CI)
 pnpm check:content           # no CV strings in UI code, no email/phone anywhere

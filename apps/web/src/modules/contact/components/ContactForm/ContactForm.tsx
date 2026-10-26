@@ -12,15 +12,32 @@ import { Field, FieldDescription, FieldError, FieldLabel } from '@portfolio/ui/c
 import { Input } from '@portfolio/ui/components/ui/input';
 import { Textarea } from '@portfolio/ui/components/ui/textarea';
 import { useForm } from '@tanstack/react-form';
-import { useMutation } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { useActionState, useEffect, useRef, useState } from 'react';
 
-import {
-  type ContactActionResult,
-  submitContact,
-  submitContactForm,
-} from '../../actions/contact.action';
+import { submitContactForm } from '../../actions/contact.action';
+import { submitContactClient } from '../../actions/contact.client';
+import type { ContactActionResult } from '../../actions/contact.result';
+
+function postedFields(form: HTMLFormElement): {
+  name: string;
+  email: string;
+  topic: string;
+  message: string;
+  website: string;
+  locale: Locale;
+} {
+  const data = new FormData(form);
+  const locale = String(data.get('locale') ?? 'en');
+  return {
+    name: String(data.get('name') ?? ''),
+    email: String(data.get('email') ?? ''),
+    topic: String(data.get('topic') ?? ''),
+    message: String(data.get('message') ?? ''),
+    website: String(data.get('website') ?? ''),
+    locale: locale === 'vi' ? 'vi' : 'en',
+  };
+}
 
 function firstError(errors: unknown[]): string | null {
   const first = errors[0];
@@ -41,8 +58,11 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
   const summaryRef = useRef<HTMLDivElement>(null);
   const [submitted, setSubmitted] = useState(false);
   const [actionState, formAction, actionPending] = useActionState(submitContactForm, null);
-  const mutation = useMutation({ mutationFn: submitContact });
-  const result: ContactActionResult | null = mutation.data ?? actionState;
+  const [clientResult, setClientResult] = useState<ContactActionResult | null>(null);
+  const [clientPending, setClientPending] = useState(false);
+  const result: ContactActionResult | null = clientResult ?? actionState;
+  const formRef = useRef<HTMLFormElement>(null);
+  const pending = clientPending || actionPending;
 
   const form = useForm({
     defaultValues: {
@@ -53,11 +73,37 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
       website: '',
       locale,
     },
-    validators: { onBlur: contactSchema as never, onSubmit: contactSchema as never },
-    onSubmit: async ({ value }) => {
-      await mutation.mutateAsync(value);
-    },
+    validators: { onBlur: contactSchema as never },
   });
+
+  function sendFrom(formEl: HTMLFormElement): boolean {
+    const posted = postedFields(formEl);
+    form.setFieldValue('name', posted.name);
+    form.setFieldValue('email', posted.email);
+    form.setFieldValue('topic', posted.topic);
+    form.setFieldValue('message', posted.message);
+    form.setFieldValue('website', posted.website);
+    form.setFieldValue('locale', posted.locale);
+    const parsed = contactSchema.safeParse(posted);
+    if (!parsed.success) {
+      setSubmitted(true);
+      summaryRef.current?.focus();
+      return false;
+    }
+    setClientPending(true);
+    void submitContactClient(parsed.data)
+      .then((next) => {
+        setClientResult(next);
+      })
+      .catch(() => {
+        setClientResult({ ok: false, formError: 'failed' });
+        summaryRef.current?.focus();
+      })
+      .finally(() => {
+        setClientPending(false);
+      });
+    return true;
+  }
 
   useEffect(() => {
     if (submitted || (result && !result.ok)) {
@@ -79,17 +125,13 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
 
   return (
     <form
+      ref={formRef}
       action={formAction}
       className="bg-card-glass border-border shadow-1 relative flex flex-col gap-4 rounded-xl border p-6"
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
-        setSubmitted(true);
-        void form.handleSubmit().then(() => {
-          if (!form.state.isValid) {
-            summaryRef.current?.focus();
-          }
-        });
+        sendFrom(event.currentTarget);
       }}
     >
       {showSummary ? (
@@ -212,8 +254,17 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
         )}
       </form.Field>
 
-      <Button type="submit" disabled={mutation.isPending || actionPending}>
-        {mutation.isPending || actionPending ? t('sending') : t('send')}
+      <Button
+        type="submit"
+        disabled={pending}
+        onClick={() => {
+          if (!formRef.current) {
+            return;
+          }
+          sendFrom(formRef.current);
+        }}
+      >
+        {pending ? t('sending') : t('send')}
       </Button>
     </form>
   );

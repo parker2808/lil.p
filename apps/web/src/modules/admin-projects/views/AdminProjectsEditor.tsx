@@ -17,6 +17,7 @@ import { z } from 'zod';
 import { listAdminExperience } from '@/modules/admin-about/services/experience.service';
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
 import { PublishActions } from '@/modules/admin-core/components/PublishActions/PublishActions';
+import { RoleGate } from '@/modules/admin-core/components/RoleGate/RoleGate';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
 import { useDirtyGuard } from '@/modules/admin-core/hooks/use-dirty-guard.hook';
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
@@ -197,54 +198,56 @@ function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
       completeness={completeness}
       publish={
         form.id == null ? null : (
-          <PublishActions
-            status={
-              form.status === 'PUBLISHED'
-                ? 'published'
-                : form.status === 'ARCHIVED'
-                  ? 'archived'
-                  : 'draft'
-            }
-            previewHref={
-              form.slug
-                ? `/api/draft?path=${encodeURIComponent(`/en/projects/${form.slug}`)}`
-                : null
-            }
-            busy={publish.isPending || unpublish.isPending}
-            labels={{
-              draft: editorT('draft'),
-              published: editorT('published'),
-              archived: editorT('archived'),
-              publish: editorT('publish'),
-              unpublish: editorT('unpublish'),
-              preview: editorT('previewPage'),
-            }}
-            onPublish={() => {
-              void persist().then(async () => {
+          <RoleGate allow={['admin']}>
+            <PublishActions
+              status={
+                form.status === 'PUBLISHED'
+                  ? 'published'
+                  : form.status === 'ARCHIVED'
+                    ? 'archived'
+                    : 'draft'
+              }
+              previewHref={
+                form.slug
+                  ? `/api/draft?path=${encodeURIComponent(`/en/projects/${form.slug}`)}`
+                  : null
+              }
+              busy={publish.isPending || unpublish.isPending}
+              labels={{
+                draft: editorT('draft'),
+                published: editorT('published'),
+                archived: editorT('archived'),
+                publish: editorT('publish'),
+                unpublish: editorT('unpublish'),
+                preview: editorT('previewPage'),
+              }}
+              onPublish={() => {
+                void persist().then(async () => {
+                  if (form.id == null) {
+                    return;
+                  }
+                  try {
+                    const result = await publish.mutateAsync(form.id);
+                    setForm(projectToForm(result));
+                    setBaseline(JSON.stringify(toCreateInput(projectToForm(result))));
+                  } catch (error) {
+                    if (error instanceof ApiError) {
+                      setFieldErrors(mapFieldErrors(error));
+                    }
+                  }
+                });
+              }}
+              onUnpublish={() => {
                 if (form.id == null) {
                   return;
                 }
-                try {
-                  const result = await publish.mutateAsync(form.id);
+                void unpublish.mutateAsync(form.id).then((result) => {
                   setForm(projectToForm(result));
                   setBaseline(JSON.stringify(toCreateInput(projectToForm(result))));
-                } catch (error) {
-                  if (error instanceof ApiError) {
-                    setFieldErrors(mapFieldErrors(error));
-                  }
-                }
-              });
-            }}
-            onUnpublish={() => {
-              if (form.id == null) {
-                return;
-              }
-              void unpublish.mutateAsync(form.id).then((result) => {
-                setForm(projectToForm(result));
-                setBaseline(JSON.stringify(toCreateInput(projectToForm(result))));
-              });
-            }}
-          />
+                });
+              }}
+            />
+          </RoleGate>
         )
       }
       labels={{

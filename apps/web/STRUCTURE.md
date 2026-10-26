@@ -10,7 +10,8 @@ This file covers how `apps/web` is laid out. It follows the conventions of Parke
 app/                      # thin route files (page.tsx, layout.tsx, route.ts) → module views
 src/modules/              # feature UI (one folder per feature)
 i18n/                     # next-intl config + locales/{en,vi}.json (fixed UI labels only)
-e2e/                      # Playwright specs
+e2e/                      # Playwright: public, contact, admin-publish, admin-pages (demo seed, production builds)
+playwright.config.ts      # Chromium, one worker, starts Nest + Next against the test DB
 proxy.ts                  # Next 16: locale routing; /admin/* without an access_token cookie → /admin/login
 next.config.ts            # /api/* rewrite to NestJS, transpilePackages
 components.json           # shadcn: points at packages/ui

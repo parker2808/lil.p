@@ -7,3 +7,6 @@ uploads
 storybook-static
 *.tsbuildinfo
 apps/api/src/generated
+test-results
+playwright-report
+blob-report

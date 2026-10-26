@@ -1,10 +1,5 @@
 import type { PublicProjectDetail } from '@portfolio/contracts';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-} from '@portfolio/ui/components/ui/breadcrumb';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbList } from '@portfolio/ui/components/ui/breadcrumb';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { Icon } from '@portfolio/ui/components/Icon/Icon';
 import { VersionTag } from '@portfolio/ui/components/VersionTag/VersionTag';
@@ -24,9 +19,9 @@ export function CaseStudyHeader({
       <Breadcrumb aria-label={labels.back}>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/projects">{labels.back}</Link>
-            </BreadcrumbLink>
+            <Link href="/projects" className="hover:text-foreground">
+              {labels.back}
+            </Link>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

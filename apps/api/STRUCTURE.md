@@ -58,7 +58,7 @@ Keep that order in mind: guards decide whether a request is allowed, pipes check
 | `src/common/utils/` | Plain helper functions, no Nest | `paginate.util.ts` (skip/take from page + pageSize), `slug.util.ts`, `reading-time.util.ts`, `ip-hash.util.ts` |
 | `src/i18n/` | The API speaks two content languages. Public routes take `?locale=en\|vi` and return one language; admin routes return both columns | `locale.decorator.ts` (`@Locale()`), `pick-locale.util.ts` (+ `.spec.ts`) |
 | `src/modules/` | One folder per domain. A module groups the controller(s), service and DTOs for one thing | see "Module layout" |
-| `test/` | Tests that start the whole app and call it over HTTP against a separate test database | `*.e2e-spec.ts`, `helpers/` (`create-app.ts`, `reset-db.ts`, `auth.helper.ts`: an `admin` and a `user` agent with cookies) |
+| `test/` | Tests that start the whole app and call it over HTTP against a separate test database | `*.e2e-spec.ts` (incl. `health.e2e-spec.ts` for `GET /api/health` + public site locale validation), `helpers/` (`create-app.ts`, `reset-db.ts`, `auth.helper.ts`: an `admin` and a `user` agent with cookies) |
 
 ## Module layout
 
