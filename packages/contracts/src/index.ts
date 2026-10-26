@@ -8,6 +8,8 @@ export type { ParseBlockResult, ParseBlockRow } from './blocks/resolve-block.uti
 export { parseBlock, resolveBlockLocale } from './blocks/resolve-block.util';
 export type { ApiErrorBody, ErrorCode } from './common/api-error.schema';
 export { apiErrorSchema, errorCodeSchema } from './common/api-error.schema';
+export type { Paginated } from './common/list-params.schema';
+export { listParamsSchema, paginatedSchema, parseSort } from './common/list-params.schema';
 export type { Locale } from './common/locale.schema';
 export { localeQuerySchema, localeSchema } from './common/locale.schema';
 export { publishLint } from './common/publish-lint.util';
@@ -43,16 +45,18 @@ export { publicPageSchema } from './pages/pages.schema';
 export type { PublicPage } from './pages/pages.type';
 export {
   adminPostInputSchema,
+  postListParamsSchema,
   publicPostDetailSchema,
   publicPostListItemSchema,
-  publicPostListQuerySchema,
+  publicPostListPageSchema,
   publicPostTagSchema,
 } from './posts/posts.schema';
 export type {
   AdminPostInput,
+  PostListParams,
   PublicPostDetail,
   PublicPostListItem,
-  PublicPostListQuery,
+  PublicPostListPage,
   PublicPostTag,
 } from './posts/posts.type';
 export { publicPrincipleSchema } from './principles/principles.schema';
@@ -68,17 +72,19 @@ export type { PublicProfileStat } from './profile-stats/profile-stats.type';
 export type { ContentStatus } from './projects/projects.enum';
 export { contentStatusSchema } from './projects/projects.enum';
 export {
+  projectListParamsSchema,
   publicProjectDetailSchema,
   publicProjectExperienceSchema,
   publicProjectListItemSchema,
-  publicProjectListQuerySchema,
+  publicProjectListPageSchema,
   publicProjectMetricSchema,
 } from './projects/projects.schema';
 export type {
+  ProjectListParams,
   PublicProjectDetail,
   PublicProjectExperience,
   PublicProjectListItem,
-  PublicProjectListQuery,
+  PublicProjectListPage,
   PublicProjectMetric,
 } from './projects/projects.type';
 export { publicSiteSchema } from './public-site/public-site.schema';

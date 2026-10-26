@@ -33,6 +33,30 @@ describe('PostsService', () => {
     await expect(service.getPublic('draft-note', 'en')).rejects.toBeInstanceOf(NotFoundException);
   });
 
+  it('pages published posts with a stable sort and total', async () => {
+    const findMany = vi.fn().mockResolvedValue([published]);
+    const prisma = {
+      post: { findMany, count: vi.fn().mockResolvedValue(2) },
+      $transaction: vi.fn((ops: Promise<unknown>[]) => Promise.all(ops)),
+    };
+    const service = new PostsService(prisma as never);
+    const page = await service.listPublic('en', {
+      page: 1,
+      pageSize: 1,
+      sort: '-publishedAt',
+    });
+
+    expect(page).toMatchObject({ page: 1, pageSize: 1, total: 2 });
+    expect(page.items).toHaveLength(1);
+    expect(findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        skip: 0,
+        take: 1,
+        orderBy: [{ publishedAt: 'desc' }, { id: 'asc' }],
+      }),
+    );
+  });
+
   it('falls back to English when Vietnamese body is missing', async () => {
     const service = new PostsService({
       post: { findFirst: vi.fn().mockResolvedValue(published) },

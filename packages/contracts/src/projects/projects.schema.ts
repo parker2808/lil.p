@@ -1,10 +1,16 @@
 import { z } from 'zod';
 
+import { listParamsSchema, paginatedSchema } from '../common/list-params.schema';
 import { localeSchema } from '../common/locale.schema';
 import { publicProjectDomainSchema } from '../domains/domains.schema';
 import { publicSkillChipSchema } from '../skills/skills.schema';
 
-export const publicProjectListQuerySchema = z.object({
+export const projectListParamsSchema = listParamsSchema([
+  'sortOrder',
+  '-sortOrder',
+  '-id',
+  'id',
+]).extend({
   featured: z.enum(['1', 'true', '0', 'false']).optional(),
   domain: z.string().min(1).optional(),
   skill: z.string().min(1).optional(),
@@ -46,6 +52,8 @@ export const publicProjectListItemSchema = z.object({
   skills: z.array(publicSkillChipSchema),
   lang: localeSchema,
 });
+
+export const publicProjectListPageSchema = paginatedSchema(publicProjectListItemSchema);
 
 export const publicProjectDetailSchema = publicProjectListItemSchema.extend({
   role: z.string(),

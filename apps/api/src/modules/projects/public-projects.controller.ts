@@ -1,8 +1,9 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import {
+  type ProjectListParams,
+  projectListParamsSchema,
   type PublicProjectDetail,
-  type PublicProjectListItem,
-  publicProjectListQuerySchema,
+  type PublicProjectListPage,
 } from '@portfolio/contracts';
 
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
@@ -16,9 +17,8 @@ export class PublicProjectsController {
   @Get()
   list(
     @Locale() locale: 'en' | 'vi',
-    @Query(new ZodValidationPipe(publicProjectListQuerySchema))
-    query: { featured?: '1' | 'true' | '0' | 'false'; domain?: string },
-  ): Promise<PublicProjectListItem[]> {
+    @Query(new ZodValidationPipe(projectListParamsSchema)) query: ProjectListParams,
+  ): Promise<PublicProjectListPage> {
     return this.projects.listPublic(locale, query);
   }
 

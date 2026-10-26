@@ -1,8 +1,9 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import {
+  type PostListParams,
+  postListParamsSchema,
   type PublicPostDetail,
-  type PublicPostListItem,
-  publicPostListQuerySchema,
+  type PublicPostListPage,
 } from '@portfolio/contracts';
 
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
@@ -16,8 +17,8 @@ export class PublicPostsController {
   @Get()
   list(
     @Locale() locale: 'en' | 'vi',
-    @Query(new ZodValidationPipe(publicPostListQuerySchema)) query: { tag?: string },
-  ): Promise<PublicPostListItem[]> {
+    @Query(new ZodValidationPipe(postListParamsSchema)) query: PostListParams,
+  ): Promise<PublicPostListPage> {
     return this.posts.listPublic(locale, query);
   }
 
