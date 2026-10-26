@@ -2,7 +2,7 @@
 
 [English](./PLAN.md) · Cấu trúc: [root](../STRUCTURE.md) · [web](../apps/web/STRUCTURE.md) · [api](../apps/api/STRUCTURE.md) · Snapshot thiết kế: [docs/design/](./design/)
 
-Plan này biến design của Parker (spec, Figma, mockup, practice roadmap) thành 61 task nhỏ. Mỗi task là một pull request mà một implementation agent, hoặc Parker, có thể tự làm xong và merge. Các task đi theo thứ tự của practice roadmap (p01–p33, milestone M0–M7), nên code lớn lên theo đúng nhịp của các bài học.
+Plan này biến design của Parker (spec, Figma, mockup, practice roadmap) thành 66 task nhỏ. Mỗi task là một pull request mà một implementation agent, hoặc Parker, có thể tự làm xong và merge. Các task đi theo thứ tự của practice roadmap (p01–p33, milestone M0–M7), nên code lớn lên theo đúng nhịp của các bài học.
 
 ## Mục lục
 
@@ -23,7 +23,7 @@ Plan này biến design của Parker (spec, Figma, mockup, practice roadmap) th�
 
 ## 0. Cách dùng plan này
 
-1. Chọn task có số nhỏ nhất mà mọi **Phụ thuộc** của nó đều đã merge. Các task trong cùng milestone không phụ thuộc nhau có thể chạy song song.
+1. Chọn task có số nhỏ nhất mà mọi **Phụ thuộc** của nó đều đã merge. Các task trong cùng milestone không phụ thuộc nhau có thể chạy song song. Task có hậu tố chữ cái (T10a, T45b) được thêm sau và nằm ngay sau số của nó: T10a đứng sau T10 và trước T11.
 2. Đọc theo thứ tự: task, các mục spec mà task trích dẫn, Figma node và mockup mà task nêu tên, rồi các file STRUCTURE.md để biết path.
 3. Làm trên một branch, mở một PR cho mỗi task, và dùng **Tiêu đề PR** của task. Khi roadmap có sẵn commit message cho bước đó, tiêu đề PR dùng lại message đó.
 4. Copy list **Tiêu chí nghiệm thu** của task vào PR description dưới dạng checklist, kèm [Definition of Done](#2-ground-rules-and-definition-of-done). Tick từng mục kèm bằng chứng (output của một lệnh, một screenshot, tên một test).
@@ -45,7 +45,7 @@ Cỡ task: **S** vừa một session ngắn (một nhóm file, không có khái 
 | 5 | Các file **STRUCTURE.md** | Mỗi file nằm ở đâu, cách đặt tên | [root](../STRUCTURE.md), [apps/web](../apps/web/STRUCTURE.md), [apps/api](../apps/api/STRUCTURE.md) |
 | 6 | `colors.json` (Figma export) | Test oracle cho color token | [docs/design/colors.json](./design/colors.json): 58 token × light/dark, giống hệt spec §3.6 |
 
-**Thứ tự ưu tiên khi các nguồn mâu thuẫn:** spec thắng về giá trị, behavior, data và API (1). Tên trong Figma theo spec, nên một giá trị bị lệch là bug của Figma: dùng giá trị của spec và ghi chú lại trong PR (2). Layout theo mockup và Figma frame (3). Thứ tự và cách dạy theo roadmap (4), trừ chỗ một quyết định ở §3 thay một chi tiết của roadmap bằng lựa chọn của spec. File path theo STRUCTURE.md (5), thay cho các path minh họa trong spec (xem D20). Một quyết định đánh dấu **Parker** ở §3 là lựa chọn riêng của Parker sau khi spec đã viết xong; nó thắng mọi nguồn ở trên, kể cả spec (hiện tại: D7 và D24 về auth, D25 về editor của admin).
+**Thứ tự ưu tiên khi các nguồn mâu thuẫn:** spec thắng về giá trị, behavior, data và API (1). Tên trong Figma theo spec, nên một giá trị bị lệch là bug của Figma: dùng giá trị của spec và ghi chú lại trong PR (2). Layout theo mockup và Figma frame (3). Thứ tự và cách dạy theo roadmap (4), trừ chỗ một quyết định ở §3 thay một chi tiết của roadmap bằng lựa chọn của spec. File path theo STRUCTURE.md (5), thay cho các path minh họa trong spec (xem D20). Một quyết định đánh dấu **Parker** ở §3 là lựa chọn riêng của Parker sau khi spec đã viết xong; nó thắng mọi nguồn ở trên, kể cả spec (hiện tại: D7 và D24 về auth, D25 về editor của admin, D26 về page dựng từ block).
 
 **Ghi chú về snapshot.**
 
@@ -59,13 +59,14 @@ Cỡ task: **S** vừa một session ngắn (một nhóm file, không có khái 
 
 **Quy tắc nền (mọi task).**
 
-1. **Không hard-code content.** Mọi text mà visitor đọc và nói về Parker hoặc site đều đến từ API và edit được trong `/admin`. Code chỉ chứa design token, UI label cố định trong `apps/web/i18n/locales/{en,vi}.json`, và danh sách route (spec [§1.5](./design/portfolio-design-system.vi.md#s-1-5), [§4.5](./design/portfolio-design-system.vi.md#s-4-5)).
+1. **Không hard-code content.** Mọi text mà visitor đọc và nói về Parker hoặc site đều đến từ API và edit được trong `/admin`. Code chỉ chứa design token, UI label cố định trong `apps/web/i18n/locales/{en,vi}.json`, danh sách route, và block registry (có những block type nào và zod schema cho props của chúng, không bao giờ là content của chúng; D26) (spec [§1.5](./design/portfolio-design-system.vi.md#s-1-5), [§4.5](./design/portfolio-design-system.vi.md#s-4-5)).
 2. **Privacy.** Không bao giờ commit email hay số điện thoại thật. Dùng `<email>` và `<phone>` trong seed, fixture, test, doc và `.env.example`. Nếu không, `pnpm check:content` (từ T14) sẽ làm build fail.
 3. **Chỉ dùng token.** Màu, radius, shadow, spacing và font size đến từ `packages/ui/src/styles/globals.css`. Không hex value, không arbitrary value của Tailwind (`text-[17px]`, `bg-[#…]`) trong component. Chỉ dùng 11 text size có tên: `text-display`, `text-title`, `text-heading`, `text-subheading`, `text-prose`, `text-body`, `text-meta`, `text-eyebrow`, `text-ui-title`, `text-ui`, `text-ui-meta` (spec [§3.2](./design/portfolio-design-system.vi.md#s-3-2)).
 4. **Chữ dễ đọc.** Body 16px / 1.6, prose 18px / 1.75 / max 66ch. Cảm giác "richer" đến từ surface và icon, không bao giờ từ chữ nhỏ hơn hay contrast thấp hơn (spec §7.1 G8). Áp dụng line-height tối thiểu cho tiếng Việt (1.2 cho heading, 1.5 cho UI).
 5. **File đặt đúng chỗ STRUCTURE.md quy định.** List **File** của task dùng các path đó. Một loại folder mới cần cập nhật STRUCTURE.md trong cùng PR.
 6. **An toàn database.** Không bao giờ sửa một migration đã apply; hãy thêm migration mới. Không bao giờ chạy `prisma db push` khi đã có migration.
 7. **Một task, một PR.** Không kéo việc của task sau lên làm trước. Nếu thiếu thứ gì, stub nó sau interface nhỏ nhất có thể và ghi chú lại.
+8. **Một block type được thêm trong một PR, vào mọi registry cùng lúc** (D26): definition của nó trong `packages/contracts/src/blocks/definitions/` + `block-registry.constant.ts`, renderer của nó trong `apps/web/src/modules/blocks/` + `block-renderers.constant.ts`, và từ T45b trở đi, entry admin của nó trong `apps/web/src/modules/admin-pages/constants/block-editor-meta.constant.ts` cùng các label `admin.blocks.*`. Các registry phía web có type `satisfies Record<BlockType, …>`, nên thiếu một entry thì `pnpm typecheck` fail.
 
 **Definition of Done (DoD), copy vào mọi PR.**
 
@@ -89,7 +90,7 @@ Các quyết định này chốt những chỗ các nguồn mâu thuẫn hoặc 
 | --- | --- | --- |
 | D1 | Repo root của `lil.p` là monorepo. Folder `portfolio/` trong roadmap nghĩa là repository này. | Roadmap được viết trước khi repo tồn tại |
 | D2 | Code dùng chung nằm trong `packages/ui` và `packages/contracts`, không phải một `packages/shared`. | Spec §4.0 và §6 tách chúng ra; roadmap p01/p08 ghi `packages/shared` |
-| D3 | Text dài (các section case study, body của post, bio) là **Markdown trong `@db.Text`**, render trên Next server bằng một pipeline an toàn duy nhất (không raw HTML, element theo allowlist, output của Shiki được chuyển thành React, không `dangerouslySetInnerHTML`). Quyết định này thay cho "JSON blocks" của roadmap p12; các rule của p12 (input validate bằng zod, draft không hiện ra) vẫn áp dụng. | Spec §1.5 và §4.3 (`MarkdownEditor`) |
+| D3 | Text dài (các section case study, body của post, bio) là **Markdown trong `@db.Text`**, render trên Next server bằng một pipeline an toàn duy nhất (không raw HTML, element theo allowlist, output của Shiki được chuyển thành React, không `dangerouslySetInnerHTML`). Quyết định này thay cho "JSON blocks" của roadmap p12; các rule của p12 (input validate bằng zod, draft không hiện ra) vẫn áp dụng. Phần bố cục page thì có dùng JSON block (D26); text dài bên trong một block vẫn là Markdown. | Spec §1.5 và §4.3 (`MarkdownEditor`) |
 | D4 | API route theo spec: `/api/public/*` (không auth), `/api/admin/*` (JWT đã login, D24), `/api/auth/*`, cộng thêm một aggregate `GET /api/public/site?locale` cho layout. Các URL trong roadmap như `GET /settings`, `GET /posts` map vào các route này. | Spec §4.5, §5.0 |
 | D5 | Mọi error dùng chung một body: `{ statusCode, code, message, requestId, fieldErrors? }`. | Spec §4.6 |
 | D6 | List dùng pagination theo page: request `?page&pageSize&sort&q&…`, response `{ items, page, pageSize, total }`, `pageSize` tối đa 100. Chỉ audit log và media library dùng cursor pagination (`?cursor&limit`). Các check của p13 vẫn áp dụng: lật qua tất cả row không bị trùng hay sót (sort luôn kết thúc bằng `id`), và `pageSize=500` trả 400 kèm field error. | Mockup admin table hiện "1–5 of 5" và các page size; spec §4.6 chỉ dùng cursor cho infinite list |
@@ -98,13 +99,13 @@ Các quyết định này chốt những chỗ các nguồn mâu thuẫn hoặc 
 | D9 | Không CORS. Browser chỉ nói chuyện với Next; `next.config.ts` rewrite `/api/*` sang Nest. Mục "CORS" của roadmap p05 được bỏ qua. API bind vào `127.0.0.1` cho tới khi có guard (T36). | Spec §1.6, §6 |
 | D10 | Quan hệ many-to-many dùng implicit join table của Prisma (`skills Skill[]` ở cả hai phía). Check `ProjectSkill` của roadmap p11 trở thành "các join row `_ProjectToSkill` nhìn thấy được trong Prisma Studio". | Spec §1.5 |
 | D11 | Tên: `ContactMessage` và `ContactTopic` (không phải `Message`), public route `/notes` (không phải `/blog`), `Domain`, `ProfileStat`, `ProcessStep`. | Spec §1.5, §5.5 |
-| D12 | Các Prisma model đầu tiên (T08) là `SiteSettings`, `Profile`, `NavItem`, `SocialLink`, `PageSection`. `Experience` đến ở T15. Check của roadmap p06 "Studio hiện SiteSettings, Profile, Experience" trở thành "Studio hiện SiteSettings, Profile, NavItem, SocialLink, PageSection". | Spec §6 Day 4 và aggregate `GET /public/site` cần năm model này trước |
+| D12 | Các Prisma model đầu tiên (T08) là `SiteSettings`, `Profile`, `NavItem`, `SocialLink`, `Page`, `PageBlock` (D26). `Experience` đến ở T15. Check của roadmap p06 "Studio hiện SiteSettings, Profile, Experience" trở thành "Studio hiện SiteSettings, Profile, NavItem, SocialLink, Page, PageBlock". | Spec §6 Day 4, aggregate `GET /public/site` và các page block cần các model này trước |
 | D13 | Hai seed profile trong `apps/api/prisma/seed/profiles/`: **`demo`** (dev, CI, screenshot: project `PUBLISHED`, 3 post mẫu, message và view mẫu) và **`baseline`** (lần boot production đầu tiên: danh sách seed ở spec §1.5, project `DRAFT`, 0 post). Chọn bằng `SEED_PROFILE`. Mọi giá trị là placeholder lấy từ mockup/wireframe; metric hiện trong demo chỉ lấy từ wireframe. | Spec §1.5 seed draft và 0 post, nhưng screen public nào cũng cần data đã publish để build và test |
 | D14 | Media nhận JPG, PNG, WebP, AVIF và **PDF** (file resume cho `Profile.resumeEnId/ViId`). Image có thêm variant WebP; PDF được lưu nguyên như cũ. Tối đa 10 MB. | Spec §1.5 link resume tới `Media` |
 | D15 | Storybook nằm trong `packages/ui` (`@storybook/react-vite`, addon-a11y, một nút chuyển light/dark trên toolbar). Mọi product component đều đi kèm một story. | Spec §6 Days 1–6 build component dựa trên fixture |
 | D16 | CI (GitHub Actions) bắt đầu từ T01 với install + lint + typecheck + build và lớn dần theo từng task (test từ T05, build Storybook ở T06, API test ở T29, e2e ở T56). | Roadmap p28 thêm CI muộn; có CI sớm giúp PR nào cũng merge được |
 | D17 | Test database là một MySQL service thứ hai thuộc compose profile `test` (port 3307), được thêm ở T29 cùng các integration test đầu tiên. | Roadmap p15/p28 |
-| D18 | Các key của `PageSection`. **HOME:** `hero`, `stats`, `marquee`, `featured`, `domains`, `work`, `process`, `skills`, `notes`, `cta`. **ABOUT:** `intro`, `stats`, `experience`, `principles`, `skills`, `education`, `cv`. **PROJECTS, NOTES, CONTACT:** `header` (H1 của page + intro). | Spec §1.5 liệt kê ví dụ; §5.1–5.6 cần các key này. Key `header` lấp chỗ trống cho title của các list page |
+| D18 | Block mặc định của từng page, seed dưới dạng `key` của block → block type (D26). **HOME:** `hero` → `hero`, `stats` → `stat-band`, `marquee` → `tech-marquee` (stats và marquee dùng chung một band), `featured` → `featured-case`, `domains` → `domain-grid`, `work` → `case-grid`, `process` → `process`, `skills` → `skill-groups`, `notes` → `post-list`, `cta` → `cta-band`. **ABOUT:** `intro` → `about-intro`, `stats` → `stat-band` (compact), `experience` → `timeline`, `principles` → `principle-list`, `skills` → `skill-groups`, `education` → `education-list`, `cv` → `cv-download`. **PROJECTS:** `header` → `page-header`, `projects` → `projects-browser`. **NOTES:** `header` → `page-header`, `notes` → `notes-browser`. **CONTACT:** `contact` → `contact-form`. Các key này là key `PageSection` cũ, nên anchor như `/#work` vẫn chạy. | Spec §1.5 liệt kê ví dụ section; §5.1–5.6 cần các block này. `header` lấp chỗ trống cho title của các list page. Heading của CONTACT nằm bên trong `contact-form`, vì mockup đặt nó trong cột cạnh form |
 | D19 | Locale fallback theo từng nhóm field. Một nhóm DTO public (ví dụ một project card, body của một post) chỉ dùng tiếng Việt khi mọi field dịch được có giá trị tiếng Anh cũng có giá trị tiếng Việt; nếu không, cả nhóm là tiếng Anh với `lang: "en"`. | Spec §1.5 "falling back to English with `lang` on the field group" |
 | D20 | Path trong STRUCTURE.md thay cho path minh họa trong spec: `apps/web/messages/` → `apps/web/i18n/locales/`; `packages/contracts/icons.ts` → `src/constants/icons.constant.ts`; `query-keys.ts` → `src/constants/query-keys.constant.ts`; `fixtures/*` → `src/fixtures/*.fixture.ts`. | Quy ước đặt tên của Parker (kebab-case + hậu tố) |
 | D21 | Một shadcn primitive được thêm bởi task đầu tiên dùng nó, không thêm tất cả cùng lúc. | Giữ PR nhỏ và dễ review |
@@ -112,6 +113,7 @@ Các quyết định này chốt những chỗ các nguồn mâu thuẫn hoặc 
 | D23 | Fetch public dùng `revalidate: 3600` + tag trên production và `revalidate: 0` khi development (`NODE_ENV`), nên thay đổi seed hiện ra ngay mà không phải chờ. | Check của roadmap p09 "seed lại thì home page thay đổi" |
 | D24 | **Parker.** Auth dùng **JWT thay cho session MySQL**: `@nestjs/jwt` ký, `passport-jwt` (qua `@nestjs/passport`) verify. Một **access token** ngắn (15 phút, payload `{ sub, role }`) và một **refresh token** dài hơn (7 ngày, payload `{ sub, ver }`), ký bằng hai secret khác nhau. Cả hai nằm trong cookie `httpOnly` do API set (`access_token` trên `Path=/`, `refresh_token` trên `Path=/api/auth`), không bao giờ ở `localStorage` hay bộ nhớ JS; cách này chạy được vì Next proxy `/api/*`, nên cookie là first-party với origin của web (D9). Không có bảng `Session`: `User.tokenVersion` là công tắc khẩn cấp ("sign out everywhere", khóa tài khoản, đổi password đều tăng nó, và mọi lần refresh đều check nó). Đánh đổi, đã chấp nhận: access token đã cấp vẫn dùng được tới khi hết hạn (tối đa 15 phút), và logout thường chỉ xóa cookie của browser này. | Thay cho spec §1.5 `Session`, dòng Auth ở §1.6 (vốn chọn session) và "session MySQL" của roadmap p18; mục tiêu học của p18 (hash, cookie httpOnly, logout) vẫn giữ |
 | D25 | **Parker.** `MarkdownEditor` của admin được dựng trên **Tiptap v3** (ProseMirror), chỉ dùng các package MIT miễn phí từ npm registry public: `@tiptap/react`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/markdown`, `@tiptap/extensions` và `@tiptap/extension-*`. Không dùng Tiptap Pro hay extension trả phí, không dùng registry `@tiptap-pro/*`, không Tiptap Cloud, Collaboration, Comments hay AI, không cần tài khoản hay token Tiptap; `pnpm check:deps` enforce điều này trong CI (T42). Cách lưu không đổi (D3): editor load với `contentType: 'markdown'` và lưu `editor.getMarkdown()`. Schema của nó chính là allowlist Markdown dùng chung với renderer public (`packages/contracts/src/constants/markdown.constant.ts`, T23), nên editor không thể tạo ra thứ mà site public sẽ bỏ đi. Code block dùng `@tiptap/extension-code-block-lowlight` + `lowlight` lúc viết; chế độ Preview hiện đúng output Shiki của trang public. | Thay cho `MarkdownEditor` (CodeMirror 6) ở spec §4.0 và §4.3; toolbar, slash menu, paste ảnh, các chế độ, word count và `SaveStatus` của spec vẫn giữ |
+| D26 | **Parker.** Page public được **dựng từ block quản lý trong admin**. Mỗi page trong năm route page (`HOME`, `ABOUT`, `PROJECTS`, `NOTES`, `CONTACT`) là một list có thứ tự gồm các row `PageBlock`: `type`, `key` (anchor), `props` (MySQL `JSON`), một `layout` preset, `surface`, `sortOrder`, `isVisible`. Block type chỉ đến từ một **registry nằm trong code** gồm các component của design system (`packages/contracts/src/blocks/`). Mỗi type có một zod 4 props schema, được API dùng để validate mọi lần ghi và mọi lần đọc, và được admin biến thành một TanStack Form (`z.toJSONSchema` + gợi ý widget qua `.meta()`), cùng các page, layout và giới hạn được phép của nó. Layout chỉ được chọn từ preset (`ONE`, `TWO`, `THREE`, `FOUR`, `SPLIT_8_4`, `SPLIT_4_8`, `SPLIT_7_5`) với luật responsive cố định (§4); không có grid tự do theo từng field. Page builder trong admin (T45b) sắp xếp block bằng drag and drop với `@dnd-kit/core` + `@dnd-kit/sortable` (MIT; move up/down vẫn giữ làm cách thay thế cho bàn phím và một-con-trỏ), thêm, nhân bản, xóa và ẩn block, và sửa props trong form được generate. Mỗi page có một draft (các row) và các version đã publish (JSON snapshot `PageVersion`): publish copy draft thành một version mới, version nào cũng restore được vào draft, và live preview hiện draft qua Next draft mode (T52a). Page public vẫn là React Server Component có cache tag (`page:{key}` + tag data của từng block). Type lạ hoặc props sai không bao giờ làm vỡ page: API bỏ block đó và log lại, web không render gì cho type nó không biết, và mỗi block có `SectionBoundary` riêng. `PageSection` trở thành `PageBlock`: cùng model thứ tự và hiển thị, với các cột `title`, `intro` và `ctaLabel` chuyển vào `props`, nên không có model thứ hai. Page chi tiết (`/projects/[slug]`, `/notes/[slug]`) giữ template cố định, và text dài vẫn là Markdown (D3). | Thay cho `PageSection` ở spec §1.5 (key cố định, mỗi key một component), luật sắp xếp ở §4.5 và tab Sections ở §5.10; đưa `BlockRenderer` của roadmap p14 và "block editor list" của p22 trở lại ở cấp page. Đặt block tự do trên grid và block nằm cạnh nhau là hướng mở rộng có thể làm sau (Q13) |
 
 <a id="4-architecture-at-a-glance"></a>
 
@@ -134,7 +136,66 @@ Browser ──► Next.js apps/web :3000 ──/api/* rewrite──► NestJS ap
 
 **Environment (`.env.example`, lớn dần theo từng task).** `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE=portfolio`, `MYSQL_USER=app`, `MYSQL_PASSWORD`, `DATABASE_URL`, `DATABASE_URL_TEST` (T29), `API_PORT=4000`, `API_HOST=127.0.0.1`, `WEB_ORIGIN=http://localhost:3000`, `API_URL=http://127.0.0.1:4000` (web → api), `WEB_INTERNAL_URL=http://127.0.0.1:3000` (api → web revalidate, T52), `REVALIDATE_SECRET` (T52), `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET` (T35, mỗi cái 32+ ký tự random, khác nhau), `JWT_ACCESS_TTL_SECONDS=900`, `JWT_REFRESH_TTL_SECONDS=604800` (T35), `ADMIN_EMAIL="<email>"`, `ADMIN_NAME`, `ADMIN_PASSWORD` (T35), `ANALYTICS_SALT_SECRET` (T54), `UPLOAD_DIR=./uploads` (T50), `SEED_PROFILE=demo`, `NEXT_PUBLIC_BUILD_SHA` (hash deploy ở footer).
 
-**Rendering (spec [§4.6](./design/portfolio-design-system.vi.md#s-4-6)).** Public page là React Server Component gọi `apiServer()` kèm cache tag (`site`, `projects`, `project:{slug}`, `posts`, `post:{slug}`, `skills`, `domains`). Khi publish, API gọi `POST /api/revalidate` trên web app, endpoint này chạy `revalidateTag`. Client island (search notes, contact form, pause marquee, ⌘K) là các file `'use client'` nhỏ. Admin prefetch trên server, hydrate bằng `HydrationBoundary`, và đọc bằng `useSuspenseQuery` với key từ `qk`.
+**Rendering (spec [§4.6](./design/portfolio-design-system.vi.md#s-4-6)).** Public page là React Server Component gọi `apiServer()` kèm cache tag (`site`, `page:{key}`, `projects`, `project:{slug}`, `posts`, `post:{slug}`, `skills`, `domains`). Khi publish, API gọi `POST /api/revalidate` trên web app, endpoint này chạy `revalidateTag`. Client island (search notes, contact form, pause marquee, ⌘K) là các file `'use client'` nhỏ. Admin prefetch trên server, hydrate bằng `HydrationBoundary`, và đọc bằng `useSuspenseQuery` với key từ `qk`.
+
+**Page và block (D26).** Mỗi page trong năm route page là một `Page` với một list có thứ tự gồm các row `PageBlock`. `GET /api/public/pages/:key?locale` trả về `{ key, seo, blocks }`, mỗi block là `{ id, type, key, layout, surface, props, lang }` với text đã ở sẵn một ngôn ngữ (D19 theo từng block). Web tra `type` trong `blocks/constants/block-renderers.constant.ts` và render container của block đó; container tự fetch data của nó (project, post, skill) với cache tag riêng, bên trong `SectionBoundary` riêng. Block lưu setting và tham chiếu, không bao giờ lưu bản copy của content: một `case-grid` nói *những* project nào được hiện, còn project vẫn nằm trong table của nó.
+
+```text
+Page(home) ─┬─ PageBlock key=hero   type=hero       layout=SPLIT_7_5  props={ primaryCta, secondaryCta, showDiagram }
+            ├─ PageBlock key=stats  type=stat-band  surface=BAND      props={ heading, variant: "default" }
+            ├─ PageBlock key=work   type=case-grid  layout=THREE      props={ heading, source: "latest", limit: 3 }
+            └─ PageBlock key=cta    type=cta-band                     props={ title, intro, showEmail, showSocial }
+PageVersion(home, v3) = một JSON snapshot của các row đó; visitor đọc snapshot đã publish (T52a)
+```
+
+**Catalog block.** Được định nghĩa trong `packages/contracts/src/blocks/definitions/`, render bởi `apps/web/src/modules/blocks/`. Block "H1" đứng đầu, visible và không bao giờ bị xóa; block "required" không bao giờ bị xóa hay ẩn. `heading` là nhóm `SectionHeader` dùng chung (`eyebrow`, `title`, `intro`, `iconKey`, `link` optional). Mọi text prop là một cặp `{ en, vi }`.
+
+| Type | Component của design system | Page | Layout (mặc định đứng đầu) | Props chính | Task |
+| --- | --- | --- | --- | --- | --- |
+| `hero` | `KickerPill`, `AccentHeadline`, `Atmosphere`, `MigrationDiagram`, `Button` | HOME (H1) | `SPLIT_7_5`, `ONE` | `primaryCta`, `secondaryCta` (label + route), `showDiagram`, `showAvailability`; headline và kicker lấy từ `Profile` | T10a, T14, T24 |
+| `page-header` | `Eyebrow`, H1, intro | PROJECTS, NOTES (H1) | `ONE` | `eyebrow`, `title`, `intro` | T10a, T14 |
+| `cta-band` | `CtaBand`, `CopyEmailButton` | mọi page, tối đa 1 | `ONE` | `title`, `intro`, `showEmail`, `showSocial` (`SocialLink.showInCta`) | T10a, T14 |
+| `stat-band` | `StatBand` | HOME, ABOUT | `ONE` | `heading`, `variant` (`default` / `compact`), `statIds` (trống = tất cả) | T24 |
+| `tech-marquee` | `TechMarquee` | HOME, ABOUT | `ONE` | `heading` | T24 |
+| `featured-case` | `CaseCard` (`featured`) | HOME | `ONE` | `heading`, `projectId` (trống = project featured đầu tiên) | T24 |
+| `domain-grid` | `DomainCard` | HOME, PROJECTS | `FOUR`, `TWO` | `heading` | T24 |
+| `case-grid` | `CaseCard` | HOME, ABOUT | `THREE`, `TWO`, `ONE` | `heading`, `source` (`latest` / `featured` / `manual`), `projectIds`, `domainSlug`, `limit` 1–6 | T24 |
+| `process` | `FeatureCard`, `ProcessFlow` | HOME, ABOUT | `TWO`, `SPLIT_7_5` | `heading`, `showPrinciples` | T24 |
+| `skill-groups` | `SkillGroup` | HOME, ABOUT | `THREE`, `ONE` | `heading` | T24 |
+| `post-list` | `PostCard` | HOME, ABOUT, PROJECTS, CONTACT | `ONE`, `TWO`, `THREE` | `heading`, `limit` 1–6, `tag` | T24 |
+| `about-intro` | card avatar, bio `Markdown`, `Badge` availability | ABOUT (H1) | `SPLIT_4_8` | `eyebrow`, `showCity`, `showAvailability`; tên và bio lấy từ `Profile` | T25 |
+| `timeline` | `Timeline` | ABOUT | `ONE` | `heading` | T25 |
+| `principle-list` | `PrincipleList` | ABOUT, HOME | `TWO`, `ONE` | `heading` | T25 |
+| `education-list` | list `card` | ABOUT | `ONE`, `TWO` | `heading` | T25 |
+| `cv-download` | card CV | ABOUT, CONTACT | `ONE` | `heading`, `intro` | T25 |
+| `prose` | `Markdown` → `Prose`, `Callout`, `CodeBlock` | mọi page | `ONE`, `SPLIT_8_4` | `heading`, `body`, `aside` (Markdown, D3) | T25 |
+| `projects-browser` | `DomainFilter`, `TechFilter`, grid `CaseCard`, `pagination` | PROJECTS (required) | `TWO`, `THREE` | `showFeatured`, `pageSize` | T26 |
+| `notes-browser` | `NotesSearch`, pill tag, các row `PostCard` | NOTES (required) | `ONE` | `showFeatured`, `pageSize` | T28 |
+| `contact-form` | `ContactForm`, card kênh liên hệ | CONTACT (H1) | `TWO`, `ONE` | `eyebrow`, `title`, `intro` | T48 |
+
+**Layout preset.** Một block chọn một trong các preset được phép của nó; không có grid tự do (D26, Q13). Preset nằm trên grid 4 / 8 / 12 cột của spec với gutter 16 / 24 / 32px (§4.4); breakpoint là `--breakpoint-md` (768px) và `--breakpoint-lg` (1024px).
+
+| Preset | Dưới 768px | 768–1023px | Từ 1024px | Dùng cho |
+| --- | --- | --- | --- | --- |
+| `ONE` | 1 cột | 1 | 1 | list, prose ở 66ch, band |
+| `TWO` | 1 | 2 | 2 | grid card; contact (thông tin, form) |
+| `THREE` | 1 | 2 | 3 | grid case và skill (mockup `.work-grid`) |
+| `FOUR` | 1 | 2 | 4 | grid domain (mockup `.domain-grid`) |
+| `SPLIT_8_4`, `SPLIT_4_8` | xếp chồng | xếp chồng | 8 + 4 hoặc 4 + 8 trên 12 | main + aside (prose có aside, intro của About) |
+| `SPLIT_7_5` | xếp chồng | xếp chồng | 7 + 5 trên 12 | text hero + diagram, process (mockup `.hero-grid`, `.featured-card`) |
+
+Luật responsive cho mọi preset:
+- Các cột render từ trái sang phải theo thứ tự DOM và xếp chồng theo đúng thứ tự đó. Không có CSS đổi thứ tự, nên thứ tự focus khớp với thứ bạn nhìn thấy.
+- Một grid có ít item hơn số cột vẫn giữ nguyên độ rộng cột.
+- Các block `BAND` liền nhau dùng chung một `Band`, nên hai band không bao giờ chạm nhau (spec §4.4).
+- Atmosphere chỉ xuất hiện trên `hero` và `cta-band`.
+
+**Luật của page.** API check các luật này ở mọi lần ghi và khi publish:
+- mỗi page có đúng một block H1, luôn đứng đầu và visible;
+- block required không bao giờ bị xóa hay ẩn;
+- `maxPerPage` là 1 cho block H1, các browser và `cta-band`;
+- một type chỉ được thêm vào các page có trong danh sách của nó;
+- `key` của block là kebab-case và unique trên page của nó, và nó chính là anchor (`/#work`).
 
 **Locale.** `en` (mặc định) và `vi`, URL có prefix (`/en/…`, `/vi/…`) qua next-intl. Public API call truyền `?locale=`; API chọn cột (D19). Admin có chrome tiếng Anh và edit cả hai cột cạnh nhau (`LocaleTabs`).
 
@@ -160,6 +221,7 @@ Link Figma dùng dạng `https://www.figma.com/design/ULYJR56vSbNQhZE3JxvkRu/?no
 | Admin dashboard (dark) | `14:2` | `admin-dashboard.html` | `06-admin-dashboard` | §5.7, §5.11 | T37, T38, T54 |
 | Admin table project | `15:2` | `admin-table.html` | `07-admin-projects-table` | §5.8, §5.11 | T39, T40, T41 |
 | Admin editor project | `18:2` | `admin-editor.html` | `08-admin-project-editor` | §5.9, §5.11 | T42, T43, T44 |
+| Admin page builder (chưa có frame: ghép từ `18:2` và `15:2`) | không có | không có | n/a | §5.10, D26 | T45b, T52a |
 
 **Figma component set → code.**
 
@@ -193,10 +255,11 @@ Path: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct**
 | T08 | Prisma: model layout site, migration đầu tiên, seed profile | p06 | T02, T07 | L | api `prisma/`, `src/prisma/` |
 | T09 | Package contracts + `GET /api/public/site` | p07 | T08 | L | ct `src/`, api `modules/public-site/`, `i18n/` |
 | T10 | Validation pipe, error filter, request id, logging | p08 | T09 | M | api `src/common/` |
+| T10a | Contracts cho block registry + `GET /api/public/pages/:key` | p08 | T10 | M | ct `src/blocks/`, `src/pages/`, api `modules/pages/` |
 | T11 | Data layer của web + next-intl + layout theo locale | p09 | T05, T09 | L | web `app/[locale]/`, `i18n/`, `core/services/` |
 | T12 | UI primitive khớp với các component set trong Figma | p09 | T06 | M | ui `components/ui/`, `components/[Name]/` |
 | T13 | Component trạng thái + atmosphere | p09 | T12 | M | ui `components/[Name]/`, `hooks/` |
-| T14 | Site shell + hero/CTA của home từ API + content check | p09 | T11, T13 | L | web `core/`, `home/`, `scripts/check-content.mjs` |
+| T14 | Site shell + hero/CTA của home từ API + content check | p09 | T10a, T11, T13 | L | web `core/`, `blocks/`, `scripts/check-content.mjs` |
 | **M2** | **Đồ thị nội dung** | | | | |
 | T15 | Model + endpoint cho nội dung About | p10 | T10 | M | api `modules/experience/` … |
 | T16 | Domain + project + metric (one-to-many) | p10 | T15 | L | api `modules/domains/`, `modules/projects/` |
@@ -207,8 +270,8 @@ Path: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct**
 | T21 | Section rich: StatBand, TechMarquee, ProcessFlow, PrincipleList, FeatureCard, SkillGroup | p14 | T13, T17 | M | ui `components/` |
 | T22 | MigrationDiagram | p14 | T13, T17 | M | ui `components/MigrationDiagram/` |
 | T23 | Markdown pipeline + Prose + CodeBlock + công cụ hỗ trợ đọc | p14 | T11, T12 | L | web `modules/content/`, ui `components/` |
-| T24 | Home v2 hoàn chỉnh | p14 | T14, T19, T20, T21, T22 | L | web `modules/home/` |
-| T25 | Page About + Timeline | p14 | T24 | L | web `modules/about/`, ui `Timeline/` |
+| T24 | Home v2 hoàn chỉnh | p14 | T14, T19, T20, T21, T22 | L | web `modules/blocks/`, ct `blocks/definitions/` |
+| T25 | Page About + Timeline | p14 | T23, T24 | L | web `modules/blocks/`, `about/`, ui `Timeline/` |
 | T26 | List project | p14 | T14, T19, T20 | M | web `modules/projects/` |
 | T27 | Case study của project | p14 | T23, T26 | L | web `modules/projects/` |
 | T28 | List notes + post | p14 | T19, T20, T23 | L | web `modules/notes/` |
@@ -216,8 +279,9 @@ Path: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct**
 | T29 | Write API admin cho project + test DB | p15 | T19 | L | api `modules/projects/admin-*`, `test/` |
 | T30 | Write API: post, experience, education, principle, stat, process | p15 | T29 | M | api `modules/*/admin-*` |
 | T31 | Write API: skill, category, tag, domain | p15 | T29 | M | api `modules/*/admin-*` |
-| T32 | Write API: site, profile, nav, social, section, contact topic | p15 | T29 | M | api `modules/*/admin-*` |
-| T33 | Reorder trong transaction + thay tag | p16 | T31, T32 | M | api services, `common/utils/` |
+| T32 | Write API: site, profile, nav, social, contact topic | p15 | T29 | M | api `modules/*/admin-*` |
+| T32a | Write API: page và block | p15 | T10a, T29 | L | api `modules/pages/`, ct `pages/` |
+| T33 | Reorder trong transaction + thay tag | p16 | T31, T32, T32a | M | api services, `common/utils/` |
 | T34 | Index + EXPLAIN | p17 | T33 | S | api `prisma/`, `docs/sql-notes.sql` |
 | **M4** | **Auth + CMS admin** | | | | |
 | T35 | User, argon2, cookie JWT access + refresh | p18 | T29 | L | api `modules/auth/`, `modules/users/` |
@@ -230,7 +294,9 @@ Path: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct**
 | T42 | Editor shell + Tiptap MarkdownEditor + autosave | p22 | T39 | L | web `admin-core/`, ui `MarkdownEditor/` |
 | T43 | Editor project | p22 | T42 | L | web `admin-projects/` |
 | T44 | Editor post + experience | p22 | T42 | M | web `admin-posts/`, `admin-about/` |
-| T45 | Admin cho site, section, profile | p22 | T33, T42 | L | web `admin-site/` |
+| T45 | Admin cho site settings + profile | p22 | T33, T42 | L | web `admin-site/` |
+| T45a | Form props sinh từ schema (zod → TanStack Form) | p22 | T41, T42 | M | web `admin-core/components/SchemaForm/` |
+| T45b | Page builder: block, drag and drop, layout | p22 | T33, T45a | L | web `admin-pages/`, ui `SortableList/` |
 | T46 | Admin user (chỉ admin) + tự đổi password | p22 | T37 | M | web `admin-users/`, api `modules/users/` |
 | **M5** | **Realtime, media, publish** | | | | |
 | T47 | API contact + inbox | p23 | T36 | M | api `modules/contact/`, `contact-topics/` |
@@ -239,19 +305,20 @@ Path: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct**
 | T50 | Media API: upload, variant, relation | p24 | T36 | L | api `modules/media/` |
 | T51 | Media UI: library, uploader, picker | p24 | T42, T50 | M | web `admin-media/`, ui `MediaLibrary/` |
 | T52 | Workflow publish + revalidate + draft preview | p25 | T27, T28, T43, T44 | L | api `modules/publishing/`, web `app/api/` |
+| T52a | Publish page, version, live preview | p25 | T45b, T52 | L | api `modules/pages/`, web `admin-pages/`, `blocks/` |
 | **M6** | **Chất lượng** | | | | |
-| T53 | SEO từ CMS | p26 | T24, T25, T27, T28 | M | web `modules/seo/`, `app/sitemap.ts` |
+| T53 | SEO từ CMS | p26 | T24, T25, T27, T28, T52a | M | web `modules/seo/`, `app/sitemap.ts` |
 | T54 | Analytics + chart trên dashboard | p27 | T38, T49 | M | api `modules/analytics/`, web `admin-insights/` |
 | T55 | Audit log | p27 | T36, T38 | M | api `modules/audit/`, web `admin-insights/` |
-| T56 | Test + e2e trên CI | p28 | T52 | M | web `e2e/`, `.github/workflows/` |
+| T56 | Test + e2e trên CI | p28 | T52a | M | web `e2e/`, `.github/workflows/` |
 | T57 | Audit accessibility + performance | p29 | T53 | M | `docs/audits/` |
 | **M7** | **Ship** | | | | |
 | T58 | Compose cho production | p30 | T56 | M | `compose.prod.yml`, `apps/*/Dockerfile` |
 | T59 | Hardening + backup | p31 | T58 | M | `infra/caddy/`, `scripts/backup/` |
-| T60 | Dọn seed production + check placeholder | p32 | T45, T51, T52 | S | api `prisma/seed/`, `scripts/` |
+| T60 | Dọn seed production + check placeholder | p32 | T45, T51, T52a | S | api `prisma/seed/`, `scripts/` |
 | T61 | Pipeline deploy + checklist launch | p33 | T58, T59, T60 | M | `.github/workflows/deploy.yml`, `docs/` |
 
-Độ phủ roadmap: mọi bước p01–p33 đều map tới ít nhất một task. p04 được tách thành T04–T06, p09 thành T11–T14, p14 thành T20–T28, p15 thành T29–T32, p21 thành T39–T41 và p22 thành T42–T46.
+Độ phủ roadmap: mọi bước p01–p33 đều map tới ít nhất một task. p04 được tách thành T04–T06, p08 thành T10–T10a, p09 thành T11–T14, p14 thành T20–T28, p15 thành T29–T32a, p21 thành T39–T41, p22 thành T42–T46 (cùng T45a, T45b) và p25 thành T52–T52a.
 
 <a id="7-tasks"></a>
 
@@ -478,19 +545,20 @@ Mỗi task dùng cùng một template: **Roadmap · Spec · Phụ thuộc · C�
 - `prisma/schema.prisma` theo các quy ước ở §1.5 (`id` autoincrement, `createdAt`/`updatedAt`, cặp cột `En`/`Vi`, `sortOrder`/`isVisible`, `@@map` sang snake_case, `@db.Text` cho markdown):
   - `SiteSettings` (1 row): mọi field ở §1.5, gồm cả `ambientEffects`, `marqueeEnabled`; `ogImageId` tạm là `Int?` thường cho tới khi có media (T50 thêm relation).
   - `Profile` (1 row): mọi field ở §1.5, gồm cả `heroKicker{En,Vi}`, `headlineAccent{En,Vi}`, `phone` private; `avatarId`, `resumeEnId`, `resumeViId` tạm thời là `Int?` thường.
-  - `NavItem`, `SocialLink` (có `showInHeader`, `showInCta`), `PageSection` (`@@unique([page, key])`).
-  - Enum `Availability`, `NavLocation`, `SocialKind`, `Page`.
+  - `NavItem`, `SocialLink` (có `showInHeader`, `showInCta`).
+  - Cặp model của page (D26): `Page` (`key` là enum `PageKey` `@unique`; `seoTitle{En,Vi}?`, `seoDescription{En,Vi}?`) và `PageBlock` (`pageId` → `Page` với `onDelete: Cascade`, `type` `VarChar(48)`, `key` `VarChar(48)`, `schemaVersion Int @default(1)`, `props Json`, `layout` là enum `LayoutPreset`, `surface` là enum `BlockSurface` (`PLAIN` | `BAND`), `sortOrder`, `isVisible`; `@@unique([pageId, key])`, `@@index([pageId, sortOrder])`). `type` là string thường, không phải enum trong DB, nên một block type mới về sau không cần migration; T10a check nó với registry.
+  - Enum `Availability`, `NavLocation`, `SocialKind`, `PageKey`, `LayoutPreset`, `BlockSurface`.
 - Migration đầu tiên `pnpm prisma migrate dev --name init-site`.
-- Seed (D13): `prisma/seed/seed.ts` đọc `SEED_PROFILE` (`demo` | `baseline`) và chạy `profiles/demo.seed.ts` hoặc `profiles/baseline.seed.ts`; row lấy từ `prisma/seed/data/site.data.ts`. Chỉ dùng giá trị placeholder: copy từ wireframe/mockup, `contactEmail: '<email>'`, `phone: '<phone>'`. Seed mọi key `PageSection` từ D18. Upsert trên unique key để chạy hai lần cũng không thay đổi gì.
+- Seed (D13): `prisma/seed/seed.ts` đọc `SEED_PROFILE` (`demo` | `baseline`) và chạy `profiles/demo.seed.ts` hoặc `profiles/baseline.seed.ts`; row lấy từ `prisma/seed/data/site.data.ts`. Chỉ dùng giá trị placeholder: copy từ wireframe/mockup, `contactEmail: '<email>'`, `phone: '<phone>'`. Seed năm row `Page` và các block mặc định của chúng từ D18 (`prisma/seed/data/pages.data.ts`: `type`, `key`, `layout`, `surface`, `props` placeholder với text `{ en, vi }`). Upsert trên unique key để chạy hai lần cũng không thay đổi gì.
 - `src/prisma/prisma.module.ts` (`@Global`) và `prisma.service.ts` (extends `PrismaClient`, connect khi module init).
 - `GET /api/health` trả thêm `db: "ok"` sau khi chạy `SELECT 1`.
 - Script `db:migrate`, `db:reset`, `db:seed`, `db:studio`.
 
 **Ngoài phạm vi.** Các table content (T15+), public endpoint (T09).
 
-**File.** `apps/api/prisma/schema.prisma`, `apps/api/prisma/migrations/*_init_site/`, `apps/api/prisma/seed/seed.ts`, `apps/api/prisma/seed/profiles/{demo,baseline}.seed.ts`, `apps/api/prisma/seed/data/site.data.ts`, `apps/api/prisma.config.ts` (Prisma 7+), `apps/api/src/prisma/{prisma.module.ts,prisma.service.ts}`, `apps/api/src/modules/health/health.controller.ts`.
+**File.** `apps/api/prisma/schema.prisma`, `apps/api/prisma/migrations/*_init_site/`, `apps/api/prisma/seed/seed.ts`, `apps/api/prisma/seed/profiles/{demo,baseline}.seed.ts`, `apps/api/prisma/seed/data/{site,pages}.data.ts`, `apps/api/prisma.config.ts` (Prisma 7+), `apps/api/src/prisma/{prisma.module.ts,prisma.service.ts}`, `apps/api/src/modules/health/health.controller.ts`.
 
-**Thiết kế.** Các table "Site" và "About · Profile" ở spec §1.5; các key của D18.
+**Thiết kế.** Các table "Site" và "About · Profile" ở spec §1.5; block mặc định của D18, D26.
 
 **Các bước backend, giải thích.**
 1. **ORM.** Prisma biến `schema.prisma` thành các table SQL và một client có type. Bạn viết `prisma.profile.findUnique({ where: { id: 1 } })` thay vì SQL, và TypeScript biết mọi cột.
@@ -499,10 +567,11 @@ Mỗi task dùng cùng một template: **Roadmap · Spec · Phụ thuộc · C�
 4. **Seed.** Một script điền dữ liệu vào DB trống. `upsert` (update-or-insert) giúp chạy lại nhiều lần vẫn an toàn. Có hai profile: `demo` cho dev và CI một site đầy đủ, `baseline` là dữ liệu ban đầu của production (D13).
 5. **PrismaService.** Một connection dùng chung, được đăng ký làm global provider của Nest, nên service nào cũng có thể xin nó trong constructor thay vì tự mở connection riêng.
 6. **Xem data.** `pnpm db:studio` mở Prisma Studio; dùng Adminer cũng được.
+7. **Một cột JSON.** `PageBlock.props` là MySQL `JSON`: mỗi row có thể có shape riêng. Mở một row trong Adminer để xem. MySQL không check bên trong có gì; T10a thêm việc check đó trong code.
 
 **Tiêu chí nghiệm thu.**
 - [ ] `pnpm --filter @portfolio/api prisma migrate reset` tạo lại các table và seed chúng (roadmap p06).
-- [ ] Prisma Studio hiện row trong SiteSettings, Profile, NavItem, SocialLink, PageSection (roadmap p06, điều chỉnh theo D12).
+- [ ] Prisma Studio hiện row trong SiteSettings, Profile, NavItem, SocialLink, Page, PageBlock (roadmap p06, điều chỉnh theo D12).
 - [ ] Chạy seed hai lần vẫn giữ nguyên số row.
 - [ ] Mô tả PR tóm tắt SQL được generate.
 - [ ] Dùng `rg` tìm pattern email/phone trong `apps/api/prisma` chỉ thấy `<email>` và `<phone>`.
@@ -517,31 +586,31 @@ Mỗi task dùng cùng một template: **Roadmap · Spec · Phụ thuộc · C�
 **Mục tiêu.** Một public endpoint trả về mọi thứ layout cần, đã ở sẵn ngôn ngữ được yêu cầu, có type nhờ một package contracts dùng chung.
 
 **Phạm vi.**
-- Tạo `packages/contracts` (`@portfolio/contracts`, chỉ phụ thuộc `zod`). Build bằng `tsup` ra `dist/` (ESM + CJS + type) để Nest dùng được; `pnpm dev` ở root chạy `tsup --watch`.
-- Contracts: `common/locale.schema.ts`, `common/api-error.schema.ts`, và các public DTO schema trong `site-settings/`, `profile/`, `navigation/`, `social-links/`, `page-sections/`, `public-site/` (`[domain].schema.ts` + `[domain].type.ts` + `[domain].enum.ts`), `constants/routes.constant.ts` (các public route thật cho `NavItem.href`).
+- Tạo `packages/contracts` (`@portfolio/contracts`, chỉ phụ thuộc `zod`; zod 4, vì block dùng `.meta()` và `z.toJSONSchema`, D26). Build bằng `tsup` ra `dist/` (ESM + CJS + type) để Nest dùng được; `pnpm dev` ở root chạy `tsup --watch`.
+- Contracts: `common/locale.schema.ts`, `common/api-error.schema.ts`, và các public DTO schema trong `site-settings/`, `profile/`, `navigation/`, `social-links/`, `public-site/` (`[domain].schema.ts` + `[domain].type.ts` + `[domain].enum.ts`), `constants/routes.constant.ts` (các public route thật cho `NavItem.href`).
 - API `src/i18n/`: `locale.decorator.ts` (`@Locale()` đọc `?locale`, mặc định `en`), `pick-locale.util.ts` hiện thực D19 (`pickGroup(row, ['headline', 'subheadline'], locale)` → `{ headline, subheadline, lang }`), kèm `pick-locale.util.spec.ts`.
-- Các module sở hữu table (service + entity + mapper, chưa có controller): `site-settings`, `profile`, `navigation`, `social-links`, `page-sections`. Mapper của profile không bao giờ output `phone`.
-- `modules/public-site/`: `public-site.controller.ts` (`GET /public/site`), `public-site.service.ts` (gọi song song năm service; chỉ lấy row visible, sắp theo `sortOrder`). Response: `{ settings, profile, nav: { header, footer }, socialLinks, sections }`. `profileStats` sẽ được T15 thêm vào.
+- Các module sở hữu table (service + entity + mapper, chưa có controller): `site-settings`, `profile`, `navigation`, `social-links`. Mapper của profile không bao giờ output `phone`. Page block có module và endpoint riêng ở T10a.
+- `modules/public-site/`: `public-site.controller.ts` (`GET /public/site`), `public-site.service.ts` (gọi song song bốn service; chỉ lấy row visible, sắp theo `sortOrder`). Response: `{ settings, profile, nav: { header, footer }, socialLinks }`. `profileStats` sẽ được T15 thêm vào.
 - Singleton bị thiếu thì trả về 404 `{ code: "NOT_SEEDED", message }`. T10 sẽ biến nó thành error body đầy đủ.
 - Request trong `api.http` với `?locale=en` và `?locale=vi`.
 
 **Ngoài phạm vi.** Validation global và error filter (T10). Phía web dùng data (T11).
 
-**File.** `packages/contracts/{package.json,tsconfig.json,tsup.config.ts}`, `packages/contracts/src/index.ts`, `packages/contracts/src/common/{locale.schema.ts,api-error.schema.ts}`, `packages/contracts/src/{site-settings,profile,navigation,social-links,page-sections,public-site}/*`, `packages/contracts/src/constants/routes.constant.ts`, `apps/api/src/i18n/{locale.decorator.ts,pick-locale.util.ts,pick-locale.util.spec.ts}`, `apps/api/src/modules/{site-settings,profile,navigation,social-links,page-sections}/{[domain].module.ts,[domain].service.ts,entities/*}`, `apps/api/src/modules/public-site/{public-site.module.ts,public-site.controller.ts,public-site.service.ts}`, `apps/api/api.http` ([STRUCTURE ở root: contracts](../STRUCTURE.md#package-layout-packagescontracts), [module layout của api](../apps/api/STRUCTURE.md#module-layout)).
+**File.** `packages/contracts/{package.json,tsconfig.json,tsup.config.ts}`, `packages/contracts/src/index.ts`, `packages/contracts/src/common/{locale.schema.ts,api-error.schema.ts}`, `packages/contracts/src/{site-settings,profile,navigation,social-links,public-site}/*`, `packages/contracts/src/constants/routes.constant.ts`, `apps/api/src/i18n/{locale.decorator.ts,pick-locale.util.ts,pick-locale.util.spec.ts}`, `apps/api/src/modules/{site-settings,profile,navigation,social-links}/{[domain].module.ts,[domain].service.ts,entities/*}`, `apps/api/src/modules/public-site/{public-site.module.ts,public-site.controller.ts,public-site.service.ts}`, `apps/api/api.http` ([STRUCTURE ở root: contracts](../STRUCTURE.md#package-layout-packagescontracts), [module layout của api](../apps/api/STRUCTURE.md#module-layout)).
 
 **Thiết kế.** Row "Layout: header, footer" ở spec §5.0; "Hai shape API" ở §1.5.
 
 **Các bước backend, giải thích.**
 1. **Contracts.** Một zod schema mô tả shape của một JSON đúng một lần. API dùng nó để kiểm tra output trong test, web dùng type được infer ra từ nó, và sau này form admin dùng chính schema đó để validate input.
-2. **Mỗi table một module.** `profile` sở hữu table `Profile`: chỉ `ProfileService` được query nó. `public-site` không sở hữu table nào; nó hỏi năm service kia rồi gộp kết quả lại. Quy tắc này giữ query của mỗi table ở đúng một chỗ.
+2. **Mỗi table một module.** `profile` sở hữu table `Profile`: chỉ `ProfileService` được query nó. `public-site` không sở hữu table nào; nó hỏi bốn service kia rồi gộp kết quả lại. Quy tắc này giữ query của mỗi table ở đúng một chỗ.
 3. **Entity và mapper.** File entity cố định những cột nào được load. Mapper biến row từ DB thành public DTO: nó chọn `headlineVi` hoặc `headlineEn` và bỏ các field private như `phone`.
 4. **Locale fallback (D19).** Nếu bất kỳ field nào trong một nhóm thiếu tiếng Việt, cả nhóm sẽ dùng English và mang `lang: "en"`, để page đánh dấu đúng ngôn ngữ cho screen reader và font.
-5. **Đọc song song.** `Promise.all` chạy năm query cùng lúc thay vì lần lượt từng cái.
+5. **Đọc song song.** `Promise.all` chạy bốn query cùng lúc thay vì lần lượt từng cái.
 
 **Tiêu chí nghiệm thu.**
 - [ ] `GET /api/public/site?locale=vi` trả về field phẳng (`headline`, không phải `headlineVi`) từ seed (roadmap p07).
 - [ ] Xóa giá trị `Profile.subheadlineVi` trong Adminer làm nhóm profile chuyển sang English với `lang: "en"`.
-- [ ] Nav item và section bị ẩn không được trả về; thứ tự theo `sortOrder`.
+- [ ] Nav item bị ẩn không được trả về; thứ tự theo `sortOrder`.
 - [ ] `phone` không bao giờ xuất hiện trong response (unit test của mapper).
 - [ ] Với DB trống (`migrate reset --skip-seed`), endpoint trả về 404 kèm `code` + `message` (roadmap p07).
 
@@ -580,6 +649,48 @@ Mỗi task dùng cùng một template: **Roadmap · Spec · Phụ thuộc · C�
 - [ ] Type của `@portfolio/contracts` được `apps/api` import, và được `apps/web` import từ T11 (roadmap p08, điều chỉnh theo D2).
 
 **Tiêu đề PR:** `feat(contracts): zod contracts + error filter`
+
+#### T10a · Contracts cho block registry + `GET /api/public/pages/:key`
+
+**Roadmap** p08 · **Spec** §1.5 (`PageSection`, được D26 thay thế), §4.5 (thứ tự và hiển thị), §5.0 · **Phụ thuộc** T10 · **Cỡ** M
+
+**Mục tiêu.** Một chỗ duy nhất trong code nói có những loại block nào và props của chúng trông ra sao, cùng một public endpoint trả về các block visible và hợp lệ của một page bằng một ngôn ngữ, để một row hỏng không bao giờ làm sập cả page.
+
+**Phạm vi.**
+- Contracts `packages/contracts/src/blocks/`:
+  - `localized.schema.ts`: `localizedText({ max })` và `localizedMarkdown()` (một cặp `{ en, vi }`; English bắt buộc khi field là bắt buộc, tiếng Việt có thể để trống), `routeHref()` (một route trong `routes.constant.ts`), `sectionHeadingSchema` (`eyebrow`, `title`, `intro`, `iconKey`, `link` optional gồm label + route).
+  - `block-layout.constant.ts`: `LAYOUT_PRESETS` (`ONE`, `TWO`, `THREE`, `FOUR`, `SPLIT_8_4`, `SPLIT_4_8`, `SPLIT_7_5`) kèm số cột theo từng breakpoint (bảng ở §4) và `BLOCK_SURFACES` (`PLAIN`, `BAND`).
+  - `define-block.util.ts`: `defineBlock({ type, version, props, defaults, pages, layouts, maxPerPage, role, migrate, refs })`. `role` là `h1` (đứng đầu, visible, không bao giờ bị xóa), `required` (không bao giờ bị xóa hay ẩn) hoặc `optional`. `migrate(props, fromVersion)` nâng cấp props được lưu dưới một `version` cũ hơn. `refs(props)` liệt kê các id mà props trỏ tới (project, stat, tag), để T32a check chúng có tồn tại.
+  - `definitions/hero.block.ts`, `definitions/page-header.block.ts`, `definitions/cta-band.block.ts`: ba type đầu tiên (catalog ở §4). Mỗi field mang `.meta({ widget, label })`: `label` là một key `admin.blocks.*` trong `en.json` (D22), không bao giờ là text, còn `widget` cho form được generate biết cần vẽ input nào (T45a).
+  - `block-registry.constant.ts`: `BLOCK_REGISTRY` (`type` → definition), `BlockType`, `blockTypeSchema`.
+  - `block.schema.ts` + `block.type.ts`: `adminBlockSchema` (cả hai ngôn ngữ, cộng `issues` cho một row không hợp lệ), `publicBlockSchema` (`{ id, type, key, layout, surface, props, lang }`), `blockKeySchema` (kebab-case, tối đa 48 ký tự).
+  - `resolve-block.util.ts`: `parseBlock(row)` chạy `migrate`, rồi props schema, và trả về `{ ok: true, block }` hoặc `{ ok: false, reason: 'UNKNOWN_TYPE' | 'INVALID_PROPS', issues }`. `resolveBlockLocale(props, locale)` thay mỗi cặp `{ en, vi }` bằng một chuỗi và áp dụng D19 cho cả block (`lang: "en"` khi thiếu bất kỳ giá trị tiếng Việt nào).
+- Contracts `pages/`: `pages.enum.ts` (`PageKey`, `LayoutPreset`, `BlockSurface`, mirror từ Prisma), `pages.schema.ts` (`publicPageSchema`: `{ key, seo, blocks }`), `pages.type.ts`. Page key viết thường trong URL và cache tag (`/public/pages/home`, `page:home`).
+- API `modules/pages/`: `pages.service.ts` load `Page` và các `PageBlock` visible của nó theo `sortOrder`, rồi cho mọi row đi qua `parseBlock`. Một row không biết type hoặc không hợp lệ sẽ bị bỏ và được log một lần ở mức warning kèm page key, block id, type và request id (không bao giờ log props). `public-pages.controller.ts`: `GET /public/pages/:key?locale` (`:key` được parse bằng `PageKey` qua pipe của T10; key lạ → 404 `NOT_FOUND`). `entities/page.entity.ts`, `entities/page.mapper.ts` (locale theo từng block, nhóm SEO theo D19).
+- Seed: các row trong `pages.data.ts` được check bằng `parseBlock` với những type đã có. Row của các type được thêm sau vẫn nằm trong seed và bị bỏ lúc đọc cho tới khi task của chúng xong (T24, T25, T26, T28, T48).
+- Test: `resolve-block.util.test.ts` (type lạ, props sai, `migrate` từ một `version` cũ hơn, locale fallback), `pages.service.spec.ts`; `api.http` với `?locale=en` và `?locale=vi`.
+
+**Ngoài phạm vi.** Render (T14). Ghi (T32a). Version và publish (T52a): tới lúc đó visitor thấy các row hiện tại, giống mọi table khác trước T52.
+
+**File.** `packages/contracts/src/blocks/{localized.schema.ts,block-layout.constant.ts,define-block.util.ts,block-registry.constant.ts,block.schema.ts,block.type.ts,resolve-block.util.ts,resolve-block.util.test.ts}`, `packages/contracts/src/blocks/definitions/{hero,page-header,cta-band}.block.ts`, `packages/contracts/src/pages/{pages.schema.ts,pages.type.ts,pages.enum.ts}`, `packages/contracts/src/index.ts`, `apps/api/src/modules/pages/{pages.module.ts,public-pages.controller.ts,pages.service.ts,pages.service.spec.ts,entities/page.entity.ts,entities/page.mapper.ts}`, `apps/api/src/app.module.ts`, `apps/api/prisma/seed/data/pages.data.ts`, `apps/api/api.http` ([STRUCTURE ở root: contracts](../STRUCTURE.md#package-layout-packagescontracts), [api: page và block](../apps/api/STRUCTURE.md#pages-and-blocks)).
+
+**Thiết kế.** Catalog block và layout preset ở §4. Quy ước của spec §1.5 (`sortOrder`, `isVisible`, cặp En/Vi, ở đây là `{ en, vi }` bên trong JSON).
+
+**Các bước backend, giải thích.**
+1. **Một cột JSON.** `PageBlock.props` là một cột MySQL `JSON`, nên mỗi row có thể giữ một shape khác nhau, đúng thứ block cần (hero và post list có setting khác nhau). MySQL chỉ check giá trị là JSON hợp lệ. Nó không biết shape, nên API check bằng zod ở mọi lần ghi (T32a) *và* mọi lần đọc, vì một row cũng có thể bị sửa tay trong Adminer hoặc được ghi bởi một version code cũ hơn.
+2. **Registry là code, content là data.** Có những loại block nào và mỗi loại nhận props gì được quyết định trong code và review trong PR. Một page hiện block nào, theo thứ tự nào và với text gì là data trong MySQL, sửa trong `/admin`. Admin có thể thêm block của một type đã biết nhưng không thể tự nghĩ ra type mới.
+3. **Fail an toàn, không fail ầm ĩ.** Một block hỏng không được làm sập trang home. Service bỏ qua nó, log một warning mà bạn tìm được bằng request id, và trả về phần còn lại. Builder (T45b) hiện block hỏng cho admin thấy để sửa.
+4. **Version của schema.** Khi props của một block đổi shape (một field bị đổi tên), tăng `version` của nó và viết `migrate`. Row cũ và snapshot đã publish cũ được nâng cấp lúc đọc, nên không có gì trong DB phải ghi lại, và restore một version cũ vẫn chạy.
+5. **Tham chiếu trong JSON không có foreign key.** MySQL không check `projectIds: [3, 7]` bên trong JSON, nên một project có thể bị archive trong khi một block vẫn trỏ tới nó. Renderer bỏ qua id bị thiếu, T32a check id khi ghi, và content health liệt kê những tham chiếu bị treo (T52a).
+
+**Tiêu chí nghiệm thu.**
+- [ ] `GET /api/public/pages/home?locale=vi` trả về các block visible theo `sortOrder`, với text props phẳng và một `lang` cho mỗi block.
+- [ ] Một row có `type` lạ hoặc `props` sai, chèn vào bằng Adminer, không có trong response, request vẫn trả 200, và log có một warning kèm id của nó.
+- [ ] Xóa một giá trị tiếng Việt trong một block chỉ làm block đó chuyển sang English với `lang: "en"`.
+- [ ] Unit test phủ `parseBlock` (type lạ, props sai, `migrate` từ một `version` cũ hơn) và `resolveBlockLocale`.
+- [ ] `GET /api/public/pages/unknown` trả 404 theo shape error chung.
+
+**Tiêu đề PR:** `feat(contracts): block registry + public pages`
 
 #### T11 · Data layer phía web + next-intl + root layout
 
@@ -675,26 +786,39 @@ Mỗi task dùng cùng một template: **Roadmap · Spec · Phụ thuộc · C�
 
 **Roadmap** p09 · **Spec** [§4.2](./design/portfolio-design-system.vi.md#s-4-2), §4.5, [§5.1](./design/portfolio-design-system.vi.md#s-5-1), §7.1 · **Phụ thuộc** T11, T13 · **Cỡ** L
 
-**Mục tiêu.** Public layout thật (header, footer, skip link, switch locale và theme, mobile menu, ⌘K) và hai section đầu tiên của home, tất cả lấy từ `GET /public/site`, cộng một script giữ content và dữ liệu cá nhân nằm ngoài code.
+**Mục tiêu.** Public layout thật (header, footer, skip link, switch locale và theme, mobile menu, ⌘K) lấy từ `GET /public/site`, block renderer, và các block đầu tiên của home (hero, CTA band) lấy từ `GET /public/pages/home`, cộng một script giữ content và dữ liệu cá nhân nằm ngoài code.
 
 **Phạm vi.**
 - Component `core`: `SiteShell`, `SiteHeader` (sticky, `--background` 80% + blur, `--shadow-1` sau khi scroll; header `NavItem` qua `NavLink`; button ⌘K; `LocaleSwitch`; `ThemeToggle`; `Sheet` cho mobile), `SiteFooter` (một dòng mono: tên, footer nav, social icon, `NEXT_PUBLIC_BUILD_SHA`), `SkipLink`, `LocaleSwitch` (`toggle-group` VI/EN, link tới cùng path ở locale còn lại, `hreflang`), `CommandPalette` public (nav, theme, locale; search post thêm ở T28), `CopyEmailButton` (copy `settings.contactEmail`, toast `sonner`), `LocaleSuggestBanner` (mặc định theo Q5). shadcn: `sheet`, `navigation-menu`, `toggle-group`, `command`, `dialog`, `sonner`.
 - Route: `app/[locale]/(site)/layout.tsx` → `SiteShell`; `app/[locale]/error.tsx` (page chrome-only, Retry, request id; không hard-code tên), `app/[locale]/(site)/error.tsx`, `app/[locale]/(site)/not-found.tsx`.
-- `home`: `views/HomeIndex.tsx` render `sections` qua registry `constants/home-sections.constant.ts` (key → container, mỗi cái bọc trong `SectionBoundary`). Hiện chỉ implement `hero` và `cta`; các key khác không render gì cho tới T24.
-  - `HeroSection`: `Atmosphere variant="hero"` (nếu `ambientEffects`), `KickerPill` (`heroKicker`), `AccentHeadline` ở `text-display`, sub-line ở `text-prose`, badge availability, hai button: label của button primary = `PageSection(HOME, hero).ctaLabel` → `/projects`, label của button secondary = `PageSection(HOME, cta).ctaLabel` → `/contact`. Text trải full width cho tới khi có diagram (T22, T24).
-  - `CtaBandSection`: `CtaBand` với title/intro của `PageSection(HOME, cta)`, `CopyEmailButton` (chrome label "Copy email"), tối đa 2 button outline từ `SocialLink.showInCta`. Ẩn nếu section không có title.
+- Module `blocks` (D26):
+  - `services/pages.service.ts`: `getPage(key, locale)`, tag `page:{key}`, bọc trong React `cache()`; `qk.public.page(key, locale)` trong contracts.
+  - `components/BlockRenderer/BlockRenderer.tsx` (server). Nó:
+    - bỏ qua block có `type` không có renderer;
+    - đặt các block `BAND` liền nhau vào cùng một `Band`;
+    - bọc mỗi block trong `BlockLayout` và trong `SectionBoundary` với skeleton của renderer đó;
+    - set `id={block.key}` cho anchor;
+    - truyền cho mỗi block một `BlockContext` (`{ locale, searchParams, draft }`).
+  - `constants/block-renderers.constant.ts`: registry phía web, `type` → `{ component, skeleton }`, `satisfies Record<BlockType, BlockRendererEntry>` (quy tắc 8).
+  - `views/BlocksPage.tsx`: fetch page, rồi `BlockRenderer`. `home/views/HomeIndex.tsx` render `BlocksPage` cho `home`.
+- `BlockLayout` trong `packages/ui`: các preset của T10a dưới dạng class CSS grid với luật responsive ở §4. Các vùng được truyền vào dưới dạng children, và section được `aria-labelledby` heading của nó.
+- Renderer cho ba type của T10a (các block sau không render gì cho tới task của chúng):
+  - `HeroBlock`: `Atmosphere variant="hero"` (nếu `ambientEffects`), `KickerPill` (`heroKicker`), `AccentHeadline` ở `text-display`, sub-line ở `text-prose`, badge availability (nếu `showAvailability`), và hai button từ `props.primaryCta` và `props.secondaryCta` (label → route). Layout `ONE` cho tới khi có diagram (T22, T24).
+  - `CtaBandBlock`: `CtaBand` với title và intro của block, `CopyEmailButton` (chrome label "Copy email") khi `showEmail`, và tối đa 2 button outline từ `SocialLink.showInCta` khi `showSocial`. Ẩn nếu block không có title.
+  - `PageHeaderBlock`: eyebrow, H1 ở `text-title`, intro (PROJECTS và NOTES dùng nó từ T26 và T28).
 - `scripts/check-content.mjs` + root script `check:content` + bước CI: (1) fail khi gặp địa chỉ email và số điện thoại đầy đủ (8+ chữ số, có hoặc không có prefix `+84`) ở bất kỳ file nào được track, trừ placeholder `<email>` / `<phone>`; (2) fail khi gặp chuỗi từ CV (denylist build từ seed data: tên, công ty, thành phố) trong `apps/web/**` và `packages/ui/src/components/**`, loại trừ `*.stories.tsx`, `*.test.tsx` và `packages/contracts/src/fixtures/`.
 
-**Ngoài phạm vi.** Các section khác của home (T24). Admin (T37).
+**Ngoài phạm vi.** Các block type khác (T24, T25, T26, T28, T48). Admin (T37).
 
-**File.** `apps/web/app/[locale]/(site)/{layout.tsx,error.tsx,not-found.tsx}`, `apps/web/app/[locale]/error.tsx`, `apps/web/src/modules/core/components/{SiteShell,SiteHeader,SiteFooter,SkipLink,LocaleSwitch,CommandPalette,CopyEmailButton,LocaleSuggestBanner}/*`, `apps/web/src/modules/home/views/HomeIndex.tsx`, `apps/web/src/modules/home/constants/home-sections.constant.ts`, `apps/web/src/modules/home/components/{HeroSection,CtaBandSection}/*`, `apps/web/i18n/locales/{en,vi}.json`, `packages/ui/src/components/ui/{sheet,navigation-menu,toggle-group,command,dialog,sonner}.tsx`, `scripts/check-content.mjs`, `package.json`, `.github/workflows/ci.yml`.
+**File.** `apps/web/app/[locale]/(site)/{layout.tsx,error.tsx,not-found.tsx}`, `apps/web/app/[locale]/error.tsx`, `apps/web/src/modules/core/components/{SiteShell,SiteHeader,SiteFooter,SkipLink,LocaleSwitch,CommandPalette,CopyEmailButton,LocaleSuggestBanner}/*`, `apps/web/src/modules/home/views/HomeIndex.tsx`, `apps/web/src/modules/blocks/{components/{BlockRenderer,HeroBlock,CtaBandBlock,PageHeaderBlock}/*,constants/block-renderers.constant.ts,services/pages.service.ts,types/entities/block-context.type.ts,views/BlocksPage.tsx}`, `packages/ui/src/components/BlockLayout/*`, `packages/contracts/src/constants/query-keys.constant.ts`, `apps/web/i18n/locales/{en,vi}.json`, `packages/ui/src/components/ui/{sheet,navigation-menu,toggle-group,command,dialog,sonner}.tsx`, `scripts/check-content.mjs`, `package.json`, `.github/workflows/ci.yml`.
 
 **Thiết kế.** Figma `2:2`/`3:2` (header, hero, CTA band, footer), `8:2` (mobile header có hamburger, CTA xếp chồng). Mockup `home.html` (+ `?dark=1`, và ở 390px). Token: `text-display`, `text-prose`, `--primary`, `--primary-subtle`, `--glow`, `--grid-line`, `--band`, `--shadow-1`, `--z-header`, `--z-skip`.
 
 **Tiêu chí nghiệm thu.**
 - [ ] Đổi một giá trị seed rồi seed lại sẽ làm home page thay đổi (roadmap p09).
 - [ ] Khi API dừng, `/en` hiện page lỗi chrome-only có Retry, không crash hay trang trắng (roadmap p09).
-- [ ] Set `isVisible = 0` cho `PageSection(HOME, cta)` trong Adminer sẽ làm CTA band biến mất.
+- [ ] Set `isVisible = 0` cho block `cta` của home trong Adminer sẽ làm CTA band biến mất; đổi `sortOrder` của nó thì nó đổi chỗ.
+- [ ] Test `BlockRenderer`: một type không có renderer không render gì, và một renderer throw lỗi chỉ hiện lỗi inline cho đúng block đó.
 - [ ] Locale switch giữ nguyên path hiện tại; bấm Tab từ đầu trang sẽ focus vào skip link trước tiên; mobile sheet giữ focus bên trong (focus trap) và `Esc` đóng nó.
 - [ ] `pnpm check:content` fail với một chuỗi có dạng email được cài vào một file tạm (output dán trong PR) và pass trên tree sạch.
 - [ ] Screenshot ở 1440/390, light/dark, so với hero và footer của `home.html`.
@@ -959,22 +1083,32 @@ Mỗi task dùng cùng một template: **Roadmap · Spec · Phụ thuộc · C�
 
 **Roadmap** p14 · **Spec** [§5.1](./design/portfolio-design-system.vi.md#s-5-1), §5.0 (row home), §4.4, §4.5, §7.2 (`01`, `02`, `05`, `09`) · **Phụ thuộc** T14, T19, T20, T21, T22 · **Cỡ** L
 
-**Mục tiêu.** Toàn bộ trang home lấy từ API, theo thứ tự và trạng thái hiển thị đặt trong `PageSection`, khớp với các frame home.
+**Mục tiêu.** Toàn bộ trang home dựng từ các block của home (D26), theo thứ tự, trạng thái hiển thị và layout của chúng, khớp với các frame home.
 
 **Phạm vi.**
 - Service (server, có tag): `projects/services/{projects,domains}.service.ts`, `about/services/skills.service.ts`, `home/services/process-steps.service.ts`, `notes/services/posts.service.ts`.
-- Container của home đăng ký trong `home-sections.constant.ts`: `stats` (`StatBand`, ẩn nếu < 2), `marquee` (`TechMarquee`, ẩn nếu 0, tĩnh nếu < 6 hoặc `marqueeEnabled` là false), `featured` (`CaseCard` featured, ẩn nếu không có), `domains` (các `DomainCard`, card có 0 project bị ẩn), `work` (3 `CaseCard`), `process` (`FeatureCard` 2×2 từ principles + `ProcessFlow`, ẩn nếu < 3 bước), `skills` (`SkillGroup`), `notes` (3 `PostCard`), cộng thêm `MigrationDiagram` trong hero.
-- Các band xen kẽ như §5.1: stats + marquee, domains, process. `SectionHeader` có eyebrow và ô icon ở mọi section. `Reveal` khi scroll.
-- Mỗi section nằm trong `SectionBoundary` với skeleton đúng hình section (Figma `21:2`) và lỗi inline có Retry; một section optional bị rỗng thì biến mất cùng anchor của nó.
+- Block type (quy tắc 8: definition + renderer + các entry trong registry):
+  - `stat-band`: `StatBand`, ẩn nếu ít hơn 2 stat.
+  - `tech-marquee`: `TechMarquee`, ẩn nếu rỗng, tĩnh nếu ít hơn 6 skill hoặc `marqueeEnabled` là false.
+  - `featured-case`: `CaseCard` featured, ẩn nếu không có.
+  - `domain-grid`: các `DomainCard`; card có 0 project bị ẩn.
+  - `case-grid`: các `CaseCard` theo `source`. `manual` giữ thứ tự của `projectIds` và bỏ qua id bị thiếu hoặc chưa publish.
+  - `process`: `FeatureCard` 2×2 từ principles + `ProcessFlow`, ẩn nếu ít hơn 3 bước.
+  - `skill-groups`: `SkillGroup`.
+  - `post-list`: các `PostCard`, với `limit` và một `tag` optional.
+  - Hero có thêm `MigrationDiagram` trong aside khi `layout` là `SPLIT_7_5` và `showDiagram` bật.
+- Các band của §5.1 đến từ giá trị `surface` đã seed: stats + marquee (một band dùng chung), domains, process. `SectionHeader` có eyebrow và ô icon ở mọi block có `heading`. `Reveal` khi scroll.
+- Mỗi block nằm trong `SectionBoundary` với skeleton đúng hình block (Figma `21:2`) và lỗi inline có Retry; một block optional bị rỗng thì biến mất cùng anchor của nó.
 
-**File.** `apps/web/src/modules/home/components/{StatsSection,MarqueeSection,FeaturedSection,DomainsSection,WorkSection,ProcessSection,SkillsSection,NotesSection}/*`, `apps/web/src/modules/home/constants/home-sections.constant.ts`, `apps/web/src/modules/home/components/HeroSection/HeroSection.tsx`, `apps/web/src/modules/home/services/process-steps.service.ts`, `apps/web/src/modules/projects/services/{projects,domains}.service.ts`, `apps/web/src/modules/about/services/skills.service.ts`, `apps/web/src/modules/notes/services/posts.service.ts`, `apps/web/i18n/locales/{en,vi}.json`.
+**File.** `apps/web/src/modules/blocks/components/{StatBandBlock,TechMarqueeBlock,FeaturedCaseBlock,DomainGridBlock,CaseGridBlock,ProcessBlock,SkillGroupsBlock,PostListBlock}/*`, `apps/web/src/modules/blocks/constants/block-renderers.constant.ts`, `apps/web/src/modules/blocks/components/HeroBlock/HeroBlock.tsx`, `packages/contracts/src/blocks/definitions/{stat-band,tech-marquee,featured-case,domain-grid,case-grid,process,skill-groups,post-list}.block.ts`, `packages/contracts/src/blocks/{block-registry.constant.ts,definitions/hero.block.ts}`, `apps/web/src/modules/home/services/process-steps.service.ts`, `apps/web/src/modules/projects/services/{projects,domains}.service.ts`, `apps/web/src/modules/about/services/skills.service.ts`, `apps/web/src/modules/notes/services/posts.service.ts`, `apps/web/i18n/locales/{en,vi}.json`.
 
 **Thiết kế.** Figma `2:2`/`3:2` (1440 light/dark), `8:2` (390), `21:2` (loading). Mockup `home.html` (+ `?dark=1`, 390px), `home-skeleton.html`. Token: mọi token v2 (`--band`, `--grid-line`, `--glow`, `--card-glass`, `--hue-*`), `text-display`, `text-title`, `text-heading`.
 
 **Tiêu chí nghiệm thu.**
 - [ ] Mọi text trên trang đều truy ra được một field API; `pnpm check:content` pass (roadmap p14).
-- [ ] Thứ tự section theo `PageSection.sortOrder`; ẩn `marquee` trong Adminer thì nó biến mất (check v2 Day 7 trong spec §6).
-- [ ] Ép endpoint của một section bị lỗi thì section đó hiện alert inline trong khi phần còn lại vẫn render.
+- [ ] Thứ tự block theo `PageBlock.sortOrder`; ẩn block `marquee` trong Adminer thì nó biến mất (check v2 Day 7 trong spec §6).
+- [ ] Đổi `layout` của block `work` sang `TWO` trong Adminer thì có 2 cột từ 768px; ở 390px mọi block là một cột.
+- [ ] Ép endpoint của một block bị lỗi thì block đó hiện alert inline trong khi phần còn lại vẫn render.
 - [ ] Lượt test chỉ dùng bàn phím: thứ tự Tab, focus nhìn thấy được, card mở bằng Enter (roadmap p14).
 - [ ] Không có scroll ngang ở 390px; CLS 0 từ count-up và reveal.
 - [ ] Screenshot ở 1440 light/dark và 390 được so với frame Figma; trạng thái loading so với `21:2`.
@@ -983,23 +1117,30 @@ Mỗi task dùng cùng một template: **Roadmap · Spec · Phụ thuộc · C�
 
 #### T25 · Trang About + Timeline
 
-**Roadmap** p14 · **Spec** [§5.2](./design/portfolio-design-system.vi.md#s-5-2), §4.2 (`Timeline`), §5.0 (row About) · **Phụ thuộc** T24 · **Cỡ** L
+**Roadmap** p14 · **Spec** [§5.2](./design/portfolio-design-system.vi.md#s-5-2), §4.2 (`Timeline`), §5.0 (row About) · **Phụ thuộc** T23, T24 · **Cỡ** L
 
-**Mục tiêu.** Trang About lấy từ API: intro, dải stats, timeline experience, principles, skills, education và card CV, theo thứ tự `PageSection`.
+**Mục tiêu.** Trang About dựng từ các block của about (D26): intro, dải stats, timeline experience, principles, skills, education và card CV, cộng một block `prose` tự do dùng được cho mọi page.
 
 **Phạm vi.**
-- Route `app/[locale]/(site)/about/page.tsx` → `about/views/AboutIndex.tsx`, registry `about/constants/about-sections.constant.ts` (key theo D18).
+- Route `app/[locale]/(site)/about/page.tsx` → `about/views/AboutIndex.tsx`, view này render `BlocksPage` cho `about`.
 - Service: `about/services/{experience,education,principles}.service.ts` (+ skills service đã có).
-- Container: `IntroSection` (card avatar có city và pill availability; avatar hiện chữ cái đầu tên cho tới khi có media; bio qua `Markdown`), `StatsSection` (`StatBand compact`), `ExperienceSection` (`Timeline`), `PrinciplesSection`, `SkillsSection`, `EducationSection`, `CvSection` (card download; ẩn khi `resumeEnId`/`resumeViId` còn trống; link hoạt động sau T51).
+- Block type (quy tắc 8):
+  - `about-intro` (H1): card avatar có city và pill availability; avatar hiện chữ cái đầu tên cho tới khi có media; bio qua `Markdown`.
+  - `timeline`: `Timeline`.
+  - `principle-list`, `education-list`.
+  - `cv-download`: card download, ẩn khi `resumeEnId`/`resumeViId` còn trống; link hoạt động sau T51.
+  - `prose`: một `body` Markdown tự do và một `aside` optional qua pipeline của T23, được phép trên mọi page; `SPLIT_8_4` đặt aside ở bên phải.
+  - `stat-band` (`compact`) và `skill-groups` từ T24 được phép trên ABOUT.
 - `Timeline` / `TimelineItem` trong `packages/ui`: thanh năm, row nhóm theo `company`, role, khoảng tháng bằng `<time datetime>`, label "now" cho `endDate` null (chrome), highlights trong một `accordion` (mở sẵn khi reduced motion), tech tag. `<ol>`.
 
-**File.** `apps/web/app/[locale]/(site)/about/page.tsx`, `apps/web/src/modules/about/views/AboutIndex.tsx`, `apps/web/src/modules/about/constants/about-sections.constant.ts`, `apps/web/src/modules/about/components/{IntroSection,StatsSection,ExperienceSection,PrinciplesSection,SkillsSection,EducationSection,CvSection}/*`, `apps/web/src/modules/about/services/{experience,education,principles}.service.ts`, `packages/ui/src/components/Timeline/*`, `packages/ui/src/components/ui/{accordion,avatar}.tsx`.
+**File.** `apps/web/app/[locale]/(site)/about/page.tsx`, `apps/web/src/modules/about/views/AboutIndex.tsx`, `apps/web/src/modules/blocks/components/{AboutIntroBlock,TimelineBlock,PrincipleListBlock,EducationListBlock,CvDownloadBlock,ProseBlock}/*`, `apps/web/src/modules/blocks/constants/block-renderers.constant.ts`, `packages/contracts/src/blocks/definitions/{about-intro,timeline,principle-list,education-list,cv-download,prose}.block.ts`, `packages/contracts/src/blocks/block-registry.constant.ts`, `apps/web/src/modules/about/services/{experience,education,principles}.service.ts`, `packages/ui/src/components/Timeline/*`, `packages/ui/src/components/ui/{accordion,avatar}.tsx`.
 
 **Thiết kế.** Figma `7:2`. Mockup `about.html`. Token: `--band`, `--card`, `--border`, `--primary`, `text-title`, `text-subheading`, `text-prose`, `text-meta`.
 
 **Tiêu chí nghiệm thu.**
 - [ ] Công ty có hai role hiện thành một nhóm với hai item.
-- [ ] Section optional bị ẩn thì biến mất cùng anchor; timeline rỗng hiện `empty`.
+- [ ] Block optional bị ẩn hoặc rỗng thì biến mất cùng anchor; timeline rỗng hiện `empty`.
+- [ ] Một block `prose` chứa fixture không an toàn của T23 không render item không an toàn nào.
 - [ ] Trên `/vi`, các nhóm fallback mang `lang="en"` và badge "EN".
 - [ ] Screenshot được so với `7:2`; có lượt test bàn phím.
 
@@ -1013,10 +1154,10 @@ Mỗi task dùng cùng một template: **Roadmap · Spec · Phụ thuộc · C�
 
 **Phạm vi.**
 - Route `app/[locale]/(site)/projects/page.tsx` → `projects/views/ProjectsIndex.tsx`. URL param được parse bằng `projectListParamsSchema`.
-- `HeaderSection` lấy từ `PageSection(PROJECTS, header)` (eyebrow, H1, intro).
+- `ProjectsIndex` render `BlocksPage` cho `projects`, với `searchParams` trong `BlockContext`: `page-header` (T14), rồi block mới `projects-browser` (quy tắc 8; required, một cái mỗi page; props `showFeatured`, `pageSize`; layout `TWO` hoặc `THREE` cho grid), block này chứa list bên dưới.
 - `DomainFilter` (pill có số đếm và chấm hue, là link thật `?domain=`; trên mobile scroll ngang với mép mờ dần), `TechFilter` (client island: combobox `popover` + `command` điều hướng tới `?skill=`), `CaseCard` featured dạng rộng, rồi tới grid 2 cột; `empty` có "Clear filters"; `pagination` khi số row nhiều hơn `pageSize`.
 
-**File.** `apps/web/app/[locale]/(site)/projects/page.tsx`, `apps/web/src/modules/projects/views/ProjectsIndex.tsx`, `apps/web/src/modules/projects/components/{HeaderSection,DomainFilter,TechFilter,ProjectsGrid}/*`, `packages/ui/src/components/ui/{popover,pagination}.tsx`.
+**File.** `apps/web/app/[locale]/(site)/projects/page.tsx`, `apps/web/src/modules/projects/views/ProjectsIndex.tsx`, `apps/web/src/modules/projects/components/{DomainFilter,TechFilter,ProjectsGrid}/*`, `apps/web/src/modules/blocks/components/ProjectsBrowserBlock/*`, `apps/web/src/modules/blocks/constants/block-renderers.constant.ts`, `packages/contracts/src/blocks/{definitions/projects-browser.block.ts,block-registry.constant.ts}`, `packages/ui/src/components/ui/{popover,pagination}.tsx`.
 
 **Thiết kế.** Figma `13:2` (bind hoàn toàn: so sánh cả variable, không chỉ pixel). Mockup `projects.html`. Token: `--hue-*`, `--card`, `--border-strong`, `--shadow-2`, `text-title`, `text-body`, `text-meta`.
 
@@ -1059,12 +1200,12 @@ Mỗi task dùng cùng một template: **Roadmap · Spec · Phụ thuộc · C�
 
 **Phạm vi.**
 - Route `app/[locale]/(site)/notes/page.tsx` → `notes/views/NotesIndex.tsx`; `notes/[slug]/page.tsx` → `notes/views/NotesDetail.tsx` (`generateStaticParams`, `notFound()`).
-- List: `HeaderSection` (`PageSection(NOTES, header)`), `NotesSearch` (client: `role="search"`, debounce 200ms, đồng bộ URL `?q=&tag=`, số kết quả trong một live region, gợi ý `⌘K`), pill tag có số đếm từ `GET /public/tags`, các nhóm theo năm gồm các row `PostCard`, post featured dạng card rộng, `pagination`.
+- List: `NotesIndex` render `BlocksPage` cho `notes`: `page-header`, rồi block mới `notes-browser` (quy tắc 8; required; props `showFeatured`, `pageSize`) chứa `NotesSearch` (client: `role="search"`, debounce 200ms, đồng bộ URL `?q=&tag=`, số kết quả trong một live region, gợi ý `⌘K`), pill tag có số đếm từ `GET /public/tags`, các nhóm theo năm gồm các row `PostCard`, post featured dạng card rộng, `pagination`.
   - `notes/hooks/use-notes-search.hook.ts`: `useQuery(qk.public.posts(params))`, `placeholderData: keepPreviousData`, `initialData` = trang đầu từ server khi `q` rỗng, abort qua `signal`. `notes/services/posts-client.service.ts` dùng `apiClient`.
 - Post: eyebrow `NOTE · #tag`, date · minutes bằng mono, tag, H1, body `Markdown`, `TakeawaysCard` (nếu có `takeaways`), `PostCard` prev/next, `SectionNav`, `ContentProgress`.
 - `CommandPalette` public có thêm search post (cùng hook).
 
-**File.** `apps/web/app/[locale]/(site)/notes/page.tsx`, `apps/web/app/[locale]/(site)/notes/[slug]/page.tsx`, `apps/web/src/modules/notes/views/{NotesIndex,NotesDetail}.tsx`, `apps/web/src/modules/notes/components/{HeaderSection,NotesSearch,TagFilter,PostList,PostHeader,PostPrevNext}/*`, `apps/web/src/modules/notes/hooks/use-notes-search.hook.ts`, `apps/web/src/modules/notes/services/{posts.service.ts,posts-client.service.ts}`, `apps/web/src/modules/core/components/CommandPalette/*`, `packages/ui/src/components/ui/input-group.tsx`.
+**File.** `apps/web/app/[locale]/(site)/notes/page.tsx`, `apps/web/app/[locale]/(site)/notes/[slug]/page.tsx`, `apps/web/src/modules/notes/views/{NotesIndex,NotesDetail}.tsx`, `apps/web/src/modules/notes/components/{NotesSearch,TagFilter,PostList,PostHeader,PostPrevNext}/*`, `apps/web/src/modules/blocks/components/NotesBrowserBlock/*`, `apps/web/src/modules/blocks/constants/block-renderers.constant.ts`, `packages/contracts/src/blocks/{definitions/notes-browser.block.ts,block-registry.constant.ts}`, `apps/web/src/modules/notes/hooks/use-notes-search.hook.ts`, `apps/web/src/modules/notes/services/{posts.service.ts,posts-client.service.ts}`, `apps/web/src/modules/core/components/CommandPalette/*`, `packages/ui/src/components/ui/input-group.tsx`.
 
 **Thiết kế.** Figma `9:2` (list), `10:2` (post). Mockup `notes.html`, `post.html`. Token: `text-prose`, `text-subheading`, `text-meta`, `--primary-subtle`, `--measure`.
 
@@ -1166,7 +1307,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Tiêu đề PR:** `feat(api): taxonomy crud endpoints`
 
-#### T32 · Write API: site, profile, nav, social, section, contact topic
+#### T32 · Write API: site, profile, nav, social, contact topic
 
 **Roadmap** p15 · **Spec** §1.5 (nhóm Site), §5.10, §6 Day 6 · **Phụ thuộc** T29 · **Cỡ** M
 
@@ -1174,11 +1315,11 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Phạm vi.**
 - `GET/PATCH /admin/site` (`site-settings`), `GET/PATCH /admin/profile` (`profile`; admin DTO có cả `phone` private; `headlineAccent{En,Vi}` phải là substring của `headline{En,Vi}` → `fieldErrors`).
-- CRUD `navigation` (`href` phải là một route trong `routes.constant.ts` hoặc một URL tuyệt đối `https://`), CRUD `social-links` (tối đa 2 cái có `showInCta` → 400), `page-sections` chỉ list/patch (key do seed cố định: không create hay delete).
+- CRUD `navigation` (`href` phải là một route trong `routes.constant.ts` hoặc một URL tuyệt đối `https://`), CRUD `social-links` (tối đa 2 cái có `showInCta` → 400). Page và block có write API riêng (T32a).
 - Module mới `contact-topics`: admin CRUD và `GET /public/contact-topics` (chỉ topic visible, theo thứ tự).
 - e2e test: PATCH profile sai, accent không nằm trong headline, quy tắc href của nav, giới hạn CTA.
 
-**File.** `apps/api/src/modules/{site-settings,profile,navigation,social-links,page-sections}/{admin-*.controller.ts,*.service.ts,dto/*}`, `apps/api/src/modules/contact-topics/*`, `apps/api/prisma/schema.prisma` + migration `add-contact-topics`, `apps/api/prisma/seed/data/site.data.ts`, `packages/contracts/src/{site-settings,profile,navigation,social-links,page-sections,contact-topics}/*`, `apps/api/test/site.e2e-spec.ts`, `apps/api/api.http`.
+**File.** `apps/api/src/modules/{site-settings,profile,navigation,social-links}/{admin-*.controller.ts,*.service.ts,dto/*}`, `apps/api/src/modules/contact-topics/*`, `apps/api/prisma/schema.prisma` + migration `add-contact-topics`, `apps/api/prisma/seed/data/site.data.ts`, `packages/contracts/src/{site-settings,profile,navigation,social-links,contact-topics}/*`, `apps/api/test/site.e2e-spec.ts`, `apps/api/api.http`.
 
 **Thiết kế.** Spec §5.10.
 
@@ -1193,19 +1334,59 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Tiêu đề PR:** `feat(api): site crud endpoints`
 
+#### T32a · Write API: page và block
+
+**Roadmap** p15 · **Spec** §1.5, §4.6 (autosave `409`), §5.10, D26 · **Phụ thuộc** T10a, T29 · **Cỡ** L
+
+**Mục tiêu.** Admin endpoint để thêm, sửa, ẩn, nhân bản và xóa các block trong draft của một page, với mọi luật của registry được API enforce.
+
+**Phạm vi.**
+- `admin-pages.controller.ts`:
+  - `GET /admin/pages`: năm page kèm key, số block và `updatedAt` (T52a thêm version đã publish và `hasUnpublishedChanges`).
+  - `GET /admin/pages/:key`: các field SEO của page ở cả hai ngôn ngữ và mọi block, kể cả block bị ẩn. Row không biết type hoặc không hợp lệ được trả về kèm `issues`, để builder hiện được chúng.
+  - `PATCH /admin/pages/:key`: các field SEO, có check `updatedAt`.
+  - `POST /admin/pages/:key/blocks` `{ type, afterId? }`: tạo một block với `defaults` và layout đầu tiên của type, một `key` unique suy ra từ type (`case-grid`, `case-grid-2`), đặt sau `afterId` hoặc ở cuối. 400 `BLOCK_NOT_ALLOWED` khi type không được phép trên page này; 409 `BLOCK_LIMIT` khi vượt `maxPerPage`.
+  - `PATCH /admin/pages/:key/blocks/:id` `{ props?, layout?, surface?, isVisible?, key?, updatedAt }`: `props` được parse bằng schema của type → 400 kèm `fieldErrors` có key là path (`props.primaryCta.label.en`); `layout` phải là một trong các layout của type; `refs` được check (id project hoặc stat không tồn tại → 400 trên field đó); `updatedAt` cũ → 409 `STALE`.
+  - `POST /admin/pages/:key/blocks/:id/duplicate`: cùng props, key mới, đặt ngay sau.
+  - `DELETE /admin/pages/:key/blocks/:id`: xóa hẳn row trong draft. Một version đã publish vẫn giữ block đó cho tới lần publish sau (T52a).
+- Luật của page trong `pages-rules.util.ts` (có unit test, được publish ở T52a dùng lại): block `h1` đứng đầu, visible và không xóa được (409 `BLOCK_LOCKED`); block `required` không xóa hay ẩn được (409 `BLOCK_REQUIRED`); `maxPerPage`; các page được phép.
+- Mọi thao tác ghi cũng update `Page.updatedAt` trong cùng transaction, để page biết nó có thay đổi trong draft.
+- Contracts `pages/`: admin page DTO, `createBlockSchema`, `updateBlockSchema` (`props` ở đây là `unknown` và được parse theo type trong service, vì một body schema không thể biết mọi type), `updatePageSchema`. `ErrorCode` có thêm `BLOCK_NOT_ALLOWED`, `BLOCK_LIMIT`, `BLOCK_LOCKED`, `BLOCK_REQUIRED`.
+- e2e `test/pages.e2e-spec.ts`: thêm mọi type được phép; props sai → 400 kèm path của field; type không được phép → 400; vượt giới hạn → 409; xóa block H1 → 409; ẩn một block required → 409; update cũ → 409; id project lạ trong một `case-grid` → 400; một row có type lạ (chèn bằng Prisma trong test) được admin route liệt kê kèm `issues` và không có trong public route.
+
+**Ngoài phạm vi.** Reorder (T33). Publish, version, preview (T52a). UI của builder (T45b).
+
+**File.** `apps/api/src/modules/pages/{admin-pages.controller.ts,pages.service.ts,pages-rules.util.ts,pages-rules.util.spec.ts,dto/*,entities/page.mapper.ts}`, `packages/contracts/src/pages/*`, `packages/contracts/src/common/api-error.schema.ts`, `apps/api/test/pages.e2e-spec.ts`, `apps/api/api.http`.
+
+**Thiết kế.** Không có (chỉ API).
+
+**Các bước backend, giải thích.**
+1. **Validate theo type, trong service.** Body của `PATCH …/blocks/:id` phụ thuộc vào type của block, mà server đọc từ row trong DB. Vì vậy controller nhận `props` là unknown, còn service chọn zod schema của type rồi parse. Fail thì trở thành 400 quen thuộc kèm `fieldErrors`, nên form được generate (T45a) hiện từng message dưới đúng input của nó.
+2. **Luật thuộc về server.** Builder ẩn các nút sẽ làm vỡ luật, nhưng API mới là bên từ chối, kèm một `code` rõ ràng. Một script hay một tab browser cũ không thể xóa hero.
+3. **Chỉ draft thay đổi.** Các endpoint này sửa các row draft. Khi T52a xong, visitor vẫn thấy version đã publish cho tới khi có người publish, nên bạn sắp xếp lại thoải mái.
+4. **Optimistic concurrency theo từng block.** Mỗi block có `updatedAt` riêng, nên hai người sửa hai block khác nhau không xung đột; cùng một block mở ở hai tab thì có.
+
+**Tiêu chí nghiệm thu.**
+- [ ] `api.http` phủ mọi route, kể cả các trường hợp lỗi (roadmap p15).
+- [ ] Props sai trả 400 kèm `fieldErrors` ở đúng path; `key` block bị trùng trả 409 kèm `fieldErrors.key`.
+- [ ] Xóa block H1 hoặc ẩn một block required trả 409 kèm code của nó.
+- [ ] `pnpm --filter @portfolio/api test:e2e` xanh, kể cả trường hợp type lạ.
+
+**Tiêu đề PR:** `feat(api): page blocks crud`
+
 #### T33 · Reorder trong transaction + thay tag
 
-**Roadmap** p16 · **Spec** §1.6 (transaction), §4.6 (optimistic reorder) · **Phụ thuộc** T31, T32 · **Cỡ** M
+**Roadmap** p16 · **Spec** §1.6 (transaction), §4.6 (optimistic reorder) · **Phụ thuộc** T31, T32, T32a · **Cỡ** M
 
 **Mục tiêu.** Reorder bất kỳ list nào và thay tag của một post thì hoặc thành công trọn vẹn, hoặc không đổi gì cả.
 
 **Phạm vi.**
 - `common/utils/reorder.util.ts`: nhận một model delegate và `ids: number[]`, check các id đúng bằng tập hiện tại, rồi ghi `sortOrder = index` cho từng cái bên trong `prisma.$transaction(async (tx) => …)`.
-- `PATCH /admin/{entity}/order` với body `{ ids }` cho project, experience, principle, profile stat, process step, skill, skill category, domain, nav item, social link, page section (theo từng page), contact topic.
+- `PATCH /admin/{entity}/order` với body `{ ids }` cho project, experience, principle, profile stat, process step, skill, skill category, domain, nav item, social link, contact topic, và page block (`PATCH /admin/pages/:key/blocks/order`, theo từng page; block H1 phải luôn đứng đầu, T32a).
 - Việc thay tag của post và thay skill/metric của project được chuyển vào interactive transaction tường minh, cùng với việc update field.
 - Test ép lỗi: cho update thứ ba throw bên trong transaction và assert `sortOrder` và tag không đổi.
 
-**File.** `apps/api/src/common/utils/reorder.util.ts` (+ `.spec.ts`), `apps/api/src/modules/*/admin-*.controller.ts` (route order), `apps/api/src/modules/{posts,projects}/*.service.ts`, `packages/contracts/src/common/reorder.schema.ts`, `apps/api/test/reorder.e2e-spec.ts`, `apps/api/api.http`.
+**File.** `apps/api/src/common/utils/reorder.util.ts` (+ `.spec.ts`), `apps/api/src/modules/*/admin-*.controller.ts` (route order), `apps/api/src/modules/{posts,projects,pages}/*.service.ts`, `packages/contracts/src/common/reorder.schema.ts`, `apps/api/test/reorder.e2e-spec.ts`, `apps/api/api.http`.
 
 **Thiết kế.** Không có (chỉ API).
 
@@ -1314,7 +1495,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 - `JwtAuthGuard` (từ T35) trở thành global và đọc `@Public()` bằng `Reflector`: route public bỏ qua nó; mọi route khác cần access token hợp lệ, nếu không thì 401. `@Public()` trên health, `POST /auth/login`, `POST /auth/refresh` (route này có `JwtRefreshGuard` riêng), `POST /auth/logout` và mọi `public-*.controller.ts`.
 - `common/decorators/roles.decorator.ts`: `@Roles(...roles: Role[])` với `Role = 'admin' | 'user'` lấy từ contracts.
 - `common/guards/roles.guard.ts`: bỏ qua route `@Public()`; đọc `@Roles()` trên handler, rồi tới class; **không có `@Roles()` nghĩa là `['admin']`**; `request.user.role` không nằm trong danh sách → 403 `FORBIDDEN`.
-- Thêm `@Roles('admin', 'user')` vào mọi handler đọc (`GET`) của các admin controller đã có tới lúc này (T29–T32) và vào `GET /auth/me`. Các route ghi để trống decorator, nên chỉ admin dùng được. Các task sau ghi rõ role của mình (xem bảng).
+- Thêm `@Roles('admin', 'user')` vào mọi handler đọc (`GET`) của các admin controller đã có tới lúc này (T29–T32a) và vào `GET /auth/me`. Các route ghi để trống decorator, nên chỉ admin dùng được. Các task sau ghi rõ role của mình (xem bảng).
 - `common/guards/origin.guard.ts`: với `POST/PUT/PATCH/DELETE`, `Origin` phải bằng `WEB_ORIGIN`; nếu không thì 403 `BAD_ORIGIN` (D8). Login, refresh và logout cũng bị check. Các lời gọi server-to-server từ Next (Server Action của contact, T48) gửi `Origin: WEB_ORIGIN` một cách tường minh.
 - `common/decorators/current-user.decorator.ts`: `@CurrentUser()` trả `request.user` (`{ id, role }`).
 - `@nestjs/throttler`: login 5 lần mỗi phút cho mỗi IP + email → 429; refresh 30 lần mỗi phút cho mỗi IP. Trust proxy loopback (`trust proxy`) để IP client lấy từ `x-forwarded-for` do Next set.
@@ -1326,9 +1507,9 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 | --- | --- | --- | --- |
 | Tài khoản của mình: me, logout, đổi password của mình | có | có | `/auth/*` (T35, T46) |
 | Dashboard: số liệu, content health, chart analytics | đọc | đọc | `GET /admin/stats`, `GET /admin/health` (T38, T54) |
-| Nội dung: project, post, experience và các bảng about khác, skill, tag, domain, site, profile, nav, social, section, contact topic | đọc, tạo, sửa, xóa, sắp xếp | chỉ đọc (list và editor mở ở chế độ read-only) | `/admin/*` (T29–T33, T39–T45) |
-| Publish, unpublish, đổi status hàng loạt | có | không | T52, T55 |
-| Xem trước draft | có | có | `GET /admin/preview/*`, `/api/draft` (T52) |
+| Nội dung: project, post, experience và các bảng about khác, skill, tag, domain, site, profile, nav, social, contact topic, page và block | đọc, tạo, sửa, xóa, sắp xếp | chỉ đọc (list, editor và page builder mở ở chế độ read-only) | `/admin/*` (T29–T33, T39–T45b) |
+| Publish, unpublish, đổi status hàng loạt; publish page, discard và restore version | có | không | T52, T52a, T55 |
+| Xem trước draft (kể cả live preview của page builder) và lịch sử version của page | có | có | `GET /admin/preview/*`, `/api/draft`, `GET /admin/pages/:key/versions` (T52, T52a) |
 | Media: duyệt thư viện | có | có | `GET /admin/media` (T50) |
 | Media: upload, sửa alt text, xóa | có | không | T50 |
 | Inbox (contact message chứa email của khách) và thông báo realtime | có | không | `/admin/messages`, `/admin/events` (T47, T49) |
@@ -1599,26 +1780,110 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Tiêu đề PR:** `feat(web): post and experience editors`
 
-#### T45 · Admin cho site, section, profile
+#### T45 · Admin cho site settings + profile
 
 **Roadmap** p22 · **Spec** [§5.10](./design/portfolio-design-system.vi.md#s-5-10), §1.5 (`Profile`, `SiteSettings`) · **Phụ thuộc** T33, T42 · **Cỡ** L
 
-**Mục tiêu.** Sửa site settings, navigation, section, social link, contact topic và profile ngay từ admin.
+**Mục tiêu.** Sửa site settings, navigation, social link, contact topic và profile ngay từ admin. Section của page giờ là block, sửa trong page builder (T45b).
 
 **Phạm vi.**
-- `app/admin/(cms)/site/page.tsx` → `admin-site/views/AdminSiteIndex.tsx` với các tab đồng bộ theo URL: Settings (form: SEO mặc định, footer note, contact intro, thời gian reply, contact email, availability, analytics, ambient effect, marquee), Navigation (table, label sửa inline được, picker `href` từ `routes.constant.ts` hoặc URL, move up/down), Sections (theo từng page: switch visible (optimistic), đổi title, intro, label CTA, move up/down), Social links (có `showInHeader`, `showInCta`), Contact topics.
+- `app/admin/(cms)/site/page.tsx` → `admin-site/views/AdminSiteIndex.tsx` với các tab đồng bộ theo URL: Settings (form: SEO mặc định, footer note, contact intro, thời gian reply, contact email, availability, analytics, ambient effect, marquee), Navigation (table, label sửa inline được, picker `href` từ `routes.constant.ts` hoặc URL, move up/down), Social links (có `showInHeader`, `showInCta`), Contact topics.
 - `app/admin/(cms)/profile/page.tsx` → `AdminSiteProfile`: headline + accent (preview `AccentHeadline` live, validate theo từng locale), hero kicker, subheadline, bio (`MarkdownField`, toolbar `compact`), ngày bắt đầu sự nghiệp, ngôn ngữ, thành phố, timezone, phone private. Picker avatar và resume có ở T51.
 
-**File.** `apps/web/app/admin/(cms)/{site,profile}/page.tsx`, `apps/web/src/modules/admin-site/{views/{AdminSiteIndex,AdminSiteProfile}.tsx,components/{SettingsForm,NavTable,SectionsTable,SocialTable,TopicsTable,ProfileForm}/*,hooks/*,services/*}`.
+**File.** `apps/web/app/admin/(cms)/{site,profile}/page.tsx`, `apps/web/src/modules/admin-site/{views/{AdminSiteIndex,AdminSiteProfile}.tsx,components/{SettingsForm,NavTable,SocialTable,TopicsTable,ProfileForm}/*,hooks/*,services/*}`.
 
 **Thiết kế.** Wireframe spec §5.10. Token: `text-ui`, kích thước control admin.
 
 **Tiêu chí nghiệm thu.**
-- [ ] Ẩn một section trong admin thì nó biến mất khỏi page public (dev: ngay lập tức; production: sau revalidation của T52).
+- [ ] Đổi tên một nav item trong admin thì header public thay đổi (dev: ngay lập tức; production: sau revalidation của T52).
 - [ ] Accent không nằm trong headline hiện field error cho đúng locale đó.
-- [ ] Reorder section và nav dùng endpoint order có transaction.
+- [ ] Reorder nav và social dùng endpoint order có transaction.
 
 **Tiêu đề PR:** `feat(web): site and profile admin`
+
+#### T45a · Form props sinh từ schema (zod → TanStack Form)
+
+**Roadmap** p22 · **Spec** §4.6 (TanStack Form + zod), D26 · **Phụ thuộc** T41, T42 · **Cỡ** M
+
+**Mục tiêu.** Một component vẽ ra form sửa được từ một zod schema, để một block type mới không cần viết tay form admin nào.
+
+**Phạm vi.**
+- `admin-core/utils/schema-to-fields.util.ts`: `z.toJSONSchema(schema, { io: 'input' })` → một cây field (`path`, `kind`, `required`, `min`/`max`, `enum`, `default`, `widget`, `label`). Nó đọc các key `.meta()` từ T10a và hỗ trợ object, string, number và integer, boolean, enum, array gồm object hoặc giá trị đơn, giá trị optional và default. Một shape nó không biết sẽ throw khi development và trong test, để một schema mới không thể âm thầm làm mất một field.
+- `admin-core/components/SchemaForm/SchemaForm.tsx`: `useForm({ defaultValues, validators: { onChange: schema } })` (TanStack Form nhận thẳng zod 4 qua Standard Schema), một `form.Field` cho mỗi lá, `fieldErrors` từ server được map bằng `map-field-errors.util.ts` của T42, và `readOnly` disable mọi widget.
+- Widget trong `SchemaForm/widgets/`, chọn theo `widget`, nếu không có thì theo type:
+  - `text`, `textarea`, `number`, `switch`, `select` (enum);
+  - `localized-text` và `localized-textarea`: input EN và VI cạnh nhau, giống mọi editor trong admin, có một chấm khi VI trống;
+  - `markdown`: `MarkdownField` với toolbar `compact` (T42);
+  - `icon` (`IconPicker`, T41), `hue` (`HuePicker`), `route` (từ `routes.constant.ts`);
+  - `project`, `projects` (multi-combobox có search, giữ nguyên thứ tự, cho list `manual`), `stats`, `tag`.
+  - Array có các nút thêm, xóa, và move up/down.
+- Label và help text lấy từ `admin.blocks.*` trong `en.json` qua key `label`. Một unit test đi qua `BLOCK_REGISTRY` và fail khi thiếu key.
+- Autosave: `SchemaForm` expose `onValuesChange` cho `use-autosave` (T42), nên builder lưu một block 1.5s sau khi ngừng gõ.
+- Test: mọi type trong `BLOCK_REGISTRY` render được form mà không có field lạ; một giá trị sai hiện message của zod; `fieldErrors` từ server nằm dưới đúng input; `readOnly` không render input nào còn enable.
+
+**Ngoài phạm vi.** Màn hình page builder (T45b). Drag and drop trong array (`SortableList`, T45b).
+
+**File.** `apps/web/src/modules/admin-core/{utils/schema-to-fields.util.ts,utils/schema-to-fields.util.test.ts,components/SchemaForm/{SchemaForm.tsx,SchemaForm.test.tsx,widgets/*}}`, `apps/web/i18n/locales/en.json`, `packages/ui/src/components/ui/{switch,select,command,popover}.tsx`.
+
+**Thiết kế.** Properties pane của Figma `18:2` (dáng field, control 32px). Token: `text-ui`, `text-ui-meta`, `--input`, `--ring`, `--destructive`.
+
+**Tiêu chí nghiệm thu.**
+- [ ] Browser và API validate bằng cùng một zod schema: các fixture dùng chung mà form chấp nhận thì T32a cũng chấp nhận, và những cái form từ chối thì API trả đúng các field error đó (roadmap p22).
+- [ ] Mọi type trong `BLOCK_REGISTRY` render form với đủ field và label (test).
+- [ ] Một lỗi server trên `props.primaryCta.label.en` hiện dưới input label tiếng Anh.
+- [ ] Với `readOnly`, không input nào enable.
+
+**Tiêu đề PR:** `feat(web): schema-driven props form`
+
+#### T45b · Page builder: block, drag and drop, layout
+
+**Roadmap** p22 · **Spec** §4.3, §4.6 (optimistic reorder), §5.10, D26 · **Phụ thuộc** T33, T45a · **Cỡ** L
+
+**Mục tiêu.** Trong `/admin/pages`, một `admin` sắp xếp từng page public: kéo block vào đúng thứ tự, thêm, nhân bản, ẩn và xóa block, chọn layout preset, và sửa props trong form được generate. Một `user` thấy cùng màn hình đó ở chế độ read-only.
+
+**Phạm vi.**
+- Dependency (`packages/ui`): `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`, `@dnd-kit/modifiers`, đều MIT và miễn phí. Dùng dòng stable (`core` 6.x, `sortable` 10.x), không dùng `@dnd-kit/react` còn dưới 1.0. `check:deps` (T42) cũng fail nếu có package `@dnd-kit/*` nào không phải MIT.
+- `SortableList` trong `packages/ui` (`'use client'`):
+  - một list dọc trên `DndContext` + `SortableContext`, với `PointerSensor` (khoảng cách kích hoạt nhỏ, để click vẫn hoạt động) và `KeyboardSensor` với `sortableKeyboardCoordinates`;
+  - một button drag handle có accessible name, `restrictToVerticalAxis`, và một `DragOverlay`;
+  - `announcements` và `screenReaderInstructions` cho screen reader được truyền vào dưới dạng label, và `onReorder(ids)`;
+  - item `disabled` (block H1) không di chuyển được, và không gì thả được lên trên nó.
+  - Story có hướng dẫn dùng bàn phím.
+- Route `app/admin/(cms)/pages/page.tsx` → `admin-pages/views/AdminPagesIndex.tsx` (năm page, số block, thời gian update) và `app/admin/(cms)/pages/[key]/page.tsx` → `AdminPagesEditor.tsx`. Một item "Pages" được thêm vào nhóm Site của sidebar.
+- `AdminPagesEditor` trên `EditorShell` (T42), với list block ở cột chính và inspector ở properties pane:
+  - `BlockList` (`SortableList`). Mỗi `BlockRow` hiện drag handle, icon và label của type, `key`, một badge layout, một `switch` visible (optimistic), và một row menu: Move up, Move down, Duplicate, và Delete với `alert-dialog`. Move up/down là cách thay cho kéo thả dành cho người dùng bàn phím và một-con-trỏ (WCAG 2.5.7). Một block không hợp lệ hoặc không biết type hiện thành một row `alert` kèm issues của nó và chỉ có Delete.
+  - Reorder gọi `PATCH /admin/pages/:key/blocks/order` với optimistic update và rollback (`optimistic.util.ts` của T39). Reorder fail thì list được khôi phục và hiện một toast.
+  - `AddBlockDialog`: một list `command` gồm các type được phép trên page này, mỗi cái có icon và một dòng mô tả. Type đã chạm `maxPerPage` bị disable, kèm lý do. Block mới được đặt sau block đang chọn.
+  - Các tab của `BlockInspector`:
+    - Props: `SchemaForm` cho type, autosave theo từng block kèm `updatedAt` của nó, cộng `SaveStatus` và các action Conflict của T42 khi gặp 409;
+    - Layout: `LayoutPresetPicker`, một `toggle-group` gồm các preset của type với thumbnail cột nhỏ, và luật responsive bên dưới bằng `text-ui-meta`;
+    - Appearance: `surface` plain hoặc band, kèm ghi chú rằng các band chạm nhau sẽ gộp lại;
+    - Anchor: `key`, kèm URL public `/#key` của nó.
+  - `PageSettingsSheet`: SEO title và description theo từng locale.
+  - Header: một status "Draft" và một link "Open page" (dev hiện thay đổi ngay, D23). Publish, history và live preview có ở T52a.
+- `admin-pages/constants/block-editor-meta.constant.ts`: `type` → `{ icon, labelKey, descriptionKey }`, `satisfies Record<BlockType, …>` (quy tắc 8).
+- `services/admin-pages.service.ts`.
+- `hooks/use-admin-page.hook.ts`: `useSuspenseQuery(qk.admin.pages.detail(key))`.
+- `hooks/use-block-mutations.hook.ts`: add, update, duplicate, delete, reorder và toggle, mỗi cái patch hoặc invalidate query của page.
+- Read-only (D7): không drag handle, không add, không item ghi nào trong row menu, và inspector ở `readOnly`. "Open page" vẫn hoạt động.
+- Tab Sections của spec §5.10 giờ nằm ở đây; T45 không còn tab đó.
+
+**Ngoài phạm vi.** Publish, version, live preview (T52a). Đặt block tự do trên grid và block nằm cạnh nhau (Q13).
+
+**File.** `packages/ui/package.json`, `packages/ui/src/components/SortableList/{SortableList.tsx,SortableList.stories.tsx,SortableList.test.tsx}`, `apps/web/app/admin/(cms)/pages/{page.tsx,[key]/page.tsx}`, `apps/web/src/modules/admin-pages/{views/{AdminPagesIndex,AdminPagesEditor}.tsx,components/{BlockList,BlockRow,AddBlockDialog,BlockInspector,LayoutPresetPicker,PageSettingsSheet}/*,constants/block-editor-meta.constant.ts,hooks/{use-admin-page.hook.ts,use-block-mutations.hook.ts},services/admin-pages.service.ts}`, `apps/web/src/modules/admin-core/components/AdminSidebar/*`, `packages/contracts/src/constants/query-keys.constant.ts`, `apps/web/i18n/locales/en.json`, `scripts/check-deps.mjs`, `packages/ui/src/components/ui/{alert-dialog,toggle-group,sheet,tabs}.tsx` ([STRUCTURE của web: module](../apps/web/STRUCTURE.md#modules)).
+
+**Thiết kế.** Chưa có Figma frame cho màn hình này. Dựng nó từ editor shell (`18:2`: list block nằm ở chỗ body của editor, inspector ở properties pane) và các row table của `15:2`, rồi đính kèm screenshot vào PR để Parker review. Token: `--card`, `--border`, `--sidebar-accent` (block đang chọn), `--muted` (drag overlay), `--shadow-2`, `--destructive-subtle` và `--destructive` (row không hợp lệ), `--ring`, `text-ui`, `text-ui-meta`, chiều cao control của admin.
+
+**Tiêu chí nghiệm thu.**
+- [ ] Kéo block `work` lên trên `featured`, bằng chuột và bằng bàn phím (Space, phím mũi tên, Space), lưu thứ tự mới trong một transaction; block H1 không thể bị di chuyển hay bị thả lên trên (roadmap p22 "block editor list").
+- [ ] Ép reorder trả 500 thì thứ tự cũ được khôi phục (test optimistic rollback).
+- [ ] Thêm một `case-grid`, chuyển nó sang `TWO` và lưu props của nó thì nó hiện trên home public ở dev (D23), với hai cột từ 768px.
+- [ ] Một type đã chạm giới hạn bị disable trong add dialog, và API vẫn từ chối nó (T32a).
+- [ ] Mọi action đều có cách làm không cần kéo (row menu), và screen reader đọc được các thông báo nhấc lên, di chuyển và thả.
+- [ ] Đăng nhập bằng `user` thì builder ở chế độ read-only và không gửi thao tác ghi nào.
+- [ ] `pnpm check:deps` pass với các package dnd-kit.
+
+**Tiêu đề PR:** `feat(web): page builder`
 
 #### T46 · Admin user (chỉ admin) + tự đổi password
 
@@ -1696,11 +1961,11 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Mục tiêu.** Trang contact với một form chạy được cả khi có và không có JavaScript.
 
 **Phạm vi.**
-- Route `app/[locale]/(site)/contact/page.tsx` → `contact/views/ContactIndex.tsx`. Layout chia đôi trên nền grid mờ: bên trái là `HeaderSection` (`PageSection(CONTACT, header)`), `contactIntro`, `replyTimeNote`, các card kênh liên hệ (email với `CopyEmailButton`, địa chỉ chỉ hiện qua `mailto:`; GitHub; LinkedIn, lấy từ `socialLinks`); bên phải là `ContactForm` trên `--card-glass`.
+- Route `app/[locale]/(site)/contact/page.tsx` → `contact/views/ContactIndex.tsx`. `ContactIndex` render `BlocksPage` cho `contact`. Block type mới `contact-form` (quy tắc 8; H1; layout `TWO` hoặc `ONE`) vẽ layout chia đôi trên nền grid mờ: bên trái là eyebrow, H1 và intro của block, `contactIntro`, `replyTimeNote`, các card kênh liên hệ (email với `CopyEmailButton`, địa chỉ chỉ hiện qua `mailto:`; GitHub; LinkedIn, lấy từ `socialLinks`); bên phải là `ContactForm` trên `--card-glass`.
 - `ContactForm` (client): TanStack Form + `field`, validators = `contactSchema`; các field name, email, topic (`select`, ẩn khi không có topic nào), message, honeypot ẩn; validate khi blur, khi submit thì hiện error summary và summary đó nhận focus; submit thành công thì form được thay bằng một status panel; lỗi submit hiện một `alert` phía trên form và giữ nguyên các input.
 - `contact/actions/contact.action.ts` (`'use server'`): validate bằng `contactSchema`, gọi `POST /public/contact` với `Origin: WEB_ORIGIN` và `x-forwarded-for` lấy từ request đến (để throttle thấy IP của visitor), trả `{ ok }` hoặc `{ fieldErrors }`. `<form action>` dùng trực tiếp action này (không JS, `useActionState`); khi có JS, một `useMutation` gọi cùng action đó.
 
-**File.** `apps/web/app/[locale]/(site)/contact/page.tsx`, `apps/web/src/modules/contact/{views/ContactIndex.tsx,components/{HeaderSection,ChannelCards,ContactForm}/*,actions/contact.action.ts,services/contact-topics.service.ts}`, `apps/web/i18n/locales/{en,vi}.json`, `packages/ui/src/components/ui/{select,textarea}.tsx`.
+**File.** `apps/web/app/[locale]/(site)/contact/page.tsx`, `apps/web/src/modules/contact/{views/ContactIndex.tsx,components/{ChannelCards,ContactForm}/*,actions/contact.action.ts,services/contact-topics.service.ts}`, `apps/web/src/modules/blocks/components/ContactFormBlock/*`, `apps/web/src/modules/blocks/constants/block-renderers.constant.ts`, `packages/contracts/src/blocks/{definitions/contact-form.block.ts,block-registry.constant.ts}`, `apps/web/i18n/locales/{en,vi}.json`, `packages/ui/src/components/ui/{select,textarea}.tsx`.
 
 **Thiết kế.** Figma `12:2`. Mockup `contact.html` (một field ở error state). Token: `--card-glass`, `--grid-line`, `--destructive`, `text-title`, `text-body`.
 
@@ -1801,13 +2066,14 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Mục tiêu.** Publish làm thay đổi lên live trong vài giây mà không cần redeploy; draft chỉ xem được trong preview khi đã đăng nhập.
 
 **Phạm vi.**
-- API `modules/publishing`: `publishing.service.ts` (`revalidate(tags)` → `POST ${WEB_INTERNAL_URL}/api/revalidate` với `x-revalidate-secret`; retry một lần; lỗi được log và không bao giờ chặn thao tác ghi), `tags.util.ts` (entity → tag: `site`, `projects`, `project:{slug}`, `posts`, `post:{slug}`, `skills`, `domains`).
+- API `modules/publishing`: `publishing.service.ts` (`revalidate(tags)` → `POST ${WEB_INTERNAL_URL}/api/revalidate` với `x-revalidate-secret`; retry một lần; lỗi được log và không bao giờ chặn thao tác ghi), `tags.util.ts` (entity → tag: `site`, `page:{key}`, `projects`, `project:{slug}`, `posts`, `post:{slug}`, `skills`, `domains`).
 - Route (chỉ admin): `POST /admin/projects/:id/publish|unpublish`, `POST /admin/posts/:id/publish|unpublish`. Publish kiểm tra các field English bắt buộc, `publishLint`, và alt text trên các image được dùng → 400 kèm `fieldErrors`; set `status` và `publishedAt` (chỉ ở lần publish đầu); phát `content.published`.
 - Mọi thao tác ghi trong admin làm thay đổi dữ liệu public đều gọi `revalidate` với tag của nó.
 - Preview API: `GET /admin/preview/projects/:slug`, `GET /admin/preview/posts/:slug` (shape giống public DTO, status nào cũng được, `@Roles('admin', 'user')`).
 - Web: `app/api/revalidate/route.ts` (kiểm tra secret, `revalidateTag` cho từng tag), `app/api/draft/route.ts` (kiểm tra access token qua `/auth/me` với `withAuth`, role nào cũng được; bật `draftMode()`, redirect tới page; `?exit=1` thì tắt). Khi draft mode bật, service dùng các preview endpoint với cookie `access_token` được forward và không cache; nếu cookie đã hết hạn, banner draft có link tới `/admin/login?next=` page hiện tại. Một banner draft có link để thoát.
 - Nút publish trong editor và status trong properties pane (project, post); link preview.
 - `.env.example`: `REVALIDATE_SECRET`, `WEB_INTERNAL_URL`.
+- Page (D26) dùng lại draft mode này; publish, version và live preview của page nằm ở T52a.
 
 **File.** `apps/api/src/modules/publishing/*`, `apps/api/src/modules/{projects,posts}/{admin-*.controller.ts,*.service.ts}`, `apps/api/src/modules/*/` (các lời gọi revalidate), `apps/api/test/publishing.e2e-spec.ts`, `apps/web/app/api/{revalidate,draft}/route.ts`, `apps/web/src/modules/core/{services/api-server.service.ts,components/DraftBanner/*}`, `apps/web/src/modules/{projects,notes}/services/*.service.ts`, `apps/web/src/modules/admin-{projects,posts}/components/*`, `.env.example`.
 
@@ -1827,16 +2093,83 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Tiêu đề PR:** `feat: publish + on-demand revalidate`
 
+#### T52a · Publish page, version, live preview
+
+**Roadmap** p25 · **Spec** §4.6 (tag, revalidate), §1.5 (status), D26 · **Phụ thuộc** T45b, T52 · **Cỡ** L
+
+**Mục tiêu.** Visitor thấy version đã publish của một page, không bao giờ thấy draft. Một `admin` publish bằng một click, restore được bất kỳ version nào trước đó, và xem draft live ngay cạnh builder trước khi publish.
+
+**Phạm vi.**
+- Model `PageVersion`: `pageId`, `version` (1, 2, 3… theo từng page), `snapshot Json` (`{ seo, blocks: [{ type, key, schemaVersion, props, layout, surface, isVisible, sortOrder }] }`), `note` `VarChar(200)?`, `createdById` → `User` (`onDelete: SetNull`), `createdAt`; `@@unique([pageId, version])`. `Page` có thêm `publishedVersionId` (unique, → `PageVersion`) và `publishedAt`. Migration `add-page-versions`. Seed publish v1 của mọi page.
+- Public read chuyển sang snapshot: `GET /public/pages/:key` trả snapshot đã publish, mỗi block vẫn đi qua `parseBlock`, nên một snapshot cũ được migrate hoặc các block hỏng của nó bị bỏ, không bao giờ 500. Một page chưa từng publish trả `blocks: []` (shell vẫn render) và content health đánh dấu nó.
+- Admin route (chỉ admin trừ khi có ghi chú):
+  - `POST /admin/pages/:key/publish` `{ note? }`. Check trước:
+    - các luật page của T32a;
+    - `parseBlock` chặt trên mọi block visible (400 `INVALID_BLOCKS` kèm issues theo từng block; block không hợp lệ đang ẩn bị bỏ ra khỏi snapshot);
+    - `publishLint` trên mọi giá trị text, và các field English bắt buộc.
+    - Sau đó, trong một transaction, nó ghi version n+1 và set `publishedVersionId` và `publishedAt`.
+    - Cuối cùng nó revalidate `page:{key}` qua publishing service của T52, phát `content.published`, và ghi một row audit `PUBLISH` khi T55 đã có.
+  - `GET /admin/pages/:key/versions` (list theo page: version, ngày, tên tác giả, note, số block) và `GET /admin/pages/:key/versions/:version` (snapshot). Cả hai là `@Roles('admin', 'user')`.
+  - `POST /admin/pages/:key/versions/:version/restore`: thay các row draft bằng snapshot đó trong một transaction (`deleteMany` + `createMany`). Nó không publish, nên "roll back" nghĩa là restore, rồi publish.
+  - `POST /admin/pages/:key/discard`: restore version đã publish vào draft.
+  - `GET /admin/preview/pages/:key?locale` (`@Roles('admin', 'user')`): draft theo shape public DTO, các block không hợp lệ được liệt kê riêng.
+  - `GET /admin/pages` có thêm `publishedVersion` và `hasUnpublishedChanges` (`Page.updatedAt` muộn hơn `publishedAt`).
+- Web public:
+  - `blocks/services/pages.service.ts` đọc preview endpoint (forward `access_token`, không cache) khi `draftMode()` bật.
+  - Trong draft mode, `BlockRenderer` thêm `data-block-id` vào mỗi block và hiện `UnknownBlockNotice` (một ô viền đứt kèm type và issues của nó) ở chỗ mà visitor không thấy gì.
+- `core/components/PreviewBridge` (client, chỉ được site layout mount trong draft mode): nó xử lý các event `message` có `origin` bằng `location.origin`. `preview:refresh` gọi `router.refresh()` và giữ vị trí scroll; `preview:focus { blockId }` scroll tới block đó và viền nó lại.
+- Builder (`admin-pages`):
+  - `PagePreview`: một `iframe` của `/api/draft?path=/{locale}{route}` (draft route của T52; `path` phải là một route public).
+    - Nó nằm cạnh list ở `xl` và trong một `sheet` khi nhỏ hơn.
+    - Một toggle viewport (390, 768, 1440: chiều rộng iframe, scale cho vừa) để check luật responsive, và một toggle EN/VI để đổi locale.
+    - Sau mỗi lần lưu thành công, builder post `preview:refresh`; chọn một block thì post `preview:focus`.
+  - `PublishBar`: một badge "Unpublished changes", Publish (note optional) bên trong `RoleGate allow={['admin']}`, và Discard changes. Một 400 `INVALID_BLOCKS` highlight các row.
+  - `sheet` `VersionHistory`: list các version; mở một version trong preview dưới dạng snapshot read-only; Restore nằm sau một `alert-dialog` (chỉ admin).
+- Content health (T38) có thêm bốn check:
+  - page chưa từng publish;
+  - thay đổi chưa publish cũ hơn 7 ngày;
+  - block fail validation trong draft hoặc trong version đã publish;
+  - tham chiếu của block tới item bị thiếu hoặc chưa publish.
+- Preview frame site public từ cùng origin, nên T59 set `frame-ancestors 'self'` thay vì `'none'`.
+- e2e `test/page-versions.e2e-spec.ts`:
+  - publish làm thay đổi hiện trên page public, và một lần sửa draft sau đó không làm nó đổi;
+  - publish khi có một block visible không hợp lệ trả 400;
+  - restore v1 rồi publish thì v1 quay lại;
+  - một `user` nhận 403 khi publish và restore, và 200 với versions và preview.
+
+**Ngoài phạm vi.** Publish theo lịch (Q4). So sánh hai version cạnh nhau.
+
+**File.** `apps/api/prisma/schema.prisma` + migration `add-page-versions`, `apps/api/prisma/seed/profiles/{demo,baseline}.seed.ts`, `apps/api/src/modules/pages/{admin-pages.controller.ts,pages.service.ts,page-versions.service.ts,page-versions.service.spec.ts,entities/*}`, `apps/api/src/modules/publishing/tags.util.ts`, `apps/api/src/modules/dashboard/dashboard.service.ts`, `packages/contracts/src/pages/*`, `packages/contracts/src/constants/query-keys.constant.ts`, `apps/api/test/page-versions.e2e-spec.ts`, `apps/api/api.http`, `apps/web/app/api/draft/route.ts`, `apps/web/app/[locale]/(site)/layout.tsx`, `apps/web/src/modules/blocks/{services/pages.service.ts,components/{BlockRenderer,UnknownBlockNotice}/*}`, `apps/web/src/modules/core/components/PreviewBridge/*`, `apps/web/src/modules/admin-pages/{components/{PagePreview,PublishBar,VersionHistory}/*,hooks/use-page-versions.hook.ts,services/admin-pages.service.ts}`, `apps/web/src/modules/admin-dashboard/components/ContentHealthCard/*`.
+
+**Thiết kế.** Spec §5.9 (publish trên header), `StatusPill`. Token: `--warning` và `--warning-subtle` (badge chưa publish), `--border`, `--muted` (nền của khung preview), `--shadow-2`, `--ring` (viền block đang focus).
+
+**Các bước backend, giải thích.**
+1. **Bản draft và bản đã publish.** Các row `PageBlock` là draft bạn sửa. Publish copy chúng vào một JSON snapshot (`PageVersion`) và cho page trỏ tới nó. Visitor chỉ đọc snapshot, nên một lần sắp xếp đang làm dở không bao giờ hiện ra.
+2. **Sao lại là snapshot mà không phải status cho từng block?** Một page được publish trọn vẹn: thứ tự, layout và text đi cùng nhau. Một bản JSON cho mỗi lần publish dễ đọc, dễ restore, và nhỏ (vài KB).
+3. **Số version.** `@@unique([pageId, version])`, với n+1 tính bên trong transaction, nghĩa là hai lần publish cùng lúc không thể cùng tạo version 4. Một cái fail và có thể thử lại.
+4. **Restore giữ nguyên lịch sử.** Restore copy một snapshot cũ vào draft và không bao giờ xóa version nào. Publish sau đó tạo một version mới, nên lịch sử chỉ dài thêm.
+5. **Draft mode cho page.** Preview chính là route public thật, render bởi cùng các server component, nhưng đọc draft qua một admin endpoint với cookie của bạn. Thứ bạn thấy trong đó chính xác là thứ visitor nhận được sau khi bạn publish.
+
+**Tiêu chí nghiệm thu.**
+- [ ] Trên production build, publish một home đã sắp xếp lại làm thứ tự mới hiện ra trong dưới 5s, và sửa mà không publish thì visitor không thấy gì thay đổi (roadmap p25).
+- [ ] Live preview cập nhật khoảng một giây sau mỗi lần autosave, và ở 390px nó hiện mọi block thành một cột.
+- [ ] Restore v1 rồi publish đưa page public về v1, và lịch sử giữ mọi version.
+- [ ] Publish khi có một block visible không hợp lệ trả 400 và highlight nó; một snapshot cũ có block type đã bị bỏ vẫn render các block khác của nó.
+- [ ] Visitor không có draft mode không bao giờ nhận block draft (`curl` page public trong lúc đang có thay đổi draft).
+- [ ] Đăng nhập bằng `user` thì preview và history hoạt động; Publish, Discard và Restore bị ẩn và bị API từ chối.
+
+**Tiêu đề PR:** `feat: page publish + versions + live preview`
+
 ### M6 — Chất lượng
 
 #### T53 · SEO từ CMS
 
-**Roadmap** p26 · **Spec** §5 phần mở đầu (pattern title, canonical, hreflang, JSON-LD, sitemap, RSS), §4.2 (`OgImage`), §4.5 (SEO) · **Phụ thuộc** T24, T25, T27, T28 · **Cỡ** M
+**Roadmap** p26 · **Spec** §5 phần mở đầu (pattern title, canonical, hreflang, JSON-LD, sitemap, RSS), §4.2 (`OgImage`), §4.5 (SEO) · **Phụ thuộc** T24, T25, T27, T28, T52a · **Cỡ** M
 
 **Mục tiêu.** Mọi page public có metadata, structured data và OG image lấy từ field trong CMS, và search engine nhận được sitemap chỉ gồm content đã publish.
 
 **Phạm vi.**
-- `seo/utils/*-metadata.util.ts`: các builder cho site, home, about, list project, project, list note, post, contact. Title `{seoTitle} · {siteName}`; description lấy từ `seoDescription` → `excerpt`/`tagline` → `SiteSettings`; canonical; `alternates.languages` (en, vi, `x-default`); `metadataBase` lấy từ env.
+- `seo/utils/*-metadata.util.ts`: các builder cho site, home, about, list project, project, list note, post, contact. Title `{seoTitle} · {siteName}`; description lấy từ `seoDescription` → `excerpt`/`tagline` → `SiteSettings`; năm page dựng từ block đọc `seoTitle`/`seoDescription` từ version đã publish của page (D26), rồi title và intro của block H1, rồi `SiteSettings`; canonical; `alternates.languages` (en, vi, `x-default`); `metadataBase` lấy từ env.
 - `seo/components/JsonLd`: `Person` (home, about), `CreativeWork` (case study), `BlogPosting` (post), `BreadcrumbList` (các page chi tiết); JSON được escape ký tự `<`.
 - OG image: `opengraph-image.tsx` cho route home, project và post (`ImageResponse`, 1200×630, nền tối, Be Vietnam Pro, `VersionTag`, tên + domain).
 - `app/sitemap.ts` (cả hai locale, lấy từ một `GET /public/sitemap` mới trong `public-site`: các slug đã publish + `updatedAt`), `app/robots.ts` (disallow `/admin`, `/api`), RSS `app/[locale]/(site)/rss.xml/route.ts`.
@@ -1885,8 +2218,8 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Mục tiêu.** Mỗi thao tác ghi trong admin để lại một row audit, xem được trong một list virtualized, kèm theo bulk action.
 
 **Phạm vi.**
-- Model `AuditLog` (`userId`, `action` `CREATE|UPDATE|PUBLISH|ARCHIVE|LOGIN`, `entityType`, `entityId`, `summary`). Migration `add-audit-log`.
-- `modules/audit`: `audit.service.ts` `record(…)`, được gọi tường minh từ các service bên trong cùng transaction với thao tác ghi, và từ login. `GET /admin/audit` (cursor pagination, filter theo entity type và user; chỉ admin).
+- Model `AuditLog` (`userId`, `action` `CREATE|UPDATE|PUBLISH|ARCHIVE|RESTORE|LOGIN`, `entityType`, `entityId`, `summary`). Migration `add-audit-log`.
+- `modules/audit`: `audit.service.ts` `record(…)`, được gọi tường minh từ các service bên trong cùng transaction với thao tác ghi (kể cả publish page và restore version, T52a), và từ login. `GET /admin/audit` (cursor pagination, filter theo entity type và user; chỉ admin).
 - Bulk update status cho project và post (`POST /admin/{entity}/bulk` với `{ ids, action }`, chỉ admin) trong một transaction, mỗi item một row audit; nối vào bulk bar của `DataTable`.
 - Script `pnpm --filter @portfolio/api seed:audit` chèn 5,000 row audit (chỉ dùng khi dev).
 - Web: `admin-insights/views/AdminInsightsAudit.tsx` (`useInfiniteQuery` + `useVirtualizer`, `AuditRow` hiện thời gian tương đối và tooltip thời gian tuyệt đối); card activity trên dashboard (8 mục mới nhất, nằm trong `RoleGate allow={['admin']}`). `packages/ui` `ActivityFeed`, `AuditRow`.
@@ -1908,22 +2241,22 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 #### T56 · Test + e2e trên CI
 
-**Roadmap** p28 · **Spec** §6 (Day 21, Day 24) · **Phụ thuộc** T52 · **Cỡ** M
+**Roadmap** p28 · **Spec** §6 (Day 21, Day 24) · **Phụ thuộc** T52a · **Cỡ** M
 
 **Mục tiêu.** Một bộ test chứng minh các luồng chính chạy end to end, chạy trên mọi PR.
 
 **Phạm vi.**
 - Lấp các chỗ trống trong API e2e để module nào cũng có test happy path + validation.
-- Playwright trong `apps/web/e2e/`: smoke public (home ở cả hai locale, điều hướng nav bằng bàn phím, page project và post, 404), submit contact, admin login → tạo project draft → publish → hiện trên page public → archive, và `user` login (tài khoản được tạo trong test setup qua `POST /admin/users`) → editor project mở ở chế độ chỉ đọc, không có nút Publish và không có item Inbox, Audit hay Users. Chạy trên production build của web và api với test DB và seed `demo`.
+- Playwright trong `apps/web/e2e/`: smoke public (home ở cả hai locale, điều hướng nav bằng bàn phím, page project và post, 404), submit contact, admin login → tạo project draft → publish → hiện trên page public → archive, và `user` login (tài khoản được tạo trong test setup qua `POST /admin/users`) → editor project mở ở chế độ chỉ đọc, không có nút Publish và không có item Inbox, Audit hay Users; page builder của admin → kéo block `work` của home lên trên `featured`, ẩn `marquee`, publish → home public hiện thứ tự mới không có marquee → restore version trước rồi publish → thứ tự cũ quay lại. Chạy trên production build của web và api với test DB và seed `demo`.
 - CI: các job `lint-typecheck-unit`, `api-e2e` (MySQL service), `web-e2e` (MySQL service, build cả hai app, chạy Playwright, upload report).
 
-**File.** `apps/web/e2e/{public.spec.ts,contact.spec.ts,admin-publish.spec.ts}`, `apps/web/playwright.config.ts`, `apps/api/test/*.e2e-spec.ts`, `.github/workflows/ci.yml`.
+**File.** `apps/web/e2e/{public.spec.ts,contact.spec.ts,admin-publish.spec.ts,admin-pages.spec.ts}`, `apps/web/playwright.config.ts`, `apps/api/test/*.e2e-spec.ts`, `.github/workflows/ci.yml`.
 
 **Thiết kế.** Không có.
 
 **Tiêu chí nghiệm thu.**
 - [ ] `pnpm test` xanh ở local và trên CI (roadmap p28).
-- [ ] e2e draft → publish → page public xanh (spec §6 Day 21).
+- [ ] e2e draft → publish → page public xanh (spec §6 Day 21), cho một project và cho một page.
 
 **Tiêu đề PR:** `test: api + e2e smoke`
 
@@ -1934,9 +2267,9 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Mục tiêu.** Accessibility và performance được đo trên mọi màn hình chính, và các fix đã được merge.
 
 **Phạm vi.**
-- axe (`@axe-core/playwright`) trên home, about, projects, case study, notes, post, contact, admin login và dashboard; CI fail khi có issue mức serious.
+- axe (`@axe-core/playwright`) trên home, about, projects, case study, notes, post, contact, admin login, dashboard và page builder; CI fail khi có issue mức serious.
 - Lighthouse (mobile) trên home, projects, case study, post.
-- Kiểm tra tay: bàn phím, screen reader trên 3 page, reduced motion và reduced transparency trên home, case study và post (fallback của từng effect).
+- Kiểm tra tay: bàn phím, screen reader trên 3 page, drag and drop bằng bàn phím trong page builder (Space, phím mũi tên, Space) và menu move up/down của nó, reduced motion và reduced transparency trên home, case study và post (fallback của từng effect).
 - Fix: thứ tự focus, skip link, `priority` cho image LCP, `display` của font, orb trên một composited layer, CLS 0 từ count-up và reveal.
 - Report trong `docs/audits/<date>-a11y-perf.md` với số liệu trước/sau.
 
@@ -1986,7 +2319,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Mục tiêu.** Header bảo mật, cookie an toàn, container chỉ có quyền tối thiểu, và backup mà bạn đã thực sự restore thử.
 
 **Phạm vi.**
-- Header bảo mật: CSP với nonce theo từng request, set trong `middleware.ts` (pattern của Next.js); HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `frame-ancestors 'none'` trong Caddyfile.
+- Header bảo mật: CSP với nonce theo từng request, set trong `middleware.ts` (pattern của Next.js); HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `frame-ancestors 'self'` trong Caddyfile (`'self'`, không phải `'none'`, vì live preview của page builder frame site public từ cùng origin, T52a; không site nào khác được frame nó).
 - Xác nhận cookie `Secure` trên production; container không chạy bằng root, root filesystem read-only khi có thể; không CORS (D9).
 - JWT secret cho production: `JWT_ACCESS_SECRET` và `JWT_REFRESH_SECRET` tạo bằng `openssl rand -base64 48`, khác với dev và khác nhau, chỉ nằm trong `.env` trên VPS và GitHub secrets; boot fail nếu chúng ngắn hoặc bằng nhau (T35). Ghi cách tạo và xoay vòng secret trong `docs/runbooks/secrets.md`.
 - Service `backup` trong `compose.prod.yml`: `mysqldump` + gzip hằng ngày và một file tarball cho uploads, xoay vòng 7 ngày trên volume `backups`.
@@ -2010,12 +2343,12 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 #### T60 · Dọn seed production + kiểm tra placeholder
 
-**Roadmap** p32 · **Spec** §1.1–§1.5, §2 · **Phụ thuộc** T45, T51, T52 · **Cỡ** S (phần của agent) · **Phần của owner:** Parker nhập content
+**Roadmap** p32 · **Spec** §1.1–§1.5, §2 · **Phụ thuộc** T45, T51, T52a · **Cỡ** S (phần của agent) · **Phần của owner:** Parker nhập content
 
 **Mục tiêu.** Production khởi đầu từ seed `baseline`, và có một bước kiểm tra chứng minh không placeholder nào lọt lên site live.
 
 **Phạm vi.**
-- Agent: `scripts/check-placeholders.mjs` (kết nối bằng `DATABASE_URL`, đếm các row có field text chứa marker placeholder mà seed dùng (`<email>`, `<phone>`, `Sample`, `Lorem`, `TODO`) và fail nếu có row nào đã publish hoặc nằm trong singleton); root script `check:placeholders`; review `baseline.seed.ts` theo spec §1.5 (chỉ draft, 0 post, không có message hay view demo); `docs/runbooks/content-entry.md` (checklist: profile, experience, project, post, bản dịch tiếng Việt, metric, alt text, email liên hệ thật đã nhập trong `/admin`).
+- Agent: `scripts/check-placeholders.mjs` (kết nối bằng `DATABASE_URL`, đếm các row có field text chứa marker placeholder mà seed dùng (`<email>`, `<phone>`, `Sample`, `Lorem`, `TODO`), kể cả text bên trong `PageBlock.props` và các snapshot `PageVersion` đã publish, và fail nếu có row nào đã publish hoặc nằm trong singleton); root script `check:placeholders`; review `baseline.seed.ts` theo spec §1.5 (chỉ draft, 0 post, không có message hay view demo); `docs/runbooks/content-entry.md` (checklist: profile, experience, project, post, bản dịch tiếng Việt, metric, alt text, email liên hệ thật đã nhập trong `/admin`).
 - Parker: nhập content thật trong `/admin`; publish ít nhất hai case study và một post.
 
 **File.** `scripts/check-placeholders.mjs`, `package.json`, `apps/api/prisma/seed/profiles/baseline.seed.ts`, `docs/runbooks/content-entry.md`.
@@ -2038,7 +2371,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 - `.github/workflows/deploy.yml`: sau khi CI trên `main` chạy xong, build và push image web/api lên GHCR (tag: commit SHA và `latest`), SSH vào VPS, `docker compose -f compose.prod.yml pull && up -d`, rồi smoke-check `https://<domain>/api/health`.
 - Caddy tự động bật HTTPS cho domain lấy từ env (`SITE_DOMAIN`).
 - `docs/runbooks/deploy.md` (setup VPS lần đầu, danh sách secret, rollback theo image tag).
-- `docs/launch-checklist.md`: DNS, TLS, backup và diễn tập restore, Lighthouse và axe, `check:content`, `check:placeholders`, OG preview, đã submit sitemap, đã bật analytics, đã đổi password admin, đã tạo mới `JWT_ACCESS_SECRET`/`JWT_REFRESH_SECRET` cho production (không dùng giá trị dev), page 404/500, đã cấu hình uptime ping.
+- `docs/launch-checklist.md`: DNS, TLS, backup và diễn tập restore, Lighthouse và axe, `check:content`, `check:placeholders`, OG preview, đã submit sitemap, đã bật analytics, đã đổi password admin, đã tạo mới `JWT_ACCESS_SECRET`/`JWT_REFRESH_SECRET` cho production (không dùng giá trị dev), page 404/500, mọi page đã publish và không có block không hợp lệ nào trong content health, đã cấu hình uptime ping.
 
 **File.** `.github/workflows/deploy.yml`, `infra/caddy/Caddyfile`, `compose.prod.yml`, `docs/runbooks/deploy.md`, `docs/launch-checklist.md`.
 
@@ -2067,7 +2400,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 - Account và secret: domain, VPS, DNS, secret của GitHub Actions, uptime monitor.
 - Trả lời các câu hỏi mở ở §9.
 
-**Ngoài phạm vi của plan này:** comment, newsletter, full-text search engine (MySQL `LIKE` kèm index là đủ ở quy mô này), nhiều hơn hai ngôn ngữ, cloud object storage (interface `MediaService` giữ khả năng này cho sau), admin multi-tenant, mobile app.
+**Ngoài phạm vi của plan này:** comment, newsletter, full-text search engine (MySQL `LIKE` kèm index là đủ ở quy mô này), nhiều hơn hai ngôn ngữ, cloud object storage (interface `MediaService` giữ khả năng này cho sau), admin multi-tenant, mobile app, layout page tự do (kéo field hay block vào ô grid bất kỳ, Q13), page tùy chỉnh ở URL mới (Q12).
 
 <a id="9-open-questions"></a>
 
@@ -2079,7 +2412,7 @@ Mỗi câu đều có một mặc định mà plan đang dùng, nên không task
 | --- | --- | --- |
 | Q1 | Các gap ở spec §1.4: tên pháp lý có dấu, ngày làm việc chính xác (CMC Global / Kobizo chồng nhau), metric thật cho từng case study, job title ("Senior Frontend Engineer" hay "Frontend Engineer (5 yrs)") | Placeholder từ wireframe; Parker nhập giá trị thật ở T60 |
 | Q2 | Domain name và nhà cung cấp VPS | `parker.dev` chỉ xuất hiện như placeholder; T61 đọc domain từ env |
-| Q3 | Reorder bằng drag-and-drop trong admin (`@dnd-kit/sortable`) hay chỉ dùng button move up/down | Chỉ button move up/down (spec §5.10 ghi `button (move up/down)`); drag and drop có thể thêm sau trên cùng endpoint reorder |
+| Q3 | Reorder bằng drag-and-drop trong các table của admin (`@dnd-kit/sortable`) hay chỉ dùng button move up/down | Page builder dùng dnd-kit (D26, T45b). Các table giữ move up/down (spec §5.10 ghi `button (move up/down)`); sau này chúng có thể dùng lại `SortableList` trên cùng các endpoint reorder |
 | Q4 | Mockup admin table hiện status post "Scheduled", nhưng data model chỉ có `DRAFT/PUBLISHED/ARCHIVED` | Không implement. Sau này, một `publishedAt` ở tương lai có thể mang nghĩa "scheduled" nếu Parker muốn |
 | Q5 | Accept-Language: spec ghi `vi` được "auto-suggested, never forced". Gợi ý đó trông như thế nào? | Một banner một dòng có thể dismiss trên `/en/*` cho browser `vi`, trạng thái dismiss lưu trong cookie (T14) |
 | Q6 | URL LinkedIn | Row `SocialLink` với placeholder `url = "https://www.linkedin.com/in/<handle>"` |
@@ -2088,3 +2421,5 @@ Mỗi câu đều có một mặc định mà plan đang dùng, nên không task
 | Q9 | `user` được làm chính xác những gì? (D7) | Người review chỉ đọc: dashboard, đọc nội dung và media, analytics, xem trước draft, password của mình. Không ghi, không publish, không upload, không inbox, không audit log, không quản lý user. Mở rộng về sau chỉ là thêm một `@Roles('admin', 'user')` cho mỗi route cùng `RoleGate` tương ứng |
 | Q10 | Thu hồi một refresh token bị lộ mà không sign out user đó khỏi mọi nơi? (D24) | Không. Việc đó cần một bảng lưu token (chính là session mà Parker đã bỏ). `tokenVersion` sign out user trên mọi thiết bị, đủ dùng cho vài tài khoản |
 | Q11 | Editor có nên cho phép nhiều Markdown hơn allowlist dùng chung (D25, T23) không, ví dụ H4, task list, footnote, underline hay embed? | Không. Thêm một cái về sau nghĩa là thêm một mục trong `markdown.constant.ts`, extension Tiptap tương ứng và một component renderer, trong cùng một PR |
+| Q12 | Page tùy chỉnh ở URL mới (ví dụ `/uses`) dựng từ block? (D26) | Không: block chỉ sắp xếp năm route page. Thêm nó nghĩa là cần `Page.slug`, một catch-all route, một entry trong nav và sitemap, và một action "New page" trong builder |
+| Q13 | Layout tự do: kéo field hay block vào ô grid bất kỳ, hoặc đặt hai block cạnh nhau? (D26) | Không: mỗi hàng một block, với layout preset. Một bản mở rộng sau này có thể thêm một container block `columns` hoặc một `colSpan` cho từng block trên cùng grid 12 cột, lưu trong cùng JSON |
