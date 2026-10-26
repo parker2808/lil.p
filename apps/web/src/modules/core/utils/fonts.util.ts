@@ -3,23 +3,22 @@ import { Be_Vietnam_Pro, Inter, JetBrains_Mono } from 'next/font/google';
 // Google's `vietnamese` subset includes Latin + Vietnamese diacritics.
 // Using only that subset keeps the network panel at ≤ 5 files
 // (Be Vietnam 600/700, Inter variable, JetBrains 400/600).
-const subsets = ['vietnamese'] as const;
-
+// next/font requires a literal array — no spread.
 export const beVietnamPro = Be_Vietnam_Pro({
-  subsets: [...subsets],
+  subsets: ['vietnamese'],
   weight: ['600', '700'],
   display: 'swap',
   variable: '--font-be-vietnam-pro',
 });
 
 export const inter = Inter({
-  subsets: [...subsets],
+  subsets: ['vietnamese'],
   display: 'swap',
   variable: '--font-inter',
 });
 
 export const jetbrainsMono = JetBrains_Mono({
-  subsets: [...subsets],
+  subsets: ['vietnamese'],
   weight: ['400', '600'],
   display: 'swap',
   variable: '--font-jetbrains-mono',
