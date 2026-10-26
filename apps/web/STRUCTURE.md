@@ -49,7 +49,7 @@ Create only the folders a module needs.
 | `notes` | `NotesIndex`, `NotesDetail`, search island (TanStack Query), `notes-browser`; `posts.service.ts` + `posts-client.service.ts` | §5.5 |
 | `contact` | `ContactIndex`, `ContactForm` (TanStack Form + Server Action) | §5.6 |
 | `seo` | metadata builders, JSON-LD, OG image template, sitemap/RSS builders | §5 intro |
-| `admin-core` | `AdminShell`, sidebar, topbar, admin `CommandPalette`, `NotificationBell`, `EditorShell`, `MarkdownField` (TanStack Form field ↔ Tiptap `MarkdownEditor`, loaded with `next/dynamic` `ssr: false` so Tiptap stays out of public bundles), `RoleGate` (shows children for `admin` or `user` only), `useMe`/`useIsAdmin`, SSE hook, URL list-params hook, autosave hook, dirty guard, `SchemaForm` (T45a) | §4.3 |
+| `admin-core` | `AdminShell`, sidebar, topbar, admin `CommandPalette`, `NotificationBell`, `EditorShell`, `MarkdownField` (TanStack Form field ↔ Tiptap `MarkdownEditor`, loaded with `next/dynamic` `ssr: false` so Tiptap stays out of public bundles), `RoleGate` (shows children for `admin` or `user` only), `useMe`/`useIsAdmin`, SSE hook, URL list-params hook, autosave hook, dirty guard, `SchemaForm` (`schema-to-fields` + zod 4 `toJSONSchema`) | §4.3 |
 | `admin-auth` | `AdminAuthLogin` view (silent refresh, then login form), `ChangePasswordDialog`, `safe-next.util.ts` | §4.6 |
 | `admin-dashboard` | `AdminDashboardIndex`, stat/health/inbox/activity/chart cards | §5.7, §5.11 |
 | `admin-projects` | projects table + editor (incl. "Card & facts", metrics, live preview) | §5.8, §5.9, §5.11 |
