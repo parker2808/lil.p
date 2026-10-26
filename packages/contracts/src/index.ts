@@ -10,6 +10,8 @@ export type { ApiErrorBody, ErrorCode } from './common/api-error.schema';
 export { apiErrorSchema, errorCodeSchema } from './common/api-error.schema';
 export type { Locale } from './common/locale.schema';
 export { localeQuerySchema, localeSchema } from './common/locale.schema';
+export type { IconKey } from './constants/icons.constant';
+export { ICON_KEYS, iconKeySchema } from './constants/icons.constant';
 export { qk } from './constants/query-keys.constant';
 export type { PublicRoute } from './constants/routes.constant';
 export { PUBLIC_ROUTES } from './constants/routes.constant';

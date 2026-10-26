@@ -162,6 +162,20 @@
   --shadow-3: 0 0 0 1px rgb(255 255 255 / 0.1), 0 24px 48px rgb(0 0 0 / 0.6);
 }
 
+@keyframes orb-float {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(0.5rem, -0.75rem);
+  }
+}
+
+.orb {
+  animation: orb-float 12s var(--ease-in-out) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --dur-instant: 0.01ms;
