@@ -1,5 +1,8 @@
-# Local HTTP only (T58). TLS and extra security headers land in T59 / T61.
+# Local HTTP (T58) + security headers (T59). TLS lands in T61.
 # The browser talks to Caddy; Caddy talks to Next; Next rewrites /api/* to Nest.
+# CSP is set per-request by Next (proxy.ts nonce) and passed through — do not
+# overwrite it here. frame-ancestors 'self' (via Next CSP + X-Frame-Options
+# SAMEORIGIN) so the page builder can iframe the public site (T52a).
 
 {
 	admin off
@@ -7,5 +10,13 @@
 
 :80 {
 	encode gzip zstd
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+		X-Frame-Options SAMEORIGIN
+		-Server
+	}
 	reverse_proxy web:3000
 }

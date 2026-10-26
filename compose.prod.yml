@@ -1,7 +1,8 @@
-# Production stack: MySQL + API + Next + Caddy on :80.
+# Production stack: MySQL + API + Next + Caddy on :80 + daily backups.
 # Nothing but Caddy is published. TLS lands in T61.
 # Start: pnpm prod:up   (or: docker compose -f compose.prod.yml up --build)
 # Seed once: pnpm prod:seed
+# One-shot backup: pnpm prod:backup
 
 name: portfolio-prod
 
@@ -16,6 +17,10 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - db-data:/var/lib/mysql
+    tmpfs:
+      - /tmp
+      - /var/run/mysqld
+    read_only: true
     healthcheck:
       test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       interval: 5s
@@ -29,6 +34,9 @@ services:
       context: .
       dockerfile: apps/api/Dockerfile
     image: portfolio-api
+    read_only: true
+    tmpfs:
+      - /tmp
     environment:
       NODE_ENV: production
       API_HOST: 0.0.0.0
@@ -81,6 +89,10 @@ services:
         API_URL: http://api:4000
         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL_PROD:-http://localhost}
     image: portfolio-web
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/apps/web/.next/cache
     environment:
       NODE_ENV: production
       API_URL: http://api:4000
@@ -94,14 +106,47 @@ services:
 
   caddy:
     image: caddy:2.10-alpine
+    read_only: true
+    tmpfs:
+      - /tmp
     ports:
       - '127.0.0.1:80:80'
     volumes:
       - ./infra/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
     depends_on:
       - web
+    restart: unless-stopped
+
+  backup:
+    image: mysql:8.4
+    read_only: true
+    tmpfs:
+      - /tmp
+    environment:
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      BACKUP_DIR: /backups
+      UPLOADS_DIR: /uploads
+      RETENTION_DAYS: 7
+    volumes:
+      - backups:/backups
+      - uploads:/uploads:ro
+      - ./infra/backup/backup.sh:/backup.sh:ro
+      - ./scripts/backup/restore.sh:/restore.sh:ro
+    entrypoint: ['bash', '/backup.sh']
+    depends_on:
+      db:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:
   db-data:
   uploads:
+  backups:
+  caddy-data:
+  caddy-config:

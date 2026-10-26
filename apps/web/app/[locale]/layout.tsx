@@ -6,6 +6,7 @@ import type { ReactNode } from 'react';
 
 import { Providers } from '@/modules/core/components/Providers/Providers';
 import { fontClassName } from '@/modules/core/utils/fonts.util';
+import { requestNonce } from '@/modules/core/utils/request-nonce.util';
 import { metadataBase } from '@/modules/seo/utils/site-url.util';
 
 import { routing } from '../../i18n/routing';
@@ -34,11 +35,12 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
   const messages = await getMessages();
+  const nonce = await requestNonce();
 
   return (
     <html lang={locale} className={fontClassName} suppressHydrationWarning>
       <body className="bg-background text-body text-foreground min-h-dvh font-sans antialiased">
-        <Providers locale={locale} messages={messages}>
+        <Providers locale={locale} messages={messages} nonce={nonce}>
           {children}
         </Providers>
       </body>

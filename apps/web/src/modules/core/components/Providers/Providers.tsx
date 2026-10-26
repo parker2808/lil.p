@@ -13,15 +13,17 @@ export function Providers({
   children,
   locale,
   messages,
+  nonce,
 }: {
   children: ReactNode;
   locale: string;
   messages: AbstractIntlMessages;
+  nonce?: string;
 }) {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <QueryProvider>
-        <ThemeProvider>
+        <ThemeProvider nonce={nonce}>
           {children}
           <Toaster />
         </ThemeProvider>

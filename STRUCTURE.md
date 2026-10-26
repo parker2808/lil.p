@@ -16,11 +16,11 @@ apps/
 packages/
 ├── ui/                   # design system: tokens CSS, shadcn primitives, pure product components, stories
 └── contracts/            # zod schemas + TS types shared by web and api (tsup ESM+CJS)
-infra/                    # Docker/server config files (mysql init SQL, Caddyfile)
+infra/                    # Docker/server config files (mysql init SQL, Caddyfile, backup.sh)
 scripts/                  # repo scripts: content/privacy checks, backup restore
-docs/                     # PLAN, design snapshot, sql-notes.sql, audit reports
+docs/                     # PLAN, design snapshot, sql-notes.sql, audit reports, runbooks
 docker-compose.yml        # dev: MySQL + Adminer (+ test DB under the `test` profile)
-compose.prod.yml          # production: db, api, web, caddy (backup in T59)
+compose.prod.yml          # production: db, api, web, caddy, backup (read-only root FS)
 apps/web/Dockerfile       # multi-stage Next standalone image
 apps/api/Dockerfile       # multi-stage Nest image; entrypoint runs migrate deploy
 ```
