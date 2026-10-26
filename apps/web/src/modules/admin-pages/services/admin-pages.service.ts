@@ -5,6 +5,8 @@ import {
   adminPageListItemSchema,
   type AdminPageListItem,
   adminPageSchema,
+  adminPageVersionListItemSchema,
+  adminPageVersionSchema,
   type BlockCreateInput,
   type BlockUpdateInput,
   type PageKey,
@@ -63,6 +65,38 @@ export function deleteAdminBlock(key: PageKey, id: number): Promise<AdminBlock> 
   return apiClient<AdminBlock>(`/api/admin/pages/${key}/blocks/${id}`, {
     method: 'DELETE',
   }).then((data) => adminBlockSchema.parse(data));
+}
+
+export function publishAdminPage(key: PageKey, body: { note?: string } = {}): Promise<AdminPage> {
+  return apiClient<AdminPage>(`/api/admin/pages/${key}/publish`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  }).then((data) => adminPageSchema.parse(data));
+}
+
+export function discardAdminPage(key: PageKey): Promise<AdminPage> {
+  return apiClient<AdminPage>(`/api/admin/pages/${key}/discard`, {
+    method: 'POST',
+  }).then((data) => adminPageSchema.parse(data));
+}
+
+export function listAdminPageVersions(key: PageKey) {
+  return apiClient(`/api/admin/pages/${key}/versions`).then((data) =>
+    adminPageVersionListItemSchema.array().parse(data),
+  );
+}
+
+export function getAdminPageVersion(key: PageKey, version: number) {
+  return apiClient(`/api/admin/pages/${key}/versions/${version}`).then((data) =>
+    adminPageVersionSchema.parse(data),
+  );
+}
+
+export function restoreAdminPage(key: PageKey, version: number): Promise<AdminPage> {
+  return apiClient<AdminPage>(`/api/admin/pages/${key}/versions/${version}/restore`, {
+    method: 'POST',
+  }).then((data) => adminPageSchema.parse(data));
 }
 
 export function reorderAdminBlocks(key: PageKey, ids: number[]): Promise<AdminPage> {

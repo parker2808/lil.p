@@ -9,7 +9,7 @@ export type { BlockType } from './blocks/block-registry.constant';
 export { BLOCK_REGISTRY, blockTypeSchema } from './blocks/block-registry.constant';
 export { defineBlock } from './blocks/define-block.util';
 export type { ParseBlockResult, ParseBlockRow } from './blocks/resolve-block.util';
-export { parseBlock, resolveBlockLocale } from './blocks/resolve-block.util';
+export { isLocalizedPair, parseBlock, resolveBlockLocale } from './blocks/resolve-block.util';
 export type { ApiErrorBody, ErrorCode } from './common/api-error.schema';
 export { apiErrorSchema, errorCodeSchema } from './common/api-error.schema';
 export type { Paginated } from './common/list-params.schema';
@@ -207,18 +207,33 @@ export {
 export {
   adminPageListItemSchema,
   adminPageSchema,
+  adminPageVersionListItemSchema,
+  adminPageVersionSchema,
   createBlockSchema,
+  invalidPreviewBlockSchema,
+  pageSnapshotBlockSchema,
+  pageSnapshotSchema,
+  pageSnapshotSeoSchema,
+  publicPagePreviewSchema,
   publicPageSchema,
+  publishPageSchema,
   updateBlockSchema,
   updatePageSchema,
 } from './pages/pages.schema';
 export type {
   AdminPage,
   AdminPageListItem,
+  AdminPageVersion,
+  AdminPageVersionListItem,
   BlockCreateInput,
   BlockUpdateInput,
+  InvalidPreviewBlock,
+  PageSnapshot,
+  PageSnapshotBlock,
   PageUpdateInput,
   PublicPage,
+  PublicPagePreview,
+  PublishPageInput,
 } from './pages/pages.type';
 export {
   adminPostInputSchema,

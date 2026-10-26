@@ -21,6 +21,20 @@ function block(over: Partial<PublicBlock> = {}): PublicBlock {
 }
 
 describe('BlockRenderer', () => {
+  it('shows a dashed notice for unknown types in draft mode', () => {
+    render(
+      <BlockRenderer
+        blocks={[block({ type: 'nope' as PublicBlock['type'] })]}
+        draft
+        context={context}
+        labels={{ ...labels, unknown: 'Unknown block' }}
+        registry={{}}
+      />,
+    );
+    expect(screen.getByText('Unknown block')).toBeInTheDocument();
+    expect(screen.getByText('nope')).toBeInTheDocument();
+  });
+
   it('renders nothing for an unknown type', () => {
     const { container } = render(
       <BlockRenderer

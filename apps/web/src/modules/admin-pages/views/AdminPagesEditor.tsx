@@ -2,7 +2,6 @@
 
 import type { AdminBlock, BlockType, PageKey } from '@portfolio/contracts';
 import { BLOCK_REGISTRY } from '@portfolio/contracts';
-import { Badge } from '@portfolio/ui/components/ui/badge';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,9 +12,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@portfolio/ui/components/ui/alert-dialog';
+import { Button } from '@portfolio/ui/components/ui/button';
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
@@ -24,9 +25,13 @@ import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { AddBlockDialog } from '../components/AddBlockDialog/AddBlockDialog';
 import { BlockInspector, inspectorFieldErrors } from '../components/BlockInspector/BlockInspector';
 import { BlockList } from '../components/BlockList/BlockList';
+import { PagePreview } from '../components/PagePreview/PagePreview';
 import { PageSettingsSheet } from '../components/PageSettingsSheet/PageSettingsSheet';
+import { PublishBar } from '../components/PublishBar/PublishBar';
+import { VersionHistory } from '../components/VersionHistory/VersionHistory';
 import { useAdminPage } from '../hooks/use-admin-page.hook';
 import { useBlockMutations } from '../hooks/use-block-mutations.hook';
+import { publicPagePath } from '../utils/preview-frame.util';
 
 export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
   const t = useTranslations('admin.pages');
@@ -40,6 +45,10 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
   const [locale, setLocale] = useState<'en' | 'vi'>('en');
   const [draftProps, setDraftProps] = useState<Record<string, unknown> | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [invalidKeys, setInvalidKeys] = useState<string[]>([]);
+  const [previewVersion, setPreviewVersion] = useState<number | null>(null);
+  const [refreshToken, setRefreshToken] = useState(0);
+  const frameRef = useRef<HTMLIFrameElement | null>(null);
 
   const selected = page.data.blocks.find((block) => block.id === selectedId) ?? null;
   const counts = useMemo(() => {
@@ -49,6 +58,10 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
     }
     return next;
   }, [page.data.blocks]);
+
+  function bumpPreview() {
+    setRefreshToken((value) => value + 1);
+  }
 
   const propsValue = JSON.stringify(draftProps ?? selected?.props ?? {});
   const baseline = selected ? JSON.stringify(selected.props) : null;
@@ -71,6 +84,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
           },
         });
         setFieldErrors({});
+        bumpPreview();
         return { updatedAt: next.updatedAt };
       } catch (error) {
         setFieldErrors(inspectorFieldErrors(error));
@@ -97,10 +111,20 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
     if (first && BLOCK_REGISTRY[first.type as BlockType]?.role === 'h1' && ids[0] !== first.id) {
       return;
     }
-    mutations.reorder.mutate(ids);
+    mutations.reorder.mutate(ids, { onSuccess: bumpPreview });
   }
 
-  const publicHref = pageKey === 'home' ? '/en' : `/en/${pageKey}`;
+  const publicHref = publicPagePath(pageKey, 'en');
+  const preview = (
+    <PagePreview
+      pageKey={pageKey}
+      locale={locale}
+      version={previewVersion ?? undefined}
+      frameRef={frameRef}
+      refreshToken={refreshToken}
+      focusId={selectedId}
+    />
+  );
 
   return (
     <>
@@ -125,21 +149,43 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
           void autosave.overwrite();
         }}
         publish={
-          <div className="flex items-center gap-2">
-            <Badge variant="warning">{t('draft')}</Badge>
+          <div className="flex flex-wrap items-center gap-2">
+            <PublishBar pageKey={pageKey} page={page.data} onInvalid={setInvalidKeys} />
+            <VersionHistory pageKey={pageKey} onPreviewVersion={setPreviewVersion} />
             <PageSettingsSheet
               page={page.data}
               readOnly={readOnly}
-              onSave={mutations.savePage.mutateAsync}
+              onSave={async (body) => {
+                const next = await mutations.savePage.mutateAsync(body);
+                bumpPreview();
+                return next;
+              }}
             />
             <AddBlockDialog
               pageKey={pageKey}
               counts={counts}
               readOnly={readOnly}
-              onAdd={(type) => mutations.add.mutate({ type, afterId: selectedId ?? undefined })}
+              onAdd={(type) =>
+                mutations.add.mutate(
+                  { type, afterId: selectedId ?? undefined },
+                  { onSuccess: bumpPreview },
+                )
+              }
             />
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button type="button" size="sm" variant="outline" className="2xl:hidden">
+                  {t('preview.open')}
+                </Button>
+              </SheetTrigger>
+              <SheetContent className="max-w-2xl">
+                <SheetTitle>{t('preview.title')}</SheetTitle>
+                {preview}
+              </SheetContent>
+            </Sheet>
           </div>
         }
+        preview={preview}
         properties={
           selected ? (
             <BlockInspector
@@ -147,7 +193,11 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
               block={selected}
               readOnly={readOnly}
               fieldErrors={fieldErrors}
-              onUpdate={(body) => mutations.update.mutateAsync({ id: selected.id, body })}
+              onUpdate={async (body) => {
+                const next = await mutations.update.mutateAsync({ id: selected.id, body });
+                bumpPreview();
+                return next;
+              }}
               onPropsChange={setDraftProps}
             />
           ) : (
@@ -176,6 +226,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
         <BlockList
           blocks={page.data.blocks}
           selectedId={selectedId}
+          invalidKeys={invalidKeys}
           readOnly={readOnly}
           labels={{
             handle: t('dragHandle'),
@@ -194,12 +245,15 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
           }}
           onSelect={setSelectedId}
           onToggle={(block, isVisible) =>
-            mutations.toggle.mutate({ id: block.id, isVisible, updatedAt: block.updatedAt })
+            mutations.toggle.mutate(
+              { id: block.id, isVisible, updatedAt: block.updatedAt },
+              { onSuccess: bumpPreview },
+            )
           }
           onMove={move}
-          onDuplicate={(id) => mutations.duplicate.mutate(id)}
+          onDuplicate={(id) => mutations.duplicate.mutate(id, { onSuccess: bumpPreview })}
           onDelete={setDeleteId}
-          onReorder={(ids) => mutations.reorder.mutate(ids)}
+          onReorder={(ids) => mutations.reorder.mutate(ids, { onSuccess: bumpPreview })}
         />
       </EditorShell>
       <AlertDialog open={deleteId !== null} onOpenChange={(open) => !open && setDeleteId(null)}>
@@ -213,7 +267,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
             <AlertDialogAction
               onClick={() => {
                 if (deleteId !== null) {
-                  mutations.remove.mutate(deleteId);
+                  mutations.remove.mutate(deleteId, { onSuccess: bumpPreview });
                   if (selectedId === deleteId) {
                     setSelectedId(null);
                   }

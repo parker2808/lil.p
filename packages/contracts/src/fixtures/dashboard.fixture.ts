@@ -28,6 +28,10 @@ export const adminHealthFixture: AdminHealth = {
     marqueeCount: 2,
     publishLint: 1,
     missingAlt: 0,
+    neverPublished: 0,
+    staleDrafts: 0,
+    invalidPageBlocks: 0,
+    brokenRefs: 0,
   },
   issues: [
     {

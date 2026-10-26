@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import type {
-  AdminHealth,
-  AdminHealthIssue,
-  AdminStats,
-  ContentStatus,
-  ContentStatusCounts,
-  StatsRange,
+import {
+  type AdminHealth,
+  type AdminHealthIssue,
+  type AdminStats,
+  type ContentStatus,
+  type ContentStatusCounts,
+  parseBlock,
+  PRISMA_PAGE_KEY_TO_PUBLIC,
+  type StatsRange,
 } from '@portfolio/contracts';
 
 import { PrismaService } from '../../prisma/prisma.service';
+import { blockRefsOf, readPageSnapshot } from '../pages/page-snapshot.util';
 import {
   lintFieldNames,
   missingViFieldNames,
@@ -115,7 +118,7 @@ export class DashboardService {
   }
 
   async getHealth(): Promise<AdminHealth> {
-    const [projects, posts, marqueeCount] = await Promise.all([
+    const [projects, posts, marqueeCount, pages] = await Promise.all([
       this.prisma.project.findMany({
         where: { status: { not: 'ARCHIVED' } },
         select: PROJECT_HEALTH_SELECT,
@@ -125,6 +128,12 @@ export class DashboardService {
         select: POST_HEALTH_SELECT,
       }),
       this.prisma.skill.count({ where: { showInMarquee: true, isVisible: true } }),
+      this.prisma.page.findMany({
+        include: {
+          blocks: true,
+          publishedVersion: true,
+        },
+      }),
     ]);
 
     const issues: AdminHealthIssue[] = [];
@@ -247,6 +256,171 @@ export class DashboardService {
       });
     }
 
+    const staleCutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    const refIds = { project: new Set<number>(), stat: new Set<number>() };
+    const queuedRefs: Array<{
+      pageId: number;
+      title: string;
+      href: string;
+      kind: string;
+      id: number;
+      source: string;
+    }> = [];
+
+    for (const page of pages) {
+      const title = PRISMA_PAGE_KEY_TO_PUBLIC[page.key];
+      const href = `/admin/pages/${title}`;
+      if (!page.publishedVersionId) {
+        issues.push({
+          kind: 'PAGE_NEVER_PUBLISHED',
+          entity: 'page',
+          id: page.id,
+          title,
+          href,
+        });
+      } else if (
+        page.publishedAt &&
+        page.updatedAt.getTime() > page.publishedAt.getTime() &&
+        page.updatedAt.getTime() < staleCutoff
+      ) {
+        issues.push({
+          kind: 'PAGE_STALE_DRAFT',
+          entity: 'page',
+          id: page.id,
+          title,
+          href,
+        });
+      }
+
+      const draftInvalid: string[] = [];
+      for (const block of page.blocks) {
+        const parsed = parseBlock({
+          id: block.id,
+          type: block.type,
+          key: block.key,
+          layout: block.layout,
+          surface: block.surface,
+          schemaVersion: block.schemaVersion,
+          props: block.props,
+        });
+        if (!parsed.ok) {
+          draftInvalid.push(block.key);
+        } else {
+          for (const ref of blockRefsOf(block.type, parsed.block.props)) {
+            if (ref.kind === 'project') {
+              refIds.project.add(ref.id);
+            }
+            if (ref.kind === 'stat') {
+              refIds.stat.add(ref.id);
+            }
+            queuedRefs.push({
+              pageId: page.id,
+              title,
+              href,
+              kind: ref.kind,
+              id: ref.id,
+              source: block.key,
+            });
+          }
+        }
+      }
+
+      const snapshot = page.publishedVersion
+        ? readPageSnapshot(page.publishedVersion.snapshot)
+        : null;
+      const publishedInvalid: string[] = [];
+      if (snapshot) {
+        for (const [index, block] of snapshot.blocks.entries()) {
+          const parsed = parseBlock({
+            id: index + 1,
+            type: block.type,
+            key: block.key,
+            layout: block.layout,
+            surface: block.surface,
+            schemaVersion: block.schemaVersion,
+            props: block.props,
+          });
+          if (!parsed.ok) {
+            publishedInvalid.push(block.key);
+          } else {
+            for (const ref of blockRefsOf(block.type, parsed.block.props)) {
+              if (ref.kind === 'project') {
+                refIds.project.add(ref.id);
+              }
+              if (ref.kind === 'stat') {
+                refIds.stat.add(ref.id);
+              }
+              queuedRefs.push({
+                pageId: page.id,
+                title,
+                href,
+                kind: ref.kind,
+                id: ref.id,
+                source: `published:${block.key}`,
+              });
+            }
+          }
+        }
+      }
+
+      const invalidFields = [...new Set([...draftInvalid, ...publishedInvalid])];
+      if (invalidFields.length > 0) {
+        issues.push({
+          kind: 'PAGE_INVALID_BLOCKS',
+          entity: 'page',
+          id: page.id,
+          title,
+          href,
+          fields: invalidFields,
+        });
+      }
+    }
+
+    const [projectRows, statRows] = await Promise.all([
+      refIds.project.size > 0
+        ? this.prisma.project.findMany({
+            where: { id: { in: [...refIds.project] } },
+            select: { id: true, status: true },
+          })
+        : [],
+      refIds.stat.size > 0
+        ? this.prisma.profileStat.findMany({
+            where: { id: { in: [...refIds.stat] } },
+            select: { id: true },
+          })
+        : [],
+    ]);
+    const projectById = new Map(projectRows.map((row) => [row.id, row]));
+    const statSet = new Set(statRows.map((row) => row.id));
+    const brokenByPage = new Map<number, string[]>();
+    for (const ref of queuedRefs) {
+      const ok =
+        ref.kind === 'project'
+          ? projectById.get(ref.id)?.status === 'PUBLISHED'
+          : ref.kind === 'stat'
+            ? statSet.has(ref.id)
+            : true;
+      if (!ok) {
+        const fields = brokenByPage.get(ref.pageId) ?? [];
+        fields.push(`${ref.source}:${ref.kind}:${ref.id}`);
+        brokenByPage.set(ref.pageId, fields);
+      }
+    }
+    for (const page of pages) {
+      const fields = brokenByPage.get(page.id);
+      if (!fields || fields.length === 0) {
+        continue;
+      }
+      issues.push({
+        kind: 'PAGE_BROKEN_REFS',
+        entity: 'page',
+        id: page.id,
+        title: PRISMA_PAGE_KEY_TO_PUBLIC[page.key],
+        href: `/admin/pages/${PRISMA_PAGE_KEY_TO_PUBLIC[page.key]}`,
+        fields,
+      });
+    }
+
     return {
       summary: {
         drafts:
@@ -258,6 +432,10 @@ export class DashboardService {
         marqueeCount,
         publishLint: issues.filter((issue) => issue.kind === 'PUBLISH_LINT').length,
         missingAlt: missingAlt.length,
+        neverPublished: issues.filter((issue) => issue.kind === 'PAGE_NEVER_PUBLISHED').length,
+        staleDrafts: issues.filter((issue) => issue.kind === 'PAGE_STALE_DRAFT').length,
+        invalidPageBlocks: issues.filter((issue) => issue.kind === 'PAGE_INVALID_BLOCKS').length,
+        brokenRefs: issues.filter((issue) => issue.kind === 'PAGE_BROKEN_REFS').length,
       },
       issues,
     };

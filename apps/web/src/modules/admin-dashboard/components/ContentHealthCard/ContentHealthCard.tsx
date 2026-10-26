@@ -44,6 +44,18 @@ export function ContentHealthCardView({ health }: { health: AdminHealth }) {
           <Badge variant={health.summary.missingAlt > 0 ? 'warning' : 'outline'}>
             {t('missingAlt', { count: health.summary.missingAlt })}
           </Badge>
+          <Badge variant={health.summary.neverPublished > 0 ? 'warning' : 'outline'}>
+            {t('neverPublished', { count: health.summary.neverPublished })}
+          </Badge>
+          <Badge variant={health.summary.staleDrafts > 0 ? 'warning' : 'outline'}>
+            {t('staleDrafts', { count: health.summary.staleDrafts })}
+          </Badge>
+          <Badge variant={health.summary.invalidPageBlocks > 0 ? 'warning' : 'outline'}>
+            {t('invalidPageBlocks', { count: health.summary.invalidPageBlocks })}
+          </Badge>
+          <Badge variant={health.summary.brokenRefs > 0 ? 'warning' : 'outline'}>
+            {t('brokenRefs', { count: health.summary.brokenRefs })}
+          </Badge>
         </div>
         {health.issues.length === 0 ? (
           <p className="text-ui text-muted-foreground">{t('empty')}</p>

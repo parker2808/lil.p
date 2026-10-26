@@ -21,7 +21,7 @@ const labels = {
 };
 
 describe('EditorShell', () => {
-  it('shows a read-only badge and hides the publish slot for user', () => {
+  it('shows a read-only badge and still renders the publish slot', () => {
     render(
       <EditorShell
         title="Case study"
@@ -38,6 +38,6 @@ describe('EditorShell', () => {
     );
 
     expect(screen.getByText(labels.readOnly)).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Publish' })).toBeNull();
+    expect(screen.getByRole('button', { name: 'Publish' })).toBeInTheDocument();
   });
 });

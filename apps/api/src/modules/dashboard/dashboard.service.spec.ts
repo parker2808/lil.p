@@ -23,6 +23,12 @@ function prismaMock() {
     media: {
       findMany: vi.fn().mockResolvedValue([]),
     },
+    page: {
+      findMany: vi.fn().mockResolvedValue([]),
+    },
+    profileStat: {
+      findMany: vi.fn().mockResolvedValue([]),
+    },
   };
 }
 
@@ -133,6 +139,10 @@ describe('DashboardService', () => {
       marqueeCount: 2,
       publishLint: 1,
       missingAlt: 0,
+      neverPublished: 0,
+      staleDrafts: 0,
+      invalidPageBlocks: 0,
+      brokenRefs: 0,
     });
     expect(health.issues.map((issue) => issue.kind)).toEqual([
       'PROJECT_NO_DOMAIN',

@@ -2,7 +2,7 @@ import type { AdminPage, Me } from '@portfolio/contracts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, render, screen } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import en from '../../../../i18n/locales/en.json';
 import { MeProvider } from '@/modules/admin-core/hooks/use-me.hook';
@@ -14,6 +14,9 @@ const page: AdminPage = {
   seoDescriptionEn: '',
   seoDescriptionVi: '',
   updatedAt: '2026-01-01T00:00:00.000Z',
+  publishedVersion: null,
+  publishedAt: null,
+  hasUnpublishedChanges: true,
   blocks: [
     {
       id: 1,
@@ -40,6 +43,14 @@ const update = vi.fn();
 
 vi.mock('../hooks/use-admin-page.hook', () => ({
   useAdminPage: () => ({ data: page, refetch: vi.fn() }),
+}));
+
+vi.mock('../hooks/use-page-versions.hook', () => ({
+  usePageVersions: () => ({ data: [], isError: false }),
+  usePageVersion: () => ({ data: undefined }),
+  usePublishPage: () => ({ mutateAsync: vi.fn(), isPending: false }),
+  useRestorePage: () => ({ mutateAsync: vi.fn(), isPending: false }),
+  useDiscardPage: () => ({ mutateAsync: vi.fn(), isPending: false }),
 }));
 
 vi.mock('../hooks/use-block-mutations.hook', () => ({
@@ -76,6 +87,14 @@ function renderEditor(me: Me) {
 }
 
 describe('AdminPagesEditor', () => {
+  beforeEach(() => {
+    global.ResizeObserver = class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    } as unknown as typeof ResizeObserver;
+  });
+
   afterEach(() => {
     cleanup();
     add.mockReset();

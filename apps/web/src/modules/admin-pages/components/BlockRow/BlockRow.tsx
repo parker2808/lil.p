@@ -21,6 +21,7 @@ import { BLOCK_EDITOR_META } from '../../constants/block-editor-meta.constant';
 export function BlockRow({
   block,
   selected,
+  highlighted = false,
   readOnly,
   handle,
   labels,
@@ -32,6 +33,7 @@ export function BlockRow({
 }: {
   block: AdminBlock;
   selected: boolean;
+  highlighted?: boolean;
   readOnly: boolean;
   handle: ReactNode;
   labels: {
@@ -76,9 +78,11 @@ export function BlockRow({
   return (
     <div
       className={
-        selected
-          ? 'border-border bg-sidebar-accent flex items-center gap-2 rounded-md border p-2'
-          : 'border-border bg-card flex items-center gap-2 rounded-md border p-2'
+        highlighted
+          ? 'border-destructive bg-card flex items-center gap-2 rounded-md border p-2'
+          : selected
+            ? 'border-border bg-sidebar-accent flex items-center gap-2 rounded-md border p-2'
+            : 'border-border bg-card flex items-center gap-2 rounded-md border p-2'
       }
     >
       {handle}

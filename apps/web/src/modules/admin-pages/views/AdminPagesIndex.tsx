@@ -22,7 +22,12 @@ export function AdminPagesIndex() {
             >
               <span className="text-ui font-medium">{t(`names.${page.key}`)}</span>
               <span className="text-ui-meta text-muted-foreground">
-                {t('meta', { count: page.blockCount, date: page.updatedAt.slice(0, 10) })}
+                {page.hasUnpublishedChanges
+                  ? t('metaUnpublished', {
+                      count: page.blockCount,
+                      date: page.updatedAt.slice(0, 10),
+                    })
+                  : t('meta', { count: page.blockCount, date: page.updatedAt.slice(0, 10) })}
               </span>
             </Link>
           </li>

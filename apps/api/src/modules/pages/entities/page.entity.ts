@@ -11,6 +11,7 @@ export const pageWithAllBlocksInclude = {
   blocks: {
     orderBy: { sortOrder: 'asc' as const },
   },
+  publishedVersion: true,
 } satisfies Prisma.PageInclude;
 
 export type PageWithBlocks = Prisma.PageGetPayload<{ include: typeof pageWithBlocksInclude }>;

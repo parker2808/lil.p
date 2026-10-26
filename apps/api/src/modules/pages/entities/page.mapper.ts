@@ -84,7 +84,12 @@ export function toAdminBlock(block: PageWithAllBlocks['blocks'][number]): AdminB
   };
 }
 
-export function toAdminPage(row: PageWithAllBlocks): AdminPage {
+export function toAdminPage(
+  row: PageWithAllBlocks & {
+    publishedAt?: Date | null;
+    publishedVersion?: { version: number } | null;
+  },
+): AdminPage {
   return {
     key: PRISMA_PAGE_KEY_TO_PUBLIC[row.key],
     seoTitleEn: row.seoTitleEn,
@@ -92,6 +97,9 @@ export function toAdminPage(row: PageWithAllBlocks): AdminPage {
     seoDescriptionEn: row.seoDescriptionEn,
     seoDescriptionVi: row.seoDescriptionVi,
     updatedAt: row.updatedAt.toISOString(),
+    publishedVersion: row.publishedVersion?.version ?? null,
+    publishedAt: row.publishedAt?.toISOString() ?? null,
+    hasUnpublishedChanges: hasUnpublishedChanges(row.updatedAt, row.publishedAt ?? null),
     blocks: row.blocks.map(toAdminBlock),
   };
 }
@@ -99,11 +107,23 @@ export function toAdminPage(row: PageWithAllBlocks): AdminPage {
 export function toAdminPageListItem(row: {
   key: PageWithAllBlocks['key'];
   updatedAt: Date;
+  publishedAt?: Date | null;
+  publishedVersion?: { version: number } | null;
   _count: { blocks: number };
 }): AdminPageListItem {
   return {
     key: PRISMA_PAGE_KEY_TO_PUBLIC[row.key],
     blockCount: row._count.blocks,
     updatedAt: row.updatedAt.toISOString(),
+    publishedVersion: row.publishedVersion?.version ?? null,
+    publishedAt: row.publishedAt?.toISOString() ?? null,
+    hasUnpublishedChanges: hasUnpublishedChanges(row.updatedAt, row.publishedAt ?? null),
   };
+}
+
+export function hasUnpublishedChanges(updatedAt: Date, publishedAt: Date | null): boolean {
+  if (!publishedAt) {
+    return true;
+  }
+  return updatedAt.getTime() > publishedAt.getTime();
 }

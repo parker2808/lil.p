@@ -12,6 +12,7 @@ import { BlockRow } from '../BlockRow/BlockRow';
 export function BlockList({
   blocks,
   selectedId,
+  invalidKeys = [],
   readOnly,
   labels,
   onSelect,
@@ -23,6 +24,7 @@ export function BlockList({
 }: {
   blocks: AdminBlock[];
   selectedId: number | null;
+  invalidKeys?: string[];
   readOnly: boolean;
   labels: SortableListLabels & {
     menu: string;
@@ -58,6 +60,7 @@ export function BlockList({
         <BlockRow
           block={item.block}
           selected={item.block.id === selectedId}
+          highlighted={invalidKeys.includes(item.block.key)}
           readOnly={readOnly}
           handle={handle}
           labels={labels}

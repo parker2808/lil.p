@@ -4,7 +4,6 @@ import {
   Injectable,
   Logger,
   NotFoundException,
-  Optional,
 } from '@nestjs/common';
 import {
   type AdminBlock,
@@ -15,7 +14,6 @@ import {
   type Locale,
   PAGE_KEY_TO_PRISMA,
   type PageKey,
-  pageKeySchema,
   type PageUpdateInput,
   type PublicPage,
 } from '@portfolio/contracts';
@@ -26,15 +24,9 @@ import { applyReorder } from '../../common/utils/reorder.util';
 import { assertFresh } from '../../common/utils/stale.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { PublishingService } from '../publishing/publishing.service';
-import { pageTags } from '../publishing/tags.util';
-import { pageWithAllBlocksInclude, pageWithBlocksInclude } from './entities/page.entity';
-import {
-  toAdminBlock,
-  toAdminPage,
-  toAdminPageListItem,
-  toPublicPage,
-} from './entities/page.mapper';
+import { pageWithAllBlocksInclude } from './entities/page.entity';
+import { toAdminBlock, toAdminPage, toAdminPageListItem } from './entities/page.mapper';
+import { readPageSnapshot, snapshotToPublicPage } from './page-snapshot.util';
 import {
   assertAllowedOnPage,
   assertCanDelete,
@@ -45,19 +37,12 @@ import {
   definitionOf,
   insertSortOrder,
   nextBlockKey,
+  parsePageKey,
 } from './pages-rules.util';
 
 type Tx = Prisma.TransactionClient;
 
 const PAGE_ORDER: PageKey[] = ['home', 'about', 'projects', 'notes', 'contact'];
-
-function parsePageKey(raw: string): PageKey {
-  const parsed = pageKeySchema.safeParse(raw);
-  if (!parsed.success) {
-    throw new NotFoundException({ code: 'NOT_FOUND', message: `Page ${raw} was not found` });
-  }
-  return parsed.data;
-}
 
 function propsFieldErrors(error: z.ZodError): Record<string, string[]> {
   return Object.fromEntries(
@@ -96,21 +81,27 @@ function findRefPath(value: unknown, id: number, prefix: string): string | null 
 export class PagesService {
   private readonly logger = new Logger(PagesService.name);
 
-  constructor(
-    private readonly prisma: PrismaService,
-    @Optional() private readonly publishing?: PublishingService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async getPublic(key: PageKey, locale: Locale, requestId = 'unknown'): Promise<PublicPage> {
     const row = await this.prisma.page.findUnique({
       where: { key: PAGE_KEY_TO_PRISMA[key] },
-      include: pageWithBlocksInclude,
+      include: { publishedVersion: true },
     });
     if (!row) {
       throw new NotFoundException({ code: 'NOT_FOUND', message: `Page ${key} was not found` });
     }
 
-    return toPublicPage(row, locale, ({ blockId, type, reason }) => {
+    const snapshot = row.publishedVersion ? readPageSnapshot(row.publishedVersion.snapshot) : null;
+    if (!snapshot) {
+      return {
+        key,
+        seo: { title: null, description: null, lang: locale },
+        blocks: [],
+      };
+    }
+
+    return snapshotToPublicPage(key, snapshot, locale, ({ blockId, type, reason }) => {
       this.logger.warn(
         `Dropped block ${blockId} type=${type} page=${key} reason=${reason} ${requestId}`,
       );
@@ -119,7 +110,10 @@ export class PagesService {
 
   async listAdmin(): Promise<AdminPageListItem[]> {
     const rows = await this.prisma.page.findMany({
-      include: { _count: { select: { blocks: true } } },
+      include: {
+        _count: { select: { blocks: true } },
+        publishedVersion: { select: { version: true } },
+      },
     });
     const rank = new Map(PAGE_ORDER.map((key, index) => [key, index]));
     return rows
@@ -146,7 +140,6 @@ export class PagesService {
       await this.touchPage(tx, page.id);
       return toAdminPage(await this.requirePage(tx, key));
     });
-    this.scheduleRevalidate(key);
     return result;
   }
 
@@ -167,7 +160,6 @@ export class PagesService {
       });
       return toAdminPage(await this.requirePage(tx, key));
     });
-    this.scheduleRevalidate(key);
     return result;
   }
 
@@ -224,7 +216,6 @@ export class PagesService {
       await this.touchPage(tx, page.id);
       return toAdminBlock(created);
     });
-    this.scheduleRevalidate(key);
     return result;
   }
 
@@ -290,7 +281,6 @@ export class PagesService {
       await this.touchPage(tx, page.id);
       return toAdminBlock(updated);
     });
-    this.scheduleRevalidate(key);
     return result;
   }
 
@@ -326,7 +316,6 @@ export class PagesService {
       await this.touchPage(tx, page.id);
       return toAdminBlock(created);
     });
-    this.scheduleRevalidate(key);
     return result;
   }
 
@@ -343,12 +332,7 @@ export class PagesService {
       await this.touchPage(tx, page.id);
       return toAdminBlock(current);
     });
-    this.scheduleRevalidate(key);
     return result;
-  }
-
-  private scheduleRevalidate(key: PageKey): void {
-    void this.publishing?.revalidate(pageTags(key));
   }
 
   private async requirePage(client: PrismaService | Tx, key: PageKey) {
