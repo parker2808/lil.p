@@ -1,3 +1,5 @@
+import { BLOCK_REGISTRY, parseBlock } from '@portfolio/contracts';
+
 import type { Prisma } from '../../../src/generated/prisma/client';
 import type { PrismaClient } from '../../../src/generated/prisma/client';
 
@@ -62,7 +64,7 @@ export const pagesData: SeedPage[] = [
         isVisible: true,
         props: {
           primaryCta: { label: t('View case studies', 'Xem case study'), href: '/projects' },
-          secondaryCta: { label: t('Download CV', 'Tải CV'), href: '/about#cv' },
+          secondaryCta: { label: t('Download CV', 'Tải CV'), href: '/about' },
           showDiagram: true,
           showAvailability: true,
         },
@@ -417,6 +419,22 @@ export async function seedPages(prisma: PrismaClient): Promise<void> {
     });
 
     for (const block of blocks) {
+      if (block.type in BLOCK_REGISTRY) {
+        const checked = parseBlock({
+          id: 0,
+          type: block.type,
+          key: block.key,
+          layout: block.layout,
+          surface: block.surface,
+          schemaVersion: block.schemaVersion,
+          props: block.props,
+        });
+        if (!checked.ok) {
+          throw new Error(
+            `Seed block ${page.key}/${block.key} failed: ${checked.issues.join('; ')}`,
+          );
+        }
+      }
       await prisma.pageBlock.upsert({
         where: { pageId_key: { pageId: saved.id, key: block.key } },
         create: { ...block, pageId: saved.id },

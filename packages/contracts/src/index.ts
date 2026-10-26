@@ -1,3 +1,11 @@
+export { adminBlockSchema, blockKeySchema, publicBlockSchema } from './blocks/block.schema';
+export type { AdminBlock, PublicBlock } from './blocks/block.type';
+export { BLOCK_SURFACES, LAYOUT_PRESETS } from './blocks/block-layout.constant';
+export type { BlockType } from './blocks/block-registry.constant';
+export { BLOCK_REGISTRY, blockTypeSchema } from './blocks/block-registry.constant';
+export { defineBlock } from './blocks/define-block.util';
+export type { ParseBlockResult, ParseBlockRow } from './blocks/resolve-block.util';
+export { parseBlock, resolveBlockLocale } from './blocks/resolve-block.util';
 export type { ApiErrorBody, ErrorCode } from './common/api-error.schema';
 export { apiErrorSchema, errorCodeSchema } from './common/api-error.schema';
 export type { Locale } from './common/locale.schema';
@@ -8,6 +16,17 @@ export type { NavLocation } from './navigation/navigation.enum';
 export { navLocationSchema } from './navigation/navigation.enum';
 export { publicNavItemSchema } from './navigation/navigation.schema';
 export type { PublicNavItem } from './navigation/navigation.type';
+export type { BlockSurface, LayoutPreset, PageKey, PrismaPageKey } from './pages/pages.enum';
+export {
+  blockSurfaceSchema,
+  layoutPresetSchema,
+  PAGE_KEY_TO_PRISMA,
+  pageKeySchema,
+  PRISMA_PAGE_KEY_TO_PUBLIC,
+  prismaPageKeySchema,
+} from './pages/pages.enum';
+export { publicPageSchema } from './pages/pages.schema';
+export type { PublicPage } from './pages/pages.type';
 export { publicProfileSchema } from './profile/profile.schema';
 export type { PublicProfile } from './profile/profile.type';
 export { publicSiteSchema } from './public-site/public-site.schema';
