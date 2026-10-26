@@ -43,6 +43,8 @@ describe('CaseCard', () => {
     );
     const image = screen.getByRole('img', { name: 'Ledger cover' });
     expect(image).toHaveAttribute('srcset', expect.stringContaining('480w'));
+    expect(image).toHaveAttribute('width', '1600');
+    expect(image).toHaveAttribute('height', '900');
   });
 
   it('shows the NDA pill and chip overflow', () => {

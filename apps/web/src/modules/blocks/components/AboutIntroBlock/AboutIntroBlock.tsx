@@ -54,7 +54,7 @@ export async function AboutIntroBlock({
           </p>
         ) : null}
         {props.showAvailability ? (
-          <Badge variant="success">{site.settings.availabilityNote}</Badge>
+          <Badge variant="primary">{site.settings.availabilityNote}</Badge>
         ) : null}
         {resumeUrl ? (
           <Button asChild variant="outline">

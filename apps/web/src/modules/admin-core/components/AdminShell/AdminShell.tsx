@@ -1,6 +1,7 @@
 'use client';
 
 import type { Me } from '@portfolio/contracts';
+import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 
 import { useAdminEvents } from '../../hooks/use-admin-events.hook';
@@ -25,10 +26,18 @@ export function AdminShell({
   crumbs: { label: string }[];
   children: ReactNode;
 }) {
+  const t = useTranslations('admin.shell');
+
   return (
     <MeProvider me={me}>
       <AdminUiProvider>
         <div className="bg-background text-foreground flex min-h-dvh">
+          <a
+            href="#content"
+            className="bg-primary text-primary-foreground focus:z-skip sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:rounded-md focus:px-3 focus:py-2"
+          >
+            {t('skip')}
+          </a>
           <AdminLiveEvents />
           <AdminSidebar />
           <div className="flex min-w-0 flex-1 flex-col">
@@ -41,7 +50,9 @@ export function AdminShell({
                 </>
               }
             />
-            <main className="flex-1 p-6">{children}</main>
+            <main id="content" tabIndex={-1} className="flex-1 p-6 outline-none">
+              {children}
+            </main>
           </div>
         </div>
       </AdminUiProvider>

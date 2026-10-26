@@ -46,7 +46,13 @@ function StatItem({ stat, compact }: { stat: PublicProfileStat; compact: boolean
   const name = `${display} ${stat.label}`;
 
   return (
-    <div ref={ref} data-slot="stat-item" aria-label={name} className="flex flex-col gap-2">
+    <div
+      ref={ref}
+      data-slot="stat-item"
+      role="group"
+      aria-label={name}
+      className="flex flex-col gap-2"
+    >
       <span className="bg-muted text-primary inline-flex size-10 items-center justify-center rounded-md">
         <Icon name={stat.iconKey} className={compact ? 'size-4' : 'size-5'} />
       </span>
@@ -60,7 +66,7 @@ function StatItem({ stat, compact }: { stat: PublicProfileStat; compact: boolean
       >
         {shown}
       </span>
-      <span aria-hidden className="text-eyebrow text-subtle-foreground font-mono uppercase">
+      <span aria-hidden className="text-eyebrow text-muted-foreground font-mono uppercase">
         {stat.label}
       </span>
     </div>

@@ -49,11 +49,16 @@ export function CaseCard({
             src={project.cover.url}
             srcSet={project.cover.srcset}
             alt={project.cover.alt}
+            width={project.cover.width ?? undefined}
+            height={project.cover.height ?? undefined}
             sizes={featured ? '(min-width: 1024px) 58vw, 100vw' : '100vw'}
+            fetchPriority={featured ? 'high' : 'auto'}
+            decoding="async"
             className={cn(
               'w-full object-cover',
               featured ? 'rounded-lg lg:col-span-7' : 'border-b',
             )}
+            style={{ aspectRatio: '16 / 10' }}
           />
         ) : (
           <CoverPlaceholder hue={hue} className={cn(featured ? 'lg:col-span-7' : 'border-b')} />

@@ -104,7 +104,11 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
             src={project.cover.url}
             srcSet={project.cover.srcset}
             alt={project.cover.alt}
+            width={project.cover.width ?? undefined}
+            height={project.cover.height ?? undefined}
             sizes="100vw"
+            fetchPriority="high"
+            decoding="async"
             className="w-full rounded-xl object-cover"
             style={{ aspectRatio: '21 / 9' }}
           />

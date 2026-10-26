@@ -8,6 +8,13 @@ import '../globals.css';
 
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: {
+    default: 'Admin',
+    template: '%s · Admin',
+  },
+};
+
 export default function AdminRootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className={fontClassName} suppressHydrationWarning>

@@ -1,29 +1,21 @@
 'use client';
 
 import { useInView } from '@portfolio/ui/hooks/use-in-view.hook';
+import { usePrefersReducedMotion } from '@portfolio/ui/hooks/use-prefers-reduced-motion.hook';
 import { cn } from '@portfolio/ui/lib/utils';
 import type { ComponentProps } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 
-function usePrefersReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => setReduced(media.matches);
-    sync();
-    media.addEventListener('change', sync);
-    return () => media.removeEventListener('change', sync);
-  }, []);
-
-  return reduced;
-}
-
-export function Reveal({ className, children, ...props }: ComponentProps<'div'>) {
+export function Reveal({
+  eager = false,
+  className,
+  children,
+  ...props
+}: ComponentProps<'div'> & { eager?: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref);
   const reduced = usePrefersReducedMotion();
-  const visible = reduced || inView;
+  const visible = eager || reduced || inView;
 
   return (
     <div

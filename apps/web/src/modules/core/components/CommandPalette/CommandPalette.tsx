@@ -58,7 +58,7 @@ export function CommandPalette({ nav }: { nav: PublicNavItem[] }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" aria-label={t('command')}>
+        <Button variant="outline" size="sm" aria-label={`${t('command')} ${META}${KEY}`}>
           <Kbd>{META}</Kbd>
           <Kbd>{KEY}</Kbd>
         </Button>
