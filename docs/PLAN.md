@@ -41,7 +41,7 @@ Task size: **S** fits in a short session (one file group, no new concept); **M**
 | 5 | **STRUCTURE.md** files | Where every file goes, naming | [root](../STRUCTURE.md), [apps/web](../apps/web/STRUCTURE.md), [apps/api](../apps/api/STRUCTURE.md) |
 | 6 | `colors.json` (Figma export) | Test oracle for the color tokens | [docs/design/colors.json](./design/colors.json): 58 tokens × light/dark, identical to spec §3.6 |
 
-**Precedence when sources disagree:** the spec wins on values, behavior, data and API (1). Figma names follow the spec, so a mismatch in a value is a Figma bug: use the spec value and note it in the PR (2). Layout follows the mockups and Figma frames (3). Order and teaching follow the roadmap (4), except where a decision in §3 replaces a roadmap detail with the spec's choice. File paths follow STRUCTURE.md (5), which replaces the illustrative paths in the spec (see D20). A decision marked **Parker** in §3 is Parker's own call after the spec was written; it overrides every source above, including the spec (today: D7 and D24, auth).
+**Precedence when sources disagree:** the spec wins on values, behavior, data and API (1). Figma names follow the spec, so a mismatch in a value is a Figma bug: use the spec value and note it in the PR (2). Layout follows the mockups and Figma frames (3). Order and teaching follow the roadmap (4), except where a decision in §3 replaces a roadmap detail with the spec's choice. File paths follow STRUCTURE.md (5), which replaces the illustrative paths in the spec (see D20). A decision marked **Parker** in §3 is Parker's own call after the spec was written; it overrides every source above, including the spec (today: D7 and D24 for auth, D25 for the admin editor).
 
 **Snapshot notes.**
 
@@ -65,6 +65,7 @@ Task size: **S** fits in a short session (one file group, no new concept); **M**
 
 - [ ] `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` pass locally and in CI.
 - [ ] `pnpm check:content` passes (from T14 on).
+- [ ] `pnpm check:deps` passes (from T42 on): no paid Tiptap packages (D25).
 - [ ] Acceptance items of the task are ticked with evidence.
 - [ ] UI tasks: screenshots at 1440 and 390, light and dark, attached to the PR and compared with the Figma node or mockup named in the task. Differences are listed and justified.
 - [ ] UI tasks: keyboard pass (Tab order, visible focus ring, `Esc` closes overlays) and reduced-motion pass.
@@ -102,6 +103,7 @@ These settle the places where the sources disagree or say nothing. Each is the d
 | D22 | Admin chrome strings live in `apps/web/i18n/locales/en.json` under `admin.*`. The admin UI is English only (spec §5 intro), so `vi.json` has no `admin` keys. | Keeps `react/jsx-no-literals` on for admin too |
 | D23 | Public fetches use `revalidate: 3600` + tags in production and `revalidate: 0` in development (`NODE_ENV`), so seed changes show without waiting. | Roadmap p09 check "re-seeding changes the home page" |
 | D24 | **Parker.** Auth uses **JWTs instead of MySQL sessions**: `@nestjs/jwt` signs, `passport-jwt` (via `@nestjs/passport`) verifies. A short **access token** (15 min, payload `{ sub, role }`) and a longer **refresh token** (7 days, payload `{ sub, ver }`), signed with two different secrets. Both live in `httpOnly` cookies set by the API (`access_token` on `Path=/`, `refresh_token` on `Path=/api/auth`), never in `localStorage` or JS memory; this works because Next proxies `/api/*`, so the cookies are first-party for the web origin (D9). There is no `Session` table: `User.tokenVersion` is the kill switch ("sign out everywhere", deactivate, password change bump it, and every refresh checks it). Trade-off, accepted: an access token already issued keeps working until it expires (at most 15 min), and plain logout clears this browser's cookies only. | Replaces spec §1.5 `Session`, §1.6 Auth row (which preferred sessions) and roadmap p18 "MySQL sessions"; p18's learning goals (hashing, httpOnly cookies, logout) stay |
+| D25 | **Parker.** The admin `MarkdownEditor` is built on **Tiptap v3** (ProseMirror), using only free MIT packages from the public npm registry: `@tiptap/react`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/markdown`, `@tiptap/extensions` and `@tiptap/extension-*`. No Tiptap Pro or paid extensions, no `@tiptap-pro/*` registry, no Tiptap Cloud, Collaboration, Comments or AI, no Tiptap account or token; `pnpm check:deps` enforces this in CI (T42). Storage does not change (D3): the editor loads with `contentType: 'markdown'` and saves `editor.getMarkdown()`. Its schema is the Markdown allowlist shared with the public renderer (`packages/contracts/src/constants/markdown.constant.ts`, T23), so the editor cannot produce what the public site would drop. Code blocks use `@tiptap/extension-code-block-lowlight` + `lowlight` while writing; the Preview mode shows the exact public Shiki output. | Replaces spec §4.0 and §4.3 `MarkdownEditor` (CodeMirror 6); the spec's toolbar, slash menu, image paste, modes, word count and `SaveStatus` stay |
 
 ## 4. Architecture at a glance
 
@@ -211,7 +213,7 @@ Paths: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct*
 | T39 | DataTable + admin projects list | p21 | T37 | L | ui `DataTable/`, web `admin-projects/` |
 | T40 | Admin lists: posts, experience | p21 | T30, T39 | M | web `admin-posts/`, `admin-about/` |
 | T41 | Admin lists: small entities + icon/hue pickers | p21 | T31, T32, T39 | M | web `admin-taxonomy/`, `admin-about/` |
-| T42 | Editor shell + MarkdownEditor + autosave | p22 | T39 | L | web `admin-core/`, ui `MarkdownEditor/` |
+| T42 | Editor shell + Tiptap MarkdownEditor + autosave | p22 | T39 | L | web `admin-core/`, ui `MarkdownEditor/` |
 | T43 | Project editor | p22 | T42 | L | web `admin-projects/` |
 | T44 | Post + experience editors | p22 | T42 | M | web `admin-posts/`, `admin-about/` |
 | T45 | Site, sections, profile admin | p22 | T33, T42 | L | web `admin-site/` |
@@ -916,13 +918,16 @@ Each task uses the same template: **Roadmap · Spec · Depends · Size**, then G
 **Goal.** One safe way to turn stored markdown into readable, accessible pages, and the reading aids used by case studies and posts.
 
 **Scope.**
-- `content` module (server only): `services/markdown.service.ts` runs `remark-parse` → `remark-gfm` → `remark-rehype` (no raw HTML) → `rehype-slug` → `rehype-sanitize` (allowlist) → Shiki (light + dark themes tuned to the palette, comments ≥ 4.5:1) → `hast-util-to-jsx-runtime`, mapping elements to `packages/ui` components. GitHub-style alerts (`> [!NOTE]`, `> [!WARNING]`) become `Callout`. No `dangerouslySetInnerHTML`.
+- `content` module (server only): `services/markdown.service.ts` runs `remark-parse` → `remark-gfm` → `remark-rehype` (no raw HTML) → `rehype-slug` → `rehype-sanitize` (schema built from the shared allowlist below) → Shiki (one CSS-variables theme via `createCssVariablesTheme`: token colors are `var(--shiki-token-*)`, so light and dark come from the palette; comments ≥ 4.5:1; only `MARKDOWN_CODE_LANGUAGES` are loaded, anything else renders as plain text) → `hast-util-to-jsx-runtime`, mapping elements to `packages/ui` components. GitHub-style alerts (`> [!NOTE]`, `> [!WARNING]`) become `Callout`. No `dangerouslySetInnerHTML`.
+- Shared Markdown allowlist (D25), the one list both this renderer and the admin editor (T42) obey: `packages/contracts/src/constants/markdown.constant.ts` (`MARKDOWN_HEADING_LEVELS = [2, 3]`; `MARKDOWN_CALLOUT_KINDS = ['NOTE', 'WARNING']`; `MARKDOWN_CODE_LANGUAGES` = ts, tsx, js, jsx, json, bash, css, html, sql, prisma, yaml, md, diff, vue; `MARKDOWN_LINK_PROTOCOLS = ['http', 'https', 'mailto']` plus relative `/…` and `#…`; images only from `/api/public/media/`) and `packages/contracts/src/common/markdown-url.util.ts` (`isAllowedMarkdownUrl`, `isAllowedImageSrc`). Allowed constructs: paragraphs, H2/H3, bold, italic, strikethrough, inline code, links, bullet and ordered lists, blockquotes, callouts, fenced code with a language, horizontal rules, images with alt text, GFM tables, hard breaks. Everything else (raw HTML, H1, footnotes, task lists, embeds) is dropped or rendered as plain text. An H1 in stored Markdown renders as H2.
+- Fixtures in `packages/contracts/src/fixtures/`: `markdown-kitchen-sink.fixture.ts` (every allowed construct once) and `markdown-unsafe.fixture.ts` (`<script>`, `<iframe>`, an `onerror` attribute, a `javascript:` link, an external image, an H1). T42 reuses both.
+- `packages/ui/src/styles/code-syntax.css` (imported by `globals.css`): the `--shiki-foreground`, `--shiki-background` and `--shiki-token-*` variables as aliases of palette tokens only (default mapping: keyword → `--primary`, string → `--hue-jade`, constant → `--hue-amber`, function → `--hue-violet`, comment and punctuation → `--muted-foreground`, background → `--muted`; adjust inside the palette if a contrast check fails). The admin editor's highlighter reads the same variables (T42).
 - `content` utils: `toc.util.ts` (h2/h3 → TOC items), `split-sections.util.ts` (splits a markdown field at `###` headings; used for requirement columns and decision cards), `constants/shiki-theme.constant.ts`.
 - `content/components/Markdown/Markdown.tsx` (server component).
 - `packages/ui`: `Prose` (`prose` / `compact`; every §3.2 long-form rule: 66ch, spacing, hanging `▹` bullets, underlined links, scrollable tables in a focusable region), `CodeBlock` (filename bar, language badge, copy button with `aria-live`, focusable horizontal scroll, wrap toggle), `Callout` (icon tile), `SectionNav` (sticky on `lg+`, scroll-spy with `aria-current`, `<details>` on mobile), `ContentProgress` (2px `--primary` bar, hidden under reduced motion), `RequirementColumns` (two cards, `▹` bullets), `DecisionCard` (title + compact prose), `TakeawaysCard` (`--primary-subtle`, `▹` bullets).
-- Tests: sanitizer drops `<script>`, inline HTML, `javascript:` links; headings get ids; TOC extraction; split utility.
+- Tests: every construct of the kitchen-sink fixture renders; nothing from the unsafe fixture renders (`<script>`, inline HTML, `javascript:` links, external images); headings get ids; TOC extraction; split utility.
 
-**Files.** `apps/web/src/modules/content/services/markdown.service.ts`, `apps/web/src/modules/content/utils/{toc.util.ts,split-sections.util.ts}` (+ tests), `apps/web/src/modules/content/constants/shiki-theme.constant.ts`, `apps/web/src/modules/content/components/Markdown/Markdown.tsx`, `packages/ui/src/components/{Prose,CodeBlock,Callout,SectionNav,ContentProgress,RequirementColumns,DecisionCard,TakeawaysCard}/*`.
+**Files.** `apps/web/src/modules/content/services/markdown.service.ts`, `apps/web/src/modules/content/utils/{toc.util.ts,split-sections.util.ts}` (+ tests), `apps/web/src/modules/content/constants/shiki-theme.constant.ts`, `packages/contracts/src/constants/markdown.constant.ts`, `packages/contracts/src/common/markdown-url.util.ts` (+ test), `packages/contracts/src/fixtures/{markdown-kitchen-sink,markdown-unsafe}.fixture.ts`, `packages/ui/src/styles/{globals.css,code-syntax.css}`, `apps/web/src/modules/content/components/Markdown/Markdown.tsx`, `packages/ui/src/components/{Prose,CodeBlock,Callout,SectionNav,ContentProgress,RequirementColumns,DecisionCard,TakeawaysCard}/*`.
 
 **Design.** Figma `10:2` (post), `4:2`/`5:2` (case study). Mockups `post.html`, `case-study.html`. Tokens: `text-prose`, `text-heading`, `text-subheading`, `text-meta`, `--measure`, `--muted`, `--subtle-foreground`, `--primary`, `--primary-subtle`, `--radius-lg`, `--font-mono`.
 
@@ -1455,28 +1460,78 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **PR title:** `feat(web): admin taxonomy lists`
 
-#### T42 · Editor shell + MarkdownEditor + autosave
+#### T42 · Editor shell + Tiptap MarkdownEditor + autosave
 
-**Roadmap** p22 · **Spec** [§5.9](./design/portfolio-design-system.md#s-5-9), §4.3 (`MarkdownEditor`, `SaveStatus`, `LocaleTabs`, `PropertyList`), §4.6 (Autosave) · **Depends** T39 · **Size** L
+**Roadmap** p22 · **Spec** [§5.9](./design/portfolio-design-system.md#s-5-9), §4.3 (`MarkdownEditor`, `SaveStatus`, `LocaleTabs`, `PropertyList`), §4.6 (Autosave), D25 · **Depends** T39 · **Size** L
 
-**Goal.** The shared editor frame every entity editor uses: markdown editing with preview, locale tabs, a properties pane, autosave with conflict detection, and a dirty guard.
+**Goal.** The shared editor frame every entity editor uses: a Tiptap rich-text editor that reads and writes Markdown, a toolbar built from shadcn parts, a preview that is exactly the public renderer, locale tabs, a properties pane, autosave with conflict detection, a dirty guard, and a read-only mode for `user`.
 
 **Scope.**
-- `packages/ui`: `MarkdownEditor` (CodeMirror 6; toolbar heading, bold, link, code, image, callout; slash menu; write / split / preview modes on `resizable`; word count; image paste is wired in T51), `SaveStatus` (`Saving…`, `Saved 12s ago`, `Offline, changes kept locally`, `Conflict: newer version` with Load latest / Overwrite), `LocaleTabs` (EN/VI with completeness dots), `PropertyList`.
-- `content`: split the pipeline into `markdown-to-hast` (server) and `hast-to-react.util.ts` (shared); `content/actions/preview.action.ts` (Server Action that returns sanitized HAST for the preview pane).
-- `admin-core`: `EditorShell` (header with title, `SaveStatus`, publish slot; editor; properties pane 320px on `lg`; live preview column on `2xl`; properties in a `sheet`/`drawer` on mobile), `hooks/use-autosave.hook.ts` (TanStack Form listener, 1.5s debounce, `PATCH` with `updatedAt`, 409 → conflict state, offline → local copy), `hooks/use-dirty-guard.hook.ts`, `utils/map-field-errors.util.ts` (`ApiError.fieldErrors` → form field errors).
-- `EditorShell` `readOnly` prop, true when `useIsAdmin()` is false (D7): fields and `MarkdownEditor` are read-only, autosave and the dirty guard are off, the publish slot is hidden, and the header shows a "Read only" badge. Every editor in T43–T45 passes it through.
-- Tests for the autosave state machine, field error mapping and read-only mode (no `PATCH` is sent).
+- **Dependencies** (`packages/ui`, every `@tiptap/*` pinned to the same exact version and upgraded together, because their peer dependencies require it): `@tiptap/core`, `@tiptap/pm`, `@tiptap/react`, `@tiptap/starter-kit`, `@tiptap/markdown`, `@tiptap/extensions` (`Placeholder`, `CharacterCount`), `@tiptap/extension-code-block-lowlight` + `lowlight` + `highlight.js` (BSD-3-Clause, free), `@tiptap/extension-image`, `@tiptap/extension-table`, `@tiptap/suggestion` + `@floating-ui/dom`. All MIT except highlight.js. Nothing from `@tiptap-pro/*` or the Tiptap private registry (D25).
+- **`scripts/check-deps.mjs`** + root script `check:deps`, run in CI: fails if `pnpm-lock.yaml` contains `@tiptap-pro/` or `@tiptap-cloud/`, if any `.npmrc` points at `registry.tiptap.dev`, or if an installed `@tiptap/*` package's `license` is not `MIT`.
+- **`packages/ui` `MarkdownEditor`** (`'use client'`). Props: `value` (Markdown), `onChange(markdown)`, `onBlur`, `editable`, `variant` (`full` | `compact`), `labels` (chrome strings, since `packages/ui` has no i18n), `renderPreview(markdown)` (slot filled by the web), `onUploadImage?` (wired in T51).
+  - `useEditor({ extensions: createMarkdownExtensions(), content: value, contentType: 'markdown', editable, immediatelyRender: false })`. `immediatelyRender: false` is required with Next.js server rendering, otherwise hydration fails.
+  - `extensions/create-markdown-extensions.ts` is the editor's schema, and it follows the T23 allowlist exactly: `StarterKit.configure({ heading: { levels: MARKDOWN_HEADING_LEVELS }, underline: false, codeBlock: false, link: { openOnClick: false, autolink: true, isAllowedUri: isAllowedMarkdownUrl } })`, `Markdown`, `CodeBlockLowlight` (a `lowlight` instance with only `MARKDOWN_CODE_LANGUAGES` registered), `Image` (`isAllowedImageSrc`, `alt` attribute), the Table extensions, `Placeholder`, `CharacterCount`, plus the three custom extensions below. Nothing outside the allowlist is registered, so pasted HTML is reduced to allowed nodes by ProseMirror's schema and unknown Markdown HTML stays as plain text.
+  - `extensions/heading-clamp.extension.ts`: extends `Heading` so that an H1 in loaded Markdown becomes H2, matching the public renderer.
+  - `extensions/callout.extension.ts`: a block node `callout` (`kind`: `NOTE` | `WARNING`) with a `markdownTokenizer` for `> [!NOTE]` / `> [!WARNING]` and a `renderMarkdown` that writes the same syntax back; rendered through `ReactNodeViewRenderer` with the public `Callout` look.
+  - `extensions/slash-command.extension.ts`: `@tiptap/suggestion` on `/`, listing Heading 2, Heading 3, bullet list, ordered list, quote, Note, Warning, code block, image, table and divider; the menu is shadcn `command` in a floating panel.
+  - Code blocks: a `ReactNodeViewRenderer` header with a language `select` (`MARKDOWN_CODE_LANGUAGES` + "Plain text") and the same filename/language look as the public `CodeBlock`. Highlight colors come from `packages/ui/src/styles/editor.css`, which maps `.hljs-*` classes to the T23 `--shiki-token-*` variables, so writing and reading use one palette. The Preview mode shows the exact Shiki output.
+  - Pasting plain text that looks like Markdown inserts it as Markdown (`insertContent(text, { contentType: 'markdown' })`), through a small `handlePaste` in `extensions/markdown-paste.extension.ts` if `@tiptap/markdown` has no built-in option for it.
+  - Modes on shadcn `tabs`: **Write** (the editor), **Split** (editor and preview side by side on `resizable`, `xl` and up), **Preview** (`renderPreview`, debounced 500ms), **Markdown** (read-only `<pre>` of `getMarkdown()`: exactly what will be stored). Word count from `CharacterCount` in the footer.
+  - `editable: false`: the toolbar, slash menu and paste/drop handling are off, the placeholder is hidden, `aria-readonly="true"`, links open on click. `useEffect` calls `editor.setEditable(editable)` when the prop changes.
+  - Stories: empty, kitchen-sink fixture, read-only, compact, dark.
+- **Toolbar** (`MarkdownEditor/components/EditorToolbar`): `role="toolbar"` with arrow-key roving focus, sticky at the top of the editor; every icon button has a `tooltip` showing its shortcut in `kbd`; groups split by a vertical `separator`. `variant="compact"` (experience highlights, bio) shows only bold, italic, link and lists; the schema stays the same, so no stored content is lost.
 
-**Files.** `packages/ui/src/components/{MarkdownEditor,SaveStatus,LocaleTabs,PropertyList}/*`, `packages/ui/src/components/ui/{tabs,resizable,drawer}.tsx`, `apps/web/src/modules/content/{services/markdown.service.ts,utils/hast-to-react.util.ts,actions/preview.action.ts}`, `apps/web/src/modules/admin-core/{components/EditorShell/*,hooks/use-autosave.hook.ts,hooks/use-dirty-guard.hook.ts,utils/map-field-errors.util.ts}`.
+| Control | shadcn parts | Markdown it writes | Shortcut |
+| --- | --- | --- | --- |
+| Undo, redo | `button` (`ghost`, `sm`) | n/a | `Mod-Z`, `Shift-Mod-Z` |
+| Block type: Paragraph, Heading 2, Heading 3 | `dropdown-menu` | `## `, `### ` | `Mod-Alt-0/2/3` |
+| Bold, italic, strikethrough, inline code | `toggle-group` (`multiple`, `aria-pressed`) | `**…**`, `*…*`, `~~…~~`, `` `…` `` | `Mod-B`, `Mod-I`, `Mod-Shift-S`, `Mod-E` |
+| Link | `popover` + `input` + `button` (Apply, Remove); URL checked with `isAllowedMarkdownUrl` | `[text](url)` | `Mod-K` |
+| Bullet list, ordered list, quote | `toggle` | `- `, `1. `, `> ` | `Mod-Shift-8/7/B` |
+| Callout: Note, Warning | `dropdown-menu` | `> [!NOTE]`, `> [!WARNING]` | `/note`, `/warning` |
+| Code block | `button`; language `select` in the block header | fenced block with language | `Mod-Alt-C` |
+| Image | `button` → `popover` (URL + required alt) until T51, then the media picker `dialog` | `![alt](url)` | `/image` |
+| Table | `dropdown-menu` (insert 3×3, add/remove row or column, delete table) | GFM table | `/table` |
+| Mode | `tabs` (Write, Split, Preview, Markdown) | n/a | n/a |
 
-**Design.** Figma `18:2`. Mockup `admin-editor.html`. Tokens: `text-ui`, `--muted`, `--border`, `--success`, `--warning`.
+- **Web `admin-core/components/MarkdownField`**: binds a TanStack Form field to `MarkdownEditor`. It loads the editor with `next/dynamic` (`ssr: false`, skeleton while loading), so Tiptap ships only in admin chunks. It passes `labels` from `admin.editor.*` in `en.json`, `renderPreview` (calls `content/actions/preview.action.ts`) and `editable={!readOnly}`.
+- **Autosave integration** (`hooks/use-autosave.hook.ts`):
+  - On every Tiptap `update`, `getMarkdown()` runs debounced 250ms and calls `field.handleChange(markdown)`. The form listener then debounces 1.5s and sends `PATCH` with `updatedAt`. Blur, a locale tab switch and leaving the page flush both debounces at once.
+  - **No save on open.** `@tiptap/markdown` may normalize hand-written Markdown (for example `*` bullets become `-`). Right after load, `MarkdownField` stores `baseline = editor.getMarkdown()`, and the field is dirty only when the current Markdown differs from that baseline, not from the raw DB string.
+  - **Outside changes** ("Load latest" after a 409 conflict, an offline copy restored, a locale switch) call `editor.commands.setContent(value, { contentType: 'markdown', emitUpdate: false })`, but only when `value` differs from the last emitted Markdown, so the cursor never jumps while typing.
+  - 409 → `SaveStatus` "Conflict" with "Load latest" / "Overwrite"; offline → the Markdown string is kept in `localStorage` per entity and locale. Neither keeps editor JSON.
+- **Read-only mode** (D7): `EditorShell` `readOnly` is true when `useIsAdmin()` is false. Then every `MarkdownField` gets `editable: false`, other fields are disabled, autosave and the dirty guard are off, the publish slot is hidden, and the header shows a "Read only" badge. Every editor in T43–T45 passes it through.
+- **`packages/ui`**: also `SaveStatus` (`Saving…`, `Saved 12s ago`, `Offline, changes kept locally`, `Conflict: newer version` with Load latest / Overwrite), `LocaleTabs` (EN/VI with completeness dots), `PropertyList`.
+- **`content`**: split the T23 pipeline into `markdown-to-hast` (server) and `hast-to-react.util.ts` (shared); `content/actions/preview.action.ts` (Server Action that returns sanitized HAST for the preview pane, with the same sanitize schema and Shiki theme as the public pages).
+- **`admin-core`**: `EditorShell` (header with title, `SaveStatus`, publish slot; editor; properties pane 320px on `lg`; live preview column on `2xl`; properties in a `sheet`/`drawer` on mobile), `hooks/use-dirty-guard.hook.ts`, `utils/map-field-errors.util.ts` (`ApiError.fieldErrors` → form field errors).
+- **Tests**:
+  - `MarkdownEditor` round-trip with the T23 kitchen-sink fixture: load → `getMarkdown()` → load → `getMarkdown()` gives the same string, and every construct survives.
+  - The unsafe fixture through the editor: the output has no `<script>`, `<iframe>`, `onerror`, `javascript:` or external image, and no H1.
+  - That editor output through the public pipeline renders every kitchen-sink element.
+  - Callout and code-block language Markdown round-trips.
+  - Opening a document does not mark it dirty.
+  - The autosave state machine, field error mapping, and read-only mode (no `PATCH` is sent, `editor.isEditable` is false).
+
+**Files.** `packages/ui/package.json`, `packages/ui/src/components/MarkdownEditor/{MarkdownEditor.tsx,MarkdownEditor.stories.tsx,MarkdownEditor.test.tsx,components/{EditorToolbar,SlashMenu,LinkPopover,CodeBlockView,CalloutView}/*,extensions/{create-markdown-extensions.ts,heading-clamp.extension.ts,callout.extension.ts,slash-command.extension.ts,markdown-paste.extension.ts}}`, `packages/ui/src/styles/{globals.css,editor.css}`, `packages/ui/src/components/{SaveStatus,LocaleTabs,PropertyList}/*`, `packages/ui/src/components/ui/{tabs,resizable,drawer,toggle,toggle-group,tooltip,kbd,dropdown-menu,popover,command,select,separator}.tsx`, `apps/web/src/modules/content/{services/markdown.service.ts,utils/hast-to-react.util.ts,actions/preview.action.ts}`, `apps/web/src/modules/admin-core/{components/EditorShell/*,components/MarkdownField/*,hooks/use-autosave.hook.ts,hooks/use-dirty-guard.hook.ts,utils/map-field-errors.util.ts}`, `apps/web/i18n/locales/en.json`, `scripts/check-deps.mjs`, `package.json`, `.github/workflows/ci.yml` ([root STRUCTURE: packages/ui](../STRUCTURE.md#package-layout-packagesui)).
+
+**Design.** Figma `18:2`. Mockup `admin-editor.html` (toolbar `B I H1 H2 🔗 </> 🖼 callout [Split]`, slash menu). The mockup's "H1 H2" buttons map to Heading 2 and Heading 3, because the page title is the only H1. Tokens:
+- toolbar: `--card` background, `--border` bottom border, controls 28px (`sm`), `text-ui`, active toggle `--accent` / `--accent-foreground`, focus `--ring`;
+- menus and popovers: `--popover`, `--shadow-2`, `--z-dropdown`, `--radius-md`;
+- writing surface: `Prose` (`text-prose`, `--measure`), so line length matches the public page; placeholder `--muted-foreground`; selection `--primary-subtle`;
+- code blocks: `--muted`, `--font-mono`, `--shiki-token-*`; callouts: `--info-subtle` (Note) and `--warning-subtle` (Warning);
+- word count: `text-ui-meta`; save states: `--success`, `--warning`.
 
 **Acceptance.**
-- [ ] Autosave fires 1.5s after typing stops and shows `Saved …`; a stale save shows `Conflict` with both actions (tested).
+- [ ] Typing `## `, `- ` or a code fence turns into the block, and the Markdown tab shows the matching Markdown; the stored value in the DB is Markdown, never HTML or JSON (D3).
+- [ ] The kitchen-sink fixture round-trips unchanged, and the unsafe fixture loses every disallowed item (tests).
+- [ ] Opening an item never triggers a `PATCH`; autosave fires 1.5s after typing stops and shows `Saved …`; a stale save shows `Conflict` with both actions (tested).
 - [ ] Leaving with unsaved changes asks for confirmation.
-- [ ] Signed in as `user`, an editor opens read-only and sends no writes.
-- [ ] Preview output uses the same sanitized pipeline as the public site (shared test fixture).
+- [ ] Signed in as `user`, an editor opens read-only (`editable: false`, no toolbar) and sends no writes.
+- [ ] Preview output uses the same sanitized pipeline and Shiki theme as the public site (shared fixtures).
+- [ ] `pnpm check:deps` passes, and fails when a `@tiptap-pro/` package is added in a test branch.
+- [ ] `next build` shows no growth in First Load JS for public routes (Tiptap only in `/admin` chunks).
+- [ ] Toolbar keyboard pass: Tab reaches the toolbar once, arrows move between controls, every control has an accessible name and shows its shortcut.
 
 **PR title:** `feat(web): editor shell + markdown editor`
 
@@ -1488,9 +1543,10 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **Scope.**
 - Routes `app/admin/(cms)/projects/new/page.tsx` and `projects/[id]/page.tsx` → `admin-projects/views/AdminProjectsEditor.tsx`.
-- Tabs: Content (title, tagline, the six case-study markdown fields per locale with `MarkdownEditor`), Card & facts (domain select, key facts textarea with 2–4 line counter, fact chips input with max 6, live `CaseCard` preview), Metrics (field array: label, before, after, value; reorder), SEO.
+- Tabs: Content (title, tagline, the six case-study markdown fields per locale, each a `MarkdownField` (T42); only the active locale's editors are mounted; Scope and Trade-offs show the hint "Use `###` headings to split into columns/cards", because T23's `split-sections.util.ts` splits on H3), Card & facts (domain select, key facts textarea with 2–4 line counter, fact chips input with max 6, live `CaseCard` preview), Metrics (field array: label, before, after, value; reorder), SEO.
 - Properties pane: status, slug, dates, featured, confidential, experience link, skills multi-combobox, version from/to, live/repo URLs. Cover picker comes in T51; publish button in T52.
 - Autosave via `use-autosave`; create redirects to the edit route.
+- Read-only for `user`: `AdminProjectsEditor` passes `readOnly` to `EditorShell`, every `MarkdownField` gets `editable: false`, and the metric field array hides add, remove and reorder.
 
 **Files.** `apps/web/app/admin/(cms)/projects/{new,[id]}/page.tsx`, `apps/web/src/modules/admin-projects/{views/AdminProjectsEditor.tsx,components/{ProjectContentTab,ProjectCardFactsTab,ProjectMetricsTab,ProjectSeoTab,ProjectProperties}/*,hooks/use-admin-project.hook.ts}`, `packages/ui/src/components/ui/{calendar,popover,command}.tsx`.
 
@@ -1500,6 +1556,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 - [ ] Submitting an empty EN title returns 400 and the error shows on that input (roadmap p22).
 - [ ] Edits show on the public page after save (roadmap p22; after T52 only on publish).
 - [ ] Editing in two tabs produces the Conflict state in the second.
+- [ ] Signed in as `user`, all six case-study editors are read-only and the page sends no `PATCH`.
 - [ ] Screenshot compared with `18:2`.
 
 **PR title:** `feat(web): admin editors`
@@ -1511,8 +1568,9 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Goal.** Editors for posts and experience on the shared shell.
 
 **Scope.**
-- Post editor (`AdminPostsEditor`): title, excerpt, body (markdown) per locale, takeaways textarea (≤ 5 lines), tags multi-combobox with create, featured, SEO fields; publish-lint warnings shown inline using `publishLint` from contracts. Routes `posts/new`, `posts/[id]`.
-- Experience editor (`AdminAboutExperienceEditor`): company, URL, location, employment type, role, summary, highlights (markdown), month-precision dates (`calendar`), skills. Routes `experience/new`, `experience/[id]`.
+- Post editor (`AdminPostsEditor`): title, excerpt, body (`MarkdownField`, `full` toolbar) per locale, takeaways textarea (≤ 5 lines), tags multi-combobox with create, featured, SEO fields; publish-lint warnings shown inline using `publishLint` from contracts. Routes `posts/new`, `posts/[id]`.
+- Experience editor (`AdminAboutExperienceEditor`): company, URL, location, employment type, role, summary, highlights (`MarkdownField`, `compact` toolbar), month-precision dates (`calendar`), skills. Routes `experience/new`, `experience/[id]`.
+- Both editors pass `readOnly` to `EditorShell`, so a `user` gets `editable: false` editors, disabled inputs and no tag creation.
 
 **Files.** `apps/web/app/admin/(cms)/posts/{new,[id]}/page.tsx`, `apps/web/app/admin/(cms)/experience/{new,[id]}/page.tsx`, `apps/web/src/modules/admin-posts/{views/AdminPostsEditor.tsx,components/*,hooks/use-admin-post.hook.ts}`, `apps/web/src/modules/admin-about/{views/AdminAboutExperienceEditor.tsx,components/ExperienceForm/*}`.
 
@@ -1521,6 +1579,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Acceptance.**
 - [ ] A body containing `TODO` shows a publish-lint warning before saving.
 - [ ] Creating a tag from the combobox adds it to the post.
+- [ ] Signed in as `user`, both editors are read-only and send no writes.
 
 **PR title:** `feat(web): post and experience editors`
 
@@ -1532,7 +1591,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **Scope.**
 - `app/admin/(cms)/site/page.tsx` → `admin-site/views/AdminSiteIndex.tsx` with URL-synced tabs: Settings (form: SEO defaults, footer note, contact intro, reply time, contact email, availability, analytics, ambient effects, marquee), Navigation (table, inline-editable label, `href` picker from `routes.constant.ts` or URL, move up/down), Sections (per page: visible switch (optimistic), retitle, intro, CTA label, move up/down), Social links (with `showInHeader`, `showInCta`), Contact topics.
-- `app/admin/(cms)/profile/page.tsx` → `AdminSiteProfile`: headline + accent (live `AccentHeadline` preview, validation per locale), hero kicker, subheadline, bio (markdown), career start date, languages, city, timezone, private phone. Avatar and resume pickers come in T51.
+- `app/admin/(cms)/profile/page.tsx` → `AdminSiteProfile`: headline + accent (live `AccentHeadline` preview, validation per locale), hero kicker, subheadline, bio (`MarkdownField`, `compact` toolbar), career start date, languages, city, timezone, private phone. Avatar and resume pickers come in T51.
 
 **Files.** `apps/web/app/admin/(cms)/{site,profile}/page.tsx`, `apps/web/src/modules/admin-site/{views/{AdminSiteIndex,AdminSiteProfile}.tsx,components/{SettingsForm,NavTable,SectionsTable,SocialTable,TopicsTable,ProfileForm}/*,hooks/*,services/*}`.
 
@@ -1705,10 +1764,10 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Scope.**
 - `packages/ui` `MediaLibrary` (grid, alt-missing warning) and `MediaUploader` (drop zone, per-file `progress`, cancel).
 - `admin-media`: `AdminMediaIndex` (`useInfiniteQuery` + TanStack Virtual, alt editing in a sheet), `services/media-upload.service.ts` (XHR, because `fetch` has no upload progress; `AbortController` cancel), `components/MediaPickerDialog`.
-- Pickers in editors: project cover and images with captions (T43), post cover (T44), avatar and resumes (T45 profile), OG image (T45 settings). `MarkdownEditor` paste/drop uploads and inserts `![alt](url)`.
+- Pickers in editors: project cover and images with captions (T43), post cover (T44), avatar and resumes (T45 profile), OG image (T45 settings). `MarkdownEditor`: `@tiptap/extension-file-handler` (MIT, D25) on paste and drop calls `onUploadImage(file)`, inserts the image with the returned `/api/public/media/…` URL, and opens the alt-text popover (publish requires alt, T52); the toolbar image button opens the media picker `dialog`.
 - Public: `core/utils/image-loader.util.ts` (`next/image` loader that maps width → nearest variant); covers on case study and featured card, avatar on About, CV download card links.
 
-**Files.** `packages/ui/src/components/{MediaLibrary,MediaUploader}/*`, `packages/ui/src/components/ui/progress.tsx`, `apps/web/src/modules/admin-media/*`, `apps/web/app/admin/(cms)/media/page.tsx`, `apps/web/src/modules/admin-{projects,posts,site}/components/*` (picker wiring), `apps/web/src/modules/core/utils/image-loader.util.ts`, `apps/web/next.config.ts`, `apps/web/src/modules/{projects,about,home}/components/*`.
+**Files.** `packages/ui/src/components/{MediaLibrary,MediaUploader}/*`, `packages/ui/package.json` (`@tiptap/extension-file-handler`, same version as the other `@tiptap/*`), `packages/ui/src/components/MarkdownEditor/{MarkdownEditor.tsx,extensions/create-markdown-extensions.ts}`, `apps/web/src/modules/admin-core/components/MarkdownField/*`, `packages/ui/src/components/ui/progress.tsx`, `apps/web/src/modules/admin-media/*`, `apps/web/app/admin/(cms)/media/page.tsx`, `apps/web/src/modules/admin-{projects,posts,site}/components/*` (picker wiring), `apps/web/src/modules/core/utils/image-loader.util.ts`, `apps/web/next.config.ts`, `apps/web/src/modules/{projects,about,home}/components/*`.
 
 **Design.** Mockup `admin-editor.html` (cover field), `case-study.html` (21:9 cover). Tokens: `--radius-xl`, `--muted`, `--warning`.
 
@@ -2008,3 +2067,4 @@ Each has a default the plan already uses, so no task is blocked.
 | Q8 | The `MigrationDiagram` mockup labels nodes `v1 · Vue 2` / `v2 · Nuxt 3`, and case-study decision cards show `OPTIONS · CHOICE · WHY · COST`. The data model has no dedicated fields for these. | Diagram nodes show `versionFrom`/`versionTo` as entered, with skill names as the component nodes (T22). Decisions are split at `###` headings into cards whose body is markdown, so the author writes those labels in the text (T23, T27) |
 | Q9 | What exactly may a `user` do? (D7) | Read-only reviewer: dashboard, content and media read, analytics, draft preview, own password. No writes, publishing, uploads, inbox, audit log or users. Widening it later is one `@Roles('admin', 'user')` per route plus the matching `RoleGate` |
 | Q10 | Revoke one stolen refresh token without signing that user out everywhere? (D24) | No. That needs a stored token table (the sessions Parker dropped). `tokenVersion` signs the user out on every device, which is enough for a handful of accounts |
+| Q11 | Should the editor allow more Markdown than the shared allowlist (D25, T23), for example H4, task lists, footnotes, underline or embeds? | No. Adding one later means one entry in `markdown.constant.ts`, the matching Tiptap extension and a renderer component, in the same PR |

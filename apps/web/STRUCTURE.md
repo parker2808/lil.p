@@ -41,14 +41,14 @@ Create only the folders a module needs.
 | Module | Owns | Screens (spec §) |
 | --- | --- | --- |
 | `core` | Site shell (`SiteHeader`, `SiteFooter`, `SkipLink`, `LocaleSwitch`, `ThemeToggle`, public `CommandPalette`), providers, API clients, error and metadata utils, page-view beacon | layout, `error.tsx` (§4.2, §4.5) |
-| `content` | Markdown → React pipeline (server, Shiki), `Markdown` component, TOC extraction | case study and post bodies (§3.2, §4.1) |
+| `content` | Markdown → React pipeline (server, Shiki), `Markdown` component, TOC extraction, admin preview Server Action; sanitize schema built from `@portfolio/contracts` `markdown.constant.ts` | case study and post bodies (§3.2, §4.1) |
 | `home` | `HomeIndex` view, the section registry, one container per `PageSection.key` | §5.1 |
 | `about` | `AboutIndex`, timeline/principles/education/CV sections; skills service (shared with home) | §5.2 |
 | `projects` | `ProjectsIndex`, `ProjectsDetail`, filters island; projects + domains services | §5.3, §5.4 |
 | `notes` | `NotesIndex`, `NotesDetail`, search island (TanStack Query) | §5.5 |
 | `contact` | `ContactIndex`, `ContactForm` (TanStack Form + Server Action) | §5.6 |
 | `seo` | metadata builders, JSON-LD, OG image template, sitemap/RSS builders | §5 intro |
-| `admin-core` | `AdminShell`, sidebar, topbar, admin `CommandPalette`, `NotificationBell`, `RoleGate` (shows children for `admin` or `user` only), `useMe`/`useIsAdmin`, SSE hook, URL list-params hook, autosave hook | §4.3 |
+| `admin-core` | `AdminShell`, sidebar, topbar, admin `CommandPalette`, `NotificationBell`, `EditorShell`, `MarkdownField` (TanStack Form field ↔ Tiptap `MarkdownEditor`, loaded with `next/dynamic` `ssr: false` so Tiptap stays out of public bundles), `RoleGate` (shows children for `admin` or `user` only), `useMe`/`useIsAdmin`, SSE hook, URL list-params hook, autosave hook | §4.3 |
 | `admin-auth` | `AdminAuthLogin` view (silent refresh, then login form), `ChangePasswordDialog`, `safe-next.util.ts` | §4.6 |
 | `admin-dashboard` | `AdminDashboardIndex`, stat/health/inbox/activity/chart cards | §5.7, §5.11 |
 | `admin-projects` | projects table + editor (incl. "Card & facts", metrics, live preview) | §5.8, §5.9, §5.11 |
