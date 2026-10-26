@@ -125,7 +125,7 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | `tags` | `Tag` | public list + admin CRUD (`admin-tags.controller.ts`; slug derived from `nameEn`) |
 | `posts` | `Post` | public list/detail, admin CRUD (`admin-posts.controller.ts`) + archive; publish later |
 | `contact-topics` | `ContactTopic` | `GET /public/contact-topics`, admin CRUD (`admin-contact-topics.controller.ts`) |
-| `contact` | `ContactMessage` | `POST /public/contact`, admin inbox list/patch |
+| `contact` | `ContactMessage` | `POST /public/contact` (public, 3/10 min/IP, honeypot → `SPAM`), admin inbox `GET/PATCH /admin/messages`, `GET /admin/messages/unread-count` (admin only) |
 | `auth` | none (reads `User` through `UsersService`) | `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `GET /auth/me`, `PATCH /auth/password` |
 | `users` | `User` | `GET/POST /admin/users`, `PATCH /admin/users/:id`, sign-out-everywhere, set password (admin only; last-admin 409) |
 | `media` | `Media` | admin upload/list/patch, public file `GET /public/media/:file` |
@@ -133,7 +133,7 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | `publishing` | none (calls web `/api/revalidate`) | used by projects, posts and pages services |
 | `analytics` | `PageView` | `POST /public/views` |
 | `audit` | `AuditLog` | `GET /admin/audit` (cursor) |
-| `dashboard` | none (reads counts) | `GET /admin/stats?range`, `GET /admin/health` |
+| `dashboard` | none (reads counts) | `GET /admin/stats?range` (includes `messages.unread`), `GET /admin/health` |
 
 ## Pages and blocks
 

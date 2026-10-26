@@ -17,6 +17,9 @@ function prismaMock() {
     skill: {
       count: vi.fn().mockResolvedValue(0),
     },
+    contactMessage: {
+      count: vi.fn().mockResolvedValue(0),
+    },
   };
 }
 
@@ -46,6 +49,7 @@ describe('DashboardService', () => {
         publishedInRange: 0,
         publishedInPrevious: 0,
       },
+      messages: { unread: 0 },
     });
   });
 

@@ -884,3 +884,37 @@ GET http://127.0.0.1:4000/api/admin/stats?range=1y
 
 ### Admin dashboard health
 GET http://127.0.0.1:4000/api/admin/health
+
+### Public contact (honeypot empty)
+POST http://127.0.0.1:4000/api/public/contact
+Content-Type: application/json
+Origin: http://localhost:3000
+
+{
+  "name": "Ana",
+  "email": "<email>",
+  "topic": "job",
+  "message": "Hello from the form",
+  "website": "",
+  "locale": "en"
+}
+
+### Admin messages list (inbox, hides SPAM by default)
+GET http://127.0.0.1:4000/api/admin/messages?page=1&pageSize=20&sort=-createdAt
+
+### Admin messages spam
+GET http://127.0.0.1:4000/api/admin/messages?status=SPAM
+
+### Admin messages unread count
+GET http://127.0.0.1:4000/api/admin/messages/unread-count
+
+### Admin message read
+GET http://127.0.0.1:4000/api/admin/messages/1
+
+### Admin message mark read
+PATCH http://127.0.0.1:4000/api/admin/messages/1
+Content-Type: application/json
+
+{
+  "status": "READ"
+}

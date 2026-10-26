@@ -16,6 +16,7 @@ export const adminStatsFixture: AdminStats = {
     publishedInRange: 2,
     publishedInPrevious: 1,
   },
+  messages: { unread: 3 },
 };
 
 export const adminHealthFixture: AdminHealth = {

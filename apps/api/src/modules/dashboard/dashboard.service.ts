@@ -80,15 +80,23 @@ export class DashboardService {
       publishedAt: { gte, lt },
     });
 
-    const [projectGroups, postGroups, projectInRange, projectPrev, postInRange, postPrev] =
-      await Promise.all([
-        this.prisma.project.groupBy({ by: ['status'], _count: { id: true } }),
-        this.prisma.post.groupBy({ by: ['status'], _count: { id: true } }),
-        this.prisma.project.count({ where: publishedIn(periodStart, periodEnd) }),
-        this.prisma.project.count({ where: publishedIn(previousStart, periodStart) }),
-        this.prisma.post.count({ where: publishedIn(periodStart, periodEnd) }),
-        this.prisma.post.count({ where: publishedIn(previousStart, periodStart) }),
-      ]);
+    const [
+      projectGroups,
+      postGroups,
+      projectInRange,
+      projectPrev,
+      postInRange,
+      postPrev,
+      unreadMessages,
+    ] = await Promise.all([
+      this.prisma.project.groupBy({ by: ['status'], _count: { id: true } }),
+      this.prisma.post.groupBy({ by: ['status'], _count: { id: true } }),
+      this.prisma.project.count({ where: publishedIn(periodStart, periodEnd) }),
+      this.prisma.project.count({ where: publishedIn(previousStart, periodStart) }),
+      this.prisma.post.count({ where: publishedIn(periodStart, periodEnd) }),
+      this.prisma.post.count({ where: publishedIn(previousStart, periodStart) }),
+      this.prisma.contactMessage.count({ where: { status: 'NEW' } }),
+    ]);
 
     return {
       range,
@@ -102,6 +110,7 @@ export class DashboardService {
         publishedInRange: postInRange,
         publishedInPrevious: postPrev,
       },
+      messages: { unread: unreadMessages },
     };
   }
 

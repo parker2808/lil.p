@@ -34,6 +34,30 @@ export { qk } from './constants/query-keys.constant';
 export type { PublicRoute } from './constants/routes.constant';
 export { PUBLIC_ROUTES } from './constants/routes.constant';
 export {
+  adminContactMessageListPageSchema,
+  adminContactMessageListParamsSchema,
+  adminContactMessageSchema,
+  adminContactMessageTopicSchema,
+  CONTACT_MESSAGE_MAX,
+  CONTACT_MESSAGE_STATUSES,
+  contactMessageStatusSchema,
+  contactSchema,
+  contactSubmitResultSchema,
+  unreadCountSchema,
+  updateContactMessageSchema,
+} from './contact/contact.schema';
+export type {
+  AdminContactMessage,
+  AdminContactMessageListPage,
+  AdminContactMessageListParams,
+  AdminContactMessageTopic,
+  ContactInput,
+  ContactMessageStatus,
+  ContactSubmitResult,
+  UnreadCount,
+  UpdateContactMessageInput,
+} from './contact/contact.type';
+export {
   adminContactTopicSchema,
   contactTopicCreateSchema,
   contactTopicUpdateSchema,
@@ -54,6 +78,7 @@ export {
   DEFAULT_STATS_RANGE,
   healthIssueEntitySchema,
   healthIssueKindSchema,
+  messageStatsSchema,
   parseStatsRange,
   STATS_RANGES,
   statsQuerySchema,
@@ -67,6 +92,7 @@ export type {
   ContentStatusCounts,
   HealthIssueEntity,
   HealthIssueKind,
+  MessageStats,
   StatsQuery,
   StatsRange,
 } from './dashboard/dashboard.type';
