@@ -170,3 +170,208 @@ Content-Type: application/json
 
 ### Admin project archive
 DELETE http://127.0.0.1:4000/api/admin/projects/1
+
+### Admin posts list
+GET http://127.0.0.1:4000/api/admin/posts
+
+### Admin post create
+POST http://127.0.0.1:4000/api/admin/posts
+Content-Type: application/json
+
+{
+  "slug": "sample-note",
+  "titleEn": "Sample note",
+  "titleVi": "",
+  "excerptEn": "A short excerpt",
+  "excerptVi": "",
+  "bodyEn": "Enough words to compute reading minutes for this note.",
+  "bodyVi": "",
+  "takeawaysEn": "Keep the contract",
+  "takeawaysVi": ""
+}
+
+### Admin post get
+GET http://127.0.0.1:4000/api/admin/posts/1
+
+### Admin post update
+PATCH http://127.0.0.1:4000/api/admin/posts/1
+Content-Type: application/json
+
+{
+  "titleEn": "Renamed note",
+  "updatedAt": "2026-01-01T00:00:00.000Z"
+}
+
+### Admin post stale update (409 STALE)
+PATCH http://127.0.0.1:4000/api/admin/posts/1
+Content-Type: application/json
+
+{
+  "titleEn": "Stale write",
+  "updatedAt": "2020-01-01T00:00:00.000Z"
+}
+
+### Admin post archive
+DELETE http://127.0.0.1:4000/api/admin/posts/1
+
+### Admin experience list
+GET http://127.0.0.1:4000/api/admin/experience
+
+### Admin experience create
+POST http://127.0.0.1:4000/api/admin/experience
+Content-Type: application/json
+
+{
+  "company": "Acme",
+  "location": "Remote",
+  "employmentType": "FULL_TIME",
+  "roleEn": "Frontend Engineer",
+  "roleVi": "",
+  "summaryEn": "Shipped the shell",
+  "summaryVi": "",
+  "highlightsEn": "Tokens first",
+  "highlightsVi": "",
+  "startDate": "2024-01-01"
+}
+
+### Admin experience get
+GET http://127.0.0.1:4000/api/admin/experience/1
+
+### Admin experience update
+PATCH http://127.0.0.1:4000/api/admin/experience/1
+Content-Type: application/json
+
+{
+  "roleEn": "Staff Frontend",
+  "updatedAt": "2026-01-01T00:00:00.000Z"
+}
+
+### Admin experience stale update (409 STALE)
+PATCH http://127.0.0.1:4000/api/admin/experience/1
+Content-Type: application/json
+
+{
+  "roleEn": "Stale write",
+  "updatedAt": "2020-01-01T00:00:00.000Z"
+}
+
+### Admin experience delete
+DELETE http://127.0.0.1:4000/api/admin/experience/1
+
+### Admin education list
+GET http://127.0.0.1:4000/api/admin/education
+
+### Admin education create
+POST http://127.0.0.1:4000/api/admin/education
+Content-Type: application/json
+
+{
+  "school": "Example University",
+  "degreeEn": "BSc",
+  "degreeVi": "",
+  "majorEn": "Computer Science",
+  "majorVi": "",
+  "startDate": "2016-09-01",
+  "endDate": "2020-06-01"
+}
+
+### Admin education get
+GET http://127.0.0.1:4000/api/admin/education/1
+
+### Admin education update
+PATCH http://127.0.0.1:4000/api/admin/education/1
+Content-Type: application/json
+
+{
+  "degreeEn": "BEng"
+}
+
+### Admin education delete
+DELETE http://127.0.0.1:4000/api/admin/education/1
+
+### Admin principles list
+GET http://127.0.0.1:4000/api/admin/principles
+
+### Admin principle create
+POST http://127.0.0.1:4000/api/admin/principles
+Content-Type: application/json
+
+{
+  "titleEn": "Contracts first",
+  "titleVi": "",
+  "bodyEn": "Share the DTO before the UI.",
+  "bodyVi": "",
+  "iconKey": "file-check"
+}
+
+### Admin principle get
+GET http://127.0.0.1:4000/api/admin/principles/1
+
+### Admin principle update
+PATCH http://127.0.0.1:4000/api/admin/principles/1
+Content-Type: application/json
+
+{
+  "titleEn": "Keep the contract"
+}
+
+### Admin principle delete
+DELETE http://127.0.0.1:4000/api/admin/principles/1
+
+### Admin profile-stats list
+GET http://127.0.0.1:4000/api/admin/profile-stats
+
+### Admin profile-stat create
+POST http://127.0.0.1:4000/api/admin/profile-stats
+Content-Type: application/json
+
+{
+  "labelEn": "Shipped",
+  "labelVi": "",
+  "value": "12",
+  "source": "MANUAL",
+  "iconKey": "rocket"
+}
+
+### Admin profile-stat get
+GET http://127.0.0.1:4000/api/admin/profile-stats/1
+
+### Admin profile-stat update
+PATCH http://127.0.0.1:4000/api/admin/profile-stats/1
+Content-Type: application/json
+
+{
+  "value": "14"
+}
+
+### Admin profile-stat delete
+DELETE http://127.0.0.1:4000/api/admin/profile-stats/1
+
+### Admin process-steps list
+GET http://127.0.0.1:4000/api/admin/process-steps
+
+### Admin process-step create
+POST http://127.0.0.1:4000/api/admin/process-steps
+Content-Type: application/json
+
+{
+  "titleEn": "Map",
+  "titleVi": "",
+  "captionEn": "Write the contract",
+  "captionVi": "",
+  "iconKey": "route"
+}
+
+### Admin process-step get
+GET http://127.0.0.1:4000/api/admin/process-steps/1
+
+### Admin process-step update
+PATCH http://127.0.0.1:4000/api/admin/process-steps/1
+Content-Type: application/json
+
+{
+  "titleEn": "Sketch"
+}
+
+### Admin process-step delete
+DELETE http://127.0.0.1:4000/api/admin/process-steps/1

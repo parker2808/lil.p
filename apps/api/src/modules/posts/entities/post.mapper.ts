@@ -1,4 +1,10 @@
-import type { Locale, PublicPostDetail, PublicPostListItem } from '@portfolio/contracts';
+import type {
+  AdminPost,
+  AdminPostListItem,
+  Locale,
+  PublicPostDetail,
+  PublicPostListItem,
+} from '@portfolio/contracts';
 
 import { pickGroup } from '../../../i18n/pick-locale.util';
 import type { PostRow } from './post.entity';
@@ -54,5 +60,44 @@ export function toPublicPostDetail(row: PostRow, locale: Locale): PublicPostDeta
     takeaways: takeaways(values.takeaways ?? ''),
     seoTitle: values.seoTitle,
     seoDescription: values.seoDescription,
+  };
+}
+
+export function toAdminDto(row: PostRow): AdminPost {
+  return {
+    id: row.id,
+    slug: row.slug,
+    titleEn: row.titleEn,
+    titleVi: row.titleVi,
+    excerptEn: row.excerptEn,
+    excerptVi: row.excerptVi,
+    bodyEn: row.bodyEn,
+    bodyVi: row.bodyVi,
+    takeawaysEn: row.takeawaysEn,
+    takeawaysVi: row.takeawaysVi,
+    seoTitleEn: row.seoTitleEn,
+    seoTitleVi: row.seoTitleVi,
+    seoDescriptionEn: row.seoDescriptionEn,
+    seoDescriptionVi: row.seoDescriptionVi,
+    readingMinutes: row.readingMinutes,
+    isFeatured: row.isFeatured,
+    status: row.status,
+    publishedAt: row.publishedAt ? row.publishedAt.toISOString() : null,
+    sortOrder: row.sortOrder,
+    tagIds: row.tags.map((tag) => tag.id),
+    updatedAt: row.updatedAt.toISOString(),
+  };
+}
+
+export function toAdminListItem(row: PostRow): AdminPostListItem {
+  const full = toAdminDto(row);
+  return {
+    id: full.id,
+    slug: full.slug,
+    titleEn: full.titleEn,
+    titleVi: full.titleVi,
+    status: full.status,
+    isFeatured: full.isFeatured,
+    updatedAt: full.updatedAt,
   };
 }

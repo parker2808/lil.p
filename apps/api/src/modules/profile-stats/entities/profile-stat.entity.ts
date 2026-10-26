@@ -10,6 +10,7 @@ export const profileStatSelect = {
   iconKey: true,
   sortOrder: true,
   isVisible: true,
+  updatedAt: true,
 } satisfies Prisma.ProfileStatSelect;
 
 export type ProfileStatRow = Prisma.ProfileStatGetPayload<{ select: typeof profileStatSelect }>;
