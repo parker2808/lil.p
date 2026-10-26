@@ -16,6 +16,8 @@ import {
   educationCreateSchema,
   type EducationUpdateInput,
   educationUpdateSchema,
+  type ReorderInput,
+  reorderSchema,
 } from '@portfolio/contracts';
 
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -30,6 +32,13 @@ export class AdminEducationController {
   @Roles('admin', 'user')
   list(): Promise<AdminEducation[]> {
     return this.education.listAdmin();
+  }
+
+  @Patch('order')
+  reorder(
+    @Body(new ZodValidationPipe(reorderSchema)) body: ReorderInput,
+  ): Promise<AdminEducation[]> {
+    return this.education.reorder(body.ids);
   }
 
   @Get(':id')

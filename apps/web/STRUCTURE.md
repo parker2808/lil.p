@@ -106,6 +106,8 @@ app/
 │       ├── projects/page.tsx, projects/[id]/page.tsx
 │       ├── posts/page.tsx, posts/[id]/page.tsx
 │       ├── experience/page.tsx, experience/[id]/page.tsx
+│       ├── education/page.tsx, principles/page.tsx, stats/page.tsx, process/page.tsx
+│       ├── skills/page.tsx, tags/page.tsx, domains/page.tsx
 │       ├── pages/page.tsx         # → admin-pages/views/AdminPagesIndex
 │       ├── pages/[key]/page.tsx   # → admin-pages/views/AdminPagesEditor (page builder)
 │       └── …                      # one folder per admin module

@@ -105,7 +105,10 @@
       "projects": "Projects",
       "posts": "Posts",
       "experience": "Experience",
+      "education": "Education",
+      "principles": "Principles",
       "skills": "Skills",
+      "tags": "Tags",
       "domains": "Domains",
       "process": "Process",
       "stats": "Stats",
@@ -310,6 +313,267 @@
         "dates": "Dates",
         "visible": "Visible",
         "actions": "Actions"
+      }
+    },
+    "pickers": {
+      "icon": {
+        "open": "Choose icon",
+        "search": "Search icons",
+        "empty": "No matching icons"
+      },
+      "hue": {
+        "JADE": "Jade",
+        "AMBER": "Amber",
+        "BLUE": "Blue",
+        "VIOLET": "Violet",
+        "ROSE": "Rose"
+      }
+    },
+    "education": {
+      "title": "Education",
+      "new": "New school",
+      "save": "Save",
+      "editTitle": "Edit education",
+      "createTitle": "New education",
+      "search": "Filter education",
+      "empty": "No education rows yet.",
+      "noResults": "No matching schools.",
+      "clearFilters": "Clear filters",
+      "error": "Education could not be loaded.",
+      "selected": "{count} selected",
+      "range": "{from}–{to} of {total}",
+      "delete": "Delete",
+      "confirmDeleteTitle": "Delete these schools?",
+      "confirmDelete": "Deleted schools leave the about page.",
+      "visible": "Visible",
+      "columns": {
+        "school": "School",
+        "degree": "Degree",
+        "start": "Start"
+      },
+      "fields": {
+        "school": "School",
+        "degreeEn": "Degree (EN)",
+        "degreeVi": "Degree (VI)",
+        "majorEn": "Major (EN)",
+        "majorVi": "Major (VI)",
+        "startDate": "Start date",
+        "endDate": "End date"
+      }
+    },
+    "principles": {
+      "title": "Principles",
+      "new": "New principle",
+      "save": "Save",
+      "editTitle": "Edit principle",
+      "createTitle": "New principle",
+      "search": "Filter principles",
+      "empty": "No principles yet.",
+      "noResults": "No matching principles.",
+      "clearFilters": "Clear filters",
+      "error": "Principles could not be loaded.",
+      "selected": "{count} selected",
+      "range": "{from}–{to} of {total}",
+      "delete": "Delete",
+      "confirmDeleteTitle": "Delete these principles?",
+      "confirmDelete": "Deleted principles leave the about page.",
+      "visible": "Visible",
+      "columns": {
+        "title": "Title",
+        "icon": "Icon"
+      },
+      "fields": {
+        "titleEn": "Title (EN)",
+        "titleVi": "Title (VI)",
+        "bodyEn": "Body (EN)",
+        "bodyVi": "Body (VI)",
+        "icon": "Icon"
+      }
+    },
+    "stats": {
+      "title": "Profile stats",
+      "new": "New stat",
+      "save": "Save",
+      "editTitle": "Edit stat",
+      "createTitle": "New stat",
+      "search": "Filter stats",
+      "empty": "No stats yet.",
+      "noResults": "No matching stats.",
+      "clearFilters": "Clear filters",
+      "error": "Stats could not be loaded.",
+      "selected": "{count} selected",
+      "range": "{from}–{to} of {total}",
+      "delete": "Delete",
+      "confirmDeleteTitle": "Delete these stats?",
+      "confirmDelete": "Deleted stats leave the home band.",
+      "visible": "Visible",
+      "columns": {
+        "label": "Label",
+        "value": "Value",
+        "source": "Source"
+      },
+      "fields": {
+        "labelEn": "Label (EN)",
+        "labelVi": "Label (VI)",
+        "value": "Value",
+        "suffix": "Suffix",
+        "source": "Source",
+        "icon": "Icon"
+      },
+      "source": {
+        "MANUAL": "Manual",
+        "YEARS_COMPUTED": "Years computed",
+        "PROJECT_COUNT": "Project count"
+      }
+    },
+    "process": {
+      "title": "Process steps",
+      "new": "New step",
+      "save": "Save",
+      "editTitle": "Edit step",
+      "createTitle": "New step",
+      "search": "Filter steps",
+      "empty": "No process steps yet.",
+      "noResults": "No matching steps.",
+      "clearFilters": "Clear filters",
+      "error": "Process steps could not be loaded.",
+      "selected": "{count} selected",
+      "range": "{from}–{to} of {total}",
+      "delete": "Delete",
+      "confirmDeleteTitle": "Delete these steps?",
+      "confirmDelete": "Deleted steps leave the home process.",
+      "visible": "Visible",
+      "columns": {
+        "title": "Title",
+        "caption": "Caption"
+      },
+      "fields": {
+        "titleEn": "Title (EN)",
+        "titleVi": "Title (VI)",
+        "captionEn": "Caption (EN)",
+        "captionVi": "Caption (VI)",
+        "icon": "Icon"
+      }
+    },
+    "skills": {
+      "title": "Skills",
+      "new": "New skill",
+      "save": "Save",
+      "editTitle": "Edit skill",
+      "createTitle": "New skill",
+      "search": "Filter skills",
+      "empty": "No skills yet.",
+      "noResults": "No matching skills.",
+      "clearFilters": "Clear filters",
+      "error": "Skills could not be loaded.",
+      "selected": "{count} selected",
+      "range": "{from}–{to} of {total}",
+      "delete": "Delete",
+      "confirmDeleteTitle": "Delete these skills?",
+      "confirmDelete": "Deleted skills leave projects and the marquee.",
+      "visible": "Visible",
+      "marqueeOn": "On",
+      "marqueeOff": "Off",
+      "columns": {
+        "name": "Name",
+        "depth": "Depth",
+        "marquee": "Marquee"
+      },
+      "fields": {
+        "name": "Name",
+        "slug": "Slug",
+        "category": "Category",
+        "depth": "Depth",
+        "marquee": "Show in marquee"
+      },
+      "depth": {
+        "DAILY": "Daily",
+        "SHIPPED": "Shipped",
+        "GROWING": "Growing"
+      }
+    },
+    "categories": {
+      "title": "Skill categories",
+      "new": "New category",
+      "save": "Save",
+      "editTitle": "Edit category",
+      "createTitle": "New category",
+      "search": "Filter categories",
+      "empty": "No categories yet.",
+      "noResults": "No matching categories.",
+      "clearFilters": "Clear filters",
+      "error": "Categories could not be loaded.",
+      "selected": "{count} selected",
+      "range": "{from}–{to} of {total}",
+      "delete": "Delete",
+      "confirmDeleteTitle": "Delete these categories?",
+      "confirmDelete": "Categories in use cannot be deleted.",
+      "visible": "Visible",
+      "columns": {
+        "name": "Name",
+        "count": "Skills"
+      },
+      "fields": {
+        "nameEn": "Name (EN)",
+        "nameVi": "Name (VI)"
+      }
+    },
+    "tags": {
+      "title": "Tags",
+      "new": "New tag",
+      "save": "Save",
+      "editTitle": "Edit tag",
+      "createTitle": "New tag",
+      "search": "Filter tags",
+      "empty": "No tags yet.",
+      "noResults": "No matching tags.",
+      "clearFilters": "Clear filters",
+      "error": "Tags could not be loaded.",
+      "selected": "{count} selected",
+      "range": "{from}–{to} of {total}",
+      "delete": "Delete",
+      "confirmDeleteTitle": "Delete these tags?",
+      "confirmDelete": "Deleted tags leave posts.",
+      "visible": "Visible",
+      "columns": {
+        "name": "Name",
+        "slug": "Slug"
+      },
+      "fields": {
+        "nameEn": "Name (EN)",
+        "nameVi": "Name (VI)"
+      }
+    },
+    "domains": {
+      "title": "Domains",
+      "new": "New domain",
+      "save": "Save",
+      "editTitle": "Edit domain",
+      "createTitle": "New domain",
+      "search": "Filter domains",
+      "empty": "No domains yet.",
+      "noResults": "No matching domains.",
+      "clearFilters": "Clear filters",
+      "error": "Domains could not be loaded.",
+      "selected": "{count} selected",
+      "range": "{from}–{to} of {total}",
+      "delete": "Delete",
+      "confirmDeleteTitle": "Delete these domains?",
+      "confirmDelete": "Deleted domains leave the home grid.",
+      "visible": "Visible",
+      "columns": {
+        "name": "Name",
+        "slug": "Slug",
+        "hue": "Hue"
+      },
+      "fields": {
+        "slug": "Slug",
+        "nameEn": "Name (EN)",
+        "nameVi": "Name (VI)",
+        "descriptionEn": "Description (EN)",
+        "descriptionVi": "Description (VI)",
+        "hue": "Hue",
+        "icon": "Icon"
       }
     }
   }
