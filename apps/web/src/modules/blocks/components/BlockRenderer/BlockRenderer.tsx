@@ -61,7 +61,11 @@ function renderBlock(
 
   return (
     <SectionBoundary key={block.id} fallback={<Fallback />} labels={labels}>
-      <BlockLayout layout={block.layout} id={block.key}>
+      <BlockLayout
+        layout={block.layout}
+        id={block.key}
+        className={block.surface === 'PLAIN' ? 'mx-auto max-w-5xl px-6 py-16' : undefined}
+      >
         <Renderer block={block} context={context} />
       </BlockLayout>
     </SectionBoundary>

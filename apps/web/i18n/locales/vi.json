@@ -22,6 +22,17 @@
     "retry": "Thử lại",
     "notFound": "Không tìm thấy trang này"
   },
+  "blocks": {
+    "nda": "NDA",
+    "projects": "dự án",
+    "minutes": "phút",
+    "pause": "Tạm dừng",
+    "play": "Phát",
+    "daily": "Hàng ngày",
+    "shipped": "Đã ship",
+    "growing": "Đang lớn",
+    "diagram": "Migration từ case study nổi bật"
+  },
   "content": {
     "copy": "Sao chép",
     "copied": "Đã sao chép",

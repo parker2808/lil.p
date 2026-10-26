@@ -29,7 +29,7 @@ export async function CtaBandBlock({
   const social = site.socialLinks.filter((link) => link.showInCta).slice(0, 2);
 
   return (
-    <div lang={block.lang}>
+    <div className="col-span-full" lang={block.lang}>
       <CtaBand
         title={props.title}
         intro={props.intro}
