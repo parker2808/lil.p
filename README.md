@@ -14,9 +14,10 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 ## Commands
 
 ```bash
-pnpm install                 # all workspaces
+pnpm install                 # all workspaces (also installs git hooks via Husky)
 pnpm dev                     # web :3000 + api :4000 in parallel (MySQL via docker compose)
 pnpm lint | typecheck | test | build
+pnpm format | format:check   # Prettier (one root config; format:check also runs in CI)
 pnpm check:content           # no CV strings in UI code, no email/phone anywhere
 pnpm check:deps              # no paid Tiptap packages or private Tiptap registry; every @tiptap/* and @dnd-kit/* is MIT
 pnpm db:up                   # MySQL :3306 + Adminer :8080 (127.0.0.1)
@@ -49,3 +50,13 @@ Written for a first pass at backend. Glossary: spec [§1.6](./docs/design/portfo
 4. **Environment variables.** Passwords live in `.env`, never in git. `.env.example` shows which keys exist, with fake values. Compose reads `.env` and passes `MYSQL_*` into the `db` container. The API (later) will use `DATABASE_URL`.
 5. **Init scripts.** Files in `/docker-entrypoint-initdb.d` (`infra/mysql/init/`) run **only the first time** the volume is created. `01-dev-grants.sql` lets the `app` user create and drop databases, which Prisma's shadow database needs for `migrate dev` (avoids error P3014). If you already had a volume, run the grant from `01-dev-grants.sql` by hand in Adminer, or reset with `down -v`.
 6. **Healthcheck.** Compose pings MySQL (`mysqladmin ping -h localhost`) until it answers, so other services (Adminer now, the API in T58) start only when the DB is ready. `docker compose ps` shows `healthy` when that succeeds.
+
+## Git hooks
+
+`pnpm install` sets up [Husky](https://typicode.github.io/husky/) (v9). After that:
+
+- **pre-commit** — formats and lint-fixes only the files you staged
+- **commit-msg** — commit messages must look like `chore: add hooks` or `feat(web): …` (same as PR titles)
+- **pre-push** — runs `pnpm typecheck`
+
+Beginner walkthrough: [STRUCTURE.md § Git hooks](./STRUCTURE.md#git-hooks-husky).

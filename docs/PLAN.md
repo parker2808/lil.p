@@ -2,7 +2,7 @@
 
 [Tiếng Việt](./PLAN.vi.md) · Structure: [root](../STRUCTURE.md) · [web](../apps/web/STRUCTURE.md) · [api](../apps/api/STRUCTURE.md) · Design snapshot: [docs/design/](./design/)
 
-This plan turns Parker's design (spec, Figma, mockups, practice roadmap) into 66 small tasks. Each task is one pull request that an implementation agent, or Parker, can finish and merge on its own. The tasks follow the practice roadmap order (p01–p33, milestones M0–M7), so the code grows the same way the lessons do.
+This plan turns Parker's design (spec, Figma, mockups, practice roadmap) into 67 small tasks. Each task is one pull request that an implementation agent, or Parker, can finish and merge on its own. The tasks follow the practice roadmap order (p01–p33, milestones M0–M7), so the code grows the same way the lessons do.
 
 ## Contents
 
@@ -21,7 +21,7 @@ This plan turns Parker's design (spec, Figma, mockups, practice roadmap) into 66
 
 ## 0. How to use this plan
 
-1. Pick the lowest-numbered task whose **Depends** are all merged. Tasks in the same milestone with no dependency on each other can run in parallel. A task with a letter suffix (T10a, T45b) was added later and sits right after its number: T10a comes after T10 and before T11.
+1. Pick the lowest-numbered task whose **Depends** are all merged. Tasks in the same milestone with no dependency on each other can run in parallel. A task with a letter suffix (T01a, T10a, T45b) was added later and sits right after its number: T01a comes after T01 and before T02.
 2. Read, in this order: the task, the spec sections it cites, the Figma nodes and mockup it names, and the STRUCTURE.md files for the paths.
 3. Work on a branch, open one PR per task, and use the task's **PR title**. Where the roadmap gives a commit message for that step, the PR title reuses it.
 4. Copy the task's **Acceptance** list into the PR description as a checklist, plus the [Definition of Done](#2-ground-rules-and-definition-of-done). Tick each item with evidence (a command output, a screenshot, a test name).
@@ -41,7 +41,7 @@ Task size: **S** fits in a short session (one file group, no new concept); **M**
 | 5 | **STRUCTURE.md** files | Where every file goes, naming | [root](../STRUCTURE.md), [apps/web](../apps/web/STRUCTURE.md), [apps/api](../apps/api/STRUCTURE.md) |
 | 6 | `colors.json` (Figma export) | Test oracle for the color tokens | [docs/design/colors.json](./design/colors.json): 58 tokens × light/dark, identical to spec §3.6 |
 
-**Precedence when sources disagree:** the spec wins on values, behavior, data and API (1). Figma names follow the spec, so a mismatch in a value is a Figma bug: use the spec value and note it in the PR (2). Layout follows the mockups and Figma frames (3). Order and teaching follow the roadmap (4), except where a decision in §3 replaces a roadmap detail with the spec's choice. File paths follow STRUCTURE.md (5), which replaces the illustrative paths in the spec (see D20). A decision marked **Parker** in §3 is Parker's own call after the spec was written; it overrides every source above, including the spec (today: D7 and D24 for auth, D25 for the admin editor, D26 for block-based pages).
+**Precedence when sources disagree:** the spec wins on values, behavior, data and API (1). Figma names follow the spec, so a mismatch in a value is a Figma bug: use the spec value and note it in the PR (2). Layout follows the mockups and Figma frames (3). Order and teaching follow the roadmap (4), except where a decision in §3 replaces a roadmap detail with the spec's choice. File paths follow STRUCTURE.md (5), which replaces the illustrative paths in the spec (see D20). A decision marked **Parker** in §3 is Parker's own call after the spec was written; it overrides every source above, including the spec (today: D7 and D24 for auth, D25 for the admin editor, D26 for block-based pages, D27 for repo-wide format hooks).
 
 **Snapshot notes.**
 
@@ -64,7 +64,7 @@ Task size: **S** fits in a short session (one file group, no new concept); **M**
 
 **Definition of Done (copy into every PR).**
 
-- [ ] `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` pass locally and in CI.
+- [ ] `pnpm lint`, `pnpm format:check` (from T01a), `pnpm typecheck`, `pnpm test`, `pnpm build` pass locally and in CI.
 - [ ] `pnpm check:content` passes (from T14 on).
 - [ ] `pnpm check:deps` passes (from T42 on): no paid Tiptap packages (D25).
 - [ ] Acceptance items of the task are ticked with evidence.
@@ -95,7 +95,7 @@ These settle the places where the sources disagree or say nothing. Each is the d
 | D13 | Two seed profiles in `apps/api/prisma/seed/profiles/`: **`demo`** (dev, CI, screenshots: projects `PUBLISHED`, 3 sample posts, sample messages and views) and **`baseline`** (production first boot: spec §1.5 seed list, projects `DRAFT`, 0 posts). Chosen by `SEED_PROFILE`. All values are placeholders from the mockups/wireframes; metrics shown in demo come only from the wireframes. | Spec §1.5 seeds drafts and 0 posts, but every public screen needs published data to build and test |
 | D14 | Media accepts JPG, PNG, WebP, AVIF and **PDF** (resume files for `Profile.resumeEnId/ViId`). Images get WebP variants; PDFs are stored as-is. Max 10 MB. | Spec §1.5 links resumes to `Media` |
 | D15 | Storybook lives in `packages/ui` (`@storybook/react-vite`, addon-a11y, a light/dark toolbar switch). Every product component ships a story. | Spec §6 Days 1–6 build components against fixtures |
-| D16 | CI (GitHub Actions) starts in T01 with install + lint + typecheck + build and grows with each task (tests T05+, Storybook build T06, API tests T29, e2e T56). | Roadmap p28 adds CI late; earlier CI keeps every PR mergeable |
+| D16 | CI (GitHub Actions) starts in T01 with install + lint + typecheck + build and grows with each task (`format:check` T01a, tests T05+, Storybook build T06, API tests T29, e2e T56). | Roadmap p28 adds CI late; earlier CI keeps every PR mergeable |
 | D17 | The test database is a second MySQL service under the compose profile `test` (port 3307), introduced in T29 with the first integration tests. | Roadmap p15/p28 |
 | D18 | Default blocks per page, seeded as block `key` → block type (D26). **HOME:** `hero` → `hero`, `stats` → `stat-band`, `marquee` → `tech-marquee` (stats and marquee share one band), `featured` → `featured-case`, `domains` → `domain-grid`, `work` → `case-grid`, `process` → `process`, `skills` → `skill-groups`, `notes` → `post-list`, `cta` → `cta-band`. **ABOUT:** `intro` → `about-intro`, `stats` → `stat-band` (compact), `experience` → `timeline`, `principles` → `principle-list`, `skills` → `skill-groups`, `education` → `education-list`, `cv` → `cv-download`. **PROJECTS:** `header` → `page-header`, `projects` → `projects-browser`. **NOTES:** `header` → `page-header`, `notes` → `notes-browser`. **CONTACT:** `contact` → `contact-form`. The keys are the old `PageSection` keys, so anchors such as `/#work` keep working. | Spec §1.5 lists section examples; §5.1–5.6 need these. `header` fills the gap for list-page titles. CONTACT's heading lives inside `contact-form`, because the mockup puts it in the column next to the form |
 | D19 | Locale fallback is per field group. A public DTO group (e.g. a project card, a post body) uses Vietnamese only when every translatable field that has an English value also has a Vietnamese value; otherwise the whole group is English with `lang: "en"`. | Spec §1.5 "falling back to English with `lang` on the field group" |
@@ -106,6 +106,7 @@ These settle the places where the sources disagree or say nothing. Each is the d
 | D24 | **Parker.** Auth uses **JWTs instead of MySQL sessions**: `@nestjs/jwt` signs, `passport-jwt` (via `@nestjs/passport`) verifies. A short **access token** (15 min, payload `{ sub, role }`) and a longer **refresh token** (7 days, payload `{ sub, ver }`), signed with two different secrets. Both live in `httpOnly` cookies set by the API (`access_token` on `Path=/`, `refresh_token` on `Path=/api/auth`), never in `localStorage` or JS memory; this works because Next proxies `/api/*`, so the cookies are first-party for the web origin (D9). There is no `Session` table: `User.tokenVersion` is the kill switch ("sign out everywhere", deactivate, password change bump it, and every refresh checks it). Trade-off, accepted: an access token already issued keeps working until it expires (at most 15 min), and plain logout clears this browser's cookies only. | Replaces spec §1.5 `Session`, §1.6 Auth row (which preferred sessions) and roadmap p18 "MySQL sessions"; p18's learning goals (hashing, httpOnly cookies, logout) stay |
 | D25 | **Parker.** The admin `MarkdownEditor` is built on **Tiptap v3** (ProseMirror), using only free MIT packages from the public npm registry: `@tiptap/react`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/markdown`, `@tiptap/extensions` and `@tiptap/extension-*`. No Tiptap Pro or paid extensions, no `@tiptap-pro/*` registry, no Tiptap Cloud, Collaboration, Comments or AI, no Tiptap account or token; `pnpm check:deps` enforces this in CI (T42). Storage does not change (D3): the editor loads with `contentType: 'markdown'` and saves `editor.getMarkdown()`. Its schema is the Markdown allowlist shared with the public renderer (`packages/contracts/src/constants/markdown.constant.ts`, T23), so the editor cannot produce what the public site would drop. Code blocks use `@tiptap/extension-code-block-lowlight` + `lowlight` while writing; the Preview mode shows the exact public Shiki output. | Replaces spec §4.0 and §4.3 `MarkdownEditor` (CodeMirror 6); the spec's toolbar, slash menu, image paste, modes, word count and `SaveStatus` stay |
 | D26 | **Parker.** Public pages are **built from blocks managed in the admin**. Each of the five route pages (`HOME`, `ABOUT`, `PROJECTS`, `NOTES`, `CONTACT`) is an ordered list of `PageBlock` rows: `type`, `key` (anchor), `props` (MySQL `JSON`), a `layout` preset, `surface`, `sortOrder`, `isVisible`. Block types come only from a **code-side registry** of design-system components (`packages/contracts/src/blocks/`). Each type has a zod 4 props schema, which the API uses to validate every write and every read and which the admin turns into a TanStack Form (`z.toJSONSchema` + `.meta()` widget hints), plus its allowed pages, layouts and limits. Layout is chosen from presets only (`ONE`, `TWO`, `THREE`, `FOUR`, `SPLIT_8_4`, `SPLIT_4_8`, `SPLIT_7_5`) with fixed responsive rules (§4); there is no free-form per-field grid. The admin page builder (T45b) reorders blocks by drag and drop with `@dnd-kit/core` + `@dnd-kit/sortable` (MIT; move up/down stays as the keyboard and single-pointer alternative), adds, duplicates, removes and hides blocks, and edits props in the generated form. Each page has a draft (the rows) and published versions (`PageVersion` JSON snapshots): publish copies the draft into a new version, any version can be restored into the draft, and a live preview shows the draft through Next draft mode (T52a). Public pages stay React Server Components with cache tags (`page:{key}` + each block's data tags). An unknown type or invalid props never breaks a page: the API drops that block and logs it, the web renders nothing for a type it does not know, and each block has its own `SectionBoundary`. `PageSection` becomes `PageBlock`: the same order and visibility model, with its `title`, `intro` and `ctaLabel` columns moved into `props`, so there is no second model. Detail pages (`/projects/[slug]`, `/notes/[slug]`) keep their fixed templates, and long text stays Markdown (D3). | Replaces spec §1.5 `PageSection` (fixed keys, one component per key), the §4.5 ordering rule and the §5.10 Sections tab; brings back roadmap p14 `BlockRenderer` and p22 "block editor list" at page level. Free-form grid placement and side-by-side blocks are a possible future extension (Q13) |
+| D27 | **Parker.** One root Prettier + Husky v9 toolchain for the whole monorepo (future `apps/web`, `apps/api`, `packages/*`): keep T01's `.prettierrc` and `eslint.config.mjs`, add `format` / `format:check`, lint-staged on pre-commit, commitlint (conventional commits, same shape as PR titles) on commit-msg, optional `pnpm typecheck` on pre-push, and `pnpm format:check` in CI. No per-app format/lint config unless a later app truly needs an override. | T01 shipped shared config but not git hooks or a repo-wide format check |
 
 ## 4. Architecture at a glance
 
@@ -231,6 +232,7 @@ Paths: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct*
 | --- | --- | --- | --- | --- | --- |
 | **M0** | **Groundwork** | | | | |
 | T01 | Monorepo scaffold, toolchain, minimal CI | p01 | none | S | root |
+| T01a | Prettier, Husky, lint-staged, commitlint | — (Parker, D27) | T01 | S | root |
 | T02 | Docker Compose: MySQL 8.4 + Adminer | p02 | T01 | S | `docker-compose.yml`, `infra/mysql/` |
 | T03 | SQL by hand notes (Parker) | p03 | T02 | S | `docs/sql-notes.sql` |
 | T04 | Design tokens + shadcn theme in `packages/ui` | p04 | T01 | M | ui `styles/`, `lib/` |
@@ -304,7 +306,7 @@ Paths: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct*
 | T60 | Production seed cleanup + placeholder check | p32 | T45, T51, T52a | S | api `prisma/seed/`, `scripts/` |
 | T61 | Deploy pipeline + launch checklist | p33 | T58, T59, T60 | M | `.github/workflows/deploy.yml`, `docs/` |
 
-Roadmap coverage: every step p01–p33 maps to at least one task. p04 is split into T04–T06, p08 into T10–T10a, p09 into T11–T14, p14 into T20–T28, p15 into T29–T32a, p21 into T39–T41, p22 into T42–T46 (with T45a, T45b) and p25 into T52–T52a.
+Roadmap coverage: every step p01–p33 maps to at least one task. p04 is split into T04–T06, p08 into T10–T10a, p09 into T11–T14, p14 into T20–T28, p15 into T29–T32a, p21 into T39–T41, p22 into T42–T46 (with T45a, T45b) and p25 into T52–T52a. T01a (Parker, D27) adds repo-wide format hooks after T01.
 
 ## 7. Tasks
 
@@ -338,6 +340,35 @@ Each task uses the same template: **Roadmap · Spec · Depends · Size**, then G
 - [ ] The squash-merge commit message is `chore: init portfolio monorepo` (roadmap p01).
 
 **PR title:** `chore: init portfolio monorepo`
+
+#### T01a · Prettier, Husky, lint-staged, commitlint
+
+**Roadmap** — (Parker, D27) · **Spec** — · **Depends** T01 · **Size** S
+
+**Goal.** One root format and git-hook toolchain that covers future `apps/web`, `apps/api` and `packages/*` without per-app config.
+
+**Scope.**
+- Keep T01's root `.prettierrc` and `eslint.config.mjs`. Add `prettier-plugin-tailwindcss` so Tailwind classes sort when T04 adds them.
+- `.prettierignore` for lockfiles, build output, uploads, Storybook static, Husky internals, and the frozen design snapshot.
+- Root scripts `format` (`prettier --write .`) and `format:check` (`prettier --check .`) — one command for the whole tree, not `pnpm -r`.
+- Husky v9 + `prepare` script. **pre-commit** → lint-staged (Prettier `--write` on staged `ts`/`tsx`/`js`/`json`/`md`/`css`/`yml`; ESLint `--fix` on JS/TS). **commit-msg** → commitlint (conventional commits, same shape as PR titles like `chore: …`). **pre-push** → `pnpm typecheck` (optional safety net).
+- CI: add `pnpm format:check`.
+- README + STRUCTURE.md: a short beginner section on the hooks.
+
+**Out of scope.** Per-app Prettier/ESLint. Docker (T02). Creating apps or packages (T04, T05, T07, T09).
+
+**Files.** Root: `package.json`, `pnpm-lock.yaml`, `.prettierrc`, `.prettierignore`, `commitlint.config.mjs`, `.husky/pre-commit`, `.husky/commit-msg`, `.husky/pre-push`, `.github/workflows/ci.yml`, `README.md`, `STRUCTURE.md`, `docs/PLAN.md`, `docs/PLAN.vi.md`.
+
+**Design.** None.
+
+**Acceptance.**
+- [ ] `pnpm format:check` exits 0.
+- [ ] `pnpm lint` and `pnpm typecheck` still exit 0.
+- [ ] CI includes `pnpm format:check` and is green.
+- [ ] A commit message that is not conventional is rejected by the commit-msg hook.
+- [ ] No `apps/*` or `packages/*` Prettier/ESLint config.
+
+**PR title:** `chore: add prettier, husky and commitlint`
 
 #### T02 · Docker Compose: MySQL 8.4 + Adminer
 

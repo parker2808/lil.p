@@ -23,7 +23,7 @@ docker-compose.yml        # dev: MySQL + Adminer (+ test DB under the `test` pro
 compose.prod.yml          # production: db, api, web, caddy, backup
 ```
 
-Content (profile, projects, posts, settings, translations, and each page's blocks: their order, layout and props) lives in MySQL and is edited in `/admin`. It is never committed as code. Code only decides which block *types* exist (PLAN D26). Seed data in `apps/api/prisma/seed/` holds placeholders only (`<email>`, `<phone>`).
+Content (profile, projects, posts, settings, translations, and each page's blocks: their order, layout and props) lives in MySQL and is edited in `/admin`. It is never committed as code. Code only decides which block _types_ exist (PLAN D26). Seed data in `apps/api/prisma/seed/` holds placeholders only (`<email>`, `<phone>`).
 
 ## Dependency direction
 
@@ -98,23 +98,23 @@ Imports: `@portfolio/ui/components/CaseCard`, `@portfolio/ui/components/ui/butto
 
 ## Where does it go?
 
-| Thing | Location |
-| --- | --- |
-| A token, color, font size | `packages/ui/src/styles/globals.css` only |
-| A shadcn primitive | `packages/ui/src/components/ui/` via `pnpm --filter @portfolio/ui dlx shadcn@latest add …` |
-| A reusable visual component (no fetching) | `packages/ui/src/components/[Name]/` |
-| A Tiptap extension for the admin editor | `packages/ui/src/components/MarkdownEditor/extensions/[name].extension.ts`, allowed only if the construct is in `markdown.constant.ts` |
-| A page, section container, or anything using Next/i18n/TanStack Query | `apps/web/src/modules/[module]/` |
-| A request/response shape or validation rule | `packages/contracts/src/[domain]/[domain].schema.ts` |
-| A new block type (PLAN D26, ground rule 8) | one PR, three registries: `packages/contracts/src/blocks/definitions/[type].block.ts` + `block-registry.constant.ts`; the renderer `apps/web/src/modules/blocks/components/[Name]Block/` + `blocks/constants/block-renderers.constant.ts`; the admin entry in `apps/web/src/modules/admin-pages/constants/block-editor-meta.constant.ts` + `admin.blocks.*` labels in `en.json` |
-| A layout preset or its responsive rule | `packages/contracts/src/blocks/block-layout.constant.ts` + `packages/ui/src/components/BlockLayout/` (both, same PR) |
-| Which blocks a page shows, their order, layout and text | the database (`Page`, `PageBlock`, `PageVersion`), edited in `/admin/pages`; never in code |
-| A DB table or column | `apps/api/prisma/schema.prisma` + a new migration |
-| Business logic or a DB query | `apps/api/src/modules/[domain]/[domain].service.ts` |
-| Who may call a route (`admin` / `user`) | `@Roles()` on the API controller (`apps/api/src/common/decorators/roles.decorator.ts`); the web only hides controls with `RoleGate` |
-| Auth tokens | httpOnly cookies set by the API; never stored or read by web code (`apps/api/STRUCTURE.md`, Auth) |
-| A fixed UI label ("Copy email", "min read") | `apps/web/i18n/locales/{en,vi}.json` |
-| Any visible content (names, headings, bios, SEO) | the database, edited in `/admin` |
+| Thing                                                                 | Location                                                                                                                                                                                                                                                                                                                                                                        |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A token, color, font size                                             | `packages/ui/src/styles/globals.css` only                                                                                                                                                                                                                                                                                                                                       |
+| A shadcn primitive                                                    | `packages/ui/src/components/ui/` via `pnpm --filter @portfolio/ui dlx shadcn@latest add …`                                                                                                                                                                                                                                                                                      |
+| A reusable visual component (no fetching)                             | `packages/ui/src/components/[Name]/`                                                                                                                                                                                                                                                                                                                                            |
+| A Tiptap extension for the admin editor                               | `packages/ui/src/components/MarkdownEditor/extensions/[name].extension.ts`, allowed only if the construct is in `markdown.constant.ts`                                                                                                                                                                                                                                          |
+| A page, section container, or anything using Next/i18n/TanStack Query | `apps/web/src/modules/[module]/`                                                                                                                                                                                                                                                                                                                                                |
+| A request/response shape or validation rule                           | `packages/contracts/src/[domain]/[domain].schema.ts`                                                                                                                                                                                                                                                                                                                            |
+| A new block type (PLAN D26, ground rule 8)                            | one PR, three registries: `packages/contracts/src/blocks/definitions/[type].block.ts` + `block-registry.constant.ts`; the renderer `apps/web/src/modules/blocks/components/[Name]Block/` + `blocks/constants/block-renderers.constant.ts`; the admin entry in `apps/web/src/modules/admin-pages/constants/block-editor-meta.constant.ts` + `admin.blocks.*` labels in `en.json` |
+| A layout preset or its responsive rule                                | `packages/contracts/src/blocks/block-layout.constant.ts` + `packages/ui/src/components/BlockLayout/` (both, same PR)                                                                                                                                                                                                                                                            |
+| Which blocks a page shows, their order, layout and text               | the database (`Page`, `PageBlock`, `PageVersion`), edited in `/admin/pages`; never in code                                                                                                                                                                                                                                                                                      |
+| A DB table or column                                                  | `apps/api/prisma/schema.prisma` + a new migration                                                                                                                                                                                                                                                                                                                               |
+| Business logic or a DB query                                          | `apps/api/src/modules/[domain]/[domain].service.ts`                                                                                                                                                                                                                                                                                                                             |
+| Who may call a route (`admin` / `user`)                               | `@Roles()` on the API controller (`apps/api/src/common/decorators/roles.decorator.ts`); the web only hides controls with `RoleGate`                                                                                                                                                                                                                                             |
+| Auth tokens                                                           | httpOnly cookies set by the API; never stored or read by web code (`apps/api/STRUCTURE.md`, Auth)                                                                                                                                                                                                                                                                               |
+| A fixed UI label ("Copy email", "min read")                           | `apps/web/i18n/locales/{en,vi}.json`                                                                                                                                                                                                                                                                                                                                            |
+| Any visible content (names, headings, bios, SEO)                      | the database, edited in `/admin`                                                                                                                                                                                                                                                                                                                                                |
 
 ## Naming (whole repo)
 
@@ -127,10 +127,22 @@ Imports: `@portfolio/ui/components/CaseCard`, `@portfolio/ui/components/ui/butto
 ## Root commands
 
 ```bash
-pnpm install                 # all workspaces
+pnpm install                 # all workspaces (also installs git hooks via Husky)
 pnpm dev                     # web :3000 + api :4000 in parallel (MySQL via docker compose)
 pnpm lint | typecheck | test | build
+pnpm format                  # Prettier --write across the repo (one root config)
+pnpm format:check            # Prettier --check (also runs in CI)
 pnpm check:content           # no CV strings in UI code, no email/phone anywhere
 pnpm check:deps              # no paid Tiptap packages or private Tiptap registry; every @tiptap/* and @dnd-kit/* is MIT
 docker compose up -d db adminer
 ```
+
+## Git hooks (Husky)
+
+These run automatically after `pnpm install`. There is one root Prettier + ESLint config; `apps/web`, `apps/api` and `packages/*` do not need their own.
+
+- **pre-commit** (`git commit`) — [lint-staged](https://github.com/lint-staged/lint-staged) formats staged `ts`/`tsx`/`js`/`json`/`md`/`css`/`yml` with Prettier and runs `eslint --fix` on JS/TS.
+- **commit-msg** (`git commit`) — [commitlint](https://commitlint.js.org) checks the message is a [conventional commit](https://www.conventionalcommits.org/) (`feat: …`, `chore: …`, `docs: …`, …), the same shape as our PR titles.
+- **pre-push** (`git push`) — `pnpm typecheck` (optional safety net; CI still typechecks).
+
+If a hook fails, git stops. Fix the files or the message and try again. To skip hooks in an emergency only: `HUSKY=0 git commit …` or `--no-verify`.
