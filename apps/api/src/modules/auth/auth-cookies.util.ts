@@ -9,18 +9,27 @@ export const ACCESS_COOKIE_PATH = '/';
 export const REFRESH_COOKIE_PATH = '/api/auth';
 
 /**
- * Cookie flags from PLAN D24. T61 will switch SameSite to None (and keep
- * Secure) so Vercel can send cookies to the Render API across sites.
+ * Cookie flags from PLAN D24. Secure is on whenever NODE_ENV=production
+ * (T59). T61 will switch SameSite to None (and keep Secure) so Vercel can
+ * send cookies to the Render API across sites.
  */
+export function authCookieFlags(
+  isProduction: boolean,
+): Pick<CookieOptions, 'httpOnly' | 'sameSite' | 'secure'> {
+  return {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: isProduction,
+  };
+}
+
 function cookieOptions(
   config: AppConfigService,
   path: string,
   maxAgeSeconds: number,
 ): CookieOptions {
   return {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: config.isProduction,
+    ...authCookieFlags(config.isProduction),
     path,
     maxAge: maxAgeSeconds * 1000,
   };
