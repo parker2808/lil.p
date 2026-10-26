@@ -15,6 +15,10 @@ export { ICON_KEYS, iconKeySchema } from './constants/icons.constant';
 export { qk } from './constants/query-keys.constant';
 export type { PublicRoute } from './constants/routes.constant';
 export { PUBLIC_ROUTES } from './constants/routes.constant';
+export type { Hue } from './domains/domains.enum';
+export { hueSchema } from './domains/domains.enum';
+export { publicDomainSchema, publicProjectDomainSchema } from './domains/domains.schema';
+export type { PublicDomain, PublicProjectDomain } from './domains/domains.type';
 export { publicEducationSchema } from './education/education.schema';
 export type { PublicEducation } from './education/education.type';
 export type { EmploymentType } from './experience/experience.enum';
@@ -46,6 +50,22 @@ export type { StatSource } from './profile-stats/profile-stats.enum';
 export { statSourceSchema } from './profile-stats/profile-stats.enum';
 export { publicProfileStatSchema } from './profile-stats/profile-stats.schema';
 export type { PublicProfileStat } from './profile-stats/profile-stats.type';
+export type { ContentStatus } from './projects/projects.enum';
+export { contentStatusSchema } from './projects/projects.enum';
+export {
+  publicProjectDetailSchema,
+  publicProjectExperienceSchema,
+  publicProjectListItemSchema,
+  publicProjectListQuerySchema,
+  publicProjectMetricSchema,
+} from './projects/projects.schema';
+export type {
+  PublicProjectDetail,
+  PublicProjectExperience,
+  PublicProjectListItem,
+  PublicProjectListQuery,
+  PublicProjectMetric,
+} from './projects/projects.type';
 export { publicSiteSchema } from './public-site/public-site.schema';
 export type { PublicSite } from './public-site/public-site.type';
 export type { Availability } from './site-settings/site-settings.enum';
