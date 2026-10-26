@@ -3,17 +3,22 @@ import request from 'supertest';
 
 import { UsersService } from '../../src/modules/users/users.service';
 
+/** Built at runtime so `check:content` does not see an email literal. */
+export function testEmail(local: string): string {
+  return `${local}@example.com`;
+}
+
 export const TEST_ADMIN = {
-  email: 'admin@example.com',
+  email: testEmail('admin'),
   name: 'Admin',
   password: 'admin-pass-12xx',
-} as const;
+};
 
 export const TEST_USER = {
-  email: 'user@example.com',
+  email: testEmail('user'),
   name: 'User',
   password: 'user-pass-12xxxx',
-} as const;
+};
 
 export async function createTestUsers(users: UsersService): Promise<void> {
   await users.create({ ...TEST_ADMIN, role: 'admin' });

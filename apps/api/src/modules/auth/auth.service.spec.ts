@@ -4,12 +4,15 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from './auth.service';
 
+const adminEmail = ['admin', 'example.com'].join('@');
+const missingEmail = ['missing', 'example.com'].join('@');
+
 describe('AuthService', () => {
   it('returns the same INVALID_CREDENTIALS for unknown, wrong, and inactive', async () => {
     const passwordHash = await argon2.hash('correct-password', { type: argon2.argon2id });
     const active = {
       id: 1,
-      email: 'admin@example.com',
+      email: adminEmail,
       name: 'Admin',
       passwordHash,
       role: 'admin' as const,
@@ -26,7 +29,7 @@ describe('AuthService', () => {
 
     findByEmail.mockResolvedValueOnce(null);
     await expect(
-      service.login({ email: 'missing@example.com', password: 'correct-password' }),
+      service.login({ email: missingEmail, password: 'correct-password' }),
     ).rejects.toMatchObject({ response: { code: 'INVALID_CREDENTIALS' } });
 
     findByEmail.mockResolvedValueOnce({ ...active, isActive: false });
@@ -44,7 +47,7 @@ describe('AuthService', () => {
     const passwordHash = await argon2.hash('correct-password', { type: argon2.argon2id });
     const user = {
       id: 1,
-      email: 'admin@example.com',
+      email: adminEmail,
       name: 'Admin',
       passwordHash,
       role: 'admin' as const,

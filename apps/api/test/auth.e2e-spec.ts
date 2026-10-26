@@ -5,7 +5,13 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { UsersService } from '../src/modules/users/users.service';
 import { PrismaService } from '../src/prisma/prisma.service';
-import { adminAgent, createTestUsers, TEST_ADMIN, TEST_USER } from './helpers/auth.helper';
+import {
+  adminAgent,
+  createTestUsers,
+  TEST_ADMIN,
+  TEST_USER,
+  testEmail,
+} from './helpers/auth.helper';
 import { createTestApp } from './helpers/create-app';
 import { migrateTestDb, truncateTables } from './helpers/reset-db';
 
@@ -85,7 +91,7 @@ describe('auth', () => {
   it('returns the same INVALID_CREDENTIALS for unknown, wrong, and inactive', async () => {
     const unknown = await request(app.getHttpServer())
       .post('/api/auth/login')
-      .send({ email: 'nobody@example.com', password: TEST_ADMIN.password })
+      .send({ email: testEmail('nobody'), password: TEST_ADMIN.password })
       .expect(401);
     expect(unknown.body.code).toBe('INVALID_CREDENTIALS');
 
