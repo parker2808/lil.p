@@ -1,15 +1,11 @@
-import { createParamDecorator, type ExecutionContext } from '@nestjs/common';
-import type { Locale as ContentLocale } from '@portfolio/contracts';
-import type { Request } from 'express';
+import { Query } from '@nestjs/common';
+import { localeQuerySchema } from '@portfolio/contracts';
+
+import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
 
 /**
- * `@Locale()` reads `?locale=` from the query string. Defaults to `en`.
- * T10 will parse this through the zod pipe so `fr` becomes 400.
+ * `@Locale()` reads `?locale=` through the T10 zod pipe (default `en`).
+ * `?locale=fr` → 400 `fieldErrors.locale`.
  */
-export const Locale = createParamDecorator(
-  (_data: unknown, ctx: ExecutionContext): ContentLocale => {
-    const request = ctx.switchToHttp().getRequest<Request>();
-    const raw = request.query['locale'];
-    return raw === 'vi' ? 'vi' : 'en';
-  },
-);
+export const Locale = () =>
+  Query(new ZodValidationPipe(localeQuerySchema.transform((query) => query.locale)));

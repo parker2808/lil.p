@@ -16,7 +16,7 @@ export const apiErrorSchema = z.object({
   statusCode: z.number().int(),
   code: errorCodeSchema,
   message: z.string(),
-  requestId: z.string().optional(),
+  requestId: z.string(),
   fieldErrors: z.record(z.string(), z.array(z.string())).optional(),
 });
 

@@ -1,5 +1,9 @@
-import { Module } from '@nestjs/common';
+import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 import { ConfigModule } from './config/config.module';
 import { HealthModule } from './modules/health/health.module';
 import { NavigationModule } from './modules/navigation/navigation.module';
@@ -20,5 +24,13 @@ import { PrismaModule } from './prisma/prisma.module';
     SocialLinksModule,
     PublicSiteModule,
   ],
+  providers: [
+    { provide: APP_FILTER, useClass: AllExceptionsFilter },
+    { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
+  ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(RequestIdMiddleware).forRoutes('*');
+  }
+}
