@@ -3,10 +3,14 @@ import 'server-only';
 import {
   type Locale,
   type ProjectListParams,
+  type PublicProjectDetail,
   type PublicProjectListItem,
   type PublicProjectListPage,
+  publicProjectDetailSchema,
   publicProjectListPageSchema,
 } from '@portfolio/contracts';
+
+import { ApiError } from '@/modules/core/utils/api-error.util';
 
 import { apiServer } from '@/modules/core/services/api-server.service';
 
@@ -82,4 +86,51 @@ export async function listCaseProjects(
   }
 
   return items.slice(0, options.limit);
+}
+
+export async function getProject(slug: string, locale: Locale): Promise<PublicProjectDetail> {
+  return apiServer(`/api/public/projects/${encodeURIComponent(slug)}`, {
+    locale,
+    tags: ['projects', `project:${slug}`],
+    schema: publicProjectDetailSchema,
+  });
+}
+
+export async function getProjectOrNull(
+  slug: string,
+  locale: Locale,
+): Promise<PublicProjectDetail | null> {
+  try {
+    return await getProject(slug, locale);
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) {
+      return null;
+    }
+    throw error;
+  }
+}
+
+export async function listPublishedSlugs(): Promise<string[]> {
+  try {
+    const page = await listProjectsPage('en', { pageSize: 100, sort: 'sortOrder' });
+    return page.items.map((item) => item.slug);
+  } catch {
+    return [];
+  }
+}
+
+export async function listRelatedProjects(
+  locale: Locale,
+  slug: string,
+  domainSlug?: string,
+): Promise<PublicProjectListItem[]> {
+  if (!domainSlug) {
+    return [];
+  }
+  const items = await listProjects(locale, {
+    domain: domainSlug,
+    pageSize: 6,
+    sort: 'sortOrder',
+  });
+  return items.filter((item) => item.slug !== slug).slice(0, 2);
 }
