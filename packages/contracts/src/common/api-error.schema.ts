@@ -10,6 +10,7 @@ export const errorCodeSchema = z.enum([
   'VALIDATION_FAILED',
   'CONFLICT',
   'STALE',
+  'IN_USE',
   'INTERNAL',
 ]);
 

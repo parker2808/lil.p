@@ -1,9 +1,26 @@
-import { Injectable } from '@nestjs/common';
-import type { Locale, PublicSkill, PublicSkillsGrouped } from '@portfolio/contracts';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import type {
+  AdminSkill,
+  AdminSkillCategory,
+  Locale,
+  PublicSkill,
+  PublicSkillsGrouped,
+  SkillCategoryCreateInput,
+  SkillCategoryUpdateInput,
+  SkillCreateInput,
+  SkillUpdateInput,
+} from '@portfolio/contracts';
 
+import { slugify } from '../../common/utils/slug.util';
+import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { skillSelect } from './entities/skill.entity';
-import { toPublicSkill } from './entities/skill.mapper';
+import { skillCategorySelect, skillSelect } from './entities/skill.entity';
+import { toAdminCategory, toAdminSkill, toPublicSkill } from './entities/skill.mapper';
 
 @Injectable()
 export class SkillsService {
@@ -27,5 +44,133 @@ export class SkillsService {
       shipped: skills.filter((skill) => skill.depth === 'SHIPPED'),
       growing: skills.filter((skill) => skill.depth === 'GROWING'),
     };
+  }
+
+  async listAdmin(): Promise<AdminSkill[]> {
+    const rows = await this.prisma.skill.findMany({
+      select: skillSelect,
+      orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }],
+    });
+    return rows.map(toAdminSkill);
+  }
+
+  async getAdmin(id: number): Promise<AdminSkill> {
+    return toAdminSkill(await this.findSkill(id));
+  }
+
+  async create(input: SkillCreateInput): Promise<AdminSkill> {
+    const slug = input.slug ?? slugify(input.name);
+    if (!slug) {
+      throw new BadRequestException({
+        code: 'VALIDATION_FAILED',
+        message: 'Validation failed',
+        fieldErrors: { name: ['Must contain letters or numbers'] },
+      });
+    }
+    const row = await this.prisma.skill.create({
+      data: {
+        name: input.name,
+        slug,
+        categoryId: input.categoryId,
+        depth: input.depth,
+        showInMarquee: input.showInMarquee ?? false,
+        sortOrder: input.sortOrder ?? 0,
+        isVisible: input.isVisible ?? true,
+      },
+      select: skillSelect,
+    });
+    return toAdminSkill(row);
+  }
+
+  async update(id: number, input: SkillUpdateInput): Promise<AdminSkill> {
+    await this.findSkill(id);
+    const data: Prisma.SkillUncheckedUpdateInput = {};
+    if (input.name !== undefined) data.name = input.name;
+    if (input.slug !== undefined) data.slug = input.slug;
+    if (input.categoryId !== undefined) data.categoryId = input.categoryId;
+    if (input.depth !== undefined) data.depth = input.depth;
+    if (input.showInMarquee !== undefined) data.showInMarquee = input.showInMarquee;
+    if (input.sortOrder !== undefined) data.sortOrder = input.sortOrder;
+    if (input.isVisible !== undefined) data.isVisible = input.isVisible;
+    const row = await this.prisma.skill.update({ where: { id }, data, select: skillSelect });
+    return toAdminSkill(row);
+  }
+
+  async remove(id: number): Promise<AdminSkill> {
+    const current = await this.findSkill(id);
+    await this.prisma.skill.delete({ where: { id } });
+    return toAdminSkill(current);
+  }
+
+  async listCategories(): Promise<AdminSkillCategory[]> {
+    const rows = await this.prisma.skillCategory.findMany({
+      select: skillCategorySelect,
+      orderBy: { sortOrder: 'asc' },
+    });
+    return rows.map(toAdminCategory);
+  }
+
+  async getCategory(id: number): Promise<AdminSkillCategory> {
+    return toAdminCategory(await this.findCategory(id));
+  }
+
+  async createCategory(input: SkillCategoryCreateInput): Promise<AdminSkillCategory> {
+    const row = await this.prisma.skillCategory.create({
+      data: {
+        nameEn: input.nameEn,
+        nameVi: input.nameVi,
+        sortOrder: input.sortOrder ?? 0,
+      },
+      select: skillCategorySelect,
+    });
+    return toAdminCategory(row);
+  }
+
+  async updateCategory(id: number, input: SkillCategoryUpdateInput): Promise<AdminSkillCategory> {
+    await this.findCategory(id);
+    const data: Prisma.SkillCategoryUncheckedUpdateInput = {};
+    if (input.nameEn !== undefined) data.nameEn = input.nameEn;
+    if (input.nameVi !== undefined) data.nameVi = input.nameVi;
+    if (input.sortOrder !== undefined) data.sortOrder = input.sortOrder;
+    const row = await this.prisma.skillCategory.update({
+      where: { id },
+      data,
+      select: skillCategorySelect,
+    });
+    return toAdminCategory(row);
+  }
+
+  async removeCategory(id: number): Promise<AdminSkillCategory> {
+    const current = await this.findCategory(id);
+    if (current._count.skills > 0) {
+      throw new ConflictException({
+        code: 'IN_USE',
+        message: 'This category still has skills',
+      });
+    }
+    await this.prisma.skillCategory.delete({ where: { id } });
+    return toAdminCategory(current);
+  }
+
+  private async findSkill(id: number) {
+    const row = await this.prisma.skill.findUnique({ where: { id }, select: skillSelect });
+    if (!row) {
+      throw new NotFoundException({ code: 'NOT_FOUND', message: `Skill ${id} was not found` });
+    }
+    return row;
+  }
+
+  private async findCategory(id: number) {
+    const row = await this.prisma.skillCategory.findUnique({
+      where: { id },
+      select: skillCategorySelect,
+    });
+    if (!row) {
+      throw new NotFoundException({
+        code: 'NOT_FOUND',
+        message: `Skill category ${id} was not found`,
+      });
+    }
+    return row;
   }
 }

@@ -33,3 +33,49 @@ export const publicSkillsGroupedSchema = z.object({
   shipped: z.array(publicSkillSchema),
   growing: z.array(publicSkillSchema),
 });
+
+export const skillCategoryCreateSchema = z.object({
+  nameEn: z.string().min(1),
+  nameVi: z.string(),
+  sortOrder: z.number().int().optional(),
+});
+
+export const skillCategoryUpdateSchema = skillCategoryCreateSchema.partial();
+
+export const adminSkillCategorySchema = z.object({
+  id: z.number().int(),
+  nameEn: z.string(),
+  nameVi: z.string(),
+  sortOrder: z.number().int(),
+  skillCount: z.number().int(),
+  updatedAt: z.string(),
+});
+
+export const skillCreateSchema = z.object({
+  name: z.string().min(1),
+  slug: z
+    .string()
+    .min(1)
+    .max(80)
+    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+    .optional(),
+  categoryId: z.number().int(),
+  depth: skillDepthSchema,
+  showInMarquee: z.boolean().optional(),
+  sortOrder: z.number().int().optional(),
+  isVisible: z.boolean().optional(),
+});
+
+export const skillUpdateSchema = skillCreateSchema.partial();
+
+export const adminSkillSchema = z.object({
+  id: z.number().int(),
+  name: z.string(),
+  slug: z.string(),
+  categoryId: z.number().int(),
+  depth: skillDepthSchema,
+  showInMarquee: z.boolean(),
+  sortOrder: z.number().int(),
+  isVisible: z.boolean(),
+  updatedAt: z.string(),
+});
