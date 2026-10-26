@@ -1,12 +1,25 @@
 {
   "core": {
     "skip": "Skip to content",
-    "home": "Home"
+    "home": "Home",
+    "menu": "Menu",
+    "close": "Close",
+    "command": "Search and jump",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "locale": "Language",
+    "copyEmail": "Copy email",
+    "copied": "Copied",
+    "suggestLocale": "This page is also available in Vietnamese",
+    "switchLocale": "View in Vietnamese"
   },
   "states": {
     "loading": "Loading",
     "empty": "Nothing here yet",
     "error": "Something went wrong",
-    "retry": "Retry"
+    "retry": "Retry",
+    "notFound": "This page is missing"
   }
 }

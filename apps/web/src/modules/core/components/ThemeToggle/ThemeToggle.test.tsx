@@ -1,6 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { NextIntlClientProvider } from 'next-intl';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import en from '../../../../../i18n/locales/en.json';
 
 const setTheme = vi.fn();
 
@@ -14,6 +17,14 @@ vi.mock('next-themes', () => ({
 
 import { ThemeToggle } from './ThemeToggle';
 
+function renderToggle() {
+  return render(
+    <NextIntlClientProvider locale="en" messages={en}>
+      <ThemeToggle />
+    </NextIntlClientProvider>,
+  );
+}
+
 describe('ThemeToggle', () => {
   beforeEach(() => {
     setTheme.mockClear();
@@ -21,7 +32,7 @@ describe('ThemeToggle', () => {
 
   it('opens a menu with light, dark and system options', async () => {
     const user = userEvent.setup();
-    render(<ThemeToggle />);
+    renderToggle();
 
     await user.click(screen.getByRole('button', { name: 'Theme' }));
 
