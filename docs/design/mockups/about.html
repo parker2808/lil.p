@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About · Parker Vu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container inner">
+      <a class="logo" href="home.html"><span class="mark">p</span> parker.dev</a>
+      <nav class="nav-links">
+        <a href="projects.html">Work</a>
+        <a class="active" href="about.html">About</a>
+        <a href="notes.html">Notes</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <div class="search-chip">Search… <kbd class="k">⌘K</kbd></div>
+        <div class="locale"><span class="on">EN</span><span>VI</span></div>
+        <button class="icon-btn" aria-label="Theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg></button>
+        <button class="icon-btn menu-btn" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="about-hero">
+      <div class="container">
+        <div class="eyebrow">About</div>
+        <div class="about-split" style="margin-top:16px">
+          <aside class="card avatar-card">
+            <div class="avatar-ph">PV</div>
+            <div class="text-meta muted" style="display:flex;align-items:center;gap:6px;margin-bottom:8px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 21s7-5.4 7-11a7 7 0 1 0-14 0c0 5.6 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              Hanoi · GMT+7
+            </div>
+            <span class="badge badge-success" style="margin-bottom:14px"><i class="dot-live" style="width:6px;height:6px;margin-right:4px"></i> Open to senior roles</span>
+            <a class="btn btn-outline" href="#" style="width:100%">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 4v12m0 0l-4-4m4 4l4-4"/><path d="M5 20h14"/></svg>
+              Download CV
+            </a>
+          </aside>
+          <div>
+            <h1>Hi, I’m Parker (Hung Vu Van).</h1>
+            <div class="prose" style="margin-top:16px">
+              <p>Senior frontend engineer. I spend most of my time moving existing products forward: Vue 2 to Vue 3, Vue to Nuxt, Axios to TanStack Query. The job is to keep weekly delivery while the stack changes under the users.</p>
+              <p>I’ve shipped ratings dashboards for a ReFi platform, ops tools with a Korean enterprise team, and a cart-migration product that talked to four store platforms. I’m now learning Next.js and NestJS by building this site as a CMS, not a brochure.</p>
+            </div>
+            <div class="tags" style="margin-top:16px">
+              <span class="badge">Vietnamese</span>
+              <span class="badge">English</span>
+              <span class="badge badge-outline">Works with KR · US · UK teams</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="band">
+      <section class="section" style="padding:40px 0">
+        <div class="container">
+          <div class="stats compact">
+            <div class="stat-item"><div class="n tabular">5+</div><div class="l">Years</div></div>
+            <div class="stat-item"><div class="n tabular">4</div><div class="l">Products</div></div>
+            <div class="stat-item"><div class="n tabular">2</div><div class="l">Migrations</div></div>
+            <div class="stat-item"><div class="n tabular">1</div><div class="l">Enterprise</div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="left">
+            <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+            <div>
+              <div class="eyebrow">Experience</div>
+              <h2>Experience</h2>
+            </div>
+          </div>
+        </div>
+        <div class="timeline">
+          <article class="tl-item">
+            <div class="tl-year">2024 — now</div>
+            <div class="tl-rail"><div class="tl-dot"></div></div>
+            <div class="tl-body">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                <h3>Kobizo · Frontend Developer</h3>
+                <span class="domain-pill amber">Fintech / Web3</span>
+                <a class="btn-link" href="case-study.html" style="font-size:13px">Case study ↗</a>
+              </div>
+              <p>Particula: main frontend, led v1 → v2. RWA ratings, 20+ asset classes, carbon credits.</p>
+              <ul>
+                <li>Strangler migration: Nuxt 3 beside Vue 2, no downtime</li>
+                <li>TanStack Query replaced Axios as server state</li>
+                <li>120 Playwright specs against the ratings contract</li>
+              </ul>
+              <div class="tags"><span class="badge">Vue 3</span><span class="badge">Nuxt 3</span><span class="badge">PrimeVue</span><span class="badge">TanStack</span><span class="badge">Playwright</span></div>
+            </div>
+          </article>
+          <article class="tl-item">
+            <div class="tl-year">2022 — 2024</div>
+            <div class="tl-rail"><div class="tl-dot"></div></div>
+            <div class="tl-body">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                <h3>CMC Global · Frontend Developer</h3>
+                <span class="domain-pill blue">Enterprise</span>
+                <span class="badge badge-warning">NDA</span>
+              </div>
+              <p>Samsung SDS: MSP Advanced and MSP App Expansion with a 15-person Korean team. Diagrams only.</p>
+              <div class="tags"><span class="badge">Vue 2</span><span class="badge">Vuex</span></div>
+            </div>
+          </article>
+          <article class="tl-item">
+            <div class="tl-year">2021 — 2022</div>
+            <div class="tl-rail"><div class="tl-dot"></div></div>
+            <div class="tl-body">
+              <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                <h3>LitGroup · Fullstack Developer</h3>
+                <span class="domain-pill violet">E-commerce</span>
+              </div>
+              <p>Cart migration tooling across Shopify, Magento, BigCommerce and WooCommerce.</p>
+              <div class="nested">
+                <div class="text-meta"><strong>Frontend</strong> · 2022 · Vue 2, TypeScript, Pinia</div>
+                <div class="text-meta"><strong>Backend</strong> · 2021 · Flask, Laravel, store APIs</div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <div class="band">
+      <section class="section">
+        <div class="container">
+          <div class="eyebrow">Principles</div>
+          <h2 style="margin:8px 0 24px">How I work</h2>
+          <div class="principle-list">
+            <article class="principle">
+              <div class="num">01 —</div>
+              <h3>Migrate in slices</h3>
+              <p>One route, one component library, one cache layer. Never a weekend cut-over.</p>
+            </article>
+            <article class="principle">
+              <div class="num">02 —</div>
+              <h3>Test the contract, not the pixels</h3>
+              <p>If the API shape holds, the UI can be rewritten. Specs follow the contract.</p>
+            </article>
+            <article class="principle">
+              <div class="num">03 —</div>
+              <h3>Server state is not UI state</h3>
+              <p>Caches, retries and invalidation live outside the component tree.</p>
+            </article>
+            <article class="principle">
+              <div class="num">04 —</div>
+              <h3>Write the decision down</h3>
+              <p>Chose / Over / Because. Future-me should not need Slack.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="left">
+            <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+            <div>
+              <div class="eyebrow">Stack</div>
+              <h2>Skills</h2>
+            </div>
+          </div>
+        </div>
+        <div class="skills">
+          <div>
+            <h3>Daily</h3>
+            <div class="tags"><span class="badge badge-primary">Vue 3</span><span class="badge badge-primary">Nuxt 3</span><span class="badge badge-primary">TypeScript</span><span class="badge badge-primary">Pinia</span><span class="badge badge-primary">TanStack Query</span></div>
+          </div>
+          <div>
+            <h3>Shipped before</h3>
+            <div class="tags"><span class="badge">Vue 2</span><span class="badge">Vuex</span><span class="badge">Flask</span><span class="badge">Laravel</span><span class="badge">MySQL</span></div>
+          </div>
+          <div>
+            <h3>Growing</h3>
+            <div class="tags"><span class="badge">React</span><span class="badge">Next.js</span><span class="badge">NestJS</span></div>
+          </div>
+        </div>
+        <div style="margin-top:40px">
+          <div class="eyebrow" style="margin-bottom:8px">Education</div>
+          <p class="text-body" style="margin:0">Hanoi University of Industry · Computer Science · 2017–2021</p>
+        </div>
+        <div class="card" style="margin-top:32px;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+          <div>
+            <div class="eyebrow">CV</div>
+            <h3 style="margin-top:4px">Download a one-pager</h3>
+            <p class="muted" style="margin:4px 0 0;font-size:14px">EN and VI PDFs, generated from the same CMS fields.</p>
+          </div>
+          <a class="btn btn-primary" href="#">Download CV</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container inner">
+      <span>© 2026 Parker Vu · Hung Vu Van — Senior Frontend</span>
+      <nav>
+        <a href="projects.html">Work</a>
+        <a href="notes.html">Notes</a>
+        <a href="#">CV</a>
+      </nav>
+      <span>a1b2c3</span>
+    </div>
+  </footer>
+</body>
+</html>
+
+

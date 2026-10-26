@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard · Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="admin">
+    <aside class="sb">
+      <div class="sb-brand"><span class="logo mark" style="width:20px;height:20px;border-radius:5px;display:grid;place-items:center;background:var(--sidebar-primary);color:var(--sidebar-primary-foreground);font-size:11px">P</span> Parker</div>
+      <div class="sb-search">Search… <kbd class="k">⌘K</kbd></div>
+      <a class="active" href="admin-dashboard.html">Dashboard</a>
+      <a href="#">Inbox <span class="count">3</span></a>
+      <div class="sb-label">Content</div>
+      <a href="admin-table.html">Projects</a>
+      <a href="#">Posts</a>
+      <a href="#">Experience</a>
+      <a href="#">Skills</a>
+      <a href="#">Stats</a>
+      <a href="#">Domains</a>
+      <a href="#">Process</a>
+      <div class="sb-label">Site</div>
+      <a href="#">Site settings</a>
+      <a href="#">Profile</a>
+      <a href="#">Media</a>
+      <div class="sb-label">Insights</div>
+      <a href="#">Analytics</a>
+      <a href="#">Audit log</a>
+    </aside>
+    <div class="admin-main">
+      <div class="topbar">
+        <div class="crumbs">Dashboard</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div class="seg"><span>7d</span><span class="on">30d</span><span>90d</span></div>
+          <button class="icon-btn bell" aria-label="Notifications"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 7 3 9H3s3-2 3-9"/><path d="M10 21a2 2 0 0 0 4 0"/></svg><span class="n">3</span></button>
+          <span class="avatar">PV</span>
+        </div>
+      </div>
+      <div class="admin-body">
+        <div class="kpis">
+          <div class="kpi"><div class="l">Views</div><div class="n tabular">2,140</div><div class="d up">▲ 12% vs previous 30d</div></div>
+          <div class="kpi"><div class="l">Visitors</div><div class="n tabular">980</div><div class="d up">▲ 4%</div></div>
+          <div class="kpi"><div class="l">Messages</div><div class="n tabular">6</div><div class="d down">▼ 1</div></div>
+          <div class="kpi"><div class="l">Published</div><div class="n tabular">2</div><div class="d" style="color:var(--subtle-foreground)">posts this period</div></div>
+        </div>
+        <div class="admin-grid">
+          <div class="panel">
+            <h2>Views <span style="color:var(--subtle-foreground);font-weight:400">30 days</span></h2>
+            <svg viewBox="0 0 360 160" width="100%" height="180" aria-label="Views chart">
+              <defs>
+                <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#2DD4BF" stop-opacity="0.35" />
+                  <stop offset="1" stop-color="#2DD4BF" stop-opacity="0" />
+                </linearGradient>
+              </defs>
+              <polyline fill="none" stroke="#233230" stroke-width="1" points="0,120 360,120" />
+              <polyline fill="none" stroke="#233230" stroke-width="1" points="0,80 360,80" />
+              <polyline fill="none" stroke="#233230" stroke-width="1" points="0,40 360,40" />
+              <path d="M0,130 L20,122 L40,118 L60,100 L80,108 L100,90 L120,86 L140,70 L160,78 L180,62 L200,58 L220,50 L240,54 L260,40 L280,46 L300,34 L320,38 L340,28 L360,32 V160 H0 Z" fill="url(#g)" />
+              <path d="M0,130 L20,122 L40,118 L60,100 L80,108 L100,90 L120,86 L140,70 L160,78 L180,62 L200,58 L220,50 L240,54 L260,40 L280,46 L300,34 L320,38 L340,28 L360,32" fill="none" stroke="#2DD4BF" stroke-width="2" />
+            </svg>
+          </div>
+          <div class="panel">
+            <h2>Top pages</h2>
+            <ul class="feed">
+              <li><span style="flex:1;font-family:var(--font-mono);font-size:12px">/projects/particula-v2</span><span class="tabular">842</span></li>
+              <li><span style="flex:1;font-family:var(--font-mono);font-size:12px">/notes/vue-react</span><span class="tabular">410</span></li>
+              <li><span style="flex:1;font-family:var(--font-mono);font-size:12px">/</span><span class="tabular">388</span></li>
+              <li><span style="flex:1;font-family:var(--font-mono);font-size:12px">/about</span><span class="tabular">196</span></li>
+              <li><span style="flex:1;font-family:var(--font-mono);font-size:12px">/projects</span><span class="tabular">154</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="admin-grid">
+          <div class="panel">
+            <h2>Inbox <a class="btn-link" href="#" style="font-size:12px">View all</a></h2>
+            <ul class="feed">
+              <li><i class="dot"></i><div><strong>Ana</strong> · Job opportunity<div style="color:var(--subtle-foreground)">2m · “Are you open to a senior FE role…”</div></div></li>
+              <li><i class="dot"></i><div><strong>Minh</strong> · Freelance<div style="color:var(--subtle-foreground)">1d · Nuxt 3 migration quote</div></div></li>
+              <li><i class="dot"></i><div><strong>Jordan</strong> · Other<div style="color:var(--subtle-foreground)">3d · Talk at the Hanoi meetup?</div></div></li>
+            </ul>
+          </div>
+          <div class="panel">
+            <h2>Recent activity</h2>
+            <ul class="feed">
+              <li><span class="avatar">PV</span><div>Parker published <strong>Vue → React</strong><div style="color:var(--subtle-foreground)">2h ago</div></div></li>
+              <li><span class="avatar">PV</span><div>Parker updated <strong>Particula v2</strong><div style="color:var(--subtle-foreground)">1d ago</div></div></li>
+              <li><span class="avatar">PV</span><div>Parker archived <strong>MSP App Expansion</strong><div style="color:var(--subtle-foreground)">3d ago</div></div></li>
+            </ul>
+          </div>
+        </div>
+        <div class="health">
+          <strong>Content health</strong>
+          <div class="row">
+            <span class="badge badge-warning">2 drafts</span>
+            <span class="badge badge-warning">3 missing VI</span>
+            <span class="badge badge-outline">1 image without alt</span>
+            <span class="badge badge-warning">Projects without a domain · 1</span>
+            <span class="badge badge-warning">Case studies with &lt; 2 key facts · 2</span>
+            <span class="badge badge-outline">Marquee needs 6+ skills · 10 on</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="toast">
+    <i class="dot" style="margin:0"></i>
+    <div style="flex:1">New message from Ana</div>
+    <a class="btn-link" href="#">Open</a>
+  </div>
+</body>
+</html>
+
+

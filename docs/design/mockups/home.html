@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Parker Vu · Senior Frontend Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>if (new URLSearchParams(location.search).has('dark')) document.documentElement.classList.add('dark');</script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container inner">
+      <a class="logo" href="home.html"><span class="mark">p</span> parker.dev</a>
+      <nav class="nav-links">
+        <a href="projects.html">Work</a>
+        <a href="about.html">About</a>
+        <a href="notes.html">Notes</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <div class="search-chip">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          Search… <kbd class="k">⌘K</kbd>
+        </div>
+        <div class="locale"><span class="on">EN</span><span>VI</span></div>
+        <button class="icon-btn" aria-label="Theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg></button>
+        <button class="icon-btn menu-btn" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero atmosphere">
+      <div class="grid-bg"></div>
+      <div class="orb orb-a"></div>
+      <div class="orb orb-b"></div>
+      <div class="container hero-grid">
+        <div>
+          <div class="kicker-pill"><span class="prompt" aria-hidden="true">&gt;_</span> Senior Frontend · 5 yrs · Vue/Nuxt/TS</div>
+          <h1 class="display">I move products forward <span class="text-primary">without breaking them.</span></h1>
+          <p class="lead text-prose">Parker Vu · Senior Frontend Engineer. 5 years shipping data-dense product UIs in Vue, Nuxt and TypeScript, now building with Next.js.</p>
+          <p class="meta-line"><i class="dot-live"></i> Open to senior roles · Hanoi, GMT+7</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="projects.html">View case studies
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="btn btn-outline" href="#">Download CV</a>
+          </div>
+        </div>
+        <aside class="diagram" aria-label="Migration from Vue 2 to Nuxt 3">
+          <svg viewBox="0 0 480 280" role="img">
+            <circle cx="240" cy="140" r="118" stroke="var(--border)" stroke-dasharray="3 6" fill="none"/>
+            <circle cx="240" cy="140" r="78" stroke="var(--border)" fill="none"/>
+            <line x1="116" y1="140" x2="364" y2="140" stroke="var(--primary)" stroke-width="1.5" opacity=".45"/>
+            <polygon points="356,136 368,140 356,144" fill="var(--primary)" opacity=".7"/>
+            <rect x="24" y="108" width="92" height="64" rx="8" fill="var(--card)" stroke="var(--border)"/>
+            <text x="70" y="134" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="var(--subtle-foreground)">v1</text>
+            <text x="70" y="154" text-anchor="middle" font-family="Be Vietnam Pro, sans-serif" font-size="14" font-weight="600" fill="var(--foreground)">Vue 2</text>
+            <rect x="364" y="108" width="92" height="64" rx="8" fill="var(--primary-subtle)" stroke="var(--primary)"/>
+            <circle cx="410" cy="140" r="38" fill="var(--primary)" opacity=".12"/>
+            <text x="410" y="134" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="var(--primary)">v2</text>
+            <text x="410" y="154" text-anchor="middle" font-family="Be Vietnam Pro, sans-serif" font-size="14" font-weight="600" fill="var(--primary)">Nuxt 3</text>
+            <rect x="196" y="28" width="88" height="28" rx="14" fill="var(--card)" stroke="var(--border)"/>
+            <text x="240" y="46" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="var(--muted-foreground)">Pinia</text>
+            <rect x="148" y="214" width="72" height="28" rx="14" fill="var(--card)" stroke="var(--border)"/>
+            <text x="184" y="232" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="var(--muted-foreground)">Query</text>
+            <rect x="260" y="214" width="88" height="28" rx="14" fill="var(--card)" stroke="var(--border)"/>
+            <text x="304" y="232" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="var(--muted-foreground)">Playwright</text>
+            <rect x="188" y="124" width="104" height="32" rx="16" fill="var(--card)" stroke="var(--primary)" opacity=".95"/>
+            <text x="240" y="144" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="var(--primary)">strangler</text>
+          </svg>
+        </aside>
+      </div>
+    </section>
+
+    <div class="band">
+      <section class="section" style="padding-bottom:40px">
+        <div class="container">
+          <div class="stats">
+            <div class="stat-item">
+              <span class="icon-tile lg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+              <div class="n tabular">5+</div>
+              <div class="l">Years shipping</div>
+            </div>
+            <div class="stat-item">
+              <span class="icon-tile lg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg></span>
+              <div class="n tabular">4</div>
+              <div class="l">Products shipped</div>
+            </div>
+            <div class="stat-item">
+              <span class="icon-tile lg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6h7M6 8.5v7M18 8.5v7M8.5 18h7"/></svg></span>
+              <div class="n tabular">2</div>
+              <div class="l">Framework migrations</div>
+            </div>
+            <div class="stat-item">
+              <span class="icon-tile lg"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg></span>
+              <div class="n tabular">1</div>
+              <div class="l">Enterprise platform</div>
+            </div>
+          </div>
+          <div class="marquee-wrap">
+            <div class="marquee" aria-hidden="true">
+              <div class="marquee-track">
+                <span class="tech-chip">Vue 3</span><span class="tech-chip">Nuxt 3</span><span class="tech-chip">TypeScript</span><span class="tech-chip">Pinia</span><span class="tech-chip">TanStack Query</span><span class="tech-chip">PrimeVue</span><span class="tech-chip">Playwright</span><span class="tech-chip">Vitest</span><span class="tech-chip">Tailwind</span><span class="tech-chip">Vue 2</span><span class="tech-chip">Flask</span><span class="tech-chip">Next.js</span>
+              </div>
+            </div>
+            <button class="pause-btn" aria-pressed="true" aria-label="Pause marquee">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="left">
+            <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 19V5l8 4 8-4v14l-8 4-8-4z"/><path d="M12 9v14"/></svg></span>
+            <div>
+              <div class="eyebrow">Featured</div>
+              <h2>Featured case study</h2>
+            </div>
+          </div>
+          <a class="btn-link" href="projects.html">All work →</a>
+        </div>
+        <article class="featured-card">
+          <div class="card" style="overflow:hidden">
+            <div class="ui-frame amber">
+              <div class="ui-chrome"><i></i><i></i><i></i><span>particula.app / ratings</span></div>
+              <div class="ui-body">
+                <div class="ui-side"><b></b><b></b><b style="width:60%"></b><b></b><b style="width:70%"></b></div>
+                <div class="ui-main">
+                  <div class="ui-bars"><i style="height:40%"></i><i style="height:70%"></i><i style="height:55%"></i><i style="height:90%"></i><i style="height:62%"></i><i style="height:78%"></i><i style="height:48%"></i></div>
+                  <div class="ui-row" style="width:80%"></div>
+                  <div class="ui-row" style="width:64%"></div>
+                  <div class="ui-row" style="width:72%"></div>
+                </div>
+              </div>
+              <div class="ui-overlay">Vue 2 → Nuxt 3</div>
+            </div>
+          </div>
+          <div class="body">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <span class="domain-pill amber"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/></svg> Fintech / Web3</span>
+              <span class="ver">v1 → <b>v2</b></span>
+            </div>
+            <h2>Particula v2</h2>
+            <p class="text-body muted">Rewriting an RWA ratings app without stopping delivery. Main frontend, team of 6, Kobizo · 2024 — now.</p>
+            <div class="diff tabular">
+              <div><span class="minus">−</span> <span class="label">bundle</span> 412kB → 255kB</div>
+              <div><span class="plus">+</span> <span class="label">e2e specs</span> 0 → 120</div>
+            </div>
+            <div class="tags">
+              <span class="badge">Nuxt 3</span><span class="badge">TanStack</span><span class="badge">Playwright</span>
+            </div>
+            <a class="btn-link" href="case-study.html">Read case study ↗</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <div class="band">
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <div class="left">
+              <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span>
+              <div>
+                <div class="eyebrow">Domains</div>
+                <h2>Products I’ve shipped</h2>
+                <p class="intro">Grouped by the problem they solve, not by the stack.</p>
+              </div>
+            </div>
+          </div>
+          <div class="domain-grid">
+            <article class="card domain-card amber is-hover">
+              <div class="top">
+                <span class="icon-tile amber"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/></svg></span>
+                <span class="count">1 project</span>
+              </div>
+              <h3>Fintech / Web3 (ReFi)</h3>
+              <p>RWA ratings and carbon-credit tooling for Particula.</p>
+            </article>
+            <article class="card domain-card blue">
+              <div class="top">
+                <span class="icon-tile blue"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg></span>
+                <span class="count">1 project</span>
+              </div>
+              <h3>Enterprise platforms</h3>
+              <p>Samsung SDS ops tools, NDA-safe diagrams only.</p>
+            </article>
+            <article class="card domain-card violet">
+              <div class="top">
+                <span class="icon-tile violet"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/><path d="M3 4h2l2.4 12.3a2 2 0 0 0 2 1.7h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg></span>
+                <span class="count">1 project</span>
+              </div>
+              <h3>E-commerce tooling</h3>
+              <p>Cart migrations across Shopify, Magento, WooCommerce.</p>
+            </article>
+            <article class="card domain-card jade">
+              <div class="top">
+                <span class="icon-tile jade"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+                <span class="count">1 project</span>
+              </div>
+              <h3>Developer experience</h3>
+              <p>This portfolio: Next.js, NestJS, and a typed CMS.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="left">
+            <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="4" width="7" height="7" rx="1"/><rect x="3" y="15" width="7" height="7" rx="1"/><rect x="14" y="15" width="7" height="7" rx="1"/></svg></span>
+            <div>
+              <div class="eyebrow">Selected work</div>
+              <h2>Selected work</h2>
+            </div>
+          </div>
+          <a class="btn-link" href="projects.html">All projects →</a>
+        </div>
+        <div class="work-grid">
+          <a class="card case-card is-hover" href="case-study.html">
+            <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+            <div class="ui-frame violet">
+              <div class="ui-chrome"><i></i><i></i><i></i><span>carts.litgroup / migrate</span></div>
+              <div class="ui-body">
+                <div class="ui-side"><b></b><b></b><b></b></div>
+                <div class="ui-main">
+                  <div class="ui-bars"><i style="height:30%"></i><i style="height:50%"></i><i style="height:80%"></i><i style="height:60%"></i><i style="height:90%"></i></div>
+                  <div class="ui-row"></div><div class="ui-row" style="width:70%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="body">
+              <span class="domain-pill violet"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="9" cy="20" r="1"/><circle cx="17" cy="20" r="1"/><path d="M3 4h2l2.4 12.3a2 2 0 0 0 2 1.7h7.8a2 2 0 0 0 2-1.5L21 8H7"/></svg> E-commerce</span>
+              <h3>Cart migration tool</h3>
+              <p>Flask APIs + Vue 2 UI to move store data across four platforms.</p>
+              <div class="diff tabular"><span class="plus">+</span> carts · 4 platforms</div>
+              <div class="chips"><span class="badge">Flask</span><span class="badge">Vue 2</span><span class="badge">Pinia</span></div>
+            </div>
+          </a>
+          <article class="card case-card">
+            <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+            <div class="ui-frame blue">
+              <div class="ui-chrome"><i></i><i></i><i></i><span>sds · diagrams only</span></div>
+              <div class="ui-body">
+                <div class="ui-side"><b></b><b></b><b></b></div>
+                <div class="ui-main">
+                  <div class="ui-bars"><i style="height:55%"></i><i style="height:40%"></i><i style="height:72%"></i><i style="height:48%"></i><i style="height:64%"></i></div>
+                  <div class="ui-row"></div><div class="ui-row" style="width:55%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="body">
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <span class="domain-pill blue"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="18" height="16" rx="2"/></svg> Enterprise</span>
+                <span class="badge badge-warning">NDA</span>
+              </div>
+              <h3>MSP Advanced</h3>
+              <p>Re-platformed MSP App logic into a new design with the Korean team.</p>
+              <div class="diff tabular"><span class="plus">+</span> team 15 · KR</div>
+              <div class="chips"><span class="badge">Vue 2</span><span class="badge">Vuex</span></div>
+            </div>
+          </article>
+          <article class="card case-card">
+            <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+            <div class="ui-frame jade">
+              <div class="ui-chrome"><i></i><i></i><i></i><span>parker.dev / admin</span></div>
+              <div class="ui-body">
+                <div class="ui-side"><b></b><b></b><b></b></div>
+                <div class="ui-main">
+                  <div class="ui-bars"><i style="height:35%"></i><i style="height:65%"></i><i style="height:50%"></i><i style="height:80%"></i><i style="height:44%"></i></div>
+                  <div class="ui-row"></div><div class="ui-row" style="width:60%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="body">
+              <span class="domain-pill jade"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> DevX</span>
+              <h3>This portfolio</h3>
+              <p>Next.js + NestJS + Prisma CMS, designed as a 30-day lab.</p>
+              <div class="diff tabular"><span class="plus">+</span> light + dark · vi/en</div>
+              <div class="chips"><span class="badge">Next.js</span><span class="badge">NestJS</span><span class="badge">Prisma</span></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <div class="band">
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <div class="left">
+              <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 7.8 15.8 16.2"/></svg></span>
+              <div>
+                <div class="eyebrow">Process</div>
+                <h2>How I migrate a frontend</h2>
+                <p class="intro">A strangler path: keep shipping while the old tree is replaced branch by branch.</p>
+              </div>
+            </div>
+          </div>
+          <div class="process">
+            <div class="feat-grid">
+              <article class="card feat-card">
+                <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="4" width="7" height="16" rx="1"/><rect x="14" y="4" width="7" height="10" rx="1"/></svg></span>
+                <h3>Migrate in slices</h3>
+                <p>Ship one route at a time. The old app stays up until the last page moves.</p>
+              </article>
+              <article class="card feat-card">
+                <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+                <h3>Test the contract</h3>
+                <p>Playwright against the API, not the pixels. UI can change; the contract cannot.</p>
+              </article>
+              <article class="card feat-card">
+                <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></span>
+                <h3>Server state ≠ UI</h3>
+                <p>TanStack Query (or Pinia) owns the server cache. Components own the view.</p>
+              </article>
+              <article class="card feat-card">
+                <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg></span>
+                <h3>Write it down</h3>
+                <p>Chose / Over / Because. The next person should not have to ask Slack.</p>
+              </article>
+            </div>
+            <ol class="flow" style="list-style:none;margin:0;padding:0">
+              <li class="flow-step"><span class="num">01</span> Audit · tokens, states, routes</li>
+              <div class="flow-conn"></div>
+              <li class="flow-step"><span class="num">02</span> Tokens &amp; primitives</li>
+              <div class="flow-conn"></div>
+              <li class="flow-step active">
+                <span class="icon-tile glow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="3"/><path d="M12 3v2M12 19v2M5 12H3M21 12h-2"/></svg></span>
+                <span class="num">03</span> Strangler routes
+              </li>
+              <div class="flow-conn"></div>
+              <li class="flow-step"><span class="num">04</span> Contract tests</li>
+              <div class="flow-conn"></div>
+              <li class="flow-step"><span class="num">05</span> Cut over · delete v1</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="section" style="padding-bottom:40px">
+      <div class="container">
+        <div class="section-head">
+          <div class="left">
+            <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+            <div>
+              <div class="eyebrow">Stack</div>
+              <h2>What I work with</h2>
+            </div>
+          </div>
+        </div>
+        <div class="skills">
+          <div>
+            <h3>Daily</h3>
+            <div class="tags">
+              <span class="badge badge-primary">Vue 3</span><span class="badge badge-primary">Nuxt 3</span><span class="badge badge-primary">TypeScript</span>
+              <span class="badge badge-primary">Pinia</span><span class="badge badge-primary">TanStack Query</span><span class="badge badge-primary">Playwright</span>
+            </div>
+          </div>
+          <div>
+            <h3>Shipped before</h3>
+            <div class="tags">
+              <span class="badge">Vue 2</span><span class="badge">Vuex</span><span class="badge">Flask</span>
+              <span class="badge">Laravel</span><span class="badge">MySQL</span><span class="badge">OAuth</span>
+            </div>
+          </div>
+          <div>
+            <h3>Growing</h3>
+            <div class="tags">
+              <span class="badge">React</span><span class="badge">Next.js</span><span class="badge">NestJS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:24px">
+      <div class="container">
+        <div class="section-head">
+          <div class="left">
+            <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg></span>
+            <div>
+              <div class="eyebrow">Writing</div>
+              <h2>Latest notes</h2>
+            </div>
+          </div>
+          <a class="btn-link" href="notes.html">All notes →</a>
+        </div>
+        <div class="post-list">
+          <a class="card post-card" href="post.html">
+            <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+            <div class="meta">OCT 12 · 6 MIN</div>
+            <h3>Vue → React: what transfers, what doesn’t</h3>
+            <p>Reactivity, effects and fetching map more cleanly than the tutorials suggest.</p>
+            <span class="hash-tag">#react #vue</span>
+          </a>
+          <article class="card post-card">
+            <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+            <div class="meta">SEP 30 · 8 MIN</div>
+            <h3>TanStack Query in Nuxt 3</h3>
+            <p>Replacing Axios-in-Pinia with a cache that matches the server.</p>
+            <span class="hash-tag">#nuxt #state</span>
+          </article>
+          <article class="card post-card">
+            <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+            <div class="meta">SEP 14 · 7 MIN</div>
+            <h3>Strangler vs big-bang: migrating Particula</h3>
+            <p>Why we ran Vue 2 and Nuxt 3 side by side for six months.</p>
+            <span class="hash-tag">#architecture</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta atmosphere">
+      <div class="grid-bg"></div>
+      <div class="orb orb-c"></div>
+      <div class="container">
+        <span class="icon-tile lg" style="margin-inline:auto"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6L12 3z"/></svg></span>
+        <h2>Have a product that needs to move forward?</h2>
+        <p class="lead text-prose">Senior frontend roles or a migration done right. Hanoi, GMT+7.</p>
+        <div class="cta-actions">
+          <button class="btn btn-primary" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+            Copy email
+          </button>
+          <a class="btn btn-outline" href="#">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <a class="btn btn-outline" href="https://github.com/parker2808">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.9a3.4 3.4 0 0 0-1-2.6c3.2-.3 6.5-1.5 6.5-7A5.3 5.3 0 0 0 20 4.8 4.9 4.9 0 0 0 19.9 1S18.7.7 16 2.5a13.4 13.4 0 0 0-7 0C6.3.7 5.1 1 5.1 1A4.9 4.9 0 0 0 5 4.8 5.3 5.3 0 0 0 3.5 8.5c0 5.4 3.3 6.6 6.4 7A3.3 3.3 0 0 0 9 18.1V22"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container inner">
+      <span>© 2026 Parker Vu · Hung Vu Van — Senior Frontend</span>
+      <nav>
+        <a href="projects.html">Work</a>
+        <a href="notes.html">Notes</a>
+        <a href="#">CV</a>
+        <a href="https://github.com/parker2808" aria-label="GitHub"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.9a3.4 3.4 0 0 0-1-2.6c3.2-.3 6.5-1.5 6.5-7A5.3 5.3 0 0 0 20 4.8 4.9 4.9 0 0 0 19.9 1S18.7.7 16 2.5a13.4 13.4 0 0 0-7 0C6.3.7 5.1 1 5.1 1A4.9 4.9 0 0 0 5 4.8 5.3 5.3 0 0 0 3.5 8.5c0 5.4 3.3 6.6 6.4 7A3.3 3.3 0 0 0 9 18.1V22"/></svg></a>
+      </nav>
+      <span>a1b2c3</span>
+    </div>
+  </footer>
+</body>
+</html>
+
+

@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projects · Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="admin">
+    <aside class="sb">
+      <div class="sb-brand"><span class="logo mark" style="width:20px;height:20px;border-radius:5px;display:grid;place-items:center;background:var(--sidebar-primary);color:var(--sidebar-primary-foreground);font-size:11px">P</span> Parker</div>
+      <div class="sb-search">Search… <kbd class="k">⌘K</kbd></div>
+      <a href="admin-dashboard.html">Dashboard</a>
+      <a href="#">Inbox <span class="count">3</span></a>
+      <div class="sb-label">Content</div>
+      <a class="active" href="admin-table.html">Projects</a>
+      <a href="#">Posts</a>
+      <a href="#">Experience</a>
+      <a href="#">Skills</a>
+      <a href="#">Stats</a>
+      <a href="#">Domains</a>
+      <a href="#">Process</a>
+      <div class="sb-label">Site</div>
+      <a href="#">Site settings</a>
+      <a href="#">Profile</a>
+      <a href="#">Media</a>
+      <div class="sb-label">Insights</div>
+      <a href="#">Analytics</a>
+      <a href="#">Audit log</a>
+    </aside>
+    <div class="admin-main">
+      <div class="topbar">
+        <div class="crumbs">Content / <strong>Projects</strong></div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="btn btn-sm btn-secondary">Views ▾</button>
+          <a class="btn btn-sm btn-primary" href="admin-editor.html">+ New project <kbd class="k" style="background:transparent;border-color:color-mix(in srgb,var(--primary-foreground) 40%,transparent);color:var(--primary-foreground)">C</kbd></a>
+        </div>
+      </div>
+      <div class="admin-body">
+        <div class="toolbar">
+          <input class="search" value="" placeholder="Filter projects…  /" />
+          <span class="chip">Status is Published ×</span>
+          <button class="btn btn-sm btn-ghost">+ Filter</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <thead>
+              <tr>
+                <th style="width:40px"><span class="check"></span></th>
+                <th>Title ↓</th>
+                <th>Domain</th>
+                <th>Client</th>
+                <th>Key facts</th>
+                <th>Status</th>
+                <th>Lang</th>
+                <th>Updated</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="check"></span></td>
+                <td><a href="admin-editor.html" style="font-weight:500">Particula v2</a><div style="color:var(--subtle-foreground);font-size:12px;font-family:var(--font-mono)">particula-v2 · v1 → v2</div></td>
+                <td><span class="domain-pill amber">Fintech</span></td>
+                <td>Particula</td>
+                <td class="tabular">4</td>
+                <td><span class="status pub"><i></i> Published</span></td>
+                <td><span style="color:var(--success)">EN</span> <span style="color:var(--success)">VI</span></td>
+                <td class="tabular" style="color:var(--subtle-foreground)">2h</td>
+                <td style="color:var(--subtle-foreground)">⋯</td>
+              </tr>
+              <tr class="sel">
+                <td><span class="check on"></span></td>
+                <td><a href="admin-editor.html" style="font-weight:500">Cart migration tool</a><div style="color:var(--subtle-foreground);font-size:12px;font-family:var(--font-mono)">cart-migration-tool</div></td>
+                <td><span class="domain-pill violet">E-commerce</span></td>
+                <td>LitGroup</td>
+                <td class="tabular">2</td>
+                <td><span class="status pub"><i></i> Published</span></td>
+                <td><span style="color:var(--success)">EN</span> <span style="color:var(--warning)">VI○</span></td>
+                <td class="tabular" style="color:var(--subtle-foreground)">1d</td>
+                <td style="color:var(--subtle-foreground)">⋯</td>
+              </tr>
+              <tr class="sel">
+                <td><span class="check on"></span></td>
+                <td><a href="#" style="font-weight:500">MSP Advanced</a><div style="color:var(--subtle-foreground);font-size:12px;font-family:var(--font-mono)">msp-advanced · NDA</div></td>
+                <td><span class="domain-pill blue">Enterprise</span></td>
+                <td>Samsung SDS</td>
+                <td class="tabular" style="color:var(--warning)">1</td>
+                <td><span class="status pub"><i></i> Published</span></td>
+                <td><span style="color:var(--success)">EN</span> <span style="color:var(--warning)">VI○</span></td>
+                <td class="tabular" style="color:var(--subtle-foreground)">3d</td>
+                <td style="color:var(--subtle-foreground)">⋯</td>
+              </tr>
+              <tr>
+                <td><span class="check"></span></td>
+                <td><a href="#" style="font-weight:500">This portfolio</a><div style="color:var(--subtle-foreground);font-size:12px;font-family:var(--font-mono)">this-portfolio</div></td>
+                <td><span class="domain-pill jade">DevX</span></td>
+                <td>—</td>
+                <td class="tabular" style="color:var(--warning)">0</td>
+                <td><span class="status draft"><i></i> Draft</span></td>
+                <td><span style="color:var(--success)">EN</span> <span style="color:var(--subtle-foreground)">VI○</span></td>
+                <td class="tabular" style="color:var(--subtle-foreground)">5d</td>
+                <td style="color:var(--subtle-foreground)">⋯</td>
+              </tr>
+              <tr>
+                <td><span class="check"></span></td>
+                <td><a href="#" style="font-weight:500">MSP App Expansion</a><div style="color:var(--subtle-foreground);font-size:12px;font-family:var(--font-mono)">msp-app-expansion · archived</div></td>
+                <td><span style="color:var(--subtle-foreground);font-size:12px">—</span></td>
+                <td>Samsung SDS</td>
+                <td class="tabular">0</td>
+                <td><span class="status arch"><i></i> Archived</span></td>
+                <td><span style="color:var(--success)">EN</span></td>
+                <td class="tabular" style="color:var(--subtle-foreground)">5d</td>
+                <td style="color:var(--subtle-foreground)">⋯</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="page-foot">
+          <span>1–5 of 5 · j/k move · x select · Enter open</span>
+          <span>‹ 1 ›</span>
+        </div>
+        <div class="bulk">
+          <strong>2 selected</strong>
+          <button class="btn btn-sm btn-secondary">Publish</button>
+          <button class="btn btn-sm btn-secondary">Archive</button>
+          <button class="btn btn-sm btn-ghost" style="color:var(--destructive)">Delete</button>
+          <span style="margin-left:auto;color:var(--subtle-foreground)">✕</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
+

@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Notes · Parker Vu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container inner">
+      <a class="logo" href="home.html"><span class="mark">p</span> parker.dev</a>
+      <nav class="nav-links">
+        <a href="projects.html">Work</a>
+        <a href="about.html">About</a>
+        <a class="active" href="notes.html">Notes</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <div class="search-chip">Search… <kbd class="k">⌘K</kbd></div>
+        <div class="locale"><span class="on">EN</span><span>VI</span></div>
+        <button class="icon-btn" aria-label="Theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg></button>
+        <button class="icon-btn menu-btn" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="eyebrow">Writing</div>
+        <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-end;margin:8px 0 12px">
+          <h1 style="margin:0">Notes</h1>
+          <div class="search-lg">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input value="" placeholder="Search notes…" />
+            <kbd class="k">⌘K</kbd>
+          </div>
+        </div>
+        <p class="text-prose muted" style="margin:0 0 20px">Things I learned shipping frontends.</p>
+        <div class="tags" style="margin-bottom:32px">
+          <span class="filter-pill on">all 5</span>
+          <span class="filter-pill">#vue 3</span>
+          <span class="filter-pill">#react 1</span>
+          <span class="filter-pill">#nuxt 2</span>
+          <span class="filter-pill">#testing 1</span>
+          <span class="filter-pill">#architecture 2</span>
+        </div>
+
+        <div class="year-rule">2026</div>
+        <div class="post-list">
+          <a class="card post-card is-hover" href="post.html">
+            <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+            <div class="meta">OCT 12, 2026 · 6 MIN</div>
+            <h3>Vue → React: what transfers, what doesn’t</h3>
+            <p>Reactivity, effects and fetching map more cleanly than the tutorials suggest. Lifecycle does not.</p>
+            <span class="hash-tag">#react #vue</span>
+          </a>
+          <article class="card post-card">
+            <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+            <div class="meta">SEP 30, 2026 · 8 MIN</div>
+            <h3>TanStack Query in Nuxt 3</h3>
+            <p>Replacing Axios-in-Pinia with a cache that matches the server. Invalidation is the whole game.</p>
+            <span class="hash-tag">#nuxt #state</span>
+          </article>
+          <article class="card post-card">
+            <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+            <div class="meta">SEP 14, 2026 · 7 MIN</div>
+            <h3>Strangler vs big-bang: migrating Particula</h3>
+            <p>Why we ran Vue 2 and Nuxt 3 side by side for six months, and what I would start with next time.</p>
+            <span class="hash-tag">#architecture #nuxt</span>
+          </article>
+          <article class="card post-card">
+            <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+            <div class="meta">AUG 02, 2026 · 5 MIN</div>
+            <h3>Playwright against the contract, not the pixels</h3>
+            <p>120 specs later: selectors rot, JSON shapes do not. Test the API you promised the UI.</p>
+            <span class="hash-tag">#testing #vue</span>
+          </article>
+          <article class="card post-card">
+            <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+            <div class="meta">JUL 18, 2026 · 4 MIN</div>
+            <h3>Chose / Over / Because</h3>
+            <p>A one-page template for frontend decisions, stolen from how we wrote Particula’s ADRs.</p>
+            <span class="hash-tag">#architecture</span>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container inner">
+      <span>© 2026 Parker Vu · Hung Vu Van — Senior Frontend</span>
+      <nav><a href="projects.html">Work</a><a href="notes.html">Notes</a><a href="#">CV</a></nav>
+      <span>a1b2c3</span>
+    </div>
+  </footer>
+</body>
+</html>
+
+

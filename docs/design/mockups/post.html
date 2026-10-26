@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vue → React · Parker Vu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&family=Inter:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container inner">
+      <a class="logo" href="home.html"><span class="mark">p</span> parker.dev</a>
+      <nav class="nav-links">
+        <a href="projects.html">Work</a>
+        <a href="about.html">About</a>
+        <a class="active" href="notes.html">Notes</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="header-actions">
+        <div class="search-chip">Search… <kbd class="k">⌘K</kbd></div>
+        <div class="locale"><span class="on">EN</span><span>VI</span></div>
+        <button class="icon-btn" aria-label="Theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"/></svg></button>
+        <button class="icon-btn menu-btn" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+      </div>
+    </div>
+    <div class="progress" aria-hidden="true"></div>
+  </header>
+
+  <main>
+    <div class="container layout-with-toc" style="padding-top:40px">
+      <article>
+        <a class="crumb" href="notes.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M15 18l-6-6 6-6"/></svg>
+          Notes
+        </a>
+        <div class="eyebrow" style="margin-bottom:12px">Note · #react #vue</div>
+        <h1>Vue → React: what transfers, what doesn’t</h1>
+        <p class="text-meta subtle" style="margin:12px 0 28px">Oct 12, 2026 · Updated Oct 14 · 6 min · Đọc bằng tiếng Việt</p>
+        <div class="prose">
+          <p>I spent five years in Vue. This month I’m writing React for this portfolio. The surprising part is not JSX. It is which mental models survive the jump, and which ones you have to put down.</p>
+
+          <h2>Reactivity</h2>
+          <p><code>ref</code> and <code>useState</code> look similar and are not. Vue tracks property access. React replaces the value. If you mutate an object in place, Vue notices and React does not.</p>
+
+          <div class="callout">
+            <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg></span>
+            <div>Treat React state as a value you replace, not a graph you poke. That one sentence would have saved me two days.</div>
+          </div>
+
+          <h2>Effects</h2>
+          <p><code>watch</code> is a scalpel. <code>useEffect</code> is a net. Dependency arrays are the price of admission. The Vue habit of “watch this computed and do a thing” maps to <code>useEffect</code> plus a carefully listed array, or, better, to deriving during render.</p>
+
+          <h2>Data fetching</h2>
+          <p>This is the cleanest transfer. TanStack Query is the same library. The cache, the keys, the invalidation — I already used them in Nuxt 3. The React version did not ask me to relearn anything except <code>useSuspenseQuery</code>.</p>
+
+          <div class="codeblock">
+            <div class="bar">
+              <span>components/Counter.tsx</span>
+              <span style="display:flex;gap:8px;align-items:center">
+                <span class="badge">tsx</span>
+                <button class="btn-link" type="button" style="font-size:12px">Copy</button>
+              </span>
+            </div>
+            <pre><code><span class="tok-k">function</span> <span class="tok-f">Counter</span>() {
+  <span class="tok-k">const</span> [n, setN] = <span class="tok-f">useState</span>(<span class="tok-n">0</span>)
+  <span class="tok-c">// replace, don't mutate</span>
+  <span class="tok-k">return</span> (
+    &lt;<span class="tok-f">button</span> onClick={() =&gt; setN(n + <span class="tok-n">1</span>)}&gt;
+      {n}
+    &lt;/<span class="tok-f">button</span>&gt;
+  )
+}</code></pre>
+          </div>
+
+          <h2>What does not transfer</h2>
+          <ul class="b">
+            <li>Single-file components with colocated styles — use modules or Tailwind, pick one</li>
+            <li>Directives. There is no <code>v-if</code>; you branch in JSX</li>
+            <li>The compiler doing so much that you forget about renders</li>
+          </ul>
+        </div>
+
+        <aside class="takeaways">
+          <div class="eyebrow">Key takeaways</div>
+          <ul>
+            <li>Replace state; never mutate it in place.</li>
+            <li>Derive during render before you reach for an effect.</li>
+            <li>TanStack Query is the same job in Vue and React.</li>
+            <li>Lifecycle names lie; the rules are different.</li>
+          </ul>
+        </aside>
+      </article>
+      <aside class="toc">
+        <p>On this page</p>
+        <a href="#" class="current">Reactivity</a>
+        <a href="#">Effects</a>
+        <a href="#">Data fetching</a>
+        <a href="#">What does not transfer</a>
+        <p style="margin-top:24px"><a class="btn-link" href="#">Copy link</a></p>
+      </aside>
+    </div>
+
+    <div class="band">
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <div class="left">
+              <span class="icon-tile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg></span>
+              <div>
+                <div class="eyebrow">Related</div>
+                <h2>Related notes</h2>
+              </div>
+            </div>
+          </div>
+          <div class="post-list">
+            <article class="card post-card is-hover">
+              <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+              <div class="meta">SEP 30 · 8 MIN</div>
+              <h3>TanStack Query in Nuxt 3</h3>
+              <p>Replacing Axios-in-Pinia with a cache that matches the server.</p>
+              <span class="hash-tag">#nuxt #state</span>
+            </article>
+            <article class="card post-card">
+              <span class="arrow" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M7 17L17 7M7 7h10v10"/></svg></span>
+              <div class="meta">SEP 14 · 7 MIN</div>
+              <h3>Strangler vs big-bang: migrating Particula</h3>
+              <p>Why we ran Vue 2 and Nuxt 3 side by side for six months.</p>
+              <span class="hash-tag">#architecture</span>
+            </article>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container inner">
+      <span>© 2026 Parker Vu · Hung Vu Van — Senior Frontend</span>
+      <nav><a href="projects.html">Work</a><a href="notes.html">Notes</a><a href="#">CV</a></nav>
+      <span>a1b2c3</span>
+    </div>
+  </footer>
+</body>
+</html>
+
+

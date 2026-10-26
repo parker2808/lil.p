@@ -1,0 +1,190 @@
+# API module conventions (NestJS + Prisma)
+
+Monorepo map and package rules: **[../../STRUCTURE.md](../../STRUCTURE.md)**. Build plan: [docs/PLAN.md](../../docs/PLAN.md). Backend glossary: spec [§1.6](../../docs/design/portfolio-design-system.md#s-1-6).
+
+This file covers how `apps/api` is laid out and what each folder is for. It is written for someone new to NestJS: read "How a request flows" once, then use the folder table as a lookup.
+
+## Overview
+
+```text
+prisma/                   # the database definition: schema, migrations, seed
+src/
+├── main.ts               # starts the app: prefix /api, global pipes/filters, listen :4000
+├── app.module.ts         # root module: imports every feature module
+├── config/               # reads and validates .env once
+├── prisma/               # PrismaService: the one DB connection everyone injects
+├── common/               # cross-cutting code: guards, pipes, filters, interceptors, decorators
+├── i18n/                 # locale query parsing + pick En/Vi columns for public responses
+└── modules/              # one folder per domain (projects, posts, auth, …)
+test/                     # integration tests against the test DB (supertest)
+api.http                  # one request per route, run with VS Code REST Client or curl
+prisma.config.ts          # Prisma CLI config (Prisma 7+)
+```
+
+## How a request flows
+
+```text
+GET /api/public/projects?locale=vi
+  │
+  ├─ middleware   request-id.middleware.ts   gives the request an id (shown in errors and logs)
+  ├─ guard        jwt-auth.guard.ts          valid access token in the cookie? sets request.user (@Public() routes skip it)
+  │               roles.guard.ts             does the user's role (admin | user) allow this? no @Roles() = admin only
+  │               origin.guard.ts            mutating request from our own site? (CSRF)
+  ├─ pipe         zod-validation.pipe.ts     parse ?query / body with a contracts schema → 400 if bad
+  ├─ controller   public-projects.controller.ts   maps the URL to one service method; no logic
+  ├─ service      projects.service.ts        the logic: Prisma queries, transactions, rules
+  ├─ entity/mapper project.mapper.ts         DB row → JSON shape (picks vi or en, hides private fields)
+  └─ on error     all-exceptions.filter.ts   any thrown error → { statusCode, code, message, requestId, fieldErrors? }
+```
+
+Keep that order in mind: guards decide whether a request is allowed, pipes check its input, controllers route it, services do the work.
+
+## Folders, explained
+
+| Folder | What it is, in plain words | What goes in it |
+| --- | --- | --- |
+| `prisma/` | The database's source of truth. `schema.prisma` lists every table and column; `migrate dev` turns your edits into SQL files in `migrations/` | `schema.prisma`, `migrations/` (committed, never edited after applying), `seed/` |
+| `prisma/seed/` | Scripts that fill an empty DB with starting rows | `seed.ts` (entry), `profiles/demo.seed.ts` (dev/CI data), `profiles/baseline.seed.ts` (first production boot), `data/*.data.ts` (placeholder rows, `<email>`/`<phone>` only), `audit.seed.ts` (dev-only bulk rows for performance checks) |
+| `src/config/` | Settings that live outside the code (`.env`). Read once at start-up and validated, so a missing `DATABASE_URL` or a too-short `JWT_ACCESS_SECRET` fails at boot instead of at the first request | `env.schema.ts` (zod), `app-config.service.ts` (typed getters), `config.module.ts` |
+| `src/prisma/` | The code side of Prisma: one shared `PrismaClient` wrapped as a Nest provider. Services inject it instead of creating their own connection | `prisma.module.ts` (global), `prisma.service.ts` |
+| `src/common/guards/` | A guard runs before the controller and answers yes/no | `jwt-auth.guard.ts` (global: verifies the access token from the `access_token` cookie), `jwt-refresh.guard.ts` (only on `POST /auth/refresh`: verifies the `refresh_token` cookie), `roles.guard.ts` (`admin`/`user`), `origin.guard.ts` |
+| `src/common/pipes/` | A pipe checks or transforms input before the controller sees it | `zod-validation.pipe.ts` |
+| `src/common/filters/` | A filter catches thrown errors and writes the error response, so every error looks the same | `all-exceptions.filter.ts` (maps Prisma `P2002` → 409, `P2025` → 404) |
+| `src/common/interceptors/` | Wraps the controller call, for things that happen around every request | `logging.interceptor.ts` (method, path, status, ms, request id; never bodies or passwords) |
+| `src/common/decorators/` | Small labels you put on a route or parameter | `public.decorator.ts` (`@Public()`), `roles.decorator.ts` (`@Roles('admin')`, `@Roles('admin', 'user')`), `current-user.decorator.ts` (`@CurrentUser()` → `{ id, role }`) |
+| `src/common/middleware/` | Runs first on every request, before guards | `request-id.middleware.ts` |
+| `src/common/utils/` | Plain helper functions, no Nest | `slug.util.ts`, `reading-time.util.ts`, `ip-hash.util.ts` |
+| `src/i18n/` | The API speaks two content languages. Public routes take `?locale=en\|vi` and return one language; admin routes return both columns | `locale.decorator.ts` (`@Locale()`), `pick-locale.util.ts` (+ `.spec.ts`) |
+| `src/modules/` | One folder per domain. A module groups the controller(s), service and DTOs for one thing | see "Module layout" |
+| `test/` | Tests that start the whole app and call it over HTTP against a separate test database | `*.e2e-spec.ts`, `helpers/` (`create-app.ts`, `reset-db.ts`, `auth.helper.ts`: an `admin` and a `user` agent with cookies) |
+
+## Module layout
+
+```text
+src/modules/[domain]/
+├── [domain].module.ts                 # wires controller(s) + service; exports the service if others need it
+├── public-[domain].controller.ts      # routes under /api/public/[domain]  (@Public, GET only)
+├── admin-[domain].controller.ts       # routes under /api/admin/[domain]   (JWT + roles: GET @Roles('admin','user'), writes admin only)
+├── [domain].service.ts                # logic and Prisma calls
+├── [domain].service.spec.ts           # unit tests for the service
+├── dto/                               # shapes that cross HTTP
+│   ├── create-[entity].dto.ts         # re-exports the zod schema + type from @portfolio/contracts
+│   ├── update-[entity].dto.ts
+│   └── [entity]-list-query.dto.ts
+└── entities/
+    ├── [entity].entity.ts             # the Prisma `include`/`select` we load + the row type it produces
+    └── [entity].mapper.ts             # row → public DTO (one language) / admin DTO (both languages)
+```
+
+- **DTO** (data transfer object) is the JSON shape of a request or response. Our DTO files re-export the zod schemas from `@portfolio/contracts`, so the browser form and the API run the same validation.
+- **Entity** is what a DB row looks like once loaded. Prisma generates the row types; `*.entity.ts` fixes which relations we always load, so the mapper and service agree.
+- **Mapper** turns an entity into a DTO. This is where `phone` and `passwordHash` get dropped and where `titleVi` becomes `title`.
+- A module owns its tables. Other modules call its exported service and never query its tables directly.
+
+## Auth (JWT)
+
+Two JWTs in httpOnly cookies (PLAN D24), two roles (`admin`, `user`, PLAN D7). The files, in the order a request meets them:
+
+```text
+src/modules/auth/
+├── auth.module.ts                # imports PassportModule, JwtModule, UsersModule
+├── auth.controller.ts            # /auth/login, /auth/refresh, /auth/logout, /auth/me, /auth/password
+├── auth.service.ts               # argon2 verify, issue tokens, rotate on refresh
+├── token.service.ts              # JwtService.signAsync: access { sub, role } 15 min, refresh { sub, ver } 7 days
+├── auth-cookies.util.ts          # set/clear access_token (Path=/) and refresh_token (Path=/api/auth)
+├── strategies/
+│   ├── jwt.strategy.ts           # passport-jwt 'jwt': token from the access_token cookie → request.user = { id, role }
+│   └── jwt-refresh.strategy.ts   # 'jwt-refresh': token from the refresh_token cookie, checks isActive + tokenVersion in the DB
+└── dto/
+src/common/guards/jwt-auth.guard.ts      # AuthGuard('jwt'), global, honors @Public()
+src/common/guards/jwt-refresh.guard.ts   # AuthGuard('jwt-refresh'), only on POST /auth/refresh
+src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none = ['admin']
+```
+
+- **Strategy vs guard.** A *strategy* (`passport-jwt`) knows how to find and verify one kind of token. A *guard* (`AuthGuard('jwt')`) runs a strategy before a route. `@nestjs/jwt`'s `JwtService` is only used to *create* tokens.
+- **Where the role comes from.** `request.user.role` is read from the verified access token, so a client cannot change it. Role changes apply at the next refresh (at most 15 min).
+- **Adding a route.** Admin read → `@Roles('admin', 'user')`. Admin write → nothing (admin only). Public → `@Public()`. Never put a token, email or name in a JWT payload.
+
+## Modules
+
+| Module | Tables | Routes (all under `/api`) |
+| --- | --- | --- |
+| `health` | none | `GET /health` |
+| `site-settings` | `SiteSettings` | admin `GET/PATCH /admin/site` |
+| `profile` | `Profile` | admin `GET/PATCH /admin/profile` |
+| `navigation` | `NavItem` | admin CRUD + order |
+| `social-links` | `SocialLink` | admin CRUD + order |
+| `pages` | `Page`, `PageBlock`, `PageVersion` (T52a) | `GET /public/pages/:key?locale`; admin `GET /admin/pages`, `GET/PATCH /admin/pages/:key`, `POST …/blocks`, `PATCH/DELETE …/blocks/:id`, `POST …/blocks/:id/duplicate`, `PATCH …/blocks/order`, `POST …/publish`, `GET …/versions`, `GET …/versions/:version`, `POST …/versions/:version/restore`, `POST …/discard`, `GET /admin/preview/pages/:key` (see "Pages and blocks") |
+| `public-site` | none (reads the four above + `profile-stats`) | `GET /public/site?locale` |
+| `experience`, `education`, `principles`, `profile-stats`, `process-steps` | one table each | public GET + admin CRUD + order |
+| `skills` | `SkillCategory`, `Skill` | `GET /public/skills`, admin CRUD + order |
+| `domains` | `Domain` | `GET /public/domains`, admin CRUD + order |
+| `projects` | `Project`, `ProjectMetric`, `ProjectImage` | public list/detail, admin CRUD + order + publish |
+| `tags` | `Tag` | admin CRUD |
+| `posts` | `Post` | public list/detail, admin CRUD + publish |
+| `contact-topics` | `ContactTopic` | `GET /public/contact-topics`, admin CRUD + order |
+| `contact` | `ContactMessage` | `POST /public/contact`, admin inbox list/patch |
+| `auth` | none (reads `User` through `UsersService`) | `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `GET /auth/me`, `PATCH /auth/password` |
+| `users` | `User` | admin users (admin only) |
+| `media` | `Media` | admin upload/list/patch, public file `GET /public/media/:file` |
+| `events` | none (in-memory stream) | `GET /admin/events` (SSE) |
+| `publishing` | none (calls web `/api/revalidate`) | used by projects, posts and pages services |
+| `analytics` | `PageView` | `POST /public/views` |
+| `audit` | `AuditLog` | `GET /admin/audit` (cursor) |
+| `dashboard` | none (reads counts) | `GET /admin/stats?range`, `GET /admin/health` |
+
+## Pages and blocks
+
+The five public pages (home, about, projects, notes, contact) are not hard-coded layouts. Each is a list of blocks the admin arranges (PLAN D26). This section explains the moving parts once.
+
+```text
+src/modules/pages/
+├── pages.module.ts
+├── public-pages.controller.ts    # GET /public/pages/:key?locale (@Public)
+├── admin-pages.controller.ts     # pages, blocks, order, publish, versions, restore, discard, preview
+├── pages.service.ts              # read (public + admin), block CRUD; every row goes through parseBlock
+├── page-versions.service.ts      # publish (snapshot → PageVersion), restore, discard (T52a)
+├── pages-rules.util.ts           # one H1 block first, required blocks, maxPerPage, allowed pages
+├── dto/
+└── entities/
+    ├── page.entity.ts
+    └── page.mapper.ts            # resolveBlockLocale per block, SEO group (D19)
+packages/contracts/src/blocks/    # the registry: definitions/*.block.ts, block-registry.constant.ts, resolve-block.util.ts
+```
+
+- **Three tables.** `Page` is one row per route page (`key` = `HOME` … `CONTACT`). `PageBlock` is the editable draft: one row per block, with `type`, `key` (the anchor), `props`, `layout`, `surface`, `sortOrder`, `isVisible`. `PageVersion` is a published copy of all of a page's blocks as one JSON `snapshot`; `Page.publishedVersionId` points at the live one.
+- **A JSON column.** `props` is MySQL `JSON` because every block type has different settings. MySQL only checks that it is valid JSON, so the API checks the shape with the type's zod schema from the registry on every write and on every read.
+- **Registry in code, content in the DB.** `type` is a plain string checked against `BLOCK_REGISTRY` in `@portfolio/contracts`, not a DB enum. Adding a block type is a code change with no migration (root STRUCTURE, "Where does it go?"). Which blocks a page shows, and their text, is data.
+- **Validate by type.** A write's body has `props: unknown`; the service reads the block's `type`, picks its schema and parses. Errors come back as the usual 400 with `fieldErrors` keyed by path (`props.primaryCta.label.en`), so the admin form shows them under the right input.
+- **Fail safe.** `parseBlock` never throws. On public reads, an unknown type or invalid props drops that one block and logs a warning with the request id (never the props); the page still returns 200. Admin reads return the bad row with its `issues`, so it can be fixed or deleted.
+- **Schema versions.** Each block type has a `version` and a `migrate(props, fromVersion)`. Rows and old snapshots are upgraded when read, so a props change never needs a data migration, and restoring an old version still works.
+- **References.** `projectIds` inside JSON has no foreign key. Writes check ids exist (`refs`), renderers skip missing ones, and the dashboard's content health lists dangling ones.
+- **Draft, publish, restore.** Edits change `PageBlock` rows only. Publish validates strictly, writes version n+1 (`@@unique([pageId, version])`) in one transaction, then revalidates the web tag `page:{key}`. Restore copies a snapshot back into the draft; it never deletes history.
+
+## Naming
+
+Nest's own convention already matches the frontend rule (kebab-case + suffix):
+
+- **Files**: `projects.module.ts`, `projects.service.ts`, `public-projects.controller.ts`, `create-project.dto.ts`, `project.entity.ts`, `project.mapper.ts`, `jwt-auth.guard.ts`, `jwt.strategy.ts`, `zod-validation.pipe.ts`, `all-exceptions.filter.ts`, `public.decorator.ts`
+- **Classes**: PascalCase + role (`ProjectsService`, `PublicProjectsController`, `JwtAuthGuard`, `JwtStrategy`)
+- **Module folders**: kebab-case, plural for collections (`projects/`, `profile-stats/`), singular for singletons (`profile/`)
+- **Prisma models**: PascalCase singular (`Project`), tables mapped to snake_case (`@@map("project")`), columns camelCase with `En`/`Vi` pairs (spec §1.5)
+- **Migrations**: `pnpm prisma migrate dev --name add-project` (kebab-case verb + noun)
+- **Tests**: unit `*.spec.ts` next to the file; integration `test/*.e2e-spec.ts`
+
+## Rules
+
+- Controllers have no logic: read params, call one service method, return.
+- Only services touch Prisma. Multi-row writes use `prisma.$transaction(async (tx) => …)` and every query inside uses `tx`.
+- Never return a Prisma row; always map it to a DTO.
+- Never edit an applied migration; create a new one. Never use `prisma db push` once migrations exist.
+- Never log request bodies, passwords, tokens, cookies or contact email addresses.
+- Every route is protected by the global `JwtAuthGuard` unless marked `@Public()`, and is admin only unless it has `@Roles('admin', 'user')`.
+
+## New API module
+
+```bash
+cd apps/api && MODULE_NAME="your-module" && pnpm nest g module "modules/$MODULE_NAME" && pnpm nest g service "modules/$MODULE_NAME" && pnpm nest g controller "modules/$MODULE_NAME" && mkdir -p "src/modules/$MODULE_NAME"/{dto,entities}
+```
+
+Then rename the generated controller to `public-…` / `admin-…` as needed, add the zod schemas in `packages/contracts/src/[domain]/`, and add the module's requests to `api.http`.
