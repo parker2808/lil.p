@@ -465,3 +465,44 @@ model Skill {
   @@index([depth, sortOrder])
   @@map("skill")
 }
+
+model Tag {
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique
+  nameEn    String
+  nameVi    String
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tag")
+}
+
+model Post {
+  id               Int           @id @default(autoincrement())
+  slug             String        @unique
+  titleEn          String
+  titleVi          String
+  excerptEn        String        @db.Text
+  excerptVi        String        @db.Text
+  bodyEn           String        @db.Text
+  bodyVi           String        @db.Text
+  takeawaysEn      String        @db.Text
+  takeawaysVi      String        @db.Text
+  seoTitleEn       String?
+  seoTitleVi       String?
+  seoDescriptionEn String?       @db.Text
+  seoDescriptionVi String?       @db.Text
+  coverId          Int?
+  readingMinutes   Int
+  isFeatured       Boolean       @default(false)
+  status           ContentStatus @default(DRAFT)
+  publishedAt      DateTime?
+  sortOrder        Int           @default(0)
+  tags             Tag[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([status, publishedAt, sortOrder])
+  @@map("post")
+}

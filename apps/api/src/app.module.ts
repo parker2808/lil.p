@@ -11,6 +11,7 @@ import { ExperienceModule } from './modules/experience/experience.module';
 import { HealthModule } from './modules/health/health.module';
 import { NavigationModule } from './modules/navigation/navigation.module';
 import { PagesModule } from './modules/pages/pages.module';
+import { PostsModule } from './modules/posts/posts.module';
 import { PrinciplesModule } from './modules/principles/principles.module';
 import { ProcessStepsModule } from './modules/process-steps/process-steps.module';
 import { ProfileModule } from './modules/profile/profile.module';
@@ -20,6 +21,7 @@ import { PublicSiteModule } from './modules/public-site/public-site.module';
 import { SiteSettingsModule } from './modules/site-settings/site-settings.module';
 import { SkillsModule } from './modules/skills/skills.module';
 import { SocialLinksModule } from './modules/social-links/social-links.module';
+import { TagsModule } from './modules/tags/tags.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -39,6 +41,8 @@ import { PrismaModule } from './prisma/prisma.module';
     DomainsModule,
     ProjectsModule,
     SkillsModule,
+    PostsModule,
+    TagsModule,
     PublicSiteModule,
     PagesModule,
   ],

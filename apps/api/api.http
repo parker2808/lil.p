@@ -58,3 +58,18 @@ GET http://127.0.0.1:4000/api/public/skills?locale=en
 
 ### Public skills marquee
 GET http://127.0.0.1:4000/api/public/skills?locale=en&marquee=1
+
+### Public posts
+GET http://127.0.0.1:4000/api/public/posts?locale=en
+
+### Public posts vi (EN fallback)
+GET http://127.0.0.1:4000/api/public/posts/vue-to-react?locale=vi
+
+### Public posts by tag
+GET http://127.0.0.1:4000/api/public/posts?locale=en&tag=react
+
+### Public draft post (404)
+GET http://127.0.0.1:4000/api/public/posts/draft-note
+
+### Public tags
+GET http://127.0.0.1:4000/api/public/tags?locale=en
