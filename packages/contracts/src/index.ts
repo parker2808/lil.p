@@ -10,6 +10,7 @@ export type { ApiErrorBody, ErrorCode } from './common/api-error.schema';
 export { apiErrorSchema, errorCodeSchema } from './common/api-error.schema';
 export type { Locale } from './common/locale.schema';
 export { localeQuerySchema, localeSchema } from './common/locale.schema';
+export { publishLint } from './common/publish-lint.util';
 export type { IconKey } from './constants/icons.constant';
 export { ICON_KEYS, iconKeySchema } from './constants/icons.constant';
 export { qk } from './constants/query-keys.constant';
@@ -40,6 +41,20 @@ export {
 } from './pages/pages.enum';
 export { publicPageSchema } from './pages/pages.schema';
 export type { PublicPage } from './pages/pages.type';
+export {
+  adminPostInputSchema,
+  publicPostDetailSchema,
+  publicPostListItemSchema,
+  publicPostListQuerySchema,
+  publicPostTagSchema,
+} from './posts/posts.schema';
+export type {
+  AdminPostInput,
+  PublicPostDetail,
+  PublicPostListItem,
+  PublicPostListQuery,
+  PublicPostTag,
+} from './posts/posts.type';
 export { publicPrincipleSchema } from './principles/principles.schema';
 export type { PublicPrinciple } from './principles/principles.type';
 export { publicProcessStepSchema } from './process-steps/process-steps.schema';
@@ -92,3 +107,5 @@ export type { SocialKind } from './social-links/social-links.enum';
 export { socialKindSchema } from './social-links/social-links.enum';
 export { publicSocialLinkSchema } from './social-links/social-links.schema';
 export type { PublicSocialLink } from './social-links/social-links.type';
+export { publicTagSchema } from './tags/tags.schema';
+export type { PublicTag } from './tags/tags.type';
