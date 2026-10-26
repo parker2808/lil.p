@@ -10,6 +10,8 @@ export const domainSelect = {
   hue: true,
   iconKey: true,
   sortOrder: true,
+  isVisible: true,
+  updatedAt: true,
   _count: {
     select: {
       projects: { where: { status: 'PUBLISHED' } },

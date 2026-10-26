@@ -119,10 +119,10 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | `pages` | `Page`, `PageBlock`, `PageVersion` (T52a) | `GET /public/pages/:key?locale`; admin `GET /admin/pages`, `GET/PATCH /admin/pages/:key`, `POST …/blocks`, `PATCH/DELETE …/blocks/:id`, `POST …/blocks/:id/duplicate`, `PATCH …/blocks/order`, `POST …/publish`, `GET …/versions`, `GET …/versions/:version`, `POST …/versions/:version/restore`, `POST …/discard`, `GET /admin/preview/pages/:key` (see "Pages and blocks") |
 | `public-site` | none (reads the four above + `profile-stats`) | `GET /public/site?locale` |
 | `experience`, `education`, `principles`, `profile-stats`, `process-steps` | one table each | public GET + admin CRUD + order |
-| `skills` | `SkillCategory`, `Skill` | `GET /public/skills`, admin CRUD + order |
-| `domains` | `Domain` | `GET /public/domains`, admin CRUD + order |
+| `skills` | `SkillCategory`, `Skill` | `GET /public/skills`, admin CRUD (`admin-skills.controller.ts`; used category delete → 409 `IN_USE`) |
+| `domains` | `Domain` | `GET /public/domains`, admin CRUD (`admin-domains.controller.ts`; delete sets `Project.domainId` null) |
 | `projects` | `Project`, `ProjectMetric`, `ProjectImage` | public list/detail, admin CRUD (`admin-projects.controller.ts`) + archive; publish later |
-| `tags` | `Tag` | admin CRUD |
+| `tags` | `Tag` | public list + admin CRUD (`admin-tags.controller.ts`; slug derived from `nameEn`) |
 | `posts` | `Post` | public list/detail, admin CRUD (`admin-posts.controller.ts`) + archive; publish later |
 | `contact-topics` | `ContactTopic` | `GET /public/contact-topics`, admin CRUD + order |
 | `contact` | `ContactMessage` | `POST /public/contact`, admin inbox list/patch |

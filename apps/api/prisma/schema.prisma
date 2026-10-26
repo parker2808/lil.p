@@ -394,7 +394,7 @@ model Project {
   publishedAt     DateTime?
   sortOrder       Int           @default(0)
   domainId        Int?
-  domain          Domain?       @relation(fields: [domainId], references: [id])
+  domain          Domain?       @relation(fields: [domainId], references: [id], onDelete: SetNull)
   experienceId    Int?
   experience      Experience?   @relation(fields: [experienceId], references: [id])
   metrics         ProjectMetric[]

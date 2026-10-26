@@ -375,3 +375,113 @@ Content-Type: application/json
 
 ### Admin process-step delete
 DELETE http://127.0.0.1:4000/api/admin/process-steps/1
+
+### Admin skill-categories list
+GET http://127.0.0.1:4000/api/admin/skill-categories
+
+### Admin skill-category create
+POST http://127.0.0.1:4000/api/admin/skill-categories
+Content-Type: application/json
+
+{
+  "nameEn": "Frontend",
+  "nameVi": ""
+}
+
+### Admin skill-category get
+GET http://127.0.0.1:4000/api/admin/skill-categories/1
+
+### Admin skill-category update
+PATCH http://127.0.0.1:4000/api/admin/skill-categories/1
+Content-Type: application/json
+
+{
+  "nameEn": "UI"
+}
+
+### Admin skill-category delete (409 IN_USE if skills remain)
+DELETE http://127.0.0.1:4000/api/admin/skill-categories/1
+
+### Admin skills list
+GET http://127.0.0.1:4000/api/admin/skills
+
+### Admin skill create
+POST http://127.0.0.1:4000/api/admin/skills
+Content-Type: application/json
+
+{
+  "name": "React",
+  "categoryId": 1,
+  "depth": "DAILY"
+}
+
+### Admin skill get
+GET http://127.0.0.1:4000/api/admin/skills/1
+
+### Admin skill update
+PATCH http://127.0.0.1:4000/api/admin/skills/1
+Content-Type: application/json
+
+{
+  "showInMarquee": true
+}
+
+### Admin skill delete
+DELETE http://127.0.0.1:4000/api/admin/skills/1
+
+### Admin tags list
+GET http://127.0.0.1:4000/api/admin/tags
+
+### Admin tag create (slug derived from nameEn)
+POST http://127.0.0.1:4000/api/admin/tags
+Content-Type: application/json
+
+{
+  "nameEn": "React 19",
+  "nameVi": ""
+}
+
+### Admin tag get
+GET http://127.0.0.1:4000/api/admin/tags/1
+
+### Admin tag update
+PATCH http://127.0.0.1:4000/api/admin/tags/1
+Content-Type: application/json
+
+{
+  "nameEn": "React"
+}
+
+### Admin tag delete
+DELETE http://127.0.0.1:4000/api/admin/tags/1
+
+### Admin domains list
+GET http://127.0.0.1:4000/api/admin/domains
+
+### Admin domain create
+POST http://127.0.0.1:4000/api/admin/domains
+Content-Type: application/json
+
+{
+  "slug": "commerce",
+  "nameEn": "Commerce",
+  "nameVi": "",
+  "descriptionEn": "Stores",
+  "descriptionVi": "",
+  "hue": "JADE",
+  "iconKey": "shopping-bag"
+}
+
+### Admin domain get
+GET http://127.0.0.1:4000/api/admin/domains/1
+
+### Admin domain update
+PATCH http://127.0.0.1:4000/api/admin/domains/1
+Content-Type: application/json
+
+{
+  "nameEn": "Shop"
+}
+
+### Admin domain delete (projects keep the row, domainId becomes null)
+DELETE http://127.0.0.1:4000/api/admin/domains/1

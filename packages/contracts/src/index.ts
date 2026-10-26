@@ -29,8 +29,20 @@ export type { PublicRoute } from './constants/routes.constant';
 export { PUBLIC_ROUTES } from './constants/routes.constant';
 export type { Hue } from './domains/domains.enum';
 export { hueSchema } from './domains/domains.enum';
-export { publicDomainSchema, publicProjectDomainSchema } from './domains/domains.schema';
-export type { PublicDomain, PublicProjectDomain } from './domains/domains.type';
+export {
+  adminDomainSchema,
+  domainCreateSchema,
+  domainUpdateSchema,
+  publicDomainSchema,
+  publicProjectDomainSchema,
+} from './domains/domains.schema';
+export type {
+  AdminDomain,
+  DomainCreateInput,
+  DomainUpdateInput,
+  PublicDomain,
+  PublicProjectDomain,
+} from './domains/domains.type';
 export {
   adminEducationSchema,
   educationCreateSchema,
@@ -196,22 +208,39 @@ export type { PublicSiteSettings } from './site-settings/site-settings.type';
 export type { SkillDepth } from './skills/skills.enum';
 export { skillDepthSchema } from './skills/skills.enum';
 export {
+  adminSkillCategorySchema,
+  adminSkillSchema,
   publicSkillCategorySchema,
   publicSkillChipSchema,
   publicSkillSchema,
   publicSkillsGroupedSchema,
   publicSkillsQuerySchema,
+  skillCategoryCreateSchema,
+  skillCategoryUpdateSchema,
+  skillCreateSchema,
+  skillUpdateSchema,
 } from './skills/skills.schema';
 export type {
+  AdminSkill,
+  AdminSkillCategory,
   PublicSkill,
   PublicSkillCategory,
   PublicSkillChip,
   PublicSkillsGrouped,
   PublicSkillsQuery,
+  SkillCategoryCreateInput,
+  SkillCategoryUpdateInput,
+  SkillCreateInput,
+  SkillUpdateInput,
 } from './skills/skills.type';
 export type { SocialKind } from './social-links/social-links.enum';
 export { socialKindSchema } from './social-links/social-links.enum';
 export { publicSocialLinkSchema } from './social-links/social-links.schema';
 export type { PublicSocialLink } from './social-links/social-links.type';
-export { publicTagSchema } from './tags/tags.schema';
-export type { PublicTag } from './tags/tags.type';
+export {
+  adminTagSchema,
+  publicTagSchema,
+  tagCreateSchema,
+  tagUpdateSchema,
+} from './tags/tags.schema';
+export type { AdminTag, PublicTag, TagCreateInput, TagUpdateInput } from './tags/tags.type';

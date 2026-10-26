@@ -5,6 +5,7 @@ export const tagSelect = {
   slug: true,
   nameEn: true,
   nameVi: true,
+  updatedAt: true,
   _count: {
     select: {
       posts: { where: { status: 'PUBLISHED' } },
