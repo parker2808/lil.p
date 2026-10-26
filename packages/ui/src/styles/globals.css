@@ -353,6 +353,18 @@
   .marquee-track[data-paused='true'] {
     animation-play-state: paused;
   }
+  @keyframes diagram-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .diagram-orbit {
+    transform-origin: 240px 140px;
+    animation: diagram-spin 24s linear infinite;
+  }
+  .diagram-orbit[data-reduced='true'] {
+    animation: none;
+  }
   code,
   kbd,
   pre {
