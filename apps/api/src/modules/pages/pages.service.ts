@@ -1,4 +1,10 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   type AdminBlock,
   type AdminPage,
@@ -15,6 +21,7 @@ import {
 import type { z } from 'zod';
 
 import { flattenZodError } from '../../common/pipes/zod-validation.pipe';
+import { applyReorder } from '../../common/utils/reorder.util';
 import { assertFresh } from '../../common/utils/stale.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -116,6 +123,23 @@ export class PagesService {
 
   async getAdmin(rawKey: string): Promise<AdminPage> {
     return toAdminPage(await this.requirePage(this.prisma, parsePageKey(rawKey)));
+  }
+
+  async reorderBlocks(rawKey: string, ids: number[]): Promise<AdminPage> {
+    const key = parsePageKey(rawKey);
+    return this.prisma.$transaction(async (tx) => {
+      const page = await this.requirePage(tx, key);
+      const h1 = page.blocks.find((block) => definitionOf(block.type)?.role === 'h1');
+      if (h1 && ids[0] !== h1.id) {
+        throw new ConflictException({
+          code: 'BLOCK_LOCKED',
+          message: 'The H1 block must stay first',
+        });
+      }
+      await applyReorder(tx.pageBlock, ids, { pageId: page.id });
+      await this.touchPage(tx, page.id);
+      return toAdminPage(await this.requirePage(tx, key));
+    });
   }
 
   async updatePage(rawKey: string, input: PageUpdateInput): Promise<AdminPage> {

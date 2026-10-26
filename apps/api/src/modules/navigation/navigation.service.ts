@@ -7,6 +7,7 @@ import type {
   PublicNavItem,
 } from '@portfolio/contracts';
 
+import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { navItemSelect } from './entities/nav-item.entity';
@@ -36,6 +37,11 @@ export class NavigationService {
       orderBy: [{ location: 'asc' }, { sortOrder: 'asc' }],
     });
     return rows.map(toAdminDto);
+  }
+
+  async reorder(ids: number[]): Promise<AdminNavItem[]> {
+    await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).navItem, ids);
+    return this.listAdmin();
   }
 
   async getAdmin(id: number): Promise<AdminNavItem> {

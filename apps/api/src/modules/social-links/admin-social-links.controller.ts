@@ -12,6 +12,8 @@ import {
 } from '@nestjs/common';
 import {
   type AdminSocialLink,
+  type ReorderInput,
+  reorderSchema,
   type SocialLinkCreateInput,
   socialLinkCreateSchema,
   type SocialLinkUpdateInput,
@@ -28,6 +30,13 @@ export class AdminSocialLinksController {
   @Get()
   list(): Promise<AdminSocialLink[]> {
     return this.links.listAdmin();
+  }
+
+  @Patch('order')
+  reorder(
+    @Body(new ZodValidationPipe(reorderSchema)) body: ReorderInput,
+  ): Promise<AdminSocialLink[]> {
+    return this.links.reorder(body.ids);
   }
 
   @Get(':id')

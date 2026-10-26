@@ -7,6 +7,7 @@ import type {
   SocialLinkUpdateInput,
 } from '@portfolio/contracts';
 
+import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { socialLinkSelect } from './entities/social-link.entity';
@@ -33,6 +34,11 @@ export class SocialLinksService {
       orderBy: { sortOrder: 'asc' },
     });
     return rows.map(toAdminDto);
+  }
+
+  async reorder(ids: number[]): Promise<AdminSocialLink[]> {
+    await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).socialLink, ids);
+    return this.listAdmin();
   }
 
   async getAdmin(id: number): Promise<AdminSocialLink> {

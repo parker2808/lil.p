@@ -16,6 +16,8 @@ import {
   contactTopicCreateSchema,
   type ContactTopicUpdateInput,
   contactTopicUpdateSchema,
+  type ReorderInput,
+  reorderSchema,
 } from '@portfolio/contracts';
 
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
@@ -28,6 +30,13 @@ export class AdminContactTopicsController {
   @Get()
   list(): Promise<AdminContactTopic[]> {
     return this.topics.listAdmin();
+  }
+
+  @Patch('order')
+  reorder(
+    @Body(new ZodValidationPipe(reorderSchema)) body: ReorderInput,
+  ): Promise<AdminContactTopic[]> {
+    return this.topics.reorder(body.ids);
   }
 
   @Get(':id')

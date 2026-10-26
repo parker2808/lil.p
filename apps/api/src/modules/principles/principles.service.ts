@@ -7,6 +7,7 @@ import type {
   PublicPrinciple,
 } from '@portfolio/contracts';
 
+import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { principleSelect } from './entities/principle.entity';
@@ -31,6 +32,11 @@ export class PrinciplesService {
       orderBy: { sortOrder: 'asc' },
     });
     return rows.map(toAdminDto);
+  }
+
+  async reorder(ids: number[]): Promise<AdminPrinciple[]> {
+    await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).principle, ids);
+    return this.listAdmin();
   }
 
   async getAdmin(id: number): Promise<AdminPrinciple> {

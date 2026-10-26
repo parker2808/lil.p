@@ -7,6 +7,7 @@ import type {
   PublicExperience,
 } from '@portfolio/contracts';
 
+import { reorder } from '../../common/utils/reorder.util';
 import { assertFresh } from '../../common/utils/stale.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -32,6 +33,11 @@ export class ExperienceService {
       orderBy: [{ startDate: 'desc' }, { sortOrder: 'asc' }],
     });
     return rows.map(toAdminDto);
+  }
+
+  async reorder(ids: number[]): Promise<AdminExperience[]> {
+    await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).experience, ids);
+    return this.listAdmin();
   }
 
   async getAdmin(id: number): Promise<AdminExperience> {

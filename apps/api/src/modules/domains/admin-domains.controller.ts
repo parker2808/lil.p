@@ -16,6 +16,8 @@ import {
   domainCreateSchema,
   type DomainUpdateInput,
   domainUpdateSchema,
+  type ReorderInput,
+  reorderSchema,
 } from '@portfolio/contracts';
 
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
@@ -28,6 +30,11 @@ export class AdminDomainsController {
   @Get()
   list(): Promise<AdminDomain[]> {
     return this.domains.listAdmin();
+  }
+
+  @Patch('order')
+  reorder(@Body(new ZodValidationPipe(reorderSchema)) body: ReorderInput): Promise<AdminDomain[]> {
+    return this.domains.reorder(body.ids);
   }
 
   @Get(':id')

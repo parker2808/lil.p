@@ -13,6 +13,8 @@ import {
 import {
   type AdminSkill,
   type AdminSkillCategory,
+  type ReorderInput,
+  reorderSchema,
   type SkillCategoryCreateInput,
   skillCategoryCreateSchema,
   type SkillCategoryUpdateInput,
@@ -33,6 +35,11 @@ export class AdminSkillsController {
   @Get()
   list(): Promise<AdminSkill[]> {
     return this.skills.listAdmin();
+  }
+
+  @Patch('order')
+  reorder(@Body(new ZodValidationPipe(reorderSchema)) body: ReorderInput): Promise<AdminSkill[]> {
+    return this.skills.reorder(body.ids);
   }
 
   @Get(':id')
@@ -69,6 +76,13 @@ export class AdminSkillCategoriesController {
   @Get()
   list(): Promise<AdminSkillCategory[]> {
     return this.skills.listCategories();
+  }
+
+  @Patch('order')
+  reorder(
+    @Body(new ZodValidationPipe(reorderSchema)) body: ReorderInput,
+  ): Promise<AdminSkillCategory[]> {
+    return this.skills.reorderCategories(body.ids);
   }
 
   @Get(':id')

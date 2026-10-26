@@ -16,6 +16,8 @@ import {
   processStepCreateSchema,
   type ProcessStepUpdateInput,
   processStepUpdateSchema,
+  type ReorderInput,
+  reorderSchema,
 } from '@portfolio/contracts';
 
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
@@ -28,6 +30,13 @@ export class AdminProcessStepsController {
   @Get()
   list(): Promise<AdminProcessStep[]> {
     return this.steps.listAdmin();
+  }
+
+  @Patch('order')
+  reorder(
+    @Body(new ZodValidationPipe(reorderSchema)) body: ReorderInput,
+  ): Promise<AdminProcessStep[]> {
+    return this.steps.reorder(body.ids);
   }
 
   @Get(':id')

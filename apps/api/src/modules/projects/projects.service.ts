@@ -1,6 +1,7 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import type {
   AdminProject,
+  AdminProjectListItem,
   AdminProjectListPage,
   AdminProjectListParams,
   Locale,
@@ -13,6 +14,7 @@ import type {
 import { parseSort } from '@portfolio/contracts';
 
 import { paginate } from '../../common/utils/paginate.util';
+import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { projectSelect } from './entities/project.entity';
@@ -117,6 +119,15 @@ export class ProjectsService {
     };
   }
 
+  async reorder(ids: number[]): Promise<AdminProjectListItem[]> {
+    await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).project, ids);
+    const rows = await this.prisma.project.findMany({
+      select: projectSelect,
+      orderBy: { sortOrder: 'asc' },
+    });
+    return rows.map(toAdminListItem);
+  }
+
   async getAdmin(id: number): Promise<AdminProject> {
     const row = await this.findRow(id);
     return toAdminDto(row);
@@ -157,28 +168,34 @@ export class ProjectsService {
 
     const { skillIds, metrics, updatedAt, ...fields } = input;
     void updatedAt;
-    const row = await this.prisma.project.update({
-      where: { id },
-      data: {
-        ...this.toWriteData(fields),
-        ...(skillIds ? { skills: { set: skillIds.map((skillId) => ({ id: skillId })) } } : {}),
-        ...(metrics
-          ? {
-              metrics: {
-                deleteMany: {},
-                create: metrics.map((metric, index) => ({
-                  labelEn: metric.labelEn,
-                  labelVi: metric.labelVi,
-                  before: metric.before ?? null,
-                  after: metric.after ?? null,
-                  value: metric.value,
-                  sortOrder: metric.sortOrder ?? index,
-                })),
-              },
-            }
-          : {}),
-      },
-      select: projectSelect,
+    const row = await this.prisma.$transaction(async (tx) => {
+      await tx.project.update({
+        where: { id },
+        data: this.toWriteData(fields),
+      });
+      if (skillIds) {
+        await tx.project.update({
+          where: { id },
+          data: { skills: { set: skillIds.map((skillId) => ({ id: skillId })) } },
+        });
+      }
+      if (metrics) {
+        await tx.projectMetric.deleteMany({ where: { projectId: id } });
+        if (metrics.length > 0) {
+          await tx.projectMetric.createMany({
+            data: metrics.map((metric, index) => ({
+              projectId: id,
+              labelEn: metric.labelEn,
+              labelVi: metric.labelVi,
+              before: metric.before ?? null,
+              after: metric.after ?? null,
+              value: metric.value,
+              sortOrder: metric.sortOrder ?? index,
+            })),
+          });
+        }
+      }
+      return tx.project.findUniqueOrThrow({ where: { id }, select: projectSelect });
     });
     return toAdminDto(row);
   }

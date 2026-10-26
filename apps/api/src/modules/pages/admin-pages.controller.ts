@@ -18,6 +18,8 @@ import {
   type BlockUpdateInput,
   createBlockSchema,
   type PageUpdateInput,
+  type ReorderInput,
+  reorderSchema,
   updateBlockSchema,
   updatePageSchema,
 } from '@portfolio/contracts';
@@ -54,6 +56,14 @@ export class AdminPagesController {
     @Body(new ZodValidationPipe(createBlockSchema)) body: BlockCreateInput,
   ): Promise<AdminBlock> {
     return this.pages.createBlock(key, body);
+  }
+
+  @Patch(':key/blocks/order')
+  reorderBlocks(
+    @Param('key') key: string,
+    @Body(new ZodValidationPipe(reorderSchema)) body: ReorderInput,
+  ): Promise<AdminPage> {
+    return this.pages.reorderBlocks(key, body.ids);
   }
 
   @Patch(':key/blocks/:id')

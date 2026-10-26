@@ -16,6 +16,8 @@ import {
   navItemCreateSchema,
   type NavItemUpdateInput,
   navItemUpdateSchema,
+  type ReorderInput,
+  reorderSchema,
 } from '@portfolio/contracts';
 
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
@@ -28,6 +30,11 @@ export class AdminNavigationController {
   @Get()
   list(): Promise<AdminNavItem[]> {
     return this.navigation.listAdmin();
+  }
+
+  @Patch('order')
+  reorder(@Body(new ZodValidationPipe(reorderSchema)) body: ReorderInput): Promise<AdminNavItem[]> {
+    return this.navigation.reorder(body.ids);
   }
 
   @Get(':id')
