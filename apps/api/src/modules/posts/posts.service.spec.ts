@@ -57,6 +57,31 @@ describe('PostsService', () => {
     );
   });
 
+  it('filters admin lists by tag slug', async () => {
+    const findMany = vi
+      .fn()
+      .mockResolvedValue([{ ...published, status: 'DRAFT', updatedAt: new Date('2026-10-26') }]);
+    const prisma = {
+      post: { findMany, count: vi.fn().mockResolvedValue(1) },
+      $transaction: vi.fn((ops: Promise<unknown>[]) => Promise.all(ops)),
+    };
+    const service = new PostsService(prisma as never);
+    const page = await service.listAdmin({
+      page: 1,
+      pageSize: 20,
+      sort: '-updatedAt',
+      tag: 'react',
+    });
+
+    expect(page.items[0]?.tags).toEqual([{ id: 1, slug: 'react', nameEn: 'React' }]);
+    expect(page.items[0]?.readingMinutes).toBe(6);
+    expect(findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { tags: { some: { slug: 'react' } } },
+      }),
+    );
+  });
+
   it('falls back to English when Vietnamese body is missing', async () => {
     const service = new PostsService({
       post: { findFirst: vi.fn().mockResolvedValue(published) },

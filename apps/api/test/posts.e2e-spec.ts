@@ -54,6 +54,8 @@ describe('admin posts', () => {
 
     const listed = await agent.get('/api/admin/posts').expect(200);
     expect(listed.body.total).toBe(1);
+    expect(listed.body.items[0]?.readingMinutes).toBeGreaterThanOrEqual(1);
+    expect(listed.body.items[0]?.tags).toEqual([]);
 
     const updated = await agent
       .patch(`/api/admin/posts/${created.body.id}`)
@@ -88,5 +90,21 @@ describe('admin posts', () => {
     const res = await agent.post('/api/admin/posts').send({ slug: 'Not A Slug' }).expect(400);
     expect(res.body.code).toBe('VALIDATION_FAILED');
     expect(res.body.fieldErrors).toBeDefined();
+  });
+
+  it('filters the list by tag slug', async () => {
+    const tag = await agent.post('/api/admin/tags').send({ nameEn: 'React' }).expect(201);
+    await agent.post('/api/admin/posts').send(payload()).expect(201);
+    const tagged = await agent
+      .post('/api/admin/posts')
+      .send(payload({ slug: 'tagged-note', tagIds: [tag.body.id] }))
+      .expect(201);
+
+    const listed = await agent.get('/api/admin/posts?tag=react').expect(200);
+    expect(listed.body.total).toBe(1);
+    expect(listed.body.items[0]?.id).toBe(tagged.body.id);
+    expect(listed.body.items[0]?.tags).toEqual([
+      { id: tag.body.id, slug: 'react', nameEn: 'React' },
+    ]);
   });
 });

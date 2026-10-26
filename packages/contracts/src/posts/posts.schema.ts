@@ -49,8 +49,11 @@ export const adminPostListParamsSchema = listParamsSchema([
   'id',
   'sortOrder',
   '-sortOrder',
+  '-publishedAt',
+  'publishedAt',
 ]).extend({
   status: contentStatusSchema.optional(),
+  tag: z.string().min(1).optional(),
 });
 
 export const adminPostSchema = z.object({
@@ -77,15 +80,27 @@ export const adminPostSchema = z.object({
   updatedAt: z.string(),
 });
 
-export const adminPostListItemSchema = adminPostSchema.pick({
-  id: true,
-  slug: true,
-  titleEn: true,
-  titleVi: true,
-  status: true,
-  isFeatured: true,
-  updatedAt: true,
+export const adminPostListTagSchema = z.object({
+  id: z.number().int(),
+  slug: z.string(),
+  nameEn: z.string(),
 });
+
+export const adminPostListItemSchema = adminPostSchema
+  .pick({
+    id: true,
+    slug: true,
+    titleEn: true,
+    titleVi: true,
+    status: true,
+    isFeatured: true,
+    readingMinutes: true,
+    publishedAt: true,
+    updatedAt: true,
+  })
+  .extend({
+    tags: z.array(adminPostListTagSchema),
+  });
 
 export const adminPostListPageSchema = paginatedSchema(adminPostListItemSchema);
 

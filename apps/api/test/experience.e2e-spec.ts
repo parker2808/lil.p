@@ -52,7 +52,8 @@ describe('admin experience', () => {
     expect(created.body.company).toBe('Acme');
 
     const listed = await agent.get('/api/admin/experience').expect(200);
-    expect(listed.body).toHaveLength(1);
+    expect(listed.body.total).toBe(1);
+    expect(listed.body.items).toHaveLength(1);
 
     const updated = await agent
       .patch(`/api/admin/experience/${created.body.id}`)
@@ -62,7 +63,20 @@ describe('admin experience', () => {
 
     await agent.delete(`/api/admin/experience/${created.body.id}`).expect(200);
     const empty = await agent.get('/api/admin/experience').expect(200);
-    expect(empty.body).toHaveLength(0);
+    expect(empty.body.total).toBe(0);
+    expect(empty.body.items).toHaveLength(0);
+  });
+
+  it('filters the list by visibility through query params', async () => {
+    await agent.post('/api/admin/experience').send(payload()).expect(201);
+    const hidden = await agent
+      .post('/api/admin/experience')
+      .send(payload({ company: 'Hidden Co', isVisible: false, startDate: '2023-01-01' }))
+      .expect(201);
+
+    const listed = await agent.get('/api/admin/experience?visible=0').expect(200);
+    expect(listed.body.total).toBe(1);
+    expect(listed.body.items[0]?.id).toBe(hidden.body.id);
   });
 
   it('returns 409 STALE when updatedAt is old', async () => {

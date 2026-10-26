@@ -172,7 +172,10 @@ Content-Type: application/json
 DELETE http://127.0.0.1:4000/api/admin/projects/1
 
 ### Admin posts list
-GET http://127.0.0.1:4000/api/admin/posts
+GET http://127.0.0.1:4000/api/admin/posts?page=1&pageSize=20&sort=-updatedAt
+
+### Admin posts list filtered by status and tag
+GET http://127.0.0.1:4000/api/admin/posts?status=DRAFT&tag=react
 
 ### Admin post create
 POST http://127.0.0.1:4000/api/admin/posts
@@ -215,7 +218,10 @@ Content-Type: application/json
 DELETE http://127.0.0.1:4000/api/admin/posts/1
 
 ### Admin experience list
-GET http://127.0.0.1:4000/api/admin/experience
+GET http://127.0.0.1:4000/api/admin/experience?page=1&pageSize=20&sort=-startDate
+
+### Admin experience list hidden only
+GET http://127.0.0.1:4000/api/admin/experience?visible=0
 
 ### Admin experience create
 POST http://127.0.0.1:4000/api/admin/experience

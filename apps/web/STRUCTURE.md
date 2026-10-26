@@ -104,6 +104,8 @@ app/
 │       ├── layout.tsx             # server check GET /auth/me (forwards access_token) → redirect; → admin-core AdminShell
 │       ├── page.tsx               # → admin-dashboard/views/AdminDashboardIndex
 │       ├── projects/page.tsx, projects/[id]/page.tsx
+│       ├── posts/page.tsx, posts/[id]/page.tsx
+│       ├── experience/page.tsx, experience/[id]/page.tsx
 │       ├── pages/page.tsx         # → admin-pages/views/AdminPagesIndex
 │       ├── pages/[key]/page.tsx   # → admin-pages/views/AdminPagesEditor (page builder)
 │       └── …                      # one folder per admin module

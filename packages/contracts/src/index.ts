@@ -101,6 +101,8 @@ export type {
 export type { EmploymentType } from './experience/experience.enum';
 export { employmentTypeSchema } from './experience/experience.enum';
 export {
+  adminExperienceListPageSchema,
+  adminExperienceListParamsSchema,
   adminExperienceSchema,
   experienceCreateSchema,
   experienceUpdateSchema,
@@ -108,6 +110,8 @@ export {
 } from './experience/experience.schema';
 export type {
   AdminExperience,
+  AdminExperienceListPage,
+  AdminExperienceListParams,
   ExperienceCreateInput,
   ExperienceUpdateInput,
   PublicExperience,
@@ -173,6 +177,7 @@ export {
   adminPostListItemSchema,
   adminPostListPageSchema,
   adminPostListParamsSchema,
+  adminPostListTagSchema,
   adminPostSchema,
   postCreateSchema,
   postListParamsSchema,
@@ -188,6 +193,7 @@ export type {
   AdminPostListItem,
   AdminPostListPage,
   AdminPostListParams,
+  AdminPostListTag,
   PostCreateInput,
   PostListParams,
   PostUpdateInput,
