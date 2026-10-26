@@ -1,0 +1,204 @@
+// Database definition. `pnpm db:migrate` turns edits here into SQL in
+// prisma/migrations/. Conventions come from spec §1.5 and PLAN T08 / D26.
+//
+// Beginner notes:
+// - `id Int @id @default(autoincrement())` → 1, 2, 3… (easy to read in Adminer)
+// - `createdAt` / `updatedAt` are filled by Prisma
+// - Two columns per translated text (`titleEn`, `titleVi`)
+// - Singletons (`SiteSettings`, `Profile`) are one row with `id = 1`
+// - Tables map to snake_case; columns stay camelCase
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Availability {
+  OPEN
+  NOT_LOOKING
+  FREELANCE
+
+  @@map("availability")
+}
+
+enum NavLocation {
+  HEADER
+  FOOTER
+
+  @@map("nav_location")
+}
+
+enum SocialKind {
+  GITHUB
+  LINKEDIN
+  EMAIL
+  RSS
+  OTHER
+
+  @@map("social_kind")
+}
+
+enum PageKey {
+  HOME
+  ABOUT
+  PROJECTS
+  NOTES
+  CONTACT
+
+  @@map("page_key")
+}
+
+enum LayoutPreset {
+  ONE
+  TWO
+  THREE
+  FOUR
+  SPLIT_8_4
+  SPLIT_4_8
+  SPLIT_7_5
+
+  @@map("layout_preset")
+}
+
+enum BlockSurface {
+  PLAIN
+  BAND
+
+  @@map("block_surface")
+}
+
+/// Site-wide settings. Exactly one row (`id = 1`), created by the seed.
+model SiteSettings {
+  id                 Int          @id @default(autoincrement())
+  siteName           String
+  domain             String
+  defaultLocale      String       @default("en") @db.VarChar(8)
+  seoTitleEn         String
+  seoTitleVi         String
+  seoDescriptionEn   String       @db.Text
+  seoDescriptionVi   String       @db.Text
+  /// Plain Int until Media exists (T50 adds the relation).
+  ogImageId          Int?
+  footerNoteEn       String
+  footerNoteVi       String
+  contactIntroEn     String       @db.Text
+  contactIntroVi     String       @db.Text
+  replyTimeNoteEn    String
+  replyTimeNoteVi    String
+  contactEmail       String
+  availability       Availability @default(OPEN)
+  availabilityNoteEn String
+  availabilityNoteVi String
+  analyticsEnabled   Boolean      @default(false)
+  ambientEffects     Boolean      @default(true)
+  marqueeEnabled     Boolean      @default(true)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  @@map("site_settings")
+}
+
+/// Public profile. Exactly one row (`id = 1`). `phone` is private — mappers drop it.
+model Profile {
+  id                Int      @id @default(autoincrement())
+  displayName       String
+  legalName         String
+  city              String
+  country           String
+  timezone          String
+  careerStartDate   DateTime @db.Date
+  headlineEn        String   @db.Text
+  headlineVi        String   @db.Text
+  subheadlineEn     String   @db.Text
+  subheadlineVi     String   @db.Text
+  bioEn             String   @db.Text
+  bioVi             String   @db.Text
+  languagesEn       String
+  languagesVi       String
+  heroKickerEn      String?
+  heroKickerVi      String?
+  headlineAccentEn  String?
+  headlineAccentVi  String?
+  /// Plain Int until Media exists (T50).
+  avatarId          Int?
+  resumeEnId        Int?
+  resumeViId        Int?
+  phone             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("profile")
+}
+
+model NavItem {
+  id        Int         @id @default(autoincrement())
+  location  NavLocation
+  labelEn   String
+  labelVi   String
+  href      String
+  sortOrder Int         @default(0)
+  isVisible Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([location, sortOrder])
+  @@map("nav_item")
+}
+
+model SocialLink {
+  id           Int        @id @default(autoincrement())
+  kind         SocialKind
+  labelEn      String
+  labelVi      String
+  url          String
+  showInHeader Boolean    @default(false)
+  showInCta    Boolean    @default(false)
+  sortOrder    Int        @default(0)
+  isVisible    Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([sortOrder])
+  @@map("social_link")
+}
+
+/// One row per public route page (HOME … CONTACT).
+model Page {
+  id               Int         @id @default(autoincrement())
+  key              PageKey     @unique
+  seoTitleEn       String?
+  seoTitleVi       String?
+  seoDescriptionEn String?     @db.Text
+  seoDescriptionVi String?     @db.Text
+  blocks           PageBlock[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@map("page")
+}
+
+/// Ordered block on a page. `type` is a string (not a DB enum) so a new
+/// block type later needs no migration — T10a checks it against the registry.
+model PageBlock {
+  id            Int          @id @default(autoincrement())
+  pageId        Int
+  page          Page         @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  type          String       @db.VarChar(48)
+  key           String       @db.VarChar(48)
+  schemaVersion Int          @default(1)
+  props         Json
+  layout        LayoutPreset
+  surface       BlockSurface @default(PLAIN)
+  sortOrder     Int          @default(0)
+  isVisible     Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@unique([pageId, key])
+  @@index([pageId, sortOrder])
+  @@map("page_block")
+}

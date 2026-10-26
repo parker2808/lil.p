@@ -136,6 +136,7 @@ pnpm format                  # Prettier --write across the repo (one root config
 pnpm format:check            # Prettier --check (also runs in CI)
 pnpm check:content           # no CV strings in UI code, no email/phone anywhere
 pnpm check:deps              # no paid Tiptap packages or private Tiptap registry; every @tiptap/* and @dnd-kit/* is MIT
+pnpm db:migrate | db:reset | db:seed | db:studio
 docker compose up -d db adminer
 ```
 

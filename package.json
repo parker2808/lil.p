@@ -17,7 +17,11 @@
     "prepare": "husky",
     "db:up": "docker compose up -d db adminer",
     "db:down": "docker compose down",
-    "db:logs": "docker compose logs -f db adminer"
+    "db:logs": "docker compose logs -f db adminer",
+    "db:migrate": "pnpm --filter @portfolio/api db:migrate",
+    "db:reset": "pnpm --filter @portfolio/api db:reset",
+    "db:seed": "pnpm --filter @portfolio/api db:seed",
+    "db:studio": "pnpm --filter @portfolio/api db:studio"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs}": [
@@ -32,7 +36,10 @@
     "onlyBuiltDependencies": [
       "esbuild",
       "unrs-resolver",
-      "@swc/core"
+      "@swc/core",
+      "prisma",
+      "@prisma/engines",
+      "@prisma/client"
     ]
   },
   "devDependencies": {

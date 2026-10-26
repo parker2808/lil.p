@@ -23,6 +23,10 @@ pnpm check:deps              # no paid Tiptap packages or private Tiptap registr
 pnpm db:up                   # MySQL :3306 + Adminer :8080 (127.0.0.1)
 pnpm db:down                 # stop containers; named volume `db-data` keeps the data
 pnpm db:logs                 # follow db + adminer logs
+pnpm db:migrate              # create / apply Prisma migrations (apps/api)
+pnpm db:reset                # drop + recreate + seed
+pnpm db:seed                 # re-run the seed (idempotent upserts)
+pnpm db:studio               # Prisma Studio GUI
 docker compose up -d db adminer
 ```
 
@@ -39,6 +43,22 @@ docker compose ps            # wait until `db` is `healthy`
 Adminer: [http://localhost:8080](http://localhost:8080). System **MySQL**, server **`db`** (the Compose service name — Adminer is also in Docker, so `localhost` would mean Adminer's own container), username **`app`**, password and database from `.env` (`MYSQL_PASSWORD`, `MYSQL_DATABASE=portfolio`).
 
 `pnpm db:down` stops the containers. Data stays. `docker compose down -v` deletes the `db-data` volume too (a full reset). If you already had a volume before `infra/mysql/init/01-dev-grants.sql` existed, run that GRANT in Adminer or reset with `down -v`.
+
+### Prisma (schema, migrate, seed)
+
+The API owns the schema in `apps/api/prisma/schema.prisma`. After MySQL is healthy:
+
+```bash
+pnpm db:migrate              # first run: `--name init-site` (already committed)
+pnpm db:seed                 # fills SiteSettings, Profile, nav, social, pages
+pnpm db:studio               # browse rows; Adminer works too
+```
+
+`SEED_PROFILE=demo` (default) or `baseline` chooses the seed profile (PLAN D13). Values are placeholders; contact fields are `<email>` / `<phone>`.
+
+7. **ORM.** Prisma turns `schema.prisma` into SQL tables and a typed client. You write `prisma.profile.findUnique({ where: { id: 1 } })` instead of SQL.
+8. **Migration.** `migrate dev --name init-site` writes a SQL file in `prisma/migrations/`. That file is committed and never edited.
+9. **Seed.** `upsert` on unique keys makes the script safe to run twice. Two profiles: `demo` (dev/CI) and `baseline` (production first boot).
 
 ### Backend steps, explained
 

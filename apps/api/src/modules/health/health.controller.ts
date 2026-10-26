@@ -1,5 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 
+import { PrismaService } from '../../prisma/prisma.service';
+
 /**
  * `@Controller('health')` + `@Get()` = GET /api/health
  * (the /api prefix is set once in main.ts).
@@ -7,8 +9,11 @@ import { Controller, Get } from '@nestjs/common';
  */
 @Controller('health')
 export class HealthController {
+  constructor(private readonly prisma: PrismaService) {}
+
   @Get()
-  getHealth(): { status: 'ok' } {
-    return { status: 'ok' };
+  async getHealth(): Promise<{ status: 'ok'; db: 'ok' }> {
+    await this.prisma.$queryRaw`SELECT 1`;
+    return { status: 'ok', db: 'ok' };
   }
 }
