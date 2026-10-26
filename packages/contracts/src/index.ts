@@ -28,6 +28,14 @@ export type { EmploymentType } from './experience/experience.enum';
 export { employmentTypeSchema } from './experience/experience.enum';
 export { publicExperienceSchema } from './experience/experience.schema';
 export type { PublicExperience } from './experience/experience.type';
+export { domainFixture, domainFixtures, emptyDomainFixture } from './fixtures/domains.fixture';
+export { postFixture, postFixtures, viPostFixture } from './fixtures/posts.fixture';
+export {
+  confidentialProjectFixture,
+  overflowProjectFixture,
+  projectFixture,
+  projectFixtures,
+} from './fixtures/projects.fixture';
 export type { NavLocation } from './navigation/navigation.enum';
 export { navLocationSchema } from './navigation/navigation.enum';
 export { publicNavItemSchema } from './navigation/navigation.schema';

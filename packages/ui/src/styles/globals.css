@@ -336,6 +336,9 @@
   :lang(vi) .text-display {
     line-height: 1.2;
   }
+  .clamp-marks {
+    padding-block: 0.15em;
+  }
   code,
   kbd,
   pre {
