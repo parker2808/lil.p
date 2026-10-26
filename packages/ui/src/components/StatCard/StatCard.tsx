@@ -17,11 +17,13 @@ export function StatCard({
   label,
   value,
   delta,
+  sparkline,
   className,
 }: {
   label: string;
   value: string | number;
   delta?: StatCardDelta;
+  sparkline?: ReactNode;
   className?: string;
 }): ReactNode {
   const Icon = delta ? DELTA_ICON[delta.direction] : null;
@@ -39,6 +41,7 @@ export function StatCard({
           <span>{delta.text}</span>
         </p>
       ) : null}
+      {sparkline ? <div className="text-chart-1 mt-3">{sparkline}</div> : null}
     </div>
   );
 }

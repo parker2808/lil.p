@@ -8,6 +8,17 @@ GET http://127.0.0.1:4000/api/public/site?locale=en
 ### Public sitemap (published paths only)
 GET http://127.0.0.1:4000/api/public/sitemap
 
+### Public page view (sendBeacon)
+POST http://127.0.0.1:4000/api/public/views
+Content-Type: application/json
+Origin: http://localhost:3000
+
+{
+  "path": "/",
+  "locale": "en",
+  "referrer": "https://github.com"
+}
+
 ### Public site (vi)
 GET http://127.0.0.1:4000/api/public/site?locale=vi
 

@@ -78,4 +78,8 @@ export class AppConfigService {
   get revalidateSecret(): string | null {
     return this.config.get('REVALIDATE_SECRET', { infer: true }) ?? null;
   }
+
+  get analyticsSaltSecret(): string | null {
+    return this.config.get('ANALYTICS_SALT_SECRET', { infer: true }) ?? null;
+  }
 }

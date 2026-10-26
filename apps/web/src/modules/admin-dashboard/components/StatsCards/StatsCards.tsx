@@ -1,6 +1,7 @@
 'use client';
 
 import type { AdminStats, StatsRange } from '@portfolio/contracts';
+import { Sparkline } from '@portfolio/ui/components/Sparkline/Sparkline';
 import { StatCard } from '@portfolio/ui/components/StatCard/StatCard';
 import { useTranslations } from 'next-intl';
 
@@ -41,10 +42,18 @@ export function StatsCardsView({ stats }: { stats: AdminStats }) {
       current: stats.projects.publishedInRange + stats.posts.publishedInRange,
       previous: stats.projects.publishedInPrevious + stats.posts.publishedInPrevious,
     },
+    {
+      key: 'views',
+      label: t('cards.views'),
+      value: stats.views.total,
+      current: stats.views.total,
+      previous: stats.views.previousTotal,
+      sparkline: stats.views.byDay.map((day) => day.views),
+    },
   ] as const;
 
   return (
-    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 xl:grid-cols-5">
       {cards.map((card) => {
         const delta =
           'current' in card && card.current !== undefined && card.previous !== undefined
@@ -55,6 +64,11 @@ export function StatsCardsView({ stats }: { stats: AdminStats }) {
             key={card.key}
             label={card.label}
             value={formatCount(card.value)}
+            sparkline={
+              'sparkline' in card && card.sparkline ? (
+                <Sparkline values={card.sparkline} label={t('cards.viewsSparkline')} />
+              ) : undefined
+            }
             delta={
               delta
                 ? {

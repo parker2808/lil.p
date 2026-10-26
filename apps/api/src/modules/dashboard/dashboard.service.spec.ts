@@ -29,6 +29,12 @@ function prismaMock() {
     profileStat: {
       findMany: vi.fn().mockResolvedValue([]),
     },
+    pageView: {
+      aggregate: vi.fn().mockResolvedValue({ _count: { id: 0 } }),
+      groupBy: vi.fn().mockResolvedValue([]),
+      findMany: vi.fn().mockResolvedValue([]),
+    },
+    $queryRaw: vi.fn().mockResolvedValue([]),
   };
 }
 
@@ -42,7 +48,8 @@ describe('DashboardService', () => {
   });
 
   it('returns zeroed counts for an empty catalog', async () => {
-    await expect(service.getStats('30d')).resolves.toEqual({
+    const stats = await service.getStats('30d');
+    expect(stats).toMatchObject({
       range: '30d',
       projects: {
         draft: 0,
@@ -59,7 +66,16 @@ describe('DashboardService', () => {
         publishedInPrevious: 0,
       },
       messages: { unread: 0 },
+      views: {
+        total: 0,
+        uniqueVisitors: 0,
+        previousTotal: 0,
+        previousUnique: 0,
+        topPages: [],
+        topReferrers: [],
+      },
     });
+    expect(stats.views.byDay.length).toBeGreaterThan(0);
   });
 
   it('maps groupBy rows onto status counts', async () => {

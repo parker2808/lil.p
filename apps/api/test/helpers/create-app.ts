@@ -19,6 +19,7 @@ export async function createTestApp(): Promise<INestApplication> {
   process.env.WEB_ORIGIN ??= 'http://localhost:3000';
   process.env.JWT_ACCESS_SECRET = TEST_ACCESS_SECRET;
   process.env.JWT_REFRESH_SECRET = TEST_REFRESH_SECRET;
+  process.env.ANALYTICS_SALT_SECRET ??= 'test-analytics-salt-secret!!';
   if (process.env.DATABASE_URL_TEST) {
     process.env.DATABASE_URL = process.env.DATABASE_URL_TEST;
   }

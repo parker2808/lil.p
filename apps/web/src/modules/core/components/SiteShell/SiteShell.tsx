@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import { getSite } from '@/modules/core/services/site.service';
 
 import { DraftBanner } from '../DraftBanner/DraftBanner';
+import { PageViewBeacon } from '../PageViewBeacon/PageViewBeacon';
 import { LocaleSuggestBanner } from '../LocaleSuggestBanner/LocaleSuggestBanner';
 import { PreviewBridge } from '../PreviewBridge/PreviewBridge';
 import { SiteFooter } from '../SiteFooter/SiteFooter';
@@ -17,6 +18,7 @@ export async function SiteShell({ locale, children }: { locale: Locale; children
 
   return (
     <div className="flex min-h-dvh flex-col">
+      <PageViewBeacon enabled={site.settings.analyticsEnabled} />
       <SkipLink />
       {draft.isEnabled ? <PreviewBridge /> : null}
       <DraftBanner />

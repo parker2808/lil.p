@@ -80,7 +80,16 @@ describe('admin dashboard', () => {
         publishedInPrevious: 0,
       },
       messages: { unread: 0 },
+      views: expect.objectContaining({
+        total: 0,
+        uniqueVisitors: 0,
+        previousTotal: 0,
+        previousUnique: 0,
+        topPages: [],
+        topReferrers: [],
+      }),
     });
+    expect(stats.body.views.byDay.length).toBeGreaterThan(0);
 
     const health = await agent.get('/api/admin/health').expect(200);
     expect(health.body.summary.marqueeCount).toBe(0);
