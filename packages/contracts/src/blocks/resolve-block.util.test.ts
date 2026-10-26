@@ -23,7 +23,7 @@ describe('parseBlock', () => {
   });
 
   it('returns UNKNOWN_TYPE for a type not in the registry', () => {
-    const result = parseBlock({ ...heroRow, type: 'about-intro' });
+    const result = parseBlock({ ...heroRow, type: 'notes-browser' });
     expect(result).toMatchObject({ ok: false, reason: 'UNKNOWN_TYPE' });
   });
 

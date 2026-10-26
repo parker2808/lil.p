@@ -31,7 +31,11 @@
     "daily": "Hàng ngày",
     "shipped": "Đã ship",
     "growing": "Đang lớn",
-    "diagram": "Migration từ case study nổi bật"
+    "diagram": "Migration từ case study nổi bật",
+    "now": "nay",
+    "highlights": "Điểm chính",
+    "fallback": "EN",
+    "downloadCv": "Tải CV"
   },
   "content": {
     "copy": "Sao chép",

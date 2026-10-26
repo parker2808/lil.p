@@ -28,6 +28,8 @@ export function toPublicProfile(row: ProfileRow, locale: Locale): PublicProfile 
     languages: values.languages ?? '',
     heroKicker: values.heroKicker,
     headlineAccent: values.headlineAccent,
+    resumeEnId: row.resumeEnId,
+    resumeViId: row.resumeViId,
     lang,
   };
 }

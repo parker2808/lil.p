@@ -38,6 +38,7 @@ export { employmentTypeSchema } from './experience/experience.enum';
 export { publicExperienceSchema } from './experience/experience.schema';
 export type { PublicExperience } from './experience/experience.type';
 export { domainFixture, domainFixtures, emptyDomainFixture } from './fixtures/domains.fixture';
+export { experienceFixtures } from './fixtures/experience.fixture';
 export { markdownKitchenSink } from './fixtures/markdown-kitchen-sink.fixture';
 export { markdownUnsafe } from './fixtures/markdown-unsafe.fixture';
 export { postFixture, postFixtures, viPostFixture } from './fixtures/posts.fixture';

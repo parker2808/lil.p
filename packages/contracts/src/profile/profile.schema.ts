@@ -16,5 +16,7 @@ export const publicProfileSchema = z.object({
   languages: z.string(),
   heroKicker: z.string().nullable(),
   headlineAccent: z.string().nullable(),
+  resumeEnId: z.number().int().nullable(),
+  resumeViId: z.number().int().nullable(),
   lang: localeSchema,
 });
