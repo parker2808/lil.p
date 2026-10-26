@@ -1,6 +1,7 @@
 import type { z } from 'zod';
 
 import type {
+  adminProjectListDomainSchema,
   adminProjectListItemSchema,
   adminProjectListPageSchema,
   adminProjectListParamsSchema,
@@ -27,5 +28,6 @@ export type ProjectReleaseStatus = z.infer<typeof projectReleaseStatusSchema>;
 export type ProjectCreateInput = z.infer<typeof projectCreateSchema>;
 export type ProjectUpdateInput = z.infer<typeof projectUpdateSchema>;
 export type AdminProject = z.infer<typeof adminProjectSchema>;
+export type AdminProjectListDomain = z.infer<typeof adminProjectListDomainSchema>;
 export type AdminProjectListItem = z.infer<typeof adminProjectListItemSchema>;
 export type AdminProjectListPage = z.infer<typeof adminProjectListPageSchema>;

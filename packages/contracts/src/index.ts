@@ -243,6 +243,7 @@ export type {
 export type { ContentStatus } from './projects/projects.enum';
 export { contentStatusSchema } from './projects/projects.enum';
 export {
+  adminProjectListDomainSchema,
   adminProjectListItemSchema,
   adminProjectListPageSchema,
   adminProjectListParamsSchema,
@@ -261,6 +262,7 @@ export {
 } from './projects/projects.schema';
 export type {
   AdminProject,
+  AdminProjectListDomain,
   AdminProjectListItem,
   AdminProjectListPage,
   AdminProjectListParams,
