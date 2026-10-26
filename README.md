@@ -20,8 +20,36 @@ pnpm lint | typecheck | test | build
 pnpm format | format:check   # Prettier (one root config; format:check also runs in CI)
 pnpm check:content           # no CV strings in UI code, no email/phone anywhere
 pnpm check:deps              # no paid Tiptap packages or private Tiptap registry; every @tiptap/* and @dnd-kit/* is MIT
+pnpm db:up                   # MySQL :3306 + Adminer :8080 (127.0.0.1)
+pnpm db:down                 # stop containers; named volume `db-data` keeps the data
+pnpm db:logs                 # follow db + adminer logs
 docker compose up -d db adminer
 ```
+
+## Database
+
+Local MySQL 8.4 plus [Adminer](https://www.adminer.org/) (a browser UI to look inside it). Only these two run in Docker in development; the API and web apps come later and use `pnpm dev`. Copy `.env.example` to `.env` once, then start with one command:
+
+```bash
+cp .env.example .env         # real passwords live here; `.env` is git-ignored
+pnpm db:up                   # or: docker compose up -d db adminer
+docker compose ps            # wait until `db` is `healthy`
+```
+
+Adminer: [http://localhost:8080](http://localhost:8080). System **MySQL**, server **`db`** (the Compose service name — Adminer is also in Docker, so `localhost` would mean Adminer's own container), username **`app`**, password and database from `.env` (`MYSQL_PASSWORD`, `MYSQL_DATABASE=portfolio`).
+
+`pnpm db:down` stops the containers. Data stays. `docker compose down -v` deletes the `db-data` volume too (a full reset). If you already had a volume before `infra/mysql/init/01-dev-grants.sql` existed, run that GRANT in Adminer or reset with `down -v`.
+
+### Backend steps, explained
+
+Written for a first pass at backend. Glossary: spec [§1.6](./docs/design/portfolio-design-system.md#s-1-6).
+
+1. **Image vs container** (glossary §1.6). `mysql:8.4` is the packaged program; `docker compose up` starts a running copy of it. Pin the tag so everyone runs the same version. `adminer:5.4.2` is pinned the same way.
+2. **Port mapping.** `127.0.0.1:3306:3306` means "port 3306 on my laptop, reachable only from my laptop, goes to port 3306 in the container". Binding to `127.0.0.1` keeps the DB off your Wi-Fi network. Adminer is `127.0.0.1:8080:8080` for the same reason. If a local MySQL already uses 3306, stop it or the new container will fail to bind.
+3. **Volume.** `db-data` is a folder Docker keeps outside the container. `docker compose down` deletes the container but not the volume, so data survives. `docker compose down -v` deletes the volume too (a full reset).
+4. **Environment variables.** Passwords live in `.env`, never in git. `.env.example` shows which keys exist, with fake values. Compose reads `.env` and passes `MYSQL_*` into the `db` container. The API (later) will use `DATABASE_URL`.
+5. **Init scripts.** Files in `/docker-entrypoint-initdb.d` (`infra/mysql/init/`) run **only the first time** the volume is created. `01-dev-grants.sql` lets the `app` user create and drop databases, which Prisma's shadow database needs for `migrate dev` (avoids error P3014). If you already had a volume, run the grant from `01-dev-grants.sql` by hand in Adminer, or reset with `down -v`.
+6. **Healthcheck.** Compose pings MySQL (`mysqladmin ping -h localhost`) until it answers, so other services (Adminer now, the API in T58) start only when the DB is ready. `docker compose ps` shows `healthy` when that succeeds.
 
 ## Git hooks
 
