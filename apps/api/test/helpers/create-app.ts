@@ -29,6 +29,8 @@ export async function createTestApp(): Promise<INestApplication> {
 
   const app = module.createNestApplication();
   app.use(cookieParser());
+  const expressApp = app.getHttpAdapter().getInstance() as { set: (k: string, v: string) => void };
+  expressApp.set('trust proxy', 'loopback');
   app.setGlobalPrefix('api');
   await app.init();
   return app;

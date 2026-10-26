@@ -1,9 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import type { PublicSite } from '@portfolio/contracts';
 
+import { Public } from '../../common/decorators/public.decorator';
 import { Locale } from '../../i18n/locale.decorator';
 import { PublicSiteService } from './public-site.service';
 
+@Public()
 @Controller('public/site')
 export class PublicSiteController {
   constructor(private readonly publicSite: PublicSiteService) {}

@@ -5,10 +5,12 @@ import {
   publicSkillsQuerySchema,
 } from '@portfolio/contracts';
 
+import { Public } from '../../common/decorators/public.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { Locale } from '../../i18n/locale.decorator';
 import { SkillsService } from './skills.service';
 
+@Public()
 @Controller('public/skills')
 export class PublicSkillsController {
   constructor(private readonly skills: SkillsService) {}

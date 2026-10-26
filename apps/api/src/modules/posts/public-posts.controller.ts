@@ -6,10 +6,12 @@ import {
   type PublicPostListPage,
 } from '@portfolio/contracts';
 
+import { Public } from '../../common/decorators/public.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { Locale } from '../../i18n/locale.decorator';
 import { PostsService } from './posts.service';
 
+@Public()
 @Controller('public/posts')
 export class PublicPostsController {
   constructor(private readonly posts: PostsService) {}

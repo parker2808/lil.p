@@ -1,7 +1,11 @@
 import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { OriginGuard } from './common/guards/origin.guard';
+import { RolesGuard } from './common/guards/roles.guard';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 import { ConfigModule } from './config/config.module';
@@ -51,10 +55,17 @@ import { PrismaModule } from './prisma/prisma.module';
     PagesModule,
     UsersModule,
     AuthModule,
+    ThrottlerModule.forRoot({
+      skipIf: () => process.env.NODE_ENV === 'test' && process.env.E2E_THROTTLE !== '1',
+      throttlers: [{ name: 'default', ttl: 60_000, limit: 10_000 }],
+    }),
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
     { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
+    { provide: APP_GUARD, useClass: OriginGuard },
   ],
 })
 export class AppModule implements NestModule {

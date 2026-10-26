@@ -20,6 +20,7 @@ import {
   reorderSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { ProcessStepsService } from './process-steps.service';
 
@@ -28,6 +29,7 @@ export class AdminProcessStepsController {
   constructor(private readonly steps: ProcessStepsService) {}
 
   @Get()
+  @Roles('admin', 'user')
   list(): Promise<AdminProcessStep[]> {
     return this.steps.listAdmin();
   }
@@ -40,6 +42,7 @@ export class AdminProcessStepsController {
   }
 
   @Get(':id')
+  @Roles('admin', 'user')
   get(@Param('id', ParseIntPipe) id: number): Promise<AdminProcessStep> {
     return this.steps.getAdmin(id);
   }

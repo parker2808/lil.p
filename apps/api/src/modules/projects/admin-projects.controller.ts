@@ -25,6 +25,7 @@ import {
   reorderSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { ProjectsService } from './projects.service';
 
@@ -33,6 +34,7 @@ export class AdminProjectsController {
   constructor(private readonly projects: ProjectsService) {}
 
   @Get()
+  @Roles('admin', 'user')
   list(
     @Query(new ZodValidationPipe(adminProjectListParamsSchema)) query: AdminProjectListParams,
   ): Promise<AdminProjectListPage> {
@@ -47,6 +49,7 @@ export class AdminProjectsController {
   }
 
   @Get(':id')
+  @Roles('admin', 'user')
   get(@Param('id', ParseIntPipe) id: number): Promise<AdminProject> {
     return this.projects.getAdmin(id);
   }

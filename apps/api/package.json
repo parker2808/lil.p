@@ -22,6 +22,7 @@
     "@nestjs/jwt": "^12.0.3",
     "@nestjs/passport": "^12.0.0",
     "@nestjs/platform-express": "^11.1.9",
+    "@nestjs/throttler": "^6.7.1",
     "@portfolio/contracts": "workspace:*",
     "@prisma/adapter-mariadb": "7",
     "@prisma/client": "7",

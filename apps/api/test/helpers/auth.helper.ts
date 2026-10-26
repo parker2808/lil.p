@@ -25,12 +25,15 @@ export async function createTestUsers(users: UsersService): Promise<void> {
   await users.create({ ...TEST_USER, role: 'user' });
 }
 
+export const TEST_ORIGIN = process.env.WEB_ORIGIN ?? 'http://localhost:3000';
+
 export async function loggedInAgent(
   app: INestApplication,
   email: string,
   password: string,
 ): Promise<request.Agent> {
   const agent = request.agent(app.getHttpServer());
+  agent.set('Origin', TEST_ORIGIN);
   await agent.post('/api/auth/login').send({ email, password }).expect(200);
   return agent;
 }

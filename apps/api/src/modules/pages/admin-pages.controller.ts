@@ -24,6 +24,7 @@ import {
   updatePageSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { PagesService } from './pages.service';
 
@@ -32,11 +33,13 @@ export class AdminPagesController {
   constructor(private readonly pages: PagesService) {}
 
   @Get()
+  @Roles('admin', 'user')
   list(): Promise<AdminPageListItem[]> {
     return this.pages.listAdmin();
   }
 
   @Get(':key')
+  @Roles('admin', 'user')
   get(@Param('key') key: string): Promise<AdminPage> {
     return this.pages.getAdmin(key);
   }

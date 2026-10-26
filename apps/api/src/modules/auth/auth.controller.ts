@@ -9,11 +9,15 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { type LoginInput, loginSchema, type Me } from '@portfolio/contracts';
 import type { Request, Response } from 'express';
 
-import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Public } from '../../common/decorators/public.decorator';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { JwtRefreshGuard } from '../../common/guards/jwt-refresh.guard';
+import { LoginThrottleGuard, RateLimitGuard } from '../../common/guards/login-throttle.guard';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { AppConfigService } from '../../config/app-config.service';
 import { toMeDto } from '../users/entities/user.mapper';
@@ -30,8 +34,11 @@ export class AuthController {
     private readonly config: AppConfigService,
   ) {}
 
+  @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
+  @UseGuards(LoginThrottleGuard)
   async login(
     @Body(new ZodValidationPipe(loginSchema)) body: LoginInput,
     @Res({ passthrough: true }) res: Response,
@@ -41,9 +48,11 @@ export class AuthController {
     return toMeDto(result.user);
   }
 
+  @Public()
   @Post('refresh')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(JwtRefreshGuard)
+  @Throttle({ default: { limit: 30, ttl: 60_000 } })
+  @UseGuards(RateLimitGuard, JwtRefreshGuard)
   async refresh(
     @Req() req: AuthedRequest,
     @Res({ passthrough: true }) res: Response,
@@ -52,6 +61,7 @@ export class AuthController {
     setAuthCookies(res, tokens, this.config);
   }
 
+  @Public()
   @Post('logout')
   @HttpCode(HttpStatus.NO_CONTENT)
   logout(@Res({ passthrough: true }) res: Response): void {
@@ -59,9 +69,9 @@ export class AuthController {
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
-  async me(@Req() req: AuthedRequest): Promise<Me> {
-    const user = await this.auth.me(req.user.id);
-    return toMeDto(user);
+  @Roles('admin', 'user')
+  async me(@CurrentUser() user: RequestUser): Promise<Me> {
+    const row = await this.auth.me(user.id);
+    return toMeDto(row);
   }
 }

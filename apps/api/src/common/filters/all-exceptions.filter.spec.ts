@@ -95,4 +95,13 @@ describe('AllExceptionsFilter', () => {
     expect(body.statusCode).toBe(401);
     expect(body.code).toBe('UNAUTHENTICATED');
   });
+
+  it('maps a 403 without a code to FORBIDDEN and 429 to RATE_LIMITED', () => {
+    expect(filter.toBody(new HttpException('no', HttpStatus.FORBIDDEN), 'req-8').code).toBe(
+      'FORBIDDEN',
+    );
+    expect(
+      filter.toBody(new HttpException('slow', HttpStatus.TOO_MANY_REQUESTS), 'req-9').code,
+    ).toBe('RATE_LIMITED');
+  });
 });

@@ -20,6 +20,7 @@ import {
   socialLinkUpdateSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { SocialLinksService } from './social-links.service';
 
@@ -28,6 +29,7 @@ export class AdminSocialLinksController {
   constructor(private readonly links: SocialLinksService) {}
 
   @Get()
+  @Roles('admin', 'user')
   list(): Promise<AdminSocialLink[]> {
     return this.links.listAdmin();
   }
@@ -40,6 +42,7 @@ export class AdminSocialLinksController {
   }
 
   @Get(':id')
+  @Roles('admin', 'user')
   get(@Param('id', ParseIntPipe) id: number): Promise<AdminSocialLink> {
     return this.links.getAdmin(id);
   }

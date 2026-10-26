@@ -20,6 +20,7 @@ import {
   reorderSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { ContactTopicsService } from './contact-topics.service';
 
@@ -28,6 +29,7 @@ export class AdminContactTopicsController {
   constructor(private readonly topics: ContactTopicsService) {}
 
   @Get()
+  @Roles('admin', 'user')
   list(): Promise<AdminContactTopic[]> {
     return this.topics.listAdmin();
   }
@@ -40,6 +42,7 @@ export class AdminContactTopicsController {
   }
 
   @Get(':id')
+  @Roles('admin', 'user')
   get(@Param('id', ParseIntPipe) id: number): Promise<AdminContactTopic> {
     return this.topics.getAdmin(id);
   }

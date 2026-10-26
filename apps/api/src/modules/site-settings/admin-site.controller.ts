@@ -5,6 +5,7 @@ import {
   siteSettingsUpdateSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { SiteSettingsService } from './site-settings.service';
 
@@ -13,6 +14,7 @@ export class AdminSiteController {
   constructor(private readonly site: SiteSettingsService) {}
 
   @Get()
+  @Roles('admin', 'user')
   get(): Promise<AdminSiteSettings> {
     return this.site.getAdmin();
   }

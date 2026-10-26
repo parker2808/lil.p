@@ -1,9 +1,10 @@
 import type { INestApplication } from '@nestjs/common';
 import { BLOCK_REGISTRY, type BlockType } from '@portfolio/contracts';
-import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
+import { UsersService } from '../src/modules/users/users.service';
 import { PrismaService } from '../src/prisma/prisma.service';
+import { adminAgent, createTestUsers } from './helpers/auth.helper';
 import { createTestApp } from './helpers/create-app';
 import { migrateTestDb, truncateTables } from './helpers/reset-db';
 
@@ -94,15 +95,20 @@ async function seedPages(prisma: PrismaService): Promise<void> {
 describe('admin pages and blocks', () => {
   let app: INestApplication;
   let prisma: PrismaService;
+  let users: UsersService;
+  let agent: import('supertest').Agent;
 
   beforeAll(async () => {
     migrateTestDb();
     app = await createTestApp();
     prisma = app.get(PrismaService);
+    users = app.get(UsersService);
   });
 
   beforeEach(async () => {
     await truncateTables(prisma);
+    await createTestUsers(users);
+    agent = await adminAgent(app);
     await seedPages(prisma);
   });
 
@@ -111,7 +117,7 @@ describe('admin pages and blocks', () => {
   });
 
   it('lists the five pages and adds every type allowed on home', async () => {
-    const listed = await request(app.getHttpServer()).get('/api/admin/pages').expect(200);
+    const listed = await agent.get('/api/admin/pages').expect(200);
     expect(listed.body.map((row: { key: string }) => row.key)).toEqual([
       'home',
       'about',
@@ -128,23 +134,20 @@ describe('admin pages and blocks', () => {
       if (type === 'hero') {
         continue;
       }
-      const created = await request(app.getHttpServer())
-        .post('/api/admin/pages/home/blocks')
-        .send({ type })
-        .expect(201);
+      const created = await agent.post('/api/admin/pages/home/blocks').send({ type }).expect(201);
       expect(created.body.type).toBe(type);
       expect(created.body.key).toMatch(new RegExp(`^${type}`));
     }
 
-    const page = await request(app.getHttpServer()).get('/api/admin/pages/home').expect(200);
+    const page = await agent.get('/api/admin/pages/home').expect(200);
     expect(page.body.blocks).toHaveLength(allowed.length);
     expect(page.body.blocks[0].type).toBe('hero');
   });
 
   it('returns 400 with the props path for invalid hero copy', async () => {
-    const page = await request(app.getHttpServer()).get('/api/admin/pages/home').expect(200);
+    const page = await agent.get('/api/admin/pages/home').expect(200);
     const hero = page.body.blocks[0];
-    const res = await request(app.getHttpServer())
+    const res = await agent
       .patch(`/api/admin/pages/home/blocks/${hero.id}`)
       .send({
         updatedAt: hero.updatedAt,
@@ -160,7 +163,7 @@ describe('admin pages and blocks', () => {
   });
 
   it('returns 400 BLOCK_NOT_ALLOWED for a type the page cannot host', async () => {
-    const res = await request(app.getHttpServer())
+    const res = await agent
       .post('/api/admin/pages/home/blocks')
       .send({ type: 'about-intro' })
       .expect(400);
@@ -168,27 +171,24 @@ describe('admin pages and blocks', () => {
   });
 
   it('returns 409 BLOCK_LIMIT when maxPerPage is exceeded', async () => {
-    const res = await request(app.getHttpServer())
-      .post('/api/admin/pages/home/blocks')
-      .send({ type: 'hero' })
-      .expect(409);
+    const res = await agent.post('/api/admin/pages/home/blocks').send({ type: 'hero' }).expect(409);
     expect(res.body.code).toBe('BLOCK_LIMIT');
   });
 
   it('returns 409 BLOCK_LOCKED when deleting the H1 block', async () => {
-    const page = await request(app.getHttpServer()).get('/api/admin/pages/home').expect(200);
-    const res = await request(app.getHttpServer())
+    const page = await agent.get('/api/admin/pages/home').expect(200);
+    const res = await agent
       .delete(`/api/admin/pages/home/blocks/${page.body.blocks[0].id}`)
       .expect(409);
     expect(res.body.code).toBe('BLOCK_LOCKED');
   });
 
   it('returns 409 BLOCK_REQUIRED when hiding a required block', async () => {
-    const page = await request(app.getHttpServer()).get('/api/admin/pages/projects').expect(200);
+    const page = await agent.get('/api/admin/pages/projects').expect(200);
     const browser = page.body.blocks.find(
       (block: { type: string }) => block.type === 'projects-browser',
     );
-    const res = await request(app.getHttpServer())
+    const res = await agent
       .patch(`/api/admin/pages/projects/blocks/${browser.id}`)
       .send({ isVisible: false, updatedAt: browser.updatedAt })
       .expect(409);
@@ -196,16 +196,16 @@ describe('admin pages and blocks', () => {
   });
 
   it('returns 409 STALE when the block updatedAt does not match', async () => {
-    const page = await request(app.getHttpServer()).get('/api/admin/pages/home').expect(200);
+    const page = await agent.get('/api/admin/pages/home').expect(200);
     const hero = page.body.blocks[0];
-    await request(app.getHttpServer())
+    await agent
       .patch(`/api/admin/pages/home/blocks/${hero.id}`)
       .send({
         updatedAt: hero.updatedAt,
         props: { ...HERO_PROPS, showDiagram: false },
       })
       .expect(200);
-    const stale = await request(app.getHttpServer())
+    const stale = await agent
       .patch(`/api/admin/pages/home/blocks/${hero.id}`)
       .send({
         updatedAt: hero.updatedAt,
@@ -216,11 +216,11 @@ describe('admin pages and blocks', () => {
   });
 
   it('returns 400 for an unknown project id in a case-grid', async () => {
-    const created = await request(app.getHttpServer())
+    const created = await agent
       .post('/api/admin/pages/home/blocks')
       .send({ type: 'case-grid' })
       .expect(201);
-    const res = await request(app.getHttpServer())
+    const res = await agent
       .patch(`/api/admin/pages/home/blocks/${created.body.id}`)
       .send({
         updatedAt: created.body.updatedAt,
@@ -232,16 +232,16 @@ describe('admin pages and blocks', () => {
   });
 
   it('returns 409 fieldErrors.key for a duplicate block key', async () => {
-    const first = await request(app.getHttpServer())
+    const first = await agent
       .post('/api/admin/pages/home/blocks')
       .send({ type: 'case-grid' })
       .expect(201);
-    const second = await request(app.getHttpServer())
+    const second = await agent
       .post('/api/admin/pages/home/blocks')
       .send({ type: 'case-grid' })
       .expect(201);
     expect(second.body.key).toBe('case-grid-2');
-    const res = await request(app.getHttpServer())
+    const res = await agent
       .patch(`/api/admin/pages/home/blocks/${second.body.id}`)
       .send({ key: first.body.key, updatedAt: second.body.updatedAt })
       .expect(409);
@@ -249,11 +249,11 @@ describe('admin pages and blocks', () => {
   });
 
   it('duplicates a block after the original and lists unknown types only on admin', async () => {
-    const created = await request(app.getHttpServer())
+    const created = await agent
       .post('/api/admin/pages/home/blocks')
       .send({ type: 'prose' })
       .expect(201);
-    const copy = await request(app.getHttpServer())
+    const copy = await agent
       .post(`/api/admin/pages/home/blocks/${created.body.id}/duplicate`)
       .expect(201);
     expect(copy.body.type).toBe('prose');
@@ -275,20 +275,18 @@ describe('admin pages and blocks', () => {
       },
     });
 
-    const admin = await request(app.getHttpServer()).get('/api/admin/pages/home').expect(200);
+    const admin = await agent.get('/api/admin/pages/home').expect(200);
     const ghost = admin.body.blocks.find((block: { key: string }) => block.key === 'ghost');
     expect(ghost.issues).toBeDefined();
     expect(ghost.issues.join(' ')).toMatch(/Unknown block type/i);
 
-    const pub = await request(app.getHttpServer())
-      .get('/api/public/pages/home?locale=en')
-      .expect(200);
+    const pub = await agent.get('/api/public/pages/home?locale=en').expect(200);
     expect(pub.body.blocks.every((block: { key: string }) => block.key !== 'ghost')).toBe(true);
   });
 
   it('patches page SEO and bumps updatedAt', async () => {
-    const before = await request(app.getHttpServer()).get('/api/admin/pages/home').expect(200);
-    const patched = await request(app.getHttpServer())
+    const before = await agent.get('/api/admin/pages/home').expect(200);
+    const patched = await agent
       .patch('/api/admin/pages/home')
       .send({ seoTitleEn: 'Renamed home', updatedAt: before.body.updatedAt })
       .expect(200);
