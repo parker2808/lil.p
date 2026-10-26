@@ -12,6 +12,7 @@ export default tseslint.config(
       '**/coverage/**',
       '**/uploads/**',
       '**/storybook-static/**',
+      '**/src/generated/**',
     ],
   },
   eslint.configs.recommended,

@@ -7,6 +7,7 @@ const valid = {
   API_PORT: '4000',
   API_HOST: '127.0.0.1',
   WEB_ORIGIN: 'http://localhost:3000',
+  DATABASE_URL: 'mysql://app:changeme@127.0.0.1:3306/portfolio',
 };
 
 describe('envSchema', () => {
@@ -19,5 +20,10 @@ describe('envSchema', () => {
 
   it('rejects a non-numeric API_PORT', () => {
     expect(() => envSchema.parse({ ...valid, API_PORT: 'abc' })).toThrow(/API_PORT|invalid/i);
+  });
+
+  it('rejects a missing DATABASE_URL', () => {
+    const rest = { ...valid, DATABASE_URL: undefined };
+    expect(() => envSchema.parse(rest)).toThrow(/DATABASE_URL/i);
   });
 });

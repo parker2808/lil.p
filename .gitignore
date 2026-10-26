@@ -6,3 +6,4 @@ coverage
 uploads
 storybook-static
 *.tsbuildinfo
+apps/api/src/generated

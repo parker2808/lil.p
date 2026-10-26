@@ -10,6 +10,7 @@ export const envSchema = z.object({
   API_PORT: z.coerce.number().int().positive(),
   API_HOST: z.string().min(1).default('127.0.0.1'),
   WEB_ORIGIN: z.url(),
+  DATABASE_URL: z.string().min(1).startsWith('mysql://'),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -26,4 +26,8 @@ export class AppConfigService {
   get nodeEnv(): Env['NODE_ENV'] {
     return this.config.get('NODE_ENV', { infer: true });
   }
+
+  get databaseUrl(): string {
+    return this.config.get('DATABASE_URL', { infer: true });
+  }
 }
