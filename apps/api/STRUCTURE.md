@@ -112,10 +112,10 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | Module | Tables | Routes (all under `/api`) |
 | --- | --- | --- |
 | `health` | none | `GET /health` |
-| `site-settings` | `SiteSettings` | admin `GET/PATCH /admin/site` |
-| `profile` | `Profile` | admin `GET/PATCH /admin/profile` |
-| `navigation` | `NavItem` | admin CRUD + order |
-| `social-links` | `SocialLink` | admin CRUD + order |
+| `site-settings` | `SiteSettings` | admin `GET/PATCH /admin/site` (`admin-site.controller.ts`) |
+| `profile` | `Profile` | admin `GET/PATCH /admin/profile` (includes private `phone`; accent must sit in the headline) |
+| `navigation` | `NavItem` | admin CRUD (`href` is a public route or `https://`) |
+| `social-links` | `SocialLink` | admin CRUD (at most two `showInCta`) |
 | `pages` | `Page`, `PageBlock`, `PageVersion` (T52a) | `GET /public/pages/:key?locale`; admin `GET /admin/pages`, `GET/PATCH /admin/pages/:key`, `POST …/blocks`, `PATCH/DELETE …/blocks/:id`, `POST …/blocks/:id/duplicate`, `PATCH …/blocks/order`, `POST …/publish`, `GET …/versions`, `GET …/versions/:version`, `POST …/versions/:version/restore`, `POST …/discard`, `GET /admin/preview/pages/:key` (see "Pages and blocks") |
 | `public-site` | none (reads the four above + `profile-stats`) | `GET /public/site?locale` |
 | `experience`, `education`, `principles`, `profile-stats`, `process-steps` | one table each | public GET + admin CRUD + order |
@@ -124,7 +124,7 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | `projects` | `Project`, `ProjectMetric`, `ProjectImage` | public list/detail, admin CRUD (`admin-projects.controller.ts`) + archive; publish later |
 | `tags` | `Tag` | public list + admin CRUD (`admin-tags.controller.ts`; slug derived from `nameEn`) |
 | `posts` | `Post` | public list/detail, admin CRUD (`admin-posts.controller.ts`) + archive; publish later |
-| `contact-topics` | `ContactTopic` | `GET /public/contact-topics`, admin CRUD + order |
+| `contact-topics` | `ContactTopic` | `GET /public/contact-topics`, admin CRUD (`admin-contact-topics.controller.ts`) |
 | `contact` | `ContactMessage` | `POST /public/contact`, admin inbox list/patch |
 | `auth` | none (reads `User` through `UsersService`) | `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `GET /auth/me`, `PATCH /auth/password` |
 | `users` | `User` | admin users (admin only) |

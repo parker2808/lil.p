@@ -10,6 +10,7 @@ export const socialLinkSelect = {
   showInCta: true,
   sortOrder: true,
   isVisible: true,
+  updatedAt: true,
 } satisfies Prisma.SocialLinkSelect;
 
 export type SocialLinkRow = Prisma.SocialLinkGetPayload<{ select: typeof socialLinkSelect }>;

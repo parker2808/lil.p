@@ -5,6 +5,7 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 import { ConfigModule } from './config/config.module';
+import { ContactTopicsModule } from './modules/contact-topics/contact-topics.module';
 import { DomainsModule } from './modules/domains/domains.module';
 import { EducationModule } from './modules/education/education.module';
 import { ExperienceModule } from './modules/experience/experience.module';
@@ -43,6 +44,7 @@ import { PrismaModule } from './prisma/prisma.module';
     SkillsModule,
     PostsModule,
     TagsModule,
+    ContactTopicsModule,
     PublicSiteModule,
     PagesModule,
   ],

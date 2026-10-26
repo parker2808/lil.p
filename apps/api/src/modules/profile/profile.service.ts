@@ -1,16 +1,77 @@
-import { Injectable } from '@nestjs/common';
-import type { Locale, PublicProfile } from '@portfolio/contracts';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import type { AdminProfile, Locale, ProfileUpdateInput, PublicProfile } from '@portfolio/contracts';
 
 import { NotSeededException } from '../../common/errors/not-seeded.exception';
+import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { profileSelect } from './entities/profile.entity';
-import { toPublicProfile } from './entities/profile.mapper';
+import { toAdminDto, toPublicProfile } from './entities/profile.mapper';
 
 @Injectable()
 export class ProfileService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getPublic(locale: Locale): Promise<PublicProfile> {
+    return toPublicProfile(await this.requireRow(), locale);
+  }
+
+  async getAdmin(): Promise<AdminProfile> {
+    return toAdminDto(await this.requireRow());
+  }
+
+  async update(input: ProfileUpdateInput): Promise<AdminProfile> {
+    const current = await this.requireRow();
+    this.assertAccent(
+      input.headlineEn ?? current.headlineEn,
+      input.headlineAccentEn !== undefined ? input.headlineAccentEn : current.headlineAccentEn,
+      'headlineAccentEn',
+    );
+    this.assertAccent(
+      input.headlineVi ?? current.headlineVi,
+      input.headlineAccentVi !== undefined ? input.headlineAccentVi : current.headlineAccentVi,
+      'headlineAccentVi',
+    );
+
+    const data: Prisma.ProfileUncheckedUpdateInput = {};
+    if (input.displayName !== undefined) data.displayName = input.displayName;
+    if (input.legalName !== undefined) data.legalName = input.legalName;
+    if (input.city !== undefined) data.city = input.city;
+    if (input.country !== undefined) data.country = input.country;
+    if (input.timezone !== undefined) data.timezone = input.timezone;
+    if (input.careerStartDate !== undefined) data.careerStartDate = new Date(input.careerStartDate);
+    if (input.headlineEn !== undefined) data.headlineEn = input.headlineEn;
+    if (input.headlineVi !== undefined) data.headlineVi = input.headlineVi;
+    if (input.subheadlineEn !== undefined) data.subheadlineEn = input.subheadlineEn;
+    if (input.subheadlineVi !== undefined) data.subheadlineVi = input.subheadlineVi;
+    if (input.bioEn !== undefined) data.bioEn = input.bioEn;
+    if (input.bioVi !== undefined) data.bioVi = input.bioVi;
+    if (input.languagesEn !== undefined) data.languagesEn = input.languagesEn;
+    if (input.languagesVi !== undefined) data.languagesVi = input.languagesVi;
+    if (input.heroKickerEn !== undefined) data.heroKickerEn = input.heroKickerEn;
+    if (input.heroKickerVi !== undefined) data.heroKickerVi = input.heroKickerVi;
+    if (input.headlineAccentEn !== undefined) data.headlineAccentEn = input.headlineAccentEn;
+    if (input.headlineAccentVi !== undefined) data.headlineAccentVi = input.headlineAccentVi;
+    if (input.phone !== undefined) data.phone = input.phone;
+
+    const row = await this.prisma.profile.update({
+      where: { id: 1 },
+      data,
+      select: profileSelect,
+    });
+    return toAdminDto(row);
+  }
+
+  private assertAccent(headline: string, accent: string | null, field: string): void {
+    if (accent && !headline.includes(accent)) {
+      throw new BadRequestException({
+        code: 'VALIDATION_FAILED',
+        message: 'Validation failed',
+        fieldErrors: { [field]: ['Must appear in the headline'] },
+      });
+    }
+  }
+
+  private async requireRow() {
     const row = await this.prisma.profile.findUnique({
       where: { id: 1 },
       select: profileSelect,
@@ -18,6 +79,6 @@ export class ProfileService {
     if (!row) {
       throw new NotSeededException('Profile');
     }
-    return toPublicProfile(row, locale);
+    return row;
   }
 }

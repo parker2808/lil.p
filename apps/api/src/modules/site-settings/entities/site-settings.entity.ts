@@ -23,6 +23,7 @@ export const siteSettingsSelect = {
   analyticsEnabled: true,
   ambientEffects: true,
   marqueeEnabled: true,
+  updatedAt: true,
 } satisfies Prisma.SiteSettingsSelect;
 
 export type SiteSettingsRow = Prisma.SiteSettingsGetPayload<{ select: typeof siteSettingsSelect }>;

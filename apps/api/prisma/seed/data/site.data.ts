@@ -137,6 +137,12 @@ export const socialLinksData = [
   },
 ];
 
+export const contactTopicsData = [
+  { slug: 'role', labelEn: 'A role', labelVi: 'Một vai trò', sortOrder: 0 },
+  { slug: 'migration', labelEn: 'A migration', labelVi: 'Một cuộc migration', sortOrder: 1 },
+  { slug: 'other', labelEn: 'Something else', labelVi: 'Khác', sortOrder: 2 },
+];
+
 export async function seedSite(prisma: PrismaClient): Promise<void> {
   await prisma.siteSettings.upsert({
     where: { id: 1 },
@@ -162,6 +168,14 @@ export async function seedSite(prisma: PrismaClient): Promise<void> {
     } else {
       await prisma.navItem.create({ data: item });
     }
+  }
+
+  for (const topic of contactTopicsData) {
+    await prisma.contactTopic.upsert({
+      where: { slug: topic.slug },
+      create: topic,
+      update: topic,
+    });
   }
 
   for (const link of socialLinksData) {

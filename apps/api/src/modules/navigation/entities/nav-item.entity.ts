@@ -8,6 +8,7 @@ export const navItemSelect = {
   href: true,
   sortOrder: true,
   isVisible: true,
+  updatedAt: true,
 } satisfies Prisma.NavItemSelect;
 
 export type NavItemRow = Prisma.NavItemGetPayload<{ select: typeof navItemSelect }>;
