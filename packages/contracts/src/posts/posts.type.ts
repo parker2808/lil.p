@@ -5,6 +5,7 @@ import type {
   adminPostListItemSchema,
   adminPostListPageSchema,
   adminPostListParamsSchema,
+  adminPostListTagSchema,
   adminPostSchema,
   postCreateSchema,
   postListParamsSchema,
@@ -19,6 +20,7 @@ export type AdminPostInput = z.infer<typeof adminPostInputSchema>;
 export type PostCreateInput = z.infer<typeof postCreateSchema>;
 export type PostUpdateInput = z.infer<typeof postUpdateSchema>;
 export type AdminPost = z.infer<typeof adminPostSchema>;
+export type AdminPostListTag = z.infer<typeof adminPostListTagSchema>;
 export type AdminPostListItem = z.infer<typeof adminPostListItemSchema>;
 export type AdminPostListPage = z.infer<typeof adminPostListPageSchema>;
 export type AdminPostListParams = z.infer<typeof adminPostListParamsSchema>;

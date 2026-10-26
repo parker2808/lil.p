@@ -98,6 +98,9 @@ export function toAdminListItem(row: PostRow): AdminPostListItem {
     titleVi: full.titleVi,
     status: full.status,
     isFeatured: full.isFeatured,
+    readingMinutes: full.readingMinutes,
+    publishedAt: full.publishedAt,
     updatedAt: full.updatedAt,
+    tags: row.tags.map((tag) => ({ id: tag.id, slug: tag.slug, nameEn: tag.nameEn })),
   };
 }

@@ -243,6 +243,74 @@
         "updated": "Updated",
         "actions": "Actions"
       }
+    },
+    "posts": {
+      "title": "Posts",
+      "new": "New post",
+      "search": "Filter posts",
+      "addFilter": "+ Filter",
+      "removeChip": "×",
+      "empty": "No posts yet.",
+      "noResults": "No matching posts.",
+      "clearFilters": "Clear filters",
+      "error": "Posts could not be loaded.",
+      "selected": "{count} selected",
+      "range": "{from}–{to} of {total}",
+      "archive": "Archive",
+      "confirmArchiveTitle": "Archive these posts?",
+      "confirmArchive": "Archived posts leave the public site.",
+      "readingMinutes": "{minutes} min",
+      "chip": {
+        "status": "Status is {status}",
+        "tag": "Tag is {tag}"
+      },
+      "status": {
+        "DRAFT": "Draft",
+        "PUBLISHED": "Published",
+        "ARCHIVED": "Archived"
+      },
+      "columns": {
+        "title": "Title",
+        "status": "Status",
+        "tags": "Tags",
+        "reading": "Reading",
+        "published": "Published",
+        "updated": "Updated",
+        "actions": "Actions"
+      }
+    },
+    "experience": {
+      "title": "Experience",
+      "new": "New role",
+      "search": "Filter experience",
+      "addFilter": "+ Filter",
+      "removeChip": "×",
+      "empty": "No experience rows yet.",
+      "noResults": "No matching roles.",
+      "clearFilters": "Clear filters",
+      "error": "Experience could not be loaded.",
+      "selected": "{count} selected",
+      "range": "{from}–{to} of {total}",
+      "delete": "Delete",
+      "confirmDeleteTitle": "Delete these roles?",
+      "confirmDelete": "Deleted roles are removed from the timeline.",
+      "now": "now",
+      "datesValue": "{start}—{end}",
+      "chip": {
+        "visible": "Visible",
+        "hidden": "Hidden"
+      },
+      "visible": {
+        "on": "Visible",
+        "off": "Hidden"
+      },
+      "columns": {
+        "company": "Company",
+        "role": "Role",
+        "dates": "Dates",
+        "visible": "Visible",
+        "actions": "Actions"
+      }
     }
   }
 }

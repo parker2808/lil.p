@@ -74,6 +74,9 @@ export class PostsService {
     if (query.status) {
       where.status = query.status;
     }
+    if (query.tag) {
+      where.tags = { some: { slug: query.tag } };
+    }
     if (query.q) {
       where.OR = [
         { titleEn: { contains: query.q } },

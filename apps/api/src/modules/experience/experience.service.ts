@@ -1,12 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type {
   AdminExperience,
+  AdminExperienceListPage,
+  AdminExperienceListParams,
   ExperienceCreateInput,
   ExperienceUpdateInput,
   Locale,
   PublicExperience,
 } from '@portfolio/contracts';
+import { parseSort } from '@portfolio/contracts';
 
+import { paginate } from '../../common/utils/paginate.util';
 import { reorder } from '../../common/utils/reorder.util';
 import { assertFresh } from '../../common/utils/stale.util';
 import type { Prisma } from '../../generated/prisma/client';
@@ -27,17 +31,52 @@ export class ExperienceService {
     return rows.map((row) => toPublicExperience(row, locale));
   }
 
-  async listAdmin(): Promise<AdminExperience[]> {
-    const rows = await this.prisma.experience.findMany({
-      select: experienceSelect,
-      orderBy: [{ startDate: 'desc' }, { sortOrder: 'asc' }],
-    });
-    return rows.map(toAdminDto);
+  async listAdmin(query: AdminExperienceListParams): Promise<AdminExperienceListPage> {
+    const where: Prisma.ExperienceWhereInput = {};
+    if (query.q) {
+      where.OR = [
+        { company: { contains: query.q } },
+        { location: { contains: query.q } },
+        { roleEn: { contains: query.q } },
+        { roleVi: { contains: query.q } },
+      ];
+    }
+    if (query.visible === '1' || query.visible === 'true') {
+      where.isVisible = true;
+    }
+    if (query.visible === '0' || query.visible === 'false') {
+      where.isVisible = false;
+    }
+    const { field, direction } = parseSort(query.sort);
+    const { skip, take } = paginate(query.page, query.pageSize);
+    const [total, rows] = await this.prisma.$transaction([
+      this.prisma.experience.count({ where }),
+      this.prisma.experience.findMany({
+        where,
+        select: experienceSelect,
+        orderBy: [
+          { [field]: direction } as Prisma.ExperienceOrderByWithRelationInput,
+          { id: 'asc' },
+        ],
+        skip,
+        take,
+      }),
+    ]);
+    return {
+      items: rows.map(toAdminDto),
+      page: query.page,
+      pageSize: query.pageSize,
+      total,
+    };
   }
 
   async reorder(ids: number[]): Promise<AdminExperience[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).experience, ids);
-    return this.listAdmin();
+    const rows = await this.prisma.experience.findMany({
+      select: experienceSelect,
+      orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }],
+    });
+    return rows.map(toAdminDto);
   }
 
   async getAdmin(id: number): Promise<AdminExperience> {

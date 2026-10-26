@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { listParamsSchema, paginatedSchema } from '../common/list-params.schema';
 import { localeSchema } from '../common/locale.schema';
 import { employmentTypeSchema } from './experience.enum';
 
@@ -58,3 +59,18 @@ export const adminExperienceSchema = z.object({
   skillIds: z.array(z.number().int()),
   updatedAt: z.string(),
 });
+
+export const adminExperienceListParamsSchema = listParamsSchema([
+  '-startDate',
+  'startDate',
+  'sortOrder',
+  '-sortOrder',
+  'company',
+  '-company',
+  '-updatedAt',
+  'updatedAt',
+]).extend({
+  visible: z.enum(['1', 'true', '0', 'false']).optional(),
+});
+
+export const adminExperienceListPageSchema = paginatedSchema(adminExperienceSchema);
