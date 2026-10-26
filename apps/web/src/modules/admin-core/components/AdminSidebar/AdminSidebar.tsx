@@ -50,7 +50,7 @@ export function AdminSidebar() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 );
-                return item.key === 'users' ? (
+                return item.key === 'users' || item.key === 'inbox' ? (
                   <RoleGate key={item.href} allow={['admin']}>
                     {itemNode}
                   </RoleGate>

@@ -1,8 +1,10 @@
-import { adminStatsFixture } from '@portfolio/contracts';
+import { adminStatsFixture, type Me } from '@portfolio/contracts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import { describe, expect, it, vi } from 'vitest';
+
+import { MeProvider } from '@/modules/admin-core/hooks/use-me.hook';
 
 import en from '../../../../i18n/locales/en.json';
 
@@ -15,11 +17,19 @@ vi.mock('../services/dashboard.service', () => ({
   fetchAdminHealth: vi.fn(),
 }));
 
+vi.mock('@/modules/admin-inbox/services/admin-inbox.service', () => ({
+  LATEST_INBOX_PARAMS: { page: 1, pageSize: 5, sort: '-createdAt' },
+  listAdminMessages: vi.fn().mockResolvedValue({ items: [], page: 1, pageSize: 5, total: 0 }),
+  fetchUnreadCount: vi.fn().mockResolvedValue({ unread: 0 }),
+}));
+
 import { fetchAdminHealth, fetchAdminStats } from '../services/dashboard.service';
 import { AdminDashboardIndex } from './AdminDashboardIndex';
 
 const fetchStats = vi.mocked(fetchAdminStats);
 const fetchHealth = vi.mocked(fetchAdminHealth);
+
+const admin: Me = { id: 1, email: '<email>', name: 'Parker', role: 'admin' };
 
 function renderDashboard() {
   const client = new QueryClient({
@@ -28,7 +38,9 @@ function renderDashboard() {
   return render(
     <NextIntlClientProvider locale="en" messages={en}>
       <QueryClientProvider client={client}>
-        <AdminDashboardIndex range="30d" />
+        <MeProvider me={admin}>
+          <AdminDashboardIndex range="30d" />
+        </MeProvider>
       </QueryClientProvider>
     </NextIntlClientProvider>,
   );

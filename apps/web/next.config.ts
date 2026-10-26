@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
   transpilePackages: ['@portfolio/ui', '@portfolio/contracts'],
   serverExternalPackages: ['shiki'],
   agentRules: false,
+  // afterFiles proxies /api/* to Nest, including GET /admin/events (SSE).
+  // Nest sets X-Accel-Buffering: no; Next streams the rewrite instead of buffering heartbeats.
   async rewrites() {
     return {
       afterFiles: [
