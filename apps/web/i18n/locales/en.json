@@ -827,6 +827,77 @@
         "quote": "⇧⌘B",
         "codeBlock": "⌘⌥C"
       }
+    },
+    "blocks": {
+      "field": {
+        "en": "English",
+        "vi": "Vietnamese",
+        "href": "Href",
+        "add": "Add item",
+        "remove": "Remove",
+        "moveUp": "Move up",
+        "moveDown": "Move down"
+      },
+      "heading": {
+        "eyebrow": "Eyebrow",
+        "title": "Title",
+        "intro": "Intro",
+        "iconKey": "Icon",
+        "linkLabel": "Link label"
+      },
+      "hero": {
+        "ctaLabel": "CTA label",
+        "showDiagram": "Show diagram",
+        "showAvailability": "Show availability"
+      },
+      "pageHeader": {
+        "eyebrow": "Eyebrow",
+        "title": "Title",
+        "intro": "Intro"
+      },
+      "cta": {
+        "title": "Title",
+        "intro": "Intro",
+        "showEmail": "Show email",
+        "showSocial": "Show social"
+      },
+      "statBand": {
+        "variant": "Variant",
+        "statIds": "Stats"
+      },
+      "featuredCase": {
+        "projectId": "Project"
+      },
+      "caseGrid": {
+        "source": "Source",
+        "projectIds": "Projects",
+        "domainSlug": "Domain",
+        "limit": "Limit"
+      },
+      "process": {
+        "showPrinciples": "Show principles"
+      },
+      "postList": {
+        "limit": "Limit",
+        "tag": "Tag"
+      },
+      "aboutIntro": {
+        "eyebrow": "Eyebrow",
+        "showCity": "Show city",
+        "showAvailability": "Show availability"
+      },
+      "prose": {
+        "body": "Body",
+        "aside": "Aside"
+      },
+      "projectsBrowser": {
+        "showFeatured": "Show featured",
+        "pageSize": "Page size"
+      },
+      "notesBrowser": {
+        "showFeatured": "Show featured",
+        "pageSize": "Page size"
+      }
     }
   }
 }
