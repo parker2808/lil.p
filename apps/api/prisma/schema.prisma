@@ -417,6 +417,7 @@ model Project {
   updatedAt       DateTime      @updatedAt
 
   @@index([status, sortOrder])
+  @@index([status, isFeatured, sortOrder])
   @@index([domainId])
   @@index([experienceId])
   @@map("project")
@@ -518,5 +519,6 @@ model Post {
   updatedAt        DateTime      @updatedAt
 
   @@index([status, publishedAt, sortOrder])
+  @@index([status, isFeatured, publishedAt])
   @@map("post")
 }

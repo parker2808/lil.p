@@ -12,6 +12,10 @@ export const envSchema = z.object({
   WEB_ORIGIN: z.url(),
   DATABASE_URL: z.string().min(1).startsWith('mysql://'),
   DATABASE_URL_TEST: z.string().min(1).startsWith('mysql://').optional(),
+  PRISMA_LOG_QUERIES: z
+    .string()
+    .optional()
+    .transform((value) => value === '1' || value === 'true'),
 });
 
 export type Env = z.infer<typeof envSchema>;

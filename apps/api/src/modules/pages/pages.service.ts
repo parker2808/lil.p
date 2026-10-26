@@ -364,9 +364,28 @@ export class PagesService {
     props: unknown,
   ): Promise<void> {
     const refs = definition.refs(props as never);
+    const projectIds = [
+      ...new Set(refs.filter((ref) => ref.kind === 'project').map((ref) => ref.id)),
+    ];
+    const statIds = [...new Set(refs.filter((ref) => ref.kind === 'stat').map((ref) => ref.id))];
+    const [projects, stats] = await Promise.all([
+      projectIds.length > 0
+        ? tx.project.findMany({ where: { id: { in: projectIds } }, select: { id: true } })
+        : [],
+      statIds.length > 0
+        ? tx.profileStat.findMany({ where: { id: { in: statIds } }, select: { id: true } })
+        : [],
+    ]);
+    const projectSet = new Set(projects.map((row) => row.id));
+    const statSet = new Set(stats.map((row) => row.id));
     const fieldErrors: Record<string, string[]> = {};
     for (const ref of refs) {
-      const exists = await this.refExists(tx, ref.kind, ref.id);
+      const exists =
+        ref.kind === 'project'
+          ? projectSet.has(ref.id)
+          : ref.kind === 'stat'
+            ? statSet.has(ref.id)
+            : true;
       if (!exists) {
         const path = findRefPath(props, ref.id, 'props') ?? `props.${ref.kind}Id`;
         fieldErrors[path] = [`Unknown ${ref.kind} ${ref.id}`];
@@ -379,15 +398,5 @@ export class PagesService {
         fieldErrors,
       });
     }
-  }
-
-  private async refExists(tx: Tx, kind: string, id: number): Promise<boolean> {
-    if (kind === 'project') {
-      return (await tx.project.findUnique({ where: { id }, select: { id: true } })) !== null;
-    }
-    if (kind === 'stat') {
-      return (await tx.profileStat.findUnique({ where: { id }, select: { id: true } })) !== null;
-    }
-    return true;
   }
 }

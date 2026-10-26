@@ -155,4 +155,107 @@ SELECT COUNT(*) AS remaining_experiences FROM experience;
 DROP TABLE IF EXISTS experience;
 DROP TABLE IF EXISTS profile;
 
--- T34 will append EXPLAIN notes below this line.
+-- T34 · Indexes + EXPLAIN (roadmap p17)
+--
+-- EXPLAIN asks MySQL how it will run a query.
+--   type ALL  = read every row (bad for lists)
+--   type ref  = look up a value in an index
+--   type index = walk an index instead of the table
+--
+-- The list indexes on `post(status, publishedAt, sortOrder)` and
+-- `project(status, sortOrder)` / `project(domainId)` landed with those
+-- tables. T34 adds featured composites and records the plans.
+-- To see the "before" plan on a database that already has the indexes,
+-- use IGNORE INDEX as below.
+
+-- ---------------------------------------------------------------------------
+-- Published posts list
+--   WHERE status = 'PUBLISHED' ORDER BY publishedAt DESC, id
+-- ---------------------------------------------------------------------------
+
+-- BEFORE (indexes ignored) — type ALL, filesort
+-- EXPLAIN SELECT id, publishedAt FROM post
+--   IGNORE INDEX (post_status_publishedAt_sortOrder_idx)
+--   WHERE status = 'PUBLISHED' ORDER BY publishedAt DESC, id;
+--
+-- id | table | type | key  | rows | Extra
+-- 1  | post  | ALL  | NULL |    4 | Using where; Using filesort
+
+EXPLAIN SELECT id, publishedAt
+FROM post
+WHERE status = 'PUBLISHED'
+ORDER BY publishedAt DESC, id;
+-- AFTER
+-- id | table | type | key                                    | Extra
+-- 1  | post  | ref  | post_status_publishedAt_sortOrder_idx  | Using index; Using filesort
+
+-- ---------------------------------------------------------------------------
+-- Posts by tag
+-- ---------------------------------------------------------------------------
+
+EXPLAIN SELECT p.id
+FROM post p
+INNER JOIN `_PostToTag` pt ON pt.A = p.id
+INNER JOIN tag t ON t.id = pt.B
+WHERE p.status = 'PUBLISHED' AND t.slug = 'react';
+-- AFTER (no ALL): tag_slug_key + _PostToTag_B_index + post PRIMARY
+
+-- ---------------------------------------------------------------------------
+-- Published projects by domain
+-- ---------------------------------------------------------------------------
+
+-- BEFORE (indexes ignored) — type ALL
+-- EXPLAIN SELECT id FROM project
+--   IGNORE INDEX (project_status_sortOrder_idx, project_domainId_idx, project_experienceId_idx)
+--   WHERE status = 'PUBLISHED' AND domainId = 1 ORDER BY sortOrder, id;
+-- type ALL | Extra: Using where; Using filesort
+
+EXPLAIN SELECT id
+FROM project
+WHERE status = 'PUBLISHED' AND domainId = 1
+ORDER BY sortOrder, id;
+-- AFTER: type ref, key project_domainId_idx
+
+-- ---------------------------------------------------------------------------
+-- Published projects by skill
+-- ---------------------------------------------------------------------------
+
+EXPLAIN SELECT p.id
+FROM project p
+INNER JOIN `_ProjectToSkill` ps ON ps.A = p.id
+INNER JOIN skill s ON s.id = ps.B
+WHERE p.status = 'PUBLISHED' AND s.slug = 'react';
+-- AFTER (no ALL): skill_slug_key + _ProjectToSkill_B_index + project PRIMARY
+
+-- ---------------------------------------------------------------------------
+-- Admin projects list (all statuses, order by sortOrder)
+-- ---------------------------------------------------------------------------
+
+-- BEFORE (indexes ignored) — type ALL
+-- EXPLAIN SELECT id FROM project
+--   IGNORE INDEX (project_status_sortOrder_idx, project_domainId_idx, project_experienceId_idx)
+--   ORDER BY sortOrder, id;
+-- type ALL | Extra: Using filesort
+
+EXPLAIN SELECT id FROM project ORDER BY sortOrder, id;
+-- AFTER: type index, key project_status_sortOrder_idx, Using index
+
+-- ---------------------------------------------------------------------------
+-- Featured lists (new T34 indexes)
+-- ---------------------------------------------------------------------------
+
+EXPLAIN SELECT id
+FROM project
+WHERE status = 'PUBLISHED' AND isFeatured = 1
+ORDER BY sortOrder, id;
+-- AFTER T34: project_status_isFeatured_sortOrder_idx
+
+EXPLAIN SELECT id
+FROM post
+WHERE status = 'PUBLISHED' AND isFeatured = 1
+ORDER BY publishedAt DESC, id;
+-- AFTER T34: post_status_isFeatured_publishedAt_idx
+
+-- N+1 found and fixed (T34): PageBlock refs used to `findUnique` once per
+-- project/stat id inside `assertRefsExist`. One PATCH with five projectIds
+-- logged five identical SELECTs. Now one `findMany({ id: { in } })` per kind.
