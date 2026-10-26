@@ -29,7 +29,8 @@
     "prod:seed": "docker compose -f compose.prod.yml run --rm -e SEED_PROFILE=baseline api node dist/seed.js",
     "prod:backup": "docker compose -f compose.prod.yml run --rm -e BACKUP_ONCE=1 backup",
     "check:content": "node scripts/check-content.mjs",
-    "check:deps": "node scripts/check-deps.mjs && node --test scripts/check-deps.test.mjs"
+    "check:placeholders": "node scripts/check-placeholders.mjs",
+    "check:deps": "node scripts/check-deps.mjs && node --test scripts/check-deps.test.mjs && node --test scripts/check-placeholders.test.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs}": [

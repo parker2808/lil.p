@@ -26,6 +26,8 @@ import {
 export async function seedOwner(prisma: PrismaClient): Promise<void> {
   const data = loadPortfolioData();
 
+  await prisma.pageView.deleteMany();
+  await prisma.contactMessage.deleteMany();
   await prisma.project.deleteMany();
   await prisma.domain.deleteMany();
   await prisma.experience.deleteMany();
