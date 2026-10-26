@@ -7,4 +7,11 @@ export const pageWithBlocksInclude = {
   },
 } satisfies Prisma.PageInclude;
 
+export const pageWithAllBlocksInclude = {
+  blocks: {
+    orderBy: { sortOrder: 'asc' as const },
+  },
+} satisfies Prisma.PageInclude;
+
 export type PageWithBlocks = Prisma.PageGetPayload<{ include: typeof pageWithBlocksInclude }>;
+export type PageWithAllBlocks = Prisma.PageGetPayload<{ include: typeof pageWithAllBlocksInclude }>;

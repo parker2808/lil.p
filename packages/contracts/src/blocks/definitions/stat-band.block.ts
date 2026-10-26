@@ -25,4 +25,5 @@ export const statBandBlock = defineBlock({
   pages: ['home', 'about'],
   layouts: ['ONE'],
   role: 'optional',
+  refs: (props) => props.statIds.map((id) => ({ kind: 'stat', id })),
 });
