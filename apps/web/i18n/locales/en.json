@@ -1,0 +1,12 @@
+{
+  "core": {
+    "skip": "Skip to content",
+    "home": "Home"
+  },
+  "states": {
+    "loading": "Loading",
+    "empty": "Nothing here yet",
+    "error": "Something went wrong",
+    "retry": "Retry"
+  }
+}

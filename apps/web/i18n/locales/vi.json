@@ -1,0 +1,12 @@
+{
+  "core": {
+    "skip": "Bỏ qua đến nội dung",
+    "home": "Trang chủ"
+  },
+  "states": {
+    "loading": "Đang tải",
+    "empty": "Chưa có nội dung",
+    "error": "Đã xảy ra lỗi",
+    "retry": "Thử lại"
+  }
+}
