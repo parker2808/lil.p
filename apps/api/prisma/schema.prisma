@@ -202,3 +202,111 @@ model PageBlock {
   @@index([pageId, sortOrder])
   @@map("page_block")
 }
+
+enum EmploymentType {
+  FULL_TIME
+  CONTRACT
+  FREELANCE
+
+  @@map("employment_type")
+}
+
+enum StatSource {
+  MANUAL
+  YEARS_COMPUTED
+  PROJECT_COUNT
+
+  @@map("stat_source")
+}
+
+/// One role at a company. The About timeline groups rows that share `company`.
+model Experience {
+  id             Int            @id @default(autoincrement())
+  company        String
+  companyUrl     String?
+  location       String
+  employmentType EmploymentType
+  roleEn         String
+  roleVi         String
+  summaryEn      String         @db.Text
+  summaryVi      String         @db.Text
+  highlightsEn   String         @db.Text
+  highlightsVi   String         @db.Text
+  startDate      DateTime       @db.Date
+  endDate        DateTime?      @db.Date
+  sortOrder      Int            @default(0)
+  isVisible      Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([startDate, sortOrder])
+  @@map("experience")
+}
+
+model Education {
+  id        Int      @id @default(autoincrement())
+  school    String
+  degreeEn  String
+  degreeVi  String
+  majorEn   String
+  majorVi   String
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+  sortOrder Int      @default(0)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sortOrder])
+  @@map("education")
+}
+
+model Principle {
+  id        Int      @id @default(autoincrement())
+  titleEn   String
+  titleVi   String
+  bodyEn    String   @db.Text
+  bodyVi    String   @db.Text
+  iconKey   String   @db.VarChar(48)
+  sortOrder Int      @default(0)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sortOrder])
+  @@map("principle")
+}
+
+/// Home stats. `YEARS_COMPUTED` and `PROJECT_COUNT` are resolved on read.
+model ProfileStat {
+  id        Int        @id @default(autoincrement())
+  labelEn   String
+  labelVi   String
+  value     String?
+  suffix    String?
+  source    StatSource
+  iconKey   String     @db.VarChar(48)
+  sortOrder Int        @default(0)
+  isVisible Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([sortOrder])
+  @@map("profile_stat")
+}
+
+model ProcessStep {
+  id        Int      @id @default(autoincrement())
+  titleEn   String
+  titleVi   String
+  captionEn String
+  captionVi String
+  iconKey   String   @db.VarChar(48)
+  sortOrder Int      @default(0)
+  isVisible Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sortOrder])
+  @@map("process_step")
+}

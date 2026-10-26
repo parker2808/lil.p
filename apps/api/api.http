@@ -19,3 +19,15 @@ GET http://127.0.0.1:4000/api/public/pages/home?locale=vi
 
 ### Public page unknown (404)
 GET http://127.0.0.1:4000/api/public/pages/unknown
+
+### Public experience (en)
+GET http://127.0.0.1:4000/api/public/experience?locale=en
+
+### Public education (en)
+GET http://127.0.0.1:4000/api/public/education?locale=en
+
+### Public principles (vi)
+GET http://127.0.0.1:4000/api/public/principles?locale=vi
+
+### Public process steps (en)
+GET http://127.0.0.1:4000/api/public/process-steps?locale=en
