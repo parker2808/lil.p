@@ -4,13 +4,20 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import { type LoginInput, loginSchema, type Me } from '@portfolio/contracts';
+import {
+  type ChangePasswordInput,
+  changePasswordSchema,
+  type LoginInput,
+  loginSchema,
+  type Me,
+} from '@portfolio/contracts';
 import type { Request, Response } from 'express';
 
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
@@ -73,5 +80,17 @@ export class AuthController {
   async me(@CurrentUser() user: RequestUser): Promise<Me> {
     const row = await this.auth.me(user.id);
     return toMeDto(row);
+  }
+
+  @Patch('password')
+  @Roles('admin', 'user')
+  async changePassword(
+    @CurrentUser() user: RequestUser,
+    @Body(new ZodValidationPipe(changePasswordSchema)) body: ChangePasswordInput,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<Me> {
+    const result = await this.auth.changePassword(user.id, body);
+    setAuthCookies(res, result, this.config);
+    return toMeDto(result.user);
   }
 }

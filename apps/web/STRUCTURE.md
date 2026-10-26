@@ -61,7 +61,7 @@ Create only the folders a module needs.
 | `admin-media` | media library, uploader, picker dialog | §4.3 |
 | `admin-inbox` | contact messages list/detail | §4.3 |
 | `admin-insights` | analytics + audit log (virtualized) | §5.7 |
-| `admin-users` | users table + editor: role (`admin`/`user`), active, sign out everywhere (admin only) | §4.3 |
+| `admin-users` | users table + sheet form: role (`admin`/`user`), active switch, sign out everywhere, set password (admin only). Change-own-password lives in `admin-auth/ChangePasswordDialog` | §4.3 |
 
 ## Routes ↔ views
 

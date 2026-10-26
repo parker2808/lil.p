@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import type { LoginInput } from '@portfolio/contracts';
+import type { ChangePasswordInput, LoginInput } from '@portfolio/contracts';
 import * as argon2 from 'argon2';
 
 import type { UserRow } from '../users/entities/user.entity';
@@ -49,6 +49,29 @@ export class AuthService {
     return {
       access: await this.tokens.signAccess(user),
       refresh: await this.tokens.signRefresh(user),
+    };
+  }
+
+  async changePassword(
+    id: number,
+    input: ChangePasswordInput,
+  ): Promise<{ user: UserRow } & IssuedTokens> {
+    const user = await this.users.findById(id);
+    const passwordOk = user
+      ? await verifyPassword(user.passwordHash, input.currentPassword)
+      : false;
+    if (!user || !user.isActive || !passwordOk) {
+      throw new UnauthorizedException({
+        code: 'INVALID_CREDENTIALS',
+        message: 'Invalid email or password',
+      });
+    }
+    const passwordHash = await argon2.hash(input.newPassword, { type: argon2.argon2id });
+    const updated = await this.users.updatePasswordHash(id, passwordHash);
+    return {
+      user: updated,
+      access: await this.tokens.signAccess(updated),
+      refresh: await this.tokens.signRefresh(updated),
     };
   }
 

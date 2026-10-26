@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Avatar, AvatarFallback } from '@portfolio/ui/components/ui/avatar';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList } from '@portfolio/ui/components/ui/breadcrumb';
@@ -15,6 +15,8 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/com
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 
+import { ChangePasswordDialog } from '@/modules/admin-auth/components/ChangePasswordDialog/ChangePasswordDialog';
+
 import { logout } from '../../services/auth.service';
 import { useMe } from '../../hooks/use-me.hook';
 import { useAdminUi } from '../../stores/admin-ui.store';
@@ -26,6 +28,7 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
   const { toggleCollapsed } = useAdminUi();
   const router = useRouter();
   const initial = me.name.slice(0, 1);
+  const [passwordOpen, setPasswordOpen] = useState(false);
 
   return (
     <header className="border-border flex h-12 items-center gap-3 border-b px-4">
@@ -69,6 +72,9 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem onSelect={() => setPasswordOpen(true)}>
+              {t('changePassword')}
+            </DropdownMenuItem>
             <DropdownMenuItem
               onSelect={async () => {
                 await logout();
@@ -80,6 +86,7 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+      <ChangePasswordDialog open={passwordOpen} onOpenChange={setPasswordOpen} />
     </header>
   );
 }

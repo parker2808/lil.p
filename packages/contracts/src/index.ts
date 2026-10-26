@@ -1,7 +1,7 @@
 export type { Role } from './auth/auth.enum';
 export { roleSchema } from './auth/auth.enum';
-export { loginSchema, meSchema } from './auth/auth.schema';
-export type { LoginInput, Me } from './auth/auth.type';
+export { changePasswordSchema, loginSchema, meSchema } from './auth/auth.schema';
+export type { ChangePasswordInput, LoginInput, Me } from './auth/auth.type';
 export { adminBlockSchema, blockKeySchema, publicBlockSchema } from './blocks/block.schema';
 export type { AdminBlock, PublicBlock } from './blocks/block.type';
 export { BLOCK_SURFACES, LAYOUT_PRESETS } from './blocks/block-layout.constant';
@@ -345,3 +345,19 @@ export {
   tagUpdateSchema,
 } from './tags/tags.schema';
 export type { AdminTag, PublicTag, TagCreateInput, TagUpdateInput } from './tags/tags.type';
+export {
+  adminUserListPageSchema,
+  adminUserListParamsSchema,
+  adminUserSchema,
+  createUserSchema,
+  setPasswordSchema,
+  updateUserSchema,
+} from './users/users.schema';
+export type {
+  AdminUser,
+  AdminUserListPage,
+  AdminUserListParams,
+  CreateUserInput,
+  SetPasswordInput,
+  UpdateUserInput,
+} from './users/users.type';

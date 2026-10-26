@@ -20,6 +20,7 @@ export const errorCodeSchema = z.enum([
   'FORBIDDEN',
   'BAD_ORIGIN',
   'RATE_LIMITED',
+  'LAST_ADMIN',
   'INTERNAL',
 ]);
 
