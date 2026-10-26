@@ -21,5 +21,15 @@
     "error": "Đã xảy ra lỗi",
     "retry": "Thử lại",
     "notFound": "Không tìm thấy trang này"
+  },
+  "content": {
+    "copy": "Sao chép",
+    "copied": "Đã sao chép",
+    "wrap": "Xuống dòng",
+    "note": "Ghi chú",
+    "warning": "Cảnh báo",
+    "anchor": "Liên kết tới tiêu đề",
+    "onThisPage": "Trên trang này",
+    "keyTakeaways": "Ý chính"
   }
 }

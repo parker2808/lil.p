@@ -21,5 +21,15 @@
     "error": "Something went wrong",
     "retry": "Retry",
     "notFound": "This page is missing"
+  },
+  "content": {
+    "copy": "Copy",
+    "copied": "Copied",
+    "wrap": "Wrap",
+    "note": "Note",
+    "warning": "Warning",
+    "anchor": "Link to heading",
+    "onThisPage": "On this page",
+    "keyTakeaways": "Key takeaways"
   }
 }
