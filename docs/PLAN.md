@@ -41,7 +41,7 @@ Task size: **S** fits in a short session (one file group, no new concept); **M**
 | 5 | **STRUCTURE.md** files | Where every file goes, naming | [root](../STRUCTURE.md), [apps/web](../apps/web/STRUCTURE.md), [apps/api](../apps/api/STRUCTURE.md) |
 | 6 | `colors.json` (Figma export) | Test oracle for the color tokens | [docs/design/colors.json](./design/colors.json): 58 tokens × light/dark, identical to spec §3.6 |
 
-**Precedence when sources disagree:** the spec wins on values, behavior, data and API (1). Figma names follow the spec, so a mismatch in a value is a Figma bug: use the spec value and note it in the PR (2). Layout follows the mockups and Figma frames (3). Order and teaching follow the roadmap (4), except where a decision in §3 replaces a roadmap detail with the spec's choice. File paths follow STRUCTURE.md (5), which replaces the illustrative paths in the spec (see D20).
+**Precedence when sources disagree:** the spec wins on values, behavior, data and API (1). Figma names follow the spec, so a mismatch in a value is a Figma bug: use the spec value and note it in the PR (2). Layout follows the mockups and Figma frames (3). Order and teaching follow the roadmap (4), except where a decision in §3 replaces a roadmap detail with the spec's choice. File paths follow STRUCTURE.md (5), which replaces the illustrative paths in the spec (see D20). A decision marked **Parker** in §3 is Parker's own call after the spec was written; it overrides every source above, including the spec (today: D7 and D24, auth).
 
 **Snapshot notes.**
 
@@ -81,11 +81,11 @@ These settle the places where the sources disagree or say nothing. Each is the d
 | D1 | The repo root of `lil.p` is the monorepo. The roadmap's `portfolio/` folder means this repository. | The roadmap was written before the repo existed |
 | D2 | Shared code lives in `packages/ui` and `packages/contracts`, not one `packages/shared`. | Spec §4.0 and §6 split them; roadmap p01/p08 says `packages/shared` |
 | D3 | Long text (case-study sections, post bodies, bio) is **Markdown in `@db.Text`**, rendered on the Next server by one safe pipeline (no raw HTML, allowlisted elements, Shiki output converted to React, no `dangerouslySetInnerHTML`). This replaces roadmap p12 "JSON blocks"; p12's rules (zod-validated input, drafts invisible) still apply. | Spec §1.5 and §4.3 (`MarkdownEditor`) |
-| D4 | API routes follow the spec: `/api/public/*` (no auth), `/api/admin/*` (session), `/api/auth/*`, plus one aggregate `GET /api/public/site?locale` for the layout. Roadmap URLs like `GET /settings`, `GET /posts` map onto these. | Spec §4.5, §5.0 |
+| D4 | API routes follow the spec: `/api/public/*` (no auth), `/api/admin/*` (signed-in JWT, D24), `/api/auth/*`, plus one aggregate `GET /api/public/site?locale` for the layout. Roadmap URLs like `GET /settings`, `GET /posts` map onto these. | Spec §4.5, §5.0 |
 | D5 | Every error uses one body: `{ statusCode, code, message, requestId, fieldErrors? }`. | Spec §4.6 |
 | D6 | Lists use page-based pagination: request `?page&pageSize&sort&q&…`, response `{ items, page, pageSize, total }`, `pageSize` max 100. Only the audit log and media library use cursor pagination (`?cursor&limit`). The p13 checks still apply: paging through all rows gives no duplicates or gaps (sort always ends with `id`), and `pageSize=500` returns 400 with a field error. | The admin table mockup shows "1–5 of 5" and page sizes; spec §4.6 uses cursors only for infinite lists |
-| D7 | Roles are `OWNER`, `EDITOR`, `VIEWER`. Login is by email + password. The seed creates the owner from env (`ADMIN_EMAIL="<email>"` in `.env.example`). | Spec §1.5 `User` |
-| D8 | CSRF protection is `SameSite=Lax` cookies + an `Origin` check on mutating requests, not double-submit tokens. Roadmap p19's check "writes without the CSRF header → 403" becomes "writes with a foreign or missing `Origin` → 403". | Spec §1.6 |
+| D7 | **Parker.** Two roles only: `admin` and `user` (Prisma enum `Role { admin user }`, the same strings in `@Roles('admin')`). `admin` can do everything. `user` is a signed-in, read-only reviewer: dashboard, content lists and editors in read-only mode, analytics, draft preview, and their own password; no writes, publishing, uploads, inbox, audit log or users admin (full table in T36). A protected route without `@Roles()` is admin only, so forgetting the decorator fails safe. Login is by email + password, hashed with argon2id. The seed creates one `admin` from env (`ADMIN_EMAIL="<email>"` in `.env.example`); admins create other accounts in the admin-only users screen (T46). | Replaces spec §1.5 `User.role` (`OWNER\|EDITOR\|VIEWER`) and §4.3 "Users (owner only)" |
+| D8 | CSRF protection is `SameSite=Lax` cookies + an `Origin` check on mutating requests, not double-submit tokens. It still applies with JWTs, because the tokens travel in cookies (D24). Roadmap p19's check "writes without the CSRF header → 403" becomes "writes with a foreign or missing `Origin` → 403". | Spec §1.6 |
 | D9 | No CORS. The browser only talks to Next; `next.config.ts` rewrites `/api/*` to Nest. Roadmap p05's "CORS" item is skipped. The API binds to `127.0.0.1` until guards land (T36). | Spec §1.6, §6 |
 | D10 | Many-to-many relations use Prisma implicit join tables (`skills Skill[]` on both sides). Roadmap p11's `ProjectSkill` check becomes "the `_ProjectToSkill` join rows are visible in Prisma Studio". | Spec §1.5 |
 | D11 | Names: `ContactMessage` and `ContactTopic` (not `Message`), public route `/notes` (not `/blog`), `Domain`, `ProfileStat`, `ProcessStep`. | Spec §1.5, §5.5 |
@@ -101,6 +101,7 @@ These settle the places where the sources disagree or say nothing. Each is the d
 | D21 | A shadcn primitive is added by the first task that uses it, not all at once. | Keeps PRs small and reviewable |
 | D22 | Admin chrome strings live in `apps/web/i18n/locales/en.json` under `admin.*`. The admin UI is English only (spec §5 intro), so `vi.json` has no `admin` keys. | Keeps `react/jsx-no-literals` on for admin too |
 | D23 | Public fetches use `revalidate: 3600` + tags in production and `revalidate: 0` in development (`NODE_ENV`), so seed changes show without waiting. | Roadmap p09 check "re-seeding changes the home page" |
+| D24 | **Parker.** Auth uses **JWTs instead of MySQL sessions**: `@nestjs/jwt` signs, `passport-jwt` (via `@nestjs/passport`) verifies. A short **access token** (15 min, payload `{ sub, role }`) and a longer **refresh token** (7 days, payload `{ sub, ver }`), signed with two different secrets. Both live in `httpOnly` cookies set by the API (`access_token` on `Path=/`, `refresh_token` on `Path=/api/auth`), never in `localStorage` or JS memory; this works because Next proxies `/api/*`, so the cookies are first-party for the web origin (D9). There is no `Session` table: `User.tokenVersion` is the kill switch ("sign out everywhere", deactivate, password change bump it, and every refresh checks it). Trade-off, accepted: an access token already issued keeps working until it expires (at most 15 min), and plain logout clears this browser's cookies only. | Replaces spec §1.5 `Session`, §1.6 Auth row (which preferred sessions) and roadmap p18 "MySQL sessions"; p18's learning goals (hashing, httpOnly cookies, logout) stay |
 
 ## 4. Architecture at a glance
 
@@ -119,7 +120,7 @@ Browser ──► Next.js apps/web :3000 ──/api/* rewrite──► NestJS ap
 | `adminer` | `docker compose up -d adminer` | 8080 (127.0.0.1) | Web UI to look inside the DB |
 | `db-test` | `docker compose --profile test up -d db-test` | 3307 (127.0.0.1) | From T29, tmpfs, reset per test run |
 
-**Environment (`.env.example`, grows task by task).** `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE=portfolio`, `MYSQL_USER=app`, `MYSQL_PASSWORD`, `DATABASE_URL`, `DATABASE_URL_TEST` (T29), `API_PORT=4000`, `API_HOST=127.0.0.1`, `WEB_ORIGIN=http://localhost:3000`, `API_URL=http://127.0.0.1:4000` (web → api), `WEB_INTERNAL_URL=http://127.0.0.1:3000` (api → web revalidate, T52), `REVALIDATE_SECRET` (T52), `SESSION_TTL_DAYS=14` (T35), `ADMIN_EMAIL="<email>"`, `ADMIN_NAME`, `ADMIN_PASSWORD` (T35), `ANALYTICS_SALT_SECRET` (T54), `UPLOAD_DIR=./uploads` (T50), `SEED_PROFILE=demo`, `NEXT_PUBLIC_BUILD_SHA` (footer deploy hash).
+**Environment (`.env.example`, grows task by task).** `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE=portfolio`, `MYSQL_USER=app`, `MYSQL_PASSWORD`, `DATABASE_URL`, `DATABASE_URL_TEST` (T29), `API_PORT=4000`, `API_HOST=127.0.0.1`, `WEB_ORIGIN=http://localhost:3000`, `API_URL=http://127.0.0.1:4000` (web → api), `WEB_INTERNAL_URL=http://127.0.0.1:3000` (api → web revalidate, T52), `REVALIDATE_SECRET` (T52), `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET` (T35, 32+ random characters each, different from each other), `JWT_ACCESS_TTL_SECONDS=900`, `JWT_REFRESH_TTL_SECONDS=604800` (T35), `ADMIN_EMAIL="<email>"`, `ADMIN_NAME`, `ADMIN_PASSWORD` (T35), `ANALYTICS_SALT_SECRET` (T54), `UPLOAD_DIR=./uploads` (T50), `SEED_PROFILE=demo`, `NEXT_PUBLIC_BUILD_SHA` (footer deploy hash).
 
 **Rendering (spec [§4.6](./design/portfolio-design-system.md#s-4-6)).** Public pages are React Server Components that call `apiServer()` with cache tags (`site`, `projects`, `project:{slug}`, `posts`, `post:{slug}`, `skills`, `domains`). Publishing calls `POST /api/revalidate` on the web app, which runs `revalidateTag`. Client islands (notes search, contact form, marquee pause, ⌘K) are small `'use client'` files. The admin prefetches on the server, hydrates with `HydrationBoundary`, and reads with `useSuspenseQuery` using keys from `qk`.
 
@@ -203,8 +204,8 @@ Paths: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct*
 | T33 | Transactional reorder + tag replace | p16 | T31, T32 | M | api services, `common/utils/` |
 | T34 | Indexes + EXPLAIN | p17 | T33 | S | api `prisma/`, `docs/sql-notes.sql` |
 | **M4** | **Auth + admin CMS** | | | | |
-| T35 | Users, argon2, MySQL sessions | p18 | T29 | L | api `modules/auth/`, `modules/users/` |
-| T36 | Guards, roles, Origin check, throttle | p19 | T35 | M | api `src/common/guards/` |
+| T35 | Users, argon2, JWT access + refresh cookies | p18 | T29 | L | api `modules/auth/`, `modules/users/` |
+| T36 | Global JWT guard, roles (admin/user), Origin check, throttle | p19 | T35 | M | api `src/common/guards/` |
 | T37 | Admin shell, login, ⌘K | p20 | T11, T12, T36 | L | web `modules/admin-core/`, `admin-auth/` |
 | T38 | Admin dashboard v1 + stats endpoint | p20 | T37 | M | web `admin-dashboard/`, api `modules/dashboard/` |
 | T39 | DataTable + admin projects list | p21 | T37 | L | ui `DataTable/`, web `admin-projects/` |
@@ -214,7 +215,7 @@ Paths: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct*
 | T43 | Project editor | p22 | T42 | L | web `admin-projects/` |
 | T44 | Post + experience editors | p22 | T42 | M | web `admin-posts/`, `admin-about/` |
 | T45 | Site, sections, profile admin | p22 | T33, T42 | L | web `admin-site/` |
-| T46 | Users admin (owner only) | p22 | T37 | S | web `admin-users/`, api `modules/users/` |
+| T46 | Users admin (admin only) + change own password | p22 | T37 | M | web `admin-users/`, api `modules/users/` |
 | **M5** | **Realtime, media, publishing** | | | | |
 | T47 | Contact + inbox API | p23 | T36 | M | api `modules/contact/`, `contact-topics/` |
 | T48 | Contact page + Server Action | p23 | T14, T47 | M | web `modules/contact/` |
@@ -1228,66 +1229,108 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 ### M4 — Auth + admin CMS
 
-#### T35 · Users, argon2, MySQL sessions
+#### T35 · Users, argon2, JWT access + refresh cookies
 
-**Roadmap** p18 · **Spec** §1.5 (`User`, `Session`), §1.6 (Auth row), §6 Day 15 · **Depends** T29 · **Size** L
+**Roadmap** p18 (adjusted by D24) · **Spec** §1.5 (`User`), §1.6 (Auth row, replaced by D24), §6 Day 15 · **Depends** T29 · **Size** L
 
-**Goal.** Email + password login that creates a server-side session row and an httpOnly cookie; logout deletes the row.
+**Goal.** Email + password login that returns two JWTs in httpOnly cookies: a short access token that proves who you are on every request, and a longer refresh token that gets a new pair when the access token expires. Logout clears both cookies.
 
 **Scope.**
-- Models `User` (`role` enum `OWNER|EDITOR|VIEWER`, `isActive`, `lastLoginAt`), `Session` (`tokenHash @unique`, `userId`, `expiresAt`, `userAgent`). Migration `add-auth`.
-- Contracts `auth/`: `loginSchema`, `meSchema` (no `passwordHash`).
-- `modules/users`: `users.service.ts` (find by email, create). Seed creates the owner from `ADMIN_EMAIL`, `ADMIN_NAME`, `ADMIN_PASSWORD` only when all are set; never a default password.
-- `modules/auth`: `auth.controller.ts` (`POST /auth/login`, `POST /auth/logout`, `GET /auth/me`), `auth.service.ts` (argon2id verify; 32 random bytes as the token; store its SHA-256 hash; cookie `sid`: `httpOnly`, `SameSite=Lax`, `Secure` in production, `Path=/`, `Max-Age` from `SESSION_TTL_DAYS`; same message for unknown email and wrong password; update `lastLoginAt`), `session.service.ts` (find valid session by token, delete expired rows).
-- `cookie-parser` in `main.ts`. `.env.example`: `SESSION_TTL_DAYS`, `ADMIN_EMAIL="<email>"`, `ADMIN_NAME`, `ADMIN_PASSWORD`.
-- e2e: login sets the cookie; `me` returns the DTO; logout deletes the row; an expired session → 401.
+- Packages: `@nestjs/jwt`, `@nestjs/passport`, `passport`, `passport-jwt` (+ `@types/passport-jwt`), `argon2`, `cookie-parser`.
+- Model `User`: `id`, `email @unique`, `name`, `passwordHash`, `role Role @default(user)` with `enum Role { admin user }` (D7), `isActive @default(true)`, `tokenVersion Int @default(0)`, `lastLoginAt?`, timestamps. No `Session` model (D24). Migration `add-auth`.
+- Contracts `auth/`: `auth.enum.ts` (`roleSchema = z.enum(['admin', 'user'])`, type `Role`), `auth.schema.ts` (`loginSchema`, `meSchema` = `{ id, email, name, role }`, never `passwordHash` or `tokenVersion`).
+- Config (`src/config/env.schema.ts`): `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET` (each at least 32 characters and not equal to each other, or boot fails), `JWT_ACCESS_TTL_SECONDS` (default 900 = 15 min), `JWT_REFRESH_TTL_SECONDS` (default 604800 = 7 days).
+- `modules/users`: `users.service.ts` (find by email, find by id, create with an argon2id hash, `bumpTokenVersion`). The seed creates one `admin` from `ADMIN_EMAIL`, `ADMIN_NAME`, `ADMIN_PASSWORD` only when all three are set; never a default password.
+- `modules/auth`:
+  - `token.service.ts`: `signAccess(user)` → `{ sub: String(user.id), role }` with `JWT_ACCESS_SECRET`, `expiresIn: JWT_ACCESS_TTL_SECONDS`; `signRefresh(user)` → `{ sub, ver: user.tokenVersion }` with `JWT_REFRESH_SECRET`, `expiresIn: JWT_REFRESH_TTL_SECONDS`. Both use `JwtService.signAsync(payload, { secret, expiresIn })`, algorithm HS256. No email, name or other personal data in a payload.
+  - `auth-cookies.util.ts`: `setAuthCookies(res, tokens)` and `clearAuthCookies(res)` with the options in the table below (Express `maxAge` is in milliseconds: seconds × 1000).
+  - `strategies/jwt.strategy.ts` (`PassportStrategy(Strategy, 'jwt')`): `jwtFromRequest` reads `req.cookies.access_token`, `ignoreExpiration: false`, `secretOrKey: JWT_ACCESS_SECRET`; `validate(payload)` returns `{ id: Number(payload.sub), role: payload.role }` without a DB query (this becomes `request.user`).
+  - `strategies/jwt-refresh.strategy.ts` (`'jwt-refresh'`): reads `req.cookies.refresh_token` with `JWT_REFRESH_SECRET`; `validate` loads the user and rejects (401) when the user is missing, `isActive = false`, or `payload.ver !== user.tokenVersion`.
+  - `auth.service.ts`: `login` (find by email, `argon2.verify`; the same `INVALID_CREDENTIALS` 401 for an unknown email, a wrong password and an inactive user; update `lastLoginAt`; issue both tokens), `refresh` (issue a new pair for the validated user: rotation), `me` (load the user by `request.user.id`; 401 if missing or inactive).
+  - `auth.controller.ts`: `POST /auth/login` (body `loginSchema`; sets both cookies; returns `meSchema`, never the tokens), `POST /auth/refresh` (`@UseGuards(JwtRefreshGuard)`; sets a new pair; 204), `POST /auth/logout` (clears both cookies; 204, works even with an expired access token), `GET /auth/me` (`@UseGuards(JwtAuthGuard)`). T36 makes `JwtAuthGuard` global.
+- `common/guards/jwt-auth.guard.ts` (`AuthGuard('jwt')`, `handleRequest` turns every failure into 401 `UNAUTHENTICATED`, D5) and `common/guards/jwt-refresh.guard.ts` (`AuthGuard('jwt-refresh')`).
+- `cookie-parser` in `main.ts`. `.env.example`: the four `JWT_*` keys (empty secrets, with the comment "generate with `openssl rand -base64 48`"), `ADMIN_EMAIL="<email>"`, `ADMIN_NAME`, `ADMIN_PASSWORD`.
+- `test/helpers/auth.helper.ts`: creates an `admin` and a `user` in the test DB and returns logged-in supertest agents (cookies kept between requests). `api.http`: login, me, refresh, logout (REST Client remembers cookies).
+- e2e: login sets both cookies with the right flags; `me` returns the DTO with `role`; an expired access token (signed in the test with a past `exp`) → 401; refresh → 204 and new cookies; refresh after `tokenVersion` changes → 401; logout clears both cookies.
 
-**Files.** `apps/api/prisma/schema.prisma`, `apps/api/prisma/migrations/*_add_auth/`, `apps/api/prisma/seed/profiles/*.seed.ts`, `apps/api/src/modules/users/{users.module.ts,users.service.ts,entities/*}`, `apps/api/src/modules/auth/{auth.module.ts,auth.controller.ts,auth.service.ts,session.service.ts,auth.service.spec.ts,dto/*}`, `apps/api/src/main.ts`, `packages/contracts/src/auth/*`, `apps/api/test/auth.e2e-spec.ts`, `.env.example`, `apps/api/api.http`.
+**Cookies (D24).**
+
+| Cookie | Holds | `Path` | `Max-Age` | Flags |
+| --- | --- | --- | --- | --- |
+| `access_token` | access JWT `{ sub, role }` | `/` (Next server components read it on `/admin/*` and forward it, T37) | `JWT_ACCESS_TTL_SECONDS` (15 min) | `httpOnly`, `SameSite=Lax`, `Secure` in production |
+| `refresh_token` | refresh JWT `{ sub, ver }` | `/api/auth` (sent only to refresh and logout) | `JWT_REFRESH_TTL_SECONDS` (7 days) | `httpOnly`, `SameSite=Lax`, `Secure` in production |
+
+**Files.** `apps/api/package.json`, `apps/api/prisma/schema.prisma`, `apps/api/prisma/migrations/*_add_auth/`, `apps/api/prisma/seed/profiles/*.seed.ts`, `apps/api/src/config/{env.schema.ts,app-config.service.ts}`, `apps/api/src/modules/users/{users.module.ts,users.service.ts,users.service.spec.ts,entities/*}`, `apps/api/src/modules/auth/{auth.module.ts,auth.controller.ts,auth.service.ts,auth.service.spec.ts,token.service.ts,auth-cookies.util.ts,strategies/jwt.strategy.ts,strategies/jwt-refresh.strategy.ts,dto/*}`, `apps/api/src/common/guards/{jwt-auth.guard.ts,jwt-refresh.guard.ts}`, `apps/api/src/main.ts`, `packages/contracts/src/auth/{auth.enum.ts,auth.schema.ts,auth.type.ts}`, `apps/api/test/helpers/auth.helper.ts`, `apps/api/test/auth.e2e-spec.ts`, `.env.example`, `apps/api/api.http` ([api STRUCTURE: auth](../apps/api/STRUCTURE.md#auth-jwt)).
 
 **Design.** None (API only).
 
 **Backend steps, explained.**
-1. **Hashing, not encryption.** A password hash cannot be turned back into the password. argon2id is slow on purpose, so guessing millions of passwords is expensive.
-2. **Session = a row.** Logged in means a `Session` row exists. Logout, or "sign out everywhere", deletes rows.
-3. **Store the token's hash.** The cookie holds a random token; the DB stores only its SHA-256. A leaked DB backup cannot be used to log in.
-4. **Cookie flags.** `httpOnly`: JavaScript cannot read it. `SameSite=Lax`: other sites cannot send it with form posts. `Secure`: HTTPS only (production).
-5. **Same error for both cases.** "Invalid email or password" for both, so nobody can test which emails have accounts.
+1. **Hashing, not encryption.** A password hash cannot be turned back into the password. argon2id is slow on purpose, so guessing millions of passwords is expensive. `argon2.hash` on create, `argon2.verify` on login; the plain password is never stored or logged.
+2. **What a JWT is.** Three base64url parts joined by dots: header (algorithm), payload (claims such as `sub` = user id, `role`, `exp` = expiry time) and a signature made with a secret only the API knows. Anyone can *read* the payload (it is not encrypted, so no email or secrets in it), but nobody can *change* it without breaking the signature. The API trusts a token because the signature checks out, not because a DB row exists.
+3. **Why two tokens.** The access token is sent on every request and is checked without touching the DB, so it must die quickly (15 min) in case it leaks. The refresh token is sent only to `/api/auth/*` (its cookie `Path`), lives 7 days, and is checked against the DB (`isActive`, `tokenVersion`) each time it is used. Different secrets mean one can never be used as the other.
+4. **Where they live: httpOnly cookies.** `httpOnly`: page JavaScript cannot read them, so an XSS bug cannot steal them (a token in `localStorage` can be stolen). `SameSite=Lax`: other sites cannot send them with form posts. `Secure`: HTTPS only (production). Because Next rewrites `/api/*` to Nest, the browser thinks it is talking to one site; the cookies set by Nest are first-party and the browser sends them back on every `/api/*` call with no extra code.
+5. **`@nestjs/jwt` and `passport-jwt`.** `JwtService` (from `@nestjs/jwt`) *creates* tokens. A Passport *strategy* (from `passport-jwt`) *checks* them: it says where to find the token (the cookie), which secret verifies it, and `validate()` returns what goes on `request.user`. `AuthGuard('jwt')` runs that strategy before a route.
+6. **Refresh and rotation.** When a request gets 401 because the access token expired, the web calls `POST /api/auth/refresh` once (T37). The API checks the refresh token, then sends a fresh access token *and* a fresh refresh token. While someone keeps using the admin, the 7 days keep sliding; after 7 idle days they log in again.
+7. **Logout and the kill switch.** Logout clears both cookies in this browser. There is no session row to delete, so to cut off *every* device the API increments `User.tokenVersion`; every refresh token signed with the old `ver` now fails, and the user is out within 15 minutes (when their access token expires). T46 uses this for "sign out everywhere", deactivation and password changes.
+8. **Same error for every failure.** "Invalid email or password" for an unknown email, a wrong password and an inactive account, so nobody can test which emails have accounts.
 
 **Acceptance.**
-- [ ] Login sets the httpOnly cookie, and `GET /auth/me` returns the user DTO (roadmap p18).
-- [ ] Logout deletes the session row; an expired session gives 401 (roadmap p18).
-- [ ] The DB holds no raw tokens and no plain passwords.
+- [ ] Login sets `access_token` and `refresh_token` as httpOnly cookies with the paths and lifetimes in the table, and `GET /auth/me` returns the user DTO with `role` (roadmap p18).
+- [ ] An expired or tampered access token gives 401; `POST /auth/refresh` with a valid refresh cookie returns 204 and new cookies; after `tokenVersion` changes, refresh gives 401.
+- [ ] Logout clears both cookies, and `GET /auth/me` then returns 401 (roadmap p18, adjusted by D24).
+- [ ] The DB holds no plain passwords and no tokens; no response body or log line contains a token.
 
-**PR title:** `feat(api): session auth`
+**PR title:** `feat(api): jwt auth` (roadmap p18 says `session auth`; changed by D24)
 
-#### T36 · Guards, roles, Origin check, throttle
+#### T36 · Global JWT guard, roles (admin/user), Origin check, throttle
 
 **Roadmap** p19 · **Spec** §1.6 (Auth, CSRF, Rate limit), §6 Day 16 · **Depends** T35 · **Size** M
 
-**Goal.** Every non-public route needs a session and the right role; mutating requests must come from our site; login is rate-limited.
+**Goal.** Every non-public route needs a valid access token and the right role; mutating requests must come from our site; login is rate-limited.
 
 **Scope.**
-- `common/guards/session.guard.ts` (global `APP_GUARD`): loads the session from the cookie, sets `request.user`; 401 otherwise. `@Public()` on health, login and every `/public/*` route.
-- `common/guards/roles.guard.ts` + `@Roles()`: OWNER = everything; EDITOR = all content writes and publish, not users; VIEWER = admin reads only. Default for admin write routes: `@Roles('OWNER', 'EDITOR')`.
-- `common/guards/origin.guard.ts` (global): for `POST/PUT/PATCH/DELETE`, `Origin` must equal `WEB_ORIGIN`; otherwise 403 `BAD_ORIGIN` (D8). Server-to-server calls from Next (contact Server Action, T48) send `Origin: WEB_ORIGIN` explicitly.
-- `common/decorators/current-user.decorator.ts`.
-- `@nestjs/throttler`: login 5 per minute per IP + email → 429. Trust the loopback proxy (`trust proxy`) so the client IP comes from `x-forwarded-for` set by Next.
-- e2e: no session → 401; VIEWER write → 403; foreign `Origin` → 403; 6th bad login → 429.
+- Register three global guards in `app.module.ts`, in this order (`APP_GUARD`): `JwtAuthGuard` → `RolesGuard` → `OriginGuard`.
+- `JwtAuthGuard` (from T35) becomes global and reads `@Public()` with `Reflector`: public routes skip it; everything else needs a valid access token or gets 401. `@Public()` on health, `POST /auth/login`, `POST /auth/refresh` (it has its own `JwtRefreshGuard`), `POST /auth/logout` and every `public-*.controller.ts`.
+- `common/decorators/roles.decorator.ts`: `@Roles(...roles: Role[])` with `Role = 'admin' | 'user'` from contracts.
+- `common/guards/roles.guard.ts`: skips `@Public()` routes; reads `@Roles()` from the handler, then the class; **no `@Roles()` means `['admin']`**; `request.user.role` not in the list → 403 `FORBIDDEN`.
+- Add `@Roles('admin', 'user')` to every read (`GET`) handler of the admin controllers that exist so far (T29–T32) and to `GET /auth/me`. Writes keep no decorator, so they are admin only. Later tasks name their roles explicitly (see the table).
+- `common/guards/origin.guard.ts`: for `POST/PUT/PATCH/DELETE`, `Origin` must equal `WEB_ORIGIN`; otherwise 403 `BAD_ORIGIN` (D8). Login, refresh and logout are included. Server-to-server calls from Next (contact Server Action, T48) send `Origin: WEB_ORIGIN` explicitly.
+- `common/decorators/current-user.decorator.ts`: `@CurrentUser()` returns `request.user` (`{ id, role }`).
+- `@nestjs/throttler`: login 5 per minute per IP + email → 429; refresh 30 per minute per IP. Trust the loopback proxy (`trust proxy`) so the client IP comes from `x-forwarded-for` set by Next.
+- e2e: no token → 401; expired token → 401; `user` on any write → 403; `user` on an admin `GET` → 200; `admin` write → 2xx; foreign `Origin` → 403; 6th bad login → 429.
 
-**Files.** `apps/api/src/common/guards/{session.guard.ts,roles.guard.ts,origin.guard.ts}` (+ specs), `apps/api/src/common/decorators/{public.decorator.ts,roles.decorator.ts,current-user.decorator.ts}`, `apps/api/src/app.module.ts`, `apps/api/src/main.ts`, every `public-*.controller.ts` (`@Public()`), `apps/api/test/guards.e2e-spec.ts`.
+**What each role can do (D7).** The API enforces this; the web only hides what a role cannot use (T37 `RoleGate`).
+
+| Area | `admin` | `user` | Routes (task) |
+| --- | --- | --- | --- |
+| Own account: me, logout, change own password | yes | yes | `/auth/*` (T35, T46) |
+| Dashboard: counts, content health, analytics charts | read | read | `GET /admin/stats`, `GET /admin/health` (T38, T54) |
+| Content: projects, posts, experience and other about tables, skills, tags, domains, site, profile, nav, social, sections, contact topics | read, create, edit, delete, reorder | read only (lists and editors open read-only) | `/admin/*` (T29–T33, T39–T45) |
+| Publish, unpublish, bulk status changes | yes | no | T52, T55 |
+| Draft preview | yes | yes | `GET /admin/preview/*`, `/api/draft` (T52) |
+| Media: browse | yes | yes | `GET /admin/media` (T50) |
+| Media: upload, edit alt text, delete | yes | no | T50 |
+| Inbox (contact messages contain visitor emails) and live notifications | yes | no | `/admin/messages`, `/admin/events` (T47, T49) |
+| Audit log | yes | no | `GET /admin/audit` (T55) |
+| Users: create, change role, deactivate, sign out everywhere | yes | no | `/admin/users` (T46) |
+
+**Files.** `apps/api/src/common/guards/{jwt-auth.guard.ts,roles.guard.ts,origin.guard.ts}` (+ specs), `apps/api/src/common/decorators/{public.decorator.ts,roles.decorator.ts,current-user.decorator.ts}`, `apps/api/src/app.module.ts`, `apps/api/src/main.ts`, `apps/api/src/modules/auth/auth.controller.ts`, every `public-*.controller.ts` (`@Public()`), every `admin-*.controller.ts` so far (`@Roles('admin', 'user')` on `GET` handlers), `apps/api/test/guards.e2e-spec.ts`.
 
 **Design.** None (API only).
 
 **Backend steps, explained.**
 1. **Guard.** Runs before the controller and answers yes or no. A global guard protects every route by default; `@Public()` opts a route out. Forgetting a decorator then fails safe (401), not open.
-2. **Roles.** `@Roles('OWNER')` puts a label on the route; `RolesGuard` compares it with `request.user.role`. The web hides buttons too (T37 `RoleGate`), but the server is what enforces it.
-3. **Origin check (CSRF).** A malicious page can make your browser send a request with your cookie. Browsers always send the `Origin` header on such requests, so rejecting other origins blocks it.
-4. **Rate limit.** Counts requests per key in a time window and answers 429 when over the limit.
+2. **Guard order.** First "who are you?" (`JwtAuthGuard` verifies the token and sets `request.user`), then "are you allowed?" (`RolesGuard`), then "did this come from our site?" (`OriginGuard`). Nest runs global guards in the order they are registered.
+3. **Roles.** `@Roles('admin', 'user')` puts a label on the route; `RolesGuard` compares it with `request.user.role`, which comes from the verified token, so a user cannot fake it. No label means admin only. The web hides buttons too, but the server is what enforces it.
+4. **Role changes and the 15 minutes.** The role is inside the access token, so a role change or deactivation (T46) takes effect at the next refresh, at most 15 minutes later. That is the price of not reading the DB on every request (D24).
+5. **Origin check (CSRF).** A malicious page can make your browser send a request with your cookies. Browsers always send the `Origin` header on such requests, so rejecting other origins blocks it. JWTs in cookies need this exactly as session cookies do.
+6. **Rate limit.** Counts requests per key in a time window and answers 429 when over the limit.
 
 **Acceptance.**
-- [ ] Writes without a session return 401; writes with a foreign or missing `Origin` return 403 (roadmap p19, adjusted by D8).
+- [ ] Writes without a token return 401; writes with a foreign or missing `Origin` return 403 (roadmap p19, adjusted by D8).
 - [ ] The 6th bad login in a minute returns 429 (roadmap p19).
-- [ ] A VIEWER cannot write (403) (spec §6 Day 16).
+- [ ] Only `admin` can write: a `user` gets 403 on every admin `POST/PATCH/DELETE`, and 200 on admin `GET` routes (roadmap p19 "only the admin can write"; spec §6 Day 16).
+- [ ] A new admin route without `@Roles()` is admin only (covered by a guard spec).
 
 **PR title:** `feat(api): guards + csrf + throttle`
 
@@ -1295,21 +1338,31 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **Roadmap** p20 · **Spec** [§4.3](./design/portfolio-design-system.md#s-4-3), §4.6 (Admin layout row), §5.7, §5.11 · **Depends** T11, T12, T36 · **Size** L
 
-**Goal.** A protected admin with a server-side session check, the Linear-style shell, the login page and the admin command palette.
+**Goal.** A protected admin with a server-side token check, silent token refresh, role-aware UI, the Linear-style shell, the login page and the admin command palette.
 
 **Scope.**
 - `app/admin/layout.tsx`: root layout #2 (`<html lang="en">`, fonts, `Providers` with `QueryProvider`, `Toaster`, admin messages from `en.json` `admin.*`, D22).
-- `app/admin/login/page.tsx` → `admin-auth/views/AdminAuthLogin.tsx` with `LoginForm` (TanStack Form + `field`, `loginSchema`, maps `fieldErrors`, shows the 429 message).
-- `app/admin/(cms)/layout.tsx`: server call `GET /auth/me` with the forwarded cookie (`apiServer` option `withSession`, `cache: 'no-store'`); 401 → `redirect('/admin/login')`; else `AdminShell`.
-- `admin-core`: `AdminShell` (shadcn `sidebar`, 240px, collapsible to a 56px rail, `[` toggles; groups and items from §4.3 plus Stats, Domains, Process (§5.11); mobile sheet), `Topbar` (breadcrumbs, page actions slot, user menu with logout), admin `CommandPalette` (jump to admin routes, "New project/post"), `RoleGate`, `stores/admin-ui.store.tsx` (`AdminUiProvider`, `useAdminUi`: sidebar collapsed, palette open), `services/auth.service.ts` (me, logout), `hooks/use-me.hook.ts`.
+- `middleware.ts` (extends the T11 file): for `/admin/*` except `/admin/login`, no `access_token` cookie → redirect to `/admin/login?next=<path>`. This is only a fast, no-network check (the cookie disappears when the token expires, T35); the real check is the layout below. Public routes keep the next-intl middleware.
+- `app/admin/login/page.tsx` → `admin-auth/views/AdminAuthLogin.tsx`. On mount it tries `POST /api/auth/refresh` once (the browser sends `refresh_token` by itself); 204 → `router.replace(next)`; otherwise it shows `LoginForm` (TanStack Form + `field`, `loginSchema`, maps `fieldErrors`, shows the 429 message). `admin-auth/utils/safe-next.util.ts` accepts only paths starting with `/admin` (no open redirect).
+- `app/admin/(cms)/layout.tsx`: server call `GET /auth/me` (`apiServer` option `withAuth`: forwards only the `access_token` cookie, `cache: 'no-store'`); 401 → `redirect('/admin/login')`; else `AdminShell` with the `me` DTO.
+- `core/services/api-client.service.ts`: for `/api/admin/*` and `/api/auth/me`, a 401 triggers one `POST /api/auth/refresh` (single-flight: parallel 401s share one refresh promise) and retries the request once; if refresh fails → `window.location.assign('/admin/login?next=…')`. Exports `refreshOnce()` for the SSE hook (T49). Public calls never refresh.
+- `admin-core`: `AdminShell` (shadcn `sidebar`, 240px, collapsible to a 56px rail, `[` toggles; groups and items from §4.3 plus Stats, Domains, Process (§5.11); mobile sheet), `Topbar` (breadcrumbs, page actions slot, user menu with name, role badge and logout), admin `CommandPalette` (jump to admin routes, "New project/post" for `admin` only), `RoleGate` (`<RoleGate allow={['admin']}>` renders children only for those roles), `stores/admin-ui.store.tsx` (`AdminUiProvider`, `useAdminUi`: sidebar collapsed, palette open), `services/auth.service.ts` (me, logout), `hooks/use-me.hook.ts` (`useMe()`, seeded from the layout's `me`; `useIsAdmin()`).
+- Role-aware UI rule for every later admin task: write controls (New, Save, Delete, Publish, reorder, upload, bulk bar) are wrapped in `RoleGate allow={['admin']}`; the Inbox, Audit log and Users sidebar items are `admin` only; a `user` sees the rest read-only (T36 table).
 - `app/admin/(cms)/page.tsx` → `AdminDashboardIndex` placeholder (filled by T38).
 
-**Files.** `apps/web/app/admin/layout.tsx`, `apps/web/app/admin/login/page.tsx`, `apps/web/app/admin/(cms)/{layout.tsx,page.tsx}`, `apps/web/src/modules/admin-auth/{views/AdminAuthLogin.tsx,components/LoginForm/*}`, `apps/web/src/modules/admin-core/components/{AdminShell,AdminSidebar,Topbar,CommandPalette,RoleGate}/*`, `apps/web/src/modules/admin-core/{stores/admin-ui.store.tsx,services/auth.service.ts,hooks/use-me.hook.ts}`, `apps/web/src/modules/core/services/api-server.service.ts`, `apps/web/i18n/locales/en.json`, `packages/ui/src/components/ui/{sidebar,breadcrumb,avatar}.tsx`.
+**Files.** `apps/web/middleware.ts`, `apps/web/app/admin/layout.tsx`, `apps/web/app/admin/login/page.tsx`, `apps/web/app/admin/(cms)/{layout.tsx,page.tsx}`, `apps/web/src/modules/admin-auth/{views/AdminAuthLogin.tsx,components/LoginForm/*,utils/safe-next.util.ts}`, `apps/web/src/modules/admin-core/components/{AdminShell,AdminSidebar,Topbar,CommandPalette,RoleGate}/*`, `apps/web/src/modules/admin-core/{stores/admin-ui.store.tsx,services/auth.service.ts,hooks/use-me.hook.ts}`, `apps/web/src/modules/core/services/{api-server.service.ts,api-client.service.ts}`, `apps/web/i18n/locales/en.json`, `packages/ui/src/components/ui/{sidebar,breadcrumb,avatar}.tsx`.
 
 **Design.** Figma `14:2` (shell). Mockup `admin-dashboard.html`. Tokens: `--sidebar*`, `text-ui-title`, `text-ui`, `text-ui-meta`, admin control height 32 (28 compact). No atmosphere, bands or orbs in admin (§7.2 `06`).
 
+**Token flow, explained.**
+1. **The browser never touches a token.** Login, refresh and logout answer with `Set-Cookie`; the browser stores the httpOnly cookies and sends them on every `/api/*` call. Web code only sees the `me` DTO.
+2. **Server components forward the cookie.** A Server Component runs on the Next server, not in the browser, so it must pass the cookie on by hand: `apiServer(..., { withAuth: true })` copies `access_token` from `cookies()` into the request to Nest.
+3. **Refresh happens in one place.** In the browser, `apiClient` sees a 401, refreshes once and retries. On a full page load after the access token expired, the middleware sends you to the login page, which refreshes silently and sends you back. Only when the refresh token is also gone or revoked do you see the form.
+
 **Acceptance.**
 - [ ] Logged out, `/admin` redirects to login on the server: `curl -I` shows a redirect, no client flash (roadmap p20).
+- [ ] With an expired access token but a valid refresh token, opening `/admin/projects` lands back on `/admin/projects` without showing the form; an admin request made after expiry succeeds after one automatic refresh.
+- [ ] Signed in as `user`: no Inbox, Audit log or Users items, no New/Save/Delete/Publish buttons; the role badge says `user`.
 - [ ] ⌘K navigates to an admin route (roadmap p20); `[` toggles the sidebar.
 - [ ] Wrong credentials show the error under the form; the 6th attempt shows the rate-limit message.
 - [ ] Screenshot compared with `14:2` (shell only).
@@ -1323,7 +1376,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Goal.** A dashboard whose counts and content-health checks come from the API, one card at a time.
 
 **Scope.**
-- API `modules/dashboard`: `GET /admin/stats?range=7d|30d|90d` (content counts by status; fields for messages and views are added by T47 and T54), `GET /admin/health` (content-health checks: projects without a domain, case studies with fewer than 2 key facts, marquee with fewer than 6 skills, missing Vietnamese fields on published items, publish-lint issues; missing alt text is added by T50).
+- API `modules/dashboard`: `GET /admin/stats?range=7d|30d|90d` (content counts by status; fields for messages and views are added by T47 and T54), `GET /admin/health` (both `@Roles('admin', 'user')`; content-health checks: projects without a domain, case studies with fewer than 2 key facts, marquee with fewer than 6 skills, missing Vietnamese fields on published items, publish-lint issues; missing alt text is added by T50).
 - Web `admin-dashboard`: `AdminDashboardIndex`, `StatCard` (in `packages/ui`: value, delta text + arrow, not color only), `ContentHealthCard` (each issue links to the item), period `toggle-group` stored in the URL. Server prefetch + `HydrationBoundary`; each card uses `useSuspenseQuery` inside its own `SectionBoundary` (per-card skeleton, empty and error).
 
 **Files.** `apps/api/src/modules/dashboard/*`, `packages/contracts/src/dashboard/*`, `apps/web/app/admin/(cms)/page.tsx`, `apps/web/src/modules/admin-dashboard/{views/AdminDashboardIndex.tsx,components/{StatsCards,ContentHealthCard}/*,hooks/use-dashboard.hook.ts,services/dashboard.service.ts}`, `packages/ui/src/components/StatCard/*`.
@@ -1344,7 +1397,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Goal.** One generic, keyboard-friendly server-driven table, first used for projects.
 
 **Scope.**
-- `packages/ui` `DataTable` (TanStack Table on shadcn `table`; `manualPagination/Sorting/Filtering`; sortable, resizable, hideable columns; row selection with shift-range; bulk actions bar; sticky header; density compact 32 / default 40; keys `j/k` move, `x` select, `Enter` open, `e` edit, `⌫` delete with confirm; states: skeleton rows, empty with create action, no results with clear filters, error with Retry; card list below `md`) and `FilterBar` (chips, add-filter menu).
+- `packages/ui` `DataTable` (TanStack Table on shadcn `table`; `manualPagination/Sorting/Filtering`; sortable, resizable, hideable columns; row selection with shift-range; bulk actions bar; sticky header; density compact 32 / default 40; keys `j/k` move, `x` select, `Enter` open, `e` edit, `⌫` delete with confirm (edit, delete and the bulk bar only for `admin`, via a `canWrite` prop); states: skeleton rows, empty with create action, no results with clear filters, error with Retry; card list below `md`) and `FilterBar` (chips, add-filter menu).
 - `admin-core/hooks/use-list-params.hook.ts` (URL ↔ `ListParams` via zod), `admin-core/utils/optimistic.util.ts` (snapshot / restore helpers for `onMutate`/`onError`).
 - `admin-projects`: `services/admin-projects.service.ts`, `hooks/use-admin-projects.hook.ts` (list with `useSuspenseQuery` and `keepPreviousData`, archive with optimistic removal and rollback, status toggle, reorder with move up/down), `views/AdminProjectsIndex.tsx`. Columns: title, domain (hue pill), status (`StatusPill`), key facts count, updated, row actions. Prefetch detail on row hover/focus after 100ms.
 - Route `app/admin/(cms)/projects/page.tsx` with server prefetch + `HydrationBoundary`.
@@ -1412,7 +1465,8 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 - `packages/ui`: `MarkdownEditor` (CodeMirror 6; toolbar heading, bold, link, code, image, callout; slash menu; write / split / preview modes on `resizable`; word count; image paste is wired in T51), `SaveStatus` (`Saving…`, `Saved 12s ago`, `Offline, changes kept locally`, `Conflict: newer version` with Load latest / Overwrite), `LocaleTabs` (EN/VI with completeness dots), `PropertyList`.
 - `content`: split the pipeline into `markdown-to-hast` (server) and `hast-to-react.util.ts` (shared); `content/actions/preview.action.ts` (Server Action that returns sanitized HAST for the preview pane).
 - `admin-core`: `EditorShell` (header with title, `SaveStatus`, publish slot; editor; properties pane 320px on `lg`; live preview column on `2xl`; properties in a `sheet`/`drawer` on mobile), `hooks/use-autosave.hook.ts` (TanStack Form listener, 1.5s debounce, `PATCH` with `updatedAt`, 409 → conflict state, offline → local copy), `hooks/use-dirty-guard.hook.ts`, `utils/map-field-errors.util.ts` (`ApiError.fieldErrors` → form field errors).
-- Tests for the autosave state machine and field error mapping.
+- `EditorShell` `readOnly` prop, true when `useIsAdmin()` is false (D7): fields and `MarkdownEditor` are read-only, autosave and the dirty guard are off, the publish slot is hidden, and the header shows a "Read only" badge. Every editor in T43–T45 passes it through.
+- Tests for the autosave state machine, field error mapping and read-only mode (no `PATCH` is sent).
 
 **Files.** `packages/ui/src/components/{MarkdownEditor,SaveStatus,LocaleTabs,PropertyList}/*`, `packages/ui/src/components/ui/{tabs,resizable,drawer}.tsx`, `apps/web/src/modules/content/{services/markdown.service.ts,utils/hast-to-react.util.ts,actions/preview.action.ts}`, `apps/web/src/modules/admin-core/{components/EditorShell/*,hooks/use-autosave.hook.ts,hooks/use-dirty-guard.hook.ts,utils/map-field-errors.util.ts}`.
 
@@ -1421,6 +1475,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Acceptance.**
 - [ ] Autosave fires 1.5s after typing stops and shows `Saved …`; a stale save shows `Conflict` with both actions (tested).
 - [ ] Leaving with unsaved changes asks for confirmation.
+- [ ] Signed in as `user`, an editor opens read-only and sends no writes.
 - [ ] Preview output uses the same sanitized pipeline as the public site (shared test fixture).
 
 **PR title:** `feat(web): editor shell + markdown editor`
@@ -1490,28 +1545,40 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **PR title:** `feat(web): site and profile admin`
 
-#### T46 · Users admin (owner only)
+#### T46 · Users admin (admin only) + change own password
 
-**Roadmap** p22 (rounding out M4) · **Spec** §4.3 (Users, owner only), §1.5 (`User`, `Session`) · **Depends** T37 · **Size** S
+**Roadmap** p22 (rounding out M4) · **Spec** §4.3 (Users; "owner only" becomes admin only by D7), §1.5 (`User`) · **Depends** T37 · **Size** M
 
-**Goal.** The owner can add users, change roles, deactivate accounts and sign users out everywhere.
+**Goal.** An `admin` can add accounts, set their role (`admin` or `user`), deactivate them and sign them out everywhere. Every signed-in account can change its own password.
 
 **Scope.**
-- API `admin-users.controller.ts` (`@Roles('OWNER')`): list, create (email, name, role, initial password), patch (role, `isActive`), `DELETE /admin/users/:id/sessions` (sign out everywhere). The owner cannot demote or deactivate themselves.
-- Web `admin-users`: table + sheet editor; sidebar item wrapped in `RoleGate`.
+- API `modules/users/admin-users.controller.ts`, `@Roles('admin')` on the class (explicit, though it is also the default):
+  - `GET /admin/users` (page list: name, email, role, `isActive`, `lastLoginAt`), `POST /admin/users` (email, name, role, initial password of at least 12 characters), `PATCH /admin/users/:id` (name, role, `isActive`).
+  - `POST /admin/users/:id/sign-out-everywhere` (increments `tokenVersion`; 204) and `POST /admin/users/:id/password` (admin sets a new password; also increments `tokenVersion`).
+  - A change of `role` or `isActive` also increments `tokenVersion`, so the old role cannot be refreshed.
+  - Guardrails: an admin cannot demote or deactivate themselves, and the last active admin cannot be demoted or deactivated (409 `LAST_ADMIN`, checked inside the same transaction as the update).
+- API `PATCH /auth/password` (`@Roles('admin', 'user')`, `changePasswordSchema`: `currentPassword`, `newPassword` with at least 12 characters): verifies the current password, stores the new argon2id hash, increments `tokenVersion`, then sets a fresh cookie pair for this browser so it stays signed in.
+- Contracts `users/`: admin user DTO (never `passwordHash` or `tokenVersion`), `createUserSchema`, `updateUserSchema`, `setPasswordSchema`; `auth/auth.schema.ts` gains `changePasswordSchema`.
+- Web `admin-users`: `AdminUsersIndex` (`DataTable`: name, email, role pill, active switch, last login; row menu with "Sign out everywhere" and "Set password" behind an `alert-dialog`) and `UserForm` in a `sheet`. Route `app/admin/(cms)/users/page.tsx`; the sidebar item is wrapped in `RoleGate allow={['admin']}`.
+- Web `admin-auth/components/ChangePasswordDialog`, opened from the topbar user menu for both roles.
 
-**Files.** `apps/api/src/modules/users/{admin-users.controller.ts,users.service.ts,dto/*}`, `packages/contracts/src/users/*`, `apps/api/test/users.e2e-spec.ts`, `apps/web/app/admin/(cms)/users/page.tsx`, `apps/web/src/modules/admin-users/*`.
+**Files.** `apps/api/src/modules/users/{admin-users.controller.ts,users.service.ts,users.service.spec.ts,dto/*}`, `apps/api/src/modules/auth/{auth.controller.ts,auth.service.ts}`, `packages/contracts/src/users/*`, `packages/contracts/src/auth/auth.schema.ts`, `apps/api/test/users.e2e-spec.ts`, `apps/api/api.http`, `apps/web/app/admin/(cms)/users/page.tsx`, `apps/web/src/modules/admin-users/{views/AdminUsersIndex.tsx,components/{UsersTable,UserForm}/*,hooks/use-admin-users.hook.ts,services/admin-users.service.ts}`, `apps/web/src/modules/admin-auth/components/ChangePasswordDialog/*`, `apps/web/src/modules/admin-core/components/{AdminSidebar,Topbar}/*`.
 
 **Design.** Admin table pattern (`15:2`).
 
 **Backend steps, explained.**
-1. **Role on the route.** `@Roles('OWNER')` on the controller class protects every route in it; the guard from T36 does the check.
-2. **Hash on create.** The initial password goes through the same argon2id hashing as login (T35); the API never returns it.
-3. **Sign out everywhere.** Because a session is a row (T35), revoking access is `deleteMany({ where: { userId } })`.
+1. **Role on the class.** `@Roles('admin')` on the controller class protects every route in it; the `RolesGuard` from T36 does the check. Writing it out, even though admin-only is the default, tells the next reader this module is sensitive.
+2. **Hash on create.** The initial password goes through the same argon2id hashing as login (T35); the API never returns it or logs it.
+3. **Sign out everywhere, without sessions.** There are no session rows to delete (D24). Incrementing `tokenVersion` makes every refresh token signed with the old number fail at the next refresh, so that user is out within one access-token lifetime (15 min). Need it faster? Lower `JWT_ACCESS_TTL_SECONDS`.
+4. **Guardrails in a transaction.** "Is this the last active admin?" and the update run in one `prisma.$transaction`, so two admins demoting each other at the same moment cannot leave the site with no admin.
+5. **Changing your own password.** Asking for the current password first means someone at an unlocked laptop cannot lock you out. Bumping `tokenVersion` signs out other devices; re-issuing cookies keeps this one signed in.
 
 **Acceptance.**
-- [ ] An EDITOR calling the users API gets 403, and does not see the Users item.
-- [ ] "Sign out everywhere" deletes that user's session rows.
+- [ ] A `user` calling any `/admin/users` route gets 403, and does not see the Users item.
+- [ ] After "Sign out everywhere", that user's next `POST /auth/refresh` returns 401 (e2e).
+- [ ] Demoting or deactivating yourself, or the last active admin, returns 409.
+- [ ] After changing your own password, the old password fails at login, another browser's refresh returns 401, and the current browser stays signed in.
+- [ ] No users API response contains `passwordHash`, `tokenVersion` or a token.
 
 **PR title:** `feat: users admin`
 
@@ -1527,7 +1594,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 - Model `ContactMessage` (`name`, `email`, `topicId?`, `message` Text, `locale`, `status` `NEW|READ|REPLIED|SPAM`, `ipHash`). Migration `add-contact`.
 - Contracts `contact/`: `contactSchema` (shared with the web form: name, email, topic, message length limits, honeypot field `website`), admin DTO, list params (`status`).
 - `public-contact.controller.ts`: `POST /public/contact` (`@Public()`, throttled 3 per 10 minutes per IP). A filled honeypot returns 201 and stores the row as `SPAM`. `ipHash` from `common/utils/ip-hash.util.ts` (SHA-256 of IP + daily salt).
-- `admin-contact.controller.ts`: `GET /admin/messages`, `GET /admin/messages/:id`, `PATCH /admin/messages/:id` (status), `GET /admin/messages/unread-count`.
+- `admin-contact.controller.ts`: `GET /admin/messages`, `GET /admin/messages/:id`, `PATCH /admin/messages/:id` (status), `GET /admin/messages/unread-count`. All admin only (no `@Roles()`, D7): messages hold visitor emails, so a `user` gets 403. The dashboard's unread count (a number only) stays readable by both roles.
 - Emit an in-process event `contact.created` (`@nestjs/event-emitter`); T49 streams it. Dashboard stats gain the unread count.
 - Logs never include the email or message body.
 
@@ -1577,8 +1644,8 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Goal.** A new contact message appears in the admin within seconds, with a toast and an unread badge, and the stream recovers after restarts.
 
 **Scope.**
-- API `modules/events`: `events.controller.ts` (`GET /admin/events`, `@Sse()`, any signed-in role), `events.service.ts` (a `Subject` fed by `contact.created` and, from T52, `content.published`); heartbeat comment every 25s; headers `Cache-Control: no-cache`, `X-Accel-Buffering: no`.
-- Web `admin-core/hooks/use-admin-events.hook.ts`: one `EventSource('/api/admin/events')` in the admin layout; on `contact.created` → `setQueryData(qk.admin.inbox.unread, n => n + 1)`, invalidate the messages list, `sonner` toast "New message from {name}" with Open; closes on unmount; the browser reconnects on its own.
+- API `modules/events`: `events.controller.ts` (`GET /admin/events`, `@Sse()`, admin only because events carry sender names), `events.service.ts` (a `Subject` fed by `contact.created` and, from T52, `content.published`); heartbeat comment every 25s; headers `Cache-Control: no-cache`, `X-Accel-Buffering: no`.
+- Web `admin-core/hooks/use-admin-events.hook.ts`: one `EventSource('/api/admin/events')` in the admin layout; on `contact.created` → `setQueryData(qk.admin.inbox.unread, n => n + 1)`, invalidate the messages list, `sonner` toast "New message from {name}" with Open; closes on unmount; the browser reconnects on its own. Mounted only for `admin`. On `error`, if the stream does not reopen within 5s (an expired access token makes the reconnect fail with 401, which `EventSource` cannot read), call `refreshOnce()` from `api-client.service.ts` and open a new `EventSource`; after 3 failed refreshes stop and send the user to login.
 - `admin-core/components/NotificationBell` (topbar, unread badge, `aria-live="polite"`, never steals focus).
 - `admin-inbox`: `AdminInboxIndex` (`DataTable`: status filter, mark read optimistic, mark spam) and `AdminInboxDetail`. Routes `app/admin/(cms)/inbox/page.tsx`, `inbox/[id]/page.tsx`. Dashboard gains an inbox card (latest 5).
 - Check that the Next rewrite does not buffer the stream; note the result in the PR.
@@ -1590,7 +1657,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Backend steps, explained.**
 1. **Server-Sent Events.** One long HTTP response that the server keeps writing small `data:` lines to. The browser's `EventSource` reads them and reconnects by itself. One-way is enough for notifications.
 2. **Heartbeats.** Proxies close idle connections. A comment line every 25s keeps it open and lets the client notice a dead connection.
-3. **Auth works for free.** It is a normal same-origin request, so the session cookie and `SessionGuard` apply.
+3. **Auth works for free, until the token expires.** It is a normal same-origin request, so the `access_token` cookie and `JwtAuthGuard` apply. The guard runs once, when the stream opens; an open stream keeps flowing after the token expires. Only a reconnect needs a fresh token, which is why the hook refreshes before reopening.
 
 **Acceptance.**
 - [ ] Submitting the public form shows the new row in the inbox without a reload within 2s (roadmap p23).
@@ -1606,7 +1673,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **Scope.**
 - Models `Media`, `ProjectImage`. Turn the plain id columns into relations: `SiteSettings.ogImage`, `Profile.avatar`, `Profile.resumeEn`, `Profile.resumeVi`, `Project.cover`, `Post.cover` (`onDelete: SetNull`). Migration `add-media`.
-- `admin-media.controller.ts`: `POST /admin/media` (`FileInterceptor`, 10 MB limit, allowlist JPG/PNG/WebP/AVIF/PDF checked by magic bytes, D14; `sharp` strips metadata and writes WebP variants at 480/960/1600 widths; random stored names under `UPLOAD_DIR`), `GET /admin/media` (cursor pagination, D6), `PATCH /admin/media/:id` (alt), `DELETE /admin/media/:id` (409 `IN_USE` when referenced).
+- `admin-media.controller.ts`: `POST /admin/media` (`FileInterceptor`, 10 MB limit, allowlist JPG/PNG/WebP/AVIF/PDF checked by magic bytes, D14; `sharp` strips metadata and writes WebP variants at 480/960/1600 widths; random stored names under `UPLOAD_DIR`), `GET /admin/media` (cursor pagination, D6; `@Roles('admin', 'user')`), `PATCH /admin/media/:id` (alt), `DELETE /admin/media/:id` (409 `IN_USE` when referenced). Upload, patch and delete are admin only.
 - `public-media.controller.ts`: `GET /public/media/:file` streams known files only, long cache headers, `X-Content-Type-Options: nosniff`.
 - Public DTOs gain image objects `{ url, srcset, width, height, alt }` (alt picked by locale). Admin project DTO gains `images` with captions and order.
 - Content health gains "images missing alt text".
@@ -1660,10 +1727,10 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **Scope.**
 - API `modules/publishing`: `publishing.service.ts` (`revalidate(tags)` → `POST ${WEB_INTERNAL_URL}/api/revalidate` with `x-revalidate-secret`; one retry; failures are logged and never block the write), `tags.util.ts` (entity → tags: `site`, `projects`, `project:{slug}`, `posts`, `post:{slug}`, `skills`, `domains`).
-- Routes: `POST /admin/projects/:id/publish|unpublish`, `POST /admin/posts/:id/publish|unpublish`. Publish checks required English fields, `publishLint`, and alt text on used images → 400 with `fieldErrors`; sets `status` and `publishedAt` (first publish only); emits `content.published`.
+- Routes (admin only): `POST /admin/projects/:id/publish|unpublish`, `POST /admin/posts/:id/publish|unpublish`. Publish checks required English fields, `publishLint`, and alt text on used images → 400 with `fieldErrors`; sets `status` and `publishedAt` (first publish only); emits `content.published`.
 - Every admin write that changes public data calls `revalidate` with its tags.
-- Preview API: `GET /admin/preview/projects/:slug`, `GET /admin/preview/posts/:slug` (public DTO shape, any status, session required).
-- Web: `app/api/revalidate/route.ts` (checks the secret, `revalidateTag` per tag), `app/api/draft/route.ts` (checks the session via `/auth/me`, enables `draftMode()`, redirects to the page; `?exit=1` disables it). Services use the preview endpoints with the forwarded cookie and no cache when draft mode is on. A draft banner with an exit link.
+- Preview API: `GET /admin/preview/projects/:slug`, `GET /admin/preview/posts/:slug` (public DTO shape, any status, `@Roles('admin', 'user')`).
+- Web: `app/api/revalidate/route.ts` (checks the secret, `revalidateTag` per tag), `app/api/draft/route.ts` (checks the access token via `/auth/me` with `withAuth`, either role; enables `draftMode()`, redirects to the page; `?exit=1` disables it). Services use the preview endpoints with the forwarded `access_token` cookie and no cache when draft mode is on; if it has expired, the draft banner links to `/admin/login?next=` the current page. A draft banner with an exit link.
 - Editor publish button and status in the properties pane (projects, posts); preview link.
 - `.env.example`: `REVALIDATE_SECRET`, `WEB_INTERNAL_URL`.
 
@@ -1675,7 +1742,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 1. **Publish is a state change with rules.** Drafts can be incomplete; publishing checks the rules once, in one place.
 2. **Cache tags.** The web caches each public page with tags. The API knows what changed, so it tells the web "everything tagged `post:my-slug` is stale", and only those pages rebuild on the next visit.
 3. **Shared secret.** The revalidate route is public on the web, so it requires a secret header known only to the API.
-4. **Draft mode.** A signed-in editor gets a cookie that makes the web skip the cache and read the preview endpoints; everyone else still gets 404 for drafts.
+4. **Draft mode.** A signed-in `admin` or `user` gets a cookie that makes the web skip the cache and read the preview endpoints; everyone else still gets 404 for drafts.
 
 **Acceptance.**
 - [ ] On a production build (`pnpm build && pnpm start`), publishing shows the change on the public page in under 5s without a redeploy (roadmap p25).
@@ -1744,10 +1811,10 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **Scope.**
 - Model `AuditLog` (`userId`, `action` `CREATE|UPDATE|PUBLISH|ARCHIVE|LOGIN`, `entityType`, `entityId`, `summary`). Migration `add-audit-log`.
-- `modules/audit`: `audit.service.ts` `record(…)`, called explicitly from services inside the same transaction as the write, and from login. `GET /admin/audit` (cursor pagination, filters entity type and user).
-- Bulk status update for projects and posts (`POST /admin/{entity}/bulk` with `{ ids, action }`) in one transaction, one audit row per item; wired to the `DataTable` bulk bar.
+- `modules/audit`: `audit.service.ts` `record(…)`, called explicitly from services inside the same transaction as the write, and from login. `GET /admin/audit` (cursor pagination, filters entity type and user; admin only).
+- Bulk status update for projects and posts (`POST /admin/{entity}/bulk` with `{ ids, action }`, admin only) in one transaction, one audit row per item; wired to the `DataTable` bulk bar.
 - Script `pnpm --filter @portfolio/api seed:audit` that inserts 5,000 audit rows (dev only).
-- Web: `admin-insights/views/AdminInsightsAudit.tsx` (`useInfiniteQuery` + `useVirtualizer`, `AuditRow` with relative time and absolute tooltip); dashboard activity card (latest 8). `packages/ui` `ActivityFeed`, `AuditRow`.
+- Web: `admin-insights/views/AdminInsightsAudit.tsx` (`useInfiniteQuery` + `useVirtualizer`, `AuditRow` with relative time and absolute tooltip); dashboard activity card (latest 8, inside `RoleGate allow={['admin']}`). `packages/ui` `ActivityFeed`, `AuditRow`.
 
 **Files.** `apps/api/prisma/schema.prisma` + migration, `apps/api/src/modules/audit/*`, `apps/api/src/modules/*/*.service.ts` (record calls), `apps/api/prisma/seed/audit.seed.ts`, `apps/api/test/audit.e2e-spec.ts`, `apps/web/src/modules/admin-insights/*`, `apps/web/app/admin/(cms)/audit/page.tsx`, `apps/web/src/modules/admin-dashboard/components/ActivityCard/*`, `packages/ui/src/components/{ActivityFeed,AuditRow}/*`.
 
@@ -1772,7 +1839,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **Scope.**
 - Fill API e2e gaps so every module has happy-path + validation tests.
-- Playwright in `apps/web/e2e/`: public smoke (home in both locales, nav by keyboard, project and post pages, 404), contact submit, admin login → create draft project → publish → visible on the public page → archive. Runs against production builds of web and api with the test DB and the `demo` seed.
+- Playwright in `apps/web/e2e/`: public smoke (home in both locales, nav by keyboard, project and post pages, 404), contact submit, admin login → create draft project → publish → visible on the public page → archive, and `user` login (account created in the test setup through `POST /admin/users`) → a project editor opens read-only with no Publish button and no Inbox, Audit or Users items. Runs against production builds of web and api with the test DB and the `demo` seed.
 - CI: jobs `lint-typecheck-unit`, `api-e2e` (MySQL service), `web-e2e` (MySQL service, builds both apps, runs Playwright, uploads the report).
 
 **Files.** `apps/web/e2e/{public.spec.ts,contact.spec.ts,admin-publish.spec.ts}`, `apps/web/playwright.config.ts`, `apps/api/test/*.e2e-spec.ts`, `.github/workflows/ci.yml`.
@@ -1846,11 +1913,11 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Scope.**
 - Security headers: CSP with a per-request nonce set in `middleware.ts` (Next.js pattern); HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `frame-ancestors 'none'` in the Caddyfile.
 - Confirm `Secure` cookies in production; containers non-root with read-only root filesystems where possible; no CORS (D9).
-- Expired-session cleanup job in the API (`@nestjs/schedule`, daily).
+- Production JWT secrets: `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET` generated with `openssl rand -base64 48`, different from dev and from each other, kept only in the VPS `.env` and GitHub secrets; boot fails if they are short or equal (T35). Document generation and rotation in `docs/runbooks/secrets.md`.
 - `backup` service in `compose.prod.yml`: daily `mysqldump` + gzip and an uploads tarball, 7-day rotation on a `backups` volume.
 - `scripts/backup/restore.sh` and `docs/runbooks/restore.md`; run a restore drill into a fresh database.
 
-**Files.** `apps/web/middleware.ts`, `infra/caddy/Caddyfile`, `compose.prod.yml`, `infra/backup/backup.sh`, `scripts/backup/restore.sh`, `apps/api/src/modules/auth/session-cleanup.service.ts`, `docs/runbooks/restore.md`.
+**Files.** `apps/web/middleware.ts`, `infra/caddy/Caddyfile`, `compose.prod.yml`, `infra/backup/backup.sh`, `scripts/backup/restore.sh`, `docs/runbooks/{restore.md,secrets.md}`.
 
 **Design.** None.
 
@@ -1858,7 +1925,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 1. **`mysqldump`.** Writes the whole database as SQL statements; piping it through `gzip` keeps files small. Run it inside the `db` network so no port is exposed.
 2. **Rotation.** Keep 7 daily files and delete older ones, so the disk never fills up.
 3. **A backup only counts once restored.** The drill loads the latest dump into an empty database, starts the API against it and checks the site.
-4. **Scheduled jobs.** `@nestjs/schedule` runs a method on a timer (here: delete expired session rows once a day).
+4. **Rotating JWT secrets.** Changing `JWT_ACCESS_SECRET` makes every access token invalid at once; changing `JWT_REFRESH_SECRET` signs everyone out. Rotate after a leak, and expect to log in again. There are no session rows to clean up (D24).
 
 **Acceptance.**
 - [ ] `scripts/backup/restore.sh` into a fresh DB brings the site back (roadmap p31).
@@ -1896,7 +1963,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 - `.github/workflows/deploy.yml`: after CI on `main`, build and push web/api images to GHCR (tags: commit SHA and `latest`), SSH to the VPS, `docker compose -f compose.prod.yml pull && up -d`, then smoke-check `https://<domain>/api/health`.
 - Caddy automatic HTTPS for the domain from env (`SITE_DOMAIN`).
 - `docs/runbooks/deploy.md` (first-time VPS setup, secrets list, rollback by image tag).
-- `docs/launch-checklist.md`: DNS, TLS, backups and restore drill, Lighthouse and axe, `check:content`, `check:placeholders`, OG previews, sitemap submitted, analytics on, admin password rotated, 404/500 pages, uptime ping configured.
+- `docs/launch-checklist.md`: DNS, TLS, backups and restore drill, Lighthouse and axe, `check:content`, `check:placeholders`, OG previews, sitemap submitted, analytics on, admin password rotated, production `JWT_ACCESS_SECRET`/`JWT_REFRESH_SECRET` generated fresh (not the dev values), 404/500 pages, uptime ping configured.
 
 **Files.** `.github/workflows/deploy.yml`, `infra/caddy/Caddyfile`, `compose.prod.yml`, `docs/runbooks/deploy.md`, `docs/launch-checklist.md`.
 
@@ -1939,3 +2006,5 @@ Each has a default the plan already uses, so no task is blocked.
 | Q6 | LinkedIn URL | `SocialLink` row with `url = "https://www.linkedin.com/in/<handle>"` placeholder |
 | Q7 | Overturn D3 (markdown instead of JSON blocks), D6 (page-based lists) or D8 (Origin check instead of CSRF tokens)? | Keep the spec's choices |
 | Q8 | The `MigrationDiagram` mockup labels nodes `v1 · Vue 2` / `v2 · Nuxt 3`, and case-study decision cards show `OPTIONS · CHOICE · WHY · COST`. The data model has no dedicated fields for these. | Diagram nodes show `versionFrom`/`versionTo` as entered, with skill names as the component nodes (T22). Decisions are split at `###` headings into cards whose body is markdown, so the author writes those labels in the text (T23, T27) |
+| Q9 | What exactly may a `user` do? (D7) | Read-only reviewer: dashboard, content and media read, analytics, draft preview, own password. No writes, publishing, uploads, inbox, audit log or users. Widening it later is one `@Roles('admin', 'user')` per route plus the matching `RoleGate` |
+| Q10 | Revoke one stolen refresh token without signing that user out everywhere? (D24) | No. That needs a stored token table (the sessions Parker dropped). `tokenVersion` signs the user out on every device, which is enough for a handful of accounts |

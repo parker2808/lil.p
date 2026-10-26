@@ -27,8 +27,8 @@ prisma.config.ts          # Prisma CLI config (Prisma 7+)
 GET /api/public/projects?locale=vi
   │
   ├─ middleware   request-id.middleware.ts   gives the request an id (shown in errors and logs)
-  ├─ guard        session.guard.ts           is a session required? (@Public() routes skip it)
-  │               roles.guard.ts             does the user's role allow this? (admin routes)
+  ├─ guard        jwt-auth.guard.ts          valid access token in the cookie? sets request.user (@Public() routes skip it)
+  │               roles.guard.ts             does the user's role (admin | user) allow this? no @Roles() = admin only
   │               origin.guard.ts            mutating request from our own site? (CSRF)
   ├─ pipe         zod-validation.pipe.ts     parse ?query / body with a contracts schema → 400 if bad
   ├─ controller   public-projects.controller.ts   maps the URL to one service method; no logic
@@ -45,18 +45,18 @@ Keep that order in mind: guards decide whether a request is allowed, pipes check
 | --- | --- | --- |
 | `prisma/` | The database's source of truth. `schema.prisma` lists every table and column; `migrate dev` turns your edits into SQL files in `migrations/` | `schema.prisma`, `migrations/` (committed, never edited after applying), `seed/` |
 | `prisma/seed/` | Scripts that fill an empty DB with starting rows | `seed.ts` (entry), `profiles/demo.seed.ts` (dev/CI data), `profiles/baseline.seed.ts` (first production boot), `data/*.data.ts` (placeholder rows, `<email>`/`<phone>` only), `audit.seed.ts` (dev-only bulk rows for performance checks) |
-| `src/config/` | Settings that live outside the code (`.env`). Read once at start-up and validated, so a missing `DATABASE_URL` fails at boot instead of at the first query | `env.schema.ts` (zod), `app-config.service.ts` (typed getters), `config.module.ts` |
+| `src/config/` | Settings that live outside the code (`.env`). Read once at start-up and validated, so a missing `DATABASE_URL` or a too-short `JWT_ACCESS_SECRET` fails at boot instead of at the first request | `env.schema.ts` (zod), `app-config.service.ts` (typed getters), `config.module.ts` |
 | `src/prisma/` | The code side of Prisma: one shared `PrismaClient` wrapped as a Nest provider. Services inject it instead of creating their own connection | `prisma.module.ts` (global), `prisma.service.ts` |
-| `src/common/guards/` | A guard runs before the controller and answers yes/no | `session.guard.ts` (loads the session from the cookie), `roles.guard.ts` (`OWNER`/`EDITOR`/`VIEWER`), `origin.guard.ts` |
+| `src/common/guards/` | A guard runs before the controller and answers yes/no | `jwt-auth.guard.ts` (global: verifies the access token from the `access_token` cookie), `jwt-refresh.guard.ts` (only on `POST /auth/refresh`: verifies the `refresh_token` cookie), `roles.guard.ts` (`admin`/`user`), `origin.guard.ts` |
 | `src/common/pipes/` | A pipe checks or transforms input before the controller sees it | `zod-validation.pipe.ts` |
 | `src/common/filters/` | A filter catches thrown errors and writes the error response, so every error looks the same | `all-exceptions.filter.ts` (maps Prisma `P2002` → 409, `P2025` → 404) |
 | `src/common/interceptors/` | Wraps the controller call, for things that happen around every request | `logging.interceptor.ts` (method, path, status, ms, request id; never bodies or passwords) |
-| `src/common/decorators/` | Small labels you put on a route or parameter | `public.decorator.ts` (`@Public()`), `roles.decorator.ts` (`@Roles('OWNER')`), `current-user.decorator.ts` (`@CurrentUser()`) |
+| `src/common/decorators/` | Small labels you put on a route or parameter | `public.decorator.ts` (`@Public()`), `roles.decorator.ts` (`@Roles('admin')`, `@Roles('admin', 'user')`), `current-user.decorator.ts` (`@CurrentUser()` → `{ id, role }`) |
 | `src/common/middleware/` | Runs first on every request, before guards | `request-id.middleware.ts` |
 | `src/common/utils/` | Plain helper functions, no Nest | `slug.util.ts`, `reading-time.util.ts`, `ip-hash.util.ts` |
 | `src/i18n/` | The API speaks two content languages. Public routes take `?locale=en\|vi` and return one language; admin routes return both columns | `locale.decorator.ts` (`@Locale()`), `pick-locale.util.ts` (+ `.spec.ts`) |
 | `src/modules/` | One folder per domain. A module groups the controller(s), service and DTOs for one thing | see "Module layout" |
-| `test/` | Tests that start the whole app and call it over HTTP against a separate test database | `*.e2e-spec.ts`, `helpers/` (app factory, DB reset, login) |
+| `test/` | Tests that start the whole app and call it over HTTP against a separate test database | `*.e2e-spec.ts`, `helpers/` (`create-app.ts`, `reset-db.ts`, `auth.helper.ts`: an `admin` and a `user` agent with cookies) |
 
 ## Module layout
 
@@ -64,7 +64,7 @@ Keep that order in mind: guards decide whether a request is allowed, pipes check
 src/modules/[domain]/
 ├── [domain].module.ts                 # wires controller(s) + service; exports the service if others need it
 ├── public-[domain].controller.ts      # routes under /api/public/[domain]  (@Public, GET only)
-├── admin-[domain].controller.ts       # routes under /api/admin/[domain]   (session + roles)
+├── admin-[domain].controller.ts       # routes under /api/admin/[domain]   (JWT + roles: GET @Roles('admin','user'), writes admin only)
 ├── [domain].service.ts                # logic and Prisma calls
 ├── [domain].service.spec.ts           # unit tests for the service
 ├── dto/                               # shapes that cross HTTP
@@ -80,6 +80,30 @@ src/modules/[domain]/
 - **Entity** is what a DB row looks like once loaded. Prisma generates the row types; `*.entity.ts` fixes which relations we always load, so the mapper and service agree.
 - **Mapper** turns an entity into a DTO. This is where `phone` and `passwordHash` get dropped and where `titleVi` becomes `title`.
 - A module owns its tables. Other modules call its exported service and never query its tables directly.
+
+## Auth (JWT)
+
+Two JWTs in httpOnly cookies (PLAN D24), two roles (`admin`, `user`, PLAN D7). The files, in the order a request meets them:
+
+```text
+src/modules/auth/
+├── auth.module.ts                # imports PassportModule, JwtModule, UsersModule
+├── auth.controller.ts            # /auth/login, /auth/refresh, /auth/logout, /auth/me, /auth/password
+├── auth.service.ts               # argon2 verify, issue tokens, rotate on refresh
+├── token.service.ts              # JwtService.signAsync: access { sub, role } 15 min, refresh { sub, ver } 7 days
+├── auth-cookies.util.ts          # set/clear access_token (Path=/) and refresh_token (Path=/api/auth)
+├── strategies/
+│   ├── jwt.strategy.ts           # passport-jwt 'jwt': token from the access_token cookie → request.user = { id, role }
+│   └── jwt-refresh.strategy.ts   # 'jwt-refresh': token from the refresh_token cookie, checks isActive + tokenVersion in the DB
+└── dto/
+src/common/guards/jwt-auth.guard.ts      # AuthGuard('jwt'), global, honors @Public()
+src/common/guards/jwt-refresh.guard.ts   # AuthGuard('jwt-refresh'), only on POST /auth/refresh
+src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none = ['admin']
+```
+
+- **Strategy vs guard.** A *strategy* (`passport-jwt`) knows how to find and verify one kind of token. A *guard* (`AuthGuard('jwt')`) runs a strategy before a route. `@nestjs/jwt`'s `JwtService` is only used to *create* tokens.
+- **Where the role comes from.** `request.user.role` is read from the verified access token, so a client cannot change it. Role changes apply at the next refresh (at most 15 min).
+- **Adding a route.** Admin read → `@Roles('admin', 'user')`. Admin write → nothing (admin only). Public → `@Public()`. Never put a token, email or name in a JWT payload.
 
 ## Modules
 
@@ -100,8 +124,8 @@ src/modules/[domain]/
 | `posts` | `Post` | public list/detail, admin CRUD + publish |
 | `contact-topics` | `ContactTopic` | `GET /public/contact-topics`, admin CRUD + order |
 | `contact` | `ContactMessage` | `POST /public/contact`, admin inbox list/patch |
-| `auth` | `Session` | `POST /auth/login`, `POST /auth/logout`, `GET /auth/me` |
-| `users` | `User` | admin users (owner only) |
+| `auth` | none (reads `User` through `UsersService`) | `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `GET /auth/me`, `PATCH /auth/password` |
+| `users` | `User` | admin users (admin only) |
 | `media` | `Media` | admin upload/list/patch, public file `GET /public/media/:file` |
 | `events` | none (in-memory stream) | `GET /admin/events` (SSE) |
 | `publishing` | none (calls web `/api/revalidate`) | used by projects/posts services |
@@ -113,8 +137,8 @@ src/modules/[domain]/
 
 Nest's own convention already matches the frontend rule (kebab-case + suffix):
 
-- **Files**: `projects.module.ts`, `projects.service.ts`, `public-projects.controller.ts`, `create-project.dto.ts`, `project.entity.ts`, `project.mapper.ts`, `session.guard.ts`, `zod-validation.pipe.ts`, `all-exceptions.filter.ts`, `public.decorator.ts`
-- **Classes**: PascalCase + role (`ProjectsService`, `PublicProjectsController`, `SessionGuard`)
+- **Files**: `projects.module.ts`, `projects.service.ts`, `public-projects.controller.ts`, `create-project.dto.ts`, `project.entity.ts`, `project.mapper.ts`, `jwt-auth.guard.ts`, `jwt.strategy.ts`, `zod-validation.pipe.ts`, `all-exceptions.filter.ts`, `public.decorator.ts`
+- **Classes**: PascalCase + role (`ProjectsService`, `PublicProjectsController`, `JwtAuthGuard`, `JwtStrategy`)
 - **Module folders**: kebab-case, plural for collections (`projects/`, `profile-stats/`), singular for singletons (`profile/`)
 - **Prisma models**: PascalCase singular (`Project`), tables mapped to snake_case (`@@map("project")`), columns camelCase with `En`/`Vi` pairs (spec §1.5)
 - **Migrations**: `pnpm prisma migrate dev --name add-project` (kebab-case verb + noun)
@@ -126,8 +150,8 @@ Nest's own convention already matches the frontend rule (kebab-case + suffix):
 - Only services touch Prisma. Multi-row writes use `prisma.$transaction(async (tx) => …)` and every query inside uses `tx`.
 - Never return a Prisma row; always map it to a DTO.
 - Never edit an applied migration; create a new one. Never use `prisma db push` once migrations exist.
-- Never log request bodies, passwords, session ids or contact email addresses.
-- Every route is protected by the global `SessionGuard` unless marked `@Public()`.
+- Never log request bodies, passwords, tokens, cookies or contact email addresses.
+- Every route is protected by the global `JwtAuthGuard` unless marked `@Public()`, and is admin only unless it has `@Roles('admin', 'user')`.
 
 ## New API module
 

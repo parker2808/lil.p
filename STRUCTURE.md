@@ -90,6 +90,8 @@ Imports: `@portfolio/ui/components/CaseCard`, `@portfolio/ui/components/ui/butto
 | A request/response shape or validation rule | `packages/contracts/src/[domain]/[domain].schema.ts` |
 | A DB table or column | `apps/api/prisma/schema.prisma` + a new migration |
 | Business logic or a DB query | `apps/api/src/modules/[domain]/[domain].service.ts` |
+| Who may call a route (`admin` / `user`) | `@Roles()` on the API controller (`apps/api/src/common/decorators/roles.decorator.ts`); the web only hides controls with `RoleGate` |
+| Auth tokens | httpOnly cookies set by the API; never stored or read by web code (`apps/api/STRUCTURE.md`, Auth) |
 | A fixed UI label ("Copy email", "min read") | `apps/web/i18n/locales/{en,vi}.json` |
 | Any visible content (names, headings, bios, SEO) | the database, edited in `/admin` |
 

@@ -11,7 +11,7 @@ app/                      # thin route files (page.tsx, layout.tsx, route.ts) �
 src/modules/              # feature UI (one folder per feature)
 i18n/                     # next-intl config + locales/{en,vi}.json (fixed UI labels only)
 e2e/                      # Playwright specs
-middleware.ts             # locale routing (named proxy.ts from Next 16)
+middleware.ts             # locale routing + /admin/* without an access_token cookie → /admin/login (named proxy.ts from Next 16)
 next.config.ts            # /api/* rewrite to NestJS, transpilePackages
 components.json           # shadcn: points at packages/ui
 ```
@@ -48,8 +48,8 @@ Create only the folders a module needs.
 | `notes` | `NotesIndex`, `NotesDetail`, search island (TanStack Query) | §5.5 |
 | `contact` | `ContactIndex`, `ContactForm` (TanStack Form + Server Action) | §5.6 |
 | `seo` | metadata builders, JSON-LD, OG image template, sitemap/RSS builders | §5 intro |
-| `admin-core` | `AdminShell`, sidebar, topbar, admin `CommandPalette`, `NotificationBell`, `RoleGate`, SSE hook, URL list-params hook, autosave hook | §4.3 |
-| `admin-auth` | `AdminAuthLogin` view, login form | §4.6 |
+| `admin-core` | `AdminShell`, sidebar, topbar, admin `CommandPalette`, `NotificationBell`, `RoleGate` (shows children for `admin` or `user` only), `useMe`/`useIsAdmin`, SSE hook, URL list-params hook, autosave hook | §4.3 |
+| `admin-auth` | `AdminAuthLogin` view (silent refresh, then login form), `ChangePasswordDialog`, `safe-next.util.ts` | §4.6 |
 | `admin-dashboard` | `AdminDashboardIndex`, stat/health/inbox/activity/chart cards | §5.7, §5.11 |
 | `admin-projects` | projects table + editor (incl. "Card & facts", metrics, live preview) | §5.8, §5.9, §5.11 |
 | `admin-posts` | posts table + editor | §5.8, §5.9 |
@@ -59,7 +59,7 @@ Create only the folders a module needs.
 | `admin-media` | media library, uploader, picker dialog | §4.3 |
 | `admin-inbox` | contact messages list/detail | §4.3 |
 | `admin-insights` | analytics + audit log (virtualized) | §5.7 |
-| `admin-users` | users and sessions (owner only) | §4.3 |
+| `admin-users` | users table + editor: role (`admin`/`user`), active, sign out everywhere (admin only) | §4.3 |
 
 ## Routes ↔ views
 
@@ -97,9 +97,9 @@ app/
 │       └── rss.xml/route.ts
 ├── admin/                         # root layout #2: admin is English chrome, not localized
 │   ├── layout.tsx
-│   ├── login/page.tsx             # → admin-auth/views/AdminAuthLogin
+│   ├── login/page.tsx             # → admin-auth/views/AdminAuthLogin (tries POST /api/auth/refresh first)
 │   └── (cms)/
-│       ├── layout.tsx             # server check GET /auth/me → redirect; → admin-core AdminShell
+│       ├── layout.tsx             # server check GET /auth/me (forwards access_token) → redirect; → admin-core AdminShell
 │       ├── page.tsx               # → admin-dashboard/views/AdminDashboardIndex
 │       ├── projects/page.tsx, projects/[id]/page.tsx
 │       └── …                      # one folder per admin module
@@ -126,7 +126,8 @@ Move a component up a level only when a second feature needs it.
 
 - **`services/*.service.ts`** are plain async functions that call the API. Two kinds:
   - **Server services** (public site) start with `import 'server-only'` and use `apiServer()` from `core/services/api-server.service.ts` (`fetch` with `next.tags`, spec §4.6). Views and section containers `await` them directly.
-  - **Client services** (admin, notes search) use `apiClient()` from `core/services/api-client.service.ts` (same-origin `/api/*`, throws `ApiError`).
+  - **Client services** (admin, notes search) use `apiClient()` from `core/services/api-client.service.ts` (same-origin `/api/*`, throws `ApiError`). For admin calls, a 401 triggers one shared `POST /api/auth/refresh` and one retry.
+  - **Auth tokens are never handled in web code.** The API sets them as httpOnly cookies (`access_token`, `refresh_token`) and the browser sends them through the `/api/*` rewrite. Server code that calls admin routes uses `apiServer(path, { withAuth: true })`, which forwards only `access_token` from `cookies()`. No token in `localStorage`, state or props.
 - **`hooks/use-*.hook.ts`** wrap client services in TanStack Query/Form, using keys from `qk` in `@portfolio/contracts` (`use-admin-projects.hook.ts` → `useAdminProjects(params)`).
 - **`actions/*.action.ts`** are Server Actions, used only where a form must work without JS (contact).
 - Never `fetch` in a component or in `useEffect`.
