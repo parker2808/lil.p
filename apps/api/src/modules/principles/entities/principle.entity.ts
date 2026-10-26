@@ -9,6 +9,7 @@ export const principleSelect = {
   iconKey: true,
   sortOrder: true,
   isVisible: true,
+  updatedAt: true,
 } satisfies Prisma.PrincipleSelect;
 
 export type PrincipleRow = Prisma.PrincipleGetPayload<{ select: typeof principleSelect }>;

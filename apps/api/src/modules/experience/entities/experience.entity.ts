@@ -16,6 +16,8 @@ export const experienceSelect = {
   endDate: true,
   sortOrder: true,
   isVisible: true,
+  updatedAt: true,
+  skills: { select: { id: true } },
 } satisfies Prisma.ExperienceSelect;
 
 export type ExperienceRow = Prisma.ExperienceGetPayload<{ select: typeof experienceSelect }>;

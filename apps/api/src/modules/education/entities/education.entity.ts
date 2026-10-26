@@ -11,6 +11,7 @@ export const educationSelect = {
   endDate: true,
   sortOrder: true,
   isVisible: true,
+  updatedAt: true,
 } satisfies Prisma.EducationSelect;
 
 export type EducationRow = Prisma.EducationGetPayload<{ select: typeof educationSelect }>;

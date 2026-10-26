@@ -123,7 +123,7 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | `domains` | `Domain` | `GET /public/domains`, admin CRUD + order |
 | `projects` | `Project`, `ProjectMetric`, `ProjectImage` | public list/detail, admin CRUD (`admin-projects.controller.ts`) + archive; publish later |
 | `tags` | `Tag` | admin CRUD |
-| `posts` | `Post` | public list/detail, admin CRUD + publish |
+| `posts` | `Post` | public list/detail, admin CRUD (`admin-posts.controller.ts`) + archive; publish later |
 | `contact-topics` | `ContactTopic` | `GET /public/contact-topics`, admin CRUD + order |
 | `contact` | `ContactMessage` | `POST /public/contact`, admin inbox list/patch |
 | `auth` | none (reads `User` through `UsersService`) | `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `GET /auth/me`, `PATCH /auth/password` |

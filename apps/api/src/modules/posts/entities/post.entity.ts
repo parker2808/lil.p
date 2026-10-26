@@ -24,8 +24,10 @@ export const postSelect = {
   seoDescriptionVi: true,
   readingMinutes: true,
   isFeatured: true,
+  status: true,
   publishedAt: true,
   sortOrder: true,
+  updatedAt: true,
   tags: { select: postTagSelect, orderBy: { slug: 'asc' as const } },
 } satisfies Prisma.PostSelect;
 

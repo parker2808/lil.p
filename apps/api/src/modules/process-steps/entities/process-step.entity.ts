@@ -9,6 +9,7 @@ export const processStepSelect = {
   iconKey: true,
   sortOrder: true,
   isVisible: true,
+  updatedAt: true,
 } satisfies Prisma.ProcessStepSelect;
 
 export type ProcessStepRow = Prisma.ProcessStepGetPayload<{ select: typeof processStepSelect }>;

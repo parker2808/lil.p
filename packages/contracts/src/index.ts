@@ -31,12 +31,32 @@ export type { Hue } from './domains/domains.enum';
 export { hueSchema } from './domains/domains.enum';
 export { publicDomainSchema, publicProjectDomainSchema } from './domains/domains.schema';
 export type { PublicDomain, PublicProjectDomain } from './domains/domains.type';
-export { publicEducationSchema } from './education/education.schema';
-export type { PublicEducation } from './education/education.type';
+export {
+  adminEducationSchema,
+  educationCreateSchema,
+  educationUpdateSchema,
+  publicEducationSchema,
+} from './education/education.schema';
+export type {
+  AdminEducation,
+  EducationCreateInput,
+  EducationUpdateInput,
+  PublicEducation,
+} from './education/education.type';
 export type { EmploymentType } from './experience/experience.enum';
 export { employmentTypeSchema } from './experience/experience.enum';
-export { publicExperienceSchema } from './experience/experience.schema';
-export type { PublicExperience } from './experience/experience.type';
+export {
+  adminExperienceSchema,
+  experienceCreateSchema,
+  experienceUpdateSchema,
+  publicExperienceSchema,
+} from './experience/experience.schema';
+export type {
+  AdminExperience,
+  ExperienceCreateInput,
+  ExperienceUpdateInput,
+  PublicExperience,
+} from './experience/experience.type';
 export { domainFixture, domainFixtures, emptyDomainFixture } from './fixtures/domains.fixture';
 export { experienceFixtures } from './fixtures/experience.fixture';
 export { markdownKitchenSink } from './fixtures/markdown-kitchen-sink.fixture';
@@ -69,30 +89,72 @@ export { publicPageSchema } from './pages/pages.schema';
 export type { PublicPage } from './pages/pages.type';
 export {
   adminPostInputSchema,
+  adminPostListItemSchema,
+  adminPostListPageSchema,
+  adminPostListParamsSchema,
+  adminPostSchema,
+  postCreateSchema,
   postListParamsSchema,
+  postUpdateSchema,
   publicPostDetailSchema,
   publicPostListItemSchema,
   publicPostListPageSchema,
   publicPostTagSchema,
 } from './posts/posts.schema';
 export type {
+  AdminPost,
   AdminPostInput,
+  AdminPostListItem,
+  AdminPostListPage,
+  AdminPostListParams,
+  PostCreateInput,
   PostListParams,
+  PostUpdateInput,
   PublicPostDetail,
   PublicPostListItem,
   PublicPostListPage,
   PublicPostTag,
 } from './posts/posts.type';
-export { publicPrincipleSchema } from './principles/principles.schema';
-export type { PublicPrinciple } from './principles/principles.type';
-export { publicProcessStepSchema } from './process-steps/process-steps.schema';
-export type { PublicProcessStep } from './process-steps/process-steps.type';
+export {
+  adminPrincipleSchema,
+  principleCreateSchema,
+  principleUpdateSchema,
+  publicPrincipleSchema,
+} from './principles/principles.schema';
+export type {
+  AdminPrinciple,
+  PrincipleCreateInput,
+  PrincipleUpdateInput,
+  PublicPrinciple,
+} from './principles/principles.type';
+export {
+  adminProcessStepSchema,
+  processStepCreateSchema,
+  processStepUpdateSchema,
+  publicProcessStepSchema,
+} from './process-steps/process-steps.schema';
+export type {
+  AdminProcessStep,
+  ProcessStepCreateInput,
+  ProcessStepUpdateInput,
+  PublicProcessStep,
+} from './process-steps/process-steps.type';
 export { publicProfileSchema } from './profile/profile.schema';
 export type { PublicProfile } from './profile/profile.type';
 export type { StatSource } from './profile-stats/profile-stats.enum';
 export { statSourceSchema } from './profile-stats/profile-stats.enum';
-export { publicProfileStatSchema } from './profile-stats/profile-stats.schema';
-export type { PublicProfileStat } from './profile-stats/profile-stats.type';
+export {
+  adminProfileStatSchema,
+  profileStatCreateSchema,
+  profileStatUpdateSchema,
+  publicProfileStatSchema,
+} from './profile-stats/profile-stats.schema';
+export type {
+  AdminProfileStat,
+  ProfileStatCreateInput,
+  ProfileStatUpdateInput,
+  PublicProfileStat,
+} from './profile-stats/profile-stats.type';
 export type { ContentStatus } from './projects/projects.enum';
 export { contentStatusSchema } from './projects/projects.enum';
 export {
