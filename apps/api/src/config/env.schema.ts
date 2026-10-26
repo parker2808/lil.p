@@ -24,6 +24,9 @@ export const envSchema = z
     ADMIN_EMAIL: z.string().optional(),
     ADMIN_NAME: z.string().optional(),
     ADMIN_PASSWORD: z.string().optional(),
+    CLOUDINARY_CLOUD_NAME: z.string().min(1).optional(),
+    CLOUDINARY_API_KEY: z.string().min(1).optional(),
+    CLOUDINARY_API_SECRET: z.string().min(1).optional(),
   })
   .superRefine((env, ctx) => {
     if (env.JWT_ACCESS_SECRET === env.JWT_REFRESH_SECRET) {

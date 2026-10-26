@@ -7,6 +7,7 @@ import type {
 } from '@portfolio/contracts';
 
 import { pickGroup } from '../../../i18n/pick-locale.util';
+import { toPublicImage } from '../../media/media.mapper';
 import type { PostRow } from './post.entity';
 
 const LIST_TEXT = ['title', 'excerpt'] as const;
@@ -45,6 +46,7 @@ export function toPublicPostListItem(row: PostRow, locale: Locale): PublicPostLi
     isFeatured: row.isFeatured,
     publishedAt: row.publishedAt ? row.publishedAt.toISOString() : null,
     tags: toTags(row, locale),
+    cover: toPublicImage(row.cover, locale),
     lang,
   };
 }
@@ -84,6 +86,7 @@ export function toAdminDto(row: PostRow): AdminPost {
     status: row.status,
     publishedAt: row.publishedAt ? row.publishedAt.toISOString() : null,
     sortOrder: row.sortOrder,
+    coverId: row.coverId,
     tagIds: row.tags.map((tag) => tag.id),
     updatedAt: row.updatedAt.toISOString(),
   };

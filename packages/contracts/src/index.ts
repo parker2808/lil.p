@@ -158,6 +158,24 @@ export {
   projectFixtures,
 } from './fixtures/projects.fixture';
 export { skillChipFixtures, skillFixtures, skillsGroupedFixture } from './fixtures/skills.fixture';
+export {
+  adminMediaListPageSchema,
+  adminMediaListParamsSchema,
+  adminMediaSchema,
+  adminProjectImageSchema,
+  MEDIA_MAX_BYTES,
+  MEDIA_VARIANT_WIDTHS,
+  publicImageSchema,
+  updateMediaSchema,
+} from './media/media.schema';
+export type {
+  AdminMedia,
+  AdminMediaListPage,
+  AdminMediaListParams,
+  AdminProjectImage,
+  PublicImage,
+  UpdateMediaInput,
+} from './media/media.type';
 export type { NavLocation } from './navigation/navigation.enum';
 export { navLocationSchema } from './navigation/navigation.enum';
 export {

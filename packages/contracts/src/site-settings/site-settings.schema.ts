@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { localeSchema } from '../common/locale.schema';
+import { publicImageSchema } from '../media/media.schema';
 import { availabilitySchema } from './site-settings.enum';
 
 export const siteSettingsUpdateSchema = z.object({
@@ -24,6 +25,7 @@ export const siteSettingsUpdateSchema = z.object({
   analyticsEnabled: z.boolean().optional(),
   ambientEffects: z.boolean().optional(),
   marqueeEnabled: z.boolean().optional(),
+  ogImageId: z.number().int().nullable().optional(),
 });
 
 export const adminSiteSettingsSchema = z.object({
@@ -48,6 +50,7 @@ export const adminSiteSettingsSchema = z.object({
   analyticsEnabled: z.boolean(),
   ambientEffects: z.boolean(),
   marqueeEnabled: z.boolean(),
+  ogImageId: z.number().int().nullable().optional(),
   updatedAt: z.string(),
 });
 
@@ -66,5 +69,6 @@ export const publicSiteSettingsSchema = z.object({
   analyticsEnabled: z.boolean(),
   ambientEffects: z.boolean(),
   marqueeEnabled: z.boolean(),
+  ogImage: publicImageSchema.nullable().optional(),
   lang: localeSchema,
 });

@@ -19,6 +19,7 @@ import { EducationModule } from './modules/education/education.module';
 import { EventsModule } from './modules/events/events.module';
 import { ExperienceModule } from './modules/experience/experience.module';
 import { HealthModule } from './modules/health/health.module';
+import { MediaModule } from './modules/media/media.module';
 import { NavigationModule } from './modules/navigation/navigation.module';
 import { PagesModule } from './modules/pages/pages.module';
 import { PostsModule } from './modules/posts/posts.module';
@@ -63,6 +64,7 @@ import { PrismaModule } from './prisma/prisma.module';
     AuthModule,
     DashboardModule,
     EventsModule,
+    MediaModule,
     ThrottlerModule.forRoot({
       skipIf: () => process.env.NODE_ENV === 'test' && process.env.E2E_THROTTLE !== '1',
       throttlers: [{ name: 'default', ttl: 60_000, limit: 10_000 }],

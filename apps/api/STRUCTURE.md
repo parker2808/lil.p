@@ -128,7 +128,7 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | `contact` | `ContactMessage` | `POST /public/contact` (public, 3/10 min/IP, honeypot → `SPAM`), admin inbox `GET/PATCH /admin/messages`, `GET /admin/messages/unread-count` (admin only) |
 | `auth` | none (reads `User` through `UsersService`) | `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `GET /auth/me`, `PATCH /auth/password` |
 | `users` | `User` | `GET/POST /admin/users`, `PATCH /admin/users/:id`, sign-out-everywhere, set password (admin only; last-admin 409) |
-| `media` | `Media` | admin upload/list/patch, public file `GET /public/media/:file` |
+| `media` | `Media`, `ProjectImage` | admin `POST/GET/PATCH/DELETE /admin/media` (cursor list; Cloudinary or in-memory storage, never local disk), public `GET /public/media/:file` (redirect) |
 | `events` | none (in-memory stream) | `GET /admin/events` (SSE) |
 | `publishing` | none (calls web `/api/revalidate`) | used by projects, posts and pages services |
 | `analytics` | `PageView` | `POST /public/views` |

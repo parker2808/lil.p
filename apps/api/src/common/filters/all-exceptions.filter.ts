@@ -51,7 +51,8 @@ export function uniqueFieldFromPrisma(error: Prisma.PrismaClientKnownRequestErro
 
 /**
  * Turns every thrown error into the shared `{ statusCode, code, message, requestId }` body.
- * Prisma unique → 409, missing row → 404. Stacks stay in the log, never in the body.
+ * Prisma unique → 409, missing row → 404. Multer 413 → 400 VALIDATION_FAILED.
+ * Stacks stay in the log, never in the body.
  */
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -78,6 +79,20 @@ export class AllExceptionsFilter implements ExceptionFilter {
   toBody(exception: unknown, requestId: string): ApiErrorBody {
     if (exception instanceof HttpException) {
       return this.fromHttp(exception, requestId);
+    }
+
+    if (
+      exception instanceof Error &&
+      'code' in exception &&
+      (exception as { code?: string }).code === 'LIMIT_FILE_SIZE'
+    ) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        code: 'VALIDATION_FAILED',
+        message: 'Must be 10 MB or smaller',
+        requestId,
+        fieldErrors: { file: ['Must be 10 MB or smaller'] },
+      };
     }
 
     if (exception instanceof Prisma.PrismaClientKnownRequestError) {
@@ -111,6 +126,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
   private fromHttp(exception: HttpException, requestId: string): ApiErrorBody {
     const statusCode = exception.getStatus();
     const raw = exception.getResponse();
+
+    if (statusCode === HttpStatus.PAYLOAD_TOO_LARGE) {
+      return {
+        statusCode: HttpStatus.BAD_REQUEST,
+        code: 'VALIDATION_FAILED',
+        message: 'Must be 10 MB or smaller',
+        requestId,
+        fieldErrors: { file: ['Must be 10 MB or smaller'] },
+      };
+    }
 
     if (typeof raw === 'object' && raw !== null && 'code' in raw) {
       const payload = raw as {

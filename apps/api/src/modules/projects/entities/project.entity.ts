@@ -80,7 +80,13 @@ export const projectSelect = {
   publishedAt: true,
   domainId: true,
   experienceId: true,
+  coverId: true,
   updatedAt: true,
+  cover: true,
+  images: {
+    include: { media: true },
+    orderBy: { sortOrder: 'asc' as const },
+  },
   domain: { select: projectDomainSelect },
   experience: { select: projectExperienceSelect },
   metrics: { select: projectMetricSelect, orderBy: { sortOrder: 'asc' as const } },

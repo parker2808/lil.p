@@ -3,6 +3,7 @@ import {
   HttpException,
   HttpStatus,
   NotFoundException,
+  PayloadTooLargeException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
@@ -94,6 +95,13 @@ describe('AllExceptionsFilter', () => {
     const body = filter.toBody(new UnauthorizedException(), 'req-7');
     expect(body.statusCode).toBe(401);
     expect(body.code).toBe('UNAUTHENTICATED');
+  });
+
+  it('maps PayloadTooLarge to 400 VALIDATION_FAILED on file', () => {
+    const body = filter.toBody(new PayloadTooLargeException('File too large'), 'req-10');
+    expect(body.statusCode).toBe(400);
+    expect(body.code).toBe('VALIDATION_FAILED');
+    expect(body.fieldErrors?.file).toEqual(['Must be 10 MB or smaller']);
   });
 
   it('maps a 403 without a code to FORBIDDEN and 429 to RATE_LIMITED', () => {

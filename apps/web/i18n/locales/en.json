@@ -238,13 +238,15 @@
         "fewKeyFacts": "Case studies with < 2 key facts · {count}",
         "marquee": "Marquee needs 6+ skills · {count} on",
         "publishLint": "{count} publish-lint issues",
+        "missingAlt": "Images missing alt · {count}",
         "marqueeTitle": "Skills marquee",
         "kinds": {
           "PROJECT_NO_DOMAIN": "No domain",
           "CASE_STUDY_KEY_FACTS": "{count} key facts",
           "MARQUEE_SKILLS": "{count} on marquee · needs 6+",
           "MISSING_VI": "Missing Vietnamese · {fields}",
-          "PUBLISH_LINT": "Publish lint · {fields}"
+          "PUBLISH_LINT": "Publish lint · {fields}",
+          "MISSING_ALT": "Missing alt text"
         }
       },
       "stats": {

@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { listParamsSchema, paginatedSchema } from '../common/list-params.schema';
 import { localeSchema } from '../common/locale.schema';
+import { publicImageSchema } from '../media/media.schema';
 import { contentStatusSchema } from '../projects/projects.enum';
 import { publicTagSchema } from '../tags/tags.schema';
 
@@ -33,6 +34,7 @@ export const adminPostInputSchema = z.object({
   seoDescriptionVi: z.string().nullable().optional(),
   isFeatured: z.boolean().optional(),
   sortOrder: z.number().int().optional(),
+  coverId: z.number().int().nullable().optional(),
   tagIds: z.array(z.number().int()).optional(),
 });
 
@@ -76,6 +78,7 @@ export const adminPostSchema = z.object({
   status: contentStatusSchema,
   publishedAt: z.string().nullable(),
   sortOrder: z.number().int(),
+  coverId: z.number().int().nullable(),
   tagIds: z.array(z.number().int()),
   updatedAt: z.string(),
 });
@@ -124,6 +127,7 @@ export const publicPostListItemSchema = z.object({
   isFeatured: z.boolean(),
   publishedAt: z.string().nullable(),
   tags: z.array(publicPostTagSchema),
+  cover: publicImageSchema.nullable().optional(),
   lang: localeSchema,
 });
 
