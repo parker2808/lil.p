@@ -15,6 +15,11 @@
     "suggestLocale": "This page is also available in Vietnamese",
     "switchLocale": "View in Vietnamese"
   },
+  "draft": {
+    "banner": "You are previewing drafts. Visitors still see the published site.",
+    "exit": "Exit preview",
+    "login": "Sign in to keep previewing"
+  },
   "states": {
     "loading": "Loading",
     "empty": "Nothing here yet",
@@ -976,6 +981,13 @@
       "overwrite": "Overwrite",
       "localeEn": "EN",
       "localeVi": "VI",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "previewPage": "Preview",
+      "publishFailed": "This is not ready to publish.",
+      "draft": "Draft",
+      "published": "Published",
+      "archived": "Archived",
       "shortcuts": {
         "undo": "⌘Z",
         "redo": "⇧⌘Z",

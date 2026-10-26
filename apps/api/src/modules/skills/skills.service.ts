@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import type {
   AdminSkill,
@@ -20,12 +21,17 @@ import { reorder } from '../../common/utils/reorder.util';
 import { slugify } from '../../common/utils/slug.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { PublishingService } from '../publishing/publishing.service';
+import { SKILL_TAGS } from '../publishing/tags.util';
 import { skillCategorySelect, skillSelect } from './entities/skill.entity';
 import { toAdminCategory, toAdminSkill, toPublicSkill } from './entities/skill.mapper';
 
 @Injectable()
 export class SkillsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly publishing?: PublishingService,
+  ) {}
 
   async listPublic(locale: Locale, marquee: boolean): Promise<PublicSkill[] | PublicSkillsGrouped> {
     const rows = await this.prisma.skill.findMany({
@@ -57,6 +63,7 @@ export class SkillsService {
 
   async reorder(ids: number[]): Promise<AdminSkill[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).skill, ids);
+    this.bump();
     return this.listAdmin();
   }
 
@@ -85,6 +92,7 @@ export class SkillsService {
       },
       select: skillSelect,
     });
+    this.bump();
     return toAdminSkill(row);
   }
 
@@ -99,12 +107,14 @@ export class SkillsService {
     if (input.sortOrder !== undefined) data.sortOrder = input.sortOrder;
     if (input.isVisible !== undefined) data.isVisible = input.isVisible;
     const row = await this.prisma.skill.update({ where: { id }, data, select: skillSelect });
+    this.bump();
     return toAdminSkill(row);
   }
 
   async remove(id: number): Promise<AdminSkill> {
     const current = await this.findSkill(id);
     await this.prisma.skill.delete({ where: { id } });
+    this.bump();
     return toAdminSkill(current);
   }
 
@@ -118,6 +128,7 @@ export class SkillsService {
 
   async reorderCategories(ids: number[]): Promise<AdminSkillCategory[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).skillCategory, ids);
+    this.bump();
     return this.listCategories();
   }
 
@@ -134,6 +145,7 @@ export class SkillsService {
       },
       select: skillCategorySelect,
     });
+    this.bump();
     return toAdminCategory(row);
   }
 
@@ -148,6 +160,7 @@ export class SkillsService {
       data,
       select: skillCategorySelect,
     });
+    this.bump();
     return toAdminCategory(row);
   }
 
@@ -160,7 +173,12 @@ export class SkillsService {
       });
     }
     await this.prisma.skillCategory.delete({ where: { id } });
+    this.bump();
     return toAdminCategory(current);
+  }
+
+  private bump(): void {
+    void this.publishing?.revalidate([...SKILL_TAGS]);
   }
 
   private async findSkill(id: number) {

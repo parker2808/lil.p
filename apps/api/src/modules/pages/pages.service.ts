@@ -4,6 +4,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import {
   type AdminBlock,
@@ -25,6 +26,8 @@ import { applyReorder } from '../../common/utils/reorder.util';
 import { assertFresh } from '../../common/utils/stale.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { PublishingService } from '../publishing/publishing.service';
+import { pageTags } from '../publishing/tags.util';
 import { pageWithAllBlocksInclude, pageWithBlocksInclude } from './entities/page.entity';
 import {
   toAdminBlock,
@@ -93,7 +96,10 @@ function findRefPath(value: unknown, id: number, prefix: string): string | null 
 export class PagesService {
   private readonly logger = new Logger(PagesService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly publishing?: PublishingService,
+  ) {}
 
   async getPublic(key: PageKey, locale: Locale, requestId = 'unknown'): Promise<PublicPage> {
     const row = await this.prisma.page.findUnique({
@@ -127,7 +133,7 @@ export class PagesService {
 
   async reorderBlocks(rawKey: string, ids: number[]): Promise<AdminPage> {
     const key = parsePageKey(rawKey);
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       const page = await this.requirePage(tx, key);
       const h1 = page.blocks.find((block) => definitionOf(block.type)?.role === 'h1');
       if (h1 && ids[0] !== h1.id) {
@@ -140,11 +146,13 @@ export class PagesService {
       await this.touchPage(tx, page.id);
       return toAdminPage(await this.requirePage(tx, key));
     });
+    this.scheduleRevalidate(key);
+    return result;
   }
 
   async updatePage(rawKey: string, input: PageUpdateInput): Promise<AdminPage> {
     const key = parsePageKey(rawKey);
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       const page = await this.requirePage(tx, key);
       assertFresh(page.updatedAt, input.updatedAt);
       await tx.page.update({
@@ -159,6 +167,8 @@ export class PagesService {
       });
       return toAdminPage(await this.requirePage(tx, key));
     });
+    this.scheduleRevalidate(key);
+    return result;
   }
 
   async createBlock(rawKey: string, input: BlockCreateInput): Promise<AdminBlock> {
@@ -171,7 +181,7 @@ export class PagesService {
       });
     }
 
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       const page = await this.requirePage(tx, key);
       assertAllowedOnPage(definition, key);
       const count = page.blocks.filter((block) => block.type === definition.type).length;
@@ -214,11 +224,13 @@ export class PagesService {
       await this.touchPage(tx, page.id);
       return toAdminBlock(created);
     });
+    this.scheduleRevalidate(key);
+    return result;
   }
 
   async updateBlock(rawKey: string, id: number, input: BlockUpdateInput): Promise<AdminBlock> {
     const key = parsePageKey(rawKey);
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       const page = await this.requirePage(tx, key);
       const current = this.requireBlock(page, id);
       assertFresh(current.updatedAt, input.updatedAt);
@@ -278,11 +290,13 @@ export class PagesService {
       await this.touchPage(tx, page.id);
       return toAdminBlock(updated);
     });
+    this.scheduleRevalidate(key);
+    return result;
   }
 
   async duplicateBlock(rawKey: string, id: number): Promise<AdminBlock> {
     const key = parsePageKey(rawKey);
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       const page = await this.requirePage(tx, key);
       const current = this.requireBlock(page, id);
       const sortOrder = current.sortOrder + 1;
@@ -312,11 +326,13 @@ export class PagesService {
       await this.touchPage(tx, page.id);
       return toAdminBlock(created);
     });
+    this.scheduleRevalidate(key);
+    return result;
   }
 
   async deleteBlock(rawKey: string, id: number): Promise<AdminBlock> {
     const key = parsePageKey(rawKey);
-    return this.prisma.$transaction(async (tx) => {
+    const result = await this.prisma.$transaction(async (tx) => {
       const page = await this.requirePage(tx, key);
       const current = this.requireBlock(page, id);
       const definition = definitionOf(current.type);
@@ -327,6 +343,12 @@ export class PagesService {
       await this.touchPage(tx, page.id);
       return toAdminBlock(current);
     });
+    this.scheduleRevalidate(key);
+    return result;
+  }
+
+  private scheduleRevalidate(key: PageKey): void {
+    void this.publishing?.revalidate(pageTags(key));
   }
 
   private async requirePage(client: PrismaService | Tx, key: PageKey) {

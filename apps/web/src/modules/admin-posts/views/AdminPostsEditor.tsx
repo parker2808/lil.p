@@ -10,6 +10,7 @@ import { useMemo, useState } from 'react';
 import { z } from 'zod';
 
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
+import { PublishActions } from '@/modules/admin-core/components/PublishActions/PublishActions';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
 import { useDirtyGuard } from '@/modules/admin-core/hooks/use-dirty-guard.hook';
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
@@ -22,7 +23,13 @@ import { ApiError } from '@/modules/core/utils/api-error.util';
 import { PostContentTab } from '../components/PostContentTab/PostContentTab';
 import { PostProperties } from '../components/PostProperties/PostProperties';
 import { PostSeoTab } from '../components/PostSeoTab/PostSeoTab';
-import { useAdminPost, useCreateAdminPost, useSaveAdminPost } from '../hooks/use-admin-post.hook';
+import {
+  useAdminPost,
+  useCreateAdminPost,
+  usePublishAdminPost,
+  useSaveAdminPost,
+  useUnpublishAdminPost,
+} from '../hooks/use-admin-post.hook';
 import {
   emptyPostForm,
   postPublishLint,
@@ -60,6 +67,8 @@ function PostEditorForm({ initial }: { initial: PostFormValues }) {
   const readOnly = !useIsAdmin();
   const create = useCreateAdminPost();
   const save = useSaveAdminPost();
+  const publish = usePublishAdminPost();
+  const unpublish = useUnpublishAdminPost();
   const [locale, setLocale] = useState<'en' | 'vi'>('en');
   const [tab, setTab] = useState('content');
   const [form, setForm] = useState(initial);
@@ -177,6 +186,56 @@ function PostEditorForm({ initial }: { initial: PostFormValues }) {
         setLocale(next);
       }}
       completeness={completeness}
+      publish={
+        form.id == null ? null : (
+          <PublishActions
+            status={
+              form.status === 'PUBLISHED'
+                ? 'published'
+                : form.status === 'ARCHIVED'
+                  ? 'archived'
+                  : 'draft'
+            }
+            previewHref={
+              form.slug ? `/api/draft?path=${encodeURIComponent(`/en/notes/${form.slug}`)}` : null
+            }
+            busy={publish.isPending || unpublish.isPending}
+            labels={{
+              draft: editorT('draft'),
+              published: editorT('published'),
+              archived: editorT('archived'),
+              publish: editorT('publish'),
+              unpublish: editorT('unpublish'),
+              preview: editorT('previewPage'),
+            }}
+            onPublish={() => {
+              void persist().then(async () => {
+                if (form.id == null) {
+                  return;
+                }
+                try {
+                  const result = await publish.mutateAsync(form.id);
+                  setForm(postToForm(result));
+                  setBaseline(JSON.stringify(toPostCreateInput(postToForm(result))));
+                } catch (error) {
+                  if (error instanceof ApiError) {
+                    setFieldErrors(mapFieldErrors(error));
+                  }
+                }
+              });
+            }}
+            onUnpublish={() => {
+              if (form.id == null) {
+                return;
+              }
+              void unpublish.mutateAsync(form.id).then((result) => {
+                setForm(postToForm(result));
+                setBaseline(JSON.stringify(toPostCreateInput(postToForm(result))));
+              });
+            }}
+          />
+        )
+      }
       labels={{
         readOnly: editorT('readOnly'),
         properties: editorT('properties'),

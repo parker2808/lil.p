@@ -121,9 +121,9 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | `experience`, `education`, `principles`, `profile-stats`, `process-steps` | one table each | public GET + admin CRUD + order |
 | `skills` | `SkillCategory`, `Skill` | `GET /public/skills`, admin CRUD (`admin-skills.controller.ts`; used category delete → 409 `IN_USE`) |
 | `domains` | `Domain` | `GET /public/domains`, admin CRUD (`admin-domains.controller.ts`; delete sets `Project.domainId` null) |
-| `projects` | `Project`, `ProjectMetric`, `ProjectImage` | public list/detail, admin CRUD (`admin-projects.controller.ts`) + archive; publish later |
+| `projects` | `Project`, `ProjectMetric`, `ProjectImage` | public list/detail, admin CRUD + archive, `POST /admin/projects/:id/publish|unpublish`, preview `GET /admin/preview/projects/:slug` |
 | `tags` | `Tag` | public list + admin CRUD (`admin-tags.controller.ts`; slug derived from `nameEn`) |
-| `posts` | `Post` | public list/detail, admin CRUD (`admin-posts.controller.ts`) + archive; publish later |
+| `posts` | `Post` | public list/detail, admin CRUD + archive, `POST /admin/posts/:id/publish|unpublish`, preview `GET /admin/preview/posts/:slug` |
 | `contact-topics` | `ContactTopic` | `GET /public/contact-topics`, admin CRUD (`admin-contact-topics.controller.ts`) |
 | `contact` | `ContactMessage` | `POST /public/contact` (public, 3/10 min/IP, honeypot → `SPAM`), admin inbox `GET/PATCH /admin/messages`, `GET /admin/messages/unread-count` (admin only) |
 | `auth` | none (reads `User` through `UsersService`) | `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `GET /auth/me`, `PATCH /auth/password` |

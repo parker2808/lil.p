@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Optional } from '@nestjs/common';
 import type {
   AdminSiteSettings,
   Locale,
@@ -9,12 +9,17 @@ import type {
 import { NotSeededException } from '../../common/errors/not-seeded.exception';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { PublishingService } from '../publishing/publishing.service';
+import { SITE_TAGS } from '../publishing/tags.util';
 import { siteSettingsSelect } from './entities/site-settings.entity';
 import { toAdminDto, toPublicSiteSettings } from './entities/site-settings.mapper';
 
 @Injectable()
 export class SiteSettingsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly publishing?: PublishingService,
+  ) {}
 
   async getPublic(locale: Locale): Promise<PublicSiteSettings> {
     return toPublicSiteSettings(await this.requireRow(), locale);
@@ -32,6 +37,7 @@ export class SiteSettingsService {
       data,
       select: siteSettingsSelect,
     });
+    void this.publishing?.revalidate([...SITE_TAGS]);
     return toAdminDto(row);
   }
 

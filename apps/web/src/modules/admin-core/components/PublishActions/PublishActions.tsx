@@ -1,0 +1,61 @@
+'use client';
+
+import { StatusPill, type ContentStatus } from '@portfolio/ui/components/StatusPill/StatusPill';
+import { Button } from '@portfolio/ui/components/ui/button';
+
+export function PublishActions({
+  status,
+  previewHref,
+  disabled,
+  busy,
+  labels,
+  onPublish,
+  onUnpublish,
+}: {
+  status: ContentStatus;
+  previewHref: string | null;
+  disabled?: boolean;
+  busy?: boolean;
+  labels: {
+    draft: string;
+    published: string;
+    archived: string;
+    publish: string;
+    unpublish: string;
+    preview: string;
+  };
+  onPublish: () => void;
+  onUnpublish: () => void;
+}) {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <StatusPill
+        status={status}
+        labels={{ draft: labels.draft, published: labels.published, archived: labels.archived }}
+      />
+      {status === 'published' ? (
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          disabled={disabled || busy}
+          onClick={onUnpublish}
+        >
+          {labels.unpublish}
+        </Button>
+      ) : (
+        <Button type="button" size="sm" disabled={disabled || busy} onClick={onPublish}>
+          {labels.publish}
+        </Button>
+      )}
+      {previewHref ? (
+        <a
+          href={previewHref}
+          className="text-ui text-primary hover:text-primary-hover underline underline-offset-4"
+        >
+          {labels.preview}
+        </a>
+      ) : null}
+    </div>
+  );
+}

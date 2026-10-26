@@ -1,4 +1,11 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  Optional,
+} from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import type {
   AdminProject,
   AdminProjectListItem,
@@ -17,7 +24,16 @@ import { paginate } from '../../common/utils/paginate.util';
 import { reorder } from '../../common/utils/reorder.util';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { projectSelect } from './entities/project.entity';
+import {
+  lintErrors,
+  markdownAltErrors,
+  mediaAltErrors,
+  mergeFieldErrors,
+  requiredFieldErrors,
+} from '../publishing/publish-rules.util';
+import { PublishingService } from '../publishing/publishing.service';
+import { projectTags } from '../publishing/tags.util';
+import { type ProjectRow, projectSelect } from './entities/project.entity';
 import {
   toAdminDto,
   toAdminListItem,
@@ -27,7 +43,11 @@ import {
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly publishing?: PublishingService,
+    @Optional() private readonly events?: EventEmitter2,
+  ) {}
 
   async listPublic(locale: Locale, query: ProjectListParams): Promise<PublicProjectListPage> {
     const where: Prisma.ProjectWhereInput = { status: 'PUBLISHED' };
@@ -84,6 +104,20 @@ export class ProjectsService {
     return toPublicProjectDetail(row, locale);
   }
 
+  async getPreview(slug: string, locale: Locale): Promise<PublicProjectDetail> {
+    const row = await this.prisma.project.findFirst({
+      where: { slug },
+      select: projectSelect,
+    });
+    if (!row) {
+      throw new NotFoundException({
+        code: 'NOT_FOUND',
+        message: `Project ${slug} was not found`,
+      });
+    }
+    return toPublicProjectDetail(row, locale);
+  }
+
   async listAdmin(query: AdminProjectListParams): Promise<AdminProjectListPage> {
     const where: Prisma.ProjectWhereInput = {};
     if (query.status) {
@@ -125,6 +159,7 @@ export class ProjectsService {
       select: projectSelect,
       orderBy: { sortOrder: 'asc' },
     });
+    void this.publishing?.revalidate(['projects']);
     return rows.map(toAdminListItem);
   }
 
@@ -164,6 +199,7 @@ export class ProjectsService {
       },
       select: projectSelect,
     });
+    this.scheduleRevalidate(row.slug);
     return toAdminDto(row);
   }
 
@@ -178,12 +214,12 @@ export class ProjectsService {
 
     const { skillIds, metrics, images, updatedAt, status, ...fields } = input;
     void updatedAt;
+    void status;
     const row = await this.prisma.$transaction(async (tx) => {
       await tx.project.update({
         where: { id },
         data: {
           ...this.toWriteData(fields),
-          ...(status !== undefined ? { status } : {}),
         },
       });
       if (skillIds) {
@@ -224,16 +260,45 @@ export class ProjectsService {
       }
       return tx.project.findUniqueOrThrow({ where: { id }, select: projectSelect });
     });
+    this.scheduleRevalidate(current.slug, row.slug);
+    return toAdminDto(row);
+  }
+
+  async publish(id: number): Promise<AdminProject> {
+    const current = await this.findRow(id);
+    this.assertPublishable(current);
+    const row = await this.prisma.project.update({
+      where: { id },
+      data: {
+        status: 'PUBLISHED',
+        publishedAt: current.publishedAt ?? new Date(),
+      },
+      select: projectSelect,
+    });
+    this.events?.emit('content.published', { entity: 'project', id: row.id, slug: row.slug });
+    this.scheduleRevalidate(row.slug);
+    return toAdminDto(row);
+  }
+
+  async unpublish(id: number): Promise<AdminProject> {
+    const current = await this.findRow(id);
+    const row = await this.prisma.project.update({
+      where: { id },
+      data: { status: 'DRAFT' },
+      select: projectSelect,
+    });
+    this.scheduleRevalidate(current.slug);
     return toAdminDto(row);
   }
 
   async archive(id: number): Promise<AdminProject> {
-    await this.findRow(id);
+    const current = await this.findRow(id);
     const row = await this.prisma.project.update({
       where: { id },
       data: { status: 'ARCHIVED' },
       select: projectSelect,
     });
+    this.scheduleRevalidate(current.slug);
     return toAdminDto(row);
   }
 
@@ -306,5 +371,46 @@ export class ProjectsService {
     if (input.domainId !== undefined) data.domainId = input.domainId;
     if (input.experienceId !== undefined) data.experienceId = input.experienceId;
     return data as Prisma.ProjectUncheckedUpdateInput & Prisma.ProjectUncheckedCreateInput;
+  }
+
+  private assertPublishable(row: ProjectRow): void {
+    const fieldErrors = mergeFieldErrors(
+      requiredFieldErrors({
+        titleEn: row.titleEn,
+        slug: row.slug,
+        taglineEn: row.taglineEn,
+        problemEn: row.problemEn,
+      }),
+      lintErrors({
+        titleEn: row.titleEn,
+        taglineEn: row.taglineEn,
+        roleEn: row.roleEn,
+        problemEn: row.problemEn,
+        constraintsEn: row.constraintsEn,
+        approachEn: row.approachEn,
+        decisionsEn: row.decisionsEn,
+        outcomeEn: row.outcomeEn,
+        lessonsEn: row.lessonsEn,
+        keyFactsEn: row.keyFactsEn,
+        factChipsEn: row.factChipsEn,
+      }),
+      mediaAltErrors(row.cover, 'cover'),
+      ...row.images.map((image, index) => mediaAltErrors(image.media, `images.${index}`)),
+      markdownAltErrors(row.problemEn, 'problemEn'),
+      markdownAltErrors(row.approachEn, 'approachEn'),
+      markdownAltErrors(row.outcomeEn, 'outcomeEn'),
+    );
+    if (Object.keys(fieldErrors).length > 0) {
+      throw new BadRequestException({
+        code: 'VALIDATION_FAILED',
+        message: 'This project is not ready to publish',
+        fieldErrors,
+      });
+    }
+  }
+
+  private scheduleRevalidate(...slugs: string[]): void {
+    const tags = slugs.flatMap((slug) => projectTags(slug));
+    void this.publishing?.revalidate(tags);
   }
 }

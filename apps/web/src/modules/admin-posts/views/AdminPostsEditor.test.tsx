@@ -57,6 +57,8 @@ vi.mock('../services/admin-posts.service', () => ({
   getAdminPost: vi.fn(),
   listAdminPosts: vi.fn(),
   archiveAdminPost: vi.fn(),
+  publishAdminPost: vi.fn(),
+  unpublishAdminPost: vi.fn(),
 }));
 
 import { tagsApi } from '@/modules/admin-taxonomy/services/tags.service';

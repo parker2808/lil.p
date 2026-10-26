@@ -61,6 +61,18 @@ export function updateAdminProject(id: number, body: ProjectUpdateInput): Promis
   }).then((data) => adminProjectSchema.parse(data));
 }
 
+export function publishAdminProject(id: number): Promise<AdminProject> {
+  return apiClient<AdminProject>(`/api/admin/projects/${id}/publish`, { method: 'POST' }).then(
+    (data) => adminProjectSchema.parse(data),
+  );
+}
+
+export function unpublishAdminProject(id: number): Promise<AdminProject> {
+  return apiClient<AdminProject>(`/api/admin/projects/${id}/unpublish`, { method: 'POST' }).then(
+    (data) => adminProjectSchema.parse(data),
+  );
+}
+
 export function reorderAdminProjects(ids: number[]): Promise<void> {
   return apiClient(`/api/admin/projects/order`, {
     method: 'PATCH',
