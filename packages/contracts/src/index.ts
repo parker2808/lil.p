@@ -45,6 +45,31 @@ export type {
   ContactTopicUpdateInput,
   PublicContactTopic,
 } from './contact-topics/contact-topics.type';
+export {
+  adminHealthIssueSchema,
+  adminHealthSchema,
+  adminHealthSummarySchema,
+  adminStatsSchema,
+  contentStatusCountsSchema,
+  DEFAULT_STATS_RANGE,
+  healthIssueEntitySchema,
+  healthIssueKindSchema,
+  parseStatsRange,
+  STATS_RANGES,
+  statsQuerySchema,
+  statsRangeSchema,
+} from './dashboard/dashboard.schema';
+export type {
+  AdminHealth,
+  AdminHealthIssue,
+  AdminHealthSummary,
+  AdminStats,
+  ContentStatusCounts,
+  HealthIssueEntity,
+  HealthIssueKind,
+  StatsQuery,
+  StatsRange,
+} from './dashboard/dashboard.type';
 export type { Hue } from './domains/domains.enum';
 export { hueSchema } from './domains/domains.enum';
 export {
@@ -87,6 +112,7 @@ export type {
   ExperienceUpdateInput,
   PublicExperience,
 } from './experience/experience.type';
+export { adminHealthFixture, adminStatsFixture } from './fixtures/dashboard.fixture';
 export { domainFixture, domainFixtures, emptyDomainFixture } from './fixtures/domains.fixture';
 export { experienceFixtures } from './fixtures/experience.fixture';
 export { markdownKitchenSink } from './fixtures/markdown-kitchen-sink.fixture';

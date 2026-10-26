@@ -840,3 +840,18 @@ POST http://127.0.0.1:4000/api/auth/refresh
 
 ### Auth logout
 POST http://127.0.0.1:4000/api/auth/logout
+
+### Admin dashboard stats (30d default)
+GET http://127.0.0.1:4000/api/admin/stats
+
+### Admin dashboard stats 7d
+GET http://127.0.0.1:4000/api/admin/stats?range=7d
+
+### Admin dashboard stats 90d
+GET http://127.0.0.1:4000/api/admin/stats?range=90d
+
+### Admin dashboard stats invalid range (400)
+GET http://127.0.0.1:4000/api/admin/stats?range=1y
+
+### Admin dashboard health
+GET http://127.0.0.1:4000/api/admin/health
