@@ -5,14 +5,22 @@ import { BlockRenderer } from '../components/BlockRenderer/BlockRenderer';
 import { BLOCK_RENDERERS } from '../constants/block-renderers.constant';
 import { getPage } from '../services/pages.service';
 
-export async function BlocksPage({ pageKey, locale }: { pageKey: PageKey; locale: Locale }) {
+export async function BlocksPage({
+  pageKey,
+  locale,
+  searchParams,
+}: {
+  pageKey: PageKey;
+  locale: Locale;
+  searchParams?: Record<string, string | string[] | undefined>;
+}) {
   const page = await getPage(pageKey, locale);
   const t = await getTranslations('states');
 
   return (
     <BlockRenderer
       blocks={page.blocks}
-      context={{ locale }}
+      context={{ locale, searchParams }}
       labels={{ error: t('error'), retry: t('retry'), empty: t('empty') }}
       registry={BLOCK_RENDERERS}
     />

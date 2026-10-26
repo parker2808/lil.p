@@ -13,6 +13,7 @@ import { pageHeaderBlock } from './definitions/page-header.block';
 import { postListBlock } from './definitions/post-list.block';
 import { principleListBlock } from './definitions/principle-list.block';
 import { processBlock } from './definitions/process.block';
+import { projectsBrowserBlock } from './definitions/projects-browser.block';
 import { proseBlock } from './definitions/prose.block';
 import { skillGroupsBlock } from './definitions/skill-groups.block';
 import { statBandBlock } from './definitions/stat-band.block';
@@ -37,6 +38,7 @@ export const BLOCK_REGISTRY = {
   'education-list': educationListBlock,
   'cv-download': cvDownloadBlock,
   prose: proseBlock,
+  'projects-browser': projectsBrowserBlock,
 } as const satisfies Record<string, BlockDefinition>;
 
 export type BlockType = keyof typeof BLOCK_REGISTRY;

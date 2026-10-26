@@ -78,6 +78,19 @@ describe('resolveBlockLocale', () => {
     });
   });
 
+  it('accepts a seeded projects-browser', () => {
+    const result = parseBlock({
+      id: 3,
+      type: 'projects-browser',
+      key: 'projects',
+      layout: 'TWO',
+      surface: 'PLAIN',
+      schemaVersion: 1,
+      props: { showFeatured: true, pageSize: 6 },
+    });
+    expect(result.ok).toBe(true);
+  });
+
   it('falls back the whole block to English when one Vi value is missing', () => {
     const resolved = resolveBlockLocale(
       {

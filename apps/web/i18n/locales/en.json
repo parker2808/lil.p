@@ -37,6 +37,17 @@
     "fallback": "EN",
     "downloadCv": "Download CV"
   },
+  "projects": {
+    "all": "All",
+    "tech": "Tech",
+    "any": "any",
+    "search": "Filter by tech",
+    "clearFilters": "Clear filters",
+    "noneFor": "No case studies for {name}",
+    "previous": "Previous",
+    "next": "Next",
+    "pagination": "Projects pages"
+  },
   "content": {
     "copy": "Copy",
     "copied": "Copied",
