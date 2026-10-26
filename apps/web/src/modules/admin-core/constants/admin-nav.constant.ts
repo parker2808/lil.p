@@ -38,6 +38,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     key: 'site',
     items: [
       { href: '/admin/site', key: 'site', roles: ['admin', 'user'] },
+      { href: '/admin/pages', key: 'pages', roles: ['admin', 'user'] },
       { href: '/admin/profile', key: 'profile', roles: ['admin', 'user'] },
       { href: '/admin/media', key: 'media', roles: ['admin', 'user'] },
     ],

@@ -57,7 +57,7 @@ Create only the folders a module needs.
 | `admin-about` | experience, education, principles, profile stats, process steps | §5.8, §5.11 |
 | `admin-taxonomy` | skills, skill categories, tags, domains (hue + icon pickers) | §5.11 |
 | `admin-site` | settings, profile, navigation, social links, contact topics | §5.10 |
-| `admin-pages` | page builder (PLAN T45b, T52a): pages list, `BlockList` (`SortableList` drag and drop + move up/down), `AddBlockDialog`, `BlockInspector` (props `SchemaForm`, `LayoutPresetPicker`, surface, anchor), `PagePreview` iframe, `PublishBar`, `VersionHistory`; the admin registry `constants/block-editor-meta.constant.ts` | §5.10 (Sections), D26 |
+| `admin-pages` | page builder (PLAN T45b): pages list + editor (`BlockList` on `SortableList`, `AddBlockDialog`, `BlockInspector` with `SchemaForm` / layout / surface / anchor, `PageSettingsSheet`); `block-editor-meta.constant.ts`. Publish, versions and live preview come in T52a | §5.10 (Sections), D26 |
 | `admin-media` | media library, uploader, picker dialog | §4.3 |
 | `admin-inbox` | contact messages list/detail | §4.3 |
 | `admin-insights` | analytics + audit log (virtualized) | §5.7 |

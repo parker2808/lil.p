@@ -37,7 +37,9 @@ export function AdminSidebar() {
             {collapsed ? null : <SidebarGroupLabel>{t(`groups.${group.key}`)}</SidebarGroupLabel>}
             <SidebarMenu>
               {group.items.map((item) => {
-                const active = pathname === item.href;
+                const active =
+                  pathname === item.href ||
+                  (item.href !== '/admin' && pathname.startsWith(`${item.href}/`));
                 return (
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton asChild active={active}>
