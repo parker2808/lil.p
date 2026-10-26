@@ -17,6 +17,8 @@ import {
   type AdminProjectListPage,
   type AdminProjectListParams,
   adminProjectListParamsSchema,
+  type BulkStatusInput,
+  bulkStatusSchema,
   type ProjectCreateInput,
   projectCreateSchema,
   type ProjectUpdateInput,
@@ -52,6 +54,14 @@ export class AdminProjectsController {
   @Roles('admin', 'user')
   get(@Param('id', ParseIntPipe) id: number): Promise<AdminProject> {
     return this.projects.getAdmin(id);
+  }
+
+  @Post('bulk')
+  @HttpCode(HttpStatus.OK)
+  bulk(
+    @Body(new ZodValidationPipe(bulkStatusSchema)) body: BulkStatusInput,
+  ): Promise<{ count: number }> {
+    return this.projects.bulk(body);
   }
 
   @Post()

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import type {
   AdminProcessStep,
   Locale,
@@ -10,12 +10,16 @@ import type {
 import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { processStepSelect } from './entities/process-step.entity';
 import { toAdminDto, toPublicProcessStep } from './entities/process-step.mapper';
 
 @Injectable()
 export class ProcessStepsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly audit?: AuditService,
+  ) {}
 
   async listPublic(locale: Locale): Promise<PublicProcessStep[]> {
     const rows = await this.prisma.processStep.findMany({
@@ -36,6 +40,12 @@ export class ProcessStepsService {
 
   async reorder(ids: number[]): Promise<AdminProcessStep[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).processStep, ids);
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'process-step',
+      entityId: ids[0] ?? 0,
+      summary: `Reordered ${ids.length} process steps`,
+    });
     return this.listAdmin();
   }
 
@@ -48,6 +58,12 @@ export class ProcessStepsService {
       data: this.toWriteData(input) as Prisma.ProcessStepUncheckedCreateInput,
       select: processStepSelect,
     });
+    await this.audit?.recordNow({
+      action: 'CREATE',
+      entityType: 'process-step',
+      entityId: row.id,
+      summary: `Created process step ${row.titleEn}`,
+    });
     return toAdminDto(row);
   }
 
@@ -58,12 +74,24 @@ export class ProcessStepsService {
       data: this.toWriteData(input),
       select: processStepSelect,
     });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'process-step',
+      entityId: id,
+      summary: `Updated process step ${row.titleEn}`,
+    });
     return toAdminDto(row);
   }
 
   async remove(id: number): Promise<AdminProcessStep> {
     const current = await this.findRow(id);
     await this.prisma.processStep.delete({ where: { id } });
+    await this.audit?.recordNow({
+      action: 'ARCHIVE',
+      entityType: 'process-step',
+      entityId: id,
+      summary: `Deleted process step ${current.titleEn}`,
+    });
     return toAdminDto(current);
   }
 

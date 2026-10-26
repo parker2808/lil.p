@@ -45,7 +45,7 @@ Keep that order in mind: guards decide whether a request is allowed, pipes check
 | Folder | What it is, in plain words | What goes in it |
 | --- | --- | --- |
 | `prisma/` | The database's source of truth. `schema.prisma` lists every table and column; `migrate dev` turns your edits into SQL files in `migrations/` | `schema.prisma`, `migrations/` (committed, never edited after applying), `seed/` |
-| `prisma/seed/` | Scripts that fill an empty DB with starting rows | `seed.ts` (entry), `profiles/demo.seed.ts` (dev/CI placeholder data), `profiles/baseline.seed.ts` + `profiles/owner.seed.ts` (owner CV: `data/portfolio-data.json`, projects `DRAFT`), `data/portfolio.mapper.ts` (exact-value mapping), `data/portfolio-unmapped.json` (fields with no model), `data/*.data.ts` (demo placeholders, `<email>`/`<phone>` only) |
+| `prisma/seed/` | Scripts that fill an empty DB with starting rows | `seed.ts` (entry), `profiles/demo.seed.ts` (dev/CI placeholder data), `profiles/baseline.seed.ts` + `profiles/owner.seed.ts` (owner CV: `data/portfolio-data.json`, projects `DRAFT`), `data/portfolio.mapper.ts` (exact-value mapping), `data/portfolio-unmapped.json` (fields with no model), `data/*.data.ts` (demo placeholders, `<email>`/`<phone>` only), `audit.seed.ts` (`pnpm --filter @portfolio/api seed:audit`, 5,000 rows, dev only) |
 | `src/config/` | Settings that live outside the code (`.env`). Read once at start-up and validated, so a missing `DATABASE_URL` or a too-short `JWT_ACCESS_SECRET` fails at boot instead of at the first request | `env.schema.ts` (zod), `app-config.service.ts` (typed getters), `config.module.ts` |
 | `src/prisma/` | The code side of Prisma: one shared `PrismaClient` wrapped as a Nest provider. Services inject it instead of creating their own connection | `prisma.module.ts` (global), `prisma.service.ts` (Prisma 7 + MariaDB adapter) |
 | `src/generated/` | Output of `prisma generate`. Do not edit. Regenerated on `pnpm install`, typecheck, and build | `prisma/` (client, enums, models) |
@@ -132,7 +132,7 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | `events` | none (in-memory stream) | `GET /admin/events` (SSE) |
 | `publishing` | none (calls web `/api/revalidate`) | used by projects, posts and pages services |
 | `analytics` | `PageView` | `POST /public/views` (`@Public()`, 30/min/IP, cookieless; skips bots and `analyticsEnabled = false`) |
-| `audit` | `AuditLog` | `GET /admin/audit` (cursor) |
+| `audit` | `AuditLog` | `GET /admin/audit` (cursor, admin only; filters `entityType`/`userId`); `record()` in the same write transaction; `POST /admin/{projects,posts}/bulk`; `pnpm --filter @portfolio/api seed:audit` inserts 5,000 rows |
 | `dashboard` | none (reads counts) | `GET /admin/stats?range` (includes `messages.unread`), `GET /admin/health` |
 
 ## Pages and blocks

@@ -601,6 +601,7 @@ model User {
   lastLoginAt  DateTime?
   uploads      Media[]
   pageVersions PageVersion[]
+  auditLogs    AuditLog[]
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 
@@ -649,6 +650,34 @@ model ProjectImage {
 
   @@index([projectId, sortOrder])
   @@map("project_image")
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  PUBLISH
+  ARCHIVE
+  RESTORE
+  LOGIN
+
+  @@map("audit_action")
+}
+
+/// Append-only admin write record. Inserted in the same transaction as the write.
+model AuditLog {
+  id         Int         @id @default(autoincrement())
+  userId     Int?
+  user       User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  action     AuditAction
+  entityType String      @db.VarChar(64)
+  entityId   String      @db.VarChar(64)
+  summary    String      @db.VarChar(500)
+  createdAt  DateTime    @default(now())
+
+  @@index([createdAt])
+  @@index([entityType, id])
+  @@index([userId, id])
+  @@map("audit_log")
 }
 
 /// Cookieless page view. `visitorHash` is SHA-256(IP + UA + daily salt).

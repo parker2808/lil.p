@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import type {
   AdminNavItem,
   Locale,
@@ -10,12 +10,16 @@ import type {
 import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { navItemSelect } from './entities/nav-item.entity';
 import { toAdminDto, toPublicNavItem } from './entities/nav-item.mapper';
 
 @Injectable()
 export class NavigationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly audit?: AuditService,
+  ) {}
 
   async listPublic(locale: Locale): Promise<{ header: PublicNavItem[]; footer: PublicNavItem[] }> {
     const rows = await this.prisma.navItem.findMany({
@@ -41,6 +45,12 @@ export class NavigationService {
 
   async reorder(ids: number[]): Promise<AdminNavItem[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).navItem, ids);
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'nav-item',
+      entityId: ids[0] ?? 0,
+      summary: `Reordered ${ids.length} nav items`,
+    });
     return this.listAdmin();
   }
 
@@ -60,6 +70,12 @@ export class NavigationService {
       },
       select: navItemSelect,
     });
+    await this.audit?.recordNow({
+      action: 'CREATE',
+      entityType: 'nav-item',
+      entityId: row.id,
+      summary: `Created nav item ${row.href}`,
+    });
     return toAdminDto(row);
   }
 
@@ -73,12 +89,24 @@ export class NavigationService {
     if (input.sortOrder !== undefined) data.sortOrder = input.sortOrder;
     if (input.isVisible !== undefined) data.isVisible = input.isVisible;
     const row = await this.prisma.navItem.update({ where: { id }, data, select: navItemSelect });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'nav-item',
+      entityId: id,
+      summary: `Updated nav item ${row.href}`,
+    });
     return toAdminDto(row);
   }
 
   async remove(id: number): Promise<AdminNavItem> {
     const current = await this.findRow(id);
     await this.prisma.navItem.delete({ where: { id } });
+    await this.audit?.recordNow({
+      action: 'ARCHIVE',
+      entityType: 'nav-item',
+      entityId: id,
+      summary: `Deleted nav item ${current.href}`,
+    });
     return toAdminDto(current);
   }
 

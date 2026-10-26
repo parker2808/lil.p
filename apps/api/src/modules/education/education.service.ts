@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import type {
   AdminEducation,
   EducationCreateInput,
@@ -10,12 +10,16 @@ import type {
 import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { educationSelect } from './entities/education.entity';
 import { toAdminDto, toPublicEducation } from './entities/education.mapper';
 
 @Injectable()
 export class EducationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly audit?: AuditService,
+  ) {}
 
   async listPublic(locale: Locale): Promise<PublicEducation[]> {
     const rows = await this.prisma.education.findMany({
@@ -36,6 +40,12 @@ export class EducationService {
 
   async reorder(ids: number[]): Promise<AdminEducation[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).education, ids);
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'education',
+      entityId: ids[0] ?? 0,
+      summary: `Reordered ${ids.length} education rows`,
+    });
     return this.listAdmin();
   }
 
@@ -48,6 +58,12 @@ export class EducationService {
       data: this.toWriteData(input) as Prisma.EducationUncheckedCreateInput,
       select: educationSelect,
     });
+    await this.audit?.recordNow({
+      action: 'CREATE',
+      entityType: 'education',
+      entityId: row.id,
+      summary: `Created education ${row.school}`,
+    });
     return toAdminDto(row);
   }
 
@@ -58,12 +74,24 @@ export class EducationService {
       data: this.toWriteData(input),
       select: educationSelect,
     });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'education',
+      entityId: id,
+      summary: `Updated education ${row.school}`,
+    });
     return toAdminDto(row);
   }
 
   async remove(id: number): Promise<AdminEducation> {
     const current = await this.findRow(id);
     await this.prisma.education.delete({ where: { id } });
+    await this.audit?.recordNow({
+      action: 'ARCHIVE',
+      entityType: 'education',
+      entityId: id,
+      summary: `Deleted education ${current.school}`,
+    });
     return toAdminDto(current);
   }
 

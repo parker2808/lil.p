@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import type {
   AdminExperience,
   AdminExperienceListPage,
@@ -15,12 +15,16 @@ import { reorder } from '../../common/utils/reorder.util';
 import { assertFresh } from '../../common/utils/stale.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { experienceSelect } from './entities/experience.entity';
 import { toAdminDto, toPublicExperience } from './entities/experience.mapper';
 
 @Injectable()
 export class ExperienceService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly audit?: AuditService,
+  ) {}
 
   async listPublic(locale: Locale): Promise<PublicExperience[]> {
     const rows = await this.prisma.experience.findMany({
@@ -72,6 +76,12 @@ export class ExperienceService {
 
   async reorder(ids: number[]): Promise<AdminExperience[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).experience, ids);
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'experience',
+      entityId: ids[0] ?? 0,
+      summary: `Reordered ${ids.length} experience rows`,
+    });
     const rows = await this.prisma.experience.findMany({
       select: experienceSelect,
       orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }],
@@ -104,6 +114,12 @@ export class ExperienceService {
       },
       select: experienceSelect,
     });
+    await this.audit?.recordNow({
+      action: 'CREATE',
+      entityType: 'experience',
+      entityId: row.id,
+      summary: `Created experience ${row.company}`,
+    });
     return toAdminDto(row);
   }
 
@@ -120,12 +136,24 @@ export class ExperienceService {
       },
       select: experienceSelect,
     });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'experience',
+      entityId: id,
+      summary: `Updated experience ${row.company}`,
+    });
     return toAdminDto(row);
   }
 
   async remove(id: number): Promise<AdminExperience> {
     const current = await this.findRow(id);
     await this.prisma.experience.delete({ where: { id } });
+    await this.audit?.recordNow({
+      action: 'ARCHIVE',
+      entityType: 'experience',
+      entityId: id,
+      summary: `Deleted experience ${current.company}`,
+    });
     return toAdminDto(current);
   }
 

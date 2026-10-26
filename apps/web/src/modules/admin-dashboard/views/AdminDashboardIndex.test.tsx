@@ -23,6 +23,11 @@ vi.mock('@/modules/admin-inbox/services/admin-inbox.service', () => ({
   fetchUnreadCount: vi.fn().mockResolvedValue({ unread: 0 }),
 }));
 
+vi.mock('@/modules/admin-insights/services/admin-audit.service', () => ({
+  LATEST_AUDIT_PARAMS: { limit: 8 },
+  listAdminAudit: vi.fn().mockResolvedValue({ items: [], nextCursor: null }),
+}));
+
 import { fetchAdminHealth, fetchAdminStats } from '../services/dashboard.service';
 import { AdminDashboardIndex } from './AdminDashboardIndex';
 

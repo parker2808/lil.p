@@ -11,6 +11,8 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 import { ConfigModule } from './config/config.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
+import { AuditModule } from './modules/audit/audit.module';
+import { AuditActorInterceptor } from './modules/audit/audit-actor.interceptor';
 import { AuthModule } from './modules/auth/auth.module';
 import { ContactModule } from './modules/contact/contact.module';
 import { ContactTopicsModule } from './modules/contact-topics/contact-topics.module';
@@ -69,6 +71,7 @@ import { PrismaModule } from './prisma/prisma.module';
     MediaModule,
     PublishingModule,
     AnalyticsModule,
+    AuditModule,
     ThrottlerModule.forRoot({
       skipIf: () => process.env.NODE_ENV === 'test' && process.env.E2E_THROTTLE !== '1',
       throttlers: [{ name: 'default', ttl: 60_000, limit: 10_000 }],
@@ -77,6 +80,7 @@ import { PrismaModule } from './prisma/prisma.module';
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
     { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: AuditActorInterceptor },
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_GUARD, useClass: OriginGuard },

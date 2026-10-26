@@ -4,6 +4,7 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import type {
   AdminMedia,
@@ -15,6 +16,7 @@ import type {
 } from '@portfolio/contracts';
 
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { toAdminMedia, toPublicImage } from './media.mapper';
 import { detectMediaKind, MEDIA_MAX_BYTES } from './media-kind.util';
 import { deliveryUrls, MEDIA_STORAGE, type MediaStorage } from './media-storage';
@@ -24,6 +26,7 @@ export class MediaService {
   constructor(
     private readonly prisma: PrismaService,
     @Inject(MEDIA_STORAGE) private readonly storage: MediaStorage,
+    @Optional() private readonly audit?: AuditService,
   ) {}
 
   toImage(row: Parameters<typeof toPublicImage>[0], locale: Locale): PublicImage | null {
@@ -75,6 +78,13 @@ export class MediaService {
         uploadedById: userId,
       },
     });
+    await this.audit?.recordNow({
+      userId,
+      action: 'CREATE',
+      entityType: 'media',
+      entityId: row.id,
+      summary: `Uploaded ${row.originalName}`,
+    });
     return toAdminMedia(row);
   }
 
@@ -87,6 +97,12 @@ export class MediaService {
         ...(input.altVi !== undefined ? { altVi: input.altVi } : {}),
       },
     });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'media',
+      entityId: id,
+      summary: `Updated alt for ${row.originalName}`,
+    });
     return toAdminMedia(row);
   }
 
@@ -98,6 +114,12 @@ export class MediaService {
     }
     await this.storage.destroy(row.fileName, row.resourceType === 'raw' ? 'raw' : 'image');
     await this.prisma.media.delete({ where: { id } });
+    await this.audit?.recordNow({
+      action: 'ARCHIVE',
+      entityType: 'media',
+      entityId: id,
+      summary: `Deleted ${row.originalName}`,
+    });
   }
 
   async publicUrl(fileName: string): Promise<string | null> {

@@ -16,6 +16,8 @@ import {
   type AdminPostListPage,
   type AdminPostListParams,
   adminPostListParamsSchema,
+  type BulkStatusInput,
+  bulkStatusSchema,
   type PostCreateInput,
   postCreateSchema,
   type PostUpdateInput,
@@ -42,6 +44,14 @@ export class AdminPostsController {
   @Roles('admin', 'user')
   get(@Param('id', ParseIntPipe) id: number): Promise<AdminPost> {
     return this.posts.getAdmin(id);
+  }
+
+  @Post('bulk')
+  @HttpCode(HttpStatus.OK)
+  bulk(
+    @Body(new ZodValidationPipe(bulkStatusSchema)) body: BulkStatusInput,
+  ): Promise<{ count: number }> {
+    return this.posts.bulk(body);
   }
 
   @Post()

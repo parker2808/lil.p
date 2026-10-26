@@ -21,6 +21,7 @@ import { reorder } from '../../common/utils/reorder.util';
 import { slugify } from '../../common/utils/slug.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { PublishingService } from '../publishing/publishing.service';
 import { SKILL_TAGS } from '../publishing/tags.util';
 import { skillCategorySelect, skillSelect } from './entities/skill.entity';
@@ -31,6 +32,7 @@ export class SkillsService {
   constructor(
     private readonly prisma: PrismaService,
     @Optional() private readonly publishing?: PublishingService,
+    @Optional() private readonly audit?: AuditService,
   ) {}
 
   async listPublic(locale: Locale, marquee: boolean): Promise<PublicSkill[] | PublicSkillsGrouped> {
@@ -63,6 +65,12 @@ export class SkillsService {
 
   async reorder(ids: number[]): Promise<AdminSkill[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).skill, ids);
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'skill',
+      entityId: ids[0] ?? 0,
+      summary: `Reordered ${ids.length} skills`,
+    });
     this.bump();
     return this.listAdmin();
   }
@@ -92,6 +100,12 @@ export class SkillsService {
       },
       select: skillSelect,
     });
+    await this.audit?.recordNow({
+      action: 'CREATE',
+      entityType: 'skill',
+      entityId: row.id,
+      summary: `Created skill ${row.slug}`,
+    });
     this.bump();
     return toAdminSkill(row);
   }
@@ -107,6 +121,12 @@ export class SkillsService {
     if (input.sortOrder !== undefined) data.sortOrder = input.sortOrder;
     if (input.isVisible !== undefined) data.isVisible = input.isVisible;
     const row = await this.prisma.skill.update({ where: { id }, data, select: skillSelect });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'skill',
+      entityId: id,
+      summary: `Updated skill ${row.slug}`,
+    });
     this.bump();
     return toAdminSkill(row);
   }
@@ -114,6 +134,12 @@ export class SkillsService {
   async remove(id: number): Promise<AdminSkill> {
     const current = await this.findSkill(id);
     await this.prisma.skill.delete({ where: { id } });
+    await this.audit?.recordNow({
+      action: 'ARCHIVE',
+      entityType: 'skill',
+      entityId: id,
+      summary: `Deleted skill ${current.slug}`,
+    });
     this.bump();
     return toAdminSkill(current);
   }
@@ -128,6 +154,12 @@ export class SkillsService {
 
   async reorderCategories(ids: number[]): Promise<AdminSkillCategory[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).skillCategory, ids);
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'skill-category',
+      entityId: ids[0] ?? 0,
+      summary: `Reordered ${ids.length} skill categories`,
+    });
     this.bump();
     return this.listCategories();
   }
@@ -145,6 +177,12 @@ export class SkillsService {
       },
       select: skillCategorySelect,
     });
+    await this.audit?.recordNow({
+      action: 'CREATE',
+      entityType: 'skill-category',
+      entityId: row.id,
+      summary: `Created skill category ${row.nameEn}`,
+    });
     this.bump();
     return toAdminCategory(row);
   }
@@ -160,6 +198,12 @@ export class SkillsService {
       data,
       select: skillCategorySelect,
     });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'skill-category',
+      entityId: id,
+      summary: `Updated skill category ${row.nameEn}`,
+    });
     this.bump();
     return toAdminCategory(row);
   }
@@ -173,6 +217,12 @@ export class SkillsService {
       });
     }
     await this.prisma.skillCategory.delete({ where: { id } });
+    await this.audit?.recordNow({
+      action: 'ARCHIVE',
+      entityType: 'skill-category',
+      entityId: id,
+      summary: `Deleted skill category ${current.nameEn}`,
+    });
     this.bump();
     return toAdminCategory(current);
   }

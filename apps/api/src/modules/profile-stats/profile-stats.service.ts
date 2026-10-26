@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import type {
   AdminProfileStat,
   Locale,
@@ -11,13 +11,17 @@ import { NotSeededException } from '../../common/errors/not-seeded.exception';
 import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { profileStatSelect } from './entities/profile-stat.entity';
 import { toAdminDto, toPublicProfileStat } from './entities/profile-stat.mapper';
 import { resolveStatValue } from './resolve-profile-stat.util';
 
 @Injectable()
 export class ProfileStatsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly audit?: AuditService,
+  ) {}
 
   async listPublic(locale: Locale): Promise<PublicProfileStat[]> {
     const [profile, rows, publishedProjectCount] = await Promise.all([
@@ -60,6 +64,12 @@ export class ProfileStatsService {
 
   async reorder(ids: number[]): Promise<AdminProfileStat[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).profileStat, ids);
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'profile-stat',
+      entityId: ids[0] ?? 0,
+      summary: `Reordered ${ids.length} profile stats`,
+    });
     return this.listAdmin();
   }
 
@@ -72,6 +82,12 @@ export class ProfileStatsService {
       data: this.toWriteData(input) as Prisma.ProfileStatUncheckedCreateInput,
       select: profileStatSelect,
     });
+    await this.audit?.recordNow({
+      action: 'CREATE',
+      entityType: 'profile-stat',
+      entityId: row.id,
+      summary: `Created profile stat ${row.labelEn}`,
+    });
     return toAdminDto(row);
   }
 
@@ -82,12 +98,24 @@ export class ProfileStatsService {
       data: this.toWriteData(input),
       select: profileStatSelect,
     });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'profile-stat',
+      entityId: id,
+      summary: `Updated profile stat ${row.labelEn}`,
+    });
     return toAdminDto(row);
   }
 
   async remove(id: number): Promise<AdminProfileStat> {
     const current = await this.findRow(id);
     await this.prisma.profileStat.delete({ where: { id } });
+    await this.audit?.recordNow({
+      action: 'ARCHIVE',
+      entityType: 'profile-stat',
+      entityId: id,
+      summary: `Deleted profile stat ${current.labelEn}`,
+    });
     return toAdminDto(current);
   }
 

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, Optional } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import type {
   AdminContactMessage,
@@ -18,6 +18,7 @@ import { paginate } from '../../common/utils/paginate.util';
 import { AppConfigService } from '../../config/app-config.service';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { contactMessageSelect } from './entities/contact-message.entity';
 import { toAdminContactMessage } from './entities/contact-message.mapper';
 
@@ -27,6 +28,7 @@ export class ContactService {
     private readonly prisma: PrismaService,
     private readonly events: EventEmitter2,
     private readonly config: AppConfigService,
+    @Optional() private readonly audit?: AuditService,
   ) {}
 
   async submit(input: ContactInput, req: Request): Promise<ContactSubmitResult> {
@@ -83,6 +85,12 @@ export class ContactService {
       where: { id },
       data: { status: input.status },
       select: contactMessageSelect,
+    });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'contact-message',
+      entityId: id,
+      summary: `Marked message ${id} as ${row.status}`,
     });
     return toAdminContactMessage(row);
   }

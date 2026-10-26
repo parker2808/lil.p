@@ -4,6 +4,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import {
   type AdminBlock,
@@ -24,6 +25,7 @@ import { applyReorder } from '../../common/utils/reorder.util';
 import { assertFresh } from '../../common/utils/stale.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { pageWithAllBlocksInclude } from './entities/page.entity';
 import { toAdminBlock, toAdminPage, toAdminPageListItem } from './entities/page.mapper';
 import { readPageSnapshot, snapshotToPublicPage } from './page-snapshot.util';
@@ -81,7 +83,10 @@ function findRefPath(value: unknown, id: number, prefix: string): string | null 
 export class PagesService {
   private readonly logger = new Logger(PagesService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly audit?: AuditService,
+  ) {}
 
   async getPublic(key: PageKey, locale: Locale, requestId = 'unknown'): Promise<PublicPage> {
     const row = await this.prisma.page.findUnique({
@@ -138,6 +143,12 @@ export class PagesService {
       }
       await applyReorder(tx.pageBlock, ids, { pageId: page.id });
       await this.touchPage(tx, page.id);
+      await this.audit?.record(tx, {
+        action: 'UPDATE',
+        entityType: 'page',
+        entityId: key,
+        summary: `Reordered blocks on ${key}`,
+      });
       return toAdminPage(await this.requirePage(tx, key));
     });
     return result;
@@ -157,6 +168,12 @@ export class PagesService {
           seoDescriptionVi: input.seoDescriptionVi,
           updatedAt: new Date(),
         },
+      });
+      await this.audit?.record(tx, {
+        action: 'UPDATE',
+        entityType: 'page',
+        entityId: key,
+        summary: `Updated ${key} SEO`,
       });
       return toAdminPage(await this.requirePage(tx, key));
     });
@@ -214,6 +231,12 @@ export class PagesService {
         },
       });
       await this.touchPage(tx, page.id);
+      await this.audit?.record(tx, {
+        action: 'CREATE',
+        entityType: 'page',
+        entityId: key,
+        summary: `Created block ${keyName} on ${key}`,
+      });
       return toAdminBlock(created);
     });
     return result;
@@ -279,6 +302,12 @@ export class PagesService {
         data,
       });
       await this.touchPage(tx, page.id);
+      await this.audit?.record(tx, {
+        action: 'UPDATE',
+        entityType: 'page',
+        entityId: key,
+        summary: `Updated block ${updated.key} on ${key}`,
+      });
       return toAdminBlock(updated);
     });
     return result;
@@ -314,6 +343,12 @@ export class PagesService {
         },
       });
       await this.touchPage(tx, page.id);
+      await this.audit?.record(tx, {
+        action: 'CREATE',
+        entityType: 'page',
+        entityId: key,
+        summary: `Duplicated block ${keyName} on ${key}`,
+      });
       return toAdminBlock(created);
     });
     return result;
@@ -330,6 +365,12 @@ export class PagesService {
       }
       await tx.pageBlock.delete({ where: { id: current.id } });
       await this.touchPage(tx, page.id);
+      await this.audit?.record(tx, {
+        action: 'ARCHIVE',
+        entityType: 'page',
+        entityId: key,
+        summary: `Deleted block ${current.key} on ${key}`,
+      });
       return toAdminBlock(current);
     });
     return result;

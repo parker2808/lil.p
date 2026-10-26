@@ -10,6 +10,7 @@ import type {
 import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { PublishingService } from '../publishing/publishing.service';
 import { DOMAIN_TAGS } from '../publishing/tags.util';
 import { domainSelect } from './entities/domain.entity';
@@ -20,6 +21,7 @@ export class DomainsService {
   constructor(
     private readonly prisma: PrismaService,
     @Optional() private readonly publishing?: PublishingService,
+    @Optional() private readonly audit?: AuditService,
   ) {}
 
   async listPublic(locale: Locale): Promise<PublicDomain[]> {
@@ -41,6 +43,12 @@ export class DomainsService {
 
   async reorder(ids: number[]): Promise<AdminDomain[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).domain, ids);
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'domain',
+      entityId: ids[0] ?? 0,
+      summary: `Reordered ${ids.length} domains`,
+    });
     this.bump();
     return this.listAdmin();
   }
@@ -64,6 +72,12 @@ export class DomainsService {
       },
       select: domainSelect,
     });
+    await this.audit?.recordNow({
+      action: 'CREATE',
+      entityType: 'domain',
+      entityId: row.id,
+      summary: `Created domain ${row.slug}`,
+    });
     this.bump();
     return toAdminDto(row);
   }
@@ -81,6 +95,12 @@ export class DomainsService {
     if (input.sortOrder !== undefined) data.sortOrder = input.sortOrder;
     if (input.isVisible !== undefined) data.isVisible = input.isVisible;
     const row = await this.prisma.domain.update({ where: { id }, data, select: domainSelect });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'domain',
+      entityId: id,
+      summary: `Updated domain ${row.slug}`,
+    });
     this.bump();
     return toAdminDto(row);
   }
@@ -88,6 +108,12 @@ export class DomainsService {
   async remove(id: number): Promise<AdminDomain> {
     const current = await this.findRow(id);
     await this.prisma.domain.delete({ where: { id } });
+    await this.audit?.recordNow({
+      action: 'ARCHIVE',
+      entityType: 'domain',
+      entityId: id,
+      summary: `Deleted domain ${current.slug}`,
+    });
     this.bump();
     return toAdminDto(current);
   }

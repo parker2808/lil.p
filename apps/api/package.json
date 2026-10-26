@@ -13,6 +13,7 @@
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset --force",
     "db:seed": "prisma db seed",
+    "seed:audit": "tsx prisma/seed/audit.seed.ts",
     "db:studio": "prisma studio"
   },
   "dependencies": {

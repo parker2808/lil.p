@@ -20,6 +20,7 @@ import {
 import type { Prisma } from '../../generated/prisma/client';
 import { pickGroup } from '../../i18n/pick-locale.util';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import {
   lintErrors,
   mergeFieldErrors,
@@ -53,6 +54,7 @@ export class PageVersionsService {
     private readonly prisma: PrismaService,
     @Optional() private readonly publishing?: PublishingService,
     @Optional() private readonly events?: EventEmitter2,
+    @Optional() private readonly audit?: AuditService,
   ) {}
 
   async listVersions(rawKey: string) {
@@ -134,6 +136,13 @@ export class PageVersionsService {
           updatedAt: now,
         },
       });
+      await this.audit?.record(tx, {
+        userId: actorId,
+        action: 'PUBLISH',
+        entityType: 'page',
+        entityId: key,
+        summary: `Published ${key} v${version}`,
+      });
       return toAdminPage(await this.requirePage(tx, key));
     });
     this.events?.emit('content.published', { entity: 'page', key });
@@ -163,6 +172,12 @@ export class PageVersionsService {
         });
       }
       await this.applySnapshot(tx, page.id, snapshot);
+      await this.audit?.record(tx, {
+        action: 'RESTORE',
+        entityType: 'page',
+        entityId: key,
+        summary: `Restored ${key} to v${version}`,
+      });
       return toAdminPage(await this.requirePage(tx, key));
     });
   }

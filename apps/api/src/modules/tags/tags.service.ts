@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, Optional } from '@nestjs/common';
 import type {
   AdminTag,
   Locale,
@@ -10,12 +10,16 @@ import type {
 import { slugify } from '../../common/utils/slug.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { tagSelect } from './entities/tag.entity';
 import { toAdminDto, toPublicTag } from './entities/tag.mapper';
 
 @Injectable()
 export class TagsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly audit?: AuditService,
+  ) {}
 
   async listPublic(locale: Locale): Promise<PublicTag[]> {
     const rows = await this.prisma.tag.findMany({
@@ -54,6 +58,12 @@ export class TagsService {
       },
       select: tagSelect,
     });
+    await this.audit?.recordNow({
+      action: 'CREATE',
+      entityType: 'tag',
+      entityId: row.id,
+      summary: `Created tag ${row.slug}`,
+    });
     return toAdminDto(row);
   }
 
@@ -63,12 +73,24 @@ export class TagsService {
     if (input.nameEn !== undefined) data.nameEn = input.nameEn;
     if (input.nameVi !== undefined) data.nameVi = input.nameVi;
     const row = await this.prisma.tag.update({ where: { id }, data, select: tagSelect });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'tag',
+      entityId: id,
+      summary: `Updated tag ${row.slug}`,
+    });
     return toAdminDto(row);
   }
 
   async remove(id: number): Promise<AdminTag> {
     const current = await this.findRow(id);
     await this.prisma.tag.delete({ where: { id } });
+    await this.audit?.recordNow({
+      action: 'ARCHIVE',
+      entityType: 'tag',
+      entityId: id,
+      summary: `Deleted tag ${current.slug}`,
+    });
     return toAdminDto(current);
   }
 
