@@ -1,7 +1,15 @@
 import type { Hue } from '@portfolio/contracts';
 import { cn } from '@portfolio/ui/lib/utils';
 
-export function CoverPlaceholder({ hue = 'JADE', className }: { hue?: Hue; className?: string }) {
+export function CoverPlaceholder({
+  hue = 'JADE',
+  ratio = '16 / 10',
+  className,
+}: {
+  hue?: Hue;
+  ratio?: '16 / 10' | '21 / 9';
+  className?: string;
+}) {
   const hueVar = `--hue-${hue.toLowerCase()}`;
 
   return (
@@ -10,7 +18,7 @@ export function CoverPlaceholder({ hue = 'JADE', className }: { hue?: Hue; class
       aria-hidden
       className={cn('bg-muted relative flex flex-col overflow-hidden', className)}
       style={{
-        aspectRatio: '16 / 10',
+        aspectRatio: ratio,
         backgroundImage: `linear-gradient(180deg, color-mix(in srgb, var(${hueVar}) 16%, var(--muted)), var(--muted))`,
       }}
     >
