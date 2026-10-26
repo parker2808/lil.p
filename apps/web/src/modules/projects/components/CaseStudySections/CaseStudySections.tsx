@@ -12,6 +12,7 @@ type SectionSpec = {
   body?: string;
   scope?: { title: string; items: string[] }[];
   decisions?: { title: string; body: string }[];
+  release?: { title: string; items: string[] }[];
 };
 
 export function caseStudyToc(
@@ -24,6 +25,9 @@ export function caseStudyToc(
     tradeoffs: string;
     result: string;
     retro: string;
+    notMine: string;
+    released: string;
+    notReleased: string;
   },
 ): { id: string; title: string; depth: 2 | 3 }[] {
   const { limits, scope } = splitLimitsAndScope(project.constraints);
@@ -50,6 +54,12 @@ export function caseStudyToc(
   if (project.lessons) {
     items.push({ id: 'retro', title: labels.retro, depth: 2 });
   }
+  if (project.notMine) {
+    items.push({ id: 'not-mine', title: labels.notMine, depth: 2 });
+  }
+  if (project.releaseStatus) {
+    items.push({ id: 'release', title: labels.released, depth: 2 });
+  }
   return items;
 }
 
@@ -66,6 +76,9 @@ export async function CaseStudySections({
     tradeoffs: string;
     result: string;
     retro: string;
+    notMine: string;
+    released: string;
+    notReleased: string;
   };
 }) {
   const { limits, scope } = splitLimitsAndScope(project.constraints);
@@ -78,6 +91,17 @@ export async function CaseStudySections({
     { id: 'tradeoffs', eyebrow: labels.tradeoffs, decisions },
     { id: 'result', eyebrow: labels.result, body: project.outcome },
     { id: 'retro', eyebrow: labels.retro, body: project.lessons },
+    { id: 'not-mine', eyebrow: labels.notMine, body: project.notMine ?? undefined },
+    {
+      id: 'release',
+      eyebrow: labels.released,
+      release: project.releaseStatus
+        ? [
+            { title: labels.released, items: project.releaseStatus.released },
+            { title: labels.notReleased, items: project.releaseStatus.notReleased },
+          ].filter((column) => column.items.length > 0)
+        : undefined,
+    },
   ];
 
   return (
@@ -86,7 +110,8 @@ export async function CaseStudySections({
         const hasBody = Boolean(section.body);
         const hasScope = Boolean(section.scope?.length);
         const hasDecisions = Boolean(section.decisions?.length);
-        if (!hasBody && !hasScope && !hasDecisions) {
+        const hasRelease = Boolean(section.release?.length);
+        if (!hasBody && !hasScope && !hasDecisions && !hasRelease) {
           return null;
         }
         return (
@@ -110,6 +135,7 @@ export async function CaseStudySections({
                   ),
                 )
               : null}
+            {hasRelease ? <RequirementColumns columns={section.release!} /> : null}
           </section>
         );
       })}

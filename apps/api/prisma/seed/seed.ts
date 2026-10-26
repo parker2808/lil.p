@@ -11,7 +11,10 @@ import { seedDemo } from './profiles/demo.seed';
 config({ path: resolve(import.meta.dirname, '../../../../.env') });
 config({ path: resolve(import.meta.dirname, '../../../.env') });
 
-const profile = process.env.SEED_PROFILE === 'baseline' ? 'baseline' : 'demo';
+const profile =
+  process.env.SEED_PROFILE === 'baseline' || process.env.SEED_PROFILE === 'owner'
+    ? 'baseline'
+    : 'demo';
 
 async function main(): Promise<void> {
   const url = process.env.DATABASE_URL;

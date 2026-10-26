@@ -13,6 +13,6 @@ export default defineConfig({
   ],
   test: {
     environment: 'node',
-    include: ['src/**/*.spec.ts'],
+    include: ['src/**/*.spec.ts', 'prisma/seed/**/*.spec.ts'],
   },
 });

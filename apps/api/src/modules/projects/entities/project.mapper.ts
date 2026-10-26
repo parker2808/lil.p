@@ -1,12 +1,14 @@
-import type {
-  AdminProject,
-  AdminProjectListItem,
-  Locale,
-  PublicProjectDetail,
-  PublicProjectDomain,
-  PublicProjectExperience,
-  PublicProjectListItem,
-  PublicProjectMetric,
+import {
+  type AdminProject,
+  type AdminProjectListItem,
+  type Locale,
+  type ProjectReleaseStatus,
+  projectReleaseStatusSchema,
+  type PublicProjectDetail,
+  type PublicProjectDomain,
+  type PublicProjectExperience,
+  type PublicProjectListItem,
+  type PublicProjectMetric,
 } from '@portfolio/contracts';
 
 import { toIsoDate } from '../../../common/utils/iso-date.util';
@@ -35,6 +37,18 @@ function splitLines(value: string): string[] {
     .split('\n')
     .map((line) => line.trim())
     .filter(Boolean);
+}
+
+function toReleaseStatus(value: unknown): ProjectReleaseStatus | null {
+  const parsed = projectReleaseStatusSchema.safeParse(value);
+  return parsed.success ? parsed.data : null;
+}
+
+function pickNotMine(row: ProjectRow, locale: Locale): string | null {
+  if (locale === 'vi' && row.notMineVi) {
+    return row.notMineVi;
+  }
+  return row.notMineEn;
 }
 
 function splitChips(value: string): string[] {
@@ -129,6 +143,8 @@ export function toPublicProjectDetail(row: ProjectRow, locale: Locale): PublicPr
     decisions: values.decisions ?? '',
     outcome: values.outcome ?? '',
     lessons: values.lessons ?? '',
+    notMine: pickNotMine(row, locale),
+    releaseStatus: toReleaseStatus(row.releaseStatus),
     keyFacts: splitLines(values.keyFacts ?? ''),
     factChips: splitChips(values.factChips ?? ''),
     seoTitle: values.seoTitle,
@@ -174,6 +190,9 @@ export function toAdminDto(row: ProjectRow): AdminProject {
     keyFactsVi: row.keyFactsVi,
     factChipsEn: row.factChipsEn,
     factChipsVi: row.factChipsVi,
+    notMineEn: row.notMineEn,
+    notMineVi: row.notMineVi,
+    releaseStatus: toReleaseStatus(row.releaseStatus),
     seoTitleEn: row.seoTitleEn,
     seoTitleVi: row.seoTitleVi,
     seoDescriptionEn: row.seoDescriptionEn,

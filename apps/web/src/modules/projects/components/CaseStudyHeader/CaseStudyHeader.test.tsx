@@ -27,6 +27,8 @@ function detail(over: Partial<PublicProjectDetail> = {}): PublicProjectDetail {
     decisions: 'Tokens first',
     outcome: 'Shipped',
     lessons: 'Keep the contract',
+    notMine: null,
+    releaseStatus: null,
     keyFacts: ['Zero downtime'],
     seoTitle: null,
     seoDescription: null,

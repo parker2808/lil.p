@@ -409,8 +409,11 @@ export const pagesData: SeedPage[] = [
   },
 ];
 
-export async function seedPages(prisma: PrismaClient): Promise<void> {
-  for (const page of pagesData) {
+export async function seedPages(
+  prisma: PrismaClient,
+  pages: SeedPage[] = pagesData,
+): Promise<void> {
+  for (const page of pages) {
     const { blocks, ...pageFields } = page;
     const saved = await prisma.page.upsert({
       where: { key: page.key },

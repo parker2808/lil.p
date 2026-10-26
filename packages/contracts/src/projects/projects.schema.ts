@@ -71,6 +71,11 @@ export const publicProjectListItemSchema = z.object({
 
 export const publicProjectListPageSchema = paginatedSchema(publicProjectListItemSchema);
 
+export const projectReleaseStatusSchema = z.object({
+  released: z.array(z.string()),
+  notReleased: z.array(z.string()),
+});
+
 export const publicProjectDetailSchema = publicProjectListItemSchema.extend({
   role: z.string(),
   teamSize: z.number().int().nullable(),
@@ -82,6 +87,9 @@ export const publicProjectDetailSchema = publicProjectListItemSchema.extend({
   decisions: z.string(),
   outcome: z.string(),
   lessons: z.string(),
+  /** Teammate / backend work. Must not be presented as the owner's. */
+  notMine: z.string().nullable(),
+  releaseStatus: projectReleaseStatusSchema.nullable(),
   keyFacts: z.array(z.string()),
   seoTitle: z.string().nullable(),
   seoDescription: z.string().nullable(),
@@ -135,6 +143,9 @@ export const projectCreateSchema = z.object({
   keyFactsVi: z.string(),
   factChipsEn: z.string(),
   factChipsVi: z.string(),
+  notMineEn: z.string().nullable().optional(),
+  notMineVi: z.string().nullable().optional(),
+  releaseStatus: projectReleaseStatusSchema.nullable().optional(),
   seoTitleEn: z.string().nullable().optional(),
   seoTitleVi: z.string().nullable().optional(),
   seoDescriptionEn: z.string().nullable().optional(),
@@ -189,6 +200,9 @@ export const adminProjectSchema = z.object({
   keyFactsVi: z.string(),
   factChipsEn: z.string(),
   factChipsVi: z.string(),
+  notMineEn: z.string().nullable(),
+  notMineVi: z.string().nullable(),
+  releaseStatus: projectReleaseStatusSchema.nullable(),
   seoTitleEn: z.string().nullable(),
   seoTitleVi: z.string().nullable(),
   seoDescriptionEn: z.string().nullable(),
