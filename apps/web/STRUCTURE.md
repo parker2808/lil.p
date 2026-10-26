@@ -103,7 +103,7 @@ app/
 │   └── (cms)/
 │       ├── layout.tsx             # server check GET /auth/me (forwards access_token) → redirect; → admin-core AdminShell
 │       ├── page.tsx               # → admin-dashboard/views/AdminDashboardIndex
-│       ├── projects/page.tsx, projects/[id]/page.tsx
+│       ├── projects/page.tsx, projects/new/page.tsx, projects/[id]/page.tsx
 │       ├── posts/page.tsx, posts/[id]/page.tsx
 │       ├── experience/page.tsx, experience/[id]/page.tsx
 │       ├── education/page.tsx, principles/page.tsx, stats/page.tsx, process/page.tsx

@@ -4,6 +4,7 @@ import {
   type AdminProjectListPage,
   adminProjectListPageSchema,
   type AdminProjectListParams,
+  type ProjectCreateInput,
   type ProjectUpdateInput,
 } from '@portfolio/contracts';
 
@@ -42,6 +43,14 @@ export function archiveAdminProject(id: number): Promise<AdminProject> {
   return apiClient<AdminProject>(`/api/admin/projects/${id}`, { method: 'DELETE' }).then((data) =>
     adminProjectSchema.parse(data),
   );
+}
+
+export function createAdminProject(body: ProjectCreateInput): Promise<AdminProject> {
+  return apiClient<AdminProject>('/api/admin/projects', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  }).then((data) => adminProjectSchema.parse(data));
 }
 
 export function updateAdminProject(id: number, body: ProjectUpdateInput): Promise<AdminProject> {
