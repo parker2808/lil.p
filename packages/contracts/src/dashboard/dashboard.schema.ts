@@ -23,10 +23,15 @@ export const contentStatusCountsSchema = z.object({
   publishedInPrevious: z.number().int().nonnegative(),
 });
 
+export const messageStatsSchema = z.object({
+  unread: z.number().int().nonnegative(),
+});
+
 export const adminStatsSchema = z.object({
   range: statsRangeSchema,
   projects: contentStatusCountsSchema,
   posts: contentStatusCountsSchema,
+  messages: messageStatsSchema,
 });
 
 export const healthIssueKindSchema = z.enum([

@@ -79,6 +79,7 @@ describe('admin dashboard', () => {
         publishedInRange: 0,
         publishedInPrevious: 0,
       },
+      messages: { unread: 0 },
     });
 
     const health = await agent.get('/api/admin/health').expect(200);

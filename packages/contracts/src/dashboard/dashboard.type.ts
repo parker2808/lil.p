@@ -8,6 +8,7 @@ import type {
   contentStatusCountsSchema,
   healthIssueEntitySchema,
   healthIssueKindSchema,
+  messageStatsSchema,
   statsQuerySchema,
   statsRangeSchema,
 } from './dashboard.schema';
@@ -15,6 +16,7 @@ import type {
 export type StatsRange = z.infer<typeof statsRangeSchema>;
 export type StatsQuery = z.infer<typeof statsQuerySchema>;
 export type ContentStatusCounts = z.infer<typeof contentStatusCountsSchema>;
+export type MessageStats = z.infer<typeof messageStatsSchema>;
 export type AdminStats = z.infer<typeof adminStatsSchema>;
 export type HealthIssueKind = z.infer<typeof healthIssueKindSchema>;
 export type HealthIssueEntity = z.infer<typeof healthIssueEntitySchema>;

@@ -1,5 +1,6 @@
 import { type MiddlewareConsumer, Module, type NestModule } from '@nestjs/common';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerModule } from '@nestjs/throttler';
 
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
@@ -10,6 +11,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 import { ConfigModule } from './config/config.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { ContactModule } from './modules/contact/contact.module';
 import { ContactTopicsModule } from './modules/contact-topics/contact-topics.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { DomainsModule } from './modules/domains/domains.module';
@@ -52,11 +54,13 @@ import { PrismaModule } from './prisma/prisma.module';
     PostsModule,
     TagsModule,
     ContactTopicsModule,
+    ContactModule,
     PublicSiteModule,
     PagesModule,
     UsersModule,
     AuthModule,
     DashboardModule,
+    EventEmitterModule.forRoot(),
     ThrottlerModule.forRoot({
       skipIf: () => process.env.NODE_ENV === 'test' && process.env.E2E_THROTTLE !== '1',
       throttlers: [{ name: 'default', ttl: 60_000, limit: 10_000 }],
