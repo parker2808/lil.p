@@ -18,6 +18,7 @@ export const qk = {
     all: (entity: Entity) => ['admin', entity] as const,
     inbox: { unread: ['admin', 'inbox', 'unread'] as const },
     stats: (range: '7d' | '30d' | '90d') => ['admin', 'stats', range] as const,
+    health: ['admin', 'health'] as const,
     audit: (params: ListParams) => ['admin', 'audit', params] as const,
   },
 };

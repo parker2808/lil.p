@@ -139,8 +139,48 @@
     },
     "dashboard": {
       "title": "Dashboard",
-      "placeholder": "Hello {name}. Counts land in the next task.",
-      "adminHint": "Write actions stay behind RoleGate."
+      "range": {
+        "7d": "7d",
+        "30d": "30d",
+        "90d": "90d",
+        "label": "Period"
+      },
+      "cards": {
+        "projects": "Projects published",
+        "posts": "Posts published",
+        "drafts": "Drafts",
+        "publishedPeriod": "Published this period"
+      },
+      "delta": {
+        "up": "+{value} vs previous {range}",
+        "down": "−{value} vs previous {range}",
+        "flat": "same as previous {range}"
+      },
+      "health": {
+        "title": "Content health",
+        "empty": "No content-health issues.",
+        "error": "Content health could not be loaded.",
+        "retry": "Retry",
+        "drafts": "{count} drafts",
+        "missingVi": "{count} missing VI",
+        "noDomain": "Projects without a domain · {count}",
+        "fewKeyFacts": "Case studies with < 2 key facts · {count}",
+        "marquee": "Marquee needs 6+ skills · {count} on",
+        "publishLint": "{count} publish-lint issues",
+        "marqueeTitle": "Skills marquee",
+        "kinds": {
+          "PROJECT_NO_DOMAIN": "No domain",
+          "CASE_STUDY_KEY_FACTS": "{count} key facts",
+          "MARQUEE_SKILLS": "{count} on marquee · needs 6+",
+          "MISSING_VI": "Missing Vietnamese · {fields}",
+          "PUBLISH_LINT": "Publish lint · {fields}"
+        }
+      },
+      "stats": {
+        "error": "Dashboard counts could not be loaded.",
+        "retry": "Retry",
+        "empty": "No content counts yet."
+      }
     }
   }
 }
