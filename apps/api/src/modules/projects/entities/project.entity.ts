@@ -76,6 +76,10 @@ export const projectSelect = {
   domain: { select: projectDomainSelect },
   experience: { select: projectExperienceSelect },
   metrics: { select: projectMetricSelect, orderBy: { sortOrder: 'asc' as const } },
+  skills: {
+    select: { name: true, slug: true, sortOrder: true },
+    orderBy: { sortOrder: 'asc' as const },
+  },
 } satisfies Prisma.ProjectSelect;
 
 export type ProjectRow = Prisma.ProjectGetPayload<{ select: typeof projectSelect }>;

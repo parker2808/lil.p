@@ -2,10 +2,12 @@ import { z } from 'zod';
 
 import { localeSchema } from '../common/locale.schema';
 import { publicProjectDomainSchema } from '../domains/domains.schema';
+import { publicSkillChipSchema } from '../skills/skills.schema';
 
 export const publicProjectListQuerySchema = z.object({
   featured: z.enum(['1', 'true', '0', 'false']).optional(),
   domain: z.string().min(1).optional(),
+  skill: z.string().min(1).optional(),
 });
 
 export const publicProjectMetricSchema = z.object({
@@ -41,6 +43,7 @@ export const publicProjectListItemSchema = z.object({
   domain: publicProjectDomainSchema.nullable(),
   topMetric: publicProjectMetricSchema.nullable(),
   factChips: z.array(z.string()).max(6),
+  skills: z.array(publicSkillChipSchema),
   lang: localeSchema,
 });
 
