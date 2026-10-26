@@ -90,5 +90,57 @@
     "anchor": "Link to heading",
     "onThisPage": "On this page",
     "keyTakeaways": "Key takeaways"
+  },
+  "admin": {
+    "nav": {
+      "groups": {
+        "main": "Workspace",
+        "content": "Content",
+        "site": "Site",
+        "insights": "Insights",
+        "access": "Access"
+      },
+      "dashboard": "Dashboard",
+      "inbox": "Inbox",
+      "projects": "Projects",
+      "posts": "Posts",
+      "experience": "Experience",
+      "skills": "Skills",
+      "domains": "Domains",
+      "process": "Process",
+      "stats": "Stats",
+      "site": "Site settings",
+      "profile": "Profile",
+      "media": "Media",
+      "analytics": "Analytics",
+      "audit": "Audit log",
+      "users": "Users"
+    },
+    "shell": {
+      "menu": "Menu",
+      "toggleSidebar": "Collapse sidebar",
+      "breadcrumb": "Breadcrumb",
+      "logout": "Log out"
+    },
+    "palette": {
+      "open": "Jump to",
+      "newProject": "New project",
+      "newPost": "New post"
+    },
+    "login": {
+      "title": "Sign in",
+      "intro": "Admin is English only. Use the account from the seed env.",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "invalid": "Those credentials did not work.",
+      "rateLimited": "Too many attempts. Try again in a minute.",
+      "checking": "Checking session"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "placeholder": "Hello {name}. Counts land in the next task.",
+      "adminHint": "Write actions stay behind RoleGate."
+    }
   }
 }

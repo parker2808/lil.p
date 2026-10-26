@@ -1,6 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('server-only', () => ({}));
+vi.mock('next/headers', () => ({
+  cookies: async () => ({ get: () => undefined }),
+}));
 
 import { ApiError } from '../utils/api-error.util';
 import { apiServer } from './api-server.service';
