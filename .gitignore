@@ -5,3 +5,4 @@ dist
 coverage
 uploads
 storybook-static
+*.tsbuildinfo
