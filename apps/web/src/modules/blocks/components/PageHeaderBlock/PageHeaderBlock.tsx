@@ -11,7 +11,7 @@ export function PageHeaderBlock({ block }: { block: PublicBlock; context: BlockC
   }
 
   return (
-    <header className="mx-auto flex max-w-3xl flex-col gap-3 px-6 py-12" lang={block.lang}>
+    <header className="col-span-full mx-auto flex max-w-3xl flex-col gap-3 py-12" lang={block.lang}>
       {props.eyebrow ? <Eyebrow>{props.eyebrow}</Eyebrow> : null}
       <h1 className="font-heading text-title font-bold">{props.title}</h1>
       {props.intro ? (

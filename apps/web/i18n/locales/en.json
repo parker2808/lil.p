@@ -22,6 +22,17 @@
     "retry": "Retry",
     "notFound": "This page is missing"
   },
+  "blocks": {
+    "nda": "NDA",
+    "projects": "projects",
+    "minutes": "min",
+    "pause": "Pause",
+    "play": "Play",
+    "daily": "Daily",
+    "shipped": "Shipped",
+    "growing": "Growing",
+    "diagram": "Migration from the featured case"
+  },
   "content": {
     "copy": "Copy",
     "copied": "Copied",

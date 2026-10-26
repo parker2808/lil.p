@@ -23,8 +23,26 @@ describe('parseBlock', () => {
   });
 
   it('returns UNKNOWN_TYPE for a type not in the registry', () => {
-    const result = parseBlock({ ...heroRow, type: 'stat-band' });
+    const result = parseBlock({ ...heroRow, type: 'about-intro' });
     expect(result).toMatchObject({ ok: false, reason: 'UNKNOWN_TYPE' });
+  });
+
+  it('accepts a seeded case-grid', () => {
+    const result = parseBlock({
+      id: 2,
+      type: 'case-grid',
+      key: 'work',
+      layout: 'THREE',
+      surface: 'PLAIN',
+      schemaVersion: 1,
+      props: {
+        heading: { title: { en: 'Selected work', vi: 'Việc đã chọn' } },
+        source: 'latest',
+        projectIds: [],
+        limit: 3,
+      },
+    });
+    expect(result.ok).toBe(true);
   });
 
   it('returns INVALID_PROPS when required fields are missing', () => {
