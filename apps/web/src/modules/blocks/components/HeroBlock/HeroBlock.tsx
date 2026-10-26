@@ -36,6 +36,7 @@ export async function HeroBlock({ block, context }: { block: PublicBlock; contex
 
   return (
     <Reveal
+      eager
       className={
         split
           ? 'relative col-span-full grid items-center gap-8 overflow-hidden lg:grid-cols-12'

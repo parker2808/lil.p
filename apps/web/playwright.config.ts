@@ -39,7 +39,14 @@ Object.assign(process.env, sharedEnv);
 
 export default defineConfig({
   testDir: './e2e',
-  testMatch: ['public.spec.ts', 'contact.spec.ts', 'admin-publish.spec.ts', 'admin-pages.spec.ts'],
+  testMatch: [
+    'public.spec.ts',
+    'contact.spec.ts',
+    'admin-publish.spec.ts',
+    'admin-pages.spec.ts',
+    'a11y.spec.ts',
+    'lighthouse.spec.ts',
+  ],
   fullyParallel: false,
   workers: 1,
   forbidOnly: Boolean(process.env.CI),

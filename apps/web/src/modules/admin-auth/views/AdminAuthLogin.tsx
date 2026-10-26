@@ -11,6 +11,7 @@ import { safeAdminNext } from '../utils/safe-next.util';
 
 export function AdminAuthLogin() {
   const t = useTranslations('admin.login');
+  const shell = useTranslations('admin.shell');
   const router = useRouter();
   const search = useSearchParams();
   const next = safeAdminNext(search.get('next'));
@@ -32,13 +33,19 @@ export function AdminAuthLogin() {
 
   return (
     <div className="flex min-h-dvh items-center justify-center px-4">
-      <div className="flex w-full max-w-sm flex-col gap-6">
+      <a
+        href="#content"
+        className="bg-primary text-primary-foreground focus:z-skip sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:rounded-md focus:px-3 focus:py-2"
+      >
+        {shell('skip')}
+      </a>
+      <main id="content" tabIndex={-1} className="flex w-full max-w-sm flex-col gap-6 outline-none">
         <div className="flex flex-col gap-1">
           <h1 className="text-ui-title font-semibold">{t('title')}</h1>
           <p className="text-ui text-muted-foreground">{t('intro')}</p>
         </div>
         <LoginForm onSignedIn={() => router.replace(next)} />
-      </div>
+      </main>
     </div>
   );
 }

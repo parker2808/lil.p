@@ -39,7 +39,7 @@ describe('NotificationBell', () => {
 
   it('shows the unread count without stealing focus', async () => {
     renderBell(admin);
-    const link = await screen.findByRole('link', { name: '3 unread messages' });
+    const link = await screen.findByRole('link', { name: /3 unread messages/ });
     expect(link).toHaveAttribute('href', '/admin/inbox');
     expect(link).toHaveTextContent('3');
     await waitFor(() => {

@@ -175,7 +175,7 @@ function SortableRow({
             {...attributes}
             {...listeners}
           >
-            <GripVertical className="size-4" />
+            <GripVertical className="size-4" aria-hidden />
           </Button>
         ),
       )}

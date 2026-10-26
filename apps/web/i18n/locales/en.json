@@ -150,6 +150,7 @@
     },
     "shell": {
       "menu": "Menu",
+      "skip": "Skip to content",
       "toggleSidebar": "Collapse sidebar",
       "breadcrumb": "Breadcrumb",
       "logout": "Log out",

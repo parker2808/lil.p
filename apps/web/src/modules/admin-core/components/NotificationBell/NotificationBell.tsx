@@ -28,7 +28,6 @@ export function NotificationBell() {
   return (
     <Link
       href="/admin/inbox"
-      aria-label={t('bell', { count })}
       className="hover:bg-accent relative inline-flex h-8 items-center gap-2 rounded-md px-2"
     >
       <span className="text-ui">{t('bellShort')}</span>

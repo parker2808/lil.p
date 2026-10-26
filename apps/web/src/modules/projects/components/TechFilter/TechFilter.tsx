@@ -41,7 +41,6 @@ export function TechFilter({
       <PopoverTrigger
         type="button"
         className="border-border bg-card text-meta hover:border-border-strong inline-flex shrink-0 items-center gap-2 rounded-md border px-2.5 py-1"
-        aria-label={`${labels.tech}: ${current}`}
       >
         <span>{labels.tech}</span>
         <ChevronDown aria-hidden className="size-3.5" />
