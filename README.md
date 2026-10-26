@@ -3,6 +3,7 @@
 Portfolio monorepo: Next.js public site + admin (`apps/web`), NestJS API (`apps/api`), design system (`packages/ui`), and shared zod contracts (`packages/contracts`).
 
 Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./docs/PLAN.md).
+Free hosting (Vercel + Render + TiDB + Cloudinary): [docs/DEPLOY.md](./docs/DEPLOY.md).
 
 ## Prerequisites
 

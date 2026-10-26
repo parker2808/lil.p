@@ -44,6 +44,26 @@ describe('envSchema', () => {
     ).toThrow(/differ/i);
   });
 
+  it('falls back to PORT when API_PORT is omitted', () => {
+    const previous = process.env.PORT;
+    process.env.PORT = '10000';
+    try {
+      const rest = { ...valid, API_PORT: undefined };
+      expect(envSchema.parse(rest).API_PORT).toBe(10000);
+    } finally {
+      if (previous === undefined) {
+        delete process.env.PORT;
+      } else {
+        process.env.PORT = previous;
+      }
+    }
+  });
+
+  it('turns CROSS_SITE_COOKIES=1 into true', () => {
+    expect(envSchema.parse({ ...valid, CROSS_SITE_COOKIES: '1' }).CROSS_SITE_COOKIES).toBe(true);
+    expect(envSchema.parse(valid).CROSS_SITE_COOKIES).toBe(false);
+  });
+
   it('treats empty optional secrets as missing', () => {
     const parsed = envSchema.parse({
       ...valid,

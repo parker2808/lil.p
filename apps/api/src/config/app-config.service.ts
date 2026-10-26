@@ -12,6 +12,10 @@ export class AppConfigService {
   constructor(private readonly config: ConfigService<Env, true>) {}
 
   get port(): number {
+    const renderPort = process.env.PORT;
+    if (renderPort) {
+      return Number(renderPort);
+    }
     return this.config.get('API_PORT', { infer: true });
   }
 
@@ -21,6 +25,25 @@ export class AppConfigService {
 
   get webOrigin(): string {
     return this.config.get('WEB_ORIGIN', { infer: true });
+  }
+
+  get crossSiteCookies(): boolean {
+    return this.config.get('CROSS_SITE_COOKIES', { infer: true }) ?? false;
+  }
+
+  get cookieDomain(): string | undefined {
+    return this.config.get('COOKIE_DOMAIN', { infer: true });
+  }
+
+  get corsOrigins(): string[] {
+    const extra = (this.config.get('CORS_ORIGINS', { infer: true }) ?? '')
+      .split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean);
+    if (this.crossSiteCookies) {
+      return [...new Set([this.webOrigin, ...extra])];
+    }
+    return extra;
   }
 
   get nodeEnv(): Env['NODE_ENV'] {

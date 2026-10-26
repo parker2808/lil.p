@@ -8,6 +8,7 @@ import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 
 import { refreshOnce } from '@/modules/core/services/api-client.service';
+import { publicApiUrl } from '@/modules/core/utils/public-api-url.util';
 
 import { useIsAdmin } from './use-me.hook';
 
@@ -40,7 +41,9 @@ export function useAdminEvents(): void {
 
     function open(): void {
       close();
-      const source = new EventSource('/api/admin/events');
+      const source = new EventSource(publicApiUrl('/api/admin/events'), {
+        withCredentials: true,
+      });
       sourceRef.current = source;
 
       source.addEventListener('contact.created', (event) => {

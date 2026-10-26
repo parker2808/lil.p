@@ -4,6 +4,7 @@ import { useLocale } from 'next-intl';
 import { useEffect } from 'react';
 
 import { usePathname } from '@i18n/navigation';
+import { publicApiUrl } from '@/modules/core/utils/public-api-url.util';
 
 export function PageViewBeacon({ enabled }: { enabled: boolean }) {
   const pathname = usePathname();
@@ -18,7 +19,10 @@ export function PageViewBeacon({ enabled }: { enabled: boolean }) {
       locale,
       referrer: document.referrer || undefined,
     });
-    navigator.sendBeacon('/api/public/views', new Blob([body], { type: 'application/json' }));
+    navigator.sendBeacon(
+      publicApiUrl('/api/public/views'),
+      new Blob([body], { type: 'application/json' }),
+    );
   }, [enabled, pathname, locale]);
 
   return null;

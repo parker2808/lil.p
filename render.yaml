@@ -1,0 +1,54 @@
+# Render Blueprint (T61 / PLAN D28). Free web service for the Nest API.
+# TiDB Cloud and Cloudinary are provisioned outside Render — paste their
+# values in the Dashboard (sync: false). Never commit secrets.
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: portfolio-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./apps/api/Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: API_HOST
+        value: 0.0.0.0
+      - key: API_PORT
+        value: '4000'
+      - key: CROSS_SITE_COOKIES
+        value: '1'
+      - key: SEED_PROFILE
+        value: baseline
+      - key: DATABASE_URL
+        sync: false
+      - key: WEB_ORIGIN
+        sync: false
+      - key: WEB_INTERNAL_URL
+        sync: false
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: COOKIE_DOMAIN
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: REVALIDATE_SECRET
+        sync: false
+      - key: ANALYTICS_SALT_SECRET
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_NAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false

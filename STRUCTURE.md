@@ -21,6 +21,7 @@ scripts/                  # repo scripts: content/privacy/placeholder checks, ba
 docs/                     # PLAN, design snapshot, sql-notes.sql, audit reports, runbooks
 docker-compose.yml        # dev: MySQL + Adminer (+ test DB under the `test` profile)
 compose.prod.yml          # production: db, api, web, caddy, backup (read-only root FS)
+render.yaml               # Render Blueprint: free Docker API (T61 / D28)
 apps/web/Dockerfile       # multi-stage Next standalone image
 apps/api/Dockerfile       # multi-stage Nest image; entrypoint runs migrate deploy
 ```

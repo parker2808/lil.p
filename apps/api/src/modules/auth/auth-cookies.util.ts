@@ -9,16 +9,17 @@ export const ACCESS_COOKIE_PATH = '/';
 export const REFRESH_COOKIE_PATH = '/api/auth';
 
 /**
- * Cookie flags from PLAN D24. Secure is on whenever NODE_ENV=production
- * (T59). T61 will switch SameSite to None (and keep Secure) so Vercel can
- * send cookies to the Render API across sites.
+ * Cookie flags from PLAN D24 / D28. Secure is on whenever NODE_ENV=production
+ * (T59). SameSite is None (and Secure) when CROSS_SITE_COOKIES=1 so the
+ * Vercel site can send cookies to the Render API (T61). Local compose stays Lax.
  */
 export function authCookieFlags(
   isProduction: boolean,
+  crossSite = false,
 ): Pick<CookieOptions, 'httpOnly' | 'sameSite' | 'secure'> {
   return {
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: isProduction && crossSite ? 'none' : 'lax',
     secure: isProduction,
   };
 }
@@ -29,8 +30,9 @@ function cookieOptions(
   maxAgeSeconds: number,
 ): CookieOptions {
   return {
-    ...authCookieFlags(config.isProduction),
+    ...authCookieFlags(config.isProduction, config.crossSiteCookies),
     path,
+    domain: config.cookieDomain,
     maxAge: maxAgeSeconds * 1000,
   };
 }

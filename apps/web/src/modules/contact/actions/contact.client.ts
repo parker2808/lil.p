@@ -1,5 +1,7 @@
 import { contactSchema, type ContactInput } from '@portfolio/contracts';
 
+import { publicApiUrl } from '@/modules/core/utils/public-api-url.util';
+
 import type { ContactActionResult } from './contact.result';
 
 function flattenIssues(error: { issues: Array<{ path: PropertyKey[]; message: string }> }) {
@@ -23,7 +25,7 @@ export async function submitContactClient(input: unknown): Promise<ContactAction
 async function postContact(body: ContactInput): Promise<ContactActionResult> {
   let response: Response;
   try {
-    response = await fetch('/api/public/contact', {
+    response = await fetch(publicApiUrl('/api/public/contact'), {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(body),
