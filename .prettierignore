@@ -1,0 +1,25 @@
+# Dependencies and lockfiles
+node_modules
+pnpm-lock.yaml
+
+# Build and generated output (apps/web, apps/api, packages/*)
+dist
+.next
+coverage
+uploads
+storybook-static
+*.min.js
+*.min.css
+
+# Husky internals
+.husky/_
+
+# Frozen design snapshot — match the mockups, do not reformat
+docs/design/
+
+# Bilingual plan files are hand-wrapped; reformatting would bury real edits
+docs/PLAN.md
+docs/PLAN.vi.md
+
+# App STRUCTURE tables are hand-authored; Prettier expands them past readable width
+apps/*/STRUCTURE.md

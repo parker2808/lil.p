@@ -2,7 +2,7 @@
 
 [English](./PLAN.md) · Cấu trúc: [root](../STRUCTURE.md) · [web](../apps/web/STRUCTURE.md) · [api](../apps/api/STRUCTURE.md) · Snapshot thiết kế: [docs/design/](./design/)
 
-Plan này biến design của Parker (spec, Figma, mockup, practice roadmap) thành 66 task nhỏ. Mỗi task là một pull request mà một implementation agent, hoặc Parker, có thể tự làm xong và merge. Các task đi theo thứ tự của practice roadmap (p01–p33, milestone M0–M7), nên code lớn lên theo đúng nhịp của các bài học.
+Plan này biến design của Parker (spec, Figma, mockup, practice roadmap) thành 67 task nhỏ. Mỗi task là một pull request mà một implementation agent, hoặc Parker, có thể tự làm xong và merge. Các task đi theo thứ tự của practice roadmap (p01–p33, milestone M0–M7), nên code lớn lên theo đúng nhịp của các bài học.
 
 ## Mục lục
 
@@ -23,7 +23,7 @@ Plan này biến design của Parker (spec, Figma, mockup, practice roadmap) th�
 
 ## 0. Cách dùng plan này
 
-1. Chọn task có số nhỏ nhất mà mọi **Phụ thuộc** của nó đều đã merge. Các task trong cùng milestone không phụ thuộc nhau có thể chạy song song. Task có hậu tố chữ cái (T10a, T45b) được thêm sau và nằm ngay sau số của nó: T10a đứng sau T10 và trước T11.
+1. Chọn task có số nhỏ nhất mà mọi **Phụ thuộc** của nó đều đã merge. Các task trong cùng milestone không phụ thuộc nhau có thể chạy song song. Task có hậu tố chữ cái (T01a, T10a, T45b) được thêm sau và nằm ngay sau số của nó: T01a đứng sau T01 và trước T02.
 2. Đọc theo thứ tự: task, các mục spec mà task trích dẫn, Figma node và mockup mà task nêu tên, rồi các file STRUCTURE.md để biết path.
 3. Làm trên một branch, mở một PR cho mỗi task, và dùng **Tiêu đề PR** của task. Khi roadmap có sẵn commit message cho bước đó, tiêu đề PR dùng lại message đó.
 4. Copy list **Tiêu chí nghiệm thu** của task vào PR description dưới dạng checklist, kèm [Definition of Done](#2-ground-rules-and-definition-of-done). Tick từng mục kèm bằng chứng (output của một lệnh, một screenshot, tên một test).
@@ -45,7 +45,7 @@ Cỡ task: **S** vừa một session ngắn (một nhóm file, không có khái 
 | 5 | Các file **STRUCTURE.md** | Mỗi file nằm ở đâu, cách đặt tên | [root](../STRUCTURE.md), [apps/web](../apps/web/STRUCTURE.md), [apps/api](../apps/api/STRUCTURE.md) |
 | 6 | `colors.json` (Figma export) | Test oracle cho color token | [docs/design/colors.json](./design/colors.json): 58 token × light/dark, giống hệt spec §3.6 |
 
-**Thứ tự ưu tiên khi các nguồn mâu thuẫn:** spec thắng về giá trị, behavior, data và API (1). Tên trong Figma theo spec, nên một giá trị bị lệch là bug của Figma: dùng giá trị của spec và ghi chú lại trong PR (2). Layout theo mockup và Figma frame (3). Thứ tự và cách dạy theo roadmap (4), trừ chỗ một quyết định ở §3 thay một chi tiết của roadmap bằng lựa chọn của spec. File path theo STRUCTURE.md (5), thay cho các path minh họa trong spec (xem D20). Một quyết định đánh dấu **Parker** ở §3 là lựa chọn riêng của Parker sau khi spec đã viết xong; nó thắng mọi nguồn ở trên, kể cả spec (hiện tại: D7 và D24 về auth, D25 về editor của admin, D26 về page dựng từ block).
+**Thứ tự ưu tiên khi các nguồn mâu thuẫn:** spec thắng về giá trị, behavior, data và API (1). Tên trong Figma theo spec, nên một giá trị bị lệch là bug của Figma: dùng giá trị của spec và ghi chú lại trong PR (2). Layout theo mockup và Figma frame (3). Thứ tự và cách dạy theo roadmap (4), trừ chỗ một quyết định ở §3 thay một chi tiết của roadmap bằng lựa chọn của spec. File path theo STRUCTURE.md (5), thay cho các path minh họa trong spec (xem D20). Một quyết định đánh dấu **Parker** ở §3 là lựa chọn riêng của Parker sau khi spec đã viết xong; nó thắng mọi nguồn ở trên, kể cả spec (hiện tại: D7 và D24 về auth, D25 về editor của admin, D26 về page dựng từ block, D27 về hook format cho cả repo).
 
 **Ghi chú về snapshot.**
 
@@ -70,7 +70,7 @@ Cỡ task: **S** vừa một session ngắn (một nhóm file, không có khái 
 
 **Definition of Done (DoD), copy vào mọi PR.**
 
-- [ ] `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` pass ở local và trên CI.
+- [ ] `pnpm lint`, `pnpm format:check` (từ T01a), `pnpm typecheck`, `pnpm test`, `pnpm build` pass ở local và trên CI.
 - [ ] `pnpm check:content` pass (từ T14 trở đi).
 - [ ] `pnpm check:deps` pass (từ T42 trở đi): không có package Tiptap trả phí (D25).
 - [ ] Các mục nghiệm thu của task được tick kèm bằng chứng.
@@ -103,7 +103,7 @@ Các quyết định này chốt những chỗ các nguồn mâu thuẫn hoặc 
 | D13 | Hai seed profile trong `apps/api/prisma/seed/profiles/`: **`demo`** (dev, CI, screenshot: project `PUBLISHED`, 3 post mẫu, message và view mẫu) và **`baseline`** (lần boot production đầu tiên: danh sách seed ở spec §1.5, project `DRAFT`, 0 post). Chọn bằng `SEED_PROFILE`. Mọi giá trị là placeholder lấy từ mockup/wireframe; metric hiện trong demo chỉ lấy từ wireframe. | Spec §1.5 seed draft và 0 post, nhưng screen public nào cũng cần data đã publish để build và test |
 | D14 | Media nhận JPG, PNG, WebP, AVIF và **PDF** (file resume cho `Profile.resumeEnId/ViId`). Image có thêm variant WebP; PDF được lưu nguyên như cũ. Tối đa 10 MB. | Spec §1.5 link resume tới `Media` |
 | D15 | Storybook nằm trong `packages/ui` (`@storybook/react-vite`, addon-a11y, một nút chuyển light/dark trên toolbar). Mọi product component đều đi kèm một story. | Spec §6 Days 1–6 build component dựa trên fixture |
-| D16 | CI (GitHub Actions) bắt đầu từ T01 với install + lint + typecheck + build và lớn dần theo từng task (test từ T05, build Storybook ở T06, API test ở T29, e2e ở T56). | Roadmap p28 thêm CI muộn; có CI sớm giúp PR nào cũng merge được |
+| D16 | CI (GitHub Actions) bắt đầu từ T01 với install + lint + typecheck + build và lớn dần theo từng task (`format:check` ở T01a, test từ T05, build Storybook ở T06, API test ở T29, e2e ở T56). | Roadmap p28 thêm CI muộn; có CI sớm giúp PR nào cũng merge được |
 | D17 | Test database là một MySQL service thứ hai thuộc compose profile `test` (port 3307), được thêm ở T29 cùng các integration test đầu tiên. | Roadmap p15/p28 |
 | D18 | Block mặc định của từng page, seed dưới dạng `key` của block → block type (D26). **HOME:** `hero` → `hero`, `stats` → `stat-band`, `marquee` → `tech-marquee` (stats và marquee dùng chung một band), `featured` → `featured-case`, `domains` → `domain-grid`, `work` → `case-grid`, `process` → `process`, `skills` → `skill-groups`, `notes` → `post-list`, `cta` → `cta-band`. **ABOUT:** `intro` → `about-intro`, `stats` → `stat-band` (compact), `experience` → `timeline`, `principles` → `principle-list`, `skills` → `skill-groups`, `education` → `education-list`, `cv` → `cv-download`. **PROJECTS:** `header` → `page-header`, `projects` → `projects-browser`. **NOTES:** `header` → `page-header`, `notes` → `notes-browser`. **CONTACT:** `contact` → `contact-form`. Các key này là key `PageSection` cũ, nên anchor như `/#work` vẫn chạy. | Spec §1.5 liệt kê ví dụ section; §5.1–5.6 cần các block này. `header` lấp chỗ trống cho title của các list page. Heading của CONTACT nằm bên trong `contact-form`, vì mockup đặt nó trong cột cạnh form |
 | D19 | Locale fallback theo từng nhóm field. Một nhóm DTO public (ví dụ một project card, body của một post) chỉ dùng tiếng Việt khi mọi field dịch được có giá trị tiếng Anh cũng có giá trị tiếng Việt; nếu không, cả nhóm là tiếng Anh với `lang: "en"`. | Spec §1.5 "falling back to English with `lang` on the field group" |
@@ -114,6 +114,7 @@ Các quyết định này chốt những chỗ các nguồn mâu thuẫn hoặc 
 | D24 | **Parker.** Auth dùng **JWT thay cho session MySQL**: `@nestjs/jwt` ký, `passport-jwt` (qua `@nestjs/passport`) verify. Một **access token** ngắn (15 phút, payload `{ sub, role }`) và một **refresh token** dài hơn (7 ngày, payload `{ sub, ver }`), ký bằng hai secret khác nhau. Cả hai nằm trong cookie `httpOnly` do API set (`access_token` trên `Path=/`, `refresh_token` trên `Path=/api/auth`), không bao giờ ở `localStorage` hay bộ nhớ JS; cách này chạy được vì Next proxy `/api/*`, nên cookie là first-party với origin của web (D9). Không có bảng `Session`: `User.tokenVersion` là công tắc khẩn cấp ("sign out everywhere", khóa tài khoản, đổi password đều tăng nó, và mọi lần refresh đều check nó). Đánh đổi, đã chấp nhận: access token đã cấp vẫn dùng được tới khi hết hạn (tối đa 15 phút), và logout thường chỉ xóa cookie của browser này. | Thay cho spec §1.5 `Session`, dòng Auth ở §1.6 (vốn chọn session) và "session MySQL" của roadmap p18; mục tiêu học của p18 (hash, cookie httpOnly, logout) vẫn giữ |
 | D25 | **Parker.** `MarkdownEditor` của admin được dựng trên **Tiptap v3** (ProseMirror), chỉ dùng các package MIT miễn phí từ npm registry public: `@tiptap/react`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/markdown`, `@tiptap/extensions` và `@tiptap/extension-*`. Không dùng Tiptap Pro hay extension trả phí, không dùng registry `@tiptap-pro/*`, không Tiptap Cloud, Collaboration, Comments hay AI, không cần tài khoản hay token Tiptap; `pnpm check:deps` enforce điều này trong CI (T42). Cách lưu không đổi (D3): editor load với `contentType: 'markdown'` và lưu `editor.getMarkdown()`. Schema của nó chính là allowlist Markdown dùng chung với renderer public (`packages/contracts/src/constants/markdown.constant.ts`, T23), nên editor không thể tạo ra thứ mà site public sẽ bỏ đi. Code block dùng `@tiptap/extension-code-block-lowlight` + `lowlight` lúc viết; chế độ Preview hiện đúng output Shiki của trang public. | Thay cho `MarkdownEditor` (CodeMirror 6) ở spec §4.0 và §4.3; toolbar, slash menu, paste ảnh, các chế độ, word count và `SaveStatus` của spec vẫn giữ |
 | D26 | **Parker.** Page public được **dựng từ block quản lý trong admin**. Mỗi page trong năm route page (`HOME`, `ABOUT`, `PROJECTS`, `NOTES`, `CONTACT`) là một list có thứ tự gồm các row `PageBlock`: `type`, `key` (anchor), `props` (MySQL `JSON`), một `layout` preset, `surface`, `sortOrder`, `isVisible`. Block type chỉ đến từ một **registry nằm trong code** gồm các component của design system (`packages/contracts/src/blocks/`). Mỗi type có một zod 4 props schema, được API dùng để validate mọi lần ghi và mọi lần đọc, và được admin biến thành một TanStack Form (`z.toJSONSchema` + gợi ý widget qua `.meta()`), cùng các page, layout và giới hạn được phép của nó. Layout chỉ được chọn từ preset (`ONE`, `TWO`, `THREE`, `FOUR`, `SPLIT_8_4`, `SPLIT_4_8`, `SPLIT_7_5`) với luật responsive cố định (§4); không có grid tự do theo từng field. Page builder trong admin (T45b) sắp xếp block bằng drag and drop với `@dnd-kit/core` + `@dnd-kit/sortable` (MIT; move up/down vẫn giữ làm cách thay thế cho bàn phím và một-con-trỏ), thêm, nhân bản, xóa và ẩn block, và sửa props trong form được generate. Mỗi page có một draft (các row) và các version đã publish (JSON snapshot `PageVersion`): publish copy draft thành một version mới, version nào cũng restore được vào draft, và live preview hiện draft qua Next draft mode (T52a). Page public vẫn là React Server Component có cache tag (`page:{key}` + tag data của từng block). Type lạ hoặc props sai không bao giờ làm vỡ page: API bỏ block đó và log lại, web không render gì cho type nó không biết, và mỗi block có `SectionBoundary` riêng. `PageSection` trở thành `PageBlock`: cùng model thứ tự và hiển thị, với các cột `title`, `intro` và `ctaLabel` chuyển vào `props`, nên không có model thứ hai. Page chi tiết (`/projects/[slug]`, `/notes/[slug]`) giữ template cố định, và text dài vẫn là Markdown (D3). | Thay cho `PageSection` ở spec §1.5 (key cố định, mỗi key một component), luật sắp xếp ở §4.5 và tab Sections ở §5.10; đưa `BlockRenderer` của roadmap p14 và "block editor list" của p22 trở lại ở cấp page. Đặt block tự do trên grid và block nằm cạnh nhau là hướng mở rộng có thể làm sau (Q13) |
+| D27 | **Parker.** Một toolchain Prettier + Husky v9 ở root cho cả monorepo (`apps/web`, `apps/api`, `packages/*` sau này): giữ `.prettierrc` và `eslint.config.mjs` của T01, thêm `format` / `format:check`, lint-staged ở pre-commit, commitlint (conventional commit, cùng dạng với tiêu đề PR) ở commit-msg, `pnpm typecheck` tùy chọn ở pre-push, và `pnpm format:check` trên CI. Không có config format/lint theo từng app trừ khi app sau này thật sự cần override. | T01 đã có config dùng chung nhưng chưa có git hook hay format check cho cả repo |
 
 <a id="4-architecture-at-a-glance"></a>
 
@@ -245,6 +246,7 @@ Path: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct**
 | --- | --- | --- | --- | --- | --- |
 | **M0** | **Nền tảng** | | | | |
 | T01 | Scaffold monorepo, toolchain, CI tối thiểu | p01 | không có | S | root |
+| T01a | Prettier, Husky, lint-staged, commitlint | — (Parker, D27) | T01 | S | root |
 | T02 | Docker Compose: MySQL 8.4 + Adminer | p02 | T01 | S | `docker-compose.yml`, `infra/mysql/` |
 | T03 | Ghi chú SQL viết tay (Parker) | p03 | T02 | S | `docs/sql-notes.sql` |
 | T04 | Design token + shadcn theme trong `packages/ui` | p04 | T01 | M | ui `styles/`, `lib/` |
@@ -318,7 +320,7 @@ Path: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct**
 | T60 | Dọn seed production + check placeholder | p32 | T45, T51, T52a | S | api `prisma/seed/`, `scripts/` |
 | T61 | Pipeline deploy + checklist launch | p33 | T58, T59, T60 | M | `.github/workflows/deploy.yml`, `docs/` |
 
-Độ phủ roadmap: mọi bước p01–p33 đều map tới ít nhất một task. p04 được tách thành T04–T06, p08 thành T10–T10a, p09 thành T11–T14, p14 thành T20–T28, p15 thành T29–T32a, p21 thành T39–T41, p22 thành T42–T46 (cùng T45a, T45b) và p25 thành T52–T52a.
+Độ phủ roadmap: mọi bước p01–p33 đều map tới ít nhất một task. p04 được tách thành T04–T06, p08 thành T10–T10a, p09 thành T11–T14, p14 thành T20–T28, p15 thành T29–T32a, p21 thành T39–T41, p22 thành T42–T46 (cùng T45a, T45b) và p25 thành T52–T52a. T01a (Parker, D27) thêm hook format cho cả repo sau T01.
 
 <a id="7-tasks"></a>
 
@@ -354,6 +356,35 @@ Mỗi task dùng cùng một template: **Roadmap · Spec · Phụ thuộc · C�
 - [ ] Commit message của squash-merge là `chore: init portfolio monorepo` (roadmap p01).
 
 **Tiêu đề PR:** `chore: init portfolio monorepo`
+
+#### T01a · Prettier, Husky, lint-staged, commitlint
+
+**Roadmap** — (Parker, D27) · **Spec** — · **Phụ thuộc** T01 · **Cỡ** S
+
+**Mục tiêu.** Một toolchain format và git hook ở root, phủ `apps/web`, `apps/api` và `packages/*` sau này mà không cần config theo từng app.
+
+**Phạm vi.**
+- Giữ `.prettierrc` và `eslint.config.mjs` ở root của T01. Thêm `prettier-plugin-tailwindcss` để sort class Tailwind khi T04 thêm chúng.
+- `.prettierignore` cho lockfile, output build, uploads, Storybook static, file nội bộ của Husky, và snapshot thiết kế đã đóng băng.
+- Script root `format` (`prettier --write .`) và `format:check` (`prettier --check .`) — một lệnh cho cả cây, không dùng `pnpm -r`.
+- Husky v9 + script `prepare`. **pre-commit** → lint-staged (Prettier `--write` trên file staged `ts`/`tsx`/`js`/`json`/`md`/`css`/`yml`; ESLint `--fix` trên JS/TS). **commit-msg** → commitlint (conventional commit, cùng dạng với tiêu đề PR như `chore: …`). **pre-push** → `pnpm typecheck` (lưới an toàn tùy chọn).
+- CI: thêm `pnpm format:check`.
+- README + STRUCTURE.md: một mục ngắn cho người mới về các hook.
+
+**Ngoài phạm vi.** Prettier/ESLint theo từng app. Docker (T02). Tạo app hay package (T04, T05, T07, T09).
+
+**File.** Root: `package.json`, `pnpm-lock.yaml`, `.prettierrc`, `.prettierignore`, `commitlint.config.mjs`, `.husky/pre-commit`, `.husky/commit-msg`, `.husky/pre-push`, `.github/workflows/ci.yml`, `README.md`, `STRUCTURE.md`, `docs/PLAN.md`, `docs/PLAN.vi.md`.
+
+**Thiết kế.** Không có.
+
+**Tiêu chí nghiệm thu.**
+- [ ] `pnpm format:check` exit 0.
+- [ ] `pnpm lint` và `pnpm typecheck` vẫn exit 0.
+- [ ] CI có `pnpm format:check` và xanh.
+- [ ] Commit message không theo conventional bị hook commit-msg từ chối.
+- [ ] Không có config Prettier/ESLint trong `apps/*` hay `packages/*`.
+
+**Tiêu đề PR:** `chore: add prettier, husky and commitlint`
 
 #### T02 · Docker Compose: MySQL 8.4 + Adminer
 
