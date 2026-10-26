@@ -89,7 +89,9 @@ packages/ui/src/
 │       └── extensions/       # optional, MarkdownEditor only: Tiptap extensions (*.extension.ts, create-markdown-extensions.ts)
 ├── hooks/                    # use-*.hook.ts (e.g. use-in-view.hook.ts)
 ├── utils/                    # *.util.ts
-└── lib/utils.ts              # `cn()`; path fixed by shadcn's components.json
+├── lib/utils.ts              # `cn()`; path fixed by shadcn's components.json
+└── stories/
+    └── foundations/          # Colors, Typography, Spacing, Motion (T06)
 ```
 
 A component goes in `packages/ui` when it takes props only, has no data fetching, and imports nothing from Next. Examples: `CaseCard`, `StatBand`, `Timeline`, `Prose`, `DataTable`, `SectionBoundary`, `BlockLayout`, `SortableList`. Chrome labels reach it as props (`labels={{ pause: t('marquee.pause') }}`), so the package stays free of i18n.
