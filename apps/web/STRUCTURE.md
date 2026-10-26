@@ -11,7 +11,7 @@ app/                      # thin route files (page.tsx, layout.tsx, route.ts) �
 src/modules/              # feature UI (one folder per feature)
 i18n/                     # next-intl config + locales/{en,vi}.json (fixed UI labels only)
 e2e/                      # Playwright specs
-middleware.ts             # locale routing + /admin/* without an access_token cookie → /admin/login (named proxy.ts from Next 16)
+proxy.ts                  # Next 16: locale routing + later /admin/* without an access_token cookie → /admin/login
 next.config.ts            # /api/* rewrite to NestJS, transpilePackages
 components.json           # shadcn: points at packages/ui
 ```

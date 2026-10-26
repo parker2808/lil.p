@@ -1,5 +1,6 @@
 import eslint from '@eslint/js';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import react from 'eslint-plugin-react';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tseslint from 'typescript-eslint';
 
@@ -24,6 +25,24 @@ export default tseslint.config(
     rules: {
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
+    },
+  },
+  {
+    files: [
+      'packages/ui/src/components/**/*.{js,jsx,ts,tsx}',
+      'src/components/**/*.{js,jsx,ts,tsx}',
+    ],
+    ignores: ['**/*.{test,stories}.{js,jsx,ts,tsx}'],
+    plugins: { react },
+    rules: {
+      'react/jsx-no-literals': [
+        'error',
+        {
+          noStrings: true,
+          allowedStrings: ['·', '→', '—', '>', '_'],
+          ignoreProps: true,
+        },
+      ],
     },
   },
   eslintConfigPrettier,

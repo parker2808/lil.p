@@ -10,6 +10,7 @@
       "@portfolio/ui/*": ["../../packages/ui/src/*"]
     }
   },
-  "include": ["app", "src", "next-env.d.ts", "vitest.config.mts"],
+  "include": ["app", "src", "i18n", "proxy.ts", "next-env.d.ts", "vitest.config.mts"],
+
   "exclude": ["node_modules", ".next"]
 }
