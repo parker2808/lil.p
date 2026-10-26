@@ -42,8 +42,7 @@ export class ProfileStatsService {
     );
   }
 
-  /** T16 will count `Project` rows with `status: PUBLISHED`. */
   private async countPublishedProjects(): Promise<number> {
-    return 0;
+    return this.prisma.project.count({ where: { status: 'PUBLISHED' } });
   }
 }

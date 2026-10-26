@@ -31,3 +31,21 @@ GET http://127.0.0.1:4000/api/public/principles?locale=vi
 
 ### Public process steps (en)
 GET http://127.0.0.1:4000/api/public/process-steps?locale=en
+
+### Public domains
+GET http://127.0.0.1:4000/api/public/domains?locale=en
+
+### Public projects
+GET http://127.0.0.1:4000/api/public/projects?locale=en
+
+### Public projects featured
+GET http://127.0.0.1:4000/api/public/projects?locale=en&featured=1
+
+### Public projects by domain
+GET http://127.0.0.1:4000/api/public/projects?locale=en&domain=fintech
+
+### Public project detail
+GET http://127.0.0.1:4000/api/public/projects/particula?locale=en
+
+### Public project missing (404)
+GET http://127.0.0.1:4000/api/public/projects/does-not-exist
