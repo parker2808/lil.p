@@ -30,12 +30,16 @@ export { publicExperienceSchema } from './experience/experience.schema';
 export type { PublicExperience } from './experience/experience.type';
 export { domainFixture, domainFixtures, emptyDomainFixture } from './fixtures/domains.fixture';
 export { postFixture, postFixtures, viPostFixture } from './fixtures/posts.fixture';
+export { principleFixtures } from './fixtures/principles.fixture';
+export { processStepFixtures } from './fixtures/process-steps.fixture';
+export { profileStatFixtures } from './fixtures/profile-stats.fixture';
 export {
   confidentialProjectFixture,
   overflowProjectFixture,
   projectFixture,
   projectFixtures,
 } from './fixtures/projects.fixture';
+export { skillChipFixtures, skillFixtures, skillsGroupedFixture } from './fixtures/skills.fixture';
 export type { NavLocation } from './navigation/navigation.enum';
 export { navLocationSchema } from './navigation/navigation.enum';
 export { publicNavItemSchema } from './navigation/navigation.schema';
