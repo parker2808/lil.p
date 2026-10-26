@@ -4,6 +4,8 @@ import {
   type AdminPostListPage,
   adminPostListPageSchema,
   type AdminPostListParams,
+  type PostCreateInput,
+  type PostUpdateInput,
 } from '@portfolio/contracts';
 
 import { apiClient } from '@/modules/core/services/api-client.service';
@@ -39,4 +41,20 @@ export function archiveAdminPost(id: number): Promise<AdminPost> {
   return apiClient<AdminPost>(`/api/admin/posts/${id}`, { method: 'DELETE' }).then((data) =>
     adminPostSchema.parse(data),
   );
+}
+
+export function createAdminPost(body: PostCreateInput): Promise<AdminPost> {
+  return apiClient<AdminPost>('/api/admin/posts', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  }).then((data) => adminPostSchema.parse(data));
+}
+
+export function updateAdminPost(id: number, body: PostUpdateInput): Promise<AdminPost> {
+  return apiClient<AdminPost>(`/api/admin/posts/${id}`, {
+    method: 'PATCH',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  }).then((data) => adminPostSchema.parse(data));
 }
