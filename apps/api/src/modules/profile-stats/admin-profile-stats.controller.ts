@@ -20,6 +20,7 @@ import {
   reorderSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { ProfileStatsService } from './profile-stats.service';
 
@@ -28,6 +29,7 @@ export class AdminProfileStatsController {
   constructor(private readonly stats: ProfileStatsService) {}
 
   @Get()
+  @Roles('admin', 'user')
   list(): Promise<AdminProfileStat[]> {
     return this.stats.listAdmin();
   }
@@ -40,6 +42,7 @@ export class AdminProfileStatsController {
   }
 
   @Get(':id')
+  @Roles('admin', 'user')
   get(@Param('id', ParseIntPipe) id: number): Promise<AdminProfileStat> {
     return this.stats.getAdmin(id);
   }

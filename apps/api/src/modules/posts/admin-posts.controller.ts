@@ -22,6 +22,7 @@ import {
   postUpdateSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { PostsService } from './posts.service';
 
@@ -30,6 +31,7 @@ export class AdminPostsController {
   constructor(private readonly posts: PostsService) {}
 
   @Get()
+  @Roles('admin', 'user')
   list(
     @Query(new ZodValidationPipe(adminPostListParamsSchema)) query: AdminPostListParams,
   ): Promise<AdminPostListPage> {
@@ -37,6 +39,7 @@ export class AdminPostsController {
   }
 
   @Get(':id')
+  @Roles('admin', 'user')
   get(@Param('id', ParseIntPipe) id: number): Promise<AdminPost> {
     return this.posts.getAdmin(id);
   }

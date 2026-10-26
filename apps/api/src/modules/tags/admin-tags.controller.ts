@@ -18,6 +18,7 @@ import {
   tagUpdateSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { TagsService } from './tags.service';
 
@@ -26,11 +27,13 @@ export class AdminTagsController {
   constructor(private readonly tags: TagsService) {}
 
   @Get()
+  @Roles('admin', 'user')
   list(): Promise<AdminTag[]> {
     return this.tags.listAdmin();
   }
 
   @Get(':id')
+  @Roles('admin', 'user')
   get(@Param('id', ParseIntPipe) id: number): Promise<AdminTag> {
     return this.tags.getAdmin(id);
   }

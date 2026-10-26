@@ -20,6 +20,7 @@ import {
   reorderSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { PrinciplesService } from './principles.service';
 
@@ -28,6 +29,7 @@ export class AdminPrinciplesController {
   constructor(private readonly principles: PrinciplesService) {}
 
   @Get()
+  @Roles('admin', 'user')
   list(): Promise<AdminPrinciple[]> {
     return this.principles.listAdmin();
   }
@@ -40,6 +42,7 @@ export class AdminPrinciplesController {
   }
 
   @Get(':id')
+  @Roles('admin', 'user')
   get(@Param('id', ParseIntPipe) id: number): Promise<AdminPrinciple> {
     return this.principles.getAdmin(id);
   }

@@ -1,9 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import type { PublicTag } from '@portfolio/contracts';
 
+import { Public } from '../../common/decorators/public.decorator';
 import { Locale } from '../../i18n/locale.decorator';
 import { TagsService } from './tags.service';
 
+@Public()
 @Controller('public/tags')
 export class PublicTagsController {
   constructor(private readonly tags: TagsService) {}

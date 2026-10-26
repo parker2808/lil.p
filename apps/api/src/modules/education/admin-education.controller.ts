@@ -18,6 +18,7 @@ import {
   educationUpdateSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { EducationService } from './education.service';
 
@@ -26,11 +27,13 @@ export class AdminEducationController {
   constructor(private readonly education: EducationService) {}
 
   @Get()
+  @Roles('admin', 'user')
   list(): Promise<AdminEducation[]> {
     return this.education.listAdmin();
   }
 
   @Get(':id')
+  @Roles('admin', 'user')
   get(@Param('id', ParseIntPipe) id: number): Promise<AdminEducation> {
     return this.education.getAdmin(id);
   }

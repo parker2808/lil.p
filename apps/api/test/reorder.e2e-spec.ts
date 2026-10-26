@@ -1,9 +1,10 @@
 import type { INestApplication } from '@nestjs/common';
-import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { applyReorder } from '../src/common/utils/reorder.util';
+import { UsersService } from '../src/modules/users/users.service';
 import { PrismaService } from '../src/prisma/prisma.service';
+import { adminAgent, createTestUsers } from './helpers/auth.helper';
 import { createTestApp } from './helpers/create-app';
 import { migrateTestDb, truncateTables } from './helpers/reset-db';
 
@@ -21,15 +22,20 @@ function principle(title: string, sortOrder: number) {
 describe('transactional reorder', () => {
   let app: INestApplication;
   let prisma: PrismaService;
+  let users: UsersService;
+  let agent: import('supertest').Agent;
 
   beforeAll(async () => {
     migrateTestDb();
     app = await createTestApp();
     prisma = app.get(PrismaService);
+    users = app.get(UsersService);
   });
 
   beforeEach(async () => {
     await truncateTables(prisma);
+    await createTestUsers(users);
+    agent = await adminAgent(app);
   });
 
   afterAll(async () => {
@@ -39,7 +45,7 @@ describe('transactional reorder', () => {
   it('reorders principles and rejects a list missing a row', async () => {
     const created = [];
     for (const title of ['One', 'Two', 'Three']) {
-      const res = await request(app.getHttpServer())
+      const res = await agent
         .post('/api/admin/principles')
         .send(principle(title, created.length))
         .expect(201);
@@ -47,13 +53,13 @@ describe('transactional reorder', () => {
     }
 
     const reversed = [...created].reverse().map((row: { id: number }) => row.id);
-    const ordered = await request(app.getHttpServer())
+    const ordered = await agent
       .patch('/api/admin/principles/order')
       .send({ ids: reversed })
       .expect(200);
     expect(ordered.body.map((row: { id: number }) => row.id)).toEqual(reversed);
 
-    const missing = await request(app.getHttpServer())
+    const missing = await agent
       .patch('/api/admin/principles/order')
       .send({ ids: reversed.slice(0, 2) })
       .expect(400);
@@ -98,16 +104,16 @@ describe('transactional reorder', () => {
       },
     });
 
-    const page = await request(app.getHttpServer()).get('/api/admin/pages/home').expect(200);
+    const page = await agent.get('/api/admin/pages/home').expect(200);
     const [hero, prose] = page.body.blocks;
 
-    const locked = await request(app.getHttpServer())
+    const locked = await agent
       .patch('/api/admin/pages/home/blocks/order')
       .send({ ids: [prose.id, hero.id] })
       .expect(409);
     expect(locked.body.code).toBe('BLOCK_LOCKED');
 
-    const ok = await request(app.getHttpServer())
+    const ok = await agent
       .patch('/api/admin/pages/home/blocks/order')
       .send({ ids: [hero.id, prose.id] })
       .expect(200);

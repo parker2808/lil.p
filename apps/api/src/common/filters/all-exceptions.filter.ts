@@ -145,7 +145,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
             ? 'CONFLICT'
             : statusCode === HttpStatus.UNAUTHORIZED
               ? 'UNAUTHENTICATED'
-              : 'INTERNAL';
+              : statusCode === HttpStatus.FORBIDDEN
+                ? 'FORBIDDEN'
+                : statusCode === HttpStatus.TOO_MANY_REQUESTS
+                  ? 'RATE_LIMITED'
+                  : 'INTERNAL';
 
     return { statusCode, code, message, requestId };
   }

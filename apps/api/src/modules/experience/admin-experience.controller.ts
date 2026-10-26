@@ -20,6 +20,7 @@ import {
   reorderSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { ExperienceService } from './experience.service';
 
@@ -28,6 +29,7 @@ export class AdminExperienceController {
   constructor(private readonly experience: ExperienceService) {}
 
   @Get()
+  @Roles('admin', 'user')
   list(): Promise<AdminExperience[]> {
     return this.experience.listAdmin();
   }
@@ -40,6 +42,7 @@ export class AdminExperienceController {
   }
 
   @Get(':id')
+  @Roles('admin', 'user')
   get(@Param('id', ParseIntPipe) id: number): Promise<AdminExperience> {
     return this.experience.getAdmin(id);
   }

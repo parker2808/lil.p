@@ -5,6 +5,7 @@ import {
   profileUpdateSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { ProfileService } from './profile.service';
 
@@ -13,6 +14,7 @@ export class AdminProfileController {
   constructor(private readonly profile: ProfileService) {}
 
   @Get()
+  @Roles('admin', 'user')
   get(): Promise<AdminProfile> {
     return this.profile.getAdmin();
   }

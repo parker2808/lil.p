@@ -2,11 +2,13 @@ import { Controller, Get, NotFoundException, Param, Req } from '@nestjs/common';
 import { pageKeySchema, type PublicPage } from '@portfolio/contracts';
 import type { Request } from 'express';
 
+import { Public } from '../../common/decorators/public.decorator';
 import { Locale } from '../../i18n/locale.decorator';
 import { PagesService } from './pages.service';
 
 type RequestWithId = Request & { requestId?: string };
 
+@Public()
 @Controller('public/pages')
 export class PublicPagesController {
   constructor(private readonly pages: PagesService) {}

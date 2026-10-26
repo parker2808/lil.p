@@ -9,6 +9,7 @@ import {
   adminAgent,
   createTestUsers,
   TEST_ADMIN,
+  TEST_ORIGIN,
   TEST_USER,
   testEmail,
 } from './helpers/auth.helper';
@@ -56,6 +57,7 @@ describe('auth', () => {
   it('logs in with httpOnly cookies and returns me with role', async () => {
     const res = await request(app.getHttpServer())
       .post('/api/auth/login')
+      .set('Origin', TEST_ORIGIN)
       .send({ email: TEST_ADMIN.email, password: TEST_ADMIN.password })
       .expect(200);
 
@@ -91,12 +93,14 @@ describe('auth', () => {
   it('returns the same INVALID_CREDENTIALS for unknown, wrong, and inactive', async () => {
     const unknown = await request(app.getHttpServer())
       .post('/api/auth/login')
+      .set('Origin', TEST_ORIGIN)
       .send({ email: testEmail('nobody'), password: TEST_ADMIN.password })
       .expect(401);
     expect(unknown.body.code).toBe('INVALID_CREDENTIALS');
 
     const wrong = await request(app.getHttpServer())
       .post('/api/auth/login')
+      .set('Origin', TEST_ORIGIN)
       .send({ email: TEST_ADMIN.email, password: 'not-the-password' })
       .expect(401);
     expect(wrong.body.code).toBe('INVALID_CREDENTIALS');
@@ -107,6 +111,7 @@ describe('auth', () => {
     });
     const inactive = await request(app.getHttpServer())
       .post('/api/auth/login')
+      .set('Origin', TEST_ORIGIN)
       .send({ email: TEST_USER.email, password: TEST_USER.password })
       .expect(401);
     expect(inactive.body.code).toBe('INVALID_CREDENTIALS');
@@ -140,6 +145,7 @@ describe('auth', () => {
   it('rotates cookies on refresh and rejects a bumped tokenVersion', async () => {
     const login = await request(app.getHttpServer())
       .post('/api/auth/login')
+      .set('Origin', TEST_ORIGIN)
       .send({ email: TEST_ADMIN.email, password: TEST_ADMIN.password })
       .expect(200);
     const first = setCookies(login);
@@ -149,6 +155,7 @@ describe('auth', () => {
 
     const rotated = await request(app.getHttpServer())
       .post('/api/auth/refresh')
+      .set('Origin', TEST_ORIGIN)
       .set(
         'Cookie',
         `access_token=${cookieValue(access ?? '')}; refresh_token=${cookieValue(refresh ?? '')}`,
@@ -167,6 +174,7 @@ describe('auth', () => {
     });
     const stale = await request(app.getHttpServer())
       .post('/api/auth/refresh')
+      .set('Origin', TEST_ORIGIN)
       .set(
         'Cookie',
         `access_token=${cookieValue(cookie(next, 'access_token') ?? '')}; refresh_token=${cookieValue(cookie(next, 'refresh_token') ?? '')}`,

@@ -20,6 +20,7 @@ import {
   reorderSchema,
 } from '@portfolio/contracts';
 
+import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import { NavigationService } from './navigation.service';
 
@@ -28,6 +29,7 @@ export class AdminNavigationController {
   constructor(private readonly navigation: NavigationService) {}
 
   @Get()
+  @Roles('admin', 'user')
   list(): Promise<AdminNavItem[]> {
     return this.navigation.listAdmin();
   }
@@ -38,6 +40,7 @@ export class AdminNavigationController {
   }
 
   @Get(':id')
+  @Roles('admin', 'user')
   get(@Param('id', ParseIntPipe) id: number): Promise<AdminNavItem> {
     return this.navigation.getAdmin(id);
   }

@@ -17,6 +17,9 @@ export const errorCodeSchema = z.enum([
   'BLOCK_REQUIRED',
   'UNAUTHENTICATED',
   'INVALID_CREDENTIALS',
+  'FORBIDDEN',
+  'BAD_ORIGIN',
+  'RATE_LIMITED',
   'INTERNAL',
 ]);
 

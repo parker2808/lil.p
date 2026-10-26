@@ -1,9 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import type { PublicEducation } from '@portfolio/contracts';
 
+import { Public } from '../../common/decorators/public.decorator';
 import { Locale } from '../../i18n/locale.decorator';
 import { EducationService } from './education.service';
 
+@Public()
 @Controller('public/education')
 export class PublicEducationController {
   constructor(private readonly education: EducationService) {}
