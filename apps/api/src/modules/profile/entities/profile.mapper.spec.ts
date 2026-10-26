@@ -22,6 +22,8 @@ const row = {
   heroKickerVi: 'Kicker VI',
   headlineAccentEn: 'Hello',
   headlineAccentVi: 'Xin chào',
+  resumeEnId: null,
+  resumeViId: null,
 };
 
 describe('toPublicProfile', () => {

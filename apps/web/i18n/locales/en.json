@@ -31,7 +31,11 @@
     "daily": "Daily",
     "shipped": "Shipped",
     "growing": "Growing",
-    "diagram": "Migration from the featured case"
+    "diagram": "Migration from the featured case",
+    "now": "now",
+    "highlights": "Highlights",
+    "fallback": "EN",
+    "downloadCv": "Download CV"
   },
   "content": {
     "copy": "Copy",

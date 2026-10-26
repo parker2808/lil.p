@@ -44,7 +44,7 @@ Create only the folders a module needs.
 | `content` | Markdown → React pipeline (server, Shiki): `services/markdown.service.ts`, `components/Markdown/Markdown.tsx`, `utils/{toc,split-sections}.util.ts`, `constants/shiki-theme.constant.ts`; sanitize schema built from `@portfolio/contracts` `markdown.constant.ts`; admin preview Server Action later (T42) | case study and post bodies (§3.2, §4.1) |
 | `blocks` | Public block rendering (PLAN D26): `BlocksPage` view, `BlockRenderer` (band grouping, `BlockLayout`, one `SectionBoundary` per block, skips unknown types), the renderer registry `constants/block-renderers.constant.ts` (`satisfies Record<BlockType, …>`), one `[Name]Block` container per block type (`HeroBlock`, `CaseGridBlock`, `ProseBlock`, …), `UnknownBlockNotice` (draft mode), `pages.service.ts` (tag `page:{key}`) | §5.1–§5.6 |
 | `home` | `HomeIndex` view (renders `BlocksPage` for `home`); `process-steps.service.ts` | §5.1 |
-| `about` | `AboutIndex` (renders `BlocksPage` for `about`); skills and principles services (experience/education in T25) | §5.2 |
+| `about` | `AboutIndex` (renders `BlocksPage` for `about`); experience, education, principles and skills services | §5.2 |
 | `projects` | `ProjectsIndex`, `ProjectsDetail`, filters island; `projects.service.ts` + `domains.service.ts` | §5.3, §5.4 |
 | `notes` | `NotesIndex`, `NotesDetail`, search island (TanStack Query); `posts.service.ts` | §5.5 |
 | `contact` | `ContactIndex`, `ContactForm` (TanStack Form + Server Action) | §5.6 |

@@ -1,9 +1,15 @@
 import type { BlockType, PublicBlock } from '@portfolio/contracts';
 import type { ComponentType, ReactNode } from 'react';
 
+import { AboutIntroBlock, AboutIntroSkeleton } from '../components/AboutIntroBlock/AboutIntroBlock';
 import { CaseGridBlock, CaseGridSkeleton } from '../components/CaseGridBlock/CaseGridBlock';
 import { CtaBandBlock, CtaBandSkeleton } from '../components/CtaBandBlock/CtaBandBlock';
+import { CvDownloadBlock, CvDownloadSkeleton } from '../components/CvDownloadBlock/CvDownloadBlock';
 import { DomainGridBlock, DomainGridSkeleton } from '../components/DomainGridBlock/DomainGridBlock';
+import {
+  EducationListBlock,
+  EducationListSkeleton,
+} from '../components/EducationListBlock/EducationListBlock';
 import {
   FeaturedCaseBlock,
   FeaturedCaseSkeleton,
@@ -11,7 +17,12 @@ import {
 import { HeroBlock, HeroSkeleton } from '../components/HeroBlock/HeroBlock';
 import { PageHeaderBlock, PageHeaderSkeleton } from '../components/PageHeaderBlock/PageHeaderBlock';
 import { PostListBlock, PostListSkeleton } from '../components/PostListBlock/PostListBlock';
+import {
+  PrincipleListBlock,
+  PrincipleListSkeleton,
+} from '../components/PrincipleListBlock/PrincipleListBlock';
 import { ProcessBlock, ProcessSkeleton } from '../components/ProcessBlock/ProcessBlock';
+import { ProseBlock, ProseSkeleton } from '../components/ProseBlock/ProseBlock';
 import {
   SkillGroupsBlock,
   SkillGroupsSkeleton,
@@ -21,6 +32,7 @@ import {
   TechMarqueeBlock,
   TechMarqueeSkeleton,
 } from '../components/TechMarqueeBlock/TechMarqueeBlock';
+import { TimelineBlock, TimelineSkeleton } from '../components/TimelineBlock/TimelineBlock';
 import type { BlockContext } from '../types/entities/block-context.type';
 
 export type BlockRendererEntry = {
@@ -40,6 +52,12 @@ export const BLOCK_RENDERERS = {
   process: { component: ProcessBlock, skeleton: ProcessSkeleton },
   'skill-groups': { component: SkillGroupsBlock, skeleton: SkillGroupsSkeleton },
   'post-list': { component: PostListBlock, skeleton: PostListSkeleton },
+  'about-intro': { component: AboutIntroBlock, skeleton: AboutIntroSkeleton },
+  timeline: { component: TimelineBlock, skeleton: TimelineSkeleton },
+  'principle-list': { component: PrincipleListBlock, skeleton: PrincipleListSkeleton },
+  'education-list': { component: EducationListBlock, skeleton: EducationListSkeleton },
+  'cv-download': { component: CvDownloadBlock, skeleton: CvDownloadSkeleton },
+  prose: { component: ProseBlock, skeleton: ProseSkeleton },
 } satisfies Record<BlockType, BlockRendererEntry>;
 
 export type BlockRenderers = Record<string, BlockRendererEntry | undefined>;

@@ -1,0 +1,43 @@
+import type { PublicExperience } from '../experience/experience.type';
+
+export const experienceFixtures: PublicExperience[] = [
+  {
+    id: 1,
+    company: 'Acme Platform',
+    companyUrl: 'https://example.com/acme',
+    location: 'Remote',
+    employmentType: 'FULL_TIME',
+    role: 'Frontend Engineer',
+    summary: 'Moved the product UI forward without a rewrite.',
+    highlights: '- Vue 2 to Vue 3 in slices\n- Shared design tokens',
+    startDate: '2022-07-01',
+    endDate: null,
+    lang: 'en',
+  },
+  {
+    id: 2,
+    company: 'Acme Platform',
+    companyUrl: 'https://example.com/acme',
+    location: 'Remote',
+    employmentType: 'FULL_TIME',
+    role: 'Backend Engineer',
+    summary: 'APIs and data jobs that kept weekly delivery moving.',
+    highlights: '- Owned the read path\n- Cut job time in half',
+    startDate: '2021-01-01',
+    endDate: '2022-06-30',
+    lang: 'en',
+  },
+  {
+    id: 3,
+    company: 'Contoso Commerce',
+    companyUrl: 'https://example.com/contoso',
+    location: 'Remote',
+    employmentType: 'CONTRACT',
+    role: 'Frontend Engineer',
+    summary: 'Cart flows that talked to more than one store platform.',
+    highlights: '- One checkout over four adapters',
+    startDate: '2023-03-01',
+    endDate: '2024-02-29',
+    lang: 'en',
+  },
+];
