@@ -45,7 +45,7 @@ Cỡ task: **S** vừa một session ngắn (một nhóm file, không có khái 
 | 5 | Các file **STRUCTURE.md** | Mỗi file nằm ở đâu, cách đặt tên | [root](../STRUCTURE.md), [apps/web](../apps/web/STRUCTURE.md), [apps/api](../apps/api/STRUCTURE.md) |
 | 6 | `colors.json` (Figma export) | Test oracle cho color token | [docs/design/colors.json](./design/colors.json): 58 token × light/dark, giống hệt spec §3.6 |
 
-**Thứ tự ưu tiên khi các nguồn mâu thuẫn:** spec thắng về giá trị, behavior, data và API (1). Tên trong Figma theo spec, nên một giá trị bị lệch là bug của Figma: dùng giá trị của spec và ghi chú lại trong PR (2). Layout theo mockup và Figma frame (3). Thứ tự và cách dạy theo roadmap (4), trừ chỗ một quyết định ở §3 thay một chi tiết của roadmap bằng lựa chọn của spec. File path theo STRUCTURE.md (5), thay cho các path minh họa trong spec (xem D20). Một quyết định đánh dấu **Parker** ở §3 là lựa chọn riêng của Parker sau khi spec đã viết xong; nó thắng mọi nguồn ở trên, kể cả spec (hiện tại: D7 và D24, về auth).
+**Thứ tự ưu tiên khi các nguồn mâu thuẫn:** spec thắng về giá trị, behavior, data và API (1). Tên trong Figma theo spec, nên một giá trị bị lệch là bug của Figma: dùng giá trị của spec và ghi chú lại trong PR (2). Layout theo mockup và Figma frame (3). Thứ tự và cách dạy theo roadmap (4), trừ chỗ một quyết định ở §3 thay một chi tiết của roadmap bằng lựa chọn của spec. File path theo STRUCTURE.md (5), thay cho các path minh họa trong spec (xem D20). Một quyết định đánh dấu **Parker** ở §3 là lựa chọn riêng của Parker sau khi spec đã viết xong; nó thắng mọi nguồn ở trên, kể cả spec (hiện tại: D7 và D24 về auth, D25 về editor của admin).
 
 **Ghi chú về snapshot.**
 
@@ -71,6 +71,7 @@ Cỡ task: **S** vừa một session ngắn (một nhóm file, không có khái 
 
 - [ ] `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build` pass ở local và trên CI.
 - [ ] `pnpm check:content` pass (từ T14 trở đi).
+- [ ] `pnpm check:deps` pass (từ T42 trở đi): không có package Tiptap trả phí (D25).
 - [ ] Các mục nghiệm thu của task được tick kèm bằng chứng.
 - [ ] Task UI: screenshot ở 1440 và 390, light và dark, đính kèm vào PR và so sánh với Figma node hoặc mockup mà task nêu tên. Các điểm khác biệt được liệt kê và giải thích lý do.
 - [ ] Task UI: kiểm tra bằng bàn phím (thứ tự Tab, focus ring nhìn thấy được, `Esc` đóng overlay) và kiểm tra reduced-motion.
@@ -110,6 +111,7 @@ Các quyết định này chốt những chỗ các nguồn mâu thuẫn hoặc 
 | D22 | Chuỗi chrome của admin nằm trong `apps/web/i18n/locales/en.json` dưới `admin.*`. Admin UI chỉ có tiếng Anh (phần intro của spec §5), nên `vi.json` không có key `admin`. | Giữ `react/jsx-no-literals` bật cho cả admin |
 | D23 | Fetch public dùng `revalidate: 3600` + tag trên production và `revalidate: 0` khi development (`NODE_ENV`), nên thay đổi seed hiện ra ngay mà không phải chờ. | Check của roadmap p09 "seed lại thì home page thay đổi" |
 | D24 | **Parker.** Auth dùng **JWT thay cho session MySQL**: `@nestjs/jwt` ký, `passport-jwt` (qua `@nestjs/passport`) verify. Một **access token** ngắn (15 phút, payload `{ sub, role }`) và một **refresh token** dài hơn (7 ngày, payload `{ sub, ver }`), ký bằng hai secret khác nhau. Cả hai nằm trong cookie `httpOnly` do API set (`access_token` trên `Path=/`, `refresh_token` trên `Path=/api/auth`), không bao giờ ở `localStorage` hay bộ nhớ JS; cách này chạy được vì Next proxy `/api/*`, nên cookie là first-party với origin của web (D9). Không có bảng `Session`: `User.tokenVersion` là công tắc khẩn cấp ("sign out everywhere", khóa tài khoản, đổi password đều tăng nó, và mọi lần refresh đều check nó). Đánh đổi, đã chấp nhận: access token đã cấp vẫn dùng được tới khi hết hạn (tối đa 15 phút), và logout thường chỉ xóa cookie của browser này. | Thay cho spec §1.5 `Session`, dòng Auth ở §1.6 (vốn chọn session) và "session MySQL" của roadmap p18; mục tiêu học của p18 (hash, cookie httpOnly, logout) vẫn giữ |
+| D25 | **Parker.** `MarkdownEditor` của admin được dựng trên **Tiptap v3** (ProseMirror), chỉ dùng các package MIT miễn phí từ npm registry public: `@tiptap/react`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/markdown`, `@tiptap/extensions` và `@tiptap/extension-*`. Không dùng Tiptap Pro hay extension trả phí, không dùng registry `@tiptap-pro/*`, không Tiptap Cloud, Collaboration, Comments hay AI, không cần tài khoản hay token Tiptap; `pnpm check:deps` enforce điều này trong CI (T42). Cách lưu không đổi (D3): editor load với `contentType: 'markdown'` và lưu `editor.getMarkdown()`. Schema của nó chính là allowlist Markdown dùng chung với renderer public (`packages/contracts/src/constants/markdown.constant.ts`, T23), nên editor không thể tạo ra thứ mà site public sẽ bỏ đi. Code block dùng `@tiptap/extension-code-block-lowlight` + `lowlight` lúc viết; chế độ Preview hiện đúng output Shiki của trang public. | Thay cho `MarkdownEditor` (CodeMirror 6) ở spec §4.0 và §4.3; toolbar, slash menu, paste ảnh, các chế độ, word count và `SaveStatus` của spec vẫn giữ |
 
 <a id="4-architecture-at-a-glance"></a>
 
@@ -225,7 +227,7 @@ Path: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct**
 | T39 | DataTable + list project trong admin | p21 | T37 | L | ui `DataTable/`, web `admin-projects/` |
 | T40 | List trong admin: post, experience | p21 | T30, T39 | M | web `admin-posts/`, `admin-about/` |
 | T41 | List trong admin: entity nhỏ + picker icon/hue | p21 | T31, T32, T39 | M | web `admin-taxonomy/`, `admin-about/` |
-| T42 | Editor shell + MarkdownEditor + autosave | p22 | T39 | L | web `admin-core/`, ui `MarkdownEditor/` |
+| T42 | Editor shell + Tiptap MarkdownEditor + autosave | p22 | T39 | L | web `admin-core/`, ui `MarkdownEditor/` |
 | T43 | Editor project | p22 | T42 | L | web `admin-projects/` |
 | T44 | Editor post + experience | p22 | T42 | M | web `admin-posts/`, `admin-about/` |
 | T45 | Admin cho site, section, profile | p22 | T33, T42 | L | web `admin-site/` |
@@ -932,13 +934,16 @@ Mỗi task dùng cùng một template: **Roadmap · Spec · Phụ thuộc · C�
 **Mục tiêu.** Một cách an toàn duy nhất để biến markdown đã lưu thành trang dễ đọc và accessible, cùng các công cụ hỗ trợ đọc dùng cho case study và post.
 
 **Phạm vi.**
-- Module `content` (chỉ chạy trên server): `services/markdown.service.ts` chạy `remark-parse` → `remark-gfm` → `remark-rehype` (không raw HTML) → `rehype-slug` → `rehype-sanitize` (allowlist) → Shiki (theme light + dark chỉnh theo palette, comment ≥ 4.5:1) → `hast-util-to-jsx-runtime`, map các element sang component của `packages/ui`. Alert kiểu GitHub (`> [!NOTE]`, `> [!WARNING]`) thành `Callout`. Không dùng `dangerouslySetInnerHTML`.
+- Module `content` (chỉ chạy trên server): `services/markdown.service.ts` chạy `remark-parse` → `remark-gfm` → `remark-rehype` (không raw HTML) → `rehype-slug` → `rehype-sanitize` (schema dựng từ allowlist dùng chung bên dưới) → Shiki (một theme CSS-variables qua `createCssVariablesTheme`: màu token là `var(--shiki-token-*)`, nên light và dark đều lấy từ palette; comment ≥ 4.5:1; chỉ load `MARKDOWN_CODE_LANGUAGES`, ngôn ngữ khác render như text thường) → `hast-util-to-jsx-runtime`, map các element sang component của `packages/ui`. Alert kiểu GitHub (`> [!NOTE]`, `> [!WARNING]`) thành `Callout`. Không dùng `dangerouslySetInnerHTML`.
+- Allowlist Markdown dùng chung (D25), danh sách duy nhất mà cả renderer này lẫn editor của admin (T42) tuân theo: `packages/contracts/src/constants/markdown.constant.ts` (`MARKDOWN_HEADING_LEVELS = [2, 3]`; `MARKDOWN_CALLOUT_KINDS = ['NOTE', 'WARNING']`; `MARKDOWN_CODE_LANGUAGES` = ts, tsx, js, jsx, json, bash, css, html, sql, prisma, yaml, md, diff, vue; `MARKDOWN_LINK_PROTOCOLS = ['http', 'https', 'mailto']` cộng với link tương đối `/…` và `#…`; image chỉ từ `/api/public/media/`) và `packages/contracts/src/common/markdown-url.util.ts` (`isAllowedMarkdownUrl`, `isAllowedImageSrc`). Các cấu trúc được phép: paragraph, H2/H3, bold, italic, strikethrough, inline code, link, bullet list và ordered list, blockquote, callout, fenced code có ngôn ngữ, horizontal rule, image có alt text, table GFM, hard break. Mọi thứ khác (raw HTML, H1, footnote, task list, embed) bị bỏ hoặc render như text thường. H1 trong Markdown đã lưu được render thành H2.
+- Fixture trong `packages/contracts/src/fixtures/`: `markdown-kitchen-sink.fixture.ts` (mỗi cấu trúc được phép xuất hiện một lần) và `markdown-unsafe.fixture.ts` (`<script>`, `<iframe>`, một attribute `onerror`, một link `javascript:`, một image bên ngoài, một H1). T42 dùng lại cả hai.
+- `packages/ui/src/styles/code-syntax.css` (được `globals.css` import): các biến `--shiki-foreground`, `--shiki-background` và `--shiki-token-*`, chỉ là alias của token palette (map mặc định: keyword → `--primary`, string → `--hue-jade`, constant → `--hue-amber`, function → `--hue-violet`, comment và punctuation → `--muted-foreground`, background → `--muted`; chỉnh trong phạm vi palette nếu check contrast fail). Highlighter của editor admin đọc cùng các biến này (T42).
 - Util của `content`: `toc.util.ts` (h2/h3 → item TOC), `split-sections.util.ts` (tách một field markdown tại các heading `###`; dùng cho requirement column và decision card), `constants/shiki-theme.constant.ts`.
 - `content/components/Markdown/Markdown.tsx` (server component).
 - `packages/ui`: `Prose` (`prose` / `compact`; mọi rule long-form trong §3.2: 66ch, spacing, bullet `▹` thụt treo, link gạch chân, table scroll được trong một vùng focus được), `CodeBlock` (thanh filename, badge ngôn ngữ, nút copy có `aria-live`, scroll ngang focus được, toggle wrap), `Callout` (ô icon), `SectionNav` (sticky từ `lg+`, scroll-spy với `aria-current`, `<details>` trên mobile), `ContentProgress` (thanh `--primary` 2px, ẩn khi reduced motion), `RequirementColumns` (hai card, bullet `▹`), `DecisionCard` (title + prose compact), `TakeawaysCard` (`--primary-subtle`, bullet `▹`).
-- Test: sanitizer loại bỏ `<script>`, HTML inline, link `javascript:`; heading có id; trích xuất TOC; util tách section.
+- Test: mọi cấu trúc của fixture kitchen-sink đều được render; không thứ gì từ fixture unsafe được render (`<script>`, HTML inline, link `javascript:`, image bên ngoài); heading có id; trích xuất TOC; util tách section.
 
-**File.** `apps/web/src/modules/content/services/markdown.service.ts`, `apps/web/src/modules/content/utils/{toc.util.ts,split-sections.util.ts}` (+ test), `apps/web/src/modules/content/constants/shiki-theme.constant.ts`, `apps/web/src/modules/content/components/Markdown/Markdown.tsx`, `packages/ui/src/components/{Prose,CodeBlock,Callout,SectionNav,ContentProgress,RequirementColumns,DecisionCard,TakeawaysCard}/*`.
+**File.** `apps/web/src/modules/content/services/markdown.service.ts`, `apps/web/src/modules/content/utils/{toc.util.ts,split-sections.util.ts}` (+ test), `apps/web/src/modules/content/constants/shiki-theme.constant.ts`, `packages/contracts/src/constants/markdown.constant.ts`, `packages/contracts/src/common/markdown-url.util.ts` (+ test), `packages/contracts/src/fixtures/{markdown-kitchen-sink,markdown-unsafe}.fixture.ts`, `packages/ui/src/styles/{globals.css,code-syntax.css}`, `apps/web/src/modules/content/components/Markdown/Markdown.tsx`, `packages/ui/src/components/{Prose,CodeBlock,Callout,SectionNav,ContentProgress,RequirementColumns,DecisionCard,TakeawaysCard}/*`.
 
 **Thiết kế.** Figma `10:2` (post), `4:2`/`5:2` (case study). Mockup `post.html`, `case-study.html`. Token: `text-prose`, `text-heading`, `text-subheading`, `text-meta`, `--measure`, `--muted`, `--subtle-foreground`, `--primary`, `--primary-subtle`, `--radius-lg`, `--font-mono`.
 
@@ -1471,28 +1476,78 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Tiêu đề PR:** `feat(web): admin taxonomy lists`
 
-#### T42 · Editor shell + MarkdownEditor + autosave
+#### T42 · Editor shell + Tiptap MarkdownEditor + autosave
 
-**Roadmap** p22 · **Spec** [§5.9](./design/portfolio-design-system.vi.md#s-5-9), §4.3 (`MarkdownEditor`, `SaveStatus`, `LocaleTabs`, `PropertyList`), §4.6 (Autosave) · **Phụ thuộc** T39 · **Cỡ** L
+**Roadmap** p22 · **Spec** [§5.9](./design/portfolio-design-system.vi.md#s-5-9), §4.3 (`MarkdownEditor`, `SaveStatus`, `LocaleTabs`, `PropertyList`), §4.6 (Autosave), D25 · **Phụ thuộc** T39 · **Cỡ** L
 
-**Mục tiêu.** Khung editor dùng chung cho mọi editor entity: soạn markdown có preview, locale tab, pane properties, autosave có phát hiện conflict, và dirty guard.
+**Mục tiêu.** Khung editor dùng chung cho mọi editor của entity: một rich-text editor Tiptap đọc và ghi Markdown, một toolbar dựng từ các phần của shadcn, một preview giống hệt renderer public, locale tab, pane properties, autosave có phát hiện conflict, dirty guard, và chế độ read-only cho `user`.
 
 **Phạm vi.**
-- `packages/ui`: `MarkdownEditor` (CodeMirror 6; toolbar heading, bold, link, code, image, callout; slash menu; các mode write / split / preview trên `resizable`; đếm từ; paste image được nối ở T51), `SaveStatus` (`Saving…`, `Saved 12s ago`, `Offline, changes kept locally`, `Conflict: newer version` kèm Load latest / Overwrite), `LocaleTabs` (EN/VI với chấm báo độ đầy đủ), `PropertyList`.
-- `content`: tách pipeline thành `markdown-to-hast` (server) và `hast-to-react.util.ts` (dùng chung); `content/actions/preview.action.ts` (Server Action trả HAST đã sanitize cho pane preview).
-- `admin-core`: `EditorShell` (header có title, `SaveStatus`, slot publish; editor; pane properties 320px trên `lg`; cột live preview trên `2xl`; properties nằm trong `sheet`/`drawer` trên mobile), `hooks/use-autosave.hook.ts` (listener của TanStack Form, debounce 1.5s, `PATCH` kèm `updatedAt`, 409 → state conflict, offline → bản copy local), `hooks/use-dirty-guard.hook.ts`, `utils/map-field-errors.util.ts` (`ApiError.fieldErrors` → lỗi field của form).
-- Prop `readOnly` của `EditorShell`, bằng true khi `useIsAdmin()` là false (D7): field và `MarkdownEditor` chỉ đọc, autosave và dirty guard tắt, slot publish bị ẩn, và header hiện badge "Read only". Mọi editor trong T43–T45 truyền prop này xuống.
-- Test cho state machine của autosave, cho việc map field error và cho chế độ read-only (không gửi `PATCH` nào).
+- **Dependency** (`packages/ui`, mọi `@tiptap/*` được pin cùng một version chính xác và nâng cấp cùng lúc, vì peer dependency của chúng đòi hỏi vậy): `@tiptap/core`, `@tiptap/pm`, `@tiptap/react`, `@tiptap/starter-kit`, `@tiptap/markdown`, `@tiptap/extensions` (`Placeholder`, `CharacterCount`), `@tiptap/extension-code-block-lowlight` + `lowlight` + `highlight.js` (BSD-3-Clause, miễn phí), `@tiptap/extension-image`, `@tiptap/extension-table`, `@tiptap/suggestion` + `@floating-ui/dom`. Tất cả là MIT trừ highlight.js. Không có gì từ `@tiptap-pro/*` hay registry riêng của Tiptap (D25).
+- **`scripts/check-deps.mjs`** + root script `check:deps`, chạy trong CI: fail nếu `pnpm-lock.yaml` chứa `@tiptap-pro/` hoặc `@tiptap-cloud/`, nếu có `.npmrc` nào trỏ tới `registry.tiptap.dev`, hoặc nếu một package `@tiptap/*` đã cài có `license` khác `MIT`.
+- **`MarkdownEditor` trong `packages/ui`** (`'use client'`). Prop: `value` (Markdown), `onChange(markdown)`, `onBlur`, `editable`, `variant` (`full` | `compact`), `labels` (chuỗi chrome, vì `packages/ui` không có i18n), `renderPreview(markdown)` (slot do web điền), `onUploadImage?` (nối ở T51).
+  - `useEditor({ extensions: createMarkdownExtensions(), content: value, contentType: 'markdown', editable, immediatelyRender: false })`. `immediatelyRender: false` là bắt buộc khi Next.js render trên server, nếu không hydration sẽ fail.
+  - `extensions/create-markdown-extensions.ts` là schema của editor, và nó theo đúng allowlist của T23: `StarterKit.configure({ heading: { levels: MARKDOWN_HEADING_LEVELS }, underline: false, codeBlock: false, link: { openOnClick: false, autolink: true, isAllowedUri: isAllowedMarkdownUrl } })`, `Markdown`, `CodeBlockLowlight` (một instance `lowlight` chỉ đăng ký `MARKDOWN_CODE_LANGUAGES`), `Image` (`isAllowedImageSrc`, attribute `alt`), các extension Table, `Placeholder`, `CharacterCount`, cộng ba extension tự viết bên dưới. Không đăng ký gì nằm ngoài allowlist, nên HTML được paste vào sẽ bị schema của ProseMirror rút gọn về các node được phép, và HTML lạ trong Markdown vẫn chỉ là text thường.
+  - `extensions/heading-clamp.extension.ts`: mở rộng `Heading` để H1 trong Markdown khi load trở thành H2, khớp với renderer public.
+  - `extensions/callout.extension.ts`: một block node `callout` (`kind`: `NOTE` | `WARNING`) có `markdownTokenizer` cho `> [!NOTE]` / `> [!WARNING]` và `renderMarkdown` ghi lại đúng cú pháp đó; render qua `ReactNodeViewRenderer` với giao diện giống `Callout` public.
+  - `extensions/slash-command.extension.ts`: `@tiptap/suggestion` trên `/`, liệt kê Heading 2, Heading 3, bullet list, ordered list, quote, Note, Warning, code block, image, table và divider; menu là `command` của shadcn trong một panel nổi.
+  - Code block: một header `ReactNodeViewRenderer` có `select` ngôn ngữ (`MARKDOWN_CODE_LANGUAGES` + "Plain text") và cùng giao diện filename/ngôn ngữ như `CodeBlock` public. Màu highlight lấy từ `packages/ui/src/styles/editor.css`, file này map các class `.hljs-*` sang các biến `--shiki-token-*` của T23, nên lúc viết và lúc đọc dùng chung một palette. Chế độ Preview hiện đúng output Shiki.
+  - Paste text thường trông như Markdown thì chèn vào dưới dạng Markdown (`insertContent(text, { contentType: 'markdown' })`), qua một `handlePaste` nhỏ trong `extensions/markdown-paste.extension.ts` nếu `@tiptap/markdown` không có sẵn option cho việc này.
+  - Các chế độ trên `tabs` của shadcn: **Write** (editor), **Split** (editor và preview cạnh nhau trên `resizable`, từ `xl` trở lên), **Preview** (`renderPreview`, debounce 500ms), **Markdown** (`<pre>` chỉ đọc của `getMarkdown()`: chính xác thứ sẽ được lưu). Word count từ `CharacterCount` ở footer.
+  - `editable: false`: toolbar, slash menu và xử lý paste/drop tắt, placeholder ẩn, `aria-readonly="true"`, link mở khi click. `useEffect` gọi `editor.setEditable(editable)` khi prop đổi.
+  - Story: rỗng, fixture kitchen-sink, read-only, compact, dark.
+- **Toolbar** (`MarkdownEditor/components/EditorToolbar`): `role="toolbar"` với roving focus bằng phím mũi tên, sticky ở đầu editor; mọi icon button có `tooltip` hiện shortcut trong `kbd`; các nhóm cách nhau bằng `separator` dọc. `variant="compact"` (highlights của experience, bio) chỉ hiện bold, italic, link và list; schema vẫn giữ nguyên, nên không mất nội dung nào đã lưu.
 
-**File.** `packages/ui/src/components/{MarkdownEditor,SaveStatus,LocaleTabs,PropertyList}/*`, `packages/ui/src/components/ui/{tabs,resizable,drawer}.tsx`, `apps/web/src/modules/content/{services/markdown.service.ts,utils/hast-to-react.util.ts,actions/preview.action.ts}`, `apps/web/src/modules/admin-core/{components/EditorShell/*,hooks/use-autosave.hook.ts,hooks/use-dirty-guard.hook.ts,utils/map-field-errors.util.ts}`.
+| Control | Phần của shadcn | Markdown nó ghi ra | Shortcut |
+| --- | --- | --- | --- |
+| Undo, redo | `button` (`ghost`, `sm`) | n/a | `Mod-Z`, `Shift-Mod-Z` |
+| Loại block: Paragraph, Heading 2, Heading 3 | `dropdown-menu` | `## `, `### ` | `Mod-Alt-0/2/3` |
+| Bold, italic, strikethrough, inline code | `toggle-group` (`multiple`, `aria-pressed`) | `**…**`, `*…*`, `~~…~~`, `` `…` `` | `Mod-B`, `Mod-I`, `Mod-Shift-S`, `Mod-E` |
+| Link | `popover` + `input` + `button` (Apply, Remove); URL được check bằng `isAllowedMarkdownUrl` | `[text](url)` | `Mod-K` |
+| Bullet list, ordered list, quote | `toggle` | `- `, `1. `, `> ` | `Mod-Shift-8/7/B` |
+| Callout: Note, Warning | `dropdown-menu` | `> [!NOTE]`, `> [!WARNING]` | `/note`, `/warning` |
+| Code block | `button`; `select` ngôn ngữ trong header của block | fenced block có ngôn ngữ | `Mod-Alt-C` |
+| Image | `button` → `popover` (URL + alt bắt buộc) cho tới T51, sau đó là `dialog` media picker | `![alt](url)` | `/image` |
+| Table | `dropdown-menu` (chèn 3×3, thêm/xóa row hoặc column, xóa table) | table GFM | `/table` |
+| Chế độ | `tabs` (Write, Split, Preview, Markdown) | n/a | n/a |
 
-**Thiết kế.** Figma `18:2`. Mockup `admin-editor.html`. Token: `text-ui`, `--muted`, `--border`, `--success`, `--warning`.
+- **Web `admin-core/components/MarkdownField`**: nối một field của TanStack Form với `MarkdownEditor`. Nó load editor bằng `next/dynamic` (`ssr: false`, có skeleton trong lúc load), nên Tiptap chỉ nằm trong chunk của admin. Nó truyền `labels` từ `admin.editor.*` trong `en.json`, `renderPreview` (gọi `content/actions/preview.action.ts`) và `editable={!readOnly}`.
+- **Tích hợp autosave** (`hooks/use-autosave.hook.ts`):
+  - Mỗi lần Tiptap `update`, `getMarkdown()` chạy với debounce 250ms rồi gọi `field.handleChange(markdown)`. Listener của form sau đó debounce 1.5s và gửi `PATCH` kèm `updatedAt`. Blur, chuyển locale tab và rời trang thì flush cả hai debounce ngay.
+  - **Không save khi mở.** `@tiptap/markdown` có thể chuẩn hóa Markdown viết tay (ví dụ bullet `*` thành `-`). Ngay sau khi load, `MarkdownField` lưu `baseline = editor.getMarkdown()`, và field chỉ bị coi là dirty khi Markdown hiện tại khác baseline đó, chứ không so với chuỗi gốc trong DB.
+  - **Thay đổi từ bên ngoài** ("Load latest" sau conflict 409, khôi phục bản copy offline, chuyển locale) gọi `editor.commands.setContent(value, { contentType: 'markdown', emitUpdate: false })`, nhưng chỉ khi `value` khác Markdown được emit lần cuối, nên con trỏ không bao giờ nhảy khi đang gõ.
+  - 409 → `SaveStatus` "Conflict" với "Load latest" / "Overwrite"; offline → chuỗi Markdown được giữ trong `localStorage` theo entity và locale. Không chỗ nào giữ JSON của editor.
+- **Chế độ read-only** (D7): `readOnly` của `EditorShell` bằng true khi `useIsAdmin()` là false. Khi đó mọi `MarkdownField` nhận `editable: false`, các field khác bị disable, autosave và dirty guard tắt, slot publish bị ẩn, và header hiện badge "Read only". Mọi editor trong T43–T45 truyền prop này xuống.
+- **`packages/ui`**: thêm `SaveStatus` (`Saving…`, `Saved 12s ago`, `Offline, changes kept locally`, `Conflict: newer version` với Load latest / Overwrite), `LocaleTabs` (EN/VI có chấm hoàn thiện), `PropertyList`.
+- **`content`**: tách pipeline của T23 thành `markdown-to-hast` (server) và `hast-to-react.util.ts` (dùng chung); `content/actions/preview.action.ts` (Server Action trả HAST đã sanitize cho pane preview, dùng cùng sanitize schema và Shiki theme với các page public).
+- **`admin-core`**: `EditorShell` (header có title, `SaveStatus`, slot publish; editor; pane properties 320px trên `lg`; cột live preview trên `2xl`; properties nằm trong `sheet`/`drawer` trên mobile), `hooks/use-dirty-guard.hook.ts`, `utils/map-field-errors.util.ts` (`ApiError.fieldErrors` → lỗi field của form).
+- **Test**:
+  - Round-trip của `MarkdownEditor` với fixture kitchen-sink của T23: load → `getMarkdown()` → load → `getMarkdown()` cho ra cùng một chuỗi, và mọi cấu trúc đều còn nguyên.
+  - Fixture unsafe đi qua editor: output không có `<script>`, `<iframe>`, `onerror`, `javascript:` hay image bên ngoài, và không có H1.
+  - Output đó của editor đi qua pipeline public thì render đủ mọi element của kitchen-sink.
+  - Markdown của callout và ngôn ngữ của code block round-trip đúng.
+  - Mở một document không làm nó bị dirty.
+  - State machine của autosave, việc map field error, và chế độ read-only (không gửi `PATCH` nào, `editor.isEditable` là false).
+
+**File.** `packages/ui/package.json`, `packages/ui/src/components/MarkdownEditor/{MarkdownEditor.tsx,MarkdownEditor.stories.tsx,MarkdownEditor.test.tsx,components/{EditorToolbar,SlashMenu,LinkPopover,CodeBlockView,CalloutView}/*,extensions/{create-markdown-extensions.ts,heading-clamp.extension.ts,callout.extension.ts,slash-command.extension.ts,markdown-paste.extension.ts}}`, `packages/ui/src/styles/{globals.css,editor.css}`, `packages/ui/src/components/{SaveStatus,LocaleTabs,PropertyList}/*`, `packages/ui/src/components/ui/{tabs,resizable,drawer,toggle,toggle-group,tooltip,kbd,dropdown-menu,popover,command,select,separator}.tsx`, `apps/web/src/modules/content/{services/markdown.service.ts,utils/hast-to-react.util.ts,actions/preview.action.ts}`, `apps/web/src/modules/admin-core/{components/EditorShell/*,components/MarkdownField/*,hooks/use-autosave.hook.ts,hooks/use-dirty-guard.hook.ts,utils/map-field-errors.util.ts}`, `apps/web/i18n/locales/en.json`, `scripts/check-deps.mjs`, `package.json`, `.github/workflows/ci.yml` ([root STRUCTURE: packages/ui](../STRUCTURE.md#package-layout-packagesui)).
+
+**Thiết kế.** Figma `18:2`. Mockup `admin-editor.html` (toolbar `B I H1 H2 🔗 </> 🖼 callout [Split]`, slash menu). Các button "H1 H2" của mockup map sang Heading 2 và Heading 3, vì title của page là H1 duy nhất. Token:
+- toolbar: nền `--card`, border dưới `--border`, control 28px (`sm`), `text-ui`, toggle đang bật `--accent` / `--accent-foreground`, focus `--ring`;
+- menu và popover: `--popover`, `--shadow-2`, `--z-dropdown`, `--radius-md`;
+- vùng viết: `Prose` (`text-prose`, `--measure`), để độ dài dòng khớp với page public; placeholder `--muted-foreground`; selection `--primary-subtle`;
+- code block: `--muted`, `--font-mono`, `--shiki-token-*`; callout: `--info-subtle` (Note) và `--warning-subtle` (Warning);
+- word count: `text-ui-meta`; trạng thái save: `--success`, `--warning`.
 
 **Tiêu chí nghiệm thu.**
-- [ ] Autosave chạy 1.5s sau khi ngừng gõ và hiện `Saved …`; một lần save stale hiện `Conflict` kèm cả hai action (có test).
+- [ ] Gõ `## `, `- ` hoặc một code fence thì thành block tương ứng, và tab Markdown hiện đúng Markdown đó; giá trị lưu trong DB là Markdown, không bao giờ là HTML hay JSON (D3).
+- [ ] Fixture kitchen-sink round-trip không đổi, và fixture unsafe mất hết mọi thứ không được phép (test).
+- [ ] Mở một item không bao giờ gây ra `PATCH`; autosave chạy 1.5s sau khi ngừng gõ và hiện `Saved …`; một lần save cũ hiện `Conflict` với cả hai action (có test).
 - [ ] Rời trang khi còn thay đổi chưa save thì hỏi xác nhận.
-- [ ] Login bằng `user`, editor mở ở chế độ chỉ đọc và không gửi thao tác ghi nào.
-- [ ] Output preview dùng cùng pipeline đã sanitize như site public (fixture test dùng chung).
+- [ ] Login bằng `user`, editor mở ở chế độ chỉ đọc (`editable: false`, không có toolbar) và không gửi thao tác ghi nào.
+- [ ] Output của preview dùng cùng pipeline đã sanitize và cùng Shiki theme với site public (fixture dùng chung).
+- [ ] `pnpm check:deps` pass, và fail khi thêm một package `@tiptap-pro/` trên một branch thử.
+- [ ] `next build` cho thấy First Load JS của các route public không tăng (Tiptap chỉ nằm trong chunk `/admin`).
+- [ ] Kiểm tra toolbar bằng bàn phím: Tab tới toolbar đúng một lần, phím mũi tên di chuyển giữa các control, mọi control có accessible name và hiện shortcut.
 
 **Tiêu đề PR:** `feat(web): editor shell + markdown editor`
 
@@ -1504,9 +1559,10 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Phạm vi.**
 - Route `app/admin/(cms)/projects/new/page.tsx` và `projects/[id]/page.tsx` → `admin-projects/views/AdminProjectsEditor.tsx`.
-- Tab: Content (title, tagline, sáu field markdown của case study cho mỗi locale, dùng `MarkdownEditor`), Card & facts (select domain, textarea key fact có bộ đếm 2–4 dòng, input fact chip tối đa 6, preview `CaseCard` live), Metrics (field array: label, before, after, value; reorder), SEO.
+- Tab: Content (title, tagline, sáu field markdown của case study cho mỗi locale, mỗi field là một `MarkdownField` (T42); chỉ mount editor của locale đang mở; Scope và Trade-offs hiện gợi ý "Use `###` headings to split into columns/cards", vì `split-sections.util.ts` của T23 tách theo H3), Card & facts (select domain, textarea key fact có bộ đếm 2–4 dòng, input fact chip tối đa 6, preview `CaseCard` live), Metrics (field array: label, before, after, value; reorder), SEO.
 - Pane properties: status, slug, ngày tháng, featured, confidential, link tới experience, multi-combobox skill, version from/to, URL live/repo. Picker cover có ở T51; button publish ở T52.
 - Autosave qua `use-autosave`; create xong thì redirect sang route edit.
+- Read-only cho `user`: `AdminProjectsEditor` truyền `readOnly` cho `EditorShell`, mọi `MarkdownField` nhận `editable: false`, và field array của metric ẩn thêm, xóa và reorder.
 
 **File.** `apps/web/app/admin/(cms)/projects/{new,[id]}/page.tsx`, `apps/web/src/modules/admin-projects/{views/AdminProjectsEditor.tsx,components/{ProjectContentTab,ProjectCardFactsTab,ProjectMetricsTab,ProjectSeoTab,ProjectProperties}/*,hooks/use-admin-project.hook.ts}`, `packages/ui/src/components/ui/{calendar,popover,command}.tsx`.
 
@@ -1516,6 +1572,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 - [ ] Submit với title EN trống trả 400 và lỗi hiện trên input đó (roadmap p22).
 - [ ] Chỉnh sửa hiện trên page public sau khi save (roadmap p22; sau T52 thì chỉ khi publish).
 - [ ] Sửa trong hai tab thì tab thứ hai vào state Conflict.
+- [ ] Login bằng `user`, cả sáu editor của case study đều chỉ đọc và page không gửi `PATCH` nào.
 - [ ] Screenshot được so với `18:2`.
 
 **Tiêu đề PR:** `feat(web): admin editors`
@@ -1527,8 +1584,9 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Mục tiêu.** Editor cho post và experience trên shell dùng chung.
 
 **Phạm vi.**
-- Editor post (`AdminPostsEditor`): title, excerpt, body (markdown) cho mỗi locale, textarea takeaways (≤ 5 dòng), multi-combobox tag có tạo mới, featured, field SEO; cảnh báo publish lint hiện inline, dùng `publishLint` từ contracts. Route `posts/new`, `posts/[id]`.
-- Editor experience (`AdminAboutExperienceEditor`): company, URL, location, employment type, role, summary, highlights (markdown), ngày tháng chính xác tới tháng (`calendar`), skill. Route `experience/new`, `experience/[id]`.
+- Editor post (`AdminPostsEditor`): title, excerpt, body (`MarkdownField`, toolbar `full`) cho mỗi locale, textarea takeaways (≤ 5 dòng), multi-combobox tag có tạo mới, featured, field SEO; cảnh báo publish lint hiện inline, dùng `publishLint` từ contracts. Route `posts/new`, `posts/[id]`.
+- Editor experience (`AdminAboutExperienceEditor`): company, URL, location, employment type, role, summary, highlights (`MarkdownField`, toolbar `compact`), ngày tháng chính xác tới tháng (`calendar`), skill. Route `experience/new`, `experience/[id]`.
+- Cả hai editor truyền `readOnly` cho `EditorShell`, nên `user` nhận editor `editable: false`, input bị disable và không tạo được tag.
 
 **File.** `apps/web/app/admin/(cms)/posts/{new,[id]}/page.tsx`, `apps/web/app/admin/(cms)/experience/{new,[id]}/page.tsx`, `apps/web/src/modules/admin-posts/{views/AdminPostsEditor.tsx,components/*,hooks/use-admin-post.hook.ts}`, `apps/web/src/modules/admin-about/{views/AdminAboutExperienceEditor.tsx,components/ExperienceForm/*}`.
 
@@ -1537,6 +1595,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Tiêu chí nghiệm thu.**
 - [ ] Body có chứa `TODO` hiện cảnh báo publish lint trước khi save.
 - [ ] Tạo tag từ combobox thì tag được thêm vào post.
+- [ ] Login bằng `user`, cả hai editor đều chỉ đọc và không gửi thao tác ghi nào.
 
 **Tiêu đề PR:** `feat(web): post and experience editors`
 
@@ -1548,7 +1607,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Phạm vi.**
 - `app/admin/(cms)/site/page.tsx` → `admin-site/views/AdminSiteIndex.tsx` với các tab đồng bộ theo URL: Settings (form: SEO mặc định, footer note, contact intro, thời gian reply, contact email, availability, analytics, ambient effect, marquee), Navigation (table, label sửa inline được, picker `href` từ `routes.constant.ts` hoặc URL, move up/down), Sections (theo từng page: switch visible (optimistic), đổi title, intro, label CTA, move up/down), Social links (có `showInHeader`, `showInCta`), Contact topics.
-- `app/admin/(cms)/profile/page.tsx` → `AdminSiteProfile`: headline + accent (preview `AccentHeadline` live, validate theo từng locale), hero kicker, subheadline, bio (markdown), ngày bắt đầu sự nghiệp, ngôn ngữ, thành phố, timezone, phone private. Picker avatar và resume có ở T51.
+- `app/admin/(cms)/profile/page.tsx` → `AdminSiteProfile`: headline + accent (preview `AccentHeadline` live, validate theo từng locale), hero kicker, subheadline, bio (`MarkdownField`, toolbar `compact`), ngày bắt đầu sự nghiệp, ngôn ngữ, thành phố, timezone, phone private. Picker avatar và resume có ở T51.
 
 **File.** `apps/web/app/admin/(cms)/{site,profile}/page.tsx`, `apps/web/src/modules/admin-site/{views/{AdminSiteIndex,AdminSiteProfile}.tsx,components/{SettingsForm,NavTable,SectionsTable,SocialTable,TopicsTable,ProfileForm}/*,hooks/*,services/*}`.
 
@@ -1721,10 +1780,10 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Phạm vi.**
 - `packages/ui` `MediaLibrary` (grid, cảnh báo thiếu alt) và `MediaUploader` (drop zone, `progress` cho từng file, cancel).
 - `admin-media`: `AdminMediaIndex` (`useInfiniteQuery` + TanStack Virtual, sửa alt trong một sheet), `services/media-upload.service.ts` (XHR, vì `fetch` không có upload progress; cancel bằng `AbortController`), `components/MediaPickerDialog`.
-- Picker trong các editor: cover và image kèm caption của project (T43), cover của post (T44), avatar và resume (T45 profile), OG image (T45 settings). `MarkdownEditor` upload khi paste/drop và chèn `![alt](url)`.
+- Picker trong các editor: cover và image kèm caption của project (T43), cover của post (T44), avatar và resume (T45 profile), OG image (T45 settings). `MarkdownEditor`: `@tiptap/extension-file-handler` (MIT, D25) khi paste và drop gọi `onUploadImage(file)`, chèn image với URL `/api/public/media/…` được trả về, và mở popover alt text (publish đòi hỏi alt, T52); button image trên toolbar mở `dialog` media picker.
 - Public: `core/utils/image-loader.util.ts` (loader của `next/image`, map width → variant gần nhất); cover trên case study và featured card, avatar trên About, link cho card tải CV.
 
-**File.** `packages/ui/src/components/{MediaLibrary,MediaUploader}/*`, `packages/ui/src/components/ui/progress.tsx`, `apps/web/src/modules/admin-media/*`, `apps/web/app/admin/(cms)/media/page.tsx`, `apps/web/src/modules/admin-{projects,posts,site}/components/*` (nối picker), `apps/web/src/modules/core/utils/image-loader.util.ts`, `apps/web/next.config.ts`, `apps/web/src/modules/{projects,about,home}/components/*`.
+**File.** `packages/ui/src/components/{MediaLibrary,MediaUploader}/*`, `packages/ui/package.json` (`@tiptap/extension-file-handler`, cùng version với các `@tiptap/*` khác), `packages/ui/src/components/MarkdownEditor/{MarkdownEditor.tsx,extensions/create-markdown-extensions.ts}`, `apps/web/src/modules/admin-core/components/MarkdownField/*`, `packages/ui/src/components/ui/progress.tsx`, `apps/web/src/modules/admin-media/*`, `apps/web/app/admin/(cms)/media/page.tsx`, `apps/web/src/modules/admin-{projects,posts,site}/components/*` (nối picker), `apps/web/src/modules/core/utils/image-loader.util.ts`, `apps/web/next.config.ts`, `apps/web/src/modules/{projects,about,home}/components/*`.
 
 **Thiết kế.** Mockup `admin-editor.html` (field cover), `case-study.html` (cover 21:9). Token: `--radius-xl`, `--muted`, `--warning`.
 
@@ -2028,3 +2087,4 @@ Mỗi câu đều có một mặc định mà plan đang dùng, nên không task
 | Q8 | Mockup `MigrationDiagram` gắn label cho node là `v1 · Vue 2` / `v2 · Nuxt 3`, và các decision card trong case study hiện `OPTIONS · CHOICE · WHY · COST`. Data model không có field riêng cho các thứ này. | Node của diagram hiện `versionFrom`/`versionTo` đúng như đã nhập, với tên skill làm các component node (T22). Decision được tách tại các heading `###` thành card có body là markdown, nên tác giả tự viết các label đó trong text (T23, T27) |
 | Q9 | `user` được làm chính xác những gì? (D7) | Người review chỉ đọc: dashboard, đọc nội dung và media, analytics, xem trước draft, password của mình. Không ghi, không publish, không upload, không inbox, không audit log, không quản lý user. Mở rộng về sau chỉ là thêm một `@Roles('admin', 'user')` cho mỗi route cùng `RoleGate` tương ứng |
 | Q10 | Thu hồi một refresh token bị lộ mà không sign out user đó khỏi mọi nơi? (D24) | Không. Việc đó cần một bảng lưu token (chính là session mà Parker đã bỏ). `tokenVersion` sign out user trên mọi thiết bị, đủ dùng cho vài tài khoản |
+| Q11 | Editor có nên cho phép nhiều Markdown hơn allowlist dùng chung (D25, T23) không, ví dụ H4, task list, footnote, underline hay embed? | Không. Thêm một cái về sau nghĩa là thêm một mục trong `markdown.constant.ts`, extension Tiptap tương ứng và một component renderer, trong cùng một PR |
