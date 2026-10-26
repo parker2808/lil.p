@@ -485,3 +485,122 @@ Content-Type: application/json
 
 ### Admin domain delete (projects keep the row, domainId becomes null)
 DELETE http://127.0.0.1:4000/api/admin/domains/1
+
+### Admin site get
+GET http://127.0.0.1:4000/api/admin/site
+
+### Admin site update
+PATCH http://127.0.0.1:4000/api/admin/site
+Content-Type: application/json
+
+{
+  "siteName": "parker.dev",
+  "contactEmail": "<email>"
+}
+
+### Admin profile get
+GET http://127.0.0.1:4000/api/admin/profile
+
+### Admin profile update
+PATCH http://127.0.0.1:4000/api/admin/profile
+Content-Type: application/json
+
+{
+  "headlineAccentEn": "without breaking them."
+}
+
+### Admin profile invalid accent (400)
+PATCH http://127.0.0.1:4000/api/admin/profile
+Content-Type: application/json
+
+{
+  "headlineEn": "I move products forward without breaking them.",
+  "headlineAccentEn": "not in the line"
+}
+
+### Admin navigation list
+GET http://127.0.0.1:4000/api/admin/navigation
+
+### Admin navigation create
+POST http://127.0.0.1:4000/api/admin/navigation
+Content-Type: application/json
+
+{
+  "location": "HEADER",
+  "labelEn": "Work",
+  "labelVi": "",
+  "href": "/projects"
+}
+
+### Admin navigation get
+GET http://127.0.0.1:4000/api/admin/navigation/1
+
+### Admin navigation update
+PATCH http://127.0.0.1:4000/api/admin/navigation/1
+Content-Type: application/json
+
+{
+  "href": "https://github.com/parker2808/lil.p"
+}
+
+### Admin navigation delete
+DELETE http://127.0.0.1:4000/api/admin/navigation/1
+
+### Admin social-links list
+GET http://127.0.0.1:4000/api/admin/social-links
+
+### Admin social-link create
+POST http://127.0.0.1:4000/api/admin/social-links
+Content-Type: application/json
+
+{
+  "kind": "GITHUB",
+  "labelEn": "GitHub",
+  "labelVi": "",
+  "url": "https://github.com/example",
+  "showInCta": true
+}
+
+### Admin social-link get
+GET http://127.0.0.1:4000/api/admin/social-links/1
+
+### Admin social-link update
+PATCH http://127.0.0.1:4000/api/admin/social-links/1
+Content-Type: application/json
+
+{
+  "showInHeader": true
+}
+
+### Admin social-link delete
+DELETE http://127.0.0.1:4000/api/admin/social-links/1
+
+### Admin contact-topics list
+GET http://127.0.0.1:4000/api/admin/contact-topics
+
+### Admin contact-topic create
+POST http://127.0.0.1:4000/api/admin/contact-topics
+Content-Type: application/json
+
+{
+  "slug": "role",
+  "labelEn": "A role",
+  "labelVi": "Một vai trò"
+}
+
+### Admin contact-topic get
+GET http://127.0.0.1:4000/api/admin/contact-topics/1
+
+### Admin contact-topic update
+PATCH http://127.0.0.1:4000/api/admin/contact-topics/1
+Content-Type: application/json
+
+{
+  "labelEn": "A senior role"
+}
+
+### Admin contact-topic delete
+DELETE http://127.0.0.1:4000/api/admin/contact-topics/1
+
+### Public contact-topics
+GET http://127.0.0.1:4000/api/public/contact-topics?locale=en

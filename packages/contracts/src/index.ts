@@ -27,6 +27,18 @@ export {
 export { qk } from './constants/query-keys.constant';
 export type { PublicRoute } from './constants/routes.constant';
 export { PUBLIC_ROUTES } from './constants/routes.constant';
+export {
+  adminContactTopicSchema,
+  contactTopicCreateSchema,
+  contactTopicUpdateSchema,
+  publicContactTopicSchema,
+} from './contact-topics/contact-topics.schema';
+export type {
+  AdminContactTopic,
+  ContactTopicCreateInput,
+  ContactTopicUpdateInput,
+  PublicContactTopic,
+} from './contact-topics/contact-topics.type';
 export type { Hue } from './domains/domains.enum';
 export { hueSchema } from './domains/domains.enum';
 export {
@@ -86,8 +98,19 @@ export {
 export { skillChipFixtures, skillFixtures, skillsGroupedFixture } from './fixtures/skills.fixture';
 export type { NavLocation } from './navigation/navigation.enum';
 export { navLocationSchema } from './navigation/navigation.enum';
-export { publicNavItemSchema } from './navigation/navigation.schema';
-export type { PublicNavItem } from './navigation/navigation.type';
+export {
+  adminNavItemSchema,
+  navHrefSchema,
+  navItemCreateSchema,
+  navItemUpdateSchema,
+  publicNavItemSchema,
+} from './navigation/navigation.schema';
+export type {
+  AdminNavItem,
+  NavItemCreateInput,
+  NavItemUpdateInput,
+  PublicNavItem,
+} from './navigation/navigation.type';
 export type { BlockSurface, LayoutPreset, PageKey, PrismaPageKey } from './pages/pages.enum';
 export {
   blockSurfaceSchema,
@@ -151,8 +174,12 @@ export type {
   ProcessStepUpdateInput,
   PublicProcessStep,
 } from './process-steps/process-steps.type';
-export { publicProfileSchema } from './profile/profile.schema';
-export type { PublicProfile } from './profile/profile.type';
+export {
+  adminProfileSchema,
+  profileUpdateSchema,
+  publicProfileSchema,
+} from './profile/profile.schema';
+export type { AdminProfile, ProfileUpdateInput, PublicProfile } from './profile/profile.type';
 export type { StatSource } from './profile-stats/profile-stats.enum';
 export { statSourceSchema } from './profile-stats/profile-stats.enum';
 export {
@@ -203,8 +230,16 @@ export { publicSiteSchema } from './public-site/public-site.schema';
 export type { PublicSite } from './public-site/public-site.type';
 export type { Availability } from './site-settings/site-settings.enum';
 export { availabilitySchema } from './site-settings/site-settings.enum';
-export { publicSiteSettingsSchema } from './site-settings/site-settings.schema';
-export type { PublicSiteSettings } from './site-settings/site-settings.type';
+export {
+  adminSiteSettingsSchema,
+  publicSiteSettingsSchema,
+  siteSettingsUpdateSchema,
+} from './site-settings/site-settings.schema';
+export type {
+  AdminSiteSettings,
+  PublicSiteSettings,
+  SiteSettingsUpdateInput,
+} from './site-settings/site-settings.type';
 export type { SkillDepth } from './skills/skills.enum';
 export { skillDepthSchema } from './skills/skills.enum';
 export {
@@ -235,8 +270,18 @@ export type {
 } from './skills/skills.type';
 export type { SocialKind } from './social-links/social-links.enum';
 export { socialKindSchema } from './social-links/social-links.enum';
-export { publicSocialLinkSchema } from './social-links/social-links.schema';
-export type { PublicSocialLink } from './social-links/social-links.type';
+export {
+  adminSocialLinkSchema,
+  publicSocialLinkSchema,
+  socialLinkCreateSchema,
+  socialLinkUpdateSchema,
+} from './social-links/social-links.schema';
+export type {
+  AdminSocialLink,
+  PublicSocialLink,
+  SocialLinkCreateInput,
+  SocialLinkUpdateInput,
+} from './social-links/social-links.type';
 export {
   adminTagSchema,
   publicTagSchema,

@@ -23,6 +23,8 @@ export const profileSelect = {
   headlineAccentVi: true,
   resumeEnId: true,
   resumeViId: true,
+  phone: true,
+  updatedAt: true,
 } satisfies Prisma.ProfileSelect;
 
 export type ProfileRow = Prisma.ProfileGetPayload<{ select: typeof profileSelect }>;

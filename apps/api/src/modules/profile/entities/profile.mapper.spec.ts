@@ -24,6 +24,8 @@ const row = {
   headlineAccentVi: 'Xin chào',
   resumeEnId: null,
   resumeViId: null,
+  phone: '<phone>',
+  updatedAt: new Date('2026-01-01'),
 };
 
 describe('toPublicProfile', () => {
