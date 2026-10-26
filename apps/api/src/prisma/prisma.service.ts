@@ -14,7 +14,10 @@ import { PrismaClient } from '../generated/prisma/client';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor(config: AppConfigService) {
-    super({ adapter: new PrismaMariaDb(config.databaseUrl) });
+    super({
+      adapter: new PrismaMariaDb(config.databaseUrl),
+      log: config.prismaLogQueries ? [{ emit: 'stdout', level: 'query' }] : [],
+    });
   }
 
   async onModuleInit(): Promise<void> {

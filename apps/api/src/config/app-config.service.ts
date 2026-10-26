@@ -36,4 +36,8 @@ export class AppConfigService {
     }
     return this.config.get('DATABASE_URL', { infer: true });
   }
+
+  get prismaLogQueries(): boolean {
+    return this.config.get('PRISMA_LOG_QUERIES', { infer: true });
+  }
 }

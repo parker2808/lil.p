@@ -26,4 +26,9 @@ describe('envSchema', () => {
     const rest = { ...valid, DATABASE_URL: undefined };
     expect(() => envSchema.parse(rest)).toThrow(/DATABASE_URL/i);
   });
+
+  it('turns PRISMA_LOG_QUERIES=1 into true', () => {
+    expect(envSchema.parse({ ...valid, PRISMA_LOG_QUERIES: '1' }).PRISMA_LOG_QUERIES).toBe(true);
+    expect(envSchema.parse(valid).PRISMA_LOG_QUERIES).toBe(false);
+  });
 });
