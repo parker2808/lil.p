@@ -2,7 +2,7 @@
 
 [Tiếng Việt](./PLAN.vi.md) · Structure: [root](../STRUCTURE.md) · [web](../apps/web/STRUCTURE.md) · [api](../apps/api/STRUCTURE.md) · Design snapshot: [docs/design/](./design/)
 
-This plan turns Parker's design (spec, Figma, mockups, practice roadmap) into 61 small tasks. Each task is one pull request that an implementation agent, or Parker, can finish and merge on its own. The tasks follow the practice roadmap order (p01–p33, milestones M0–M7), so the code grows the same way the lessons do.
+This plan turns Parker's design (spec, Figma, mockups, practice roadmap) into 66 small tasks. Each task is one pull request that an implementation agent, or Parker, can finish and merge on its own. The tasks follow the practice roadmap order (p01–p33, milestones M0–M7), so the code grows the same way the lessons do.
 
 ## Contents
 
@@ -21,7 +21,7 @@ This plan turns Parker's design (spec, Figma, mockups, practice roadmap) into 61
 
 ## 0. How to use this plan
 
-1. Pick the lowest-numbered task whose **Depends** are all merged. Tasks in the same milestone with no dependency on each other can run in parallel.
+1. Pick the lowest-numbered task whose **Depends** are all merged. Tasks in the same milestone with no dependency on each other can run in parallel. A task with a letter suffix (T10a, T45b) was added later and sits right after its number: T10a comes after T10 and before T11.
 2. Read, in this order: the task, the spec sections it cites, the Figma nodes and mockup it names, and the STRUCTURE.md files for the paths.
 3. Work on a branch, open one PR per task, and use the task's **PR title**. Where the roadmap gives a commit message for that step, the PR title reuses it.
 4. Copy the task's **Acceptance** list into the PR description as a checklist, plus the [Definition of Done](#2-ground-rules-and-definition-of-done). Tick each item with evidence (a command output, a screenshot, a test name).
@@ -41,7 +41,7 @@ Task size: **S** fits in a short session (one file group, no new concept); **M**
 | 5 | **STRUCTURE.md** files | Where every file goes, naming | [root](../STRUCTURE.md), [apps/web](../apps/web/STRUCTURE.md), [apps/api](../apps/api/STRUCTURE.md) |
 | 6 | `colors.json` (Figma export) | Test oracle for the color tokens | [docs/design/colors.json](./design/colors.json): 58 tokens × light/dark, identical to spec §3.6 |
 
-**Precedence when sources disagree:** the spec wins on values, behavior, data and API (1). Figma names follow the spec, so a mismatch in a value is a Figma bug: use the spec value and note it in the PR (2). Layout follows the mockups and Figma frames (3). Order and teaching follow the roadmap (4), except where a decision in §3 replaces a roadmap detail with the spec's choice. File paths follow STRUCTURE.md (5), which replaces the illustrative paths in the spec (see D20). A decision marked **Parker** in §3 is Parker's own call after the spec was written; it overrides every source above, including the spec (today: D7 and D24 for auth, D25 for the admin editor).
+**Precedence when sources disagree:** the spec wins on values, behavior, data and API (1). Figma names follow the spec, so a mismatch in a value is a Figma bug: use the spec value and note it in the PR (2). Layout follows the mockups and Figma frames (3). Order and teaching follow the roadmap (4), except where a decision in §3 replaces a roadmap detail with the spec's choice. File paths follow STRUCTURE.md (5), which replaces the illustrative paths in the spec (see D20). A decision marked **Parker** in §3 is Parker's own call after the spec was written; it overrides every source above, including the spec (today: D7 and D24 for auth, D25 for the admin editor, D26 for block-based pages).
 
 **Snapshot notes.**
 
@@ -53,13 +53,14 @@ Task size: **S** fits in a short session (one file group, no new concept); **M**
 
 **Ground rules (every task).**
 
-1. **No hard-coded content.** Any text a visitor reads that is about Parker or the site comes from the API and is editable in `/admin`. Code holds only design tokens, fixed UI labels in `apps/web/i18n/locales/{en,vi}.json`, and the route list (spec [§1.5](./design/portfolio-design-system.md#s-1-5), [§4.5](./design/portfolio-design-system.md#s-4-5)).
+1. **No hard-coded content.** Any text a visitor reads that is about Parker or the site comes from the API and is editable in `/admin`. Code holds only design tokens, fixed UI labels in `apps/web/i18n/locales/{en,vi}.json`, the route list, and the block registry (which block types exist and the zod schema of their props, never their content; D26) (spec [§1.5](./design/portfolio-design-system.md#s-1-5), [§4.5](./design/portfolio-design-system.md#s-4-5)).
 2. **Privacy.** Never commit a real email address or phone number. Use `<email>` and `<phone>` in seeds, fixtures, tests, docs and `.env.example`. `pnpm check:content` (from T14) fails the build otherwise.
 3. **Tokens only.** Colors, radii, shadows, spacing and font sizes come from `packages/ui/src/styles/globals.css`. No hex values, no arbitrary Tailwind values (`text-[17px]`, `bg-[#…]`) in components. Use only the 11 named text sizes: `text-display`, `text-title`, `text-heading`, `text-subheading`, `text-prose`, `text-body`, `text-meta`, `text-eyebrow`, `text-ui-title`, `text-ui`, `text-ui-meta` (spec [§3.2](./design/portfolio-design-system.md#s-3-2)).
 4. **Readable type.** Body 16px / 1.6, prose 18px / 1.75 / max 66ch. "Richer" comes from surfaces and icons, never from smaller or lower-contrast text (spec §7.1 G8). Vietnamese line-height floors apply (1.2 headings, 1.5 UI).
 5. **Files go where STRUCTURE.md says.** A task's **Files** list uses those paths. A new folder kind needs a STRUCTURE.md update in the same PR.
 6. **Database safety.** Never edit an applied migration; add a new one. Never run `prisma db push` once migrations exist.
 7. **One task, one PR.** Do not pull work forward from later tasks. If something is missing, stub it behind the smallest interface and note it.
+8. **A block type is added in one PR, in every registry at once** (D26): its definition in `packages/contracts/src/blocks/definitions/` + `block-registry.constant.ts`, its renderer in `apps/web/src/modules/blocks/` + `block-renderers.constant.ts`, and, from T45b on, its admin entry in `apps/web/src/modules/admin-pages/constants/block-editor-meta.constant.ts` with its `admin.blocks.*` labels. The web registries are typed `satisfies Record<BlockType, …>`, so a missing entry fails `pnpm typecheck`.
 
 **Definition of Done (copy into every PR).**
 
@@ -81,7 +82,7 @@ These settle the places where the sources disagree or say nothing. Each is the d
 | --- | --- | --- |
 | D1 | The repo root of `lil.p` is the monorepo. The roadmap's `portfolio/` folder means this repository. | The roadmap was written before the repo existed |
 | D2 | Shared code lives in `packages/ui` and `packages/contracts`, not one `packages/shared`. | Spec §4.0 and §6 split them; roadmap p01/p08 says `packages/shared` |
-| D3 | Long text (case-study sections, post bodies, bio) is **Markdown in `@db.Text`**, rendered on the Next server by one safe pipeline (no raw HTML, allowlisted elements, Shiki output converted to React, no `dangerouslySetInnerHTML`). This replaces roadmap p12 "JSON blocks"; p12's rules (zod-validated input, drafts invisible) still apply. | Spec §1.5 and §4.3 (`MarkdownEditor`) |
+| D3 | Long text (case-study sections, post bodies, bio) is **Markdown in `@db.Text`**, rendered on the Next server by one safe pipeline (no raw HTML, allowlisted elements, Shiki output converted to React, no `dangerouslySetInnerHTML`). This replaces roadmap p12 "JSON blocks"; p12's rules (zod-validated input, drafts invisible) still apply. Page composition does use JSON blocks (D26); long text inside a block is still Markdown. | Spec §1.5 and §4.3 (`MarkdownEditor`) |
 | D4 | API routes follow the spec: `/api/public/*` (no auth), `/api/admin/*` (signed-in JWT, D24), `/api/auth/*`, plus one aggregate `GET /api/public/site?locale` for the layout. Roadmap URLs like `GET /settings`, `GET /posts` map onto these. | Spec §4.5, §5.0 |
 | D5 | Every error uses one body: `{ statusCode, code, message, requestId, fieldErrors? }`. | Spec §4.6 |
 | D6 | Lists use page-based pagination: request `?page&pageSize&sort&q&…`, response `{ items, page, pageSize, total }`, `pageSize` max 100. Only the audit log and media library use cursor pagination (`?cursor&limit`). The p13 checks still apply: paging through all rows gives no duplicates or gaps (sort always ends with `id`), and `pageSize=500` returns 400 with a field error. | The admin table mockup shows "1–5 of 5" and page sizes; spec §4.6 uses cursors only for infinite lists |
@@ -90,13 +91,13 @@ These settle the places where the sources disagree or say nothing. Each is the d
 | D9 | No CORS. The browser only talks to Next; `next.config.ts` rewrites `/api/*` to Nest. Roadmap p05's "CORS" item is skipped. The API binds to `127.0.0.1` until guards land (T36). | Spec §1.6, §6 |
 | D10 | Many-to-many relations use Prisma implicit join tables (`skills Skill[]` on both sides). Roadmap p11's `ProjectSkill` check becomes "the `_ProjectToSkill` join rows are visible in Prisma Studio". | Spec §1.5 |
 | D11 | Names: `ContactMessage` and `ContactTopic` (not `Message`), public route `/notes` (not `/blog`), `Domain`, `ProfileStat`, `ProcessStep`. | Spec §1.5, §5.5 |
-| D12 | The first Prisma models (T08) are `SiteSettings`, `Profile`, `NavItem`, `SocialLink`, `PageSection`. `Experience` arrives in T15. Roadmap p06's check "Studio shows SiteSettings, Profile, Experience" becomes "Studio shows SiteSettings, Profile, NavItem, SocialLink, PageSection". | Spec §6 Day 4 and the `GET /public/site` aggregate need these five first |
+| D12 | The first Prisma models (T08) are `SiteSettings`, `Profile`, `NavItem`, `SocialLink`, `Page`, `PageBlock` (D26). `Experience` arrives in T15. Roadmap p06's check "Studio shows SiteSettings, Profile, Experience" becomes "Studio shows SiteSettings, Profile, NavItem, SocialLink, Page, PageBlock". | Spec §6 Day 4, the `GET /public/site` aggregate and the page blocks need these first |
 | D13 | Two seed profiles in `apps/api/prisma/seed/profiles/`: **`demo`** (dev, CI, screenshots: projects `PUBLISHED`, 3 sample posts, sample messages and views) and **`baseline`** (production first boot: spec §1.5 seed list, projects `DRAFT`, 0 posts). Chosen by `SEED_PROFILE`. All values are placeholders from the mockups/wireframes; metrics shown in demo come only from the wireframes. | Spec §1.5 seeds drafts and 0 posts, but every public screen needs published data to build and test |
 | D14 | Media accepts JPG, PNG, WebP, AVIF and **PDF** (resume files for `Profile.resumeEnId/ViId`). Images get WebP variants; PDFs are stored as-is. Max 10 MB. | Spec §1.5 links resumes to `Media` |
 | D15 | Storybook lives in `packages/ui` (`@storybook/react-vite`, addon-a11y, a light/dark toolbar switch). Every product component ships a story. | Spec §6 Days 1–6 build components against fixtures |
 | D16 | CI (GitHub Actions) starts in T01 with install + lint + typecheck + build and grows with each task (tests T05+, Storybook build T06, API tests T29, e2e T56). | Roadmap p28 adds CI late; earlier CI keeps every PR mergeable |
 | D17 | The test database is a second MySQL service under the compose profile `test` (port 3307), introduced in T29 with the first integration tests. | Roadmap p15/p28 |
-| D18 | `PageSection` keys. **HOME:** `hero`, `stats`, `marquee`, `featured`, `domains`, `work`, `process`, `skills`, `notes`, `cta`. **ABOUT:** `intro`, `stats`, `experience`, `principles`, `skills`, `education`, `cv`. **PROJECTS, NOTES, CONTACT:** `header` (page H1 + intro). | Spec §1.5 lists examples; §5.1–5.6 need these. The `header` key fills the gap for list-page titles |
+| D18 | Default blocks per page, seeded as block `key` → block type (D26). **HOME:** `hero` → `hero`, `stats` → `stat-band`, `marquee` → `tech-marquee` (stats and marquee share one band), `featured` → `featured-case`, `domains` → `domain-grid`, `work` → `case-grid`, `process` → `process`, `skills` → `skill-groups`, `notes` → `post-list`, `cta` → `cta-band`. **ABOUT:** `intro` → `about-intro`, `stats` → `stat-band` (compact), `experience` → `timeline`, `principles` → `principle-list`, `skills` → `skill-groups`, `education` → `education-list`, `cv` → `cv-download`. **PROJECTS:** `header` → `page-header`, `projects` → `projects-browser`. **NOTES:** `header` → `page-header`, `notes` → `notes-browser`. **CONTACT:** `contact` → `contact-form`. The keys are the old `PageSection` keys, so anchors such as `/#work` keep working. | Spec §1.5 lists section examples; §5.1–5.6 need these. `header` fills the gap for list-page titles. CONTACT's heading lives inside `contact-form`, because the mockup puts it in the column next to the form |
 | D19 | Locale fallback is per field group. A public DTO group (e.g. a project card, a post body) uses Vietnamese only when every translatable field that has an English value also has a Vietnamese value; otherwise the whole group is English with `lang: "en"`. | Spec §1.5 "falling back to English with `lang` on the field group" |
 | D20 | STRUCTURE.md paths replace the spec's illustrative ones: `apps/web/messages/` → `apps/web/i18n/locales/`; `packages/contracts/icons.ts` → `src/constants/icons.constant.ts`; `query-keys.ts` → `src/constants/query-keys.constant.ts`; `fixtures/*` → `src/fixtures/*.fixture.ts`. | Parker's naming convention (kebab-case + suffix) |
 | D21 | A shadcn primitive is added by the first task that uses it, not all at once. | Keeps PRs small and reviewable |
@@ -104,6 +105,7 @@ These settle the places where the sources disagree or say nothing. Each is the d
 | D23 | Public fetches use `revalidate: 3600` + tags in production and `revalidate: 0` in development (`NODE_ENV`), so seed changes show without waiting. | Roadmap p09 check "re-seeding changes the home page" |
 | D24 | **Parker.** Auth uses **JWTs instead of MySQL sessions**: `@nestjs/jwt` signs, `passport-jwt` (via `@nestjs/passport`) verifies. A short **access token** (15 min, payload `{ sub, role }`) and a longer **refresh token** (7 days, payload `{ sub, ver }`), signed with two different secrets. Both live in `httpOnly` cookies set by the API (`access_token` on `Path=/`, `refresh_token` on `Path=/api/auth`), never in `localStorage` or JS memory; this works because Next proxies `/api/*`, so the cookies are first-party for the web origin (D9). There is no `Session` table: `User.tokenVersion` is the kill switch ("sign out everywhere", deactivate, password change bump it, and every refresh checks it). Trade-off, accepted: an access token already issued keeps working until it expires (at most 15 min), and plain logout clears this browser's cookies only. | Replaces spec §1.5 `Session`, §1.6 Auth row (which preferred sessions) and roadmap p18 "MySQL sessions"; p18's learning goals (hashing, httpOnly cookies, logout) stay |
 | D25 | **Parker.** The admin `MarkdownEditor` is built on **Tiptap v3** (ProseMirror), using only free MIT packages from the public npm registry: `@tiptap/react`, `@tiptap/pm`, `@tiptap/starter-kit`, `@tiptap/markdown`, `@tiptap/extensions` and `@tiptap/extension-*`. No Tiptap Pro or paid extensions, no `@tiptap-pro/*` registry, no Tiptap Cloud, Collaboration, Comments or AI, no Tiptap account or token; `pnpm check:deps` enforces this in CI (T42). Storage does not change (D3): the editor loads with `contentType: 'markdown'` and saves `editor.getMarkdown()`. Its schema is the Markdown allowlist shared with the public renderer (`packages/contracts/src/constants/markdown.constant.ts`, T23), so the editor cannot produce what the public site would drop. Code blocks use `@tiptap/extension-code-block-lowlight` + `lowlight` while writing; the Preview mode shows the exact public Shiki output. | Replaces spec §4.0 and §4.3 `MarkdownEditor` (CodeMirror 6); the spec's toolbar, slash menu, image paste, modes, word count and `SaveStatus` stay |
+| D26 | **Parker.** Public pages are **built from blocks managed in the admin**. Each of the five route pages (`HOME`, `ABOUT`, `PROJECTS`, `NOTES`, `CONTACT`) is an ordered list of `PageBlock` rows: `type`, `key` (anchor), `props` (MySQL `JSON`), a `layout` preset, `surface`, `sortOrder`, `isVisible`. Block types come only from a **code-side registry** of design-system components (`packages/contracts/src/blocks/`). Each type has a zod 4 props schema, which the API uses to validate every write and every read and which the admin turns into a TanStack Form (`z.toJSONSchema` + `.meta()` widget hints), plus its allowed pages, layouts and limits. Layout is chosen from presets only (`ONE`, `TWO`, `THREE`, `FOUR`, `SPLIT_8_4`, `SPLIT_4_8`, `SPLIT_7_5`) with fixed responsive rules (§4); there is no free-form per-field grid. The admin page builder (T45b) reorders blocks by drag and drop with `@dnd-kit/core` + `@dnd-kit/sortable` (MIT; move up/down stays as the keyboard and single-pointer alternative), adds, duplicates, removes and hides blocks, and edits props in the generated form. Each page has a draft (the rows) and published versions (`PageVersion` JSON snapshots): publish copies the draft into a new version, any version can be restored into the draft, and a live preview shows the draft through Next draft mode (T52a). Public pages stay React Server Components with cache tags (`page:{key}` + each block's data tags). An unknown type or invalid props never breaks a page: the API drops that block and logs it, the web renders nothing for a type it does not know, and each block has its own `SectionBoundary`. `PageSection` becomes `PageBlock`: the same order and visibility model, with its `title`, `intro` and `ctaLabel` columns moved into `props`, so there is no second model. Detail pages (`/projects/[slug]`, `/notes/[slug]`) keep their fixed templates, and long text stays Markdown (D3). | Replaces spec §1.5 `PageSection` (fixed keys, one component per key), the §4.5 ordering rule and the §5.10 Sections tab; brings back roadmap p14 `BlockRenderer` and p22 "block editor list" at page level. Free-form grid placement and side-by-side blocks are a possible future extension (Q13) |
 
 ## 4. Architecture at a glance
 
@@ -124,7 +126,66 @@ Browser ──► Next.js apps/web :3000 ──/api/* rewrite──► NestJS ap
 
 **Environment (`.env.example`, grows task by task).** `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE=portfolio`, `MYSQL_USER=app`, `MYSQL_PASSWORD`, `DATABASE_URL`, `DATABASE_URL_TEST` (T29), `API_PORT=4000`, `API_HOST=127.0.0.1`, `WEB_ORIGIN=http://localhost:3000`, `API_URL=http://127.0.0.1:4000` (web → api), `WEB_INTERNAL_URL=http://127.0.0.1:3000` (api → web revalidate, T52), `REVALIDATE_SECRET` (T52), `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET` (T35, 32+ random characters each, different from each other), `JWT_ACCESS_TTL_SECONDS=900`, `JWT_REFRESH_TTL_SECONDS=604800` (T35), `ADMIN_EMAIL="<email>"`, `ADMIN_NAME`, `ADMIN_PASSWORD` (T35), `ANALYTICS_SALT_SECRET` (T54), `UPLOAD_DIR=./uploads` (T50), `SEED_PROFILE=demo`, `NEXT_PUBLIC_BUILD_SHA` (footer deploy hash).
 
-**Rendering (spec [§4.6](./design/portfolio-design-system.md#s-4-6)).** Public pages are React Server Components that call `apiServer()` with cache tags (`site`, `projects`, `project:{slug}`, `posts`, `post:{slug}`, `skills`, `domains`). Publishing calls `POST /api/revalidate` on the web app, which runs `revalidateTag`. Client islands (notes search, contact form, marquee pause, ⌘K) are small `'use client'` files. The admin prefetches on the server, hydrates with `HydrationBoundary`, and reads with `useSuspenseQuery` using keys from `qk`.
+**Rendering (spec [§4.6](./design/portfolio-design-system.md#s-4-6)).** Public pages are React Server Components that call `apiServer()` with cache tags (`site`, `page:{key}`, `projects`, `project:{slug}`, `posts`, `post:{slug}`, `skills`, `domains`). Publishing calls `POST /api/revalidate` on the web app, which runs `revalidateTag`. Client islands (notes search, contact form, marquee pause, ⌘K) are small `'use client'` files. The admin prefetches on the server, hydrates with `HydrationBoundary`, and reads with `useSuspenseQuery` using keys from `qk`.
+
+**Pages and blocks (D26).** Each of the five route pages is a `Page` with an ordered list of `PageBlock` rows. `GET /api/public/pages/:key?locale` returns `{ key, seo, blocks }`, each block `{ id, type, key, layout, surface, props, lang }` with its text already in one language (D19 per block). The web looks up `type` in `blocks/constants/block-renderers.constant.ts` and renders that block's container, which fetches its own data (projects, posts, skills) with its own cache tags, inside its own `SectionBoundary`. Blocks store settings and references, never copies of content: a `case-grid` says *which* projects to show, and the projects stay in their table.
+
+```text
+Page(home) ─┬─ PageBlock key=hero   type=hero       layout=SPLIT_7_5  props={ primaryCta, secondaryCta, showDiagram }
+            ├─ PageBlock key=stats  type=stat-band  surface=BAND      props={ heading, variant: "default" }
+            ├─ PageBlock key=work   type=case-grid  layout=THREE      props={ heading, source: "latest", limit: 3 }
+            └─ PageBlock key=cta    type=cta-band                     props={ title, intro, showEmail, showSocial }
+PageVersion(home, v3) = a JSON snapshot of those rows; visitors read the published snapshot (T52a)
+```
+
+**Block catalog.** Defined in `packages/contracts/src/blocks/definitions/`, rendered by `apps/web/src/modules/blocks/`. "H1" blocks are first, visible and never deleted; "required" blocks are never deleted or hidden. `heading` is the shared `SectionHeader` group (`eyebrow`, `title`, `intro`, `iconKey`, optional `link`). Every text prop is an `{ en, vi }` pair.
+
+| Type | Design-system components | Pages | Layouts (default first) | Main props | Task |
+| --- | --- | --- | --- | --- | --- |
+| `hero` | `KickerPill`, `AccentHeadline`, `Atmosphere`, `MigrationDiagram`, `Button` | HOME (H1) | `SPLIT_7_5`, `ONE` | `primaryCta`, `secondaryCta` (label + route), `showDiagram`, `showAvailability`; headline and kicker come from `Profile` | T10a, T14, T24 |
+| `page-header` | `Eyebrow`, H1, intro | PROJECTS, NOTES (H1) | `ONE` | `eyebrow`, `title`, `intro` | T10a, T14 |
+| `cta-band` | `CtaBand`, `CopyEmailButton` | all, max 1 | `ONE` | `title`, `intro`, `showEmail`, `showSocial` (`SocialLink.showInCta`) | T10a, T14 |
+| `stat-band` | `StatBand` | HOME, ABOUT | `ONE` | `heading`, `variant` (`default` / `compact`), `statIds` (empty = all) | T24 |
+| `tech-marquee` | `TechMarquee` | HOME, ABOUT | `ONE` | `heading` | T24 |
+| `featured-case` | `CaseCard` (`featured`) | HOME | `ONE` | `heading`, `projectId` (empty = first featured) | T24 |
+| `domain-grid` | `DomainCard` | HOME, PROJECTS | `FOUR`, `TWO` | `heading` | T24 |
+| `case-grid` | `CaseCard` | HOME, ABOUT | `THREE`, `TWO`, `ONE` | `heading`, `source` (`latest` / `featured` / `manual`), `projectIds`, `domainSlug`, `limit` 1–6 | T24 |
+| `process` | `FeatureCard`, `ProcessFlow` | HOME, ABOUT | `TWO`, `SPLIT_7_5` | `heading`, `showPrinciples` | T24 |
+| `skill-groups` | `SkillGroup` | HOME, ABOUT | `THREE`, `ONE` | `heading` | T24 |
+| `post-list` | `PostCard` | HOME, ABOUT, PROJECTS, CONTACT | `ONE`, `TWO`, `THREE` | `heading`, `limit` 1–6, `tag` | T24 |
+| `about-intro` | avatar card, `Markdown` bio, availability `Badge` | ABOUT (H1) | `SPLIT_4_8` | `eyebrow`, `showCity`, `showAvailability`; name and bio come from `Profile` | T25 |
+| `timeline` | `Timeline` | ABOUT | `ONE` | `heading` | T25 |
+| `principle-list` | `PrincipleList` | ABOUT, HOME | `TWO`, `ONE` | `heading` | T25 |
+| `education-list` | `card` list | ABOUT | `ONE`, `TWO` | `heading` | T25 |
+| `cv-download` | CV card | ABOUT, CONTACT | `ONE` | `heading`, `intro` | T25 |
+| `prose` | `Markdown` → `Prose`, `Callout`, `CodeBlock` | all | `ONE`, `SPLIT_8_4` | `heading`, `body`, `aside` (Markdown, D3) | T25 |
+| `projects-browser` | `DomainFilter`, `TechFilter`, `CaseCard` grid, `pagination` | PROJECTS (required) | `TWO`, `THREE` | `showFeatured`, `pageSize` | T26 |
+| `notes-browser` | `NotesSearch`, tag pills, `PostCard` rows | NOTES (required) | `ONE` | `showFeatured`, `pageSize` | T28 |
+| `contact-form` | `ContactForm`, channel cards | CONTACT (H1) | `TWO`, `ONE` | `eyebrow`, `title`, `intro` | T48 |
+
+**Layout presets.** A block picks one of its allowed presets; there is no free-form grid (D26, Q13). Presets sit on the spec's 4 / 8 / 12-column grid with 16 / 24 / 32px gutters (§4.4); breakpoints are `--breakpoint-md` (768px) and `--breakpoint-lg` (1024px).
+
+| Preset | Below 768px | 768–1023px | 1024px and up | Used for |
+| --- | --- | --- | --- | --- |
+| `ONE` | 1 column | 1 | 1 | lists, prose at 66ch, bands |
+| `TWO` | 1 | 2 | 2 | card grids; contact (details, form) |
+| `THREE` | 1 | 2 | 3 | case and skill grids (mockup `.work-grid`) |
+| `FOUR` | 1 | 2 | 4 | domain grid (mockup `.domain-grid`) |
+| `SPLIT_8_4`, `SPLIT_4_8` | stacked | stacked | 8 + 4 or 4 + 8 of 12 | main + aside (prose with an aside, About intro) |
+| `SPLIT_7_5` | stacked | stacked | 7 + 5 of 12 | hero text + diagram, process (mockup `.hero-grid`, `.featured-card`) |
+
+Responsive rules for every preset:
+- Columns render left to right in DOM order and stack in the same order. There is no CSS reordering, so focus order matches what you see.
+- A grid with fewer items than columns keeps its column width.
+- Neighbouring `BAND` blocks share one `Band`, so two bands never touch (spec §4.4).
+- Atmosphere appears only on `hero` and `cta-band`.
+
+**Page rules.** The API checks these on every write and at publish:
+- each page has exactly one H1 block, always first and visible;
+- required blocks are never deleted or hidden;
+- `maxPerPage` is 1 for H1 blocks, browsers and `cta-band`;
+- a type can be added only to its listed pages;
+- a block `key` is kebab-case and unique on its page, and it is the anchor (`/#work`).
 
 **Locale.** `en` (default) and `vi`, prefixed URLs (`/en/…`, `/vi/…`) via next-intl. Public API calls pass `?locale=`; the API picks columns (D19). The admin is English chrome and edits both columns side by side (`LocaleTabs`).
 
@@ -148,6 +209,7 @@ Figma links use `https://www.figma.com/design/ULYJR56vSbNQhZE3JxvkRu/?node-id=<i
 | Admin dashboard (dark) | `14:2` | `admin-dashboard.html` | `06-admin-dashboard` | §5.7, §5.11 | T37, T38, T54 |
 | Admin projects table | `15:2` | `admin-table.html` | `07-admin-projects-table` | §5.8, §5.11 | T39, T40, T41 |
 | Admin project editor | `18:2` | `admin-editor.html` | `08-admin-project-editor` | §5.9, §5.11 | T42, T43, T44 |
+| Admin page builder (no frame yet: compose from `18:2` and `15:2`) | none | none | n/a | §5.10, D26 | T45b, T52a |
 
 **Figma component sets → code.**
 
@@ -179,10 +241,11 @@ Paths: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct*
 | T08 | Prisma: site layout models, first migration, seed profiles | p06 | T02, T07 | L | api `prisma/`, `src/prisma/` |
 | T09 | Contracts package + `GET /api/public/site` | p07 | T08 | L | ct `src/`, api `modules/public-site/`, `i18n/` |
 | T10 | Validation pipe, error filter, request id, logging | p08 | T09 | M | api `src/common/` |
+| T10a | Block registry contracts + `GET /api/public/pages/:key` | p08 | T10 | M | ct `src/blocks/`, `src/pages/`, api `modules/pages/` |
 | T11 | Web data layer + next-intl + locale layout | p09 | T05, T09 | L | web `app/[locale]/`, `i18n/`, `core/services/` |
 | T12 | UI primitives matching Figma component sets | p09 | T06 | M | ui `components/ui/`, `components/[Name]/` |
 | T13 | States + atmosphere components | p09 | T12 | M | ui `components/[Name]/`, `hooks/` |
-| T14 | Site shell + home hero/CTA from the API + content check | p09 | T11, T13 | L | web `core/`, `home/`, `scripts/check-content.mjs` |
+| T14 | Site shell + home hero/CTA from the API + content check | p09 | T10a, T11, T13 | L | web `core/`, `blocks/`, `scripts/check-content.mjs` |
 | **M2** | **Content graph** | | | | |
 | T15 | About content models + endpoints | p10 | T10 | M | api `modules/experience/` … |
 | T16 | Domains + projects + metrics (one-to-many) | p10 | T15 | L | api `modules/domains/`, `modules/projects/` |
@@ -193,8 +256,8 @@ Paths: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct*
 | T21 | Rich sections: StatBand, TechMarquee, ProcessFlow, PrincipleList, FeatureCard, SkillGroup | p14 | T13, T17 | M | ui `components/` |
 | T22 | MigrationDiagram | p14 | T13, T17 | M | ui `components/MigrationDiagram/` |
 | T23 | Markdown pipeline + Prose + CodeBlock + reading aids | p14 | T11, T12 | L | web `modules/content/`, ui `components/` |
-| T24 | Home v2 complete | p14 | T14, T19, T20, T21, T22 | L | web `modules/home/` |
-| T25 | About page + Timeline | p14 | T24 | L | web `modules/about/`, ui `Timeline/` |
+| T24 | Home v2 complete | p14 | T14, T19, T20, T21, T22 | L | web `modules/blocks/`, ct `blocks/definitions/` |
+| T25 | About page + Timeline | p14 | T23, T24 | L | web `modules/blocks/`, `about/`, ui `Timeline/` |
 | T26 | Projects list | p14 | T14, T19, T20 | M | web `modules/projects/` |
 | T27 | Project case study | p14 | T23, T26 | L | web `modules/projects/` |
 | T28 | Notes list + post | p14 | T19, T20, T23 | L | web `modules/notes/` |
@@ -202,8 +265,9 @@ Paths: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct*
 | T29 | Admin write API on projects + test DB | p15 | T19 | L | api `modules/projects/admin-*`, `test/` |
 | T30 | Write API: posts, experience, education, principles, stats, process | p15 | T29 | M | api `modules/*/admin-*` |
 | T31 | Write API: skills, categories, tags, domains | p15 | T29 | M | api `modules/*/admin-*` |
-| T32 | Write API: site, profile, nav, social, sections, contact topics | p15 | T29 | M | api `modules/*/admin-*` |
-| T33 | Transactional reorder + tag replace | p16 | T31, T32 | M | api services, `common/utils/` |
+| T32 | Write API: site, profile, nav, social, contact topics | p15 | T29 | M | api `modules/*/admin-*` |
+| T32a | Write API: pages and blocks | p15 | T10a, T29 | L | api `modules/pages/`, ct `pages/` |
+| T33 | Transactional reorder + tag replace | p16 | T31, T32, T32a | M | api services, `common/utils/` |
 | T34 | Indexes + EXPLAIN | p17 | T33 | S | api `prisma/`, `docs/sql-notes.sql` |
 | **M4** | **Auth + admin CMS** | | | | |
 | T35 | Users, argon2, JWT access + refresh cookies | p18 | T29 | L | api `modules/auth/`, `modules/users/` |
@@ -216,7 +280,9 @@ Paths: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct*
 | T42 | Editor shell + Tiptap MarkdownEditor + autosave | p22 | T39 | L | web `admin-core/`, ui `MarkdownEditor/` |
 | T43 | Project editor | p22 | T42 | L | web `admin-projects/` |
 | T44 | Post + experience editors | p22 | T42 | M | web `admin-posts/`, `admin-about/` |
-| T45 | Site, sections, profile admin | p22 | T33, T42 | L | web `admin-site/` |
+| T45 | Site settings + profile admin | p22 | T33, T42 | L | web `admin-site/` |
+| T45a | Schema-driven props form (zod → TanStack Form) | p22 | T41, T42 | M | web `admin-core/components/SchemaForm/` |
+| T45b | Page builder: blocks, drag and drop, layouts | p22 | T33, T45a | L | web `admin-pages/`, ui `SortableList/` |
 | T46 | Users admin (admin only) + change own password | p22 | T37 | M | web `admin-users/`, api `modules/users/` |
 | **M5** | **Realtime, media, publishing** | | | | |
 | T47 | Contact + inbox API | p23 | T36 | M | api `modules/contact/`, `contact-topics/` |
@@ -225,19 +291,20 @@ Paths: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct*
 | T50 | Media API: upload, variants, relations | p24 | T36 | L | api `modules/media/` |
 | T51 | Media UI: library, uploader, pickers | p24 | T42, T50 | M | web `admin-media/`, ui `MediaLibrary/` |
 | T52 | Publish workflow + revalidate + draft preview | p25 | T27, T28, T43, T44 | L | api `modules/publishing/`, web `app/api/` |
+| T52a | Page publish, versions, live preview | p25 | T45b, T52 | L | api `modules/pages/`, web `admin-pages/`, `blocks/` |
 | **M6** | **Quality** | | | | |
-| T53 | SEO from the CMS | p26 | T24, T25, T27, T28 | M | web `modules/seo/`, `app/sitemap.ts` |
+| T53 | SEO from the CMS | p26 | T24, T25, T27, T28, T52a | M | web `modules/seo/`, `app/sitemap.ts` |
 | T54 | Analytics + dashboard charts | p27 | T38, T49 | M | api `modules/analytics/`, web `admin-insights/` |
 | T55 | Audit log | p27 | T36, T38 | M | api `modules/audit/`, web `admin-insights/` |
-| T56 | Tests + CI e2e | p28 | T52 | M | web `e2e/`, `.github/workflows/` |
+| T56 | Tests + CI e2e | p28 | T52a | M | web `e2e/`, `.github/workflows/` |
 | T57 | Accessibility + performance audit | p29 | T53 | M | `docs/audits/` |
 | **M7** | **Ship** | | | | |
 | T58 | Production Compose | p30 | T56 | M | `compose.prod.yml`, `apps/*/Dockerfile` |
 | T59 | Hardening + backups | p31 | T58 | M | `infra/caddy/`, `scripts/backup/` |
-| T60 | Production seed cleanup + placeholder check | p32 | T45, T51, T52 | S | api `prisma/seed/`, `scripts/` |
+| T60 | Production seed cleanup + placeholder check | p32 | T45, T51, T52a | S | api `prisma/seed/`, `scripts/` |
 | T61 | Deploy pipeline + launch checklist | p33 | T58, T59, T60 | M | `.github/workflows/deploy.yml`, `docs/` |
 
-Roadmap coverage: every step p01–p33 maps to at least one task. p04 is split into T04–T06, p09 into T11–T14, p14 into T20–T28, p15 into T29–T32, p21 into T39–T41 and p22 into T42–T46.
+Roadmap coverage: every step p01–p33 maps to at least one task. p04 is split into T04–T06, p08 into T10–T10a, p09 into T11–T14, p14 into T20–T28, p15 into T29–T32a, p21 into T39–T41, p22 into T42–T46 (with T45a, T45b) and p25 into T52–T52a.
 
 ## 7. Tasks
 
@@ -462,19 +529,20 @@ Each task uses the same template: **Roadmap · Spec · Depends · Size**, then G
 - `prisma/schema.prisma` with the §1.5 conventions (autoincrement `id`, `createdAt`/`updatedAt`, `En`/`Vi` column pairs, `sortOrder`/`isVisible`, `@@map` to snake_case, `@db.Text` for markdown):
   - `SiteSettings` (1 row): all §1.5 fields including `ambientEffects`, `marqueeEnabled`; `ogImageId` as a plain `Int?` until media exists (T50 adds the relation).
   - `Profile` (1 row): all §1.5 fields including `heroKicker{En,Vi}`, `headlineAccent{En,Vi}`, private `phone`; `avatarId`, `resumeEnId`, `resumeViId` as plain `Int?` for now.
-  - `NavItem`, `SocialLink` (with `showInHeader`, `showInCta`), `PageSection` (`@@unique([page, key])`).
-  - Enums `Availability`, `NavLocation`, `SocialKind`, `Page`.
+  - `NavItem`, `SocialLink` (with `showInHeader`, `showInCta`).
+  - The page pair (D26): `Page` (`key` enum `PageKey` `@unique`; `seoTitle{En,Vi}?`, `seoDescription{En,Vi}?`) and `PageBlock` (`pageId` → `Page` with `onDelete: Cascade`, `type` `VarChar(48)`, `key` `VarChar(48)`, `schemaVersion Int @default(1)`, `props Json`, `layout` enum `LayoutPreset`, `surface` enum `BlockSurface` (`PLAIN` | `BAND`), `sortOrder`, `isVisible`; `@@unique([pageId, key])`, `@@index([pageId, sortOrder])`). `type` is a plain string, not a DB enum, so a new block type later needs no migration; T10a checks it against the registry.
+  - Enums `Availability`, `NavLocation`, `SocialKind`, `PageKey`, `LayoutPreset`, `BlockSurface`.
 - First migration `pnpm prisma migrate dev --name init-site`.
-- Seed (D13): `prisma/seed/seed.ts` reads `SEED_PROFILE` (`demo` | `baseline`) and runs `profiles/demo.seed.ts` or `profiles/baseline.seed.ts`; rows come from `prisma/seed/data/site.data.ts`. Placeholder values only: copy from the wireframes/mockups, `contactEmail: '<email>'`, `phone: '<phone>'`. Seed every `PageSection` key from D18. Upsert on unique keys so running twice changes nothing.
+- Seed (D13): `prisma/seed/seed.ts` reads `SEED_PROFILE` (`demo` | `baseline`) and runs `profiles/demo.seed.ts` or `profiles/baseline.seed.ts`; rows come from `prisma/seed/data/site.data.ts`. Placeholder values only: copy from the wireframes/mockups, `contactEmail: '<email>'`, `phone: '<phone>'`. Seed the five `Page` rows and their default blocks from D18 (`prisma/seed/data/pages.data.ts`: `type`, `key`, `layout`, `surface`, placeholder `props` with `{ en, vi }` text). Upsert on unique keys so running twice changes nothing.
 - `src/prisma/prisma.module.ts` (`@Global`) and `prisma.service.ts` (extends `PrismaClient`, connects on module init).
 - `GET /api/health` also returns `db: "ok"` after `SELECT 1`.
 - Scripts `db:migrate`, `db:reset`, `db:seed`, `db:studio`.
 
 **Out of scope.** Content tables (T15+), public endpoints (T09).
 
-**Files.** `apps/api/prisma/schema.prisma`, `apps/api/prisma/migrations/*_init_site/`, `apps/api/prisma/seed/seed.ts`, `apps/api/prisma/seed/profiles/{demo,baseline}.seed.ts`, `apps/api/prisma/seed/data/site.data.ts`, `apps/api/prisma.config.ts` (Prisma 7+), `apps/api/src/prisma/{prisma.module.ts,prisma.service.ts}`, `apps/api/src/modules/health/health.controller.ts`.
+**Files.** `apps/api/prisma/schema.prisma`, `apps/api/prisma/migrations/*_init_site/`, `apps/api/prisma/seed/seed.ts`, `apps/api/prisma/seed/profiles/{demo,baseline}.seed.ts`, `apps/api/prisma/seed/data/{site,pages}.data.ts`, `apps/api/prisma.config.ts` (Prisma 7+), `apps/api/src/prisma/{prisma.module.ts,prisma.service.ts}`, `apps/api/src/modules/health/health.controller.ts`.
 
-**Design.** Spec §1.5 tables "Site" and "About · Profile"; D18 keys.
+**Design.** Spec §1.5 tables "Site" and "About · Profile"; D18 default blocks, D26.
 
 **Backend steps, explained.**
 1. **ORM.** Prisma turns `schema.prisma` into SQL tables and a typed client. You write `prisma.profile.findUnique({ where: { id: 1 } })` instead of SQL, and TypeScript knows every column.
@@ -483,10 +551,11 @@ Each task uses the same template: **Roadmap · Spec · Depends · Size**, then G
 4. **Seed.** A script that fills an empty DB. `upsert` (update-or-insert) makes it safe to run again. Two profiles: `demo` gives dev and CI a full site, `baseline` is what production starts with (D13).
 5. **PrismaService.** One shared connection, registered as a global Nest provider, so any service can ask for it in its constructor instead of opening its own connection.
 6. **Look at the data.** `pnpm db:studio` opens Prisma Studio; Adminer works too.
+7. **A JSON column.** `PageBlock.props` is MySQL `JSON`: each row may have its own shape. Open one in Adminer to see it. MySQL does not check what is inside; T10a adds that check in code.
 
 **Acceptance.**
 - [ ] `pnpm --filter @portfolio/api prisma migrate reset` recreates the tables and seeds them (roadmap p06).
-- [ ] Prisma Studio shows rows in SiteSettings, Profile, NavItem, SocialLink, PageSection (roadmap p06, adjusted by D12).
+- [ ] Prisma Studio shows rows in SiteSettings, Profile, NavItem, SocialLink, Page, PageBlock (roadmap p06, adjusted by D12).
 - [ ] Running the seed twice leaves the same row counts.
 - [ ] The PR description summarizes the generated SQL.
 - [ ] `rg` for email/phone patterns in `apps/api/prisma` finds only `<email>` and `<phone>`.
@@ -501,31 +570,31 @@ Each task uses the same template: **Roadmap · Spec · Depends · Size**, then G
 **Goal.** One public endpoint that returns everything the layout needs, already in the requested language, typed by a shared contracts package.
 
 **Scope.**
-- Create `packages/contracts` (`@portfolio/contracts`, depends on `zod` only). Build with `tsup` to `dist/` (ESM + CJS + types) so Nest can consume it; root `pnpm dev` runs `tsup --watch`.
-- Contracts: `common/locale.schema.ts`, `common/api-error.schema.ts`, and public DTO schemas in `site-settings/`, `profile/`, `navigation/`, `social-links/`, `page-sections/`, `public-site/` (`[domain].schema.ts` + `[domain].type.ts` + `[domain].enum.ts`), `constants/routes.constant.ts` (real public routes for `NavItem.href`).
+- Create `packages/contracts` (`@portfolio/contracts`, depends on `zod` only; zod 4, because blocks use `.meta()` and `z.toJSONSchema`, D26). Build with `tsup` to `dist/` (ESM + CJS + types) so Nest can consume it; root `pnpm dev` runs `tsup --watch`.
+- Contracts: `common/locale.schema.ts`, `common/api-error.schema.ts`, and public DTO schemas in `site-settings/`, `profile/`, `navigation/`, `social-links/`, `public-site/` (`[domain].schema.ts` + `[domain].type.ts` + `[domain].enum.ts`), `constants/routes.constant.ts` (real public routes for `NavItem.href`).
 - API `src/i18n/`: `locale.decorator.ts` (`@Locale()` reads `?locale`, default `en`), `pick-locale.util.ts` implementing D19 (`pickGroup(row, ['headline', 'subheadline'], locale)` → `{ headline, subheadline, lang }`), with `pick-locale.util.spec.ts`.
-- Owning modules (service + entity + mapper, no controllers yet): `site-settings`, `profile`, `navigation`, `social-links`, `page-sections`. The profile mapper never outputs `phone`.
-- `modules/public-site/`: `public-site.controller.ts` (`GET /public/site`), `public-site.service.ts` (calls the five services in parallel; visible rows only, ordered by `sortOrder`). Response: `{ settings, profile, nav: { header, footer }, socialLinks, sections }`. `profileStats` is added by T15.
+- Owning modules (service + entity + mapper, no controllers yet): `site-settings`, `profile`, `navigation`, `social-links`. The profile mapper never outputs `phone`. Page blocks get their own module and endpoint in T10a.
+- `modules/public-site/`: `public-site.controller.ts` (`GET /public/site`), `public-site.service.ts` (calls the four services in parallel; visible rows only, ordered by `sortOrder`). Response: `{ settings, profile, nav: { header, footer }, socialLinks }`. `profileStats` is added by T15.
 - A missing singleton returns 404 `{ code: "NOT_SEEDED", message }`. T10 makes this the full error body.
 - `api.http` request with `?locale=en` and `?locale=vi`.
 
 **Out of scope.** Global validation and the error filter (T10). Web consumption (T11).
 
-**Files.** `packages/contracts/{package.json,tsconfig.json,tsup.config.ts}`, `packages/contracts/src/index.ts`, `packages/contracts/src/common/{locale.schema.ts,api-error.schema.ts}`, `packages/contracts/src/{site-settings,profile,navigation,social-links,page-sections,public-site}/*`, `packages/contracts/src/constants/routes.constant.ts`, `apps/api/src/i18n/{locale.decorator.ts,pick-locale.util.ts,pick-locale.util.spec.ts}`, `apps/api/src/modules/{site-settings,profile,navigation,social-links,page-sections}/{[domain].module.ts,[domain].service.ts,entities/*}`, `apps/api/src/modules/public-site/{public-site.module.ts,public-site.controller.ts,public-site.service.ts}`, `apps/api/api.http` ([root STRUCTURE: contracts](../STRUCTURE.md#package-layout-packagescontracts), [api module layout](../apps/api/STRUCTURE.md#module-layout)).
+**Files.** `packages/contracts/{package.json,tsconfig.json,tsup.config.ts}`, `packages/contracts/src/index.ts`, `packages/contracts/src/common/{locale.schema.ts,api-error.schema.ts}`, `packages/contracts/src/{site-settings,profile,navigation,social-links,public-site}/*`, `packages/contracts/src/constants/routes.constant.ts`, `apps/api/src/i18n/{locale.decorator.ts,pick-locale.util.ts,pick-locale.util.spec.ts}`, `apps/api/src/modules/{site-settings,profile,navigation,social-links}/{[domain].module.ts,[domain].service.ts,entities/*}`, `apps/api/src/modules/public-site/{public-site.module.ts,public-site.controller.ts,public-site.service.ts}`, `apps/api/api.http` ([root STRUCTURE: contracts](../STRUCTURE.md#package-layout-packagescontracts), [api module layout](../apps/api/STRUCTURE.md#module-layout)).
 
 **Design.** Spec §5.0 "Layout: header, footer" row; §1.5 "Two API shapes".
 
 **Backend steps, explained.**
 1. **Contracts.** A zod schema describes a JSON shape once. The API uses it to check its output in tests, the web uses the inferred type, and later the admin form uses the same schema to validate input.
-2. **One module per table.** `profile` owns the `Profile` table: only `ProfileService` queries it. `public-site` owns no table; it asks the five services and combines the results. This rule keeps queries in one place per table.
+2. **One module per table.** `profile` owns the `Profile` table: only `ProfileService` queries it. `public-site` owns no table; it asks the four services and combines the results. This rule keeps queries in one place per table.
 3. **Entity and mapper.** The entity file fixes which columns we load. The mapper turns the DB row into the public DTO: it picks `headlineVi` or `headlineEn` and drops private fields like `phone`.
 4. **Locale fallback (D19).** If Vietnamese is missing for any field in a group, the whole group is English and carries `lang: "en"` so the page can mark it for screen readers and fonts.
-5. **Parallel reads.** `Promise.all` runs the five queries at the same time instead of one after another.
+5. **Parallel reads.** `Promise.all` runs the four queries at the same time instead of one after another.
 
 **Acceptance.**
 - [ ] `GET /api/public/site?locale=vi` returns flat fields (`headline`, not `headlineVi`) from the seed (roadmap p07).
 - [ ] Clearing `Profile.subheadlineVi` in Adminer makes the profile group English with `lang: "en"`.
-- [ ] Hidden nav items and sections are not returned; order follows `sortOrder`.
+- [ ] Hidden nav items are not returned; order follows `sortOrder`.
 - [ ] `phone` never appears in the response (mapper unit test).
 - [ ] With an empty DB (`migrate reset --skip-seed`), the endpoint returns 404 with `code` + `message` (roadmap p07).
 
@@ -564,6 +633,48 @@ Each task uses the same template: **Roadmap · Spec · Depends · Size**, then G
 - [ ] `@portfolio/contracts` types are imported by `apps/api`, and by `apps/web` from T11 (roadmap p08, adjusted by D2).
 
 **PR title:** `feat(contracts): zod contracts + error filter`
+
+#### T10a · Block registry contracts + `GET /api/public/pages/:key`
+
+**Roadmap** p08 · **Spec** §1.5 (`PageSection`, replaced by D26), §4.5 (ordering and visibility), §5.0 · **Depends** T10 · **Size** M
+
+**Goal.** One place in code that says which block types exist and what their props look like, and a public endpoint that returns a page's visible, valid blocks in one language, so one bad row can never break a page.
+
+**Scope.**
+- Contracts `packages/contracts/src/blocks/`:
+  - `localized.schema.ts`: `localizedText({ max })` and `localizedMarkdown()` (a `{ en, vi }` pair; English required when the field is required, Vietnamese may be empty), `routeHref()` (a route from `routes.constant.ts`), `sectionHeadingSchema` (`eyebrow`, `title`, `intro`, `iconKey`, optional `link` with label + route).
+  - `block-layout.constant.ts`: `LAYOUT_PRESETS` (`ONE`, `TWO`, `THREE`, `FOUR`, `SPLIT_8_4`, `SPLIT_4_8`, `SPLIT_7_5`) with their columns per breakpoint (the §4 table) and `BLOCK_SURFACES` (`PLAIN`, `BAND`).
+  - `define-block.util.ts`: `defineBlock({ type, version, props, defaults, pages, layouts, maxPerPage, role, migrate, refs })`. `role` is `h1` (first, visible, never deleted), `required` (never deleted or hidden) or `optional`. `migrate(props, fromVersion)` upgrades props saved under an older `version`. `refs(props)` lists the ids the props point at (projects, stats, tags), so T32a can check they exist.
+  - `definitions/hero.block.ts`, `definitions/page-header.block.ts`, `definitions/cta-band.block.ts`: the first three types (catalog in §4). Every field carries `.meta({ widget, label })`: `label` is an `admin.blocks.*` key in `en.json` (D22), never text, and `widget` tells the generated form which input to draw (T45a).
+  - `block-registry.constant.ts`: `BLOCK_REGISTRY` (`type` → definition), `BlockType`, `blockTypeSchema`.
+  - `block.schema.ts` + `block.type.ts`: `adminBlockSchema` (both languages, plus `issues` for an invalid row), `publicBlockSchema` (`{ id, type, key, layout, surface, props, lang }`), `blockKeySchema` (kebab-case, at most 48 characters).
+  - `resolve-block.util.ts`: `parseBlock(row)` runs `migrate`, then the props schema, and returns `{ ok: true, block }` or `{ ok: false, reason: 'UNKNOWN_TYPE' | 'INVALID_PROPS', issues }`. `resolveBlockLocale(props, locale)` replaces every `{ en, vi }` pair with one string and applies D19 to the whole block (`lang: "en"` when any Vietnamese value is missing).
+- Contracts `pages/`: `pages.enum.ts` (`PageKey`, `LayoutPreset`, `BlockSurface`, mirrored from Prisma), `pages.schema.ts` (`publicPageSchema`: `{ key, seo, blocks }`), `pages.type.ts`. Page keys are lowercase in URLs and cache tags (`/public/pages/home`, `page:home`).
+- API `modules/pages/`: `pages.service.ts` loads the `Page` and its visible `PageBlock`s by `sortOrder` and passes every row through `parseBlock`. An unknown or invalid row is dropped and logged once as a warning with page key, block id, type and request id (never the props). `public-pages.controller.ts`: `GET /public/pages/:key?locale` (`:key` parsed with `PageKey` through the T10 pipe; unknown key → 404 `NOT_FOUND`). `entities/page.entity.ts`, `entities/page.mapper.ts` (locale per block, SEO group per D19).
+- Seed: rows in `pages.data.ts` are checked with `parseBlock` for the types that exist. Rows of types added later stay in the seed and are dropped at read time until their task lands (T24, T25, T26, T28, T48).
+- Tests: `resolve-block.util.test.ts` (unknown type, invalid props, `migrate` from an older `version`, locale fallback), `pages.service.spec.ts`; `api.http` with `?locale=en` and `?locale=vi`.
+
+**Out of scope.** Rendering (T14). Writes (T32a). Versions and publishing (T52a): until then visitors see the current rows, like every other table before T52.
+
+**Files.** `packages/contracts/src/blocks/{localized.schema.ts,block-layout.constant.ts,define-block.util.ts,block-registry.constant.ts,block.schema.ts,block.type.ts,resolve-block.util.ts,resolve-block.util.test.ts}`, `packages/contracts/src/blocks/definitions/{hero,page-header,cta-band}.block.ts`, `packages/contracts/src/pages/{pages.schema.ts,pages.type.ts,pages.enum.ts}`, `packages/contracts/src/index.ts`, `apps/api/src/modules/pages/{pages.module.ts,public-pages.controller.ts,pages.service.ts,pages.service.spec.ts,entities/page.entity.ts,entities/page.mapper.ts}`, `apps/api/src/app.module.ts`, `apps/api/prisma/seed/data/pages.data.ts`, `apps/api/api.http` ([root STRUCTURE: contracts](../STRUCTURE.md#package-layout-packagescontracts), [api: pages and blocks](../apps/api/STRUCTURE.md#pages-and-blocks)).
+
+**Design.** §4 block catalog and layout presets. Spec §1.5 conventions (`sortOrder`, `isVisible`, En/Vi pairs, here as `{ en, vi }` inside JSON).
+
+**Backend steps, explained.**
+1. **A JSON column.** `PageBlock.props` is a MySQL `JSON` column, so every row can hold a different shape, which is what blocks need (a hero and a post list have different settings). MySQL only checks that the value is valid JSON. It does not know the shape, so the API checks it with zod on every write (T32a) *and* every read, because a row can also be changed by hand in Adminer or written by an older version of the code.
+2. **The registry is code, the content is data.** Which block types exist and which props they take is decided in code and reviewed in PRs. Which blocks a page shows, in which order and with which text, is data in MySQL, edited in `/admin`. An admin can add more blocks of a known type but cannot invent a new type.
+3. **Fail safe, not fail loud.** One broken block must not take the home page down. The service skips it, logs one warning you can find by request id, and returns the rest. The builder (T45b) shows the broken block to the admin so it gets fixed.
+4. **Schema versions.** When a block's props change shape (a field is renamed), bump its `version` and write `migrate`. Old rows and old published snapshots are upgraded when they are read, so nothing in the DB has to be rewritten, and restoring an old version still works.
+5. **References inside JSON have no foreign keys.** MySQL does not check `projectIds: [3, 7]` inside JSON, so a project can be archived while a block still points at it. The renderer skips missing ids, T32a checks ids on write, and content health lists the dangling ones (T52a).
+
+**Acceptance.**
+- [ ] `GET /api/public/pages/home?locale=vi` returns the visible blocks in `sortOrder`, with flat text props and a `lang` per block.
+- [ ] A row with an unknown `type` or invalid `props`, inserted in Adminer, is missing from the response, the request still returns 200, and the log has one warning with its id.
+- [ ] Clearing one Vietnamese value in a block makes only that block English with `lang: "en"`.
+- [ ] Unit tests cover `parseBlock` (unknown type, invalid props, `migrate` from an older `version`) and `resolveBlockLocale`.
+- [ ] `GET /api/public/pages/unknown` returns 404 in the shared error shape.
+
+**PR title:** `feat(contracts): block registry + public pages`
 
 #### T11 · Web data layer + next-intl + root layout
 
@@ -659,26 +770,39 @@ Each task uses the same template: **Roadmap · Spec · Depends · Size**, then G
 
 **Roadmap** p09 · **Spec** [§4.2](./design/portfolio-design-system.md#s-4-2), §4.5, [§5.1](./design/portfolio-design-system.md#s-5-1), §7.1 · **Depends** T11, T13 · **Size** L
 
-**Goal.** The real public layout (header, footer, skip link, locale and theme switches, mobile menu, ⌘K) and the first two home sections, all from `GET /public/site`, plus the script that keeps content and personal data out of the code.
+**Goal.** The real public layout (header, footer, skip link, locale and theme switches, mobile menu, ⌘K) from `GET /public/site`, the block renderer, and the first home blocks (hero, CTA band) from `GET /public/pages/home`, plus the script that keeps content and personal data out of the code.
 
 **Scope.**
 - `core` components: `SiteShell`, `SiteHeader` (sticky, 80% `--background` + blur, `--shadow-1` after scroll; header `NavItem`s via `NavLink`; ⌘K button; `LocaleSwitch`; `ThemeToggle`; mobile `Sheet`), `SiteFooter` (one mono line: name, footer nav, social icons, `NEXT_PUBLIC_BUILD_SHA`), `SkipLink`, `LocaleSwitch` (VI/EN `toggle-group`, links to the same path in the other locale, `hreflang`), public `CommandPalette` (nav, theme, locale; post search added in T28), `CopyEmailButton` (copies `settings.contactEmail`, `sonner` toast), `LocaleSuggestBanner` (Q5 default). shadcn: `sheet`, `navigation-menu`, `toggle-group`, `command`, `dialog`, `sonner`.
 - Routes: `app/[locale]/(site)/layout.tsx` → `SiteShell`; `app/[locale]/error.tsx` (chrome-only page, Retry, request id; no hard-coded name), `app/[locale]/(site)/error.tsx`, `app/[locale]/(site)/not-found.tsx`.
-- `home`: `views/HomeIndex.tsx` renders `sections` through the registry `constants/home-sections.constant.ts` (key → container, each wrapped in `SectionBoundary`). Only `hero` and `cta` are implemented now; other keys render nothing until T24.
-  - `HeroSection`: `Atmosphere variant="hero"` (if `ambientEffects`), `KickerPill` (`heroKicker`), `AccentHeadline` at `text-display`, sub-line at `text-prose`, availability badge, two buttons: primary label = `PageSection(HOME, hero).ctaLabel` → `/projects`, secondary label = `PageSection(HOME, cta).ctaLabel` → `/contact`. Text spans full width until the diagram arrives (T22, T24).
-  - `CtaBandSection`: `CtaBand` with `PageSection(HOME, cta)` title/intro, `CopyEmailButton` (chrome label "Copy email"), up to 2 `SocialLink.showInCta` outline buttons. Hidden if the section has no title.
+- `blocks` module (D26):
+  - `services/pages.service.ts`: `getPage(key, locale)`, tag `page:{key}`, wrapped in React `cache()`; `qk.public.page(key, locale)` in contracts.
+  - `components/BlockRenderer/BlockRenderer.tsx` (server). It:
+    - skips a block whose `type` has no renderer;
+    - puts neighbouring `BAND` blocks inside one `Band`;
+    - wraps each block in `BlockLayout` and in `SectionBoundary` with that renderer's skeleton;
+    - sets `id={block.key}` for anchors;
+    - passes each block a `BlockContext` (`{ locale, searchParams, draft }`).
+  - `constants/block-renderers.constant.ts`: the web registry, `type` → `{ component, skeleton }`, `satisfies Record<BlockType, BlockRendererEntry>` (rule 8).
+  - `views/BlocksPage.tsx`: fetch the page, then `BlockRenderer`. `home/views/HomeIndex.tsx` renders `BlocksPage` for `home`.
+- `packages/ui` `BlockLayout`: the T10a presets as CSS grid classes with the §4 responsive rules. Regions come in as children, and the section is `aria-labelledby` its heading.
+- Renderers for the three T10a types (later blocks render nothing until their task):
+  - `HeroBlock`: `Atmosphere variant="hero"` (if `ambientEffects`), `KickerPill` (`heroKicker`), `AccentHeadline` at `text-display`, sub-line at `text-prose`, availability badge (if `showAvailability`), and two buttons from `props.primaryCta` and `props.secondaryCta` (label → route). Layout `ONE` until the diagram arrives (T22, T24).
+  - `CtaBandBlock`: `CtaBand` with the block's title and intro, `CopyEmailButton` (chrome label "Copy email") when `showEmail`, and up to 2 `SocialLink.showInCta` outline buttons when `showSocial`. Hidden if the block has no title.
+  - `PageHeaderBlock`: eyebrow, H1 at `text-title`, intro (PROJECTS and NOTES use it from T26 and T28).
 - `scripts/check-content.mjs` + root script `check:content` + CI step: (1) fails on email addresses and full phone numbers (8+ digits, with or without a `+84` prefix) anywhere in tracked files except the `<email>` / `<phone>` placeholders; (2) fails on CV strings (a denylist built from the seed data: names, companies, city) in `apps/web/**` and `packages/ui/src/components/**`, excluding `*.stories.tsx`, `*.test.tsx` and `packages/contracts/src/fixtures/`.
 
-**Out of scope.** Other home sections (T24). Admin (T37).
+**Out of scope.** Other block types (T24, T25, T26, T28, T48). Admin (T37).
 
-**Files.** `apps/web/app/[locale]/(site)/{layout.tsx,error.tsx,not-found.tsx}`, `apps/web/app/[locale]/error.tsx`, `apps/web/src/modules/core/components/{SiteShell,SiteHeader,SiteFooter,SkipLink,LocaleSwitch,CommandPalette,CopyEmailButton,LocaleSuggestBanner}/*`, `apps/web/src/modules/home/views/HomeIndex.tsx`, `apps/web/src/modules/home/constants/home-sections.constant.ts`, `apps/web/src/modules/home/components/{HeroSection,CtaBandSection}/*`, `apps/web/i18n/locales/{en,vi}.json`, `packages/ui/src/components/ui/{sheet,navigation-menu,toggle-group,command,dialog,sonner}.tsx`, `scripts/check-content.mjs`, `package.json`, `.github/workflows/ci.yml`.
+**Files.** `apps/web/app/[locale]/(site)/{layout.tsx,error.tsx,not-found.tsx}`, `apps/web/app/[locale]/error.tsx`, `apps/web/src/modules/core/components/{SiteShell,SiteHeader,SiteFooter,SkipLink,LocaleSwitch,CommandPalette,CopyEmailButton,LocaleSuggestBanner}/*`, `apps/web/src/modules/home/views/HomeIndex.tsx`, `apps/web/src/modules/blocks/{components/{BlockRenderer,HeroBlock,CtaBandBlock,PageHeaderBlock}/*,constants/block-renderers.constant.ts,services/pages.service.ts,types/entities/block-context.type.ts,views/BlocksPage.tsx}`, `packages/ui/src/components/BlockLayout/*`, `packages/contracts/src/constants/query-keys.constant.ts`, `apps/web/i18n/locales/{en,vi}.json`, `packages/ui/src/components/ui/{sheet,navigation-menu,toggle-group,command,dialog,sonner}.tsx`, `scripts/check-content.mjs`, `package.json`, `.github/workflows/ci.yml`.
 
 **Design.** Figma `2:2`/`3:2` (header, hero, CTA band, footer), `8:2` (mobile header with hamburger, stacked CTA). Mockup `home.html` (+ `?dark=1`, and at 390px). Tokens: `text-display`, `text-prose`, `--primary`, `--primary-subtle`, `--glow`, `--grid-line`, `--band`, `--shadow-1`, `--z-header`, `--z-skip`.
 
 **Acceptance.**
 - [ ] Changing a seed value and re-seeding changes the home page (roadmap p09).
 - [ ] With the API stopped, `/en` shows the chrome-only error page with Retry, not a crash or a blank page (roadmap p09).
-- [ ] Setting `isVisible = 0` on `PageSection(HOME, cta)` in Adminer removes the CTA band.
+- [ ] Setting `isVisible = 0` on the home `cta` block in Adminer removes the CTA band; changing its `sortOrder` moves it.
+- [ ] `BlockRenderer` tests: a type with no renderer renders nothing, and a renderer that throws shows the inline error for that block only.
 - [ ] The locale switch keeps the current path; Tab from the top focuses the skip link first; the mobile sheet traps focus and `Esc` closes it.
 - [ ] `pnpm check:content` fails on a planted email-shaped string in a temporary file (output shown in the PR) and passes on the clean tree.
 - [ ] Screenshots at 1440/390, light/dark, compared with `home.html` hero and footer.
@@ -943,22 +1067,32 @@ Each task uses the same template: **Roadmap · Spec · Depends · Size**, then G
 
 **Roadmap** p14 · **Spec** [§5.1](./design/portfolio-design-system.md#s-5-1), §5.0 (home rows), §4.4, §4.5, §7.2 (`01`, `02`, `05`, `09`) · **Depends** T14, T19, T20, T21, T22 · **Size** L
 
-**Goal.** The whole home page from the API, in the order and visibility set in `PageSection`, matching the home frames.
+**Goal.** The whole home page built from the home blocks (D26), in their order, visibility and layout, matching the home frames.
 
 **Scope.**
 - Services (server, tagged): `projects/services/{projects,domains}.service.ts`, `about/services/skills.service.ts`, `home/services/process-steps.service.ts`, `notes/services/posts.service.ts`.
-- Home containers registered in `home-sections.constant.ts`: `stats` (`StatBand`, hide if < 2), `marquee` (`TechMarquee`, hide if 0, static if < 6 or `marqueeEnabled` is false), `featured` (featured `CaseCard`, hide if none), `domains` (`DomainCard`s, cards with 0 projects hidden), `work` (3 `CaseCard`s), `process` (`FeatureCard` 2×2 from principles + `ProcessFlow`, hide if < 3 steps), `skills` (`SkillGroup`), `notes` (3 `PostCard`s), plus `MigrationDiagram` in the hero.
-- Bands alternate as in §5.1: stats + marquee, domains, process. `SectionHeader` with eyebrow and icon tile on every section. `Reveal` on scroll.
-- Each section in `SectionBoundary` with a section-shaped skeleton (Figma `21:2`) and an inline error with Retry; an optional empty section disappears with its anchor.
+- Block types (rule 8: definition + renderer + registry entries):
+  - `stat-band`: `StatBand`, hidden if fewer than 2 stats.
+  - `tech-marquee`: `TechMarquee`, hidden if empty, static if fewer than 6 skills or `marqueeEnabled` is false.
+  - `featured-case`: featured `CaseCard`, hidden if none.
+  - `domain-grid`: `DomainCard`s; cards with 0 projects are hidden.
+  - `case-grid`: `CaseCard`s by `source`. `manual` keeps the `projectIds` order and skips missing or unpublished ids.
+  - `process`: `FeatureCard` 2×2 from principles + `ProcessFlow`, hidden if fewer than 3 steps.
+  - `skill-groups`: `SkillGroup`.
+  - `post-list`: `PostCard`s, with `limit` and an optional `tag`.
+  - The hero gains `MigrationDiagram` in its aside when `layout` is `SPLIT_7_5` and `showDiagram` is on.
+- The §5.1 bands come from the seeded `surface` values: stats + marquee (one shared band), domains, process. `SectionHeader` with eyebrow and icon tile on every block that has a `heading`. `Reveal` on scroll.
+- Each block in `SectionBoundary` with a block-shaped skeleton (Figma `21:2`) and an inline error with Retry; an optional empty block disappears with its anchor.
 
-**Files.** `apps/web/src/modules/home/components/{StatsSection,MarqueeSection,FeaturedSection,DomainsSection,WorkSection,ProcessSection,SkillsSection,NotesSection}/*`, `apps/web/src/modules/home/constants/home-sections.constant.ts`, `apps/web/src/modules/home/components/HeroSection/HeroSection.tsx`, `apps/web/src/modules/home/services/process-steps.service.ts`, `apps/web/src/modules/projects/services/{projects,domains}.service.ts`, `apps/web/src/modules/about/services/skills.service.ts`, `apps/web/src/modules/notes/services/posts.service.ts`, `apps/web/i18n/locales/{en,vi}.json`.
+**Files.** `apps/web/src/modules/blocks/components/{StatBandBlock,TechMarqueeBlock,FeaturedCaseBlock,DomainGridBlock,CaseGridBlock,ProcessBlock,SkillGroupsBlock,PostListBlock}/*`, `apps/web/src/modules/blocks/constants/block-renderers.constant.ts`, `apps/web/src/modules/blocks/components/HeroBlock/HeroBlock.tsx`, `packages/contracts/src/blocks/definitions/{stat-band,tech-marquee,featured-case,domain-grid,case-grid,process,skill-groups,post-list}.block.ts`, `packages/contracts/src/blocks/{block-registry.constant.ts,definitions/hero.block.ts}`, `apps/web/src/modules/home/services/process-steps.service.ts`, `apps/web/src/modules/projects/services/{projects,domains}.service.ts`, `apps/web/src/modules/about/services/skills.service.ts`, `apps/web/src/modules/notes/services/posts.service.ts`, `apps/web/i18n/locales/{en,vi}.json`.
 
 **Design.** Figma `2:2`/`3:2` (1440 light/dark), `8:2` (390), `21:2` (loading). Mockups `home.html` (+ `?dark=1`, 390px), `home-skeleton.html`. Tokens: all v2 tokens (`--band`, `--grid-line`, `--glow`, `--card-glass`, `--hue-*`), `text-display`, `text-title`, `text-heading`.
 
 **Acceptance.**
 - [ ] Every text on the page traces to an API field; `pnpm check:content` passes (roadmap p14).
-- [ ] Section order follows `PageSection.sortOrder`; hiding `marquee` in Adminer removes it (spec §6 Day 7 v2 check).
-- [ ] Forcing one section's endpoint to fail shows an inline alert there while the rest renders.
+- [ ] Block order follows `PageBlock.sortOrder`; hiding the `marquee` block in Adminer removes it (spec §6 Day 7 v2 check).
+- [ ] Changing the `work` block's `layout` to `TWO` in Adminer gives 2 columns from 768px; at 390px every block is one column.
+- [ ] Forcing one block's endpoint to fail shows an inline alert there while the rest renders.
 - [ ] Keyboard-only pass: Tab order, visible focus, cards open with Enter (roadmap p14).
 - [ ] No horizontal scroll at 390px; CLS 0 from count-up and reveal.
 - [ ] Screenshots at 1440 light/dark and 390 compared with the Figma frames; loading state compared with `21:2`.
@@ -967,23 +1101,30 @@ Each task uses the same template: **Roadmap · Spec · Depends · Size**, then G
 
 #### T25 · About page + Timeline
 
-**Roadmap** p14 · **Spec** [§5.2](./design/portfolio-design-system.md#s-5-2), §4.2 (`Timeline`), §5.0 (About rows) · **Depends** T24 · **Size** L
+**Roadmap** p14 · **Spec** [§5.2](./design/portfolio-design-system.md#s-5-2), §4.2 (`Timeline`), §5.0 (About rows) · **Depends** T23, T24 · **Size** L
 
-**Goal.** The About page from the API: intro, stats strip, experience timeline, principles, skills, education and CV card, in `PageSection` order.
+**Goal.** The About page built from the about blocks (D26): intro, stats strip, experience timeline, principles, skills, education and CV card, plus a free `prose` block for any page.
 
 **Scope.**
-- Route `app/[locale]/(site)/about/page.tsx` → `about/views/AboutIndex.tsx`, registry `about/constants/about-sections.constant.ts` (keys from D18).
+- Route `app/[locale]/(site)/about/page.tsx` → `about/views/AboutIndex.tsx`, which renders `BlocksPage` for `about`.
 - Services: `about/services/{experience,education,principles}.service.ts` (+ the existing skills service).
-- Containers: `IntroSection` (avatar card with city and availability pill; avatar shows initials until media exists; bio via `Markdown`), `StatsSection` (`StatBand compact`), `ExperienceSection` (`Timeline`), `PrinciplesSection`, `SkillsSection`, `EducationSection`, `CvSection` (download card; hidden while `resumeEnId`/`resumeViId` are empty; links work after T51).
+- Block types (rule 8):
+  - `about-intro` (H1): avatar card with city and availability pill; the avatar shows initials until media exists; bio via `Markdown`.
+  - `timeline`: `Timeline`.
+  - `principle-list`, `education-list`.
+  - `cv-download`: download card, hidden while `resumeEnId`/`resumeViId` are empty; links work after T51.
+  - `prose`: a free Markdown `body` and optional `aside` through the T23 pipeline, allowed on every page; `SPLIT_8_4` puts the aside on the right.
+  - `stat-band` (`compact`) and `skill-groups` from T24 are allowed on ABOUT.
 - `packages/ui` `Timeline` / `TimelineItem`: year rail, rows grouped by `company`, role, `<time datetime>` month ranges, "now" label for a null `endDate` (chrome), highlights in an `accordion` (open by default under reduced motion), tech tags. `<ol>`.
 
-**Files.** `apps/web/app/[locale]/(site)/about/page.tsx`, `apps/web/src/modules/about/views/AboutIndex.tsx`, `apps/web/src/modules/about/constants/about-sections.constant.ts`, `apps/web/src/modules/about/components/{IntroSection,StatsSection,ExperienceSection,PrinciplesSection,SkillsSection,EducationSection,CvSection}/*`, `apps/web/src/modules/about/services/{experience,education,principles}.service.ts`, `packages/ui/src/components/Timeline/*`, `packages/ui/src/components/ui/{accordion,avatar}.tsx`.
+**Files.** `apps/web/app/[locale]/(site)/about/page.tsx`, `apps/web/src/modules/about/views/AboutIndex.tsx`, `apps/web/src/modules/blocks/components/{AboutIntroBlock,TimelineBlock,PrincipleListBlock,EducationListBlock,CvDownloadBlock,ProseBlock}/*`, `apps/web/src/modules/blocks/constants/block-renderers.constant.ts`, `packages/contracts/src/blocks/definitions/{about-intro,timeline,principle-list,education-list,cv-download,prose}.block.ts`, `packages/contracts/src/blocks/block-registry.constant.ts`, `apps/web/src/modules/about/services/{experience,education,principles}.service.ts`, `packages/ui/src/components/Timeline/*`, `packages/ui/src/components/ui/{accordion,avatar}.tsx`.
 
 **Design.** Figma `7:2`. Mockup `about.html`. Tokens: `--band`, `--card`, `--border`, `--primary`, `text-title`, `text-subheading`, `text-prose`, `text-meta`.
 
 **Acceptance.**
 - [ ] The company with two roles shows as one group with two items.
-- [ ] Hidden optional sections disappear with their anchors; the empty timeline shows `empty`.
+- [ ] Hidden or empty optional blocks disappear with their anchors; the empty timeline shows `empty`.
+- [ ] A `prose` block holding the T23 unsafe fixture renders none of the unsafe items.
 - [ ] On `/vi`, fallback groups carry `lang="en"` and the "EN" badge.
 - [ ] Screenshots compared with `7:2`; keyboard pass.
 
@@ -997,10 +1138,10 @@ Each task uses the same template: **Roadmap · Spec · Depends · Size**, then G
 
 **Scope.**
 - Route `app/[locale]/(site)/projects/page.tsx` → `projects/views/ProjectsIndex.tsx`. URL params parsed with `projectListParamsSchema`.
-- `HeaderSection` from `PageSection(PROJECTS, header)` (eyebrow, H1, intro).
+- `ProjectsIndex` renders `BlocksPage` for `projects`, with `searchParams` in the `BlockContext`: `page-header` (T14), then the new `projects-browser` block (rule 8; required, one per page; props `showFeatured`, `pageSize`; layout `TWO` or `THREE` for the grid), which holds the list below.
 - `DomainFilter` (pills with counts and hue dots, real links `?domain=`; horizontal scroll with edge fade on mobile), `TechFilter` (client island: `popover` + `command` combobox that navigates to `?skill=`), featured wide `CaseCard`, then a 2-column grid; `empty` with "Clear filters"; `pagination` when there are more rows than `pageSize`.
 
-**Files.** `apps/web/app/[locale]/(site)/projects/page.tsx`, `apps/web/src/modules/projects/views/ProjectsIndex.tsx`, `apps/web/src/modules/projects/components/{HeaderSection,DomainFilter,TechFilter,ProjectsGrid}/*`, `packages/ui/src/components/ui/{popover,pagination}.tsx`.
+**Files.** `apps/web/app/[locale]/(site)/projects/page.tsx`, `apps/web/src/modules/projects/views/ProjectsIndex.tsx`, `apps/web/src/modules/projects/components/{DomainFilter,TechFilter,ProjectsGrid}/*`, `apps/web/src/modules/blocks/components/ProjectsBrowserBlock/*`, `apps/web/src/modules/blocks/constants/block-renderers.constant.ts`, `packages/contracts/src/blocks/{definitions/projects-browser.block.ts,block-registry.constant.ts}`, `packages/ui/src/components/ui/{popover,pagination}.tsx`.
 
 **Design.** Figma `13:2` (fully bound: compare variables, not only pixels). Mockup `projects.html`. Tokens: `--hue-*`, `--card`, `--border-strong`, `--shadow-2`, `text-title`, `text-body`, `text-meta`.
 
@@ -1043,12 +1184,12 @@ Each task uses the same template: **Roadmap · Spec · Depends · Size**, then G
 
 **Scope.**
 - Routes `app/[locale]/(site)/notes/page.tsx` → `notes/views/NotesIndex.tsx`; `notes/[slug]/page.tsx` → `notes/views/NotesDetail.tsx` (`generateStaticParams`, `notFound()`).
-- List: `HeaderSection` (`PageSection(NOTES, header)`), `NotesSearch` (client: `role="search"`, debounced 200ms, URL-synced `?q=&tag=`, results count in a live region, `⌘K` hint), tag pills with counts from `GET /public/tags`, year groups of `PostCard` rows, featured post as a wide card, `pagination`.
+- List: `NotesIndex` renders `BlocksPage` for `notes`: `page-header`, then the new `notes-browser` block (rule 8; required; props `showFeatured`, `pageSize`) holding `NotesSearch` (client: `role="search"`, debounced 200ms, URL-synced `?q=&tag=`, results count in a live region, `⌘K` hint), tag pills with counts from `GET /public/tags`, year groups of `PostCard` rows, featured post as a wide card, `pagination`.
   - `notes/hooks/use-notes-search.hook.ts`: `useQuery(qk.public.posts(params))`, `placeholderData: keepPreviousData`, `initialData` = server first page when `q` is empty, abort via `signal`. `notes/services/posts-client.service.ts` uses `apiClient`.
 - Post: eyebrow `NOTE · #tag`, mono date · minutes, tags, H1, `Markdown` body, `TakeawaysCard` (if `takeaways`), prev/next `PostCard`s, `SectionNav`, `ContentProgress`.
 - Public `CommandPalette` gains post search (same hook).
 
-**Files.** `apps/web/app/[locale]/(site)/notes/page.tsx`, `apps/web/app/[locale]/(site)/notes/[slug]/page.tsx`, `apps/web/src/modules/notes/views/{NotesIndex,NotesDetail}.tsx`, `apps/web/src/modules/notes/components/{HeaderSection,NotesSearch,TagFilter,PostList,PostHeader,PostPrevNext}/*`, `apps/web/src/modules/notes/hooks/use-notes-search.hook.ts`, `apps/web/src/modules/notes/services/{posts.service.ts,posts-client.service.ts}`, `apps/web/src/modules/core/components/CommandPalette/*`, `packages/ui/src/components/ui/input-group.tsx`.
+**Files.** `apps/web/app/[locale]/(site)/notes/page.tsx`, `apps/web/app/[locale]/(site)/notes/[slug]/page.tsx`, `apps/web/src/modules/notes/views/{NotesIndex,NotesDetail}.tsx`, `apps/web/src/modules/notes/components/{NotesSearch,TagFilter,PostList,PostHeader,PostPrevNext}/*`, `apps/web/src/modules/blocks/components/NotesBrowserBlock/*`, `apps/web/src/modules/blocks/constants/block-renderers.constant.ts`, `packages/contracts/src/blocks/{definitions/notes-browser.block.ts,block-registry.constant.ts}`, `apps/web/src/modules/notes/hooks/use-notes-search.hook.ts`, `apps/web/src/modules/notes/services/{posts.service.ts,posts-client.service.ts}`, `apps/web/src/modules/core/components/CommandPalette/*`, `packages/ui/src/components/ui/input-group.tsx`.
 
 **Design.** Figma `9:2` (list), `10:2` (post). Mockups `notes.html`, `post.html`. Tokens: `text-prose`, `text-subheading`, `text-meta`, `--primary-subtle`, `--measure`.
 
@@ -1150,7 +1291,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **PR title:** `feat(api): taxonomy crud endpoints`
 
-#### T32 · Write API: site, profile, nav, social, sections, contact topics
+#### T32 · Write API: site, profile, nav, social, contact topics
 
 **Roadmap** p15 · **Spec** §1.5 (Site group), §5.10, §6 Day 6 · **Depends** T29 · **Size** M
 
@@ -1158,11 +1299,11 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **Scope.**
 - `GET/PATCH /admin/site` (`site-settings`), `GET/PATCH /admin/profile` (`profile`; admin DTO includes the private `phone`; `headlineAccent{En,Vi}` must be a substring of `headline{En,Vi}` → `fieldErrors`).
-- `navigation` CRUD (`href` must be a route from `routes.constant.ts` or an absolute `https://` URL), `social-links` CRUD (at most 2 with `showInCta` → 400), `page-sections` list/patch only (keys are fixed by the seed: no create or delete).
+- `navigation` CRUD (`href` must be a route from `routes.constant.ts` or an absolute `https://` URL), `social-links` CRUD (at most 2 with `showInCta` → 400). Pages and blocks have their own write API (T32a).
 - New module `contact-topics`: admin CRUD and `GET /public/contact-topics` (visible, ordered).
 - e2e tests: invalid profile PATCH, accent not in headline, nav href rules, CTA limit.
 
-**Files.** `apps/api/src/modules/{site-settings,profile,navigation,social-links,page-sections}/{admin-*.controller.ts,*.service.ts,dto/*}`, `apps/api/src/modules/contact-topics/*`, `apps/api/prisma/schema.prisma` + migration `add-contact-topics`, `apps/api/prisma/seed/data/site.data.ts`, `packages/contracts/src/{site-settings,profile,navigation,social-links,page-sections,contact-topics}/*`, `apps/api/test/site.e2e-spec.ts`, `apps/api/api.http`.
+**Files.** `apps/api/src/modules/{site-settings,profile,navigation,social-links}/{admin-*.controller.ts,*.service.ts,dto/*}`, `apps/api/src/modules/contact-topics/*`, `apps/api/prisma/schema.prisma` + migration `add-contact-topics`, `apps/api/prisma/seed/data/site.data.ts`, `packages/contracts/src/{site-settings,profile,navigation,social-links,contact-topics}/*`, `apps/api/test/site.e2e-spec.ts`, `apps/api/api.http`.
 
 **Design.** Spec §5.10.
 
@@ -1177,19 +1318,59 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **PR title:** `feat(api): site crud endpoints`
 
+#### T32a · Write API: pages and blocks
+
+**Roadmap** p15 · **Spec** §1.5, §4.6 (autosave `409`), §5.10, D26 · **Depends** T10a, T29 · **Size** L
+
+**Goal.** Admin endpoints to add, edit, hide, duplicate and delete the blocks of a page's draft, with every registry rule enforced by the API.
+
+**Scope.**
+- `admin-pages.controller.ts`:
+  - `GET /admin/pages`: the five pages with key, block count and `updatedAt` (T52a adds the published version and `hasUnpublishedChanges`).
+  - `GET /admin/pages/:key`: page SEO fields in both languages and every block, hidden ones included. Unknown or invalid rows are returned with `issues`, so the builder can show them.
+  - `PATCH /admin/pages/:key`: SEO fields, with the `updatedAt` check.
+  - `POST /admin/pages/:key/blocks` `{ type, afterId? }`: creates a block with the type's `defaults` and first layout, a unique `key` derived from the type (`case-grid`, `case-grid-2`), placed after `afterId` or at the end. 400 `BLOCK_NOT_ALLOWED` when the type is not allowed on this page; 409 `BLOCK_LIMIT` above `maxPerPage`.
+  - `PATCH /admin/pages/:key/blocks/:id` `{ props?, layout?, surface?, isVisible?, key?, updatedAt }`: `props` parsed with the type's schema → 400 with `fieldErrors` keyed by path (`props.primaryCta.label.en`); `layout` must be one of the type's layouts; `refs` checked (an unknown project or stat id → 400 on that field); stale `updatedAt` → 409 `STALE`.
+  - `POST /admin/pages/:key/blocks/:id/duplicate`: same props, new key, placed right after.
+  - `DELETE /admin/pages/:key/blocks/:id`: hard delete of the draft row. A published version keeps the block until the next publish (T52a).
+- Page rules in `pages-rules.util.ts` (unit-tested, reused by publish in T52a): the `h1` block is first, visible and cannot be deleted (409 `BLOCK_LOCKED`); `required` blocks cannot be deleted or hidden (409 `BLOCK_REQUIRED`); `maxPerPage`; allowed pages.
+- Every write also updates `Page.updatedAt` in the same transaction, so the page knows it has draft changes.
+- Contracts `pages/`: admin page DTO, `createBlockSchema`, `updateBlockSchema` (`props` is `unknown` here and parsed per type in the service, because one body schema cannot know every type), `updatePageSchema`. `ErrorCode` gains `BLOCK_NOT_ALLOWED`, `BLOCK_LIMIT`, `BLOCK_LOCKED`, `BLOCK_REQUIRED`.
+- e2e `test/pages.e2e-spec.ts`: add every allowed type; invalid props → 400 with the field path; type not allowed → 400; over the limit → 409; delete the H1 block → 409; hide a required block → 409; stale update → 409; unknown project id in a `case-grid` → 400; a row with an unknown type (inserted with Prisma in the test) is listed with `issues` by the admin route and absent from the public one.
+
+**Out of scope.** Reorder (T33). Publish, versions, preview (T52a). The builder UI (T45b).
+
+**Files.** `apps/api/src/modules/pages/{admin-pages.controller.ts,pages.service.ts,pages-rules.util.ts,pages-rules.util.spec.ts,dto/*,entities/page.mapper.ts}`, `packages/contracts/src/pages/*`, `packages/contracts/src/common/api-error.schema.ts`, `apps/api/test/pages.e2e-spec.ts`, `apps/api/api.http`.
+
+**Design.** None (API only).
+
+**Backend steps, explained.**
+1. **Validate by type, in the service.** The body of `PATCH …/blocks/:id` depends on the block's type, which the server reads from the DB row. So the controller accepts `props` as unknown, and the service picks the type's zod schema and parses. A failure becomes the usual 400 with `fieldErrors`, so the generated form (T45a) shows each message under its input.
+2. **Rules belong to the server.** The builder hides the buttons that would break a rule, but the API is what refuses them, with a clear `code`. A script or an old browser tab cannot delete the hero.
+3. **Only the draft changes.** These endpoints edit the draft rows. Once T52a lands, visitors keep seeing the published version until someone publishes, so you can rearrange freely.
+4. **Optimistic concurrency per block.** Each block has its own `updatedAt`, so two people editing two different blocks do not conflict; the same block open in two tabs does.
+
+**Acceptance.**
+- [ ] `api.http` covers every route, including the error cases (roadmap p15).
+- [ ] Invalid props return 400 with `fieldErrors` on the exact path; a duplicate block `key` returns 409 with `fieldErrors.key`.
+- [ ] Deleting the H1 block or hiding a required block returns 409 with its code.
+- [ ] `pnpm --filter @portfolio/api test:e2e` is green, including the unknown-type case.
+
+**PR title:** `feat(api): page blocks crud`
+
 #### T33 · Transactional reorder + tag replace
 
-**Roadmap** p16 · **Spec** §1.6 (transactions), §4.6 (optimistic reorder) · **Depends** T31, T32 · **Size** M
+**Roadmap** p16 · **Spec** §1.6 (transactions), §4.6 (optimistic reorder) · **Depends** T31, T32, T32a · **Size** M
 
 **Goal.** Reordering any list and replacing a post's tags either fully succeed or change nothing.
 
 **Scope.**
 - `common/utils/reorder.util.ts`: given a model delegate and `ids: number[]`, checks the ids are exactly the current set, then writes `sortOrder = index` for each inside `prisma.$transaction(async (tx) => …)`.
-- `PATCH /admin/{entity}/order` with body `{ ids }` for projects, experience, principles, profile stats, process steps, skills, skill categories, domains, nav items, social links, page sections (per page), contact topics.
+- `PATCH /admin/{entity}/order` with body `{ ids }` for projects, experience, principles, profile stats, process steps, skills, skill categories, domains, nav items, social links, contact topics, and page blocks (`PATCH /admin/pages/:key/blocks/order`, per page; the H1 block must stay first, T32a).
 - Post tag replacement and project skill/metric replacement moved into explicit interactive transactions with the field update.
 - Forced-failure test: make the third update throw inside the transaction and assert `sortOrder` and tags are unchanged.
 
-**Files.** `apps/api/src/common/utils/reorder.util.ts` (+ `.spec.ts`), `apps/api/src/modules/*/admin-*.controller.ts` (order routes), `apps/api/src/modules/{posts,projects}/*.service.ts`, `packages/contracts/src/common/reorder.schema.ts`, `apps/api/test/reorder.e2e-spec.ts`, `apps/api/api.http`.
+**Files.** `apps/api/src/common/utils/reorder.util.ts` (+ `.spec.ts`), `apps/api/src/modules/*/admin-*.controller.ts` (order routes), `apps/api/src/modules/{posts,projects,pages}/*.service.ts`, `packages/contracts/src/common/reorder.schema.ts`, `apps/api/test/reorder.e2e-spec.ts`, `apps/api/api.http`.
 
 **Design.** None (API only).
 
@@ -1298,7 +1479,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 - `JwtAuthGuard` (from T35) becomes global and reads `@Public()` with `Reflector`: public routes skip it; everything else needs a valid access token or gets 401. `@Public()` on health, `POST /auth/login`, `POST /auth/refresh` (it has its own `JwtRefreshGuard`), `POST /auth/logout` and every `public-*.controller.ts`.
 - `common/decorators/roles.decorator.ts`: `@Roles(...roles: Role[])` with `Role = 'admin' | 'user'` from contracts.
 - `common/guards/roles.guard.ts`: skips `@Public()` routes; reads `@Roles()` from the handler, then the class; **no `@Roles()` means `['admin']`**; `request.user.role` not in the list → 403 `FORBIDDEN`.
-- Add `@Roles('admin', 'user')` to every read (`GET`) handler of the admin controllers that exist so far (T29–T32) and to `GET /auth/me`. Writes keep no decorator, so they are admin only. Later tasks name their roles explicitly (see the table).
+- Add `@Roles('admin', 'user')` to every read (`GET`) handler of the admin controllers that exist so far (T29–T32a) and to `GET /auth/me`. Writes keep no decorator, so they are admin only. Later tasks name their roles explicitly (see the table).
 - `common/guards/origin.guard.ts`: for `POST/PUT/PATCH/DELETE`, `Origin` must equal `WEB_ORIGIN`; otherwise 403 `BAD_ORIGIN` (D8). Login, refresh and logout are included. Server-to-server calls from Next (contact Server Action, T48) send `Origin: WEB_ORIGIN` explicitly.
 - `common/decorators/current-user.decorator.ts`: `@CurrentUser()` returns `request.user` (`{ id, role }`).
 - `@nestjs/throttler`: login 5 per minute per IP + email → 429; refresh 30 per minute per IP. Trust the loopback proxy (`trust proxy`) so the client IP comes from `x-forwarded-for` set by Next.
@@ -1310,9 +1491,9 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 | --- | --- | --- | --- |
 | Own account: me, logout, change own password | yes | yes | `/auth/*` (T35, T46) |
 | Dashboard: counts, content health, analytics charts | read | read | `GET /admin/stats`, `GET /admin/health` (T38, T54) |
-| Content: projects, posts, experience and other about tables, skills, tags, domains, site, profile, nav, social, sections, contact topics | read, create, edit, delete, reorder | read only (lists and editors open read-only) | `/admin/*` (T29–T33, T39–T45) |
-| Publish, unpublish, bulk status changes | yes | no | T52, T55 |
-| Draft preview | yes | yes | `GET /admin/preview/*`, `/api/draft` (T52) |
+| Content: projects, posts, experience and other about tables, skills, tags, domains, site, profile, nav, social, contact topics, pages and blocks | read, create, edit, delete, reorder | read only (lists, editors and the page builder open read-only) | `/admin/*` (T29–T33, T39–T45b) |
+| Publish, unpublish, bulk status changes; page publish, discard and version restore | yes | no | T52, T52a, T55 |
+| Draft preview (including the page builder live preview) and page version history | yes | yes | `GET /admin/preview/*`, `/api/draft`, `GET /admin/pages/:key/versions` (T52, T52a) |
 | Media: browse | yes | yes | `GET /admin/media` (T50) |
 | Media: upload, edit alt text, delete | yes | no | T50 |
 | Inbox (contact messages contain visitor emails) and live notifications | yes | no | `/admin/messages`, `/admin/events` (T47, T49) |
@@ -1583,26 +1764,110 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **PR title:** `feat(web): post and experience editors`
 
-#### T45 · Site, sections, profile admin
+#### T45 · Site settings + profile admin
 
 **Roadmap** p22 · **Spec** [§5.10](./design/portfolio-design-system.md#s-5-10), §1.5 (`Profile`, `SiteSettings`) · **Depends** T33, T42 · **Size** L
 
-**Goal.** Edit site settings, navigation, sections, social links, contact topics and the profile from the admin.
+**Goal.** Edit site settings, navigation, social links, contact topics and the profile from the admin. Page sections are now blocks, edited in the page builder (T45b).
 
 **Scope.**
-- `app/admin/(cms)/site/page.tsx` → `admin-site/views/AdminSiteIndex.tsx` with URL-synced tabs: Settings (form: SEO defaults, footer note, contact intro, reply time, contact email, availability, analytics, ambient effects, marquee), Navigation (table, inline-editable label, `href` picker from `routes.constant.ts` or URL, move up/down), Sections (per page: visible switch (optimistic), retitle, intro, CTA label, move up/down), Social links (with `showInHeader`, `showInCta`), Contact topics.
+- `app/admin/(cms)/site/page.tsx` → `admin-site/views/AdminSiteIndex.tsx` with URL-synced tabs: Settings (form: SEO defaults, footer note, contact intro, reply time, contact email, availability, analytics, ambient effects, marquee), Navigation (table, inline-editable label, `href` picker from `routes.constant.ts` or URL, move up/down), Social links (with `showInHeader`, `showInCta`), Contact topics.
 - `app/admin/(cms)/profile/page.tsx` → `AdminSiteProfile`: headline + accent (live `AccentHeadline` preview, validation per locale), hero kicker, subheadline, bio (`MarkdownField`, `compact` toolbar), career start date, languages, city, timezone, private phone. Avatar and resume pickers come in T51.
 
-**Files.** `apps/web/app/admin/(cms)/{site,profile}/page.tsx`, `apps/web/src/modules/admin-site/{views/{AdminSiteIndex,AdminSiteProfile}.tsx,components/{SettingsForm,NavTable,SectionsTable,SocialTable,TopicsTable,ProfileForm}/*,hooks/*,services/*}`.
+**Files.** `apps/web/app/admin/(cms)/{site,profile}/page.tsx`, `apps/web/src/modules/admin-site/{views/{AdminSiteIndex,AdminSiteProfile}.tsx,components/{SettingsForm,NavTable,SocialTable,TopicsTable,ProfileForm}/*,hooks/*,services/*}`.
 
 **Design.** Spec §5.10 wireframe. Tokens: `text-ui`, admin control sizes.
 
 **Acceptance.**
-- [ ] Hiding a section in the admin removes it from the public page (dev: immediately; production: after T52 revalidation).
+- [ ] Renaming a nav item in the admin changes the public header (dev: immediately; production: after T52 revalidation).
 - [ ] An accent that is not in the headline shows the field error for that locale.
-- [ ] Section and nav reorder use the transactional order endpoint.
+- [ ] Nav and social reorder use the transactional order endpoint.
 
 **PR title:** `feat(web): site and profile admin`
+
+#### T45a · Schema-driven props form (zod → TanStack Form)
+
+**Roadmap** p22 · **Spec** §4.6 (TanStack Form + zod), D26 · **Depends** T41, T42 · **Size** M
+
+**Goal.** One component that draws an editable form from a zod schema, so a new block type needs no hand-written admin form.
+
+**Scope.**
+- `admin-core/utils/schema-to-fields.util.ts`: `z.toJSONSchema(schema, { io: 'input' })` → a field tree (`path`, `kind`, `required`, `min`/`max`, `enum`, `default`, `widget`, `label`). It reads the `.meta()` keys from T10a and supports objects, strings, numbers and integers, booleans, enums, arrays of objects or scalars, optional and default values. A shape it does not know throws in development and in tests, so a new schema cannot silently lose a field.
+- `admin-core/components/SchemaForm/SchemaForm.tsx`: `useForm({ defaultValues, validators: { onChange: schema } })` (TanStack Form takes zod 4 directly through Standard Schema), one `form.Field` per leaf, server `fieldErrors` mapped with T42's `map-field-errors.util.ts`, and `readOnly` disables every widget.
+- Widgets in `SchemaForm/widgets/`, chosen by `widget`, otherwise by type:
+  - `text`, `textarea`, `number`, `switch`, `select` (enums);
+  - `localized-text` and `localized-textarea`: EN and VI inputs side by side, like every admin editor, with a dot when VI is empty;
+  - `markdown`: `MarkdownField` with the `compact` toolbar (T42);
+  - `icon` (`IconPicker`, T41), `hue` (`HuePicker`), `route` (from `routes.constant.ts`);
+  - `project`, `projects` (searchable multi-combobox that keeps the order, for `manual` lists), `stats`, `tag`.
+  - Arrays get add, remove, and move up/down buttons.
+- Labels and help text come from `en.json` `admin.blocks.*` through the `label` key. A unit test walks `BLOCK_REGISTRY` and fails on a missing key.
+- Autosave: `SchemaForm` exposes `onValuesChange` for `use-autosave` (T42), so the builder saves a block 1.5s after typing stops.
+- Tests: every type in `BLOCK_REGISTRY` renders a form with no unknown field; an invalid value shows the zod message; server `fieldErrors` land under the right input; `readOnly` renders no enabled input.
+
+**Out of scope.** The page builder screen (T45b). Drag and drop in arrays (`SortableList`, T45b).
+
+**Files.** `apps/web/src/modules/admin-core/{utils/schema-to-fields.util.ts,utils/schema-to-fields.util.test.ts,components/SchemaForm/{SchemaForm.tsx,SchemaForm.test.tsx,widgets/*}}`, `apps/web/i18n/locales/en.json`, `packages/ui/src/components/ui/{switch,select,command,popover}.tsx`.
+
+**Design.** Figma `18:2` properties pane (field look, 32px controls). Tokens: `text-ui`, `text-ui-meta`, `--input`, `--ring`, `--destructive`.
+
+**Acceptance.**
+- [ ] The browser and the API validate with the same zod schema: shared fixtures that the form accepts are accepted by T32a, and the ones it rejects get the same field errors from the API (roadmap p22).
+- [ ] Every type in `BLOCK_REGISTRY` renders its form with all fields and labels (test).
+- [ ] A server error on `props.primaryCta.label.en` shows under the English label input.
+- [ ] With `readOnly`, no input is enabled.
+
+**PR title:** `feat(web): schema-driven props form`
+
+#### T45b · Page builder: blocks, drag and drop, layouts
+
+**Roadmap** p22 · **Spec** §4.3, §4.6 (optimistic reorder), §5.10, D26 · **Depends** T33, T45a · **Size** L
+
+**Goal.** In `/admin/pages`, an `admin` arranges each public page: drags blocks into order, adds, duplicates, hides and deletes them, picks a layout preset, and edits props in the generated form. A `user` sees the same screen read-only.
+
+**Scope.**
+- Dependencies (`packages/ui`): `@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`, `@dnd-kit/modifiers`, all MIT and free. Use the stable line (`core` 6.x, `sortable` 10.x), not the pre-1.0 `@dnd-kit/react`. `check:deps` (T42) also fails if any `@dnd-kit/*` package is not MIT.
+- `packages/ui` `SortableList` (`'use client'`):
+  - a vertical list on `DndContext` + `SortableContext`, with `PointerSensor` (a small activation distance, so clicks still work) and `KeyboardSensor` with `sortableKeyboardCoordinates`;
+  - a drag-handle button with an accessible name, `restrictToVerticalAxis`, and a `DragOverlay`;
+  - screen-reader `announcements` and `screenReaderInstructions` passed in as labels, and `onReorder(ids)`;
+  - `disabled` items (the H1 block) cannot move, and nothing can be dropped above them.
+  - Stories include the keyboard instructions.
+- Routes `app/admin/(cms)/pages/page.tsx` → `admin-pages/views/AdminPagesIndex.tsx` (the five pages, block count, updated time) and `app/admin/(cms)/pages/[key]/page.tsx` → `AdminPagesEditor.tsx`. A "Pages" item joins the sidebar's Site group.
+- `AdminPagesEditor` on `EditorShell` (T42), with the block list in the main column and the inspector in the properties pane:
+  - `BlockList` (`SortableList`). Each `BlockRow` shows the drag handle, type icon and label, `key`, a layout badge, a visible `switch` (optimistic), and a row menu: Move up, Move down, Duplicate, and Delete with `alert-dialog`. Move up/down is the alternative to dragging for keyboard and single-pointer users (WCAG 2.5.7). An invalid or unknown block shows as an `alert` row with its issues and only Delete.
+  - Reorder calls `PATCH /admin/pages/:key/blocks/order` with an optimistic update and rollback (T39 `optimistic.util.ts`). A failed reorder restores the list and shows a toast.
+  - `AddBlockDialog`: a `command` list of the types allowed on this page, each with an icon and a one-line description. Types already at their `maxPerPage` are disabled, with the reason. The new block goes after the selected one.
+  - `BlockInspector` tabs:
+    - Props: `SchemaForm` for the type, autosaved per block with its `updatedAt`, plus `SaveStatus` and T42's Conflict actions on 409;
+    - Layout: `LayoutPresetPicker`, a `toggle-group` of the type's presets with small column thumbnails, and the responsive rule underneath in `text-ui-meta`;
+    - Appearance: `surface` plain or band, with the note that touching bands merge;
+    - Anchor: the `key`, with its public URL `/#key`.
+  - `PageSettingsSheet`: SEO title and description per locale.
+  - Header: a "Draft" status and an "Open page" link (dev shows edits at once, D23). Publish, history and live preview come in T52a.
+- `admin-pages/constants/block-editor-meta.constant.ts`: `type` → `{ icon, labelKey, descriptionKey }`, `satisfies Record<BlockType, …>` (rule 8).
+- `services/admin-pages.service.ts`.
+- `hooks/use-admin-page.hook.ts`: `useSuspenseQuery(qk.admin.pages.detail(key))`.
+- `hooks/use-block-mutations.hook.ts`: add, update, duplicate, delete, reorder and toggle, each patching or invalidating the page query.
+- Read-only (D7): no drag handles, no add, no write items in the row menu, and the inspector is `readOnly`. "Open page" still works.
+- The spec §5.10 Sections tab lives here now; T45 no longer has one.
+
+**Out of scope.** Publish, versions, live preview (T52a). Free-form grid placement and side-by-side blocks (Q13).
+
+**Files.** `packages/ui/package.json`, `packages/ui/src/components/SortableList/{SortableList.tsx,SortableList.stories.tsx,SortableList.test.tsx}`, `apps/web/app/admin/(cms)/pages/{page.tsx,[key]/page.tsx}`, `apps/web/src/modules/admin-pages/{views/{AdminPagesIndex,AdminPagesEditor}.tsx,components/{BlockList,BlockRow,AddBlockDialog,BlockInspector,LayoutPresetPicker,PageSettingsSheet}/*,constants/block-editor-meta.constant.ts,hooks/{use-admin-page.hook.ts,use-block-mutations.hook.ts},services/admin-pages.service.ts}`, `apps/web/src/modules/admin-core/components/AdminSidebar/*`, `packages/contracts/src/constants/query-keys.constant.ts`, `apps/web/i18n/locales/en.json`, `scripts/check-deps.mjs`, `packages/ui/src/components/ui/{alert-dialog,toggle-group,sheet,tabs}.tsx` ([web STRUCTURE: modules](../apps/web/STRUCTURE.md#modules)).
+
+**Design.** There is no Figma frame for this screen. Build it from the editor shell (`18:2`: the block list where the editor body is, the inspector in the properties pane) and the table rows of `15:2`, and attach screenshots to the PR for Parker's review. Tokens: `--card`, `--border`, `--sidebar-accent` (selected block), `--muted` (drag overlay), `--shadow-2`, `--destructive-subtle` and `--destructive` (invalid row), `--ring`, `text-ui`, `text-ui-meta`, admin control heights.
+
+**Acceptance.**
+- [ ] Dragging the `work` block above `featured`, with the mouse and with the keyboard (Space, arrows, Space), saves the new order in one transaction; the H1 block cannot be moved or dropped above (roadmap p22 "block editor list").
+- [ ] A forced 500 on reorder restores the previous order (optimistic rollback test).
+- [ ] Adding a `case-grid`, switching it to `TWO` and saving its props shows it on the public home in dev (D23), with two columns from 768px.
+- [ ] A type at its limit is disabled in the add dialog, and the API refuses it anyway (T32a).
+- [ ] Every action has a non-drag path (row menu), and a screen reader hears the pick-up, move and drop announcements.
+- [ ] Signed in as `user`, the builder is read-only and sends no writes.
+- [ ] `pnpm check:deps` passes with the dnd-kit packages.
+
+**PR title:** `feat(web): page builder`
 
 #### T46 · Users admin (admin only) + change own password
 
@@ -1680,11 +1945,11 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Goal.** The contact page with a form that works with and without JavaScript.
 
 **Scope.**
-- Route `app/[locale]/(site)/contact/page.tsx` → `contact/views/ContactIndex.tsx`. Split layout on the faint grid: left `HeaderSection` (`PageSection(CONTACT, header)`), `contactIntro`, `replyTimeNote`, channel cards (email with `CopyEmailButton`, address shown only via `mailto:`; GitHub; LinkedIn, from `socialLinks`); right `ContactForm` on `--card-glass`.
+- Route `app/[locale]/(site)/contact/page.tsx` → `contact/views/ContactIndex.tsx`. `ContactIndex` renders `BlocksPage` for `contact`. New block type `contact-form` (rule 8; H1; layout `TWO` or `ONE`) draws the split layout on the faint grid: left the block's eyebrow, H1 and intro, `contactIntro`, `replyTimeNote`, channel cards (email with `CopyEmailButton`, address shown only via `mailto:`; GitHub; LinkedIn, from `socialLinks`); right `ContactForm` on `--card-glass`.
 - `ContactForm` (client): TanStack Form + `field`, validators = `contactSchema`; fields name, email, topic (`select`, hidden when there are no topics), message, hidden honeypot; validate on blur, error summary on submit that receives focus; success replaces the form with a status panel; a submit error shows an `alert` above the form and keeps the inputs.
 - `contact/actions/contact.action.ts` (`'use server'`): validates with `contactSchema`, calls `POST /public/contact` with `Origin: WEB_ORIGIN` and `x-forwarded-for` from the incoming request (so throttling sees the visitor's IP), returns `{ ok }` or `{ fieldErrors }`. The `<form action>` uses it directly (no JS, `useActionState`); with JS, a `useMutation` calls the same action.
 
-**Files.** `apps/web/app/[locale]/(site)/contact/page.tsx`, `apps/web/src/modules/contact/{views/ContactIndex.tsx,components/{HeaderSection,ChannelCards,ContactForm}/*,actions/contact.action.ts,services/contact-topics.service.ts}`, `apps/web/i18n/locales/{en,vi}.json`, `packages/ui/src/components/ui/{select,textarea}.tsx`.
+**Files.** `apps/web/app/[locale]/(site)/contact/page.tsx`, `apps/web/src/modules/contact/{views/ContactIndex.tsx,components/{ChannelCards,ContactForm}/*,actions/contact.action.ts,services/contact-topics.service.ts}`, `apps/web/src/modules/blocks/components/ContactFormBlock/*`, `apps/web/src/modules/blocks/constants/block-renderers.constant.ts`, `packages/contracts/src/blocks/{definitions/contact-form.block.ts,block-registry.constant.ts}`, `apps/web/i18n/locales/{en,vi}.json`, `packages/ui/src/components/ui/{select,textarea}.tsx`.
 
 **Design.** Figma `12:2`. Mockup `contact.html` (one field in its error state). Tokens: `--card-glass`, `--grid-line`, `--destructive`, `text-title`, `text-body`.
 
@@ -1785,13 +2050,14 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Goal.** Publishing makes a change live in seconds without a redeploy; drafts are visible only in a signed-in preview.
 
 **Scope.**
-- API `modules/publishing`: `publishing.service.ts` (`revalidate(tags)` → `POST ${WEB_INTERNAL_URL}/api/revalidate` with `x-revalidate-secret`; one retry; failures are logged and never block the write), `tags.util.ts` (entity → tags: `site`, `projects`, `project:{slug}`, `posts`, `post:{slug}`, `skills`, `domains`).
+- API `modules/publishing`: `publishing.service.ts` (`revalidate(tags)` → `POST ${WEB_INTERNAL_URL}/api/revalidate` with `x-revalidate-secret`; one retry; failures are logged and never block the write), `tags.util.ts` (entity → tags: `site`, `page:{key}`, `projects`, `project:{slug}`, `posts`, `post:{slug}`, `skills`, `domains`).
 - Routes (admin only): `POST /admin/projects/:id/publish|unpublish`, `POST /admin/posts/:id/publish|unpublish`. Publish checks required English fields, `publishLint`, and alt text on used images → 400 with `fieldErrors`; sets `status` and `publishedAt` (first publish only); emits `content.published`.
 - Every admin write that changes public data calls `revalidate` with its tags.
 - Preview API: `GET /admin/preview/projects/:slug`, `GET /admin/preview/posts/:slug` (public DTO shape, any status, `@Roles('admin', 'user')`).
 - Web: `app/api/revalidate/route.ts` (checks the secret, `revalidateTag` per tag), `app/api/draft/route.ts` (checks the access token via `/auth/me` with `withAuth`, either role; enables `draftMode()`, redirects to the page; `?exit=1` disables it). Services use the preview endpoints with the forwarded `access_token` cookie and no cache when draft mode is on; if it has expired, the draft banner links to `/admin/login?next=` the current page. A draft banner with an exit link.
 - Editor publish button and status in the properties pane (projects, posts); preview link.
 - `.env.example`: `REVALIDATE_SECRET`, `WEB_INTERNAL_URL`.
+- Pages (D26) reuse this draft mode; their publish, versions and live preview are T52a.
 
 **Files.** `apps/api/src/modules/publishing/*`, `apps/api/src/modules/{projects,posts}/{admin-*.controller.ts,*.service.ts}`, `apps/api/src/modules/*/` (revalidate calls), `apps/api/test/publishing.e2e-spec.ts`, `apps/web/app/api/{revalidate,draft}/route.ts`, `apps/web/src/modules/core/{services/api-server.service.ts,components/DraftBanner/*}`, `apps/web/src/modules/{projects,notes}/services/*.service.ts`, `apps/web/src/modules/admin-{projects,posts}/components/*`, `.env.example`.
 
@@ -1811,16 +2077,83 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 **PR title:** `feat: publish + on-demand revalidate`
 
+#### T52a · Page publish, versions, live preview
+
+**Roadmap** p25 · **Spec** §4.6 (tags, revalidate), §1.5 (status), D26 · **Depends** T45b, T52 · **Size** L
+
+**Goal.** Visitors see a page's published version, never its draft. An `admin` publishes with one click, can restore any earlier version, and watches the draft live next to the builder before publishing.
+
+**Scope.**
+- Model `PageVersion`: `pageId`, `version` (1, 2, 3… per page), `snapshot Json` (`{ seo, blocks: [{ type, key, schemaVersion, props, layout, surface, isVisible, sortOrder }] }`), `note` `VarChar(200)?`, `createdById` → `User` (`onDelete: SetNull`), `createdAt`; `@@unique([pageId, version])`. `Page` gains `publishedVersionId` (unique, → `PageVersion`) and `publishedAt`. Migration `add-page-versions`. The seed publishes v1 of every page.
+- Public read switches to snapshots: `GET /public/pages/:key` serves the published snapshot, each block still through `parseBlock`, so an old snapshot is migrated or its bad blocks are dropped, never a 500. A page that was never published returns `blocks: []` (the shell still renders) and content health flags it.
+- Admin routes (admin only unless noted):
+  - `POST /admin/pages/:key/publish` `{ note? }`. Checks first:
+    - the T32a page rules;
+    - strict `parseBlock` on every visible block (400 `INVALID_BLOCKS` with issues per block; hidden invalid blocks are left out of the snapshot);
+    - `publishLint` on every text value, and English required fields.
+    - Then, in one transaction, it writes version n+1 and sets `publishedVersionId` and `publishedAt`.
+    - Afterwards it revalidates `page:{key}` through the T52 publishing service, emits `content.published`, and records an audit `PUBLISH` row once T55 lands.
+  - `GET /admin/pages/:key/versions` (page-based list: version, date, author name, note, block count) and `GET /admin/pages/:key/versions/:version` (snapshot). Both are `@Roles('admin', 'user')`.
+  - `POST /admin/pages/:key/versions/:version/restore`: replaces the draft rows with that snapshot in one transaction (`deleteMany` + `createMany`). It does not publish, so "roll back" means restore, then publish.
+  - `POST /admin/pages/:key/discard`: restores the published version into the draft.
+  - `GET /admin/preview/pages/:key?locale` (`@Roles('admin', 'user')`): the draft in the public DTO shape, with invalid blocks listed separately.
+  - `GET /admin/pages` gains `publishedVersion` and `hasUnpublishedChanges` (`Page.updatedAt` later than `publishedAt`).
+- Web public:
+  - `blocks/services/pages.service.ts` reads the preview endpoint (forwarded `access_token`, no cache) when `draftMode()` is on.
+  - In draft mode, `BlockRenderer` adds `data-block-id` to each block and shows `UnknownBlockNotice` (a dashed box with the type and its issues) where a visitor sees nothing.
+- `core/components/PreviewBridge` (client, mounted by the site layout only in draft mode): it handles `message` events whose `origin` equals `location.origin`. `preview:refresh` calls `router.refresh()` and keeps the scroll position; `preview:focus { blockId }` scrolls to that block and outlines it.
+- Builder (`admin-pages`):
+  - `PagePreview`: an `iframe` of `/api/draft?path=/{locale}{route}` (the T52 draft route; `path` must be a public route).
+    - It sits next to the list on `xl` and in a `sheet` below that.
+    - A viewport toggle (390, 768, 1440: the iframe width, scaled to fit) checks the responsive rules, and an EN/VI toggle switches locale.
+    - After each successful save the builder posts `preview:refresh`; selecting a block posts `preview:focus`.
+  - `PublishBar`: an "Unpublished changes" badge, Publish (optional note) inside `RoleGate allow={['admin']}`, and Discard changes. A 400 `INVALID_BLOCKS` highlights the rows.
+  - `VersionHistory` `sheet`: the versions list; open one in the preview as a read-only snapshot; Restore behind an `alert-dialog` (admin only).
+- Content health (T38) gains four checks:
+  - pages never published;
+  - unpublished changes older than 7 days;
+  - blocks that fail validation in a draft or in the published version;
+  - block references to missing or unpublished items.
+- The preview frames the public site from the same origin, so T59 sets `frame-ancestors 'self'` instead of `'none'`.
+- e2e `test/page-versions.e2e-spec.ts`:
+  - publishing shows the change on the public page, and a later draft edit leaves it unchanged;
+  - publishing with an invalid visible block returns 400;
+  - restoring v1 and publishing brings v1 back;
+  - a `user` gets 403 on publish and restore, and 200 on versions and preview.
+
+**Out of scope.** Scheduled publishing (Q4). Comparing two versions side by side.
+
+**Files.** `apps/api/prisma/schema.prisma` + migration `add-page-versions`, `apps/api/prisma/seed/profiles/{demo,baseline}.seed.ts`, `apps/api/src/modules/pages/{admin-pages.controller.ts,pages.service.ts,page-versions.service.ts,page-versions.service.spec.ts,entities/*}`, `apps/api/src/modules/publishing/tags.util.ts`, `apps/api/src/modules/dashboard/dashboard.service.ts`, `packages/contracts/src/pages/*`, `packages/contracts/src/constants/query-keys.constant.ts`, `apps/api/test/page-versions.e2e-spec.ts`, `apps/api/api.http`, `apps/web/app/api/draft/route.ts`, `apps/web/app/[locale]/(site)/layout.tsx`, `apps/web/src/modules/blocks/{services/pages.service.ts,components/{BlockRenderer,UnknownBlockNotice}/*}`, `apps/web/src/modules/core/components/PreviewBridge/*`, `apps/web/src/modules/admin-pages/{components/{PagePreview,PublishBar,VersionHistory}/*,hooks/use-page-versions.hook.ts,services/admin-pages.service.ts}`, `apps/web/src/modules/admin-dashboard/components/ContentHealthCard/*`.
+
+**Design.** Spec §5.9 (publish in the header), `StatusPill`. Tokens: `--warning` and `--warning-subtle` (unpublished badge), `--border`, `--muted` (preview frame background), `--shadow-2`, `--ring` (focused block outline).
+
+**Backend steps, explained.**
+1. **Draft and published copies.** The `PageBlock` rows are the draft you edit. Publishing copies them into one JSON snapshot (`PageVersion`) and points the page at it. Visitors only ever read snapshots, so a half-finished rearrangement never shows.
+2. **Why a snapshot and not a status per block?** A page is published as a whole: order, layout and text belong together. One JSON copy per publish is easy to read, easy to restore, and small (a few KB).
+3. **Version numbers.** `@@unique([pageId, version])`, with n+1 computed inside the transaction, means two publishes at the same moment cannot both create version 4. One fails and can retry.
+4. **Restore keeps the history.** Restoring copies an old snapshot into the draft and never deletes a version. Publishing after it creates a new version, so the history only grows.
+5. **Draft mode for pages.** The preview is the real public route, rendered by the same server components, but reading the draft through an admin endpoint with your cookie. What you see in it is exactly what visitors get after you publish.
+
+**Acceptance.**
+- [ ] On a production build, publishing a reordered home shows the new order in under 5s, and editing without publishing changes nothing for visitors (roadmap p25).
+- [ ] The live preview updates about a second after each autosave, and at 390px it shows every block in one column.
+- [ ] Restoring v1 and publishing brings the public page back to v1, and the history keeps every version.
+- [ ] Publishing with an invalid visible block returns 400 and highlights it; an old snapshot whose block type was removed still renders its other blocks.
+- [ ] A visitor without draft mode never receives draft blocks (`curl` the public page while a draft change exists).
+- [ ] Signed in as `user`, preview and history work; Publish, Discard and Restore are hidden and refused by the API.
+
+**PR title:** `feat: page publish + versions + live preview`
+
 ### M6 — Quality
 
 #### T53 · SEO from the CMS
 
-**Roadmap** p26 · **Spec** §5 intro (title pattern, canonical, hreflang, JSON-LD, sitemap, RSS), §4.2 (`OgImage`), §4.5 (SEO) · **Depends** T24, T25, T27, T28 · **Size** M
+**Roadmap** p26 · **Spec** §5 intro (title pattern, canonical, hreflang, JSON-LD, sitemap, RSS), §4.2 (`OgImage`), §4.5 (SEO) · **Depends** T24, T25, T27, T28, T52a · **Size** M
 
 **Goal.** Every public page gets metadata, structured data and an OG image from CMS fields, and search engines get a sitemap of published content only.
 
 **Scope.**
-- `seo/utils/*-metadata.util.ts`: builders for site, home, about, projects list, project, notes list, post, contact. Title `{seoTitle} · {siteName}`; description from `seoDescription` → `excerpt`/`tagline` → `SiteSettings`; canonical; `alternates.languages` (en, vi, `x-default`); `metadataBase` from env.
+- `seo/utils/*-metadata.util.ts`: builders for site, home, about, projects list, project, notes list, post, contact. Title `{seoTitle} · {siteName}`; description from `seoDescription` → `excerpt`/`tagline` → `SiteSettings`; the five block pages read `seoTitle`/`seoDescription` from the page's published version (D26), then the H1 block's title and intro, then `SiteSettings`; canonical; `alternates.languages` (en, vi, `x-default`); `metadataBase` from env.
 - `seo/components/JsonLd`: `Person` (home, about), `CreativeWork` (case study), `BlogPosting` (post), `BreadcrumbList` (detail pages); JSON escaped for `<`.
 - OG images: `opengraph-image.tsx` for home, project and post routes (`ImageResponse`, 1200×630, dark background, Be Vietnam Pro, `VersionTag`, name + domain).
 - `app/sitemap.ts` (both locales, from a new `GET /public/sitemap` in `public-site`: published slugs + `updatedAt`), `app/robots.ts` (disallow `/admin`, `/api`), RSS `app/[locale]/(site)/rss.xml/route.ts`.
@@ -1869,8 +2202,8 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Goal.** Every admin write leaves one audit row, browsable in a virtualized list, plus bulk actions.
 
 **Scope.**
-- Model `AuditLog` (`userId`, `action` `CREATE|UPDATE|PUBLISH|ARCHIVE|LOGIN`, `entityType`, `entityId`, `summary`). Migration `add-audit-log`.
-- `modules/audit`: `audit.service.ts` `record(…)`, called explicitly from services inside the same transaction as the write, and from login. `GET /admin/audit` (cursor pagination, filters entity type and user; admin only).
+- Model `AuditLog` (`userId`, `action` `CREATE|UPDATE|PUBLISH|ARCHIVE|RESTORE|LOGIN`, `entityType`, `entityId`, `summary`). Migration `add-audit-log`.
+- `modules/audit`: `audit.service.ts` `record(…)`, called explicitly from services inside the same transaction as the write (including page publish and version restore, T52a), and from login. `GET /admin/audit` (cursor pagination, filters entity type and user; admin only).
 - Bulk status update for projects and posts (`POST /admin/{entity}/bulk` with `{ ids, action }`, admin only) in one transaction, one audit row per item; wired to the `DataTable` bulk bar.
 - Script `pnpm --filter @portfolio/api seed:audit` that inserts 5,000 audit rows (dev only).
 - Web: `admin-insights/views/AdminInsightsAudit.tsx` (`useInfiniteQuery` + `useVirtualizer`, `AuditRow` with relative time and absolute tooltip); dashboard activity card (latest 8, inside `RoleGate allow={['admin']}`). `packages/ui` `ActivityFeed`, `AuditRow`.
@@ -1892,22 +2225,22 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 #### T56 · Tests + CI e2e
 
-**Roadmap** p28 · **Spec** §6 (Day 21, Day 24) · **Depends** T52 · **Size** M
+**Roadmap** p28 · **Spec** §6 (Day 21, Day 24) · **Depends** T52a · **Size** M
 
 **Goal.** A test suite that proves the main flows end to end, running on every PR.
 
 **Scope.**
 - Fill API e2e gaps so every module has happy-path + validation tests.
-- Playwright in `apps/web/e2e/`: public smoke (home in both locales, nav by keyboard, project and post pages, 404), contact submit, admin login → create draft project → publish → visible on the public page → archive, and `user` login (account created in the test setup through `POST /admin/users`) → a project editor opens read-only with no Publish button and no Inbox, Audit or Users items. Runs against production builds of web and api with the test DB and the `demo` seed.
+- Playwright in `apps/web/e2e/`: public smoke (home in both locales, nav by keyboard, project and post pages, 404), contact submit, admin login → create draft project → publish → visible on the public page → archive, and `user` login (account created in the test setup through `POST /admin/users`) → a project editor opens read-only with no Publish button and no Inbox, Audit or Users items; admin page builder → drag the home `work` block above `featured`, hide `marquee`, publish → the public home shows the new order without the marquee → restore the previous version and publish → the old order is back. Runs on the `demo` seed. Runs against production builds of web and api with the test DB and the `demo` seed.
 - CI: jobs `lint-typecheck-unit`, `api-e2e` (MySQL service), `web-e2e` (MySQL service, builds both apps, runs Playwright, uploads the report).
 
-**Files.** `apps/web/e2e/{public.spec.ts,contact.spec.ts,admin-publish.spec.ts}`, `apps/web/playwright.config.ts`, `apps/api/test/*.e2e-spec.ts`, `.github/workflows/ci.yml`.
+**Files.** `apps/web/e2e/{public.spec.ts,contact.spec.ts,admin-publish.spec.ts,admin-pages.spec.ts}`, `apps/web/playwright.config.ts`, `apps/api/test/*.e2e-spec.ts`, `.github/workflows/ci.yml`.
 
 **Design.** None.
 
 **Acceptance.**
 - [ ] `pnpm test` is green locally and in CI (roadmap p28).
-- [ ] The draft → publish → public page e2e is green (spec §6 Day 21).
+- [ ] The draft → publish → public page e2e is green (spec §6 Day 21), for a project and for a page.
 
 **PR title:** `test: api + e2e smoke`
 
@@ -1918,9 +2251,9 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Goal.** Measured accessibility and performance on every key screen, with the fixes merged.
 
 **Scope.**
-- axe (`@axe-core/playwright`) on home, about, projects, case study, notes, post, contact, admin login and dashboard; fail CI on serious issues.
+- axe (`@axe-core/playwright`) on home, about, projects, case study, notes, post, contact, admin login, dashboard and the page builder; fail CI on serious issues.
 - Lighthouse (mobile) on home, projects, case study, post.
-- Manual: keyboard, screen reader on 3 pages, reduced motion and reduced transparency on home, case study and post (every effect's fallback).
+- Manual: keyboard, screen reader on 3 pages, the page builder's keyboard drag and drop (Space, arrows, Space) and its move up/down menu, reduced motion and reduced transparency on home, case study and post (every effect's fallback).
 - Fixes: focus order, skip link, LCP image `priority`, font `display`, orbs on a composited layer, CLS 0 from count-up and reveal.
 - Report in `docs/audits/<date>-a11y-perf.md` with before/after numbers.
 
@@ -1970,7 +2303,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 **Goal.** Secure headers, safe cookies, least-privilege containers, and backups you have actually restored.
 
 **Scope.**
-- Security headers: CSP with a per-request nonce set in `middleware.ts` (Next.js pattern); HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `frame-ancestors 'none'` in the Caddyfile.
+- Security headers: CSP with a per-request nonce set in `middleware.ts` (Next.js pattern); HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `frame-ancestors 'self'` in the Caddyfile (`'self'`, not `'none'`, because the page builder's live preview frames the public site from the same origin, T52a; no other site may frame it).
 - Confirm `Secure` cookies in production; containers non-root with read-only root filesystems where possible; no CORS (D9).
 - Production JWT secrets: `JWT_ACCESS_SECRET` and `JWT_REFRESH_SECRET` generated with `openssl rand -base64 48`, different from dev and from each other, kept only in the VPS `.env` and GitHub secrets; boot fails if they are short or equal (T35). Document generation and rotation in `docs/runbooks/secrets.md`.
 - `backup` service in `compose.prod.yml`: daily `mysqldump` + gzip and an uploads tarball, 7-day rotation on a `backups` volume.
@@ -1994,12 +2327,12 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 
 #### T60 · Production seed cleanup + placeholder check
 
-**Roadmap** p32 · **Spec** §1.1–§1.5, §2 · **Depends** T45, T51, T52 · **Size** S (agent part) · **Owner part:** Parker enters the content
+**Roadmap** p32 · **Spec** §1.1–§1.5, §2 · **Depends** T45, T51, T52a · **Size** S (agent part) · **Owner part:** Parker enters the content
 
 **Goal.** Production starts from the `baseline` seed, and a check proves no placeholder reaches the live site.
 
 **Scope.**
-- Agent: `scripts/check-placeholders.mjs` (connects with `DATABASE_URL`, counts rows whose text fields contain placeholder markers used by the seed (`<email>`, `<phone>`, `Sample`, `Lorem`, `TODO`) and fails if any are published or in singletons); root script `check:placeholders`; review `baseline.seed.ts` against spec §1.5 (drafts only, 0 posts, no demo messages or views); `docs/runbooks/content-entry.md` (checklist: profile, experience, projects, posts, Vietnamese translations, metrics, alt texts, real contact email entered in `/admin`).
+- Agent: `scripts/check-placeholders.mjs` (connects with `DATABASE_URL`, counts rows whose text fields contain placeholder markers used by the seed (`<email>`, `<phone>`, `Sample`, `Lorem`, `TODO`), including the text inside `PageBlock.props` and published `PageVersion` snapshots, and fails if any are published or in singletons); root script `check:placeholders`; review `baseline.seed.ts` against spec §1.5 (drafts only, 0 posts, no demo messages or views); `docs/runbooks/content-entry.md` (checklist: profile, experience, projects, posts, Vietnamese translations, metrics, alt texts, real contact email entered in `/admin`).
 - Parker: enter real content in `/admin`; publish at least two case studies and one post.
 
 **Files.** `scripts/check-placeholders.mjs`, `package.json`, `apps/api/prisma/seed/profiles/baseline.seed.ts`, `docs/runbooks/content-entry.md`.
@@ -2022,7 +2355,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 - `.github/workflows/deploy.yml`: after CI on `main`, build and push web/api images to GHCR (tags: commit SHA and `latest`), SSH to the VPS, `docker compose -f compose.prod.yml pull && up -d`, then smoke-check `https://<domain>/api/health`.
 - Caddy automatic HTTPS for the domain from env (`SITE_DOMAIN`).
 - `docs/runbooks/deploy.md` (first-time VPS setup, secrets list, rollback by image tag).
-- `docs/launch-checklist.md`: DNS, TLS, backups and restore drill, Lighthouse and axe, `check:content`, `check:placeholders`, OG previews, sitemap submitted, analytics on, admin password rotated, production `JWT_ACCESS_SECRET`/`JWT_REFRESH_SECRET` generated fresh (not the dev values), 404/500 pages, uptime ping configured.
+- `docs/launch-checklist.md`: DNS, TLS, backups and restore drill, Lighthouse and axe, `check:content`, `check:placeholders`, OG previews, sitemap submitted, analytics on, admin password rotated, production `JWT_ACCESS_SECRET`/`JWT_REFRESH_SECRET` generated fresh (not the dev values), 404/500 pages, every page published with no invalid blocks in content health, uptime ping configured.
 
 **Files.** `.github/workflows/deploy.yml`, `infra/caddy/Caddyfile`, `compose.prod.yml`, `docs/runbooks/deploy.md`, `docs/launch-checklist.md`.
 
@@ -2049,7 +2382,7 @@ Admin routes in M3 have no login yet. They stay safe because the API listens on 
 - Accounts and secrets: domain, VPS, DNS, GitHub Actions secrets, uptime monitor.
 - Answers to the open questions in §9.
 
-**Out of scope for this plan:** comments, newsletter, full-text search engine (MySQL `LIKE` with an index is enough at this scale), more than two languages, cloud object storage (the `MediaService` interface keeps this possible later), multi-tenant admin, a mobile app.
+**Out of scope for this plan:** comments, newsletter, full-text search engine (MySQL `LIKE` with an index is enough at this scale), more than two languages, cloud object storage (the `MediaService` interface keeps this possible later), multi-tenant admin, a mobile app, free-form page layout (dragging fields or blocks into arbitrary grid cells, Q13), custom pages at new URLs (Q12).
 
 ## 9. Open questions
 
@@ -2059,7 +2392,7 @@ Each has a default the plan already uses, so no task is blocked.
 | --- | --- | --- |
 | Q1 | Spec §1.4 gaps: legal name with diacritics, exact employment dates (CMC Global / Kobizo overlap), real metrics per case study, job title ("Senior Frontend Engineer" or "Frontend Engineer (5 yrs)") | Placeholders from the wireframes; Parker enters real values in T60 |
 | Q2 | Domain name and VPS provider | `parker.dev` appears as a placeholder only; T61 reads the domain from env |
-| Q3 | Drag-and-drop reordering in admin (`@dnd-kit/sortable`) or move up/down buttons only | Move up/down buttons (spec §5.10 lists `button (move up/down)`); drag and drop can be added later on the same reorder endpoint |
+| Q3 | Drag-and-drop reordering in the admin tables (`@dnd-kit/sortable`) or move up/down buttons only | The page builder uses dnd-kit (D26, T45b). Tables keep move up/down (spec §5.10 lists `button (move up/down)`); they can reuse `SortableList` later on the same reorder endpoints |
 | Q4 | The admin table mockup shows a "Scheduled" post status, but the data model has only `DRAFT/PUBLISHED/ARCHIVED` | Not implemented. A future `publishedAt` in the future could mean "scheduled" if Parker wants it |
 | Q5 | Accept-Language: spec says `vi` is "auto-suggested, never forced". What does the suggestion look like? | A dismissible one-line banner on `/en/*` for `vi` browsers, dismissal stored in a cookie (T14) |
 | Q6 | LinkedIn URL | `SocialLink` row with `url = "https://www.linkedin.com/in/<handle>"` placeholder |
@@ -2068,3 +2401,5 @@ Each has a default the plan already uses, so no task is blocked.
 | Q9 | What exactly may a `user` do? (D7) | Read-only reviewer: dashboard, content and media read, analytics, draft preview, own password. No writes, publishing, uploads, inbox, audit log or users. Widening it later is one `@Roles('admin', 'user')` per route plus the matching `RoleGate` |
 | Q10 | Revoke one stolen refresh token without signing that user out everywhere? (D24) | No. That needs a stored token table (the sessions Parker dropped). `tokenVersion` signs the user out on every device, which is enough for a handful of accounts |
 | Q11 | Should the editor allow more Markdown than the shared allowlist (D25, T23), for example H4, task lists, footnotes, underline or embeds? | No. Adding one later means one entry in `markdown.constant.ts`, the matching Tiptap extension and a renderer component, in the same PR |
+| Q12 | Custom pages at new URLs (for example `/uses`) built from blocks? (D26) | No: blocks arrange the five route pages only. Adding it means `Page.slug`, a catch-all route, a nav and sitemap entry, and a "New page" action in the builder |
+| Q13 | Free-form layout: drag fields or blocks into any grid cell, or put two blocks side by side? (D26) | No: one block per row, with layout presets. A later extension can add a `columns` container block or a `colSpan` per block on the same 12-column grid, stored in the same JSON |
