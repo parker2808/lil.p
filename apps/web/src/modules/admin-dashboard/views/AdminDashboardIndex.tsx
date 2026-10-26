@@ -6,7 +6,11 @@ import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 
+import { RoleGate } from '@/modules/admin-core/components/RoleGate/RoleGate';
+import { LATEST_INBOX_PARAMS } from '@/modules/admin-inbox/services/admin-inbox.service';
+
 import { ContentHealthCard } from '../components/ContentHealthCard/ContentHealthCard';
+import { InboxCard } from '../components/InboxCard/InboxCard';
 import { RangeToggle } from '../components/RangeToggle/RangeToggle';
 import { StatsCards } from '../components/StatsCards/StatsCards';
 
@@ -46,6 +50,23 @@ export function AdminDashboardIndex({ range }: { range: StatsRange }) {
       >
         <ContentHealthCard />
       </SectionBoundary>
+      <RoleGate allow={['admin']}>
+        <SectionBoundary
+          labels={{
+            error: t('inbox.error'),
+            retry: t('inbox.retry'),
+            empty: t('inbox.empty'),
+          }}
+          fallback={<HealthSkeleton />}
+          onReset={() => {
+            void queryClient.resetQueries({
+              queryKey: qk.admin.list('messages', LATEST_INBOX_PARAMS),
+            });
+          }}
+        >
+          <InboxCard />
+        </SectionBoundary>
+      </RoleGate>
     </div>
   );
 }

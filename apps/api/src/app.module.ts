@@ -16,6 +16,7 @@ import { ContactTopicsModule } from './modules/contact-topics/contact-topics.mod
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { DomainsModule } from './modules/domains/domains.module';
 import { EducationModule } from './modules/education/education.module';
+import { EventsModule } from './modules/events/events.module';
 import { ExperienceModule } from './modules/experience/experience.module';
 import { HealthModule } from './modules/health/health.module';
 import { NavigationModule } from './modules/navigation/navigation.module';
@@ -36,6 +37,7 @@ import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     ConfigModule,
     PrismaModule,
     HealthModule,
@@ -60,7 +62,7 @@ import { PrismaModule } from './prisma/prisma.module';
     UsersModule,
     AuthModule,
     DashboardModule,
-    EventEmitterModule.forRoot(),
+    EventsModule,
     ThrottlerModule.forRoot({
       skipIf: () => process.env.NODE_ENV === 'test' && process.env.E2E_THROTTLE !== '1',
       throttlers: [{ name: 'default', ttl: 60_000, limit: 10_000 }],
