@@ -921,3 +921,29 @@ Content-Type: application/json
 
 ### Admin SSE events (heartbeat every 25s; X-Accel-Buffering: no)
 GET http://127.0.0.1:4000/api/admin/events
+
+### Admin media list (cursor)
+GET http://127.0.0.1:4000/api/admin/media?limit=20
+
+### Admin media upload
+POST http://127.0.0.1:4000/api/admin/media
+Content-Type: multipart/form-data; boundary=----media
+
+------media
+Content-Disposition: form-data; name="file"; filename="cover.jpg"
+Content-Type: image/jpeg
+
+< ./cover.jpg
+------media--
+
+### Admin media patch alt
+PATCH http://127.0.0.1:4000/api/admin/media/1
+Content-Type: application/json
+
+{
+  "altEn": "Cover photo",
+  "altVi": "Anh bia"
+}
+
+### Public media redirect
+GET http://127.0.0.1:4000/api/public/media/filename

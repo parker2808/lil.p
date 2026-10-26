@@ -13,6 +13,7 @@ import {
 
 import { toIsoDate } from '../../../common/utils/iso-date.util';
 import { pickGroup } from '../../../i18n/pick-locale.util';
+import { toAdminMedia, toPublicImage } from '../../media/media.mapper';
 import type { ProjectRow } from './project.entity';
 
 const LIST_TEXT = ['title', 'tagline', 'factChips'] as const;
@@ -117,6 +118,7 @@ function toListBase(row: ProjectRow, locale: Locale): PublicProjectListItem {
     topMetric: metrics[0] ?? null,
     factChips: splitChips(values.factChips ?? ''),
     skills: row.skills.map((skill) => ({ name: skill.name, slug: skill.slug })),
+    cover: row.isConfidential ? null : toPublicImage(row.cover, locale),
     lang,
   };
 }
@@ -200,9 +202,18 @@ export function toAdminDto(row: ProjectRow): AdminProject {
     status: row.status,
     publishedAt: row.publishedAt ? row.publishedAt.toISOString() : null,
     sortOrder: row.sortOrder,
+    coverId: row.coverId,
     domainId: row.domainId,
     experienceId: row.experienceId,
     skillIds: row.skills.map((skill) => skill.id),
+    images: row.images.map((image) => ({
+      id: image.id,
+      mediaId: image.mediaId,
+      captionEn: image.captionEn,
+      captionVi: image.captionVi,
+      sortOrder: image.sortOrder,
+      media: toAdminMedia(image.media),
+    })),
     metrics: row.metrics.map((metric) => ({
       id: metric.id,
       labelEn: metric.labelEn,

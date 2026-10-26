@@ -126,6 +126,7 @@ export class PostsService {
         seoDescriptionVi: input.seoDescriptionVi,
         isFeatured: input.isFeatured ?? false,
         sortOrder: input.sortOrder ?? 0,
+        coverId: input.coverId ?? null,
         status: 'DRAFT',
         readingMinutes: readingMinutes(input.bodyEn),
         tags: input.tagIds ? { connect: input.tagIds.map((id) => ({ id })) } : undefined,
@@ -195,6 +196,7 @@ export class PostsService {
     if (input.seoDescriptionVi !== undefined) data.seoDescriptionVi = input.seoDescriptionVi;
     if (input.isFeatured !== undefined) data.isFeatured = input.isFeatured;
     if (input.sortOrder !== undefined) data.sortOrder = input.sortOrder;
+    if (input.coverId !== undefined) data.coverId = input.coverId;
     return data;
   }
 }

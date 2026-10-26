@@ -81,8 +81,8 @@ model SiteSettings {
   seoTitleVi         String
   seoDescriptionEn   String       @db.Text
   seoDescriptionVi   String       @db.Text
-  /// Plain Int until Media exists (T50 adds the relation).
   ogImageId          Int?
+  ogImage            Media?       @relation("SiteOgImage", fields: [ogImageId], references: [id], onDelete: SetNull)
   footerNoteEn       String
   footerNoteVi       String
   contactIntroEn     String       @db.Text
@@ -123,10 +123,12 @@ model Profile {
   heroKickerVi      String?
   headlineAccentEn  String?
   headlineAccentVi  String?
-  /// Plain Int until Media exists (T50).
   avatarId          Int?
+  avatar            Media?   @relation("ProfileAvatar", fields: [avatarId], references: [id], onDelete: SetNull)
   resumeEnId        Int?
+  resumeEn          Media?   @relation("ProfileResumeEn", fields: [resumeEnId], references: [id], onDelete: SetNull)
   resumeViId        Int?
+  resumeVi          Media?   @relation("ProfileResumeVi", fields: [resumeViId], references: [id], onDelete: SetNull)
   phone             String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -412,6 +414,8 @@ model Project {
   liveUrl         String?
   repoUrl         String?
   coverId         Int?
+  cover           Media?        @relation("ProjectCover", fields: [coverId], references: [id], onDelete: SetNull)
+  images          ProjectImage[]
   problemEn       String        @db.Text
   problemVi       String        @db.Text
   constraintsEn   String        @db.Text
@@ -542,6 +546,7 @@ model Post {
   seoDescriptionEn String?       @db.Text
   seoDescriptionVi String?       @db.Text
   coverId          Int?
+  cover            Media?        @relation("PostCover", fields: [coverId], references: [id], onDelete: SetNull)
   readingMinutes   Int
   isFeatured       Boolean       @default(false)
   status           ContentStatus @default(DRAFT)
@@ -572,8 +577,53 @@ model User {
   isActive     Boolean   @default(true)
   tokenVersion Int       @default(0)
   lastLoginAt  DateTime?
+  uploads      Media[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
 
   @@map("user")
+}
+
+/// File metadata. Bytes live on Cloudinary (owner hosting); never on the API disk.
+model Media {
+  id           Int      @id @default(autoincrement())
+  fileName     String   @unique
+  originalName String
+  mimeType     String
+  sizeBytes    Int
+  width        Int?
+  height       Int?
+  altEn        String   @default("")
+  altVi        String   @default("")
+  resourceType String   @default("image") @db.VarChar(16)
+  uploadedById Int?
+  uploadedBy   User?    @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  siteOg       SiteSettings[] @relation("SiteOgImage")
+  avatars      Profile[]      @relation("ProfileAvatar")
+  resumesEn    Profile[]      @relation("ProfileResumeEn")
+  resumesVi    Profile[]      @relation("ProfileResumeVi")
+  projectCovers Project[]     @relation("ProjectCover")
+  postCovers   Post[]         @relation("PostCover")
+  projectImages ProjectImage[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([uploadedById])
+  @@map("media")
+}
+
+model ProjectImage {
+  id        Int      @id @default(autoincrement())
+  projectId Int
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  mediaId   Int
+  media     Media    @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+  captionEn String?
+  captionVi String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([projectId, sortOrder])
+  @@map("project_image")
 }

@@ -20,6 +20,9 @@ function prismaMock() {
     contactMessage: {
       count: vi.fn().mockResolvedValue(0),
     },
+    media: {
+      findMany: vi.fn().mockResolvedValue([]),
+    },
   };
 }
 
@@ -129,6 +132,7 @@ describe('DashboardService', () => {
       fewKeyFacts: 1,
       marqueeCount: 2,
       publishLint: 1,
+      missingAlt: 0,
     });
     expect(health.issues.map((issue) => issue.kind)).toEqual([
       'PROJECT_NO_DOMAIN',

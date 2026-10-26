@@ -27,6 +27,7 @@ export const adminHealthFixture: AdminHealth = {
     fewKeyFacts: 1,
     marqueeCount: 2,
     publishLint: 1,
+    missingAlt: 0,
   },
   issues: [
     {

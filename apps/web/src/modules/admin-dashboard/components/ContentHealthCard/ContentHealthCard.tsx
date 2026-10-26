@@ -41,6 +41,9 @@ export function ContentHealthCardView({ health }: { health: AdminHealth }) {
           <Badge variant={health.summary.publishLint > 0 ? 'warning' : 'outline'}>
             {t('publishLint', { count: health.summary.publishLint })}
           </Badge>
+          <Badge variant={health.summary.missingAlt > 0 ? 'warning' : 'outline'}>
+            {t('missingAlt', { count: health.summary.missingAlt })}
+          </Badge>
         </div>
         {health.issues.length === 0 ? (
           <p className="text-ui text-muted-foreground">{t('empty')}</p>

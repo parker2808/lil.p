@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { localeSchema } from '../common/locale.schema';
+import { publicImageSchema } from '../media/media.schema';
 
 function accentInHeadline(
   headline: string | undefined,
@@ -39,6 +40,9 @@ export const profileUpdateSchema = z
     headlineAccentEn: z.string().nullable().optional(),
     headlineAccentVi: z.string().nullable().optional(),
     phone: z.string().nullable().optional(),
+    avatarId: z.number().int().nullable().optional(),
+    resumeEnId: z.number().int().nullable().optional(),
+    resumeViId: z.number().int().nullable().optional(),
   })
   .superRefine((data, ctx) => {
     accentInHeadline(data.headlineEn, data.headlineAccentEn, 'headlineAccentEn', ctx);
@@ -65,6 +69,7 @@ export const adminProfileSchema = z.object({
   heroKickerVi: z.string().nullable(),
   headlineAccentEn: z.string().nullable(),
   headlineAccentVi: z.string().nullable(),
+  avatarId: z.number().int().nullable().optional(),
   resumeEnId: z.number().int().nullable(),
   resumeViId: z.number().int().nullable(),
   phone: z.string().nullable(),
@@ -87,5 +92,6 @@ export const publicProfileSchema = z.object({
   headlineAccent: z.string().nullable(),
   resumeEnId: z.number().int().nullable(),
   resumeViId: z.number().int().nullable(),
+  avatar: publicImageSchema.nullable().optional(),
   lang: localeSchema,
 });

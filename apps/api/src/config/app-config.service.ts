@@ -60,4 +60,14 @@ export class AppConfigService {
   get isProduction(): boolean {
     return this.nodeEnv === 'production';
   }
+
+  get cloudinary(): { cloudName: string; apiKey: string; apiSecret: string } | null {
+    const cloudName = this.config.get('CLOUDINARY_CLOUD_NAME', { infer: true });
+    const apiKey = this.config.get('CLOUDINARY_API_KEY', { infer: true });
+    const apiSecret = this.config.get('CLOUDINARY_API_SECRET', { infer: true });
+    if (!cloudName || !apiKey || !apiSecret) {
+      return null;
+    }
+    return { cloudName, apiKey, apiSecret };
+  }
 }

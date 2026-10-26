@@ -233,6 +233,20 @@ export class DashboardService {
       });
     }
 
+    const missingAlt = await this.prisma.media.findMany({
+      where: { mimeType: { startsWith: 'image/' }, altEn: '' },
+      select: { id: true, originalName: true },
+    });
+    for (const row of missingAlt) {
+      issues.push({
+        kind: 'MISSING_ALT',
+        entity: 'media',
+        id: row.id,
+        title: row.originalName,
+        href: '/admin/media',
+      });
+    }
+
     return {
       summary: {
         drafts:
@@ -243,6 +257,7 @@ export class DashboardService {
         fewKeyFacts: issues.filter((issue) => issue.kind === 'CASE_STUDY_KEY_FACTS').length,
         marqueeCount,
         publishLint: issues.filter((issue) => issue.kind === 'PUBLISH_LINT').length,
+        missingAlt: missingAlt.length,
       },
       issues,
     };

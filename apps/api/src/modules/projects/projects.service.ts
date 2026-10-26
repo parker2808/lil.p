@@ -278,6 +278,7 @@ export class ProjectsService {
     if (input.seoDescriptionEn !== undefined) data.seoDescriptionEn = input.seoDescriptionEn;
     if (input.seoDescriptionVi !== undefined) data.seoDescriptionVi = input.seoDescriptionVi;
     if (input.sortOrder !== undefined) data.sortOrder = input.sortOrder;
+    if (input.coverId !== undefined) data.coverId = input.coverId;
     if (input.domainId !== undefined) data.domainId = input.domainId;
     if (input.experienceId !== undefined) data.experienceId = input.experienceId;
     return data as Prisma.ProjectUncheckedUpdateInput & Prisma.ProjectUncheckedCreateInput;

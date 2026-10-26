@@ -40,9 +40,10 @@ export const healthIssueKindSchema = z.enum([
   'MARQUEE_SKILLS',
   'MISSING_VI',
   'PUBLISH_LINT',
+  'MISSING_ALT',
 ]);
 
-export const healthIssueEntitySchema = z.enum(['project', 'post', 'skill']);
+export const healthIssueEntitySchema = z.enum(['project', 'post', 'skill', 'media']);
 
 export const adminHealthIssueSchema = z.object({
   kind: healthIssueKindSchema,
@@ -61,6 +62,7 @@ export const adminHealthSummarySchema = z.object({
   fewKeyFacts: z.number().int().nonnegative(),
   marqueeCount: z.number().int().nonnegative(),
   publishLint: z.number().int().nonnegative(),
+  missingAlt: z.number().int().nonnegative(),
 });
 
 export const adminHealthSchema = z.object({
