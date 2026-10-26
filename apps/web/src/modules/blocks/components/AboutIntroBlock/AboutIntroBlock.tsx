@@ -1,7 +1,7 @@
 import type { PublicBlock } from '@portfolio/contracts';
 import { Eyebrow } from '@portfolio/ui/components/Eyebrow/Eyebrow';
 import { Reveal } from '@portfolio/ui/components/Reveal/Reveal';
-import { Avatar, AvatarFallback } from '@portfolio/ui/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@portfolio/ui/components/ui/avatar';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
@@ -31,13 +31,20 @@ export async function AboutIntroBlock({
     .split(/[,·]/)
     .map((item) => item.trim())
     .filter(Boolean);
-  const resumeId = context.locale === 'vi' ? site.profile.resumeViId : site.profile.resumeEnId;
+  const resumeUrl = site.profile.resume?.url;
   const cityLine = [site.profile.city, site.profile.timezone].filter(Boolean).join(' · ');
 
   return (
     <Reveal className="col-span-full grid items-start gap-8 lg:grid-cols-12" lang={block.lang}>
       <aside className="bg-card border-border flex flex-col gap-3 rounded-lg border p-4 lg:col-span-4">
         <Avatar className="size-20">
+          {site.profile.avatar ? (
+            <AvatarImage
+              src={site.profile.avatar.url}
+              srcSet={site.profile.avatar.srcset}
+              alt={site.profile.avatar.alt}
+            />
+          ) : null}
           <AvatarFallback>{initials(site.profile.displayName)}</AvatarFallback>
         </Avatar>
         {props.showCity && cityLine ? (
@@ -49,9 +56,9 @@ export async function AboutIntroBlock({
         {props.showAvailability ? (
           <Badge variant="success">{site.settings.availabilityNote}</Badge>
         ) : null}
-        {resumeId ? (
+        {resumeUrl ? (
           <Button asChild variant="outline">
-            <a href={`/api/public/media/${resumeId}`}>{t('downloadCv')}</a>
+            <a href={resumeUrl}>{t('downloadCv')}</a>
           </Button>
         ) : null}
       </aside>

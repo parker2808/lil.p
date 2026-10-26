@@ -5,6 +5,7 @@ import {
 } from '@portfolio/contracts';
 import { Editor } from '@tiptap/core';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import FileHandler from '@tiptap/extension-file-handler';
 import Image from '@tiptap/extension-image';
 import { TableKit } from '@tiptap/extension-table';
 import { CharacterCount, Placeholder } from '@tiptap/extensions';
@@ -66,11 +67,34 @@ const SafeImage = Image.extend({
   },
 });
 
+async function insertUploaded(
+  editor: Editor,
+  files: File[],
+  onUploadImage?: (file: File) => Promise<{ src: string; alt: string } | undefined>,
+  pos?: number,
+) {
+  if (!onUploadImage) {
+    return;
+  }
+  for (const file of files) {
+    const uploaded = await onUploadImage(file);
+    if (!uploaded || !isAllowedImageSrc(uploaded.src)) {
+      continue;
+    }
+    const chain = editor.chain().focus();
+    if (typeof pos === 'number') {
+      chain.setTextSelection(pos);
+    }
+    chain.setImage({ src: uploaded.src, alt: uploaded.alt }).run();
+  }
+}
+
 export function createMarkdownExtensions(options: {
   labels: MarkdownEditorLabels;
   placeholder?: string;
+  onUploadImage?: (file: File) => Promise<{ src: string; alt: string } | undefined>;
 }) {
-  const { labels, placeholder = labels.placeholder } = options;
+  const { labels, placeholder = labels.placeholder, onUploadImage } = options;
 
   return [
     StarterKit.configure({
@@ -106,6 +130,16 @@ export function createMarkdownExtensions(options: {
     Callout.configure({ note: labels.note, warning: labels.warning }),
     SlashCommand.configure({ labels }),
     MarkdownPaste,
+    FileHandler.configure({
+      allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/avif'],
+      consumePasteEvent: true,
+      onDrop: (editor, files, pos) => {
+        void insertUploaded(editor, files, onUploadImage, pos);
+      },
+      onPaste: (editor, files) => {
+        void insertUploaded(editor, files, onUploadImage);
+      },
+    }),
   ];
 }
 

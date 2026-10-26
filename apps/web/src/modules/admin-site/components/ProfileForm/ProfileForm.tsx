@@ -7,6 +7,7 @@ import { Textarea } from '@portfolio/ui/components/ui/textarea';
 import type { MarkdownEditorLabels } from '@portfolio/ui/components/MarkdownEditor/types';
 
 import { MarkdownField } from '@/modules/admin-core/components/MarkdownField/MarkdownField';
+import { MediaField } from '@/modules/admin-media/components/MediaField/MediaField';
 
 import type { AdminProfile } from '@portfolio/contracts';
 
@@ -38,6 +39,12 @@ export function ProfileForm({
     timezone: string;
     phone: string;
     preview: string;
+    avatar: string;
+    resumeEn: string;
+    resumeVi: string;
+    choose: string;
+    clear: string;
+    emptyMedia: string;
   };
   editorLabels: MarkdownEditorLabels;
   previewLabels: {
@@ -157,6 +164,72 @@ export function ProfileForm({
           onChange={(event) => onChange('timezone', event.target.value)}
         />
       </Field>
+      <MediaField
+        label={labels.avatar}
+        accept="image"
+        readOnly={readOnly}
+        chooseLabel={labels.choose}
+        clearLabel={labels.clear}
+        emptyLabel={labels.emptyMedia}
+        value={
+          values.avatar
+            ? {
+                id: values.avatar.id,
+                url: values.avatar.url,
+                originalName: values.avatar.originalName,
+                mimeType: values.avatar.mimeType,
+              }
+            : null
+        }
+        onChange={(media) => {
+          onChange('avatarId', media?.id ?? null);
+          onChange('avatar', media);
+        }}
+      />
+      <MediaField
+        label={labels.resumeEn}
+        accept="pdf"
+        readOnly={readOnly}
+        chooseLabel={labels.choose}
+        clearLabel={labels.clear}
+        emptyLabel={labels.emptyMedia}
+        value={
+          values.resumeEn
+            ? {
+                id: values.resumeEn.id,
+                url: values.resumeEn.url,
+                originalName: values.resumeEn.originalName,
+                mimeType: values.resumeEn.mimeType,
+              }
+            : null
+        }
+        onChange={(media) => {
+          onChange('resumeEnId', media?.id ?? null);
+          onChange('resumeEn', media);
+        }}
+      />
+      <MediaField
+        label={labels.resumeVi}
+        accept="pdf"
+        readOnly={readOnly}
+        chooseLabel={labels.choose}
+        clearLabel={labels.clear}
+        emptyLabel={labels.emptyMedia}
+        value={
+          values.resumeVi
+            ? {
+                id: values.resumeVi.id,
+                url: values.resumeVi.url,
+                originalName: values.resumeVi.originalName,
+                mimeType: values.resumeVi.mimeType,
+              }
+            : null
+        }
+        onChange={(media) => {
+          onChange('resumeViId', media?.id ?? null);
+          onChange('resumeVi', media);
+        }}
+      />
       <Field>
         <FieldLabel htmlFor="phone">{labels.phone}</FieldLabel>
         <Input

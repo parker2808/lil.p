@@ -1,9 +1,16 @@
-import type { AdminProject, ProjectCreateInput } from '@portfolio/contracts';
+import type {
+  AdminMedia,
+  AdminProject,
+  AdminProjectImage,
+  ProjectCreateInput,
+} from '@portfolio/contracts';
 
 export type ProjectFormValues = ProjectCreateInput & {
   id?: number;
   status?: AdminProject['status'];
   updatedAt?: string;
+  cover?: AdminMedia | null;
+  gallery?: AdminProjectImage[];
 };
 
 export function emptyProjectForm(): ProjectFormValues {
@@ -52,6 +59,10 @@ export function emptyProjectForm(): ProjectFormValues {
     experienceId: null,
     skillIds: [],
     metrics: [],
+    coverId: null,
+    images: [],
+    cover: null,
+    gallery: [],
   };
 }
 
@@ -103,6 +114,15 @@ export function projectToForm(project: AdminProject): ProjectFormValues {
     domainId: project.domainId,
     experienceId: project.experienceId,
     skillIds: project.skillIds,
+    coverId: project.coverId,
+    cover: project.cover,
+    gallery: project.images,
+    images: project.images.map((image) => ({
+      mediaId: image.mediaId,
+      captionEn: image.captionEn,
+      captionVi: image.captionVi,
+      sortOrder: image.sortOrder,
+    })),
     metrics: project.metrics.map((metric) => ({
       labelEn: metric.labelEn,
       labelVi: metric.labelVi,
@@ -173,5 +193,7 @@ export function toCreateInput(values: ProjectFormValues): ProjectCreateInput {
     experienceId: values.experienceId,
     skillIds: values.skillIds,
     metrics: values.metrics,
+    coverId: values.coverId,
+    images: values.images,
   };
 }

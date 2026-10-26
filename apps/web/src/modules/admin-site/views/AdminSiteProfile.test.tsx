@@ -45,8 +45,12 @@ const profile: AdminProfile = {
   heroKickerVi: null,
   headlineAccentEn: 'world',
   headlineAccentVi: null,
+  avatarId: null,
+  avatar: null,
   resumeEnId: null,
   resumeViId: null,
+  resumeEn: null,
+  resumeVi: null,
   phone: '<phone>',
   updatedAt: '2026-01-01T00:00:00.000Z',
 };

@@ -1,9 +1,15 @@
-import { type AdminPost, type PostCreateInput, publishLint } from '@portfolio/contracts';
+import {
+  type AdminMedia,
+  type AdminPost,
+  type PostCreateInput,
+  publishLint,
+} from '@portfolio/contracts';
 
 export type PostFormValues = PostCreateInput & {
   id?: number;
   status?: AdminPost['status'];
   updatedAt?: string;
+  cover?: AdminMedia | null;
 };
 
 export function emptyPostForm(): PostFormValues {
@@ -23,6 +29,8 @@ export function emptyPostForm(): PostFormValues {
     seoDescriptionVi: null,
     isFeatured: false,
     tagIds: [],
+    coverId: null,
+    cover: null,
   };
 }
 
@@ -46,6 +54,8 @@ export function postToForm(post: AdminPost): PostFormValues {
     seoDescriptionVi: post.seoDescriptionVi,
     isFeatured: post.isFeatured,
     tagIds: post.tagIds,
+    coverId: post.coverId,
+    cover: post.cover,
   };
 }
 
@@ -66,6 +76,7 @@ export function toPostCreateInput(values: PostFormValues): PostCreateInput {
     seoDescriptionVi: values.seoDescriptionVi,
     isFeatured: values.isFeatured,
     tagIds: values.tagIds,
+    coverId: values.coverId,
   };
 }
 

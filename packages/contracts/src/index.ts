@@ -162,9 +162,11 @@ export {
   adminMediaListPageSchema,
   adminMediaListParamsSchema,
   adminMediaSchema,
+  adminProjectImageInputSchema,
   adminProjectImageSchema,
   MEDIA_MAX_BYTES,
   MEDIA_VARIANT_WIDTHS,
+  publicFileSchema,
   publicImageSchema,
   updateMediaSchema,
 } from './media/media.schema';
@@ -173,6 +175,8 @@ export type {
   AdminMediaListPage,
   AdminMediaListParams,
   AdminProjectImage,
+  AdminProjectImageInput,
+  PublicFile,
   PublicImage,
   UpdateMediaInput,
 } from './media/media.type';

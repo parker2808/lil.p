@@ -151,6 +151,16 @@ export class ProjectsService {
               })),
             }
           : undefined,
+        images: input.images
+          ? {
+              create: input.images.map((image, index) => ({
+                mediaId: image.mediaId,
+                captionEn: image.captionEn ?? null,
+                captionVi: image.captionVi ?? null,
+                sortOrder: image.sortOrder ?? index,
+              })),
+            }
+          : undefined,
       },
       select: projectSelect,
     });
@@ -166,7 +176,7 @@ export class ProjectsService {
       });
     }
 
-    const { skillIds, metrics, updatedAt, status, ...fields } = input;
+    const { skillIds, metrics, images, updatedAt, status, ...fields } = input;
     void updatedAt;
     const row = await this.prisma.$transaction(async (tx) => {
       await tx.project.update({
@@ -194,6 +204,20 @@ export class ProjectsService {
               after: metric.after ?? null,
               value: metric.value,
               sortOrder: metric.sortOrder ?? index,
+            })),
+          });
+        }
+      }
+      if (images) {
+        await tx.projectImage.deleteMany({ where: { projectId: id } });
+        if (images.length > 0) {
+          await tx.projectImage.createMany({
+            data: images.map((image, index) => ({
+              projectId: id,
+              mediaId: image.mediaId,
+              captionEn: image.captionEn ?? null,
+              captionVi: image.captionVi ?? null,
+              sortOrder: image.sortOrder ?? index,
             })),
           });
         }

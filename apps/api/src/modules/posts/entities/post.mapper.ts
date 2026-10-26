@@ -7,7 +7,7 @@ import type {
 } from '@portfolio/contracts';
 
 import { pickGroup } from '../../../i18n/pick-locale.util';
-import { toPublicImage } from '../../media/media.mapper';
+import { toAdminMedia, toPublicImage } from '../../media/media.mapper';
 import type { PostRow } from './post.entity';
 
 const LIST_TEXT = ['title', 'excerpt'] as const;
@@ -87,6 +87,7 @@ export function toAdminDto(row: PostRow): AdminPost {
     publishedAt: row.publishedAt ? row.publishedAt.toISOString() : null,
     sortOrder: row.sortOrder,
     coverId: row.coverId,
+    cover: row.cover ? toAdminMedia(row.cover) : null,
     tagIds: row.tags.map((tag) => tag.id),
     updatedAt: row.updatedAt.toISOString(),
   };

@@ -5,6 +5,8 @@ import { Field, FieldLabel } from '@portfolio/ui/components/ui/field';
 import { Input } from '@portfolio/ui/components/ui/input';
 import { Switch } from '@portfolio/ui/components/ui/switch';
 
+import { MediaField } from '@/modules/admin-media/components/MediaField/MediaField';
+
 import type { PostFormValues } from '../../utils/post-form.util';
 import { TagPicker } from '../TagPicker/TagPicker';
 
@@ -22,6 +24,10 @@ export function PostProperties({
   labels: {
     slug: string;
     featured: string;
+    cover: string;
+    choose: string;
+    clear: string;
+    emptyMedia: string;
     tags: string;
     openTags: string;
     searchTags: string;
@@ -43,6 +49,28 @@ export function PostProperties({
           onChange={(event) => onChange('slug', event.target.value)}
         />
       </Field>
+      <MediaField
+        label={labels.cover}
+        accept="image"
+        readOnly={readOnly}
+        chooseLabel={labels.choose}
+        clearLabel={labels.clear}
+        emptyLabel={labels.emptyMedia}
+        value={
+          values.cover
+            ? {
+                id: values.cover.id,
+                url: values.cover.url,
+                originalName: values.cover.originalName,
+                mimeType: values.cover.mimeType,
+              }
+            : null
+        }
+        onChange={(media) => {
+          onChange('coverId', media?.id ?? null);
+          onChange('cover', media);
+        }}
+      />
       <Field className="flex-row items-center justify-between">
         <FieldLabel htmlFor="featured">{labels.featured}</FieldLabel>
         <Switch

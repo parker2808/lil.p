@@ -52,6 +52,9 @@ export class ProfileService {
     if (input.headlineAccentEn !== undefined) data.headlineAccentEn = input.headlineAccentEn;
     if (input.headlineAccentVi !== undefined) data.headlineAccentVi = input.headlineAccentVi;
     if (input.phone !== undefined) data.phone = input.phone;
+    if (input.avatarId !== undefined) data.avatarId = input.avatarId;
+    if (input.resumeEnId !== undefined) data.resumeEnId = input.resumeEnId;
+    if (input.resumeViId !== undefined) data.resumeViId = input.resumeViId;
 
     const row = await this.prisma.profile.update({
       where: { id: 1 },

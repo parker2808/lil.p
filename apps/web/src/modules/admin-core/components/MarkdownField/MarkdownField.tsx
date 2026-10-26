@@ -3,8 +3,11 @@
 import type { MarkdownEditorLabels } from '@portfolio/ui/components/MarkdownEditor/types';
 import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
 import dynamic from 'next/dynamic';
-import { useCallback } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
+import { MediaPickerDialog } from '@/modules/admin-media/components/MediaPickerDialog/MediaPickerDialog';
+import { publicMediaSrc } from '@/modules/admin-media/services/admin-media.service';
+import { uploadMedia } from '@/modules/admin-media/services/media-upload.service';
 import { previewMarkdown } from '@/modules/content/actions/preview.action';
 import { hastToReact } from '@/modules/content/utils/hast-to-react.util';
 
@@ -61,16 +64,50 @@ export function MarkdownField({
     [previewLabels],
   );
 
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const pickRef = useRef<((value: { src: string; alt: string } | null) => void) | null>(null);
+
+  const onUploadImage = useCallback(async (file: File) => {
+    const media = await uploadMedia(file);
+    return { src: publicMediaSrc(media.fileName), alt: media.altEn };
+  }, []);
+
+  const onPickImage = useCallback(() => {
+    return new Promise<{ src: string; alt: string } | null>((resolve) => {
+      pickRef.current = resolve;
+      setPickerOpen(true);
+    });
+  }, []);
+
   return (
-    <MarkdownEditor
-      value={value}
-      onChange={onChange}
-      onBlur={onBlur}
-      onReady={onReady}
-      editable={!readOnly}
-      variant={variant}
-      labels={labels}
-      renderPreview={renderPreview}
-    />
+    <>
+      <MarkdownEditor
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        onReady={onReady}
+        editable={!readOnly}
+        variant={variant}
+        labels={labels}
+        renderPreview={renderPreview}
+        onUploadImage={readOnly ? undefined : onUploadImage}
+        onPickImage={readOnly ? undefined : onPickImage}
+      />
+      <MediaPickerDialog
+        open={pickerOpen}
+        accept="image"
+        onOpenChange={(open) => {
+          setPickerOpen(open);
+          if (!open) {
+            pickRef.current?.(null);
+            pickRef.current = null;
+          }
+        }}
+        onPick={(media) => {
+          pickRef.current?.({ src: publicMediaSrc(media.fileName), alt: media.altEn });
+          pickRef.current = null;
+        }}
+      />
+    </>
   );
 }

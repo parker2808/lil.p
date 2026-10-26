@@ -19,8 +19,8 @@ export async function CvDownloadBlock({
 }) {
   const props = block.props as { heading?: BlockHeadingProps };
   const [site, t] = await Promise.all([getSite(context.locale), getTranslations('blocks')]);
-  const resumeId = context.locale === 'vi' ? site.profile.resumeViId : site.profile.resumeEnId;
-  if (!resumeId) {
+  const resumeUrl = site.profile.resume?.url;
+  if (!resumeUrl) {
     return null;
   }
 
@@ -31,7 +31,7 @@ export async function CvDownloadBlock({
     >
       <BlockHeading heading={props.heading} />
       <Button asChild>
-        <a href={`/api/public/media/${resumeId}`}>{t('downloadCv')}</a>
+        <a href={resumeUrl}>{t('downloadCv')}</a>
       </Button>
     </Reveal>
   );

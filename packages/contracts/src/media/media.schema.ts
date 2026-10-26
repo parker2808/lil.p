@@ -43,6 +43,13 @@ export const updateMediaSchema = z.object({
   altVi: z.string().max(200).optional(),
 });
 
+export const adminProjectImageInputSchema = z.object({
+  mediaId: z.number().int(),
+  captionEn: z.string().nullable().optional(),
+  captionVi: z.string().nullable().optional(),
+  sortOrder: z.number().int().optional(),
+});
+
 export const adminProjectImageSchema = z.object({
   id: z.number().int(),
   mediaId: z.number().int(),
@@ -50,4 +57,8 @@ export const adminProjectImageSchema = z.object({
   captionVi: z.string().nullable(),
   sortOrder: z.number().int(),
   media: adminMediaSchema,
+});
+
+export const publicFileSchema = z.object({
+  url: z.string(),
 });

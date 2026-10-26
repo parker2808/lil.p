@@ -23,6 +23,8 @@ export const siteSettingsSelect = {
   analyticsEnabled: true,
   ambientEffects: true,
   marqueeEnabled: true,
+  ogImageId: true,
+  ogImage: true,
   updatedAt: true,
 } satisfies Prisma.SiteSettingsSelect;
 

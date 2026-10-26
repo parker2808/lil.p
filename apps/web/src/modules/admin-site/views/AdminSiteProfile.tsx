@@ -35,6 +35,9 @@ function toPatch(values: AdminProfile) {
     headlineAccentEn: values.headlineAccentEn,
     headlineAccentVi: values.headlineAccentVi,
     phone: values.phone,
+    avatarId: values.avatarId,
+    resumeEnId: values.resumeEnId,
+    resumeViId: values.resumeViId,
   };
 }
 
@@ -177,6 +180,12 @@ function ProfileEditor({ initial }: { initial: AdminProfile }) {
           timezone: t('timezone'),
           phone: t('phone'),
           preview: t('preview'),
+          avatar: t('avatar'),
+          resumeEn: t('resumeEn'),
+          resumeVi: t('resumeVi'),
+          choose: t('choose'),
+          clear: t('clear'),
+          emptyMedia: t('emptyMedia'),
         }}
         editorLabels={editorLabels}
         previewLabels={previewLabels}
