@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { listParamsSchema, paginatedSchema } from '../common/list-params.schema';
 import { localeSchema } from '../common/locale.schema';
-import { publicImageSchema } from '../media/media.schema';
+import { adminMediaSchema, publicImageSchema } from '../media/media.schema';
 import { contentStatusSchema } from '../projects/projects.enum';
 import { publicTagSchema } from '../tags/tags.schema';
 
@@ -79,6 +79,7 @@ export const adminPostSchema = z.object({
   publishedAt: z.string().nullable(),
   sortOrder: z.number().int(),
   coverId: z.number().int().nullable(),
+  cover: adminMediaSchema.nullable(),
   tagIds: z.array(z.number().int()),
   updatedAt: z.string(),
 });

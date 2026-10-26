@@ -24,6 +24,27 @@ describe('CaseCard', () => {
     expect(links[0]).toHaveAttribute('href', '/projects/sample-migration');
   });
 
+  it('renders a cover with srcset and alt', () => {
+    render(
+      <CaseCard
+        project={{
+          ...projectFixture,
+          cover: {
+            url: 'https://media.test/cover',
+            srcset: 'https://media.test/cover?w=480&f=webp 480w',
+            width: 1600,
+            height: 900,
+            alt: 'Ledger cover',
+          },
+        }}
+        href="/projects/sample-migration"
+        labels={{ nda: 'NDA' }}
+      />,
+    );
+    const image = screen.getByRole('img', { name: 'Ledger cover' });
+    expect(image).toHaveAttribute('srcset', expect.stringContaining('480w'));
+  });
+
   it('shows the NDA pill and chip overflow', () => {
     const { rerender } = render(
       <CaseCard

@@ -25,6 +25,8 @@ export function MarkdownEditor({
   variant = 'full',
   labels,
   renderPreview,
+  onUploadImage,
+  onPickImage,
   className,
 }: {
   value: string;
@@ -36,6 +38,7 @@ export function MarkdownEditor({
   labels: MarkdownEditorLabels;
   renderPreview?: (markdown: string) => ReactNode | Promise<ReactNode>;
   onUploadImage?: (file: File) => Promise<{ src: string; alt: string }>;
+  onPickImage?: () => Promise<{ src: string; alt: string } | null>;
   className?: string;
 }) {
   const [mode, setMode] = useState<MarkdownEditorMode>('write');
@@ -44,11 +47,23 @@ export function MarkdownEditor({
   const changeTimer = useRef<number | undefined>(undefined);
   const previewTimer = useRef<number | undefined>(undefined);
   const readyRef = useRef(false);
+  const uploadRef = useRef(onUploadImage);
+  uploadRef.current = onUploadImage;
+  const [pendingAlt, setPendingAlt] = useState<{ src: string; alt: string } | null>(null);
 
   const editor = useEditor({
     immediatelyRender: false,
     shouldRerenderOnTransaction: true,
-    extensions: createMarkdownExtensions({ labels }),
+    extensions: createMarkdownExtensions({
+      labels,
+      onUploadImage: async (file) => {
+        const uploaded = await uploadRef.current?.(file);
+        if (uploaded) {
+          setPendingAlt(uploaded);
+        }
+        return uploaded;
+      },
+    }),
     content: value,
     contentType: 'markdown',
     editable,
@@ -162,7 +177,14 @@ export function MarkdownEditor({
           </div>
           <TabsContent value="write">
             {editor && editable ? (
-              <EditorToolbar editor={editor} labels={labels} variant={variant} />
+              <EditorToolbar
+                editor={editor}
+                labels={labels}
+                variant={variant}
+                pendingAlt={pendingAlt}
+                onPendingAltChange={setPendingAlt}
+                onPickImage={onPickImage}
+              />
             ) : null}
             <Prose>
               <EditorContent editor={editor} onBlur={flush} />
@@ -172,7 +194,14 @@ export function MarkdownEditor({
             <ResizablePanelGroup direction="horizontal">
               <ResizablePanel defaultSize={50} minSize={30}>
                 {editor && editable ? (
-                  <EditorToolbar editor={editor} labels={labels} variant={variant} />
+                  <EditorToolbar
+                    editor={editor}
+                    labels={labels}
+                    variant={variant}
+                    pendingAlt={pendingAlt}
+                    onPendingAltChange={setPendingAlt}
+                    onPickImage={onPickImage}
+                  />
                 ) : null}
                 <Prose>
                   <EditorContent editor={editor} onBlur={flush} />

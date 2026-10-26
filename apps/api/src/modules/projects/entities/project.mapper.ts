@@ -203,6 +203,7 @@ export function toAdminDto(row: ProjectRow): AdminProject {
     publishedAt: row.publishedAt ? row.publishedAt.toISOString() : null,
     sortOrder: row.sortOrder,
     coverId: row.coverId,
+    cover: row.cover ? toAdminMedia(row.cover) : null,
     domainId: row.domainId,
     experienceId: row.experienceId,
     skillIds: row.skills.map((skill) => skill.id),

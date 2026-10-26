@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { localeSchema } from '../common/locale.schema';
-import { publicImageSchema } from '../media/media.schema';
+import { adminMediaSchema, publicImageSchema } from '../media/media.schema';
 import { availabilitySchema } from './site-settings.enum';
 
 export const siteSettingsUpdateSchema = z.object({
@@ -51,6 +51,7 @@ export const adminSiteSettingsSchema = z.object({
   ambientEffects: z.boolean(),
   marqueeEnabled: z.boolean(),
   ogImageId: z.number().int().nullable().optional(),
+  ogImage: adminMediaSchema.nullable().optional(),
   updatedAt: z.string(),
 });
 

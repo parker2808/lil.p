@@ -21,8 +21,12 @@ export const profileSelect = {
   heroKickerVi: true,
   headlineAccentEn: true,
   headlineAccentVi: true,
+  avatarId: true,
+  avatar: true,
   resumeEnId: true,
   resumeViId: true,
+  resumeEn: true,
+  resumeVi: true,
   phone: true,
   updatedAt: true,
 } satisfies Prisma.ProfileSelect;

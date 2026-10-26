@@ -15,6 +15,8 @@ import { Switch } from '@portfolio/ui/components/ui/switch';
 import { Textarea } from '@portfolio/ui/components/ui/textarea';
 import { useState } from 'react';
 
+import { MediaField } from '@/modules/admin-media/components/MediaField/MediaField';
+
 export function SettingsForm({
   initial,
   readOnly,
@@ -47,6 +49,10 @@ export function SettingsForm({
     ambient: string;
     marquee: string;
     save: string;
+    ogImage: string;
+    choose: string;
+    clear: string;
+    emptyMedia: string;
   };
   onSave: (values: AdminSiteSettings) => Promise<void>;
 }) {
@@ -245,6 +251,28 @@ export function SettingsForm({
           onCheckedChange={(checked) => patch('marqueeEnabled', checked)}
         />
       </Field>
+      <MediaField
+        label={labels.ogImage}
+        accept="image"
+        readOnly={readOnly}
+        chooseLabel={labels.choose}
+        clearLabel={labels.clear}
+        emptyLabel={labels.emptyMedia}
+        value={
+          form.ogImage
+            ? {
+                id: form.ogImage.id,
+                url: form.ogImage.url,
+                originalName: form.ogImage.originalName,
+                mimeType: form.ogImage.mimeType,
+              }
+            : null
+        }
+        onChange={(media) => {
+          patch('ogImageId', media?.id ?? null);
+          patch('ogImage', media);
+        }}
+      />
       {readOnly ? null : (
         <Button type="submit" size="sm">
           {labels.save}

@@ -22,8 +22,12 @@ const row = {
   heroKickerVi: 'Kicker VI',
   headlineAccentEn: 'Hello',
   headlineAccentVi: 'Xin chào',
+  avatarId: null,
+  avatar: null,
   resumeEnId: null,
   resumeViId: null,
+  resumeEn: null,
+  resumeVi: null,
   phone: '<phone>',
   updatedAt: new Date('2026-01-01'),
 };

@@ -1,6 +1,12 @@
-import type { AdminProfile, Locale, PublicProfile } from '@portfolio/contracts';
+import {
+  type AdminProfile,
+  type Locale,
+  MARKDOWN_IMAGE_PREFIX,
+  type PublicProfile,
+} from '@portfolio/contracts';
 
 import { pickGroup } from '../../../i18n/pick-locale.util';
+import { toAdminMedia, toPublicImage } from '../../media/media.mapper';
 import type { ProfileRow } from './profile.entity';
 
 const TRANSLATED = [
@@ -30,6 +36,11 @@ export function toPublicProfile(row: ProfileRow, locale: Locale): PublicProfile 
     headlineAccent: values.headlineAccent,
     resumeEnId: row.resumeEnId,
     resumeViId: row.resumeViId,
+    avatar: toPublicImage(row.avatar, locale),
+    resume: (() => {
+      const media = locale === 'vi' && row.resumeVi ? row.resumeVi : row.resumeEn;
+      return media ? { url: `${MARKDOWN_IMAGE_PREFIX}${media.fileName}` } : null;
+    })(),
     lang,
   };
 }
@@ -55,8 +66,12 @@ export function toAdminDto(row: ProfileRow): AdminProfile {
     heroKickerVi: row.heroKickerVi,
     headlineAccentEn: row.headlineAccentEn,
     headlineAccentVi: row.headlineAccentVi,
+    avatarId: row.avatarId,
+    avatar: row.avatar ? toAdminMedia(row.avatar) : null,
     resumeEnId: row.resumeEnId,
     resumeViId: row.resumeViId,
+    resumeEn: row.resumeEn ? toAdminMedia(row.resumeEn) : null,
+    resumeVi: row.resumeVi ? toAdminMedia(row.resumeVi) : null,
     phone: row.phone,
     updatedAt: row.updatedAt.toISOString(),
   };

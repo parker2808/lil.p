@@ -44,7 +44,20 @@ export function CaseCard({
     >
       <ArrowUpRight aria-hidden className={CARD_ARROW} />
       <div className={cn(featured && 'grid items-center gap-6 lg:grid-cols-12')}>
-        <CoverPlaceholder hue={hue} className={cn(featured ? 'lg:col-span-7' : 'border-b')} />
+        {project.cover ? (
+          <img
+            src={project.cover.url}
+            srcSet={project.cover.srcset}
+            alt={project.cover.alt}
+            sizes={featured ? '(min-width: 1024px) 58vw, 100vw' : '100vw'}
+            className={cn(
+              'w-full object-cover',
+              featured ? 'rounded-lg lg:col-span-7' : 'border-b',
+            )}
+          />
+        ) : (
+          <CoverPlaceholder hue={hue} className={cn(featured ? 'lg:col-span-7' : 'border-b')} />
+        )}
         <div className={cn('flex flex-1 flex-col gap-2', featured ? 'lg:col-span-5' : 'p-4')}>
           <div className="flex flex-wrap items-center gap-1.5">
             {project.domain ? (

@@ -31,7 +31,7 @@ import {
   Table,
   Undo2,
 } from 'lucide-react';
-import { type KeyboardEvent, useMemo, useState } from 'react';
+import { type KeyboardEvent, useEffect, useMemo, useState } from 'react';
 
 import type { MarkdownEditorLabels, MarkdownEditorVariant } from '../../types';
 import { LinkPopover } from '../LinkPopover/LinkPopover';
@@ -45,14 +45,30 @@ export function EditorToolbar({
   editor,
   labels,
   variant,
+  pendingAlt,
+  onPendingAltChange,
+  onPickImage,
 }: {
   editor: Editor;
   labels: MarkdownEditorLabels;
   variant: MarkdownEditorVariant;
+  pendingAlt?: { src: string; alt: string } | null;
+  onPendingAltChange?: (value: { src: string; alt: string } | null) => void;
+  onPickImage?: () => Promise<{ src: string; alt: string } | null>;
 }) {
   const [imageOpen, setImageOpen] = useState(false);
   const [imageSrc, setImageSrc] = useState('');
   const [imageAlt, setImageAlt] = useState('');
+
+  useEffect(() => {
+    if (!pendingAlt) {
+      return;
+    }
+    setImageOpen(true);
+    setImageSrc(pendingAlt.src);
+    setImageAlt(pendingAlt.alt);
+    onPendingAltChange?.(null);
+  }, [onPendingAltChange, pendingAlt]);
 
   const compact = variant === 'compact';
   const controls = useMemo(() => {
@@ -284,7 +300,25 @@ export function EditorToolbar({
           </ToolbarIconButton>
           <Popover open={imageOpen} onOpenChange={setImageOpen}>
             <PopoverTrigger asChild>
-              <ToolbarIconButton label={labels.image}>
+              <ToolbarIconButton
+                label={labels.image}
+                onClick={() => {
+                  if (!onPickImage) {
+                    return;
+                  }
+                  void onPickImage().then((picked) => {
+                    if (!picked || !isAllowedImageSrc(picked.src)) {
+                      return;
+                    }
+                    editor.chain().focus().setImage({ src: picked.src, alt: picked.alt }).run();
+                    if (!picked.alt.trim()) {
+                      setImageSrc(picked.src);
+                      setImageAlt('');
+                      setImageOpen(true);
+                    }
+                  });
+                }}
+              >
                 <ImageIcon className="size-3.5" />
               </ToolbarIconButton>
             </PopoverTrigger>

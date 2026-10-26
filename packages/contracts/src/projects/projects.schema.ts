@@ -4,7 +4,12 @@ import { listParamsSchema, paginatedSchema } from '../common/list-params.schema'
 import { localeSchema } from '../common/locale.schema';
 import { hueSchema } from '../domains/domains.enum';
 import { publicProjectDomainSchema } from '../domains/domains.schema';
-import { adminProjectImageSchema, publicImageSchema } from '../media/media.schema';
+import {
+  adminMediaSchema,
+  adminProjectImageInputSchema,
+  adminProjectImageSchema,
+  publicImageSchema,
+} from '../media/media.schema';
 import { publicSkillChipSchema } from '../skills/skills.schema';
 import { contentStatusSchema } from './projects.enum';
 
@@ -155,6 +160,7 @@ export const projectCreateSchema = z.object({
   seoDescriptionVi: z.string().nullable().optional(),
   sortOrder: z.number().int().optional(),
   coverId: z.number().int().nullable().optional(),
+  images: z.array(adminProjectImageInputSchema).optional(),
   domainId: z.number().int().nullable().optional(),
   experienceId: z.number().int().nullable().optional(),
   skillIds: z.array(z.number().int()).optional(),
@@ -216,6 +222,7 @@ export const adminProjectSchema = z.object({
   publishedAt: z.string().nullable(),
   sortOrder: z.number().int(),
   coverId: z.number().int().nullable(),
+  cover: adminMediaSchema.nullable(),
   domainId: z.number().int().nullable(),
   experienceId: z.number().int().nullable(),
   skillIds: z.array(z.number().int()),

@@ -90,9 +90,35 @@ export function AdminSiteIndex() {
                 ambient: t('ambient'),
                 marquee: t('marquee'),
                 save: t('save'),
+                ogImage: t('ogImage'),
+                choose: t('choose'),
+                clear: t('clear'),
+                emptyMedia: t('emptyMedia'),
               }}
               onSave={async (values) => {
-                await saveSite.mutateAsync(values);
+                await saveSite.mutateAsync({
+                  siteName: values.siteName,
+                  domain: values.domain,
+                  defaultLocale: values.defaultLocale,
+                  seoTitleEn: values.seoTitleEn,
+                  seoTitleVi: values.seoTitleVi,
+                  seoDescriptionEn: values.seoDescriptionEn,
+                  seoDescriptionVi: values.seoDescriptionVi,
+                  footerNoteEn: values.footerNoteEn,
+                  footerNoteVi: values.footerNoteVi,
+                  contactIntroEn: values.contactIntroEn,
+                  contactIntroVi: values.contactIntroVi,
+                  replyTimeNoteEn: values.replyTimeNoteEn,
+                  replyTimeNoteVi: values.replyTimeNoteVi,
+                  contactEmail: values.contactEmail,
+                  availability: values.availability,
+                  availabilityNoteEn: values.availabilityNoteEn,
+                  availabilityNoteVi: values.availabilityNoteVi,
+                  analyticsEnabled: values.analyticsEnabled,
+                  ambientEffects: values.ambientEffects,
+                  marqueeEnabled: values.marqueeEnabled,
+                  ogImageId: values.ogImageId ?? null,
+                });
               }}
             />
           ) : (

@@ -1,6 +1,7 @@
 import type { AdminSiteSettings, Locale, PublicSiteSettings } from '@portfolio/contracts';
 
 import { pickGroup } from '../../../i18n/pick-locale.util';
+import { toAdminMedia, toPublicImage } from '../../media/media.mapper';
 import type { SiteSettingsRow } from './site-settings.entity';
 
 const TRANSLATED = [
@@ -30,6 +31,7 @@ export function toPublicSiteSettings(row: SiteSettingsRow, locale: Locale): Publ
     analyticsEnabled: row.analyticsEnabled,
     ambientEffects: row.ambientEffects,
     marqueeEnabled: row.marqueeEnabled,
+    ogImage: toPublicImage(row.ogImage, locale),
     lang,
   };
 }
@@ -57,6 +59,8 @@ export function toAdminDto(row: SiteSettingsRow): AdminSiteSettings {
     analyticsEnabled: row.analyticsEnabled,
     ambientEffects: row.ambientEffects,
     marqueeEnabled: row.marqueeEnabled,
+    ogImageId: row.ogImageId,
+    ogImage: row.ogImage ? toAdminMedia(row.ogImage) : null,
     updatedAt: row.updatedAt.toISOString(),
   };
 }

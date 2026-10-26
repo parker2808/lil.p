@@ -197,6 +197,10 @@ function PostEditorForm({ initial }: { initial: PostFormValues }) {
           labels={{
             slug: t('slug'),
             featured: t('featured'),
+            cover: t('cover'),
+            choose: t('choose'),
+            clear: t('clear'),
+            emptyMedia: t('emptyMedia'),
             tags: t('tags'),
             openTags: t('openTags'),
             searchTags: t('searchTags'),

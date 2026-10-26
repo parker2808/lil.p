@@ -80,7 +80,18 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
         </div>
       </header>
       <div className="mx-auto flex max-w-5xl flex-col gap-16 px-6 pb-16">
-        {project.isConfidential ? null : (
+        {project.isConfidential ? null : project.cover ? (
+          // Public cover uses API srcset + locale alt (T51); next/image cannot attach srcset.
+          // eslint-disable-next-line @next/next/no-img-element -- srcset from media DTO
+          <img
+            src={project.cover.url}
+            srcSet={project.cover.srcset}
+            alt={project.cover.alt}
+            sizes="100vw"
+            className="w-full rounded-xl object-cover"
+            style={{ aspectRatio: '21 / 9' }}
+          />
+        ) : (
           <CoverPlaceholder hue={hue} ratio="21 / 9" className="rounded-xl" />
         )}
         <div className="grid items-start gap-10 lg:grid-cols-12">
