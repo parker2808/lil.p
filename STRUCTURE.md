@@ -15,7 +15,7 @@ apps/
 └── api/                  # NestJS API (/api/*) + Prisma schema, migrations, seed
 packages/
 ├── ui/                   # design system: tokens CSS, shadcn primitives, pure product components, stories
-└── contracts/            # zod schemas + TS types shared by web and api, block registry, query keys, icon allowlist, fixtures
+└── contracts/            # zod schemas + TS types shared by web and api (tsup ESM+CJS)
 infra/                    # Docker/server config files (mysql init SQL, Caddyfile)
 scripts/                  # repo scripts: content/privacy checks, backup restore
 docs/                     # PLAN, design snapshot, sql-notes.sql, audit reports

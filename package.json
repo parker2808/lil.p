@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "pnpm -r --if-present --parallel dev",
     "lint": "pnpm -r --if-present lint",
-    "typecheck": "pnpm -r --if-present typecheck",
+    "typecheck": "pnpm --filter @portfolio/contracts build && pnpm -r --if-present typecheck",
     "test": "pnpm -r --if-present test",
     "build": "pnpm -r --if-present build",
     "format": "prettier --write .",

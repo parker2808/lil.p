@@ -1,0 +1,24 @@
+import { z } from 'zod';
+
+/**
+ * Shared error body (PLAN D5). T10 fills in the remaining codes
+ * and the request-id / fieldErrors fields.
+ */
+export const errorCodeSchema = z.enum([
+  'NOT_SEEDED',
+  'NOT_FOUND',
+  'VALIDATION_FAILED',
+  'CONFLICT',
+  'INTERNAL',
+]);
+
+export const apiErrorSchema = z.object({
+  statusCode: z.number().int(),
+  code: errorCodeSchema,
+  message: z.string(),
+  requestId: z.string().optional(),
+  fieldErrors: z.record(z.string(), z.array(z.string())).optional(),
+});
+
+export type ErrorCode = z.infer<typeof errorCodeSchema>;
+export type ApiErrorBody = z.infer<typeof apiErrorSchema>;
