@@ -96,4 +96,9 @@ export const BLOCK_EDITOR_META = {
     labelKey: 'admin.pages.types.notesBrowser',
     descriptionKey: 'admin.pages.types.notesBrowserHint',
   },
+  'contact-form': {
+    icon: 'mail',
+    labelKey: 'admin.pages.types.contactForm',
+    descriptionKey: 'admin.pages.types.contactFormHint',
+  },
 } as const satisfies Record<BlockType, { icon: IconKey; labelKey: string; descriptionKey: string }>;

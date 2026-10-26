@@ -37,6 +37,29 @@
     "fallback": "EN",
     "downloadCv": "Tải CV"
   },
+  "contact": {
+    "form": {
+      "name": "Tên",
+      "email": "Email",
+      "topic": "Chủ đề",
+      "topicPlaceholder": "Chọn chủ đề",
+      "message": "Tin nhắn",
+      "count": "{count} / {max}",
+      "send": "Gửi tin nhắn",
+      "sending": "Đang gửi",
+      "successTitle": "Đã gửi",
+      "successBody": "Cảm ơn — mình sẽ trả lời sớm nhất có thể.",
+      "summary": "Hãy sửa các trường được đánh dấu.",
+      "honeypot": "Để trống trường này",
+      "rateLimited": "Quá nhiều tin nhắn. Thử lại sau.",
+      "failed": "Không gửi được tin nhắn."
+    },
+    "channels": {
+      "email": "Email",
+      "github": "GitHub",
+      "linkedin": "LinkedIn"
+    }
+  },
   "projects": {
     "all": "Tất cả",
     "tech": "Công nghệ",

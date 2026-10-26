@@ -3,6 +3,10 @@ import type { ComponentType, ReactNode } from 'react';
 
 import { AboutIntroBlock, AboutIntroSkeleton } from '../components/AboutIntroBlock/AboutIntroBlock';
 import { CaseGridBlock, CaseGridSkeleton } from '../components/CaseGridBlock/CaseGridBlock';
+import {
+  ContactFormBlock,
+  ContactFormSkeleton,
+} from '../components/ContactFormBlock/ContactFormBlock';
 import { CtaBandBlock, CtaBandSkeleton } from '../components/CtaBandBlock/CtaBandBlock';
 import { CvDownloadBlock, CvDownloadSkeleton } from '../components/CvDownloadBlock/CvDownloadBlock';
 import { DomainGridBlock, DomainGridSkeleton } from '../components/DomainGridBlock/DomainGridBlock';
@@ -68,6 +72,7 @@ export const BLOCK_RENDERERS = {
   prose: { component: ProseBlock, skeleton: ProseSkeleton },
   'projects-browser': { component: ProjectsBrowserBlock, skeleton: ProjectsBrowserSkeleton },
   'notes-browser': { component: NotesBrowserBlock, skeleton: NotesBrowserSkeleton },
+  'contact-form': { component: ContactFormBlock, skeleton: ContactFormSkeleton },
 } satisfies Record<BlockType, BlockRendererEntry>;
 
 export type BlockRenderers = Record<string, BlockRendererEntry | undefined>;
