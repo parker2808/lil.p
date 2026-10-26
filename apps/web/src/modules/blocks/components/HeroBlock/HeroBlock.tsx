@@ -5,7 +5,8 @@ import { KickerPill } from '@portfolio/ui/components/KickerPill/KickerPill';
 import { MigrationDiagram } from '@portfolio/ui/components/MigrationDiagram/MigrationDiagram';
 import { Reveal } from '@portfolio/ui/components/Reveal/Reveal';
 import { Badge } from '@portfolio/ui/components/ui/badge';
-import { Button } from '@portfolio/ui/components/ui/button';
+import { buttonVariants } from '@portfolio/ui/components/ui/button';
+import { cn } from '@portfolio/ui/lib/utils';
 import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
 import { getTranslations } from 'next-intl/server';
 
@@ -64,14 +65,17 @@ export async function HeroBlock({ block, context }: { block: PublicBlock; contex
         ) : null}
         <div className="flex flex-wrap gap-3">
           {props.primaryCta?.href && props.primaryCta.label ? (
-            <Button asChild size="lg">
-              <Link href={props.primaryCta.href}>{props.primaryCta.label}</Link>
-            </Button>
+            <Link href={props.primaryCta.href} className={cn(buttonVariants({ size: 'lg' }))}>
+              {props.primaryCta.label}
+            </Link>
           ) : null}
           {props.secondaryCta?.href && props.secondaryCta.label ? (
-            <Button asChild size="lg" variant="outline">
-              <Link href={props.secondaryCta.href}>{props.secondaryCta.label}</Link>
-            </Button>
+            <Link
+              href={props.secondaryCta.href}
+              className={cn(buttonVariants({ size: 'lg', variant: 'outline' }))}
+            >
+              {props.secondaryCta.label}
+            </Link>
           ) : null}
         </div>
       </div>

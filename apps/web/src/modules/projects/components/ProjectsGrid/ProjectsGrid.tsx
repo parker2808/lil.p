@@ -6,8 +6,8 @@ import { Empty } from '@portfolio/ui/components/ui/empty';
 import {
   Pagination,
   PaginationItem,
-  PaginationLink,
   PaginationList,
+  paginationLinkClassName,
 } from '@portfolio/ui/components/ui/pagination';
 import type { RenderLink } from '@portfolio/ui/utils/render-link.util';
 
@@ -92,32 +92,29 @@ export function ProjectsGrid({
           <PaginationList>
             {page > 1 ? (
               <PaginationItem>
-                <PaginationLink asChild>
-                  {renderLink({
-                    href: projectsHref({ domain, skill, page: page - 1 }),
-                    children: labels.previous,
-                  })}
-                </PaginationLink>
+                {renderLink({
+                  href: projectsHref({ domain, skill, page: page - 1 }),
+                  className: paginationLinkClassName(),
+                  children: labels.previous,
+                })}
               </PaginationItem>
             ) : null}
             {Array.from({ length: pages }, (_, index) => index + 1).map((number) => (
               <PaginationItem key={number}>
-                <PaginationLink asChild isActive={number === page}>
-                  {renderLink({
-                    href: projectsHref({ domain, skill, page: number }),
-                    children: number,
-                  })}
-                </PaginationLink>
+                {renderLink({
+                  href: projectsHref({ domain, skill, page: number }),
+                  className: paginationLinkClassName(number === page),
+                  children: number,
+                })}
               </PaginationItem>
             ))}
             {page < pages ? (
               <PaginationItem>
-                <PaginationLink asChild>
-                  {renderLink({
-                    href: projectsHref({ domain, skill, page: page + 1 }),
-                    children: labels.next,
-                  })}
-                </PaginationLink>
+                {renderLink({
+                  href: projectsHref({ domain, skill, page: page + 1 }),
+                  className: paginationLinkClassName(),
+                  children: labels.next,
+                })}
               </PaginationItem>
             ) : null}
           </PaginationList>

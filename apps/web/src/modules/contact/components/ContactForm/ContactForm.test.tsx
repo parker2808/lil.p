@@ -7,14 +7,17 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import en from '../../../../../i18n/locales/en.json';
 
 vi.mock('../../actions/contact.action', () => ({
-  submitContact: vi.fn(),
   submitContactForm: vi.fn(async () => ({ ok: false, fieldErrors: { name: ['Required'] } })),
 }));
 
-import { submitContact } from '../../actions/contact.action';
+vi.mock('../../actions/contact.client', () => ({
+  submitContactClient: vi.fn(),
+}));
+
+import { submitContactClient } from '../../actions/contact.client';
 import { ContactForm } from './ContactForm';
 
-const submit = vi.mocked(submitContact);
+const submit = vi.mocked(submitContactClient);
 
 function renderForm() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });

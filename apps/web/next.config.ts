@@ -6,6 +6,9 @@ const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 const apiUrl = process.env.API_URL ?? 'http://127.0.0.1:4000';
 
 const nextConfig: NextConfig = {
+  env: {
+    API_URL: apiUrl,
+  },
   transpilePackages: ['@portfolio/ui', '@portfolio/contracts'],
   serverExternalPackages: ['shiki'],
   agentRules: false,

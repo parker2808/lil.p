@@ -26,6 +26,15 @@ export function PaginationItem(props: ComponentProps<'li'>) {
   return <li data-slot="pagination-item" {...props} />;
 }
 
+export function paginationLinkClassName(isActive?: boolean) {
+  return cn(
+    'text-ui inline-flex min-h-8 min-w-8 items-center justify-center rounded-md px-2',
+    isActive
+      ? 'bg-accent text-accent-foreground'
+      : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+  );
+}
+
 export function PaginationLink({
   className,
   isActive,
@@ -37,13 +46,7 @@ export function PaginationLink({
     <Comp
       data-slot="pagination-link"
       aria-current={isActive ? 'page' : undefined}
-      className={cn(
-        'text-ui inline-flex min-h-8 min-w-8 items-center justify-center rounded-md px-2',
-        isActive
-          ? 'bg-accent text-accent-foreground'
-          : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
-        className,
-      )}
+      className={cn(paginationLinkClassName(isActive), className)}
       {...props}
     />
   );

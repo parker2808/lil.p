@@ -3,10 +3,13 @@
 import { useLocale, useTranslations } from 'next-intl';
 
 import { Link, usePathname } from '@i18n/navigation';
-import { ToggleGroup, ToggleGroupItem } from '@portfolio/ui/components/ui/toggle-group';
+import { cn } from '@portfolio/ui/lib/utils';
 
 const VI = 'VI';
 const EN = 'EN';
+
+const itemClass =
+  'text-ui inline-flex h-8 items-center px-3 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground';
 
 export function LocaleSwitch() {
   const locale = useLocale();
@@ -14,17 +17,27 @@ export function LocaleSwitch() {
   const t = useTranslations('core');
 
   return (
-    <ToggleGroup type="single" value={locale} aria-label={t('locale')}>
-      <ToggleGroupItem value="vi" asChild>
-        <Link href={pathname} locale="vi" hrefLang="vi">
-          {VI}
-        </Link>
-      </ToggleGroupItem>
-      <ToggleGroupItem value="en" asChild>
-        <Link href={pathname} locale="en" hrefLang="en">
-          {EN}
-        </Link>
-      </ToggleGroupItem>
-    </ToggleGroup>
+    <nav className="inline-flex rounded-md border" aria-label={t('locale')}>
+      <Link
+        href={pathname}
+        locale="vi"
+        hrefLang="vi"
+        data-state={locale === 'vi' ? 'on' : 'off'}
+        aria-current={locale === 'vi' ? 'true' : undefined}
+        className={cn(itemClass)}
+      >
+        {VI}
+      </Link>
+      <Link
+        href={pathname}
+        locale="en"
+        hrefLang="en"
+        data-state={locale === 'en' ? 'on' : 'off'}
+        aria-current={locale === 'en' ? 'true' : undefined}
+        className={cn(itemClass)}
+      >
+        {EN}
+      </Link>
+    </nav>
   );
 }

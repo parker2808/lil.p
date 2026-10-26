@@ -12,4 +12,15 @@ describe('Button', () => {
     expect(button).toBeDisabled();
     expect(screen.getByText('Save')).toBeInTheDocument();
   });
+
+  it('slots onto a single child without wrapping it', () => {
+    render(
+      <Button asChild>
+        <a href="/projects">Work</a>
+      </Button>,
+    );
+
+    expect(screen.getByRole('link', { name: 'Work' })).toHaveAttribute('href', '/projects');
+    expect(screen.queryByRole('button')).toBeNull();
+  });
 });

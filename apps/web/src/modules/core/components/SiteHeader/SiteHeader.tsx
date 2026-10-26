@@ -7,14 +7,7 @@ import { useEffect, useState } from 'react';
 
 import { Link } from '@i18n/navigation';
 import { Button } from '@portfolio/ui/components/ui/button';
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from '@portfolio/ui/components/ui/sheet';
-import { NavLink } from '@portfolio/ui/components/NavLink/NavLink';
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
 import { cn } from '@portfolio/ui/lib/utils';
 
 import { CommandPalette } from '../CommandPalette/CommandPalette';
@@ -45,9 +38,14 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
           {nav.map((item) => (
-            <NavLink key={item.id} asChild>
-              <Link href={item.href}>{item.label}</Link>
-            </NavLink>
+            <Link
+              key={item.id}
+              href={item.href}
+              data-slot="nav-link"
+              className="text-ui text-muted-foreground hover:text-foreground inline-flex h-8 items-center px-2 transition-colors"
+            >
+              {item.label}
+            </Link>
           ))}
         </nav>
         <div className="ml-auto hidden items-center gap-2 md:flex">
@@ -66,11 +64,14 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
               <SheetTitle>{t('menu')}</SheetTitle>
               <nav className="flex flex-col gap-2">
                 {nav.map((item) => (
-                  <SheetClose asChild key={item.id}>
-                    <NavLink asChild>
-                      <Link href={item.href}>{item.label}</Link>
-                    </NavLink>
-                  </SheetClose>
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    data-slot="nav-link"
+                    className="text-ui text-muted-foreground hover:text-foreground inline-flex h-8 items-center px-2 transition-colors"
+                  >
+                    {item.label}
+                  </Link>
                 ))}
               </nav>
               <LocaleSwitch />

@@ -2,9 +2,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('next/cache', () => ({
   revalidateTag: vi.fn(),
+  revalidatePath: vi.fn(),
 }));
 
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 import { POST } from './route';
 
@@ -42,5 +43,21 @@ describe('POST /api/revalidate', () => {
     expect(response.status).toBe(200);
     expect(revalidateTag).toHaveBeenCalledWith('posts', 'max');
     expect(revalidateTag).toHaveBeenCalledWith('post:a', 'max');
+  });
+
+  it('revalidates paths when they are provided', async () => {
+    vi.stubEnv('REVALIDATE_SECRET', 'expected-secret-value');
+    const response = await POST(
+      new Request('http://localhost/api/revalidate', {
+        method: 'POST',
+        headers: {
+          'x-revalidate-secret': 'expected-secret-value',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ paths: ['/en/projects/particula'] }),
+      }),
+    );
+    expect(response.status).toBe(200);
+    expect(revalidatePath).toHaveBeenCalledWith('/en/projects/particula');
   });
 });
