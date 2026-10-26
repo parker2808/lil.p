@@ -12,4 +12,9 @@ describe('buildContentSecurityPolicy', () => {
     expect(csp).toContain('https://res.cloudinary.com');
     expect(csp).not.toContain('upgrade-insecure-requests');
   });
+
+  it('adds a cross-origin API to connect-src', () => {
+    const csp = buildContentSecurityPolicy('n', ['https://api.example.test']);
+    expect(csp).toContain("connect-src 'self' https://api.example.test");
+  });
 });

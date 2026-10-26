@@ -34,7 +34,8 @@ function requestWithNonce(request: NextRequest, nonce: string, csp: string): Nex
 
 export function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
-  const csp = buildContentSecurityPolicy(nonce);
+  const apiOrigin = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ?? '';
+  const csp = buildContentSecurityPolicy(nonce, apiOrigin ? [apiOrigin] : []);
   const secured = requestWithNonce(request, nonce, csp);
   const { pathname } = secured.nextUrl;
 
@@ -46,7 +47,9 @@ export function proxy(request: NextRequest) {
         csp,
       );
     }
-    if (!secured.cookies.get('access_token')) {
+    // Cross-site cookies live on the Render host (D28), so this edge
+    // redirect cannot see them. Admin pages handle 401 themselves.
+    if (!apiOrigin && !secured.cookies.get('access_token')) {
       const login = secured.nextUrl.clone();
       login.pathname = '/admin/login';
       login.search = '';

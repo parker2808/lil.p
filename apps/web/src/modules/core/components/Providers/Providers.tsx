@@ -6,6 +6,7 @@ import type { ReactNode } from 'react';
 
 import { Toaster } from 'sonner';
 
+import { ApiWarmup } from '../ApiWarmup/ApiWarmup';
 import { QueryProvider } from './QueryProvider';
 import { ThemeProvider } from './ThemeProvider';
 
@@ -24,6 +25,7 @@ export function Providers({
     <NextIntlClientProvider locale={locale} messages={messages}>
       <QueryProvider>
         <ThemeProvider nonce={nonce}>
+          <ApiWarmup />
           {children}
           <Toaster />
         </ThemeProvider>

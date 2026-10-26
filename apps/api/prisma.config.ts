@@ -14,6 +14,7 @@ export default defineConfig({
     seed: 'tsx prisma/seed/seed.ts',
   },
   datasource: {
+    // TiDB Cloud needs TLS: append ?sslaccept=strict to DATABASE_URL (D28).
     url: process.env['DATABASE_URL'],
   },
 });

@@ -9,14 +9,15 @@
  * `upgrade-insecure-requests` stays off here so local HTTP Caddy still works;
  * T61 adds it once the origin is HTTPS.
  */
-export function buildContentSecurityPolicy(nonce: string): string {
+export function buildContentSecurityPolicy(nonce: string, extraConnectSrc: string[] = []): string {
+  const connect = ["'self'", ...extraConnectSrc.filter(Boolean)].join(' ');
   return [
     "default-src 'self'",
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https://res.cloudinary.com",
     "font-src 'self'",
-    "connect-src 'self'",
+    `connect-src ${connect}`,
     "frame-src 'self'",
     "frame-ancestors 'self'",
     "object-src 'none'",

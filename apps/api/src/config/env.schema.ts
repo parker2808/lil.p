@@ -16,10 +16,19 @@ const optionalUrl = z.preprocess(emptyToUndefined, z.url().optional());
 export const envSchema = z
   .object({
     NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
-    API_PORT: z.coerce.number().int().positive(),
+    API_PORT: z.preprocess(
+      (value) => (value === '' || value === undefined || value === null ? process.env.PORT : value),
+      z.coerce.number().int().positive(),
+    ),
     API_HOST: z.string().min(1).default('127.0.0.1'),
     WEB_ORIGIN: z.url(),
     DATABASE_URL: z.string().min(1).startsWith('mysql://'),
+    CROSS_SITE_COOKIES: z
+      .string()
+      .optional()
+      .transform((value) => value === '1' || value === 'true'),
+    COOKIE_DOMAIN: optionalText,
+    CORS_ORIGINS: optionalText,
     DATABASE_URL_TEST: z.preprocess(
       emptyToUndefined,
       z.string().min(1).startsWith('mysql://').optional(),

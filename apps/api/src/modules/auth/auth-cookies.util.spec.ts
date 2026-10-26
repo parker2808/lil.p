@@ -15,4 +15,12 @@ describe('authCookieFlags', () => {
       secure: false,
     });
   });
+
+  it('uses SameSite=None with Secure for a cross-site production API', () => {
+    expect(authCookieFlags(true, true)).toEqual({
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    });
+  });
 });

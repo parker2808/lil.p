@@ -1,4 +1,5 @@
 import { apiErrorFromResponse } from '../utils/api-error.util';
+import { publicApiUrl } from '../utils/public-api-url.util';
 
 const AUTH_PATHS = ['/api/admin/', '/api/auth/me'];
 
@@ -10,7 +11,10 @@ function needsAuthRefresh(path: string): boolean {
 
 export async function refreshOnce(): Promise<boolean> {
   if (!refreshPromise) {
-    refreshPromise = fetch('/api/auth/refresh', { method: 'POST', credentials: 'include' })
+    refreshPromise = fetch(publicApiUrl('/api/auth/refresh'), {
+      method: 'POST',
+      credentials: 'include',
+    })
       .then((response) => response.ok)
       .finally(() => {
         refreshPromise = null;
@@ -27,7 +31,7 @@ async function parseBody<T>(response: Response): Promise<T> {
 }
 
 export async function apiClient<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const url = path.startsWith('/') ? path : `/${path}`;
+  const url = publicApiUrl(path.startsWith('/') ? path : `/${path}`);
   const response = await fetch(url, {
     credentials: 'include',
     ...init,
