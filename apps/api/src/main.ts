@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 
 import { NestFactory } from '@nestjs/core';
+import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
 import { AppConfigService } from './config/app-config.service';
@@ -13,6 +14,7 @@ import { AppConfigService } from './config/app-config.service';
  */
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
   app.setGlobalPrefix('api');
   app.enableShutdownHooks();
 

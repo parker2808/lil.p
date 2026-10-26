@@ -40,4 +40,24 @@ export class AppConfigService {
   get prismaLogQueries(): boolean {
     return this.config.get('PRISMA_LOG_QUERIES', { infer: true });
   }
+
+  get jwtAccessSecret(): string {
+    return this.config.get('JWT_ACCESS_SECRET', { infer: true });
+  }
+
+  get jwtRefreshSecret(): string {
+    return this.config.get('JWT_REFRESH_SECRET', { infer: true });
+  }
+
+  get jwtAccessTtlSeconds(): number {
+    return this.config.get('JWT_ACCESS_TTL_SECONDS', { infer: true });
+  }
+
+  get jwtRefreshTtlSeconds(): number {
+    return this.config.get('JWT_REFRESH_TTL_SECONDS', { infer: true });
+  }
+
+  get isProduction(): boolean {
+    return this.nodeEnv === 'production';
+  }
 }

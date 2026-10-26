@@ -143,7 +143,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
           ? 'VALIDATION_FAILED'
           : statusCode === HttpStatus.CONFLICT
             ? 'CONFLICT'
-            : 'INTERNAL';
+            : statusCode === HttpStatus.UNAUTHORIZED
+              ? 'UNAUTHENTICATED'
+              : 'INTERNAL';
 
     return { statusCode, code, message, requestId };
   }

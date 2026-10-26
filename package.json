@@ -41,7 +41,8 @@
       "@swc/core",
       "prisma",
       "@prisma/engines",
-      "@prisma/client"
+      "@prisma/client",
+      "argon2"
     ]
   },
   "devDependencies": {
