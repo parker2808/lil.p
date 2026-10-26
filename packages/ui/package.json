@@ -18,6 +18,11 @@
   },
   "dependencies": {
     "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-label": "^2.1.17",
+    "@radix-ui/react-separator": "^1.2.0",
+    "@radix-ui/react-slot": "^1.5.0",
+    "@radix-ui/react-tooltip": "^1.4.1",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.553.0",
     "tailwind-merge": "^3.4.0",
@@ -36,14 +41,17 @@
     "@storybook/addon-themes": "^10.0.0",
     "@storybook/react": "^10.0.0",
     "@storybook/react-vite": "^10.0.0",
-    "storybook": "^10.0.0",
-    "vite": "^7.1.12",
+    "@testing-library/jest-dom": "^6.10.0",
+    "@testing-library/react": "^16.3.3",
     "@types/node": "^22.19.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "jsdom": "^27.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
+    "storybook": "^10.0.0",
     "typescript": "^5.9.3",
+    "vite": "^7.1.12",
     "vitest": "^3.2.4"
   }
 }
