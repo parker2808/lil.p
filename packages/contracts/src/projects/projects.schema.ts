@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { listParamsSchema, paginatedSchema } from '../common/list-params.schema';
 import { localeSchema } from '../common/locale.schema';
+import { hueSchema } from '../domains/domains.enum';
 import { publicProjectDomainSchema } from '../domains/domains.schema';
 import { publicSkillChipSchema } from '../skills/skills.schema';
 import { contentStatusSchema } from './projects.enum';
@@ -159,6 +160,7 @@ export const projectCreateSchema = z.object({
 
 export const projectUpdateSchema = projectCreateSchema.partial().extend({
   updatedAt: z.string().optional(),
+  status: contentStatusSchema.optional(),
 });
 
 export const adminProjectMetricSchema = adminProjectMetricInputSchema.extend({
@@ -217,15 +219,27 @@ export const adminProjectSchema = z.object({
   updatedAt: z.string(),
 });
 
-export const adminProjectListItemSchema = adminProjectSchema.pick({
-  id: true,
-  slug: true,
-  titleEn: true,
-  titleVi: true,
-  status: true,
-  isFeatured: true,
-  domainId: true,
-  updatedAt: true,
+export const adminProjectListDomainSchema = z.object({
+  id: z.number().int(),
+  slug: z.string(),
+  nameEn: z.string(),
+  hue: hueSchema,
 });
+
+export const adminProjectListItemSchema = adminProjectSchema
+  .pick({
+    id: true,
+    slug: true,
+    titleEn: true,
+    titleVi: true,
+    status: true,
+    isFeatured: true,
+    domainId: true,
+    updatedAt: true,
+  })
+  .extend({
+    keyFactsCount: z.number().int().nonnegative(),
+    domain: adminProjectListDomainSchema.nullable(),
+  });
 
 export const adminProjectListPageSchema = paginatedSchema(adminProjectListItemSchema);

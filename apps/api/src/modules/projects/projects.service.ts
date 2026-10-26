@@ -166,12 +166,15 @@ export class ProjectsService {
       });
     }
 
-    const { skillIds, metrics, updatedAt, ...fields } = input;
+    const { skillIds, metrics, updatedAt, status, ...fields } = input;
     void updatedAt;
     const row = await this.prisma.$transaction(async (tx) => {
       await tx.project.update({
         where: { id },
-        data: this.toWriteData(fields),
+        data: {
+          ...this.toWriteData(fields),
+          ...(status !== undefined ? { status } : {}),
+        },
       });
       if (skillIds) {
         await tx.project.update({

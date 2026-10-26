@@ -181,6 +181,68 @@
         "retry": "Retry",
         "empty": "No content counts yet."
       }
+    },
+    "table": {
+      "retry": "Retry",
+      "previous": "Previous",
+      "next": "Next",
+      "columns": "Columns",
+      "density": "Density",
+      "densityDefault": "Default",
+      "densityCompact": "Compact",
+      "help": "Shortcuts",
+      "helpTitle": "Keyboard shortcuts",
+      "cancel": "Cancel",
+      "shortcuts": {
+        "move": "Move the active row",
+        "select": "Select the active row",
+        "open": "Open the active row",
+        "edit": "Edit the active row",
+        "remove": "Archive the selection",
+        "help": "Open this help"
+      },
+      "keys": {
+        "j": "j",
+        "k": "k",
+        "x": "x",
+        "enter": "Enter",
+        "e": "e",
+        "backspace": "⌫",
+        "help": "?"
+      }
+    },
+    "projects": {
+      "title": "Projects",
+      "new": "New project",
+      "search": "Filter projects",
+      "addFilter": "+ Filter",
+      "removeChip": "×",
+      "empty": "No projects yet.",
+      "noResults": "No matching projects.",
+      "clearFilters": "Clear filters",
+      "error": "Projects could not be loaded.",
+      "selected": "{count} selected",
+      "range": "{from}–{to} of {total}",
+      "archive": "Archive",
+      "confirmArchiveTitle": "Archive these projects?",
+      "confirmArchive": "Archived projects leave the public site.",
+      "chip": {
+        "status": "Status is {status}",
+        "domain": "Domain is {domain}"
+      },
+      "status": {
+        "DRAFT": "Draft",
+        "PUBLISHED": "Published",
+        "ARCHIVED": "Archived"
+      },
+      "columns": {
+        "title": "Title",
+        "domain": "Domain",
+        "keyFacts": "Key facts",
+        "status": "Status",
+        "updated": "Updated",
+        "actions": "Actions"
+      }
     }
   }
 }

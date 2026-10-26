@@ -227,5 +227,15 @@ export function toAdminListItem(row: ProjectRow): AdminProjectListItem {
     isFeatured: full.isFeatured,
     domainId: full.domainId,
     updatedAt: full.updatedAt,
+    keyFactsCount: splitLines(row.keyFactsEn).length,
+    domain:
+      row.domain && row.domainId !== null
+        ? {
+            id: row.domainId,
+            slug: row.domain.slug,
+            nameEn: row.domain.nameEn,
+            hue: row.domain.hue,
+          }
+        : null,
   };
 }
