@@ -18,6 +18,7 @@ import { usePathname } from 'next/navigation';
 import { navVisibleTo } from '../../constants/admin-nav.constant';
 import { useMe } from '../../hooks/use-me.hook';
 import { useAdminUi } from '../../stores/admin-ui.store';
+import { RoleGate } from '../RoleGate/RoleGate';
 
 export function AdminSidebar() {
   const t = useTranslations('admin.nav');
@@ -40,7 +41,7 @@ export function AdminSidebar() {
                 const active =
                   pathname === item.href ||
                   (item.href !== '/admin' && pathname.startsWith(`${item.href}/`));
-                return (
+                const itemNode = (
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton asChild active={active}>
                       <Link href={item.href} title={t(item.key)}>
@@ -48,6 +49,13 @@ export function AdminSidebar() {
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
+                );
+                return item.key === 'users' ? (
+                  <RoleGate key={item.href} allow={['admin']}>
+                    {itemNode}
+                  </RoleGate>
+                ) : (
+                  itemNode
                 );
               })}
             </SidebarMenu>

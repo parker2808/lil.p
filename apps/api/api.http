@@ -847,6 +847,29 @@ POST http://127.0.0.1:4000/api/auth/refresh
 ### Auth logout
 POST http://127.0.0.1:4000/api/auth/logout
 
+### Auth change password
+PATCH http://127.0.0.1:4000/api/auth/password
+Content-Type: application/json
+
+{
+  "currentPassword": "change-me",
+  "newPassword": "change-me-12xx"
+}
+
+### Admin users list
+GET http://127.0.0.1:4000/api/admin/users?page=1&pageSize=20&sort=name
+
+### Admin create user
+POST http://127.0.0.1:4000/api/admin/users
+Content-Type: application/json
+
+{
+  "email": "<email>",
+  "name": "Reviewer",
+  "role": "user",
+  "password": "change-me-12xx"
+}
+
 ### Admin dashboard stats (30d default)
 GET http://127.0.0.1:4000/api/admin/stats
 

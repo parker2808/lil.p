@@ -127,7 +127,7 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | `contact-topics` | `ContactTopic` | `GET /public/contact-topics`, admin CRUD (`admin-contact-topics.controller.ts`) |
 | `contact` | `ContactMessage` | `POST /public/contact`, admin inbox list/patch |
 | `auth` | none (reads `User` through `UsersService`) | `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout`, `GET /auth/me`, `PATCH /auth/password` |
-| `users` | `User` | admin users (admin only) |
+| `users` | `User` | `GET/POST /admin/users`, `PATCH /admin/users/:id`, sign-out-everywhere, set password (admin only; last-admin 409) |
 | `media` | `Media` | admin upload/list/patch, public file `GET /public/media/:file` |
 | `events` | none (in-memory stream) | `GET /admin/events` (SSE) |
 | `publishing` | none (calls web `/api/revalidate`) | used by projects, posts and pages services |
