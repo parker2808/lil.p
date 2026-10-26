@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import './code-syntax.css';
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
@@ -296,6 +297,7 @@
   --text-ui-meta: 0.78125rem;
   --text-ui-meta--line-height: 1.4;
 
+  --max-width-measure: var(--measure);
   --shadow-1: var(--shadow-1);
   --shadow-2: var(--shadow-2);
   --shadow-3: var(--shadow-3);
@@ -364,6 +366,9 @@
   }
   .diagram-orbit[data-reduced='true'] {
     animation: none;
+  }
+  [data-slot='prose']:not([data-compact]) li::before {
+    content: '▹';
   }
   code,
   kbd,

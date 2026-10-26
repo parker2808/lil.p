@@ -1,0 +1,14 @@
+:root,
+.dark {
+  --shiki-foreground: var(--foreground);
+  --shiki-background: var(--muted);
+  --shiki-token-constant: var(--hue-amber);
+  --shiki-token-string: var(--hue-jade);
+  --shiki-token-comment: var(--muted-foreground);
+  --shiki-token-keyword: var(--primary);
+  --shiki-token-parameter: var(--foreground);
+  --shiki-token-function: var(--hue-violet);
+  --shiki-token-string-expression: var(--hue-jade);
+  --shiki-token-punctuation: var(--muted-foreground);
+  --shiki-token-link: var(--primary);
+}
