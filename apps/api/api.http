@@ -171,6 +171,15 @@ Content-Type: application/json
 ### Admin project archive
 DELETE http://127.0.0.1:4000/api/admin/projects/1
 
+### Admin project publish
+POST http://127.0.0.1:4000/api/admin/projects/1/publish
+
+### Admin project unpublish
+POST http://127.0.0.1:4000/api/admin/projects/1/unpublish
+
+### Admin preview project (any status)
+GET http://127.0.0.1:4000/api/admin/preview/projects/sample-case?locale=en
+
 ### Admin posts list
 GET http://127.0.0.1:4000/api/admin/posts?page=1&pageSize=20&sort=-updatedAt
 
@@ -216,6 +225,15 @@ Content-Type: application/json
 
 ### Admin post archive
 DELETE http://127.0.0.1:4000/api/admin/posts/1
+
+### Admin post publish
+POST http://127.0.0.1:4000/api/admin/posts/1/publish
+
+### Admin post unpublish
+POST http://127.0.0.1:4000/api/admin/posts/1/unpublish
+
+### Admin preview post (any status)
+GET http://127.0.0.1:4000/api/admin/preview/posts/sample-note?locale=en
 
 ### Admin experience list
 GET http://127.0.0.1:4000/api/admin/experience?page=1&pageSize=20&sort=-startDate

@@ -15,6 +15,11 @@
     "suggestLocale": "Trang này cũng có bản tiếng Anh",
     "switchLocale": "Xem bằng tiếng Anh"
   },
+  "draft": {
+    "banner": "Bạn đang xem bản nháp. Khách vẫn thấy bản đã xuất bản.",
+    "exit": "Thoát xem trước",
+    "login": "Đăng nhập để tiếp tục xem trước"
+  },
   "states": {
     "loading": "Đang tải",
     "empty": "Chưa có nội dung",

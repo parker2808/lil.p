@@ -9,10 +9,10 @@ import {
   publicProjectDetailSchema,
   publicProjectListPageSchema,
 } from '@portfolio/contracts';
-
-import { ApiError } from '@/modules/core/utils/api-error.util';
+import { draftMode } from 'next/headers';
 
 import { apiServer } from '@/modules/core/services/api-server.service';
+import { ApiError } from '@/modules/core/utils/api-error.util';
 
 function queryString(params: Record<string, string | number | undefined>): string {
   const search = new URLSearchParams();
@@ -89,6 +89,14 @@ export async function listCaseProjects(
 }
 
 export async function getProject(slug: string, locale: Locale): Promise<PublicProjectDetail> {
+  const draft = await draftMode();
+  if (draft.isEnabled) {
+    return apiServer(`/api/admin/preview/projects/${encodeURIComponent(slug)}`, {
+      locale,
+      withAuth: true,
+      schema: publicProjectDetailSchema,
+    });
+  }
   return apiServer(`/api/public/projects/${encodeURIComponent(slug)}`, {
     locale,
     tags: ['projects', `project:${slug}`],

@@ -74,4 +74,16 @@ export class AdminProjectsController {
   archive(@Param('id', ParseIntPipe) id: number): Promise<AdminProject> {
     return this.projects.archive(id);
   }
+
+  @Post(':id/publish')
+  @HttpCode(HttpStatus.OK)
+  publish(@Param('id', ParseIntPipe) id: number): Promise<AdminProject> {
+    return this.projects.publish(id);
+  }
+
+  @Post(':id/unpublish')
+  @HttpCode(HttpStatus.OK)
+  unpublish(@Param('id', ParseIntPipe) id: number): Promise<AdminProject> {
+    return this.projects.unpublish(id);
+  }
 }

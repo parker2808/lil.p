@@ -10,6 +10,8 @@ import {
   publicPostListPageSchema,
 } from '@portfolio/contracts';
 
+import { draftMode } from 'next/headers';
+
 import { apiServer } from '@/modules/core/services/api-server.service';
 import { ApiError } from '@/modules/core/utils/api-error.util';
 
@@ -44,6 +46,14 @@ export async function listPosts(
 }
 
 export async function getPost(slug: string, locale: Locale): Promise<PublicPostDetail> {
+  const draft = await draftMode();
+  if (draft.isEnabled) {
+    return apiServer(`/api/admin/preview/posts/${encodeURIComponent(slug)}`, {
+      locale,
+      withAuth: true,
+      schema: publicPostDetailSchema,
+    });
+  }
   return apiServer(`/api/public/posts/${encodeURIComponent(slug)}`, {
     locale,
     tags: ['posts', `post:${slug}`],

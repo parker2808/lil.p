@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import type {
   AdminDomain,
   DomainCreateInput,
@@ -10,12 +10,17 @@ import type {
 import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { PublishingService } from '../publishing/publishing.service';
+import { DOMAIN_TAGS } from '../publishing/tags.util';
 import { domainSelect } from './entities/domain.entity';
 import { toAdminDto, toPublicDomain } from './entities/domain.mapper';
 
 @Injectable()
 export class DomainsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly publishing?: PublishingService,
+  ) {}
 
   async listPublic(locale: Locale): Promise<PublicDomain[]> {
     const rows = await this.prisma.domain.findMany({
@@ -36,6 +41,7 @@ export class DomainsService {
 
   async reorder(ids: number[]): Promise<AdminDomain[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).domain, ids);
+    this.bump();
     return this.listAdmin();
   }
 
@@ -58,6 +64,7 @@ export class DomainsService {
       },
       select: domainSelect,
     });
+    this.bump();
     return toAdminDto(row);
   }
 
@@ -74,13 +81,19 @@ export class DomainsService {
     if (input.sortOrder !== undefined) data.sortOrder = input.sortOrder;
     if (input.isVisible !== undefined) data.isVisible = input.isVisible;
     const row = await this.prisma.domain.update({ where: { id }, data, select: domainSelect });
+    this.bump();
     return toAdminDto(row);
   }
 
   async remove(id: number): Promise<AdminDomain> {
     const current = await this.findRow(id);
     await this.prisma.domain.delete({ where: { id } });
+    this.bump();
     return toAdminDto(current);
+  }
+
+  private bump(): void {
+    void this.publishing?.revalidate([...DOMAIN_TAGS]);
   }
 
   private async findRow(id: number) {

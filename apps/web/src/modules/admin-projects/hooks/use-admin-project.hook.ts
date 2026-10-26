@@ -6,6 +6,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createAdminProject,
   getAdminProject,
+  publishAdminProject,
+  unpublishAdminProject,
   updateAdminProject,
 } from '../services/admin-projects.service';
 
@@ -33,6 +35,28 @@ export function useSaveAdminProject() {
   return useMutation({
     mutationFn: ({ id, body }: { id: number; body: Parameters<typeof updateAdminProject>[1] }) =>
       updateAdminProject(id, body),
+    onSuccess: (project) => {
+      queryClient.setQueryData(qk.admin.detail('projects', project.id), project);
+      void queryClient.invalidateQueries({ queryKey: qk.admin.all('projects') });
+    },
+  });
+}
+
+export function usePublishAdminProject() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: publishAdminProject,
+    onSuccess: (project) => {
+      queryClient.setQueryData(qk.admin.detail('projects', project.id), project);
+      void queryClient.invalidateQueries({ queryKey: qk.admin.all('projects') });
+    },
+  });
+}
+
+export function useUnpublishAdminProject() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: unpublishAdminProject,
     onSuccess: (project) => {
       queryClient.setQueryData(qk.admin.detail('projects', project.id), project);
       void queryClient.invalidateQueries({ queryKey: qk.admin.all('projects') });

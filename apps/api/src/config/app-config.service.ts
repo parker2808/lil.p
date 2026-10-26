@@ -70,4 +70,12 @@ export class AppConfigService {
     }
     return { cloudName, apiKey, apiSecret };
   }
+
+  get webInternalUrl(): string | null {
+    return this.config.get('WEB_INTERNAL_URL', { infer: true }) ?? null;
+  }
+
+  get revalidateSecret(): string | null {
+    return this.config.get('REVALIDATE_SECRET', { infer: true }) ?? null;
+  }
 }

@@ -1,0 +1,46 @@
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+vi.mock('next/cache', () => ({
+  revalidateTag: vi.fn(),
+}));
+
+import { revalidateTag } from 'next/cache';
+
+import { POST } from './route';
+
+describe('POST /api/revalidate', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.clearAllMocks();
+  });
+
+  it('returns 401 when the secret is wrong', async () => {
+    vi.stubEnv('REVALIDATE_SECRET', 'expected-secret-value');
+    const response = await POST(
+      new Request('http://localhost/api/revalidate', {
+        method: 'POST',
+        headers: { 'x-revalidate-secret': 'nope', 'content-type': 'application/json' },
+        body: JSON.stringify({ tags: ['posts'] }),
+      }),
+    );
+    expect(response.status).toBe(401);
+    expect(revalidateTag).not.toHaveBeenCalled();
+  });
+
+  it('revalidates each tag when the secret matches', async () => {
+    vi.stubEnv('REVALIDATE_SECRET', 'expected-secret-value');
+    const response = await POST(
+      new Request('http://localhost/api/revalidate', {
+        method: 'POST',
+        headers: {
+          'x-revalidate-secret': 'expected-secret-value',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ tags: ['posts', 'post:a'] }),
+      }),
+    );
+    expect(response.status).toBe(200);
+    expect(revalidateTag).toHaveBeenCalledWith('posts', 'max');
+    expect(revalidateTag).toHaveBeenCalledWith('post:a', 'max');
+  });
+});

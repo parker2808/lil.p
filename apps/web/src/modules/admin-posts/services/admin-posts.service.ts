@@ -51,6 +51,18 @@ export function createAdminPost(body: PostCreateInput): Promise<AdminPost> {
   }).then((data) => adminPostSchema.parse(data));
 }
 
+export function publishAdminPost(id: number): Promise<AdminPost> {
+  return apiClient<AdminPost>(`/api/admin/posts/${id}/publish`, { method: 'POST' }).then((data) =>
+    adminPostSchema.parse(data),
+  );
+}
+
+export function unpublishAdminPost(id: number): Promise<AdminPost> {
+  return apiClient<AdminPost>(`/api/admin/posts/${id}/unpublish`, { method: 'POST' }).then((data) =>
+    adminPostSchema.parse(data),
+  );
+}
+
 export function updateAdminPost(id: number, body: PostUpdateInput): Promise<AdminPost> {
   return apiClient<AdminPost>(`/api/admin/posts/${id}`, {
     method: 'PATCH',

@@ -31,6 +31,8 @@ vi.mock('../services/admin-projects.service', () => ({
   listAdminProjects: vi.fn(),
   archiveAdminProject: vi.fn(),
   reorderAdminProjects: vi.fn(),
+  publishAdminProject: vi.fn(),
+  unpublishAdminProject: vi.fn(),
 }));
 
 import { createAdminProject, updateAdminProject } from '../services/admin-projects.service';

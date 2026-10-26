@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 
 import { getSite } from '@/modules/core/services/site.service';
 
+import { DraftBanner } from '../DraftBanner/DraftBanner';
 import { LocaleSuggestBanner } from '../LocaleSuggestBanner/LocaleSuggestBanner';
 import { SiteFooter } from '../SiteFooter/SiteFooter';
 import { SiteHeader } from '../SiteHeader/SiteHeader';
@@ -14,6 +15,7 @@ export async function SiteShell({ locale, children }: { locale: Locale; children
   return (
     <div className="flex min-h-dvh flex-col">
       <SkipLink />
+      <DraftBanner />
       <LocaleSuggestBanner />
       <SiteHeader name={site.profile.displayName} nav={site.nav.header} />
       <main id="content" className="flex-1">

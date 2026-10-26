@@ -1,15 +1,20 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Optional } from '@nestjs/common';
 import type { AdminProfile, Locale, ProfileUpdateInput, PublicProfile } from '@portfolio/contracts';
 
 import { NotSeededException } from '../../common/errors/not-seeded.exception';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { PublishingService } from '../publishing/publishing.service';
+import { SITE_TAGS } from '../publishing/tags.util';
 import { profileSelect } from './entities/profile.entity';
 import { toAdminDto, toPublicProfile } from './entities/profile.mapper';
 
 @Injectable()
 export class ProfileService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly publishing?: PublishingService,
+  ) {}
 
   async getPublic(locale: Locale): Promise<PublicProfile> {
     return toPublicProfile(await this.requireRow(), locale);
@@ -61,6 +66,7 @@ export class ProfileService {
       data,
       select: profileSelect,
     });
+    void this.publishing?.revalidate([...SITE_TAGS]);
     return toAdminDto(row);
   }
 

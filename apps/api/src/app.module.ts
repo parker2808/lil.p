@@ -29,6 +29,7 @@ import { ProfileModule } from './modules/profile/profile.module';
 import { ProfileStatsModule } from './modules/profile-stats/profile-stats.module';
 import { ProjectsModule } from './modules/projects/projects.module';
 import { PublicSiteModule } from './modules/public-site/public-site.module';
+import { PublishingModule } from './modules/publishing/publishing.module';
 import { SiteSettingsModule } from './modules/site-settings/site-settings.module';
 import { SkillsModule } from './modules/skills/skills.module';
 import { SocialLinksModule } from './modules/social-links/social-links.module';
@@ -65,6 +66,7 @@ import { PrismaModule } from './prisma/prisma.module';
     DashboardModule,
     EventsModule,
     MediaModule,
+    PublishingModule,
     ThrottlerModule.forRoot({
       skipIf: () => process.env.NODE_ENV === 'test' && process.env.E2E_THROTTLE !== '1',
       throttlers: [{ name: 'default', ttl: 60_000, limit: 10_000 }],

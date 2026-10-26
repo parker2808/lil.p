@@ -16,6 +16,11 @@ export class EventsService {
     this.bus.next({ type: 'contact.created', data: payload });
   }
 
+  @OnEvent('content.published')
+  onContentPublished(payload: { entity: string; id: number; slug: string }): void {
+    this.bus.next({ type: 'content.published', data: payload });
+  }
+
   stream(): Observable<MessageEvent> {
     return merge(
       this.bus.asObservable(),

@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, Optional } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import type {
   AdminPost,
   AdminPostListPage,
@@ -17,7 +18,16 @@ import { readingMinutes } from '../../common/utils/reading-time.util';
 import { assertFresh } from '../../common/utils/stale.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { postSelect } from './entities/post.entity';
+import {
+  lintErrors,
+  markdownAltErrors,
+  mediaAltErrors,
+  mergeFieldErrors,
+  requiredFieldErrors,
+} from '../publishing/publish-rules.util';
+import { PublishingService } from '../publishing/publishing.service';
+import { postTags } from '../publishing/tags.util';
+import { type PostRow, postSelect } from './entities/post.entity';
 import {
   toAdminDto,
   toAdminListItem,
@@ -27,7 +37,11 @@ import {
 
 @Injectable()
 export class PostsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly publishing?: PublishingService,
+    @Optional() private readonly events?: EventEmitter2,
+  ) {}
 
   async listPublic(locale: Locale, query: PostListParams): Promise<PublicPostListPage> {
     const where: Prisma.PostWhereInput = { status: 'PUBLISHED' };
@@ -61,6 +75,17 @@ export class PostsService {
   async getPublic(slug: string, locale: Locale): Promise<PublicPostDetail> {
     const row = await this.prisma.post.findFirst({
       where: { slug, status: 'PUBLISHED' },
+      select: postSelect,
+    });
+    if (!row) {
+      throw new NotFoundException({ code: 'NOT_FOUND', message: `Post ${slug} was not found` });
+    }
+    return toPublicPostDetail(row, locale);
+  }
+
+  async getPreview(slug: string, locale: Locale): Promise<PublicPostDetail> {
+    const row = await this.prisma.post.findFirst({
+      where: { slug },
       select: postSelect,
     });
     if (!row) {
@@ -133,6 +158,7 @@ export class PostsService {
       },
       select: postSelect,
     });
+    this.scheduleRevalidate(row.slug);
     return toAdminDto(row);
   }
 
@@ -158,16 +184,45 @@ export class PostsService {
       }
       return tx.post.findUniqueOrThrow({ where: { id }, select: postSelect });
     });
+    this.scheduleRevalidate(current.slug, row.slug);
+    return toAdminDto(row);
+  }
+
+  async publish(id: number): Promise<AdminPost> {
+    const current = await this.findRow(id);
+    this.assertPublishable(current);
+    const row = await this.prisma.post.update({
+      where: { id },
+      data: {
+        status: 'PUBLISHED',
+        publishedAt: current.publishedAt ?? new Date(),
+      },
+      select: postSelect,
+    });
+    this.events?.emit('content.published', { entity: 'post', id: row.id, slug: row.slug });
+    this.scheduleRevalidate(row.slug);
+    return toAdminDto(row);
+  }
+
+  async unpublish(id: number): Promise<AdminPost> {
+    const current = await this.findRow(id);
+    const row = await this.prisma.post.update({
+      where: { id },
+      data: { status: 'DRAFT' },
+      select: postSelect,
+    });
+    this.scheduleRevalidate(current.slug);
     return toAdminDto(row);
   }
 
   async archive(id: number): Promise<AdminPost> {
-    await this.findRow(id);
+    const current = await this.findRow(id);
     const row = await this.prisma.post.update({
       where: { id },
       data: { status: 'ARCHIVED' },
       select: postSelect,
     });
+    this.scheduleRevalidate(current.slug);
     return toAdminDto(row);
   }
 
@@ -198,5 +253,34 @@ export class PostsService {
     if (input.sortOrder !== undefined) data.sortOrder = input.sortOrder;
     if (input.coverId !== undefined) data.coverId = input.coverId;
     return data;
+  }
+
+  private assertPublishable(row: PostRow): void {
+    const fieldErrors = mergeFieldErrors(
+      requiredFieldErrors({
+        titleEn: row.titleEn,
+        slug: row.slug,
+        bodyEn: row.bodyEn,
+      }),
+      lintErrors({
+        titleEn: row.titleEn,
+        excerptEn: row.excerptEn,
+        bodyEn: row.bodyEn,
+        takeawaysEn: row.takeawaysEn,
+      }),
+      mediaAltErrors(row.cover, 'cover'),
+      markdownAltErrors(row.bodyEn, 'bodyEn'),
+    );
+    if (Object.keys(fieldErrors).length > 0) {
+      throw new BadRequestException({
+        code: 'VALIDATION_FAILED',
+        message: 'This post is not ready to publish',
+        fieldErrors,
+      });
+    }
+  }
+
+  private scheduleRevalidate(...slugs: string[]): void {
+    void this.publishing?.revalidate(slugs.flatMap((slug) => postTags(slug)));
   }
 }
