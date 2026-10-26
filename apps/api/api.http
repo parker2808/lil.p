@@ -7,3 +7,6 @@ GET http://127.0.0.1:4000/api/public/site?locale=en
 
 ### Public site (vi)
 GET http://127.0.0.1:4000/api/public/site?locale=vi
+
+### Public site — invalid locale (400 fieldErrors.locale)
+GET http://127.0.0.1:4000/api/public/site?locale=fr
