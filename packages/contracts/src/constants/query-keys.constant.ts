@@ -20,5 +20,9 @@ export const qk = {
     stats: (range: '7d' | '30d' | '90d') => ['admin', 'stats', range] as const,
     health: ['admin', 'health'] as const,
     audit: (params: ListParams) => ['admin', 'audit', params] as const,
+    pages: {
+      list: ['admin', 'pages'] as const,
+      detail: (key: PageKey) => ['admin', 'pages', 'detail', key] as const,
+    },
   },
 };
