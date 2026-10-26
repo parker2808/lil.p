@@ -100,6 +100,7 @@ function toListBase(row: ProjectRow, locale: Locale): PublicProjectListItem {
     domain: row.domain ? toDomain(row.domain, locale) : null,
     topMetric: metrics[0] ?? null,
     factChips: splitChips(values.factChips ?? ''),
+    skills: row.skills.map((skill) => ({ name: skill.name, slug: skill.slug })),
     lang,
   };
 }

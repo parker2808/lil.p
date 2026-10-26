@@ -58,6 +58,7 @@ const published = {
     startDate: new Date('2022-07-01'),
     endDate: null,
   },
+  skills: [{ name: 'Nuxt 3', slug: 'nuxt', sortOrder: 0 }],
   metrics: [
     {
       id: 9,
@@ -91,6 +92,17 @@ describe('ProjectsService', () => {
     expect(detail.repoUrl).toBeNull();
     expect(detail.keyFacts).toEqual(['Zero downtime', 'Six months']);
     expect(detail.topMetric?.label).toBe('Release freeze');
+  });
+
+  it('filters published projects by skill slug', async () => {
+    const findMany = vi.fn().mockResolvedValue([published]);
+    const service = new ProjectsService({ project: { findMany } } as never);
+    await service.listPublic('en', { skill: 'nuxt' });
+    expect(findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { status: 'PUBLISHED', skills: { some: { slug: 'nuxt' } } },
+      }),
+    );
   });
 
   it('lists only featured published projects when asked', async () => {

@@ -2,6 +2,7 @@ import type { PrismaClient } from '../../../src/generated/prisma/client';
 import { seedAbout } from '../data/about.data';
 import { seedPages } from '../data/pages.data';
 import { seedSite } from '../data/site.data';
+import { seedSkills } from '../data/skills.data';
 import { seedWork } from '../data/work.data';
 
 /**
@@ -12,4 +13,5 @@ export async function seedBaseline(prisma: PrismaClient): Promise<void> {
   await seedPages(prisma);
   await seedAbout(prisma);
   await seedWork(prisma, 'DRAFT');
+  await seedSkills(prisma);
 }

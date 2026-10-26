@@ -18,6 +18,7 @@ import { ProfileStatsModule } from './modules/profile-stats/profile-stats.module
 import { ProjectsModule } from './modules/projects/projects.module';
 import { PublicSiteModule } from './modules/public-site/public-site.module';
 import { SiteSettingsModule } from './modules/site-settings/site-settings.module';
+import { SkillsModule } from './modules/skills/skills.module';
 import { SocialLinksModule } from './modules/social-links/social-links.module';
 import { PrismaModule } from './prisma/prisma.module';
 
@@ -37,6 +38,7 @@ import { PrismaModule } from './prisma/prisma.module';
     ProfileStatsModule,
     DomainsModule,
     ProjectsModule,
+    SkillsModule,
     PublicSiteModule,
     PagesModule,
   ],

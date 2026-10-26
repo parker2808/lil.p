@@ -72,6 +72,22 @@ export type { Availability } from './site-settings/site-settings.enum';
 export { availabilitySchema } from './site-settings/site-settings.enum';
 export { publicSiteSettingsSchema } from './site-settings/site-settings.schema';
 export type { PublicSiteSettings } from './site-settings/site-settings.type';
+export type { SkillDepth } from './skills/skills.enum';
+export { skillDepthSchema } from './skills/skills.enum';
+export {
+  publicSkillCategorySchema,
+  publicSkillChipSchema,
+  publicSkillSchema,
+  publicSkillsGroupedSchema,
+  publicSkillsQuerySchema,
+} from './skills/skills.schema';
+export type {
+  PublicSkill,
+  PublicSkillCategory,
+  PublicSkillChip,
+  PublicSkillsGrouped,
+  PublicSkillsQuery,
+} from './skills/skills.type';
 export type { SocialKind } from './social-links/social-links.enum';
 export { socialKindSchema } from './social-links/social-links.enum';
 export { publicSocialLinkSchema } from './social-links/social-links.schema';

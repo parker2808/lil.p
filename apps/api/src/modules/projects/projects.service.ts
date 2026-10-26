@@ -26,6 +26,9 @@ export class ProjectsService {
     if (query.domain) {
       where.domain = { slug: query.domain };
     }
+    if (query.skill) {
+      where.skills = { some: { slug: query.skill } };
+    }
 
     const rows = await this.prisma.project.findMany({
       where,

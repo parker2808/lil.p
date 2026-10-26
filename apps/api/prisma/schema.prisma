@@ -237,6 +237,7 @@ model Experience {
   sortOrder      Int            @default(0)
   isVisible      Boolean        @default(true)
   projects       Project[]
+  skills         Skill[]
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 
@@ -397,6 +398,7 @@ model Project {
   experienceId    Int?
   experience      Experience?   @relation(fields: [experienceId], references: [id])
   metrics         ProjectMetric[]
+  skills          Skill[]
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
@@ -421,4 +423,45 @@ model ProjectMetric {
 
   @@index([projectId, sortOrder])
   @@map("project_metric")
+}
+
+enum SkillDepth {
+  DAILY
+  SHIPPED
+  GROWING
+
+  @@map("skill_depth")
+}
+
+model SkillCategory {
+  id        Int      @id @default(autoincrement())
+  nameEn    String
+  nameVi    String
+  sortOrder Int      @default(0)
+  skills    Skill[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sortOrder])
+  @@map("skill_category")
+}
+
+model Skill {
+  id            Int           @id @default(autoincrement())
+  name          String
+  slug          String        @unique
+  categoryId    Int
+  category      SkillCategory @relation(fields: [categoryId], references: [id])
+  depth         SkillDepth
+  showInMarquee Boolean       @default(false)
+  sortOrder     Int           @default(0)
+  isVisible     Boolean       @default(true)
+  projects      Project[]
+  experiences   Experience[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([categoryId, sortOrder])
+  @@index([depth, sortOrder])
+  @@map("skill")
 }

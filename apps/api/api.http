@@ -49,3 +49,12 @@ GET http://127.0.0.1:4000/api/public/projects/particula?locale=en
 
 ### Public project missing (404)
 GET http://127.0.0.1:4000/api/public/projects/does-not-exist
+
+### Public projects by skill
+GET http://127.0.0.1:4000/api/public/projects?locale=en&skill=nuxt
+
+### Public skills grouped
+GET http://127.0.0.1:4000/api/public/skills?locale=en
+
+### Public skills marquee
+GET http://127.0.0.1:4000/api/public/skills?locale=en&marquee=1
