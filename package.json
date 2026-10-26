@@ -16,6 +16,7 @@
     "format:check": "prettier --check .",
     "prepare": "husky",
     "db:up": "docker compose up -d db adminer",
+    "db:test:up": "docker compose --profile test up -d db-test",
     "db:down": "docker compose down",
     "db:logs": "docker compose logs -f db adminer",
     "db:migrate": "pnpm --filter @portfolio/api db:migrate",

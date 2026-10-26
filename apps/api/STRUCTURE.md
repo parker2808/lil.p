@@ -121,7 +121,7 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | `experience`, `education`, `principles`, `profile-stats`, `process-steps` | one table each | public GET + admin CRUD + order |
 | `skills` | `SkillCategory`, `Skill` | `GET /public/skills`, admin CRUD + order |
 | `domains` | `Domain` | `GET /public/domains`, admin CRUD + order |
-| `projects` | `Project`, `ProjectMetric`, `ProjectImage` | public list/detail, admin CRUD + order + publish |
+| `projects` | `Project`, `ProjectMetric`, `ProjectImage` | public list/detail, admin CRUD (`admin-projects.controller.ts`) + archive; publish later |
 | `tags` | `Tag` | admin CRUD |
 | `posts` | `Post` | public list/detail, admin CRUD + publish |
 | `contact-topics` | `ContactTopic` | `GET /public/contact-topics`, admin CRUD + order |

@@ -11,6 +11,7 @@ export const envSchema = z.object({
   API_HOST: z.string().min(1).default('127.0.0.1'),
   WEB_ORIGIN: z.url(),
   DATABASE_URL: z.string().min(1).startsWith('mysql://'),
+  DATABASE_URL_TEST: z.string().min(1).startsWith('mysql://').optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -1,4 +1,6 @@
 import type {
+  AdminProject,
+  AdminProjectListItem,
   Locale,
   PublicProjectDetail,
   PublicProjectDomain,
@@ -133,5 +135,78 @@ export function toPublicProjectDetail(row: ProjectRow, locale: Locale): PublicPr
     seoDescription: values.seoDescription,
     metrics: row.metrics.map((metric) => toMetric(metric, locale)),
     experience: row.experience ? toExperience(row.experience, locale) : null,
+  };
+}
+
+export function toAdminDto(row: ProjectRow): AdminProject {
+  return {
+    id: row.id,
+    slug: row.slug,
+    titleEn: row.titleEn,
+    titleVi: row.titleVi,
+    taglineEn: row.taglineEn,
+    taglineVi: row.taglineVi,
+    client: row.client,
+    roleEn: row.roleEn,
+    roleVi: row.roleVi,
+    teamSize: row.teamSize,
+    startDate: toIsoDate(row.startDate),
+    endDate: row.endDate ? toIsoDate(row.endDate) : null,
+    versionFrom: row.versionFrom,
+    versionTo: row.versionTo,
+    isFeatured: row.isFeatured,
+    isConfidential: row.isConfidential,
+    liveUrl: row.liveUrl,
+    repoUrl: row.repoUrl,
+    problemEn: row.problemEn,
+    problemVi: row.problemVi,
+    constraintsEn: row.constraintsEn,
+    constraintsVi: row.constraintsVi,
+    approachEn: row.approachEn,
+    approachVi: row.approachVi,
+    decisionsEn: row.decisionsEn,
+    decisionsVi: row.decisionsVi,
+    outcomeEn: row.outcomeEn,
+    outcomeVi: row.outcomeVi,
+    lessonsEn: row.lessonsEn,
+    lessonsVi: row.lessonsVi,
+    keyFactsEn: row.keyFactsEn,
+    keyFactsVi: row.keyFactsVi,
+    factChipsEn: row.factChipsEn,
+    factChipsVi: row.factChipsVi,
+    seoTitleEn: row.seoTitleEn,
+    seoTitleVi: row.seoTitleVi,
+    seoDescriptionEn: row.seoDescriptionEn,
+    seoDescriptionVi: row.seoDescriptionVi,
+    status: row.status,
+    publishedAt: row.publishedAt ? row.publishedAt.toISOString() : null,
+    sortOrder: row.sortOrder,
+    domainId: row.domainId,
+    experienceId: row.experienceId,
+    skillIds: row.skills.map((skill) => skill.id),
+    metrics: row.metrics.map((metric) => ({
+      id: metric.id,
+      labelEn: metric.labelEn,
+      labelVi: metric.labelVi,
+      before: metric.before,
+      after: metric.after,
+      value: metric.value,
+      sortOrder: metric.sortOrder,
+    })),
+    updatedAt: row.updatedAt.toISOString(),
+  };
+}
+
+export function toAdminListItem(row: ProjectRow): AdminProjectListItem {
+  const full = toAdminDto(row);
+  return {
+    id: full.id,
+    slug: full.slug,
+    titleEn: full.titleEn,
+    titleVi: full.titleVi,
+    status: full.status,
+    isFeatured: full.isFeatured,
+    domainId: full.domainId,
+    updatedAt: full.updatedAt,
   };
 }

@@ -50,6 +50,27 @@ describe('AllExceptionsFilter', () => {
     expect(body.fieldErrors?.slug).toEqual(['already exists']);
   });
 
+  it('maps Prisma 7 adapter unique index names to the field', () => {
+    const error = new Prisma.PrismaClientKnownRequestError(
+      'Unique constraint failed on the constraint: `project_slug_key`',
+      {
+        code: 'P2002',
+        clientVersion: 'test',
+        meta: {
+          modelName: 'Project',
+          driverAdapterError: {
+            cause: {
+              kind: 'UniqueConstraintViolation',
+              constraint: { index: 'project_slug_key' },
+              originalMessage: "Duplicate entry 'sample-case' for key 'project.project_slug_key'",
+            },
+          },
+        },
+      },
+    );
+    expect(filter.toBody(error, 'req-4b').fieldErrors?.slug).toEqual(['already exists']);
+  });
+
   it('maps Prisma P2025 to 404 NOT_FOUND', () => {
     const error = new Prisma.PrismaClientKnownRequestError('Missing', {
       code: 'P2025',

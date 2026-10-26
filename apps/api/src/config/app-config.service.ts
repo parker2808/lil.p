@@ -28,6 +28,12 @@ export class AppConfigService {
   }
 
   get databaseUrl(): string {
+    if (this.nodeEnv === 'test') {
+      return (
+        this.config.get('DATABASE_URL_TEST', { infer: true }) ??
+        this.config.get('DATABASE_URL', { infer: true })
+      );
+    }
     return this.config.get('DATABASE_URL', { infer: true });
   }
 }
