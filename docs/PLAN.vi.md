@@ -45,7 +45,7 @@ Cỡ task: **S** vừa một session ngắn (một nhóm file, không có khái 
 | 5 | Các file **STRUCTURE.md** | Mỗi file nằm ở đâu, cách đặt tên | [root](../STRUCTURE.md), [apps/web](../apps/web/STRUCTURE.md), [apps/api](../apps/api/STRUCTURE.md) |
 | 6 | `colors.json` (Figma export) | Test oracle cho color token | [docs/design/colors.json](./design/colors.json): 58 token × light/dark, giống hệt spec §3.6 |
 
-**Thứ tự ưu tiên khi các nguồn mâu thuẫn:** spec thắng về giá trị, behavior, data và API (1). Tên trong Figma theo spec, nên một giá trị bị lệch là bug của Figma: dùng giá trị của spec và ghi chú lại trong PR (2). Layout theo mockup và Figma frame (3). Thứ tự và cách dạy theo roadmap (4), trừ chỗ một quyết định ở §3 thay một chi tiết của roadmap bằng lựa chọn của spec. File path theo STRUCTURE.md (5), thay cho các path minh họa trong spec (xem D20).
+**Thứ tự ưu tiên khi các nguồn mâu thuẫn:** spec thắng về giá trị, behavior, data và API (1). Tên trong Figma theo spec, nên một giá trị bị lệch là bug của Figma: dùng giá trị của spec và ghi chú lại trong PR (2). Layout theo mockup và Figma frame (3). Thứ tự và cách dạy theo roadmap (4), trừ chỗ một quyết định ở §3 thay một chi tiết của roadmap bằng lựa chọn của spec. File path theo STRUCTURE.md (5), thay cho các path minh họa trong spec (xem D20). Một quyết định đánh dấu **Parker** ở §3 là lựa chọn riêng của Parker sau khi spec đã viết xong; nó thắng mọi nguồn ở trên, kể cả spec (hiện tại: D7 và D24, về auth).
 
 **Ghi chú về snapshot.**
 
@@ -89,11 +89,11 @@ Các quyết định này chốt những chỗ các nguồn mâu thuẫn hoặc 
 | D1 | Repo root của `lil.p` là monorepo. Folder `portfolio/` trong roadmap nghĩa là repository này. | Roadmap được viết trước khi repo tồn tại |
 | D2 | Code dùng chung nằm trong `packages/ui` và `packages/contracts`, không phải một `packages/shared`. | Spec §4.0 và §6 tách chúng ra; roadmap p01/p08 ghi `packages/shared` |
 | D3 | Text dài (các section case study, body của post, bio) là **Markdown trong `@db.Text`**, render trên Next server bằng một pipeline an toàn duy nhất (không raw HTML, element theo allowlist, output của Shiki được chuyển thành React, không `dangerouslySetInnerHTML`). Quyết định này thay cho "JSON blocks" của roadmap p12; các rule của p12 (input validate bằng zod, draft không hiện ra) vẫn áp dụng. | Spec §1.5 và §4.3 (`MarkdownEditor`) |
-| D4 | API route theo spec: `/api/public/*` (không auth), `/api/admin/*` (session), `/api/auth/*`, cộng thêm một aggregate `GET /api/public/site?locale` cho layout. Các URL trong roadmap như `GET /settings`, `GET /posts` map vào các route này. | Spec §4.5, §5.0 |
+| D4 | API route theo spec: `/api/public/*` (không auth), `/api/admin/*` (JWT đã login, D24), `/api/auth/*`, cộng thêm một aggregate `GET /api/public/site?locale` cho layout. Các URL trong roadmap như `GET /settings`, `GET /posts` map vào các route này. | Spec §4.5, §5.0 |
 | D5 | Mọi error dùng chung một body: `{ statusCode, code, message, requestId, fieldErrors? }`. | Spec §4.6 |
 | D6 | List dùng pagination theo page: request `?page&pageSize&sort&q&…`, response `{ items, page, pageSize, total }`, `pageSize` tối đa 100. Chỉ audit log và media library dùng cursor pagination (`?cursor&limit`). Các check của p13 vẫn áp dụng: lật qua tất cả row không bị trùng hay sót (sort luôn kết thúc bằng `id`), và `pageSize=500` trả 400 kèm field error. | Mockup admin table hiện "1–5 of 5" và các page size; spec §4.6 chỉ dùng cursor cho infinite list |
-| D7 | Role là `OWNER`, `EDITOR`, `VIEWER`. Login bằng email + password. Seed tạo owner từ env (`ADMIN_EMAIL="<email>"` trong `.env.example`). | Spec §1.5 `User` |
-| D8 | Bảo vệ CSRF bằng cookie `SameSite=Lax` + check `Origin` trên request có thay đổi data, không dùng double-submit token. Check của roadmap p19 "ghi mà không có CSRF header → 403" trở thành "ghi với `Origin` lạ hoặc thiếu → 403". | Spec §1.6 |
+| D7 | **Parker.** Chỉ có hai role: `admin` và `user` (Prisma enum `Role { admin user }`, cùng chuỗi đó trong `@Roles('admin')`). `admin` làm được mọi thứ. `user` là người review đã login, chỉ đọc: dashboard, list nội dung và editor ở chế độ read-only, analytics, xem trước draft, và password của chính mình; không ghi, không publish, không upload, không inbox, không audit log, không quản lý user (bảng đầy đủ ở T36). Một route được bảo vệ mà không có `@Roles()` thì chỉ admin dùng được, nên quên decorator thì vẫn fail an toàn. Login bằng email + password, hash bằng argon2id. Seed tạo một `admin` từ env (`ADMIN_EMAIL="<email>"` trong `.env.example`); admin tạo các tài khoản khác trong màn hình quản lý user chỉ dành cho admin (T46). | Thay cho spec §1.5 `User.role` (`OWNER\|EDITOR\|VIEWER`) và §4.3 "Users (owner only)" |
+| D8 | Bảo vệ CSRF bằng cookie `SameSite=Lax` + check `Origin` trên request có thay đổi data, không dùng double-submit token. Vẫn áp dụng khi dùng JWT, vì token đi trong cookie (D24). Check của roadmap p19 "ghi mà không có CSRF header → 403" trở thành "ghi với `Origin` lạ hoặc thiếu → 403". | Spec §1.6 |
 | D9 | Không CORS. Browser chỉ nói chuyện với Next; `next.config.ts` rewrite `/api/*` sang Nest. Mục "CORS" của roadmap p05 được bỏ qua. API bind vào `127.0.0.1` cho tới khi có guard (T36). | Spec §1.6, §6 |
 | D10 | Quan hệ many-to-many dùng implicit join table của Prisma (`skills Skill[]` ở cả hai phía). Check `ProjectSkill` của roadmap p11 trở thành "các join row `_ProjectToSkill` nhìn thấy được trong Prisma Studio". | Spec §1.5 |
 | D11 | Tên: `ContactMessage` và `ContactTopic` (không phải `Message`), public route `/notes` (không phải `/blog`), `Domain`, `ProfileStat`, `ProcessStep`. | Spec §1.5, §5.5 |
@@ -109,6 +109,7 @@ Các quyết định này chốt những chỗ các nguồn mâu thuẫn hoặc 
 | D21 | Một shadcn primitive được thêm bởi task đầu tiên dùng nó, không thêm tất cả cùng lúc. | Giữ PR nhỏ và dễ review |
 | D22 | Chuỗi chrome của admin nằm trong `apps/web/i18n/locales/en.json` dưới `admin.*`. Admin UI chỉ có tiếng Anh (phần intro của spec §5), nên `vi.json` không có key `admin`. | Giữ `react/jsx-no-literals` bật cho cả admin |
 | D23 | Fetch public dùng `revalidate: 3600` + tag trên production và `revalidate: 0` khi development (`NODE_ENV`), nên thay đổi seed hiện ra ngay mà không phải chờ. | Check của roadmap p09 "seed lại thì home page thay đổi" |
+| D24 | **Parker.** Auth dùng **JWT thay cho session MySQL**: `@nestjs/jwt` ký, `passport-jwt` (qua `@nestjs/passport`) verify. Một **access token** ngắn (15 phút, payload `{ sub, role }`) và một **refresh token** dài hơn (7 ngày, payload `{ sub, ver }`), ký bằng hai secret khác nhau. Cả hai nằm trong cookie `httpOnly` do API set (`access_token` trên `Path=/`, `refresh_token` trên `Path=/api/auth`), không bao giờ ở `localStorage` hay bộ nhớ JS; cách này chạy được vì Next proxy `/api/*`, nên cookie là first-party với origin của web (D9). Không có bảng `Session`: `User.tokenVersion` là công tắc khẩn cấp ("sign out everywhere", khóa tài khoản, đổi password đều tăng nó, và mọi lần refresh đều check nó). Đánh đổi, đã chấp nhận: access token đã cấp vẫn dùng được tới khi hết hạn (tối đa 15 phút), và logout thường chỉ xóa cookie của browser này. | Thay cho spec §1.5 `Session`, dòng Auth ở §1.6 (vốn chọn session) và "session MySQL" của roadmap p18; mục tiêu học của p18 (hash, cookie httpOnly, logout) vẫn giữ |
 
 <a id="4-architecture-at-a-glance"></a>
 
@@ -129,7 +130,7 @@ Browser ──► Next.js apps/web :3000 ──/api/* rewrite──► NestJS ap
 | `adminer` | `docker compose up -d adminer` | 8080 (127.0.0.1) | Web UI để nhìn vào DB |
 | `db-test` | `docker compose --profile test up -d db-test` | 3307 (127.0.0.1) | Từ T29, tmpfs, reset mỗi lần chạy test |
 
-**Environment (`.env.example`, lớn dần theo từng task).** `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE=portfolio`, `MYSQL_USER=app`, `MYSQL_PASSWORD`, `DATABASE_URL`, `DATABASE_URL_TEST` (T29), `API_PORT=4000`, `API_HOST=127.0.0.1`, `WEB_ORIGIN=http://localhost:3000`, `API_URL=http://127.0.0.1:4000` (web → api), `WEB_INTERNAL_URL=http://127.0.0.1:3000` (api → web revalidate, T52), `REVALIDATE_SECRET` (T52), `SESSION_TTL_DAYS=14` (T35), `ADMIN_EMAIL="<email>"`, `ADMIN_NAME`, `ADMIN_PASSWORD` (T35), `ANALYTICS_SALT_SECRET` (T54), `UPLOAD_DIR=./uploads` (T50), `SEED_PROFILE=demo`, `NEXT_PUBLIC_BUILD_SHA` (hash deploy ở footer).
+**Environment (`.env.example`, lớn dần theo từng task).** `MYSQL_ROOT_PASSWORD`, `MYSQL_DATABASE=portfolio`, `MYSQL_USER=app`, `MYSQL_PASSWORD`, `DATABASE_URL`, `DATABASE_URL_TEST` (T29), `API_PORT=4000`, `API_HOST=127.0.0.1`, `WEB_ORIGIN=http://localhost:3000`, `API_URL=http://127.0.0.1:4000` (web → api), `WEB_INTERNAL_URL=http://127.0.0.1:3000` (api → web revalidate, T52), `REVALIDATE_SECRET` (T52), `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET` (T35, mỗi cái 32+ ký tự random, khác nhau), `JWT_ACCESS_TTL_SECONDS=900`, `JWT_REFRESH_TTL_SECONDS=604800` (T35), `ADMIN_EMAIL="<email>"`, `ADMIN_NAME`, `ADMIN_PASSWORD` (T35), `ANALYTICS_SALT_SECRET` (T54), `UPLOAD_DIR=./uploads` (T50), `SEED_PROFILE=demo`, `NEXT_PUBLIC_BUILD_SHA` (hash deploy ở footer).
 
 **Rendering (spec [§4.6](./design/portfolio-design-system.vi.md#s-4-6)).** Public page là React Server Component gọi `apiServer()` kèm cache tag (`site`, `projects`, `project:{slug}`, `posts`, `post:{slug}`, `skills`, `domains`). Khi publish, API gọi `POST /api/revalidate` trên web app, endpoint này chạy `revalidateTag`. Client island (search notes, contact form, pause marquee, ⌘K) là các file `'use client'` nhỏ. Admin prefetch trên server, hydrate bằng `HydrationBoundary`, và đọc bằng `useSuspenseQuery` với key từ `qk`.
 
@@ -217,8 +218,8 @@ Path: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct**
 | T33 | Reorder trong transaction + thay tag | p16 | T31, T32 | M | api services, `common/utils/` |
 | T34 | Index + EXPLAIN | p17 | T33 | S | api `prisma/`, `docs/sql-notes.sql` |
 | **M4** | **Auth + CMS admin** | | | | |
-| T35 | User, argon2, session lưu trong MySQL | p18 | T29 | L | api `modules/auth/`, `modules/users/` |
-| T36 | Guard, role, check Origin, throttle | p19 | T35 | M | api `src/common/guards/` |
+| T35 | User, argon2, cookie JWT access + refresh | p18 | T29 | L | api `modules/auth/`, `modules/users/` |
+| T36 | JWT guard global, role (admin/user), check Origin, throttle | p19 | T35 | M | api `src/common/guards/` |
 | T37 | Admin shell, login, ⌘K | p20 | T11, T12, T36 | L | web `modules/admin-core/`, `admin-auth/` |
 | T38 | Admin dashboard v1 + endpoint stats | p20 | T37 | M | web `admin-dashboard/`, api `modules/dashboard/` |
 | T39 | DataTable + list project trong admin | p21 | T37 | L | ui `DataTable/`, web `admin-projects/` |
@@ -228,7 +229,7 @@ Path: **web** = `apps/web`, **api** = `apps/api`, **ui** = `packages/ui`, **ct**
 | T43 | Editor project | p22 | T42 | L | web `admin-projects/` |
 | T44 | Editor post + experience | p22 | T42 | M | web `admin-posts/`, `admin-about/` |
 | T45 | Admin cho site, section, profile | p22 | T33, T42 | L | web `admin-site/` |
-| T46 | Admin user (chỉ owner) | p22 | T37 | S | web `admin-users/`, api `modules/users/` |
+| T46 | Admin user (chỉ admin) + tự đổi password | p22 | T37 | M | web `admin-users/`, api `modules/users/` |
 | **M5** | **Realtime, media, publish** | | | | |
 | T47 | API contact + inbox | p23 | T36 | M | api `modules/contact/`, `contact-topics/` |
 | T48 | Page Contact + Server Action | p23 | T14, T47 | M | web `modules/contact/` |
@@ -1244,66 +1245,108 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 ### M4 — Auth + CMS admin
 
-#### T35 · User, argon2, session trong MySQL
+#### T35 · User, argon2, cookie JWT access + refresh
 
-**Roadmap** p18 · **Spec** §1.5 (`User`, `Session`), §1.6 (dòng Auth), §6 Day 15 · **Phụ thuộc** T29 · **Cỡ** L
+**Roadmap** p18 (điều chỉnh theo D24) · **Spec** §1.5 (`User`), §1.6 (dòng Auth, được thay bằng D24), §6 Day 15 · **Phụ thuộc** T29 · **Cỡ** L
 
-**Mục tiêu.** Login bằng email + password, tạo một row session phía server và một cookie httpOnly; logout xóa row đó.
+**Mục tiêu.** Login bằng email + password, trả về hai JWT nằm trong cookie httpOnly: một access token ngắn hạn để chứng minh bạn là ai trên mọi request, và một refresh token dài hơn để lấy cặp token mới khi access token hết hạn. Logout xóa cả hai cookie.
 
 **Phạm vi.**
-- Model `User` (`role` enum `OWNER|EDITOR|VIEWER`, `isActive`, `lastLoginAt`), `Session` (`tokenHash @unique`, `userId`, `expiresAt`, `userAgent`). Migration `add-auth`.
-- Contracts `auth/`: `loginSchema`, `meSchema` (không có `passwordHash`).
-- `modules/users`: `users.service.ts` (tìm theo email, create). Seed tạo owner từ `ADMIN_EMAIL`, `ADMIN_NAME`, `ADMIN_PASSWORD` chỉ khi cả ba đều được set; không bao giờ có password mặc định.
-- `modules/auth`: `auth.controller.ts` (`POST /auth/login`, `POST /auth/logout`, `GET /auth/me`), `auth.service.ts` (verify bằng argon2id; token là 32 byte random; lưu hash SHA-256 của nó; cookie `sid`: `httpOnly`, `SameSite=Lax`, `Secure` trên production, `Path=/`, `Max-Age` lấy từ `SESSION_TTL_DAYS`; cùng một message cho email không tồn tại và sai password; update `lastLoginAt`), `session.service.ts` (tìm session còn hạn theo token, xóa các row đã hết hạn).
-- `cookie-parser` trong `main.ts`. `.env.example`: `SESSION_TTL_DAYS`, `ADMIN_EMAIL="<email>"`, `ADMIN_NAME`, `ADMIN_PASSWORD`.
-- e2e: login set cookie; `me` trả DTO; logout xóa row; session hết hạn → 401.
+- Package: `@nestjs/jwt`, `@nestjs/passport`, `passport`, `passport-jwt` (+ `@types/passport-jwt`), `argon2`, `cookie-parser`.
+- Model `User`: `id`, `email @unique`, `name`, `passwordHash`, `role Role @default(user)` với `enum Role { admin user }` (D7), `isActive @default(true)`, `tokenVersion Int @default(0)`, `lastLoginAt?`, timestamp. Không có model `Session` (D24). Migration `add-auth`.
+- Contracts `auth/`: `auth.enum.ts` (`roleSchema = z.enum(['admin', 'user'])`, type `Role`), `auth.schema.ts` (`loginSchema`, `meSchema` = `{ id, email, name, role }`, không bao giờ có `passwordHash` hay `tokenVersion`).
+- Config (`src/config/env.schema.ts`): `JWT_ACCESS_SECRET` và `JWT_REFRESH_SECRET` (mỗi cái ít nhất 32 ký tự và không được bằng nhau, nếu không thì boot fail), `JWT_ACCESS_TTL_SECONDS` (mặc định 900 = 15 phút), `JWT_REFRESH_TTL_SECONDS` (mặc định 604800 = 7 ngày).
+- `modules/users`: `users.service.ts` (tìm theo email, tìm theo id, create với hash argon2id, `bumpTokenVersion`). Seed tạo một `admin` từ `ADMIN_EMAIL`, `ADMIN_NAME`, `ADMIN_PASSWORD` chỉ khi cả ba đều được set; không bao giờ có password mặc định.
+- `modules/auth`:
+  - `token.service.ts`: `signAccess(user)` → `{ sub: String(user.id), role }` với `JWT_ACCESS_SECRET`, `expiresIn: JWT_ACCESS_TTL_SECONDS`; `signRefresh(user)` → `{ sub, ver: user.tokenVersion }` với `JWT_REFRESH_SECRET`, `expiresIn: JWT_REFRESH_TTL_SECONDS`. Cả hai dùng `JwtService.signAsync(payload, { secret, expiresIn })`, thuật toán HS256. Không để email, tên hay dữ liệu cá nhân nào trong payload.
+  - `auth-cookies.util.ts`: `setAuthCookies(res, tokens)` và `clearAuthCookies(res)` với các option trong bảng bên dưới (`maxAge` của Express tính bằng mili giây: số giây × 1000).
+  - `strategies/jwt.strategy.ts` (`PassportStrategy(Strategy, 'jwt')`): `jwtFromRequest` đọc `req.cookies.access_token`, `ignoreExpiration: false`, `secretOrKey: JWT_ACCESS_SECRET`; `validate(payload)` trả `{ id: Number(payload.sub), role: payload.role }` mà không query DB (đây sẽ là `request.user`).
+  - `strategies/jwt-refresh.strategy.ts` (`'jwt-refresh'`): đọc `req.cookies.refresh_token` với `JWT_REFRESH_SECRET`; `validate` load user và từ chối (401) khi user không tồn tại, `isActive = false`, hoặc `payload.ver !== user.tokenVersion`.
+  - `auth.service.ts`: `login` (tìm theo email, `argon2.verify`; cùng một lỗi 401 `INVALID_CREDENTIALS` cho email không tồn tại, sai password và user bị khóa; update `lastLoginAt`; cấp cả hai token), `refresh` (cấp cặp mới cho user đã được validate: rotation), `me` (load user theo `request.user.id`; 401 nếu không tồn tại hoặc bị khóa).
+  - `auth.controller.ts`: `POST /auth/login` (body `loginSchema`; set cả hai cookie; trả `meSchema`, không bao giờ trả token), `POST /auth/refresh` (`@UseGuards(JwtRefreshGuard)`; set cặp mới; 204), `POST /auth/logout` (xóa cả hai cookie; 204, chạy được cả khi access token đã hết hạn), `GET /auth/me` (`@UseGuards(JwtAuthGuard)`). T36 biến `JwtAuthGuard` thành global.
+- `common/guards/jwt-auth.guard.ts` (`AuthGuard('jwt')`, `handleRequest` đổi mọi lỗi thành 401 `UNAUTHENTICATED`, D5) và `common/guards/jwt-refresh.guard.ts` (`AuthGuard('jwt-refresh')`).
+- `cookie-parser` trong `main.ts`. `.env.example`: bốn key `JWT_*` (secret để trống, kèm comment "generate with `openssl rand -base64 48`"), `ADMIN_EMAIL="<email>"`, `ADMIN_NAME`, `ADMIN_PASSWORD`.
+- `test/helpers/auth.helper.ts`: tạo một `admin` và một `user` trong test DB và trả về các supertest agent đã login (giữ cookie giữa các request). `api.http`: login, me, refresh, logout (REST Client tự nhớ cookie).
+- e2e: login set cả hai cookie với đúng flag; `me` trả DTO có `role`; access token hết hạn (ký trong test với `exp` ở quá khứ) → 401; refresh → 204 và cookie mới; refresh sau khi `tokenVersion` đổi → 401; logout xóa cả hai cookie.
 
-**File.** `apps/api/prisma/schema.prisma`, `apps/api/prisma/migrations/*_add_auth/`, `apps/api/prisma/seed/profiles/*.seed.ts`, `apps/api/src/modules/users/{users.module.ts,users.service.ts,entities/*}`, `apps/api/src/modules/auth/{auth.module.ts,auth.controller.ts,auth.service.ts,session.service.ts,auth.service.spec.ts,dto/*}`, `apps/api/src/main.ts`, `packages/contracts/src/auth/*`, `apps/api/test/auth.e2e-spec.ts`, `.env.example`, `apps/api/api.http`.
+**Cookie (D24).**
+
+| Cookie | Chứa | `Path` | `Max-Age` | Flag |
+| --- | --- | --- | --- | --- |
+| `access_token` | access JWT `{ sub, role }` | `/` (Server Component của Next đọc nó trên `/admin/*` và forward đi, T37) | `JWT_ACCESS_TTL_SECONDS` (15 phút) | `httpOnly`, `SameSite=Lax`, `Secure` trên production |
+| `refresh_token` | refresh JWT `{ sub, ver }` | `/api/auth` (chỉ gửi tới refresh và logout) | `JWT_REFRESH_TTL_SECONDS` (7 ngày) | `httpOnly`, `SameSite=Lax`, `Secure` trên production |
+
+**File.** `apps/api/package.json`, `apps/api/prisma/schema.prisma`, `apps/api/prisma/migrations/*_add_auth/`, `apps/api/prisma/seed/profiles/*.seed.ts`, `apps/api/src/config/{env.schema.ts,app-config.service.ts}`, `apps/api/src/modules/users/{users.module.ts,users.service.ts,users.service.spec.ts,entities/*}`, `apps/api/src/modules/auth/{auth.module.ts,auth.controller.ts,auth.service.ts,auth.service.spec.ts,token.service.ts,auth-cookies.util.ts,strategies/jwt.strategy.ts,strategies/jwt-refresh.strategy.ts,dto/*}`, `apps/api/src/common/guards/{jwt-auth.guard.ts,jwt-refresh.guard.ts}`, `apps/api/src/main.ts`, `packages/contracts/src/auth/{auth.enum.ts,auth.schema.ts,auth.type.ts}`, `apps/api/test/helpers/auth.helper.ts`, `apps/api/test/auth.e2e-spec.ts`, `.env.example`, `apps/api/api.http` ([api STRUCTURE: auth](../apps/api/STRUCTURE.md#auth-jwt)).
 
 **Thiết kế.** Không có (chỉ API).
 
 **Các bước backend, giải thích.**
-1. **Hash, không phải mã hóa.** Một password hash không thể đảo ngược thành password. argon2id cố ý chạy chậm, nên đoán thử hàng triệu password sẽ rất tốn kém.
-2. **Session = một row.** Đã login nghĩa là có một row `Session` tồn tại. Logout, hay "sign out everywhere", là xóa row.
-3. **Lưu hash của token.** Cookie giữ một token random; DB chỉ lưu SHA-256 của nó. Một bản backup DB bị lộ cũng không dùng để login được.
-4. **Flag của cookie.** `httpOnly`: JavaScript không đọc được. `SameSite=Lax`: site khác không gửi được cookie kèm form post. `Secure`: chỉ qua HTTPS (production).
-5. **Cùng một lỗi cho cả hai trường hợp.** "Invalid email or password" cho cả hai, để không ai dò được email nào có tài khoản.
+1. **Hash, không phải mã hóa.** Một password hash không thể đảo ngược thành password. argon2id cố ý chạy chậm, nên đoán thử hàng triệu password sẽ rất tốn kém. `argon2.hash` khi tạo, `argon2.verify` khi login; password gốc không bao giờ được lưu hay log.
+2. **JWT là gì.** Ba phần base64url nối bằng dấu chấm: header (thuật toán), payload (các claim như `sub` = user id, `role`, `exp` = thời điểm hết hạn) và một chữ ký tạo bằng secret mà chỉ API biết. Ai cũng *đọc* được payload (nó không được mã hóa, nên không để email hay bí mật vào đó), nhưng không ai *sửa* được nếu không làm hỏng chữ ký. API tin một token vì chữ ký hợp lệ, chứ không phải vì có một row trong DB.
+3. **Vì sao cần hai token.** Access token được gửi trên mọi request và được check mà không đụng tới DB, nên nó phải chết nhanh (15 phút) phòng khi bị lộ. Refresh token chỉ được gửi tới `/api/auth/*` (nhờ `Path` của cookie), sống 7 ngày, và mỗi lần dùng đều được check với DB (`isActive`, `tokenVersion`). Hai secret khác nhau nên không thể dùng token này thay cho token kia.
+4. **Token nằm ở đâu: cookie httpOnly.** `httpOnly`: JavaScript của page không đọc được, nên một lỗi XSS không lấy cắp được (token trong `localStorage` thì bị lấy được). `SameSite=Lax`: site khác không gửi được cookie kèm form post. `Secure`: chỉ qua HTTPS (production). Vì Next rewrite `/api/*` sang Nest, browser nghĩ mình đang nói chuyện với một site duy nhất; cookie do Nest set là first-party và browser tự gửi lại trên mọi lời gọi `/api/*` mà không cần thêm code.
+5. **`@nestjs/jwt` và `passport-jwt`.** `JwtService` (từ `@nestjs/jwt`) *tạo* token. Một *strategy* của Passport (từ `passport-jwt`) *kiểm tra* token: nó khai báo tìm token ở đâu (cookie), secret nào dùng để verify, và `validate()` trả về thứ sẽ nằm trên `request.user`. `AuthGuard('jwt')` chạy strategy đó trước một route.
+6. **Refresh và rotation.** Khi một request bị 401 vì access token hết hạn, web gọi `POST /api/auth/refresh` một lần (T37). API check refresh token, rồi gửi một access token mới *và* một refresh token mới. Chừng nào còn dùng admin, mốc 7 ngày cứ trượt tiếp; bỏ không 7 ngày thì phải login lại.
+7. **Logout và công tắc khẩn cấp.** Logout xóa cả hai cookie trên browser này. Không có row session nào để xóa, nên muốn cắt *mọi* thiết bị thì API tăng `User.tokenVersion`; mọi refresh token ký với `ver` cũ sẽ fail, và user bị đẩy ra trong vòng 15 phút (khi access token của họ hết hạn). T46 dùng cơ chế này cho "sign out everywhere", khóa tài khoản và đổi password.
+8. **Cùng một lỗi cho mọi trường hợp fail.** "Invalid email or password" cho email không tồn tại, sai password và tài khoản bị khóa, để không ai dò được email nào có tài khoản.
 
 **Tiêu chí nghiệm thu.**
-- [ ] Login set cookie httpOnly, và `GET /auth/me` trả user DTO (roadmap p18).
-- [ ] Logout xóa row session; session hết hạn trả 401 (roadmap p18).
-- [ ] DB không chứa token gốc và không chứa password dạng plain.
+- [ ] Login set `access_token` và `refresh_token` là cookie httpOnly với path và thời hạn như trong bảng, và `GET /auth/me` trả user DTO có `role` (roadmap p18).
+- [ ] Access token hết hạn hoặc bị sửa trả 401; `POST /auth/refresh` với refresh cookie hợp lệ trả 204 và cookie mới; sau khi `tokenVersion` đổi, refresh trả 401.
+- [ ] Logout xóa cả hai cookie, và sau đó `GET /auth/me` trả 401 (roadmap p18, điều chỉnh theo D24).
+- [ ] DB không chứa password dạng plain và không chứa token; không response body hay dòng log nào chứa token.
 
-**Tiêu đề PR:** `feat(api): session auth`
+**Tiêu đề PR:** `feat(api): jwt auth` (roadmap p18 ghi `session auth`; đổi theo D24)
 
-#### T36 · Guard, role, check Origin, throttle
+#### T36 · JWT guard global, role (admin/user), check Origin, throttle
 
 **Roadmap** p19 · **Spec** §1.6 (Auth, CSRF, Rate limit), §6 Day 16 · **Phụ thuộc** T35 · **Cỡ** M
 
-**Mục tiêu.** Mọi route không public đều cần session và đúng role; request thay đổi dữ liệu phải đến từ site của mình; login bị rate limit.
+**Mục tiêu.** Mọi route không public đều cần access token hợp lệ và đúng role; request thay đổi dữ liệu phải đến từ site của mình; login bị rate limit.
 
 **Phạm vi.**
-- `common/guards/session.guard.ts` (`APP_GUARD` global): load session từ cookie, set `request.user`; nếu không có thì 401. `@Public()` trên health, login và mọi route `/public/*`.
-- `common/guards/roles.guard.ts` + `@Roles()`: OWNER = mọi thứ; EDITOR = mọi thao tác ghi nội dung và publish, trừ user; VIEWER = chỉ đọc trong admin. Mặc định cho admin write route: `@Roles('OWNER', 'EDITOR')`.
-- `common/guards/origin.guard.ts` (global): với `POST/PUT/PATCH/DELETE`, `Origin` phải bằng `WEB_ORIGIN`; nếu không thì 403 `BAD_ORIGIN` (D8). Các lời gọi server-to-server từ Next (Server Action của contact, T48) gửi `Origin: WEB_ORIGIN` một cách tường minh.
-- `common/decorators/current-user.decorator.ts`.
-- `@nestjs/throttler`: login 5 lần mỗi phút cho mỗi IP + email → 429. Trust proxy loopback (`trust proxy`) để IP client lấy từ `x-forwarded-for` do Next set.
-- e2e: không có session → 401; VIEWER ghi → 403; `Origin` lạ → 403; lần login sai thứ 6 → 429.
+- Đăng ký ba guard global trong `app.module.ts`, theo đúng thứ tự này (`APP_GUARD`): `JwtAuthGuard` → `RolesGuard` → `OriginGuard`.
+- `JwtAuthGuard` (từ T35) trở thành global và đọc `@Public()` bằng `Reflector`: route public bỏ qua nó; mọi route khác cần access token hợp lệ, nếu không thì 401. `@Public()` trên health, `POST /auth/login`, `POST /auth/refresh` (route này có `JwtRefreshGuard` riêng), `POST /auth/logout` và mọi `public-*.controller.ts`.
+- `common/decorators/roles.decorator.ts`: `@Roles(...roles: Role[])` với `Role = 'admin' | 'user'` lấy từ contracts.
+- `common/guards/roles.guard.ts`: bỏ qua route `@Public()`; đọc `@Roles()` trên handler, rồi tới class; **không có `@Roles()` nghĩa là `['admin']`**; `request.user.role` không nằm trong danh sách → 403 `FORBIDDEN`.
+- Thêm `@Roles('admin', 'user')` vào mọi handler đọc (`GET`) của các admin controller đã có tới lúc này (T29–T32) và vào `GET /auth/me`. Các route ghi để trống decorator, nên chỉ admin dùng được. Các task sau ghi rõ role của mình (xem bảng).
+- `common/guards/origin.guard.ts`: với `POST/PUT/PATCH/DELETE`, `Origin` phải bằng `WEB_ORIGIN`; nếu không thì 403 `BAD_ORIGIN` (D8). Login, refresh và logout cũng bị check. Các lời gọi server-to-server từ Next (Server Action của contact, T48) gửi `Origin: WEB_ORIGIN` một cách tường minh.
+- `common/decorators/current-user.decorator.ts`: `@CurrentUser()` trả `request.user` (`{ id, role }`).
+- `@nestjs/throttler`: login 5 lần mỗi phút cho mỗi IP + email → 429; refresh 30 lần mỗi phút cho mỗi IP. Trust proxy loopback (`trust proxy`) để IP client lấy từ `x-forwarded-for` do Next set.
+- e2e: không có token → 401; token hết hạn → 401; `user` gọi bất kỳ route ghi nào → 403; `user` gọi admin `GET` → 200; `admin` ghi → 2xx; `Origin` lạ → 403; lần login sai thứ 6 → 429.
 
-**File.** `apps/api/src/common/guards/{session.guard.ts,roles.guard.ts,origin.guard.ts}` (+ spec), `apps/api/src/common/decorators/{public.decorator.ts,roles.decorator.ts,current-user.decorator.ts}`, `apps/api/src/app.module.ts`, `apps/api/src/main.ts`, mọi `public-*.controller.ts` (`@Public()`), `apps/api/test/guards.e2e-spec.ts`.
+**Mỗi role làm được gì (D7).** API là nơi enforce; web chỉ ẩn những gì role đó không dùng được (T37 `RoleGate`).
+
+| Khu vực | `admin` | `user` | Route (task) |
+| --- | --- | --- | --- |
+| Tài khoản của mình: me, logout, đổi password của mình | có | có | `/auth/*` (T35, T46) |
+| Dashboard: số liệu, content health, chart analytics | đọc | đọc | `GET /admin/stats`, `GET /admin/health` (T38, T54) |
+| Nội dung: project, post, experience và các bảng about khác, skill, tag, domain, site, profile, nav, social, section, contact topic | đọc, tạo, sửa, xóa, sắp xếp | chỉ đọc (list và editor mở ở chế độ read-only) | `/admin/*` (T29–T33, T39–T45) |
+| Publish, unpublish, đổi status hàng loạt | có | không | T52, T55 |
+| Xem trước draft | có | có | `GET /admin/preview/*`, `/api/draft` (T52) |
+| Media: duyệt thư viện | có | có | `GET /admin/media` (T50) |
+| Media: upload, sửa alt text, xóa | có | không | T50 |
+| Inbox (contact message chứa email của khách) và thông báo realtime | có | không | `/admin/messages`, `/admin/events` (T47, T49) |
+| Audit log | có | không | `GET /admin/audit` (T55) |
+| User: tạo, đổi role, khóa, sign out everywhere | có | không | `/admin/users` (T46) |
+
+**File.** `apps/api/src/common/guards/{jwt-auth.guard.ts,roles.guard.ts,origin.guard.ts}` (+ spec), `apps/api/src/common/decorators/{public.decorator.ts,roles.decorator.ts,current-user.decorator.ts}`, `apps/api/src/app.module.ts`, `apps/api/src/main.ts`, `apps/api/src/modules/auth/auth.controller.ts`, mọi `public-*.controller.ts` (`@Public()`), mọi `admin-*.controller.ts` đã có (`@Roles('admin', 'user')` trên các handler `GET`), `apps/api/test/guards.e2e-spec.ts`.
 
 **Thiết kế.** Không có (chỉ API).
 
 **Các bước backend, giải thích.**
 1. **Guard.** Chạy trước controller và trả lời có hoặc không. Một guard global bảo vệ mọi route theo mặc định; `@Public()` cho một route đi ra ngoài. Vì vậy quên một decorator thì hệ thống fail an toàn (401), chứ không mở toang.
-2. **Role.** `@Roles('OWNER')` gắn một nhãn lên route; `RolesGuard` so nó với `request.user.role`. Web cũng ẩn button (T37 `RoleGate`), nhưng server mới là nơi thực sự enforce.
-3. **Check Origin (CSRF).** Một page độc hại có thể khiến browser của bạn gửi request kèm cookie của bạn. Browser luôn gửi header `Origin` với những request như vậy, nên từ chối các origin khác là chặn được nó.
-4. **Rate limit.** Đếm request theo từng key trong một khung thời gian và trả 429 khi vượt giới hạn.
+2. **Thứ tự guard.** Trước hết là "bạn là ai?" (`JwtAuthGuard` verify token và set `request.user`), rồi "bạn có được phép không?" (`RolesGuard`), rồi "request này có đến từ site của mình không?" (`OriginGuard`). Nest chạy các guard global theo thứ tự đăng ký.
+3. **Role.** `@Roles('admin', 'user')` gắn một nhãn lên route; `RolesGuard` so nó với `request.user.role`, giá trị lấy từ token đã được verify, nên user không giả mạo được. Không có nhãn nghĩa là chỉ admin. Web cũng ẩn button, nhưng server mới là nơi thực sự enforce.
+4. **Đổi role và 15 phút.** Role nằm bên trong access token, nên việc đổi role hay khóa tài khoản (T46) có hiệu lực ở lần refresh tiếp theo, chậm nhất 15 phút sau. Đó là cái giá của việc không đọc DB trên mọi request (D24).
+5. **Check Origin (CSRF).** Một page độc hại có thể khiến browser của bạn gửi request kèm cookie của bạn. Browser luôn gửi header `Origin` với những request như vậy, nên từ chối các origin khác là chặn được nó. JWT nằm trong cookie cần điều này y hệt như cookie session.
+6. **Rate limit.** Đếm request theo từng key trong một khung thời gian và trả 429 khi vượt giới hạn.
 
 **Tiêu chí nghiệm thu.**
-- [ ] Ghi khi không có session trả 401; ghi với `Origin` lạ hoặc thiếu trả 403 (roadmap p19, điều chỉnh theo D8).
+- [ ] Ghi khi không có token trả 401; ghi với `Origin` lạ hoặc thiếu trả 403 (roadmap p19, điều chỉnh theo D8).
 - [ ] Lần login sai thứ 6 trong một phút trả 429 (roadmap p19).
-- [ ] VIEWER không ghi được (403) (spec §6 Day 16).
+- [ ] Chỉ `admin` ghi được: `user` nhận 403 trên mọi admin `POST/PATCH/DELETE`, và 200 trên các admin route `GET` (roadmap p19 "chỉ admin được ghi"; spec §6 Day 16).
+- [ ] Một admin route mới không có `@Roles()` thì chỉ admin dùng được (có guard spec kiểm chứng).
 
 **Tiêu đề PR:** `feat(api): guards + csrf + throttle`
 
@@ -1311,21 +1354,31 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Roadmap** p20 · **Spec** [§4.3](./design/portfolio-design-system.vi.md#s-4-3), §4.6 (dòng Admin layout), §5.7, §5.11 · **Phụ thuộc** T11, T12, T36 · **Cỡ** L
 
-**Mục tiêu.** Một admin được bảo vệ, có check session phía server, shell kiểu Linear, page login và command palette của admin.
+**Mục tiêu.** Một admin được bảo vệ, có check token phía server, refresh token ngầm, UI theo role, shell kiểu Linear, page login và command palette của admin.
 
 **Phạm vi.**
 - `app/admin/layout.tsx`: root layout #2 (`<html lang="en">`, font, `Providers` với `QueryProvider`, `Toaster`, message admin từ `en.json` `admin.*`, D22).
-- `app/admin/login/page.tsx` → `admin-auth/views/AdminAuthLogin.tsx` với `LoginForm` (TanStack Form + `field`, `loginSchema`, map `fieldErrors`, hiện message 429).
-- `app/admin/(cms)/layout.tsx`: server gọi `GET /auth/me` với cookie được forward (`apiServer` option `withSession`, `cache: 'no-store'`); 401 → `redirect('/admin/login')`; ngược lại render `AdminShell`.
-- `admin-core`: `AdminShell` (shadcn `sidebar`, 240px, thu gọn được thành rail 56px, `[` để toggle; group và item lấy từ §4.3 cộng Stats, Domains, Process (§5.11); sheet trên mobile), `Topbar` (breadcrumb, slot cho page action, user menu có logout), `CommandPalette` của admin (nhảy tới admin route, "New project/post"), `RoleGate`, `stores/admin-ui.store.tsx` (`AdminUiProvider`, `useAdminUi`: sidebar thu gọn, palette mở), `services/auth.service.ts` (me, logout), `hooks/use-me.hook.ts`.
+- `middleware.ts` (mở rộng file của T11): với `/admin/*` trừ `/admin/login`, không có cookie `access_token` → redirect tới `/admin/login?next=<path>`. Đây chỉ là check nhanh, không gọi mạng (cookie biến mất khi token hết hạn, T35); check thật nằm ở layout bên dưới. Route public vẫn dùng middleware của next-intl.
+- `app/admin/login/page.tsx` → `admin-auth/views/AdminAuthLogin.tsx`. Khi mount, nó thử `POST /api/auth/refresh` một lần (browser tự gửi `refresh_token`); 204 → `router.replace(next)`; ngược lại hiện `LoginForm` (TanStack Form + `field`, `loginSchema`, map `fieldErrors`, hiện message 429). `admin-auth/utils/safe-next.util.ts` chỉ nhận path bắt đầu bằng `/admin` (không có open redirect).
+- `app/admin/(cms)/layout.tsx`: server gọi `GET /auth/me` (`apiServer` option `withAuth`: chỉ forward cookie `access_token`, `cache: 'no-store'`); 401 → `redirect('/admin/login')`; ngược lại render `AdminShell` với DTO `me`.
+- `core/services/api-client.service.ts`: với `/api/admin/*` và `/api/auth/me`, một lỗi 401 sẽ kích hoạt đúng một lần `POST /api/auth/refresh` (single-flight: các 401 song song dùng chung một promise refresh) và retry request đó một lần; nếu refresh fail → `window.location.assign('/admin/login?next=…')`. Export `refreshOnce()` cho SSE hook (T49). Lời gọi public không bao giờ refresh.
+- `admin-core`: `AdminShell` (shadcn `sidebar`, 240px, thu gọn được thành rail 56px, `[` để toggle; group và item lấy từ §4.3 cộng Stats, Domains, Process (§5.11); sheet trên mobile), `Topbar` (breadcrumb, slot cho page action, user menu có tên, badge role và logout), `CommandPalette` của admin (nhảy tới admin route, "New project/post" chỉ cho `admin`), `RoleGate` (`<RoleGate allow={['admin']}>` chỉ render children cho các role đó), `stores/admin-ui.store.tsx` (`AdminUiProvider`, `useAdminUi`: sidebar thu gọn, palette mở), `services/auth.service.ts` (me, logout), `hooks/use-me.hook.ts` (`useMe()`, khởi tạo từ `me` của layout; `useIsAdmin()`).
+- Quy tắc UI theo role cho mọi task admin về sau: control ghi (New, Save, Delete, Publish, reorder, upload, bulk bar) được bọc trong `RoleGate allow={['admin']}`; các item sidebar Inbox, Audit log và Users chỉ dành cho `admin`; `user` thấy phần còn lại ở chế độ chỉ đọc (bảng ở T36).
 - `app/admin/(cms)/page.tsx` → placeholder `AdminDashboardIndex` (T38 làm đầy).
 
-**File.** `apps/web/app/admin/layout.tsx`, `apps/web/app/admin/login/page.tsx`, `apps/web/app/admin/(cms)/{layout.tsx,page.tsx}`, `apps/web/src/modules/admin-auth/{views/AdminAuthLogin.tsx,components/LoginForm/*}`, `apps/web/src/modules/admin-core/components/{AdminShell,AdminSidebar,Topbar,CommandPalette,RoleGate}/*`, `apps/web/src/modules/admin-core/{stores/admin-ui.store.tsx,services/auth.service.ts,hooks/use-me.hook.ts}`, `apps/web/src/modules/core/services/api-server.service.ts`, `apps/web/i18n/locales/en.json`, `packages/ui/src/components/ui/{sidebar,breadcrumb,avatar}.tsx`.
+**File.** `apps/web/middleware.ts`, `apps/web/app/admin/layout.tsx`, `apps/web/app/admin/login/page.tsx`, `apps/web/app/admin/(cms)/{layout.tsx,page.tsx}`, `apps/web/src/modules/admin-auth/{views/AdminAuthLogin.tsx,components/LoginForm/*,utils/safe-next.util.ts}`, `apps/web/src/modules/admin-core/components/{AdminShell,AdminSidebar,Topbar,CommandPalette,RoleGate}/*`, `apps/web/src/modules/admin-core/{stores/admin-ui.store.tsx,services/auth.service.ts,hooks/use-me.hook.ts}`, `apps/web/src/modules/core/services/{api-server.service.ts,api-client.service.ts}`, `apps/web/i18n/locales/en.json`, `packages/ui/src/components/ui/{sidebar,breadcrumb,avatar}.tsx`.
 
 **Thiết kế.** Figma `14:2` (shell). Mockup `admin-dashboard.html`. Token: `--sidebar*`, `text-ui-title`, `text-ui`, `text-ui-meta`, chiều cao control admin 32 (28 khi compact). Không có atmosphere, band hay orb trong admin (§7.2 `06`).
 
+**Luồng token, giải thích.**
+1. **Browser không bao giờ đụng tới token.** Login, refresh và logout trả lời bằng `Set-Cookie`; browser lưu cookie httpOnly và gửi chúng trên mọi lời gọi `/api/*`. Code web chỉ thấy DTO `me`.
+2. **Server Component forward cookie.** Server Component chạy trên server Next, không phải trong browser, nên phải tự chuyển cookie đi: `apiServer(..., { withAuth: true })` chép `access_token` từ `cookies()` vào request gửi tới Nest.
+3. **Refresh chỉ ở một chỗ.** Trong browser, `apiClient` thấy 401, refresh một lần rồi retry. Khi load cả trang sau lúc access token hết hạn, middleware đưa bạn tới page login, page này refresh ngầm rồi đưa bạn quay lại. Chỉ khi refresh token cũng mất hoặc bị thu hồi thì bạn mới thấy form.
+
 **Tiêu chí nghiệm thu.**
 - [ ] Khi chưa login, `/admin` redirect về login ngay trên server: `curl -I` hiện redirect, không có flash phía client (roadmap p20).
+- [ ] Với access token đã hết hạn nhưng refresh token còn hợp lệ, mở `/admin/projects` sẽ quay lại đúng `/admin/projects` mà không hiện form; một admin request gửi sau lúc hết hạn vẫn thành công sau một lần refresh tự động.
+- [ ] Login bằng `user`: không có item Inbox, Audit log hay Users, không có button New/Save/Delete/Publish; badge role ghi `user`.
 - [ ] ⌘K điều hướng tới một admin route (roadmap p20); `[` toggle sidebar.
 - [ ] Sai credential thì lỗi hiện dưới form; lần thử thứ 6 hiện message rate limit.
 - [ ] Screenshot được so với `14:2` (chỉ phần shell).
@@ -1339,7 +1392,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Mục tiêu.** Một dashboard có các con số và check content health đến từ API, từng card một.
 
 **Phạm vi.**
-- API `modules/dashboard`: `GET /admin/stats?range=7d|30d|90d` (đếm nội dung theo status; field cho message và view được T47 và T54 thêm vào), `GET /admin/health` (check content health: project không có domain, case study có ít hơn 2 key fact, marquee có ít hơn 6 skill, thiếu field tiếng Việt trên item đã publish, lỗi publish lint; thiếu alt text do T50 thêm vào).
+- API `modules/dashboard`: `GET /admin/stats?range=7d|30d|90d` (đếm nội dung theo status; field cho message và view được T47 và T54 thêm vào), `GET /admin/health` (cả hai đều `@Roles('admin', 'user')`; check content health: project không có domain, case study có ít hơn 2 key fact, marquee có ít hơn 6 skill, thiếu field tiếng Việt trên item đã publish, lỗi publish lint; thiếu alt text do T50 thêm vào).
 - Web `admin-dashboard`: `AdminDashboardIndex`, `StatCard` (trong `packages/ui`: giá trị, text delta + mũi tên, không chỉ dựa vào màu), `ContentHealthCard` (mỗi issue link tới item), `toggle-group` chọn khoảng thời gian, lưu trong URL. Server prefetch + `HydrationBoundary`; mỗi card dùng `useSuspenseQuery` bên trong `SectionBoundary` riêng của nó (skeleton, empty và error theo từng card).
 
 **File.** `apps/api/src/modules/dashboard/*`, `packages/contracts/src/dashboard/*`, `apps/web/app/admin/(cms)/page.tsx`, `apps/web/src/modules/admin-dashboard/{views/AdminDashboardIndex.tsx,components/{StatsCards,ContentHealthCard}/*,hooks/use-dashboard.hook.ts,services/dashboard.service.ts}`, `packages/ui/src/components/StatCard/*`.
@@ -1360,7 +1413,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Mục tiêu.** Một table generic, thân thiện với bàn phím, do server điều khiển, dùng đầu tiên cho project.
 
 **Phạm vi.**
-- `packages/ui` `DataTable` (TanStack Table trên shadcn `table`; `manualPagination/Sorting/Filtering`; cột sort được, resize được, ẩn được; chọn row, kèm chọn theo dải bằng shift; thanh bulk action; header sticky; density compact 32 / mặc định 40; phím `j/k` di chuyển, `x` chọn, `Enter` mở, `e` sửa, `⌫` xóa có confirm; các state: skeleton row, empty kèm action tạo mới, không có kết quả kèm clear filter, error kèm Retry; dạng card list dưới `md`) và `FilterBar` (chip, menu thêm filter).
+- `packages/ui` `DataTable` (TanStack Table trên shadcn `table`; `manualPagination/Sorting/Filtering`; cột sort được, resize được, ẩn được; chọn row, kèm chọn theo dải bằng shift; thanh bulk action; header sticky; density compact 32 / mặc định 40; phím `j/k` di chuyển, `x` chọn, `Enter` mở, `e` sửa, `⌫` xóa có confirm (sửa, xóa và bulk bar chỉ cho `admin`, qua prop `canWrite`); các state: skeleton row, empty kèm action tạo mới, không có kết quả kèm clear filter, error kèm Retry; dạng card list dưới `md`) và `FilterBar` (chip, menu thêm filter).
 - `admin-core/hooks/use-list-params.hook.ts` (URL ↔ `ListParams` qua zod), `admin-core/utils/optimistic.util.ts` (helper snapshot / restore cho `onMutate`/`onError`).
 - `admin-projects`: `services/admin-projects.service.ts`, `hooks/use-admin-projects.hook.ts` (list bằng `useSuspenseQuery` và `keepPreviousData`, archive với optimistic removal và rollback, toggle status, reorder bằng move up/down), `views/AdminProjectsIndex.tsx`. Cột: title, domain (pill theo hue), status (`StatusPill`), số key fact, updated, row action. Prefetch detail khi hover/focus row sau 100ms.
 - Route `app/admin/(cms)/projects/page.tsx` với server prefetch + `HydrationBoundary`.
@@ -1428,7 +1481,8 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 - `packages/ui`: `MarkdownEditor` (CodeMirror 6; toolbar heading, bold, link, code, image, callout; slash menu; các mode write / split / preview trên `resizable`; đếm từ; paste image được nối ở T51), `SaveStatus` (`Saving…`, `Saved 12s ago`, `Offline, changes kept locally`, `Conflict: newer version` kèm Load latest / Overwrite), `LocaleTabs` (EN/VI với chấm báo độ đầy đủ), `PropertyList`.
 - `content`: tách pipeline thành `markdown-to-hast` (server) và `hast-to-react.util.ts` (dùng chung); `content/actions/preview.action.ts` (Server Action trả HAST đã sanitize cho pane preview).
 - `admin-core`: `EditorShell` (header có title, `SaveStatus`, slot publish; editor; pane properties 320px trên `lg`; cột live preview trên `2xl`; properties nằm trong `sheet`/`drawer` trên mobile), `hooks/use-autosave.hook.ts` (listener của TanStack Form, debounce 1.5s, `PATCH` kèm `updatedAt`, 409 → state conflict, offline → bản copy local), `hooks/use-dirty-guard.hook.ts`, `utils/map-field-errors.util.ts` (`ApiError.fieldErrors` → lỗi field của form).
-- Test cho state machine của autosave và cho việc map field error.
+- Prop `readOnly` của `EditorShell`, bằng true khi `useIsAdmin()` là false (D7): field và `MarkdownEditor` chỉ đọc, autosave và dirty guard tắt, slot publish bị ẩn, và header hiện badge "Read only". Mọi editor trong T43–T45 truyền prop này xuống.
+- Test cho state machine của autosave, cho việc map field error và cho chế độ read-only (không gửi `PATCH` nào).
 
 **File.** `packages/ui/src/components/{MarkdownEditor,SaveStatus,LocaleTabs,PropertyList}/*`, `packages/ui/src/components/ui/{tabs,resizable,drawer}.tsx`, `apps/web/src/modules/content/{services/markdown.service.ts,utils/hast-to-react.util.ts,actions/preview.action.ts}`, `apps/web/src/modules/admin-core/{components/EditorShell/*,hooks/use-autosave.hook.ts,hooks/use-dirty-guard.hook.ts,utils/map-field-errors.util.ts}`.
 
@@ -1437,6 +1491,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Tiêu chí nghiệm thu.**
 - [ ] Autosave chạy 1.5s sau khi ngừng gõ và hiện `Saved …`; một lần save stale hiện `Conflict` kèm cả hai action (có test).
 - [ ] Rời trang khi còn thay đổi chưa save thì hỏi xác nhận.
+- [ ] Login bằng `user`, editor mở ở chế độ chỉ đọc và không gửi thao tác ghi nào.
 - [ ] Output preview dùng cùng pipeline đã sanitize như site public (fixture test dùng chung).
 
 **Tiêu đề PR:** `feat(web): editor shell + markdown editor`
@@ -1506,28 +1561,40 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Tiêu đề PR:** `feat(web): site and profile admin`
 
-#### T46 · Admin user (chỉ owner)
+#### T46 · Admin user (chỉ admin) + tự đổi password
 
-**Roadmap** p22 (hoàn thiện M4) · **Spec** §4.3 (Users, chỉ owner), §1.5 (`User`, `Session`) · **Phụ thuộc** T37 · **Cỡ** S
+**Roadmap** p22 (hoàn thiện M4) · **Spec** §4.3 (Users; "chỉ owner" thành chỉ admin theo D7), §1.5 (`User`) · **Phụ thuộc** T37 · **Cỡ** M
 
-**Mục tiêu.** Owner thêm được user, đổi role, deactivate tài khoản và sign out user khỏi mọi nơi.
+**Mục tiêu.** Một `admin` thêm được tài khoản, đặt role cho nó (`admin` hoặc `user`), khóa tài khoản và sign out tài khoản đó khỏi mọi nơi. Mọi tài khoản đã login đều tự đổi được password của mình.
 
 **Phạm vi.**
-- API `admin-users.controller.ts` (`@Roles('OWNER')`): list, create (email, name, role, password ban đầu), patch (role, `isActive`), `DELETE /admin/users/:id/sessions` (sign out everywhere). Owner không tự hạ role hay tự deactivate chính mình được.
-- Web `admin-users`: table + editor dạng sheet; item sidebar được bọc trong `RoleGate`.
+- API `modules/users/admin-users.controller.ts`, `@Roles('admin')` trên class (ghi tường minh, dù đây cũng là mặc định):
+  - `GET /admin/users` (list theo page: name, email, role, `isActive`, `lastLoginAt`), `POST /admin/users` (email, name, role, password ban đầu ít nhất 12 ký tự), `PATCH /admin/users/:id` (name, role, `isActive`).
+  - `POST /admin/users/:id/sign-out-everywhere` (tăng `tokenVersion`; 204) và `POST /admin/users/:id/password` (admin đặt password mới; cũng tăng `tokenVersion`).
+  - Đổi `role` hoặc `isActive` cũng tăng `tokenVersion`, để role cũ không refresh được nữa.
+  - Rào chắn: admin không tự hạ role hay tự khóa chính mình được, và admin active cuối cùng không bị hạ role hay bị khóa được (409 `LAST_ADMIN`, check trong cùng transaction với lệnh update).
+- API `PATCH /auth/password` (`@Roles('admin', 'user')`, `changePasswordSchema`: `currentPassword`, `newPassword` ít nhất 12 ký tự): verify password hiện tại, lưu hash argon2id mới, tăng `tokenVersion`, rồi set cặp cookie mới cho browser này để nó vẫn còn login.
+- Contracts `users/`: admin user DTO (không bao giờ có `passwordHash` hay `tokenVersion`), `createUserSchema`, `updateUserSchema`, `setPasswordSchema`; `auth/auth.schema.ts` thêm `changePasswordSchema`.
+- Web `admin-users`: `AdminUsersIndex` (`DataTable`: name, email, pill role, switch active, lần login cuối; menu của row có "Sign out everywhere" và "Set password" sau một `alert-dialog`) và `UserForm` trong một `sheet`. Route `app/admin/(cms)/users/page.tsx`; item sidebar được bọc trong `RoleGate allow={['admin']}`.
+- Web `admin-auth/components/ChangePasswordDialog`, mở từ user menu trên topbar, cho cả hai role.
 
-**File.** `apps/api/src/modules/users/{admin-users.controller.ts,users.service.ts,dto/*}`, `packages/contracts/src/users/*`, `apps/api/test/users.e2e-spec.ts`, `apps/web/app/admin/(cms)/users/page.tsx`, `apps/web/src/modules/admin-users/*`.
+**File.** `apps/api/src/modules/users/{admin-users.controller.ts,users.service.ts,users.service.spec.ts,dto/*}`, `apps/api/src/modules/auth/{auth.controller.ts,auth.service.ts}`, `packages/contracts/src/users/*`, `packages/contracts/src/auth/auth.schema.ts`, `apps/api/test/users.e2e-spec.ts`, `apps/api/api.http`, `apps/web/app/admin/(cms)/users/page.tsx`, `apps/web/src/modules/admin-users/{views/AdminUsersIndex.tsx,components/{UsersTable,UserForm}/*,hooks/use-admin-users.hook.ts,services/admin-users.service.ts}`, `apps/web/src/modules/admin-auth/components/ChangePasswordDialog/*`, `apps/web/src/modules/admin-core/components/{AdminSidebar,Topbar}/*`.
 
 **Thiết kế.** Pattern table admin (`15:2`).
 
 **Các bước backend, giải thích.**
-1. **Role trên route.** `@Roles('OWNER')` đặt trên class controller bảo vệ mọi route trong đó; guard từ T36 làm việc check.
-2. **Hash khi create.** Password ban đầu đi qua cùng bước hash argon2id như login (T35); API không bao giờ trả nó về.
-3. **Sign out everywhere.** Vì session là một row (T35), thu hồi quyền truy cập chỉ là `deleteMany({ where: { userId } })`.
+1. **Role trên class.** `@Roles('admin')` đặt trên class controller bảo vệ mọi route trong đó; `RolesGuard` từ T36 làm việc check. Ghi ra dù chỉ-admin đã là mặc định, để người đọc sau biết module này nhạy cảm.
+2. **Hash khi create.** Password ban đầu đi qua cùng bước hash argon2id như login (T35); API không bao giờ trả nó về hay log nó.
+3. **Sign out everywhere, không cần session.** Không có row session nào để xóa (D24). Tăng `tokenVersion` khiến mọi refresh token ký với số cũ fail ở lần refresh kế tiếp, nên user đó bị đẩy ra trong vòng một vòng đời access token (15 phút). Cần nhanh hơn? Giảm `JWT_ACCESS_TTL_SECONDS`.
+4. **Rào chắn trong transaction.** "Đây có phải admin active cuối cùng không?" và lệnh update chạy trong cùng một `prisma.$transaction`, nên hai admin hạ role nhau cùng một lúc cũng không làm site mất hết admin.
+5. **Tự đổi password.** Hỏi password hiện tại trước nghĩa là ai đó ngồi vào laptop đang mở cũng không khóa bạn ra ngoài được. Tăng `tokenVersion` sign out các thiết bị khác; cấp lại cookie giữ cho thiết bị này vẫn login.
 
 **Tiêu chí nghiệm thu.**
-- [ ] EDITOR gọi API users thì nhận 403, và không thấy item Users.
-- [ ] "Sign out everywhere" xóa các row session của user đó.
+- [ ] `user` gọi bất kỳ route `/admin/users` nào thì nhận 403, và không thấy item Users.
+- [ ] Sau "Sign out everywhere", lần `POST /auth/refresh` tiếp theo của user đó trả 401 (e2e).
+- [ ] Tự hạ role hay tự khóa mình, hoặc hạ role/khóa admin active cuối cùng, trả 409.
+- [ ] Sau khi tự đổi password, password cũ login fail, refresh ở browser khác trả 401, và browser hiện tại vẫn còn login.
+- [ ] Không response nào của users API chứa `passwordHash`, `tokenVersion` hay token.
 
 **Tiêu đề PR:** `feat: users admin`
 
@@ -1543,7 +1610,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 - Model `ContactMessage` (`name`, `email`, `topicId?`, `message` Text, `locale`, `status` `NEW|READ|REPLIED|SPAM`, `ipHash`). Migration `add-contact`.
 - Contracts `contact/`: `contactSchema` (dùng chung với form bên web: name, email, topic, giới hạn độ dài message, field honeypot `website`), admin DTO, list params (`status`).
 - `public-contact.controller.ts`: `POST /public/contact` (`@Public()`, throttle 3 lần mỗi 10 phút cho mỗi IP). Honeypot bị điền thì vẫn trả 201 và lưu row dưới dạng `SPAM`. `ipHash` lấy từ `common/utils/ip-hash.util.ts` (SHA-256 của IP + salt theo ngày).
-- `admin-contact.controller.ts`: `GET /admin/messages`, `GET /admin/messages/:id`, `PATCH /admin/messages/:id` (status), `GET /admin/messages/unread-count`.
+- `admin-contact.controller.ts`: `GET /admin/messages`, `GET /admin/messages/:id`, `PATCH /admin/messages/:id` (status), `GET /admin/messages/unread-count`. Tất cả chỉ cho admin (không có `@Roles()`, D7): message chứa email của khách, nên `user` nhận 403. Số chưa đọc trên dashboard (chỉ là một con số) vẫn đọc được bởi cả hai role.
 - Phát một event trong process `contact.created` (`@nestjs/event-emitter`); T49 stream event này. Stats của dashboard có thêm số message chưa đọc.
 - Log không bao giờ chứa email hay nội dung message.
 
@@ -1593,8 +1660,8 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Mục tiêu.** Contact message mới hiện trong admin chỉ sau vài giây, kèm toast và badge chưa đọc, và stream tự phục hồi sau khi restart.
 
 **Phạm vi.**
-- API `modules/events`: `events.controller.ts` (`GET /admin/events`, `@Sse()`, role nào đã đăng nhập cũng được), `events.service.ts` (một `Subject` nhận event từ `contact.created` và, từ T52, `content.published`); comment heartbeat mỗi 25s; header `Cache-Control: no-cache`, `X-Accel-Buffering: no`.
-- Web `admin-core/hooks/use-admin-events.hook.ts`: một `EventSource('/api/admin/events')` duy nhất trong admin layout; khi có `contact.created` → `setQueryData(qk.admin.inbox.unread, n => n + 1)`, invalidate list message, toast `sonner` "New message from {name}" với nút Open; đóng khi unmount; browser tự reconnect.
+- API `modules/events`: `events.controller.ts` (`GET /admin/events`, `@Sse()`, chỉ admin vì event có chứa tên người gửi), `events.service.ts` (một `Subject` nhận event từ `contact.created` và, từ T52, `content.published`); comment heartbeat mỗi 25s; header `Cache-Control: no-cache`, `X-Accel-Buffering: no`.
+- Web `admin-core/hooks/use-admin-events.hook.ts`: một `EventSource('/api/admin/events')` duy nhất trong admin layout; khi có `contact.created` → `setQueryData(qk.admin.inbox.unread, n => n + 1)`, invalidate list message, toast `sonner` "New message from {name}" với nút Open; đóng khi unmount; browser tự reconnect. Chỉ mount cho `admin`. Khi có `error`, nếu stream không mở lại trong 5s (access token hết hạn làm lần reconnect fail với 401, mà `EventSource` không đọc được status), gọi `refreshOnce()` từ `api-client.service.ts` rồi mở một `EventSource` mới; sau 3 lần refresh fail thì dừng và đưa user về login.
 - `admin-core/components/NotificationBell` (ở topbar, badge chưa đọc, `aria-live="polite"`, không bao giờ cướp focus).
 - `admin-inbox`: `AdminInboxIndex` (`DataTable`: filter theo status, mark read kiểu optimistic, mark spam) và `AdminInboxDetail`. Route `app/admin/(cms)/inbox/page.tsx`, `inbox/[id]/page.tsx`. Dashboard có thêm một card inbox (5 message mới nhất).
 - Kiểm tra rằng rewrite của Next không buffer stream; ghi kết quả vào PR.
@@ -1606,7 +1673,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Các bước backend, giải thích.**
 1. **Server-Sent Events.** Một HTTP response dài mà server cứ tiếp tục ghi thêm những dòng `data:` nhỏ vào. `EventSource` của browser đọc các dòng đó và tự reconnect. Notification chỉ cần một chiều là đủ.
 2. **Heartbeat.** Proxy sẽ đóng connection nằm im lâu. Một dòng comment mỗi 25s giữ connection mở và giúp client nhận ra connection đã chết.
-3. **Auth không tốn công.** Đây là request cùng origin bình thường, nên session cookie và `SessionGuard` vẫn áp dụng.
+3. **Auth không tốn công, cho tới khi token hết hạn.** Đây là request cùng origin bình thường, nên cookie `access_token` và `JwtAuthGuard` vẫn áp dụng. Guard chỉ chạy một lần, lúc stream mở; một stream đang mở vẫn chạy tiếp sau khi token hết hạn. Chỉ lần reconnect mới cần token mới, vì vậy hook refresh trước khi mở lại.
 
 **Tiêu chí nghiệm thu.**
 - [ ] Submit form public thì row mới hiện trong inbox trong vòng 2s mà không cần reload (roadmap p23).
@@ -1622,7 +1689,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Phạm vi.**
 - Model `Media`, `ProjectImage`. Đổi các cột id thường thành relation: `SiteSettings.ogImage`, `Profile.avatar`, `Profile.resumeEn`, `Profile.resumeVi`, `Project.cover`, `Post.cover` (`onDelete: SetNull`). Migration `add-media`.
-- `admin-media.controller.ts`: `POST /admin/media` (`FileInterceptor`, giới hạn 10 MB, allowlist JPG/PNG/WebP/AVIF/PDF kiểm tra bằng magic bytes, D14; `sharp` xóa metadata và ghi variant WebP ở các độ rộng 480/960/1600; tên lưu ngẫu nhiên trong `UPLOAD_DIR`), `GET /admin/media` (cursor pagination, D6), `PATCH /admin/media/:id` (alt), `DELETE /admin/media/:id` (409 `IN_USE` khi đang được tham chiếu).
+- `admin-media.controller.ts`: `POST /admin/media` (`FileInterceptor`, giới hạn 10 MB, allowlist JPG/PNG/WebP/AVIF/PDF kiểm tra bằng magic bytes, D14; `sharp` xóa metadata và ghi variant WebP ở các độ rộng 480/960/1600; tên lưu ngẫu nhiên trong `UPLOAD_DIR`), `GET /admin/media` (cursor pagination, D6; `@Roles('admin', 'user')`), `PATCH /admin/media/:id` (alt), `DELETE /admin/media/:id` (409 `IN_USE` khi đang được tham chiếu). Upload, patch và delete chỉ cho admin.
 - `public-media.controller.ts`: `GET /public/media/:file` chỉ stream những file đã biết, cache header dài, `X-Content-Type-Options: nosniff`.
 - Public DTO có thêm object image `{ url, srcset, width, height, alt }` (alt chọn theo locale). Admin project DTO có thêm `images` kèm caption và thứ tự.
 - Content health có thêm mục "images missing alt text".
@@ -1676,10 +1743,10 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Phạm vi.**
 - API `modules/publishing`: `publishing.service.ts` (`revalidate(tags)` → `POST ${WEB_INTERNAL_URL}/api/revalidate` với `x-revalidate-secret`; retry một lần; lỗi được log và không bao giờ chặn thao tác ghi), `tags.util.ts` (entity → tag: `site`, `projects`, `project:{slug}`, `posts`, `post:{slug}`, `skills`, `domains`).
-- Route: `POST /admin/projects/:id/publish|unpublish`, `POST /admin/posts/:id/publish|unpublish`. Publish kiểm tra các field English bắt buộc, `publishLint`, và alt text trên các image được dùng → 400 kèm `fieldErrors`; set `status` và `publishedAt` (chỉ ở lần publish đầu); phát `content.published`.
+- Route (chỉ admin): `POST /admin/projects/:id/publish|unpublish`, `POST /admin/posts/:id/publish|unpublish`. Publish kiểm tra các field English bắt buộc, `publishLint`, và alt text trên các image được dùng → 400 kèm `fieldErrors`; set `status` và `publishedAt` (chỉ ở lần publish đầu); phát `content.published`.
 - Mọi thao tác ghi trong admin làm thay đổi dữ liệu public đều gọi `revalidate` với tag của nó.
-- Preview API: `GET /admin/preview/projects/:slug`, `GET /admin/preview/posts/:slug` (shape giống public DTO, status nào cũng được, bắt buộc có session).
-- Web: `app/api/revalidate/route.ts` (kiểm tra secret, `revalidateTag` cho từng tag), `app/api/draft/route.ts` (kiểm tra session qua `/auth/me`, bật `draftMode()`, redirect tới page; `?exit=1` thì tắt). Khi draft mode bật, service dùng các preview endpoint với cookie được forward và không cache. Một banner draft có link để thoát.
+- Preview API: `GET /admin/preview/projects/:slug`, `GET /admin/preview/posts/:slug` (shape giống public DTO, status nào cũng được, `@Roles('admin', 'user')`).
+- Web: `app/api/revalidate/route.ts` (kiểm tra secret, `revalidateTag` cho từng tag), `app/api/draft/route.ts` (kiểm tra access token qua `/auth/me` với `withAuth`, role nào cũng được; bật `draftMode()`, redirect tới page; `?exit=1` thì tắt). Khi draft mode bật, service dùng các preview endpoint với cookie `access_token` được forward và không cache; nếu cookie đã hết hạn, banner draft có link tới `/admin/login?next=` page hiện tại. Một banner draft có link để thoát.
 - Nút publish trong editor và status trong properties pane (project, post); link preview.
 - `.env.example`: `REVALIDATE_SECRET`, `WEB_INTERNAL_URL`.
 
@@ -1691,7 +1758,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 1. **Publish là một lần đổi state có luật.** Draft được phép chưa đầy đủ; publish kiểm tra luật một lần, ở một chỗ.
 2. **Cache tag.** Web cache mỗi page public kèm tag. API biết cái gì vừa đổi, nên nó báo cho web "mọi thứ gắn tag `post:my-slug` đã cũ", và chỉ những page đó được build lại ở lượt truy cập tiếp theo.
 3. **Shared secret.** Route revalidate là public trên web, nên nó đòi một secret header mà chỉ API biết.
-4. **Draft mode.** Editor đã đăng nhập nhận một cookie khiến web bỏ qua cache và đọc từ preview endpoint; mọi người khác vẫn nhận 404 cho draft.
+4. **Draft mode.** `admin` hoặc `user` đã đăng nhập nhận một cookie khiến web bỏ qua cache và đọc từ preview endpoint; mọi người khác vẫn nhận 404 cho draft.
 
 **Tiêu chí nghiệm thu.**
 - [ ] Trên production build (`pnpm build && pnpm start`), publish làm thay đổi hiện trên page public trong dưới 5s mà không cần redeploy (roadmap p25).
@@ -1760,10 +1827,10 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Phạm vi.**
 - Model `AuditLog` (`userId`, `action` `CREATE|UPDATE|PUBLISH|ARCHIVE|LOGIN`, `entityType`, `entityId`, `summary`). Migration `add-audit-log`.
-- `modules/audit`: `audit.service.ts` `record(…)`, được gọi tường minh từ các service bên trong cùng transaction với thao tác ghi, và từ login. `GET /admin/audit` (cursor pagination, filter theo entity type và user).
-- Bulk update status cho project và post (`POST /admin/{entity}/bulk` với `{ ids, action }`) trong một transaction, mỗi item một row audit; nối vào bulk bar của `DataTable`.
+- `modules/audit`: `audit.service.ts` `record(…)`, được gọi tường minh từ các service bên trong cùng transaction với thao tác ghi, và từ login. `GET /admin/audit` (cursor pagination, filter theo entity type và user; chỉ admin).
+- Bulk update status cho project và post (`POST /admin/{entity}/bulk` với `{ ids, action }`, chỉ admin) trong một transaction, mỗi item một row audit; nối vào bulk bar của `DataTable`.
 - Script `pnpm --filter @portfolio/api seed:audit` chèn 5,000 row audit (chỉ dùng khi dev).
-- Web: `admin-insights/views/AdminInsightsAudit.tsx` (`useInfiniteQuery` + `useVirtualizer`, `AuditRow` hiện thời gian tương đối và tooltip thời gian tuyệt đối); card activity trên dashboard (8 mục mới nhất). `packages/ui` `ActivityFeed`, `AuditRow`.
+- Web: `admin-insights/views/AdminInsightsAudit.tsx` (`useInfiniteQuery` + `useVirtualizer`, `AuditRow` hiện thời gian tương đối và tooltip thời gian tuyệt đối); card activity trên dashboard (8 mục mới nhất, nằm trong `RoleGate allow={['admin']}`). `packages/ui` `ActivityFeed`, `AuditRow`.
 
 **File.** `apps/api/prisma/schema.prisma` + migration, `apps/api/src/modules/audit/*`, `apps/api/src/modules/*/*.service.ts` (các lời gọi record), `apps/api/prisma/seed/audit.seed.ts`, `apps/api/test/audit.e2e-spec.ts`, `apps/web/src/modules/admin-insights/*`, `apps/web/app/admin/(cms)/audit/page.tsx`, `apps/web/src/modules/admin-dashboard/components/ActivityCard/*`, `packages/ui/src/components/{ActivityFeed,AuditRow}/*`.
 
@@ -1788,7 +1855,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 
 **Phạm vi.**
 - Lấp các chỗ trống trong API e2e để module nào cũng có test happy path + validation.
-- Playwright trong `apps/web/e2e/`: smoke public (home ở cả hai locale, điều hướng nav bằng bàn phím, page project và post, 404), submit contact, admin login → tạo project draft → publish → hiện trên page public → archive. Chạy trên production build của web và api với test DB và seed `demo`.
+- Playwright trong `apps/web/e2e/`: smoke public (home ở cả hai locale, điều hướng nav bằng bàn phím, page project và post, 404), submit contact, admin login → tạo project draft → publish → hiện trên page public → archive, và `user` login (tài khoản được tạo trong test setup qua `POST /admin/users`) → editor project mở ở chế độ chỉ đọc, không có nút Publish và không có item Inbox, Audit hay Users. Chạy trên production build của web và api với test DB và seed `demo`.
 - CI: các job `lint-typecheck-unit`, `api-e2e` (MySQL service), `web-e2e` (MySQL service, build cả hai app, chạy Playwright, upload report).
 
 **File.** `apps/web/e2e/{public.spec.ts,contact.spec.ts,admin-publish.spec.ts}`, `apps/web/playwright.config.ts`, `apps/api/test/*.e2e-spec.ts`, `.github/workflows/ci.yml`.
@@ -1862,11 +1929,11 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 **Phạm vi.**
 - Header bảo mật: CSP với nonce theo từng request, set trong `middleware.ts` (pattern của Next.js); HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `frame-ancestors 'none'` trong Caddyfile.
 - Xác nhận cookie `Secure` trên production; container không chạy bằng root, root filesystem read-only khi có thể; không CORS (D9).
-- Job dọn session hết hạn trong API (`@nestjs/schedule`, hằng ngày).
+- JWT secret cho production: `JWT_ACCESS_SECRET` và `JWT_REFRESH_SECRET` tạo bằng `openssl rand -base64 48`, khác với dev và khác nhau, chỉ nằm trong `.env` trên VPS và GitHub secrets; boot fail nếu chúng ngắn hoặc bằng nhau (T35). Ghi cách tạo và xoay vòng secret trong `docs/runbooks/secrets.md`.
 - Service `backup` trong `compose.prod.yml`: `mysqldump` + gzip hằng ngày và một file tarball cho uploads, xoay vòng 7 ngày trên volume `backups`.
 - `scripts/backup/restore.sh` và `docs/runbooks/restore.md`; chạy một buổi diễn tập restore vào một database mới.
 
-**File.** `apps/web/middleware.ts`, `infra/caddy/Caddyfile`, `compose.prod.yml`, `infra/backup/backup.sh`, `scripts/backup/restore.sh`, `apps/api/src/modules/auth/session-cleanup.service.ts`, `docs/runbooks/restore.md`.
+**File.** `apps/web/middleware.ts`, `infra/caddy/Caddyfile`, `compose.prod.yml`, `infra/backup/backup.sh`, `scripts/backup/restore.sh`, `docs/runbooks/{restore.md,secrets.md}`.
 
 **Thiết kế.** Không có.
 
@@ -1874,7 +1941,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 1. **`mysqldump`.** Ghi toàn bộ database ra thành các câu lệnh SQL; pipe qua `gzip` để file nhỏ. Chạy nó bên trong network của `db` nên không phải expose port nào.
 2. **Xoay vòng.** Giữ 7 file hằng ngày và xóa những file cũ hơn, nên disk không bao giờ đầy.
 3. **Backup chỉ có giá trị khi đã restore được.** Buổi diễn tập load bản dump mới nhất vào một database trống, start API trỏ vào đó và kiểm tra site.
-4. **Job theo lịch.** `@nestjs/schedule` chạy một method theo timer (ở đây: xóa các row session hết hạn mỗi ngày một lần).
+4. **Xoay vòng JWT secret.** Đổi `JWT_ACCESS_SECRET` làm mọi access token mất hiệu lực ngay; đổi `JWT_REFRESH_SECRET` sign out tất cả mọi người. Xoay vòng sau khi bị lộ, và chuẩn bị login lại. Không có row session nào cần dọn (D24).
 
 **Tiêu chí nghiệm thu.**
 - [ ] `scripts/backup/restore.sh` vào một DB mới đưa site chạy lại được (roadmap p31).
@@ -1912,7 +1979,7 @@ Admin route trong M3 chưa có login. Chúng vẫn an toàn vì API chỉ listen
 - `.github/workflows/deploy.yml`: sau khi CI trên `main` chạy xong, build và push image web/api lên GHCR (tag: commit SHA và `latest`), SSH vào VPS, `docker compose -f compose.prod.yml pull && up -d`, rồi smoke-check `https://<domain>/api/health`.
 - Caddy tự động bật HTTPS cho domain lấy từ env (`SITE_DOMAIN`).
 - `docs/runbooks/deploy.md` (setup VPS lần đầu, danh sách secret, rollback theo image tag).
-- `docs/launch-checklist.md`: DNS, TLS, backup và diễn tập restore, Lighthouse và axe, `check:content`, `check:placeholders`, OG preview, đã submit sitemap, đã bật analytics, đã đổi password admin, page 404/500, đã cấu hình uptime ping.
+- `docs/launch-checklist.md`: DNS, TLS, backup và diễn tập restore, Lighthouse và axe, `check:content`, `check:placeholders`, OG preview, đã submit sitemap, đã bật analytics, đã đổi password admin, đã tạo mới `JWT_ACCESS_SECRET`/`JWT_REFRESH_SECRET` cho production (không dùng giá trị dev), page 404/500, đã cấu hình uptime ping.
 
 **File.** `.github/workflows/deploy.yml`, `infra/caddy/Caddyfile`, `compose.prod.yml`, `docs/runbooks/deploy.md`, `docs/launch-checklist.md`.
 
@@ -1959,3 +2026,5 @@ Mỗi câu đều có một mặc định mà plan đang dùng, nên không task
 | Q6 | URL LinkedIn | Row `SocialLink` với placeholder `url = "https://www.linkedin.com/in/<handle>"` |
 | Q7 | Lật lại D3 (markdown thay vì JSON blocks), D6 (list theo page) hay D8 (check Origin thay vì CSRF token)? | Giữ các lựa chọn của spec |
 | Q8 | Mockup `MigrationDiagram` gắn label cho node là `v1 · Vue 2` / `v2 · Nuxt 3`, và các decision card trong case study hiện `OPTIONS · CHOICE · WHY · COST`. Data model không có field riêng cho các thứ này. | Node của diagram hiện `versionFrom`/`versionTo` đúng như đã nhập, với tên skill làm các component node (T22). Decision được tách tại các heading `###` thành card có body là markdown, nên tác giả tự viết các label đó trong text (T23, T27) |
+| Q9 | `user` được làm chính xác những gì? (D7) | Người review chỉ đọc: dashboard, đọc nội dung và media, analytics, xem trước draft, password của mình. Không ghi, không publish, không upload, không inbox, không audit log, không quản lý user. Mở rộng về sau chỉ là thêm một `@Roles('admin', 'user')` cho mỗi route cùng `RoleGate` tương ứng |
+| Q10 | Thu hồi một refresh token bị lộ mà không sign out user đó khỏi mọi nơi? (D24) | Không. Việc đó cần một bảng lưu token (chính là session mà Parker đã bỏ). `tokenVersion` sign out user trên mọi thiết bị, đủ dùng cho vài tài khoản |
