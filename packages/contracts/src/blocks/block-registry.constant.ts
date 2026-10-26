@@ -9,6 +9,7 @@ import { domainGridBlock } from './definitions/domain-grid.block';
 import { educationListBlock } from './definitions/education-list.block';
 import { featuredCaseBlock } from './definitions/featured-case.block';
 import { heroBlock } from './definitions/hero.block';
+import { notesBrowserBlock } from './definitions/notes-browser.block';
 import { pageHeaderBlock } from './definitions/page-header.block';
 import { postListBlock } from './definitions/post-list.block';
 import { principleListBlock } from './definitions/principle-list.block';
@@ -39,6 +40,7 @@ export const BLOCK_REGISTRY = {
   'cv-download': cvDownloadBlock,
   prose: proseBlock,
   'projects-browser': projectsBrowserBlock,
+  'notes-browser': notesBrowserBlock,
 } as const satisfies Record<string, BlockDefinition>;
 
 export type BlockType = keyof typeof BLOCK_REGISTRY;

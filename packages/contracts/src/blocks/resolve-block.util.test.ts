@@ -23,7 +23,7 @@ describe('parseBlock', () => {
   });
 
   it('returns UNKNOWN_TYPE for a type not in the registry', () => {
-    const result = parseBlock({ ...heroRow, type: 'notes-browser' });
+    const result = parseBlock({ ...heroRow, type: 'not-a-block' });
     expect(result).toMatchObject({ ok: false, reason: 'UNKNOWN_TYPE' });
   });
 
@@ -76,6 +76,19 @@ describe('resolveBlockLocale', () => {
     expect(resolved.props).toMatchObject({
       primaryCta: { label: 'Xem việc', href: '/projects' },
     });
+  });
+
+  it('accepts a seeded notes-browser', () => {
+    const result = parseBlock({
+      id: 4,
+      type: 'notes-browser',
+      key: 'notes',
+      layout: 'ONE',
+      surface: 'PLAIN',
+      schemaVersion: 1,
+      props: { showFeatured: true, pageSize: 10 },
+    });
+    expect(result.ok).toBe(true);
   });
 
   it('accepts a seeded projects-browser', () => {

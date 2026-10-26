@@ -46,7 +46,7 @@ Create only the folders a module needs.
 | `home` | `HomeIndex` view (renders `BlocksPage` for `home`); `process-steps.service.ts` | §5.1 |
 | `about` | `AboutIndex` (renders `BlocksPage` for `about`); experience, education, principles and skills services | §5.2 |
 | `projects` | `ProjectsIndex`, `ProjectsDetail`, filters island, case-study header/meta/sections/TOC; `projects.service.ts` + `domains.service.ts` | §5.3, §5.4 |
-| `notes` | `NotesIndex`, `NotesDetail`, search island (TanStack Query); `posts.service.ts` | §5.5 |
+| `notes` | `NotesIndex`, `NotesDetail`, search island (TanStack Query), `notes-browser`; `posts.service.ts` + `posts-client.service.ts` | §5.5 |
 | `contact` | `ContactIndex`, `ContactForm` (TanStack Form + Server Action) | §5.6 |
 | `seo` | metadata builders, JSON-LD, OG image template, sitemap/RSS builders | §5 intro |
 | `admin-core` | `AdminShell`, sidebar, topbar, admin `CommandPalette`, `NotificationBell`, `EditorShell`, `SchemaForm` (draws a TanStack Form from a zod schema via `z.toJSONSchema` + `.meta()` widgets, PLAN T45a), `MarkdownField` (TanStack Form field ↔ Tiptap `MarkdownEditor`, loaded with `next/dynamic` `ssr: false` so Tiptap stays out of public bundles), `RoleGate` (shows children for `admin` or `user` only), `useMe`/`useIsAdmin`, SSE hook, URL list-params hook, autosave hook | §4.3 |
