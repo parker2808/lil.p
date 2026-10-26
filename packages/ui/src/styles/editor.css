@@ -1,0 +1,73 @@
+.ProseMirror {
+  min-height: 12rem;
+  outline: none;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before,
+.ProseMirror h2.is-editor-empty:first-child::before,
+.ProseMirror h3.is-editor-empty:first-child::before {
+  color: var(--muted-foreground);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.ProseMirror-selectednode {
+  outline: 2px solid var(--ring);
+}
+
+.ProseMirror ::selection {
+  background: var(--primary-subtle);
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-section,
+.hljs-link {
+  color: var(--shiki-token-keyword);
+}
+
+.hljs-function,
+.hljs-title {
+  color: var(--shiki-token-function);
+}
+
+.hljs-string,
+.hljs-attr,
+.hljs-attribute,
+.hljs-addition {
+  color: var(--shiki-token-string);
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion,
+.hljs-meta {
+  color: var(--shiki-token-comment);
+}
+
+.hljs-number,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-built_in {
+  color: var(--shiki-token-constant);
+}
+
+.hljs-variable,
+.hljs-template-variable,
+.hljs-params,
+.hljs-name {
+  color: var(--shiki-token-parameter);
+}
+
+.hljs-type,
+.hljs-class .hljs-title,
+.hljs-selector-class {
+  color: var(--shiki-token-string-expression);
+}
+
+.hljs-punctuation {
+  color: var(--shiki-token-punctuation);
+}

@@ -23,3 +23,12 @@ class MockIntersectionObserver implements IntersectionObserver {
 }
 
 vi.stubGlobal('IntersectionObserver', MockIntersectionObserver);
+
+class MockResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+vi.stubGlobal('ResizeObserver', MockResizeObserver);
+HTMLElement.prototype.scrollIntoView = vi.fn();
