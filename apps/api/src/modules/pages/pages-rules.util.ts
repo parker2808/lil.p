@@ -1,11 +1,19 @@
-import { BadRequestException, ConflictException } from '@nestjs/common';
-import { BLOCK_REGISTRY, type BlockType, type PageKey } from '@portfolio/contracts';
+import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
+import { BLOCK_REGISTRY, type BlockType, type PageKey, pageKeySchema } from '@portfolio/contracts';
 
 type RegistryDefinition = (typeof BLOCK_REGISTRY)[BlockType];
 type PageBlockLike = { id: number; type: string; sortOrder: number };
 
 export function definitionOf(type: string): RegistryDefinition | undefined {
   return BLOCK_REGISTRY[type as BlockType];
+}
+
+export function parsePageKey(raw: string): PageKey {
+  const parsed = pageKeySchema.safeParse(raw);
+  if (!parsed.success) {
+    throw new NotFoundException({ code: 'NOT_FOUND', message: `Page ${raw} was not found` });
+  }
+  return parsed.data;
 }
 
 export function assertAllowedOnPage(definition: RegistryDefinition, pageKey: PageKey): void {

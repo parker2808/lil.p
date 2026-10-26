@@ -445,4 +445,48 @@ export async function seedPages(
       });
     }
   }
+
+  await publishSeedPages(prisma);
+}
+
+export async function publishSeedPages(prisma: PrismaClient): Promise<void> {
+  const pages = await prisma.page.findMany({
+    include: { blocks: { orderBy: { sortOrder: 'asc' } }, publishedVersion: true },
+  });
+  for (const page of pages) {
+    if (page.publishedVersionId) {
+      continue;
+    }
+    const snapshot = {
+      seo: {
+        seoTitleEn: page.seoTitleEn,
+        seoTitleVi: page.seoTitleVi,
+        seoDescriptionEn: page.seoDescriptionEn,
+        seoDescriptionVi: page.seoDescriptionVi,
+      },
+      blocks: page.blocks.map((block) => ({
+        type: block.type,
+        key: block.key,
+        schemaVersion: block.schemaVersion,
+        props: block.props,
+        layout: block.layout,
+        surface: block.surface,
+        isVisible: block.isVisible,
+        sortOrder: block.sortOrder,
+      })),
+    };
+    const created = await prisma.pageVersion.create({
+      data: {
+        pageId: page.id,
+        version: 1,
+        snapshot,
+        note: 'Seed v1',
+      },
+    });
+    const now = new Date();
+    await prisma.page.update({
+      where: { id: page.id },
+      data: { publishedVersionId: created.id, publishedAt: now, updatedAt: now },
+    });
+  }
 }

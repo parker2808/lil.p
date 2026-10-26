@@ -15,6 +15,7 @@ export const errorCodeSchema = z.enum([
   'BLOCK_LIMIT',
   'BLOCK_LOCKED',
   'BLOCK_REQUIRED',
+  'INVALID_BLOCKS',
   'UNAUTHENTICATED',
   'INVALID_CREDENTIALS',
   'FORBIDDEN',

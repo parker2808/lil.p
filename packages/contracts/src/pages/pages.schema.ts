@@ -17,10 +17,47 @@ export const publicPageSchema = z.object({
   blocks: z.array(publicBlockSchema),
 });
 
+export const invalidPreviewBlockSchema = z.object({
+  id: z.number().int(),
+  type: z.string(),
+  key: z.string(),
+  issues: z.array(z.string()),
+});
+
+export const publicPagePreviewSchema = publicPageSchema.extend({
+  invalidBlocks: z.array(invalidPreviewBlockSchema),
+});
+
+export const pageSnapshotBlockSchema = z.object({
+  type: z.string(),
+  key: blockKeySchema,
+  schemaVersion: z.number().int(),
+  props: z.unknown(),
+  layout: layoutPresetSchema,
+  surface: blockSurfaceSchema,
+  isVisible: z.boolean(),
+  sortOrder: z.number().int(),
+});
+
+export const pageSnapshotSeoSchema = z.object({
+  seoTitleEn: z.string().nullable(),
+  seoTitleVi: z.string().nullable(),
+  seoDescriptionEn: z.string().nullable(),
+  seoDescriptionVi: z.string().nullable(),
+});
+
+export const pageSnapshotSchema = z.object({
+  seo: pageSnapshotSeoSchema,
+  blocks: z.array(pageSnapshotBlockSchema),
+});
+
 export const adminPageListItemSchema = z.object({
   key: pageKeySchema,
   blockCount: z.number().int(),
   updatedAt: z.string(),
+  publishedVersion: z.number().int().nullable(),
+  publishedAt: z.string().nullable(),
+  hasUnpublishedChanges: z.boolean(),
 });
 
 export const adminPageSchema = z.object({
@@ -30,7 +67,26 @@ export const adminPageSchema = z.object({
   seoDescriptionEn: z.string().nullable(),
   seoDescriptionVi: z.string().nullable(),
   updatedAt: z.string(),
+  publishedVersion: z.number().int().nullable(),
+  publishedAt: z.string().nullable(),
+  hasUnpublishedChanges: z.boolean(),
   blocks: z.array(adminBlockSchema),
+});
+
+export const publishPageSchema = z.object({
+  note: z.string().max(200).optional(),
+});
+
+export const adminPageVersionListItemSchema = z.object({
+  version: z.number().int(),
+  createdAt: z.string(),
+  authorName: z.string().nullable(),
+  note: z.string().nullable(),
+  blockCount: z.number().int(),
+});
+
+export const adminPageVersionSchema = adminPageVersionListItemSchema.extend({
+  snapshot: pageSnapshotSchema,
 });
 
 export const updatePageSchema = z.object({

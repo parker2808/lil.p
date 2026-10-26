@@ -6,8 +6,15 @@ import { HomeIndex } from '@/modules/home/views/HomeIndex';
 // Request-time fetch (D23). CI `next build` has no Nest process.
 export const dynamic = 'force-dynamic';
 
-export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const { locale } = await params;
+  const query = await searchParams;
   setRequestLocale(locale);
-  return <HomeIndex locale={locale as Locale} />;
+  return <HomeIndex locale={locale as Locale} searchParams={query} />;
 }

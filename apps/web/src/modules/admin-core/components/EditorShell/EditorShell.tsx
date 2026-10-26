@@ -71,7 +71,7 @@ export function EditorShell({
           onLoadLatest={onLoadLatest}
           onOverwrite={onOverwrite}
         />
-        {readOnly ? null : publish}
+        {publish}
       </header>
       <div className="flex items-center justify-between gap-3">
         <LocaleTabs

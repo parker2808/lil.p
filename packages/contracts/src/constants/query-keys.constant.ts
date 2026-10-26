@@ -23,6 +23,9 @@ export const qk = {
     pages: {
       list: ['admin', 'pages'] as const,
       detail: (key: PageKey) => ['admin', 'pages', 'detail', key] as const,
+      versions: (key: PageKey) => ['admin', 'pages', 'versions', key] as const,
+      version: (key: PageKey, version: number) =>
+        ['admin', 'pages', 'versions', key, version] as const,
     },
     media: {
       all: ['admin', 'media'] as const,

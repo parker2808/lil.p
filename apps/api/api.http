@@ -846,6 +846,32 @@ Content-Type: application/json
   "ids": [2, 1]
 }
 
+### Admin page publish
+POST http://127.0.0.1:4000/api/admin/pages/home/publish
+Content-Type: application/json
+
+{
+  "note": "v1"
+}
+
+### Admin page versions
+GET http://127.0.0.1:4000/api/admin/pages/home/versions
+
+### Admin page version
+GET http://127.0.0.1:4000/api/admin/pages/home/versions/1
+
+### Admin page restore
+POST http://127.0.0.1:4000/api/admin/pages/home/versions/1/restore
+
+### Admin page discard
+POST http://127.0.0.1:4000/api/admin/pages/home/discard
+
+### Admin page preview
+GET http://127.0.0.1:4000/api/admin/preview/pages/home?locale=en
+
+### Admin page preview of a version
+GET http://127.0.0.1:4000/api/admin/preview/pages/home?locale=en&version=1
+
 ### Auth login (sets access_token + refresh_token cookies)
 # @name login
 POST http://127.0.0.1:4000/api/auth/login

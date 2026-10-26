@@ -244,6 +244,10 @@
         "marquee": "Marquee needs 6+ skills · {count} on",
         "publishLint": "{count} publish-lint issues",
         "missingAlt": "Images missing alt · {count}",
+        "neverPublished": "Pages never published · {count}",
+        "staleDrafts": "Stale page drafts · {count}",
+        "invalidPageBlocks": "Invalid page blocks · {count}",
+        "brokenRefs": "Broken page refs · {count}",
         "marqueeTitle": "Skills marquee",
         "kinds": {
           "PROJECT_NO_DOMAIN": "No domain",
@@ -251,7 +255,11 @@
           "MARQUEE_SKILLS": "{count} on marquee · needs 6+",
           "MISSING_VI": "Missing Vietnamese · {fields}",
           "PUBLISH_LINT": "Publish lint · {fields}",
-          "MISSING_ALT": "Missing alt text"
+          "MISSING_ALT": "Missing alt text",
+          "PAGE_NEVER_PUBLISHED": "Never published",
+          "PAGE_STALE_DRAFT": "Unpublished changes older than 7 days",
+          "PAGE_INVALID_BLOCKS": "Invalid blocks · {fields}",
+          "PAGE_BROKEN_REFS": "Broken refs · {fields}"
         }
       },
       "stats": {
@@ -1009,13 +1017,48 @@
       "title": "Pages",
       "loadError": "Pages could not be loaded.",
       "meta": "{count} blocks · {date}",
+      "metaUnpublished": "Unpublished changes · {count} blocks · {date}",
       "blockCount": "{count} blocks",
       "add": "Add block",
       "searchTypes": "Search block types",
       "emptyTypes": "No matching types",
       "atLimit": "At limit for this page",
       "draft": "Draft",
+      "unpublished": "Unpublished changes",
       "openPage": "Open page",
+      "preview": {
+        "title": "Live preview",
+        "open": "Preview",
+        "viewport": "{width}px"
+      },
+      "publish": {
+        "unpublished": "Unpublished changes",
+        "published": "Published v{version}",
+        "never": "Never published",
+        "note": "Optional note",
+        "publish": "Publish",
+        "discard": "Discard changes",
+        "discardTitle": "Discard unpublished changes?",
+        "discardHint": "The draft is replaced with the live published version.",
+        "cancel": "Cancel",
+        "failed": "The page could not be published.",
+        "invalidBlocks": "Fix the highlighted blocks before publishing."
+      },
+      "versions": {
+        "open": "History",
+        "title": "Version history",
+        "error": "Versions could not be loaded.",
+        "item": "Version {version}",
+        "blocks": "{count} blocks",
+        "meta": "{date} · {author} · {note} · {count} blocks",
+        "unknownAuthor": "Unknown author",
+        "noNote": "No note",
+        "preview": "Open in preview",
+        "restore": "Restore",
+        "restoreTitle": "Restore this version into the draft?",
+        "restoreHint": "The live page does not change until you publish again.",
+        "cancel": "Cancel"
+      },
       "seo": "Page SEO",
       "seoHint": "Title and description per locale.",
       "seoTitleEn": "SEO title (EN)",
