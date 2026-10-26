@@ -22,7 +22,7 @@ Content (every visible string about Parker or the site) comes from the API. Shar
 
 ```text
 src/modules/[module-name]/
-├── components/               # PascalCase folders/files: section containers, forms, islands
+├── components/               # PascalCase folders/files: block renderers, forms, islands
 ├── hooks/                    # use-*.hook.ts (TanStack Query wrappers, UI hooks)
 ├── services/                 # *.service.ts: calls to the NestJS API
 ├── actions/                  # *.action.ts: Server Actions ('use server'), only when a form needs one
@@ -40,22 +40,24 @@ Create only the folders a module needs.
 
 | Module | Owns | Screens (spec §) |
 | --- | --- | --- |
-| `core` | Site shell (`SiteHeader`, `SiteFooter`, `SkipLink`, `LocaleSwitch`, `ThemeToggle`, public `CommandPalette`), providers, API clients, error and metadata utils, page-view beacon | layout, `error.tsx` (§4.2, §4.5) |
+| `core` | Site shell (`SiteHeader`, `SiteFooter`, `SkipLink`, `LocaleSwitch`, `ThemeToggle`, public `CommandPalette`), providers, API clients, error and metadata utils, page-view beacon, `PreviewBridge` (draft mode only: same-origin `postMessage` from the page builder, PLAN T52a) | layout, `error.tsx` (§4.2, §4.5) |
 | `content` | Markdown → React pipeline (server, Shiki), `Markdown` component, TOC extraction, admin preview Server Action; sanitize schema built from `@portfolio/contracts` `markdown.constant.ts` | case study and post bodies (§3.2, §4.1) |
-| `home` | `HomeIndex` view, the section registry, one container per `PageSection.key` | §5.1 |
-| `about` | `AboutIndex`, timeline/principles/education/CV sections; skills service (shared with home) | §5.2 |
+| `blocks` | Public block rendering (PLAN D26): `BlocksPage` view, `BlockRenderer` (band grouping, `BlockLayout`, one `SectionBoundary` per block, skips unknown types), the renderer registry `constants/block-renderers.constant.ts` (`satisfies Record<BlockType, …>`), one `[Name]Block` container per block type (`HeroBlock`, `CaseGridBlock`, `ProseBlock`, …), `UnknownBlockNotice` (draft mode), `pages.service.ts` (tag `page:{key}`) | §5.1–§5.6 |
+| `home` | `HomeIndex` view (renders `BlocksPage` for `home`); process-steps service | §5.1 |
+| `about` | `AboutIndex` (renders `BlocksPage` for `about`); experience, education, principles and skills services (used by the about blocks) | §5.2 |
 | `projects` | `ProjectsIndex`, `ProjectsDetail`, filters island; projects + domains services | §5.3, §5.4 |
 | `notes` | `NotesIndex`, `NotesDetail`, search island (TanStack Query) | §5.5 |
 | `contact` | `ContactIndex`, `ContactForm` (TanStack Form + Server Action) | §5.6 |
 | `seo` | metadata builders, JSON-LD, OG image template, sitemap/RSS builders | §5 intro |
-| `admin-core` | `AdminShell`, sidebar, topbar, admin `CommandPalette`, `NotificationBell`, `EditorShell`, `MarkdownField` (TanStack Form field ↔ Tiptap `MarkdownEditor`, loaded with `next/dynamic` `ssr: false` so Tiptap stays out of public bundles), `RoleGate` (shows children for `admin` or `user` only), `useMe`/`useIsAdmin`, SSE hook, URL list-params hook, autosave hook | §4.3 |
+| `admin-core` | `AdminShell`, sidebar, topbar, admin `CommandPalette`, `NotificationBell`, `EditorShell`, `SchemaForm` (draws a TanStack Form from a zod schema via `z.toJSONSchema` + `.meta()` widgets, PLAN T45a), `MarkdownField` (TanStack Form field ↔ Tiptap `MarkdownEditor`, loaded with `next/dynamic` `ssr: false` so Tiptap stays out of public bundles), `RoleGate` (shows children for `admin` or `user` only), `useMe`/`useIsAdmin`, SSE hook, URL list-params hook, autosave hook | §4.3 |
 | `admin-auth` | `AdminAuthLogin` view (silent refresh, then login form), `ChangePasswordDialog`, `safe-next.util.ts` | §4.6 |
 | `admin-dashboard` | `AdminDashboardIndex`, stat/health/inbox/activity/chart cards | §5.7, §5.11 |
 | `admin-projects` | projects table + editor (incl. "Card & facts", metrics, live preview) | §5.8, §5.9, §5.11 |
 | `admin-posts` | posts table + editor | §5.8, §5.9 |
 | `admin-about` | experience, education, principles, profile stats, process steps | §5.8, §5.11 |
 | `admin-taxonomy` | skills, skill categories, tags, domains (hue + icon pickers) | §5.11 |
-| `admin-site` | settings, profile, navigation, sections, social links, contact topics | §5.10 |
+| `admin-site` | settings, profile, navigation, social links, contact topics | §5.10 |
+| `admin-pages` | page builder (PLAN T45b, T52a): pages list, `BlockList` (`SortableList` drag and drop + move up/down), `AddBlockDialog`, `BlockInspector` (props `SchemaForm`, `LayoutPresetPicker`, surface, anchor), `PagePreview` iframe, `PublishBar`, `VersionHistory`; the admin registry `constants/block-editor-meta.constant.ts` | §5.10 (Sections), D26 |
 | `admin-media` | media library, uploader, picker dialog | §4.3 |
 | `admin-inbox` | contact messages list/detail | §4.3 |
 | `admin-insights` | analytics + audit log (virtualized) | §5.7 |
@@ -102,6 +104,8 @@ app/
 │       ├── layout.tsx             # server check GET /auth/me (forwards access_token) → redirect; → admin-core AdminShell
 │       ├── page.tsx               # → admin-dashboard/views/AdminDashboardIndex
 │       ├── projects/page.tsx, projects/[id]/page.tsx
+│       ├── pages/page.tsx         # → admin-pages/views/AdminPagesIndex
+│       ├── pages/[key]/page.tsx   # → admin-pages/views/AdminPagesEditor (page builder)
 │       └── …                      # one folder per admin module
 ├── api/revalidate/route.ts        # the only Next-owned /api routes (handlers win over the rewrite)
 ├── api/draft/route.ts
@@ -116,7 +120,7 @@ There is no `app/layout.tsx`. `[locale]/layout.tsx` and `admin/layout.tsx` are t
 1. **`packages/ui/src/components/ui/`**: shadcn primitives (`button`, `dialog`, …). Never edited for one feature.
 2. **`packages/ui/src/components/[Name]/`**: shared, pure product components (`CaseCard`, `StatBand`, `Prose`, `DataTable`). They take props only, never fetch, and import nothing from Next.
 3. **`src/modules/core/components/`**: app-wide components that need Next, next-intl or next-themes (`SiteHeader`, `LocaleSwitch`).
-4. **`src/modules/[module]/components/`**: used by one feature only (`StatsSection`, `ProjectEditorForm`).
+4. **`src/modules/[module]/components/`**: used by one feature only (`StatBandBlock`, `ProjectEditorForm`).
 
 Move a component up a level only when a second feature needs it.
 
@@ -125,7 +129,7 @@ Move a component up a level only when a second feature needs it.
 ## Data: services, hooks, actions
 
 - **`services/*.service.ts`** are plain async functions that call the API. Two kinds:
-  - **Server services** (public site) start with `import 'server-only'` and use `apiServer()` from `core/services/api-server.service.ts` (`fetch` with `next.tags`, spec §4.6). Views and section containers `await` them directly.
+  - **Server services** (public site) start with `import 'server-only'` and use `apiServer()` from `core/services/api-server.service.ts` (`fetch` with `next.tags`, spec §4.6). Views and block containers `await` them directly.
   - **Client services** (admin, notes search) use `apiClient()` from `core/services/api-client.service.ts` (same-origin `/api/*`, throws `ApiError`). For admin calls, a 401 triggers one shared `POST /api/auth/refresh` and one retry.
   - **Auth tokens are never handled in web code.** The API sets them as httpOnly cookies (`access_token`, `refresh_token`) and the browser sends them through the `/api/*` rewrite. Server code that calls admin routes uses `apiServer(path, { withAuth: true })`, which forwards only `access_token` from `cookies()`. No token in `localStorage`, state or props.
 - **`hooks/use-*.hook.ts`** wrap client services in TanStack Query/Form, using keys from `qk` in `@portfolio/contracts` (`use-admin-projects.hook.ts` → `useAdminProjects(params)`).
@@ -149,7 +153,7 @@ Move a component up a level only when a second feature needs it.
 ## Naming
 
 - **React components / views**: PascalCase folder + file (`SiteHeader/SiteHeader.tsx`); views are `[Module][Screen].tsx` (`ProjectsIndex.tsx`, `ProjectsDetail.tsx`, `AdminProjectsEditor.tsx`)
-- **Everything else**: kebab-case + suffix (`use-notes-search.hook.ts`, `projects.service.ts`, `contact.action.ts`, `home-sections.constant.ts`, `admin-ui.store.tsx`)
+- **Everything else**: kebab-case + suffix (`use-notes-search.hook.ts`, `projects.service.ts`, `contact.action.ts`, `block-renderers.constant.ts`, `admin-ui.store.tsx`)
 - **Module dirs**: kebab-case (`admin-projects/`)
 - **Tests**: next to the file, `*.test.ts(x)` (Vitest + Testing Library); browser flows in `e2e/*.spec.ts`
 - **Alias**: `@/*` → `src/*`

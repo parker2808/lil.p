@@ -114,8 +114,8 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | `profile` | `Profile` | admin `GET/PATCH /admin/profile` |
 | `navigation` | `NavItem` | admin CRUD + order |
 | `social-links` | `SocialLink` | admin CRUD + order |
-| `page-sections` | `PageSection` | admin list/patch/order (keys are fixed by seed) |
-| `public-site` | none (reads the six above + `profile-stats`) | `GET /public/site?locale` |
+| `pages` | `Page`, `PageBlock`, `PageVersion` (T52a) | `GET /public/pages/:key?locale`; admin `GET /admin/pages`, `GET/PATCH /admin/pages/:key`, `POST …/blocks`, `PATCH/DELETE …/blocks/:id`, `POST …/blocks/:id/duplicate`, `PATCH …/blocks/order`, `POST …/publish`, `GET …/versions`, `GET …/versions/:version`, `POST …/versions/:version/restore`, `POST …/discard`, `GET /admin/preview/pages/:key` (see "Pages and blocks") |
+| `public-site` | none (reads the four above + `profile-stats`) | `GET /public/site?locale` |
 | `experience`, `education`, `principles`, `profile-stats`, `process-steps` | one table each | public GET + admin CRUD + order |
 | `skills` | `SkillCategory`, `Skill` | `GET /public/skills`, admin CRUD + order |
 | `domains` | `Domain` | `GET /public/domains`, admin CRUD + order |
@@ -128,10 +128,38 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | `users` | `User` | admin users (admin only) |
 | `media` | `Media` | admin upload/list/patch, public file `GET /public/media/:file` |
 | `events` | none (in-memory stream) | `GET /admin/events` (SSE) |
-| `publishing` | none (calls web `/api/revalidate`) | used by projects/posts services |
+| `publishing` | none (calls web `/api/revalidate`) | used by projects, posts and pages services |
 | `analytics` | `PageView` | `POST /public/views` |
 | `audit` | `AuditLog` | `GET /admin/audit` (cursor) |
 | `dashboard` | none (reads counts) | `GET /admin/stats?range`, `GET /admin/health` |
+
+## Pages and blocks
+
+The five public pages (home, about, projects, notes, contact) are not hard-coded layouts. Each is a list of blocks the admin arranges (PLAN D26). This section explains the moving parts once.
+
+```text
+src/modules/pages/
+├── pages.module.ts
+├── public-pages.controller.ts    # GET /public/pages/:key?locale (@Public)
+├── admin-pages.controller.ts     # pages, blocks, order, publish, versions, restore, discard, preview
+├── pages.service.ts              # read (public + admin), block CRUD; every row goes through parseBlock
+├── page-versions.service.ts      # publish (snapshot → PageVersion), restore, discard (T52a)
+├── pages-rules.util.ts           # one H1 block first, required blocks, maxPerPage, allowed pages
+├── dto/
+└── entities/
+    ├── page.entity.ts
+    └── page.mapper.ts            # resolveBlockLocale per block, SEO group (D19)
+packages/contracts/src/blocks/    # the registry: definitions/*.block.ts, block-registry.constant.ts, resolve-block.util.ts
+```
+
+- **Three tables.** `Page` is one row per route page (`key` = `HOME` … `CONTACT`). `PageBlock` is the editable draft: one row per block, with `type`, `key` (the anchor), `props`, `layout`, `surface`, `sortOrder`, `isVisible`. `PageVersion` is a published copy of all of a page's blocks as one JSON `snapshot`; `Page.publishedVersionId` points at the live one.
+- **A JSON column.** `props` is MySQL `JSON` because every block type has different settings. MySQL only checks that it is valid JSON, so the API checks the shape with the type's zod schema from the registry on every write and on every read.
+- **Registry in code, content in the DB.** `type` is a plain string checked against `BLOCK_REGISTRY` in `@portfolio/contracts`, not a DB enum. Adding a block type is a code change with no migration (root STRUCTURE, "Where does it go?"). Which blocks a page shows, and their text, is data.
+- **Validate by type.** A write's body has `props: unknown`; the service reads the block's `type`, picks its schema and parses. Errors come back as the usual 400 with `fieldErrors` keyed by path (`props.primaryCta.label.en`), so the admin form shows them under the right input.
+- **Fail safe.** `parseBlock` never throws. On public reads, an unknown type or invalid props drops that one block and logs a warning with the request id (never the props); the page still returns 200. Admin reads return the bad row with its `issues`, so it can be fixed or deleted.
+- **Schema versions.** Each block type has a `version` and a `migrate(props, fromVersion)`. Rows and old snapshots are upgraded when read, so a props change never needs a data migration, and restoring an old version still works.
+- **References.** `projectIds` inside JSON has no foreign key. Writes check ids exist (`refs`), renderers skip missing ones, and the dashboard's content health lists dangling ones.
+- **Draft, publish, restore.** Edits change `PageBlock` rows only. Publish validates strictly, writes version n+1 (`@@unique([pageId, version])`) in one transaction, then revalidates the web tag `page:{key}`. Restore copies a snapshot back into the draft; it never deletes history.
 
 ## Naming
 
