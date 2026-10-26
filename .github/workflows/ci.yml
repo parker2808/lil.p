@@ -26,3 +26,38 @@ jobs:
       - run: pnpm check:content
       - run: pnpm build
       - run: pnpm --filter @portfolio/ui build-storybook
+
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: test
+          MYSQL_DATABASE: portfolio_test
+          MYSQL_USER: app
+          MYSQL_PASSWORD: test
+        ports:
+          - 3307:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=12
+    env:
+      NODE_ENV: test
+      API_PORT: 4001
+      API_HOST: 127.0.0.1
+      WEB_ORIGIN: http://localhost:3000
+      DATABASE_URL: mysql://app:test@127.0.0.1:3307/portfolio_test
+      DATABASE_URL_TEST: mysql://app:test@127.0.0.1:3307/portfolio_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @portfolio/contracts build
+      - run: pnpm --filter @portfolio/api test:e2e

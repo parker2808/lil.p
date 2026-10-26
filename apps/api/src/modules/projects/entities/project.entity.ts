@@ -73,11 +73,16 @@ export const projectSelect = {
   seoDescriptionEn: true,
   seoDescriptionVi: true,
   sortOrder: true,
+  status: true,
+  publishedAt: true,
+  domainId: true,
+  experienceId: true,
+  updatedAt: true,
   domain: { select: projectDomainSelect },
   experience: { select: projectExperienceSelect },
   metrics: { select: projectMetricSelect, orderBy: { sortOrder: 'asc' as const } },
   skills: {
-    select: { name: true, slug: true, sortOrder: true },
+    select: { id: true, name: true, slug: true, sortOrder: true },
     orderBy: { sortOrder: 'asc' as const },
   },
 } satisfies Prisma.ProjectSelect;

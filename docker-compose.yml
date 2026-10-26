@@ -1,4 +1,5 @@
-# Dev only: MySQL + Adminer. Test DB is T29; production compose is T58.
+# Dev only: MySQL + Adminer. Test DB: pnpm db:test:up (profile `test`).
+# Production compose is T58.
 # Start: pnpm db:up   (or: docker compose up -d db adminer)
 
 services:
@@ -31,6 +32,26 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+  db-test:
+    profiles: [test]
+    image: mysql:8.4
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_0900_ai_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE_TEST:-portfolio_test}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - '127.0.0.1:3307:3306'
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
 
 volumes:
   db-data:

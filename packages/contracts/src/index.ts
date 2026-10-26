@@ -96,7 +96,15 @@ export type { PublicProfileStat } from './profile-stats/profile-stats.type';
 export type { ContentStatus } from './projects/projects.enum';
 export { contentStatusSchema } from './projects/projects.enum';
 export {
+  adminProjectListItemSchema,
+  adminProjectListPageSchema,
+  adminProjectListParamsSchema,
+  adminProjectMetricInputSchema,
+  adminProjectMetricSchema,
+  adminProjectSchema,
+  projectCreateSchema,
   projectListParamsSchema,
+  projectUpdateSchema,
   publicProjectDetailSchema,
   publicProjectExperienceSchema,
   publicProjectListItemSchema,
@@ -104,7 +112,13 @@ export {
   publicProjectMetricSchema,
 } from './projects/projects.schema';
 export type {
+  AdminProject,
+  AdminProjectListItem,
+  AdminProjectListPage,
+  AdminProjectListParams,
+  ProjectCreateInput,
   ProjectListParams,
+  ProjectUpdateInput,
   PublicProjectDetail,
   PublicProjectExperience,
   PublicProjectListItem,

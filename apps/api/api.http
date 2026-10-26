@@ -79,3 +79,94 @@ GET http://127.0.0.1:4000/api/public/posts/draft-note
 
 ### Public tags
 GET http://127.0.0.1:4000/api/public/tags?locale=en
+
+### Admin projects list
+GET http://127.0.0.1:4000/api/admin/projects
+
+### Admin project create
+POST http://127.0.0.1:4000/api/admin/projects
+Content-Type: application/json
+
+{
+  "slug": "sample-case",
+  "titleEn": "Sample case",
+  "titleVi": "",
+  "taglineEn": "A short tagline",
+  "taglineVi": "",
+  "client": "Sample client",
+  "roleEn": "Frontend Engineer",
+  "roleVi": "",
+  "startDate": "2024-01-01",
+  "problemEn": "Old path",
+  "problemVi": "",
+  "constraintsEn": "No freeze",
+  "constraintsVi": "",
+  "approachEn": "Slice the work",
+  "approachVi": "",
+  "decisionsEn": "Tokens first",
+  "decisionsVi": "",
+  "outcomeEn": "Shipped",
+  "outcomeVi": "",
+  "lessonsEn": "Keep the contract",
+  "lessonsVi": "",
+  "keyFactsEn": "Zero downtime",
+  "keyFactsVi": "",
+  "factChipsEn": "Stack A",
+  "factChipsVi": ""
+}
+
+### Admin project create duplicate slug (409)
+POST http://127.0.0.1:4000/api/admin/projects
+Content-Type: application/json
+
+{
+  "slug": "sample-case",
+  "titleEn": "Sample case",
+  "titleVi": "",
+  "taglineEn": "A short tagline",
+  "taglineVi": "",
+  "client": "Sample client",
+  "roleEn": "Frontend Engineer",
+  "roleVi": "",
+  "startDate": "2024-01-01",
+  "problemEn": "Old path",
+  "problemVi": "",
+  "constraintsEn": "No freeze",
+  "constraintsVi": "",
+  "approachEn": "Slice the work",
+  "approachVi": "",
+  "decisionsEn": "Tokens first",
+  "decisionsVi": "",
+  "outcomeEn": "Shipped",
+  "outcomeVi": "",
+  "lessonsEn": "Keep the contract",
+  "lessonsVi": "",
+  "keyFactsEn": "Zero downtime",
+  "keyFactsVi": "",
+  "factChipsEn": "Stack A",
+  "factChipsVi": ""
+}
+
+### Admin project get
+GET http://127.0.0.1:4000/api/admin/projects/1
+
+### Admin project update
+PATCH http://127.0.0.1:4000/api/admin/projects/1
+Content-Type: application/json
+
+{
+  "titleEn": "Renamed case",
+  "updatedAt": "2026-01-01T00:00:00.000Z"
+}
+
+### Admin project stale update (409 STALE)
+PATCH http://127.0.0.1:4000/api/admin/projects/1
+Content-Type: application/json
+
+{
+  "titleEn": "Stale write",
+  "updatedAt": "2020-01-01T00:00:00.000Z"
+}
+
+### Admin project archive
+DELETE http://127.0.0.1:4000/api/admin/projects/1
