@@ -1,3 +1,7 @@
+export type { Role } from './auth/auth.enum';
+export { roleSchema } from './auth/auth.enum';
+export { loginSchema, meSchema } from './auth/auth.schema';
+export type { LoginInput, Me } from './auth/auth.type';
 export { adminBlockSchema, blockKeySchema, publicBlockSchema } from './blocks/block.schema';
 export type { AdminBlock, PublicBlock } from './blocks/block.type';
 export { BLOCK_SURFACES, LAYOUT_PRESETS } from './blocks/block-layout.constant';

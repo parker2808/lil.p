@@ -1,4 +1,10 @@
-import { BadRequestException, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 
 import { Prisma } from '../../generated/prisma/client';
@@ -82,5 +88,11 @@ describe('AllExceptionsFilter', () => {
   it('maps a generic HttpException by status', () => {
     const body = filter.toBody(new HttpException('nope', HttpStatus.BAD_REQUEST), 'req-6');
     expect(body.code).toBe('VALIDATION_FAILED');
+  });
+
+  it('maps a 401 without a code to UNAUTHENTICATED', () => {
+    const body = filter.toBody(new UnauthorizedException(), 'req-7');
+    expect(body.statusCode).toBe(401);
+    expect(body.code).toBe('UNAUTHENTICATED');
   });
 });

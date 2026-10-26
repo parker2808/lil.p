@@ -5,6 +5,7 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 import { ConfigModule } from './config/config.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { ContactTopicsModule } from './modules/contact-topics/contact-topics.module';
 import { DomainsModule } from './modules/domains/domains.module';
 import { EducationModule } from './modules/education/education.module';
@@ -23,6 +24,7 @@ import { SiteSettingsModule } from './modules/site-settings/site-settings.module
 import { SkillsModule } from './modules/skills/skills.module';
 import { SocialLinksModule } from './modules/social-links/social-links.module';
 import { TagsModule } from './modules/tags/tags.module';
+import { UsersModule } from './modules/users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
@@ -47,6 +49,8 @@ import { PrismaModule } from './prisma/prisma.module';
     ContactTopicsModule,
     PublicSiteModule,
     PagesModule,
+    UsersModule,
+    AuthModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },

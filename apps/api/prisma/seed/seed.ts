@@ -4,6 +4,7 @@ import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { config } from 'dotenv';
 
 import { PrismaClient } from '../../src/generated/prisma/client';
+import { seedAdmin } from './data/admin.data';
 import { seedBaseline } from './profiles/baseline.seed';
 import { seedDemo } from './profiles/demo.seed';
 
@@ -26,6 +27,7 @@ async function main(): Promise<void> {
     } else {
       await seedDemo(prisma);
     }
+    await seedAdmin(prisma);
     console.log(`Seeded ${profile} profile.`);
   } finally {
     await prisma.$disconnect();

@@ -821,3 +821,22 @@ Content-Type: application/json
 {
   "ids": [2, 1]
 }
+
+### Auth login (sets access_token + refresh_token cookies)
+# @name login
+POST http://127.0.0.1:4000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "<email>",
+  "password": "change-me"
+}
+
+### Auth me
+GET http://127.0.0.1:4000/api/auth/me
+
+### Auth refresh
+POST http://127.0.0.1:4000/api/auth/refresh
+
+### Auth logout
+POST http://127.0.0.1:4000/api/auth/logout
