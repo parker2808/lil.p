@@ -4,6 +4,7 @@ import {
   type AdminExperienceListPage,
   adminExperienceListPageSchema,
   type AdminExperienceListParams,
+  type ExperienceCreateInput,
   type ExperienceUpdateInput,
 } from '@portfolio/contracts';
 
@@ -35,6 +36,14 @@ export function getAdminExperience(id: number): Promise<AdminExperience> {
   return apiClient<AdminExperience>(`/api/admin/experience/${id}`).then((data) =>
     adminExperienceSchema.parse(data),
   );
+}
+
+export function createAdminExperience(body: ExperienceCreateInput): Promise<AdminExperience> {
+  return apiClient<AdminExperience>('/api/admin/experience', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  }).then((data) => adminExperienceSchema.parse(data));
 }
 
 export function updateAdminExperience(

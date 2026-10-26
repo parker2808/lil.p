@@ -334,6 +334,31 @@
         "published": "Published",
         "updated": "Updated",
         "actions": "Actions"
+      },
+      "editor": {
+        "untitled": "Untitled post",
+        "loading": "Loading post",
+        "loadError": "This post could not be loaded.",
+        "title": "Title",
+        "titleRequired": "English title is required.",
+        "excerpt": "Excerpt",
+        "body": "Body",
+        "takeaways": "Takeaways",
+        "takeawaysCount": "{count} of 5 lines",
+        "slug": "Slug",
+        "featured": "Featured",
+        "tags": "Tags",
+        "openTags": "Add tags",
+        "searchTags": "Search tags",
+        "emptyTags": "No matching tags",
+        "createTag": "Create “{name}”",
+        "selectedTag": "Selected",
+        "seoTitle": "SEO title",
+        "seoDescription": "SEO description",
+        "tabs": {
+          "content": "Content",
+          "seo": "SEO"
+        }
       }
     },
     "experience": {
@@ -367,6 +392,27 @@
         "dates": "Dates",
         "visible": "Visible",
         "actions": "Actions"
+      },
+      "editor": {
+        "untitled": "Untitled role",
+        "loading": "Loading experience",
+        "loadError": "This role could not be loaded.",
+        "company": "Company",
+        "companyRequired": "Company is required.",
+        "companyUrl": "Company URL",
+        "location": "Location",
+        "employmentType": "Employment type",
+        "fullTime": "Full time",
+        "contract": "Contract",
+        "freelance": "Freelance",
+        "role": "Role",
+        "summary": "Summary",
+        "highlights": "Highlights",
+        "startDate": "Start",
+        "endDate": "End",
+        "visible": "Visible",
+        "skills": "Skills",
+        "propertiesHint": "Company, dates, and skills edit in the main form."
       }
     },
     "pickers": {
