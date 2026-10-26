@@ -1,4 +1,6 @@
 import { markdownKitchenSink, markdownUnsafe } from '@portfolio/contracts';
+import { editorLabels } from '@portfolio/ui/components/MarkdownEditor/editor-labels.fixture';
+import { serializeMarkdown } from '@portfolio/ui/components/MarkdownEditor/extensions/create-markdown-extensions';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -58,5 +60,15 @@ describe('renderMarkdown', () => {
     expect(container.querySelector('#top-heading')?.tagName).toBe('H2');
     expect(screen.queryByRole('link', { name: 'Bad' })).toBeNull();
     expect(screen.getByText('Bad')).toBeInTheDocument();
+  });
+
+  it('renders kitchen-sink constructs after an editor round-trip', async () => {
+    const markdown = serializeMarkdown(markdownKitchenSink, editorLabels);
+    const tree = await renderMarkdown(markdown, labels);
+    const { container } = render(<>{tree}</>);
+    expect(container.querySelector('[data-kind="NOTE"]')).toBeTruthy();
+    expect(container.querySelector('[data-kind="WARNING"]')).toBeTruthy();
+    expect(container.textContent).toContain('export const answer = 42;');
+    expect(container.querySelector('table')).not.toBeNull();
   });
 });

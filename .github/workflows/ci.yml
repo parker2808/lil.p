@@ -24,6 +24,7 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm check:content
+      - run: pnpm check:deps
       - run: pnpm build
       - run: pnpm --filter @portfolio/ui build-storybook
 
