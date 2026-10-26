@@ -3,6 +3,7 @@ import { z } from 'zod';
 import type { BlockDefinition } from './define-block.util';
 import { aboutIntroBlock } from './definitions/about-intro.block';
 import { caseGridBlock } from './definitions/case-grid.block';
+import { contactFormBlock } from './definitions/contact-form.block';
 import { ctaBandBlock } from './definitions/cta-band.block';
 import { cvDownloadBlock } from './definitions/cv-download.block';
 import { domainGridBlock } from './definitions/domain-grid.block';
@@ -41,6 +42,7 @@ export const BLOCK_REGISTRY = {
   prose: proseBlock,
   'projects-browser': projectsBrowserBlock,
   'notes-browser': notesBrowserBlock,
+  'contact-form': contactFormBlock,
 } as const satisfies Record<string, BlockDefinition>;
 
 export type BlockType = keyof typeof BLOCK_REGISTRY;

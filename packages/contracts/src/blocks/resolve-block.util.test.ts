@@ -22,6 +22,22 @@ describe('parseBlock', () => {
     expect(result.ok).toBe(true);
   });
 
+  it('accepts a seeded contact-form', () => {
+    const result = parseBlock({
+      id: 3,
+      type: 'contact-form',
+      key: 'contact',
+      layout: 'TWO',
+      surface: 'PLAIN',
+      schemaVersion: 1,
+      props: {
+        eyebrow: { en: 'Contact', vi: 'Liên hệ' },
+        title: { en: "Let's talk about your product.", vi: 'Nói về sản phẩm của bạn.' },
+      },
+    });
+    expect(result.ok).toBe(true);
+  });
+
   it('returns UNKNOWN_TYPE for a type not in the registry', () => {
     const result = parseBlock({ ...heroRow, type: 'not-a-block' });
     expect(result).toMatchObject({ ok: false, reason: 'UNKNOWN_TYPE' });

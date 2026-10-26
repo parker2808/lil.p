@@ -37,6 +37,29 @@
     "fallback": "EN",
     "downloadCv": "Download CV"
   },
+  "contact": {
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "topic": "Topic",
+      "topicPlaceholder": "Choose a topic",
+      "message": "Message",
+      "count": "{count} / {max}",
+      "send": "Send message",
+      "sending": "Sending",
+      "successTitle": "Message sent",
+      "successBody": "Thanks — I will reply as soon as I can.",
+      "summary": "Please fix the highlighted fields.",
+      "honeypot": "Leave this field empty",
+      "rateLimited": "Too many messages. Try again later.",
+      "failed": "The message could not be sent."
+    },
+    "channels": {
+      "email": "Email",
+      "github": "GitHub",
+      "linkedin": "LinkedIn"
+    }
+  },
   "projects": {
     "all": "All",
     "tech": "Tech",
@@ -969,7 +992,9 @@
         "projectsBrowser": "Projects browser",
         "projectsBrowserHint": "Filterable project list",
         "notesBrowser": "Notes browser",
-        "notesBrowserHint": "Searchable notes list"
+        "notesBrowserHint": "Searchable notes list",
+        "contactForm": "Contact form",
+        "contactFormHint": "H1, channels, and the form"
       }
     },
     "blocks": {
@@ -1041,6 +1066,11 @@
       "notesBrowser": {
         "showFeatured": "Show featured",
         "pageSize": "Page size"
+      },
+      "contactForm": {
+        "eyebrow": "Eyebrow",
+        "title": "Title",
+        "intro": "Intro"
       }
     }
   }
