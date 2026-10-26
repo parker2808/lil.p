@@ -13,7 +13,8 @@ i18n/                     # next-intl config + locales/{en,vi}.json (fixed UI la
 e2e/                      # Playwright: public, contact, admin-publish, admin-pages, a11y, lighthouse
 playwright.config.ts      # Chromium, one worker, starts Nest + Next against the test DB
 proxy.ts                  # Next 16: locale routing; /admin/* without an access_token cookie → /admin/login
-next.config.ts            # /api/* rewrite to NestJS, transpilePackages
+next.config.ts            # standalone output, /api/* rewrite to NestJS, transpilePackages
+Dockerfile                # multi-stage production image (compose.prod.yml)
 components.json           # shadcn: points at packages/ui
 ```
 

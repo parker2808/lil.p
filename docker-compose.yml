@@ -1,5 +1,5 @@
 # Dev only: MySQL + Adminer. Test DB: pnpm db:test:up (profile `test`).
-# Production compose is T58.
+# Production stack: pnpm prod:up  (compose.prod.yml).
 # Start: pnpm db:up   (or: docker compose up -d db adminer)
 
 services:

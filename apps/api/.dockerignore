@@ -1,0 +1,9 @@
+node_modules
+dist
+coverage
+src/generated
+**/*.spec.ts
+**/*.test.ts
+.env
+*.md
+!STRUCTURE.md

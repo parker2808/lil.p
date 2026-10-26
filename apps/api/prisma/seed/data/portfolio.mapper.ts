@@ -1,6 +1,5 @@
-import { readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 import type {
   Availability,
@@ -20,7 +19,19 @@ import type {
  * unmapped note and the row uses the schema default `OPEN`.
  */
 
-const DATA_PATH = resolve(dirname(fileURLToPath(import.meta.url)), 'portfolio-data.json');
+function dataFile(name: string): string {
+  const cwd = process.cwd();
+  const candidates = [
+    resolve(cwd, 'prisma/seed/data', name),
+    resolve(cwd, 'dist', name),
+    resolve(cwd, name),
+  ];
+  const found = candidates.find((path) => existsSync(path));
+  if (!found) {
+    throw new Error(`${name} was not found next to the seed`);
+  }
+  return found;
+}
 
 export const SITE_AVAILABILITY_FALLBACK = 'OPEN' satisfies Availability;
 
@@ -62,7 +73,7 @@ export type PortfolioJson = {
 };
 
 export function loadPortfolioData(): PortfolioJson {
-  return JSON.parse(readFileSync(DATA_PATH, 'utf8')) as PortfolioJson;
+  return JSON.parse(readFileSync(dataFile('portfolio-data.json'), 'utf8')) as PortfolioJson;
 }
 
 /** `2026-07` → 2026-07-01 UTC. Full dates pass through. */

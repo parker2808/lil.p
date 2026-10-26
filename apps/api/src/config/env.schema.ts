@@ -1,5 +1,13 @@
 import { z } from 'zod';
 
+/** Compose interpolates unset secrets as `""`; treat those as missing. */
+const emptyToUndefined = (value: unknown) =>
+  value === '' || value === undefined || value === null ? undefined : value;
+
+const optionalText = z.preprocess(emptyToUndefined, z.string().min(1).optional());
+const optionalSecret = z.preprocess(emptyToUndefined, z.string().min(16).optional());
+const optionalUrl = z.preprocess(emptyToUndefined, z.url().optional());
+
 /**
  * Every value in `.env` arrives as a string. This schema turns
  * `API_PORT="4000"` into the number 4000 and stops boot if a value
@@ -12,7 +20,10 @@ export const envSchema = z
     API_HOST: z.string().min(1).default('127.0.0.1'),
     WEB_ORIGIN: z.url(),
     DATABASE_URL: z.string().min(1).startsWith('mysql://'),
-    DATABASE_URL_TEST: z.string().min(1).startsWith('mysql://').optional(),
+    DATABASE_URL_TEST: z.preprocess(
+      emptyToUndefined,
+      z.string().min(1).startsWith('mysql://').optional(),
+    ),
     PRISMA_LOG_QUERIES: z
       .string()
       .optional()
@@ -21,15 +32,15 @@ export const envSchema = z
     JWT_REFRESH_SECRET: z.string().min(32),
     JWT_ACCESS_TTL_SECONDS: z.coerce.number().int().positive().default(900),
     JWT_REFRESH_TTL_SECONDS: z.coerce.number().int().positive().default(604800),
-    ADMIN_EMAIL: z.string().optional(),
-    ADMIN_NAME: z.string().optional(),
-    ADMIN_PASSWORD: z.string().optional(),
-    CLOUDINARY_CLOUD_NAME: z.string().min(1).optional(),
-    CLOUDINARY_API_KEY: z.string().min(1).optional(),
-    CLOUDINARY_API_SECRET: z.string().min(1).optional(),
-    WEB_INTERNAL_URL: z.url().optional(),
-    REVALIDATE_SECRET: z.string().min(16).optional(),
-    ANALYTICS_SALT_SECRET: z.string().min(16).optional(),
+    ADMIN_EMAIL: optionalText,
+    ADMIN_NAME: optionalText,
+    ADMIN_PASSWORD: optionalText,
+    CLOUDINARY_CLOUD_NAME: optionalText,
+    CLOUDINARY_API_KEY: optionalText,
+    CLOUDINARY_API_SECRET: optionalText,
+    WEB_INTERNAL_URL: optionalUrl,
+    REVALIDATE_SECRET: optionalSecret,
+    ANALYTICS_SALT_SECRET: optionalSecret,
   })
   .superRefine((env, ctx) => {
     if (env.JWT_ACCESS_SECRET === env.JWT_REFRESH_SECRET) {

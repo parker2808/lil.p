@@ -1,11 +1,17 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 const apiUrl = process.env.API_URL ?? 'http://127.0.0.1:4000';
+const monorepoRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
+  outputFileTracingRoot: monorepoRoot,
   env: {
     API_URL: apiUrl,
   },

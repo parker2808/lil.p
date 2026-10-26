@@ -1,0 +1,11 @@
+# Local HTTP only (T58). TLS and extra security headers land in T59 / T61.
+# The browser talks to Caddy; Caddy talks to Next; Next rewrites /api/* to Nest.
+
+{
+	admin off
+}
+
+:80 {
+	encode gzip zstd
+	reverse_proxy web:3000
+}
