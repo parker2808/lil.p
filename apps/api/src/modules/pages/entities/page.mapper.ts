@@ -1,4 +1,7 @@
 import {
+  type AdminBlock,
+  type AdminPage,
+  type AdminPageListItem,
   type Locale,
   parseBlock,
   PRISMA_PAGE_KEY_TO_PUBLIC,
@@ -8,7 +11,7 @@ import {
 } from '@portfolio/contracts';
 
 import { pickGroup } from '../../../i18n/pick-locale.util';
-import type { PageWithBlocks } from './page.entity';
+import type { PageWithAllBlocks, PageWithBlocks } from './page.entity';
 
 export function toPublicPage(
   row: PageWithBlocks,
@@ -52,5 +55,55 @@ export function toPublicPage(
       lang,
     },
     blocks,
+  };
+}
+
+export function toAdminBlock(block: PageWithAllBlocks['blocks'][number]): AdminBlock {
+  const parsed = parseBlock({
+    id: block.id,
+    type: block.type,
+    key: block.key,
+    layout: block.layout,
+    surface: block.surface,
+    schemaVersion: block.schemaVersion,
+    props: block.props,
+  });
+
+  return {
+    id: block.id,
+    type: block.type,
+    key: block.key,
+    layout: block.layout,
+    surface: block.surface,
+    schemaVersion: block.schemaVersion,
+    props: parsed.ok ? parsed.block.props : block.props,
+    isVisible: block.isVisible,
+    sortOrder: block.sortOrder,
+    updatedAt: block.updatedAt.toISOString(),
+    ...(parsed.ok ? {} : { issues: parsed.issues }),
+  };
+}
+
+export function toAdminPage(row: PageWithAllBlocks): AdminPage {
+  return {
+    key: PRISMA_PAGE_KEY_TO_PUBLIC[row.key],
+    seoTitleEn: row.seoTitleEn,
+    seoTitleVi: row.seoTitleVi,
+    seoDescriptionEn: row.seoDescriptionEn,
+    seoDescriptionVi: row.seoDescriptionVi,
+    updatedAt: row.updatedAt.toISOString(),
+    blocks: row.blocks.map(toAdminBlock),
+  };
+}
+
+export function toAdminPageListItem(row: {
+  key: PageWithAllBlocks['key'];
+  updatedAt: Date;
+  _count: { blocks: number };
+}): AdminPageListItem {
+  return {
+    key: PRISMA_PAGE_KEY_TO_PUBLIC[row.key],
+    blockCount: row._count.blocks,
+    updatedAt: row.updatedAt.toISOString(),
   };
 }

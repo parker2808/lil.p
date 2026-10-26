@@ -604,3 +604,108 @@ DELETE http://127.0.0.1:4000/api/admin/contact-topics/1
 
 ### Public contact-topics
 GET http://127.0.0.1:4000/api/public/contact-topics?locale=en
+
+### Admin pages list
+GET http://127.0.0.1:4000/api/admin/pages
+
+### Admin page get
+GET http://127.0.0.1:4000/api/admin/pages/home
+
+### Admin page SEO update
+PATCH http://127.0.0.1:4000/api/admin/pages/home
+Content-Type: application/json
+
+{
+  "seoTitleEn": "Parker · Home"
+}
+
+### Admin page stale SEO (409 STALE)
+PATCH http://127.0.0.1:4000/api/admin/pages/home
+Content-Type: application/json
+
+{
+  "seoTitleEn": "Stale",
+  "updatedAt": "2000-01-01T00:00:00.000Z"
+}
+
+### Admin block create
+POST http://127.0.0.1:4000/api/admin/pages/home/blocks
+Content-Type: application/json
+
+{
+  "type": "case-grid"
+}
+
+### Admin block create — type not allowed (400 BLOCK_NOT_ALLOWED)
+POST http://127.0.0.1:4000/api/admin/pages/home/blocks
+Content-Type: application/json
+
+{
+  "type": "about-intro"
+}
+
+### Admin block create — over the limit (409 BLOCK_LIMIT)
+POST http://127.0.0.1:4000/api/admin/pages/home/blocks
+Content-Type: application/json
+
+{
+  "type": "hero"
+}
+
+### Admin block update
+PATCH http://127.0.0.1:4000/api/admin/pages/home/blocks/1
+Content-Type: application/json
+
+{
+  "isVisible": true
+}
+
+### Admin block update — invalid props (400 fieldErrors.props.primaryCta.label.en)
+PATCH http://127.0.0.1:4000/api/admin/pages/home/blocks/1
+Content-Type: application/json
+
+{
+  "props": {
+    "primaryCta": { "label": { "en": "" }, "href": "/projects" },
+    "showDiagram": true,
+    "showAvailability": true
+  }
+}
+
+### Admin block update — unknown project id (400)
+PATCH http://127.0.0.1:4000/api/admin/pages/home/blocks/2
+Content-Type: application/json
+
+{
+  "props": {
+    "source": "manual",
+    "projectIds": [99999],
+    "limit": 3
+  }
+}
+
+### Admin block update — stale (409 STALE)
+PATCH http://127.0.0.1:4000/api/admin/pages/home/blocks/1
+Content-Type: application/json
+
+{
+  "showDiagram": false,
+  "updatedAt": "2000-01-01T00:00:00.000Z"
+}
+
+### Admin block duplicate
+POST http://127.0.0.1:4000/api/admin/pages/home/blocks/2/duplicate
+
+### Admin block delete
+DELETE http://127.0.0.1:4000/api/admin/pages/home/blocks/2
+
+### Admin block delete H1 (409 BLOCK_LOCKED)
+DELETE http://127.0.0.1:4000/api/admin/pages/home/blocks/1
+
+### Admin block hide required (409 BLOCK_REQUIRED)
+PATCH http://127.0.0.1:4000/api/admin/pages/projects/blocks/2
+Content-Type: application/json
+
+{
+  "isVisible": false
+}

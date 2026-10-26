@@ -11,6 +11,10 @@ export const errorCodeSchema = z.enum([
   'CONFLICT',
   'STALE',
   'IN_USE',
+  'BLOCK_NOT_ALLOWED',
+  'BLOCK_LIMIT',
+  'BLOCK_LOCKED',
+  'BLOCK_REQUIRED',
   'INTERNAL',
 ]);
 

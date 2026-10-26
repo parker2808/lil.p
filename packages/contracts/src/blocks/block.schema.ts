@@ -19,6 +19,7 @@ export const adminBlockSchema = z.object({
   props: z.unknown(),
   isVisible: z.boolean(),
   sortOrder: z.number().int(),
+  updatedAt: z.string(),
   issues: z.array(z.string()).optional(),
 });
 

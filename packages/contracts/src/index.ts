@@ -120,8 +120,22 @@ export {
   PRISMA_PAGE_KEY_TO_PUBLIC,
   prismaPageKeySchema,
 } from './pages/pages.enum';
-export { publicPageSchema } from './pages/pages.schema';
-export type { PublicPage } from './pages/pages.type';
+export {
+  adminPageListItemSchema,
+  adminPageSchema,
+  createBlockSchema,
+  publicPageSchema,
+  updateBlockSchema,
+  updatePageSchema,
+} from './pages/pages.schema';
+export type {
+  AdminPage,
+  AdminPageListItem,
+  BlockCreateInput,
+  BlockUpdateInput,
+  PageUpdateInput,
+  PublicPage,
+} from './pages/pages.type';
 export {
   adminPostInputSchema,
   adminPostListItemSchema,
