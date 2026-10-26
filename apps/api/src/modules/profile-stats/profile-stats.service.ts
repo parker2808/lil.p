@@ -8,6 +8,7 @@ import type {
 } from '@portfolio/contracts';
 
 import { NotSeededException } from '../../common/errors/not-seeded.exception';
+import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { profileStatSelect } from './entities/profile-stat.entity';
@@ -55,6 +56,11 @@ export class ProfileStatsService {
       orderBy: { sortOrder: 'asc' },
     });
     return rows.map(toAdminDto);
+  }
+
+  async reorder(ids: number[]): Promise<AdminProfileStat[]> {
+    await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).profileStat, ids);
+    return this.listAdmin();
   }
 
   async getAdmin(id: number): Promise<AdminProfileStat> {

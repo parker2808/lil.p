@@ -7,6 +7,7 @@ import type {
   PublicDomain,
 } from '@portfolio/contracts';
 
+import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { domainSelect } from './entities/domain.entity';
@@ -31,6 +32,11 @@ export class DomainsService {
       orderBy: { sortOrder: 'asc' },
     });
     return rows.map(toAdminDto);
+  }
+
+  async reorder(ids: number[]): Promise<AdminDomain[]> {
+    await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).domain, ids);
+    return this.listAdmin();
   }
 
   async getAdmin(id: number): Promise<AdminDomain> {

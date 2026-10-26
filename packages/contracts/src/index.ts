@@ -14,6 +14,8 @@ export type { Locale } from './common/locale.schema';
 export { localeQuerySchema, localeSchema } from './common/locale.schema';
 export { isAllowedImageSrc, isAllowedMarkdownUrl } from './common/markdown-url.util';
 export { publishLint } from './common/publish-lint.util';
+export type { ReorderInput } from './common/reorder.schema';
+export { reorderSchema } from './common/reorder.schema';
 export type { IconKey } from './constants/icons.constant';
 export { ICON_KEYS, iconKeySchema } from './constants/icons.constant';
 export type { MarkdownCalloutKind, MarkdownCodeLanguage } from './constants/markdown.constant';

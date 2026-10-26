@@ -709,3 +709,115 @@ Content-Type: application/json
 {
   "isVisible": false
 }
+
+### Admin principles reorder
+PATCH http://127.0.0.1:4000/api/admin/principles/order
+Content-Type: application/json
+
+{
+  "ids": [3, 2, 1]
+}
+
+### Admin principles reorder — missing a row (400)
+PATCH http://127.0.0.1:4000/api/admin/principles/order
+Content-Type: application/json
+
+{
+  "ids": [1, 2]
+}
+
+### Admin projects reorder
+PATCH http://127.0.0.1:4000/api/admin/projects/order
+Content-Type: application/json
+
+{
+  "ids": [2, 1]
+}
+
+### Admin experience reorder
+PATCH http://127.0.0.1:4000/api/admin/experience/order
+Content-Type: application/json
+
+{
+  "ids": [2, 1]
+}
+
+### Admin profile-stats reorder
+PATCH http://127.0.0.1:4000/api/admin/profile-stats/order
+Content-Type: application/json
+
+{
+  "ids": [2, 1]
+}
+
+### Admin process-steps reorder
+PATCH http://127.0.0.1:4000/api/admin/process-steps/order
+Content-Type: application/json
+
+{
+  "ids": [2, 1]
+}
+
+### Admin skills reorder
+PATCH http://127.0.0.1:4000/api/admin/skills/order
+Content-Type: application/json
+
+{
+  "ids": [2, 1]
+}
+
+### Admin skill-categories reorder
+PATCH http://127.0.0.1:4000/api/admin/skill-categories/order
+Content-Type: application/json
+
+{
+  "ids": [2, 1]
+}
+
+### Admin domains reorder
+PATCH http://127.0.0.1:4000/api/admin/domains/order
+Content-Type: application/json
+
+{
+  "ids": [2, 1]
+}
+
+### Admin navigation reorder
+PATCH http://127.0.0.1:4000/api/admin/navigation/order
+Content-Type: application/json
+
+{
+  "ids": [2, 1]
+}
+
+### Admin social-links reorder
+PATCH http://127.0.0.1:4000/api/admin/social-links/order
+Content-Type: application/json
+
+{
+  "ids": [2, 1]
+}
+
+### Admin contact-topics reorder
+PATCH http://127.0.0.1:4000/api/admin/contact-topics/order
+Content-Type: application/json
+
+{
+  "ids": [2, 1]
+}
+
+### Admin page blocks reorder
+PATCH http://127.0.0.1:4000/api/admin/pages/home/blocks/order
+Content-Type: application/json
+
+{
+  "ids": [1, 2, 3]
+}
+
+### Admin page blocks reorder — H1 not first (409 BLOCK_LOCKED)
+PATCH http://127.0.0.1:4000/api/admin/pages/home/blocks/order
+Content-Type: application/json
+
+{
+  "ids": [2, 1]
+}

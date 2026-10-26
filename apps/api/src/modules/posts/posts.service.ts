@@ -138,14 +138,21 @@ export class PostsService {
     const { tagIds, updatedAt, ...fields } = input;
     void updatedAt;
     const bodyEn = fields.bodyEn ?? current.bodyEn;
-    const row = await this.prisma.post.update({
-      where: { id },
-      data: {
-        ...this.toWriteData(fields),
-        readingMinutes: readingMinutes(bodyEn),
-        ...(tagIds ? { tags: { set: tagIds.map((tagId) => ({ id: tagId })) } } : {}),
-      },
-      select: postSelect,
+    const row = await this.prisma.$transaction(async (tx) => {
+      await tx.post.update({
+        where: { id },
+        data: {
+          ...this.toWriteData(fields),
+          readingMinutes: readingMinutes(bodyEn),
+        },
+      });
+      if (tagIds) {
+        await tx.post.update({
+          where: { id },
+          data: { tags: { set: tagIds.map((tagId) => ({ id: tagId })) } },
+        });
+      }
+      return tx.post.findUniqueOrThrow({ where: { id }, select: postSelect });
     });
     return toAdminDto(row);
   }

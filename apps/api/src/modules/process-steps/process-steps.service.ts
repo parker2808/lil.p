@@ -7,6 +7,7 @@ import type {
   PublicProcessStep,
 } from '@portfolio/contracts';
 
+import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { processStepSelect } from './entities/process-step.entity';
@@ -31,6 +32,11 @@ export class ProcessStepsService {
       orderBy: { sortOrder: 'asc' },
     });
     return rows.map(toAdminDto);
+  }
+
+  async reorder(ids: number[]): Promise<AdminProcessStep[]> {
+    await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).processStep, ids);
+    return this.listAdmin();
   }
 
   async getAdmin(id: number): Promise<AdminProcessStep> {

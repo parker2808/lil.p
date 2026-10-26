@@ -16,6 +16,8 @@ import {
   experienceCreateSchema,
   type ExperienceUpdateInput,
   experienceUpdateSchema,
+  type ReorderInput,
+  reorderSchema,
 } from '@portfolio/contracts';
 
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
@@ -28,6 +30,13 @@ export class AdminExperienceController {
   @Get()
   list(): Promise<AdminExperience[]> {
     return this.experience.listAdmin();
+  }
+
+  @Patch('order')
+  reorder(
+    @Body(new ZodValidationPipe(reorderSchema)) body: ReorderInput,
+  ): Promise<AdminExperience[]> {
+    return this.experience.reorder(body.ids);
   }
 
   @Get(':id')

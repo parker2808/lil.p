@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import {
   type AdminProject,
+  type AdminProjectListItem,
   type AdminProjectListPage,
   type AdminProjectListParams,
   adminProjectListParamsSchema,
@@ -20,6 +21,8 @@ import {
   projectCreateSchema,
   type ProjectUpdateInput,
   projectUpdateSchema,
+  type ReorderInput,
+  reorderSchema,
 } from '@portfolio/contracts';
 
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
@@ -34,6 +37,13 @@ export class AdminProjectsController {
     @Query(new ZodValidationPipe(adminProjectListParamsSchema)) query: AdminProjectListParams,
   ): Promise<AdminProjectListPage> {
     return this.projects.listAdmin(query);
+  }
+
+  @Patch('order')
+  reorder(
+    @Body(new ZodValidationPipe(reorderSchema)) body: ReorderInput,
+  ): Promise<AdminProjectListItem[]> {
+    return this.projects.reorder(body.ids);
   }
 
   @Get(':id')

@@ -16,6 +16,8 @@ import {
   principleCreateSchema,
   type PrincipleUpdateInput,
   principleUpdateSchema,
+  type ReorderInput,
+  reorderSchema,
 } from '@portfolio/contracts';
 
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
@@ -28,6 +30,13 @@ export class AdminPrinciplesController {
   @Get()
   list(): Promise<AdminPrinciple[]> {
     return this.principles.listAdmin();
+  }
+
+  @Patch('order')
+  reorder(
+    @Body(new ZodValidationPipe(reorderSchema)) body: ReorderInput,
+  ): Promise<AdminPrinciple[]> {
+    return this.principles.reorder(body.ids);
   }
 
   @Get(':id')

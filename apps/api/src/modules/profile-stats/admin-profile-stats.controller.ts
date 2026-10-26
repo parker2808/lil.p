@@ -16,6 +16,8 @@ import {
   profileStatCreateSchema,
   type ProfileStatUpdateInput,
   profileStatUpdateSchema,
+  type ReorderInput,
+  reorderSchema,
 } from '@portfolio/contracts';
 
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
@@ -28,6 +30,13 @@ export class AdminProfileStatsController {
   @Get()
   list(): Promise<AdminProfileStat[]> {
     return this.stats.listAdmin();
+  }
+
+  @Patch('order')
+  reorder(
+    @Body(new ZodValidationPipe(reorderSchema)) body: ReorderInput,
+  ): Promise<AdminProfileStat[]> {
+    return this.stats.reorder(body.ids);
   }
 
   @Get(':id')

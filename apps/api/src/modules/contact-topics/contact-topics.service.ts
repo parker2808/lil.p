@@ -7,6 +7,7 @@ import type {
   PublicContactTopic,
 } from '@portfolio/contracts';
 
+import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { contactTopicSelect } from './entities/contact-topic.entity';
@@ -31,6 +32,11 @@ export class ContactTopicsService {
       orderBy: { sortOrder: 'asc' },
     });
     return rows.map(toAdminDto);
+  }
+
+  async reorder(ids: number[]): Promise<AdminContactTopic[]> {
+    await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).contactTopic, ids);
+    return this.listAdmin();
   }
 
   async getAdmin(id: number): Promise<AdminContactTopic> {

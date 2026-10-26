@@ -16,6 +16,7 @@ import type {
   SkillUpdateInput,
 } from '@portfolio/contracts';
 
+import { reorder } from '../../common/utils/reorder.util';
 import { slugify } from '../../common/utils/slug.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -52,6 +53,11 @@ export class SkillsService {
       orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }],
     });
     return rows.map(toAdminSkill);
+  }
+
+  async reorder(ids: number[]): Promise<AdminSkill[]> {
+    await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).skill, ids);
+    return this.listAdmin();
   }
 
   async getAdmin(id: number): Promise<AdminSkill> {
@@ -108,6 +114,11 @@ export class SkillsService {
       orderBy: { sortOrder: 'asc' },
     });
     return rows.map(toAdminCategory);
+  }
+
+  async reorderCategories(ids: number[]): Promise<AdminSkillCategory[]> {
+    await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).skillCategory, ids);
+    return this.listCategories();
   }
 
   async getCategory(id: number): Promise<AdminSkillCategory> {
