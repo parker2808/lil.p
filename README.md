@@ -19,6 +19,7 @@ pnpm dev                     # web :3000 + api :4000 in parallel (MySQL via dock
 pnpm lint | typecheck | test | build
 pnpm format | format:check   # Prettier (one root config; format:check also runs in CI)
 pnpm check:content           # no CV strings in UI code, no email/phone anywhere
+pnpm check:placeholders      # DATABASE_URL: no seed placeholders in live rows (T60)
 pnpm check:deps              # no paid Tiptap packages or private Tiptap registry; every @tiptap/* and @dnd-kit/* is MIT
 pnpm db:up                   # MySQL :3306 + Adminer :8080 (127.0.0.1)
 pnpm db:down                 # stop containers; named volume `db-data` keeps the data

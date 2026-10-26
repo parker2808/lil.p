@@ -17,7 +17,7 @@ packages/
 ├── ui/                   # design system: tokens CSS, shadcn primitives, pure product components, stories
 └── contracts/            # zod schemas + TS types shared by web and api (tsup ESM+CJS)
 infra/                    # Docker/server config files (mysql init SQL, Caddyfile, backup.sh)
-scripts/                  # repo scripts: content/privacy checks, backup restore
+scripts/                  # repo scripts: content/privacy/placeholder checks, backup restore
 docs/                     # PLAN, design snapshot, sql-notes.sql, audit reports, runbooks
 docker-compose.yml        # dev: MySQL + Adminer (+ test DB under the `test` profile)
 compose.prod.yml          # production: db, api, web, caddy, backup (read-only root FS)
@@ -138,6 +138,7 @@ pnpm test:e2e                # Playwright (apps/web/e2e) public/admin/a11y/light
 pnpm format                  # Prettier --write across the repo (one root config)
 pnpm format:check            # Prettier --check (also runs in CI)
 pnpm check:content           # no CV strings in UI code, no email/phone anywhere
+pnpm check:placeholders      # DATABASE_URL: 0 seed placeholders in live/published rows
 pnpm check:deps              # no paid Tiptap packages or private Tiptap registry; every @tiptap/* and @dnd-kit/* is MIT
 pnpm db:migrate | db:reset | db:seed | db:studio
 docker compose up -d db adminer
