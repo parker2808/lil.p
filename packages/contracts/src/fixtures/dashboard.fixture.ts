@@ -17,6 +17,18 @@ export const adminStatsFixture: AdminStats = {
     publishedInPrevious: 1,
   },
   messages: { unread: 3 },
+  views: {
+    total: 12,
+    uniqueVisitors: 5,
+    previousTotal: 8,
+    previousUnique: 4,
+    byDay: [
+      { date: '2026-01-01', views: 4, visitors: 2 },
+      { date: '2026-01-02', views: 8, visitors: 3 },
+    ],
+    topPages: [{ path: '/', views: 7 }],
+    topReferrers: [{ host: 'github.com', views: 3 }],
+  },
 };
 
 export const adminHealthFixture: AdminHealth = {

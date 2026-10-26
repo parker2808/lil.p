@@ -650,3 +650,18 @@ model ProjectImage {
   @@index([projectId, sortOrder])
   @@map("project_image")
 }
+
+/// Cookieless page view. `visitorHash` is SHA-256(IP + UA + daily salt).
+model PageView {
+  id           Int      @id @default(autoincrement())
+  path         String   @db.VarChar(200)
+  locale       String   @db.VarChar(8)
+  referrerHost String?  @db.VarChar(200)
+  device       String   @db.VarChar(16)
+  visitorHash  String   @db.VarChar(64)
+  createdAt    DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([path, createdAt])
+  @@map("page_view")
+}

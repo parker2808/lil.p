@@ -1,3 +1,19 @@
+export {
+  adminViewsSchema,
+  topPageSchema,
+  topReferrerSchema,
+  trackViewSchema,
+  viewDeviceSchema,
+  viewsByDaySchema,
+} from './analytics/analytics.schema';
+export type {
+  AdminViews,
+  TopPage,
+  TopReferrer,
+  TrackViewInput,
+  ViewDevice,
+  ViewsByDay,
+} from './analytics/analytics.type';
 export type { Role } from './auth/auth.enum';
 export { roleSchema } from './auth/auth.enum';
 export { changePasswordSchema, loginSchema, meSchema } from './auth/auth.schema';

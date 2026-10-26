@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { adminViewsSchema } from '../analytics/analytics.schema';
+
 export const STATS_RANGES = ['7d', '30d', '90d'] as const;
 
 export const statsRangeSchema = z.enum(STATS_RANGES);
@@ -32,6 +34,7 @@ export const adminStatsSchema = z.object({
   projects: contentStatusCountsSchema,
   posts: contentStatusCountsSchema,
   messages: messageStatsSchema,
+  views: adminViewsSchema,
 });
 
 export const healthIssueKindSchema = z.enum([

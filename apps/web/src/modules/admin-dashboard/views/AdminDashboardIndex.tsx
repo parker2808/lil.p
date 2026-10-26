@@ -73,7 +73,7 @@ export function AdminDashboardIndex({ range }: { range: StatsRange }) {
 
 function StatsSkeleton() {
   return (
-    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 xl:grid-cols-5">
       <Skeleton className="h-24" />
       <Skeleton className="h-24" />
       <Skeleton className="h-24" />

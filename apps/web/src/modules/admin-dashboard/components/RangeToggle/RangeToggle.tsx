@@ -7,7 +7,13 @@ import { useTranslations } from 'next-intl';
 
 import { rangeHref } from '../../utils/stats-delta.util';
 
-export function RangeToggle({ range }: { range: StatsRange }) {
+export function RangeToggle({
+  range,
+  hrefFor = rangeHref,
+}: {
+  range: StatsRange;
+  hrefFor?: (next: StatsRange) => string;
+}) {
   const t = useTranslations('admin.dashboard.range');
   const router = useRouter();
 
@@ -20,7 +26,7 @@ export function RangeToggle({ range }: { range: StatsRange }) {
         if (!next || next === range) {
           return;
         }
-        router.replace(rangeHref(next as StatsRange));
+        router.replace(hrefFor(next as StatsRange));
       }}
     >
       {STATS_RANGES.map((value) => (

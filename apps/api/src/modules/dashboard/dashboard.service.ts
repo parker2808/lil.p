@@ -3,6 +3,7 @@ import {
   type AdminHealth,
   type AdminHealthIssue,
   type AdminStats,
+  type AdminViews,
   type ContentStatus,
   type ContentStatusCounts,
   parseBlock,
@@ -20,6 +21,7 @@ import {
   splitFactLines,
 } from './dashboard-health.util';
 import { statsRangeWindow } from './dashboard-range.util';
+import { asDay, asInt, emptyViews, mergeViewsByDay } from './dashboard-views.util';
 
 type StatusCountRow = { status: ContentStatus; _count: { id: number } };
 
@@ -91,6 +93,7 @@ export class DashboardService {
       postInRange,
       postPrev,
       unreadMessages,
+      views,
     ] = await Promise.all([
       this.prisma.project.groupBy({ by: ['status'], _count: { id: true } }),
       this.prisma.post.groupBy({ by: ['status'], _count: { id: true } }),
@@ -99,6 +102,7 @@ export class DashboardService {
       this.prisma.post.count({ where: publishedIn(periodStart, periodEnd) }),
       this.prisma.post.count({ where: publishedIn(previousStart, periodStart) }),
       this.prisma.contactMessage.count({ where: { status: 'NEW' } }),
+      this.viewsForRange(periodStart, periodEnd, previousStart),
     ]);
 
     return {
@@ -114,7 +118,84 @@ export class DashboardService {
         publishedInPrevious: postPrev,
       },
       messages: { unread: unreadMessages },
+      views,
     };
+  }
+
+  private async viewsForRange(
+    periodStart: Date,
+    periodEnd: Date,
+    previousStart: Date,
+  ): Promise<AdminViews> {
+    try {
+      const [current, previous, byDayRows, topPages, topReferrers] = await Promise.all([
+        this.prisma.pageView.aggregate({
+          where: { createdAt: { gte: periodStart, lt: periodEnd } },
+          _count: { id: true },
+        }),
+        this.prisma.pageView.aggregate({
+          where: { createdAt: { gte: previousStart, lt: periodStart } },
+          _count: { id: true },
+        }),
+        this.prisma.$queryRaw<Array<{ date: unknown; views: unknown; visitors: unknown }>>`
+          SELECT DATE(createdAt) AS date,
+                 COUNT(*) AS views,
+                 COUNT(DISTINCT visitorHash) AS visitors
+          FROM page_view
+          WHERE createdAt >= ${periodStart} AND createdAt < ${periodEnd}
+          GROUP BY DATE(createdAt)
+          ORDER BY date ASC
+        `,
+        this.prisma.pageView.groupBy({
+          by: ['path'],
+          where: { createdAt: { gte: periodStart, lt: periodEnd } },
+          _count: { id: true },
+          orderBy: { _count: { id: 'desc' } },
+          take: 8,
+        }),
+        this.prisma.pageView.groupBy({
+          by: ['referrerHost'],
+          where: {
+            createdAt: { gte: periodStart, lt: periodEnd },
+            referrerHost: { not: null },
+          },
+          _count: { id: true },
+          orderBy: { _count: { id: 'desc' } },
+          take: 8,
+        }),
+      ]);
+      const uniqueCurrent = await this.prisma.pageView.findMany({
+        where: { createdAt: { gte: periodStart, lt: periodEnd } },
+        distinct: ['visitorHash'],
+        select: { visitorHash: true },
+      });
+      const uniquePrevious = await this.prisma.pageView.findMany({
+        where: { createdAt: { gte: previousStart, lt: periodStart } },
+        distinct: ['visitorHash'],
+        select: { visitorHash: true },
+      });
+      return {
+        total: current._count.id,
+        uniqueVisitors: uniqueCurrent.length,
+        previousTotal: previous._count.id,
+        previousUnique: uniquePrevious.length,
+        byDay: mergeViewsByDay(
+          byDayRows.map((row) => ({
+            date: asDay(row.date),
+            views: asInt(row.views),
+            visitors: asInt(row.visitors),
+          })),
+          periodStart,
+          periodEnd,
+        ),
+        topPages: topPages.map((row) => ({ path: row.path, views: row._count.id })),
+        topReferrers: topReferrers.flatMap((row) =>
+          row.referrerHost ? [{ host: row.referrerHost, views: row._count.id }] : [],
+        ),
+      };
+    } catch {
+      return emptyViews(periodStart, periodEnd);
+    }
   }
 
   async getHealth(): Promise<AdminHealth> {

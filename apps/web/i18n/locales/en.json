@@ -225,7 +225,9 @@
         "projects": "Projects published",
         "posts": "Posts published",
         "drafts": "Drafts",
-        "publishedPeriod": "Published this period"
+        "publishedPeriod": "Published this period",
+        "views": "Page views",
+        "viewsSparkline": "Views over the period"
       },
       "delta": {
         "up": "+{value} vs previous {range}",
@@ -272,6 +274,22 @@
         "retry": "Retry",
         "empty": "No messages yet."
       }
+    },
+    "analytics": {
+      "title": "Analytics",
+      "views": "{count} views",
+      "visitors": "{count} unique visitors",
+      "series": "Views",
+      "visitorsHead": "Visitors",
+      "date": "Date",
+      "tableCaption": "Page views by day",
+      "topPages": "Top pages",
+      "topReferrers": "Top referrers",
+      "noPages": "No pages yet.",
+      "noReferrers": "No referrers yet.",
+      "error": "Views could not be loaded.",
+      "retry": "Retry",
+      "empty": "No views yet."
     },
     "inbox": {
       "title": "Inbox",

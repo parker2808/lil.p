@@ -131,7 +131,7 @@ src/common/guards/roles.guard.ts         # @Roles() vs request.user.role; none =
 | `media` | `Media`, `ProjectImage` | admin `POST/GET/PATCH/DELETE /admin/media` (cursor list; Cloudinary or in-memory storage, never local disk), public `GET /public/media/:file` (redirect) |
 | `events` | none (in-memory stream) | `GET /admin/events` (SSE) |
 | `publishing` | none (calls web `/api/revalidate`) | used by projects, posts and pages services |
-| `analytics` | `PageView` | `POST /public/views` |
+| `analytics` | `PageView` | `POST /public/views` (`@Public()`, 30/min/IP, cookieless; skips bots and `analyticsEnabled = false`) |
 | `audit` | `AuditLog` | `GET /admin/audit` (cursor) |
 | `dashboard` | none (reads counts) | `GET /admin/stats?range` (includes `messages.unread`), `GET /admin/health` |
 

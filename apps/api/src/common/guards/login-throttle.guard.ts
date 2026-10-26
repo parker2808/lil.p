@@ -28,3 +28,10 @@ export class ContactThrottleGuard extends RateLimitGuard {
     return requestIp(req);
   }
 }
+
+@Injectable()
+export class ViewsThrottleGuard extends RateLimitGuard {
+  protected override async getTracker(req: Request): Promise<string> {
+    return requestIp(req);
+  }
+}

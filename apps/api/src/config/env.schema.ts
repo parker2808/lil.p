@@ -29,6 +29,7 @@ export const envSchema = z
     CLOUDINARY_API_SECRET: z.string().min(1).optional(),
     WEB_INTERNAL_URL: z.url().optional(),
     REVALIDATE_SECRET: z.string().min(16).optional(),
+    ANALYTICS_SALT_SECRET: z.string().min(16).optional(),
   })
   .superRefine((env, ctx) => {
     if (env.JWT_ACCESS_SECRET === env.JWT_REFRESH_SECRET) {
