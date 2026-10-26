@@ -23,6 +23,15 @@ export const PRISMA_PAGE_KEY_TO_PUBLIC: Record<PrismaPageKey, PageKey> = {
   CONTACT: 'contact',
 };
 
+/** Locale-agnostic public path for each page key (`/` for home). */
+export const PAGE_PUBLIC_PATHS: Record<PageKey, string> = {
+  home: '/',
+  about: '/about',
+  projects: '/projects',
+  notes: '/notes',
+  contact: '/contact',
+};
+
 export const layoutPresetSchema = z.enum([
   'ONE',
   'TWO',

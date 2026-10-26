@@ -48,7 +48,7 @@ Create only the folders a module needs.
 | `projects`        | `ProjectsIndex`, `ProjectsDetail`, filters island, case-study header/meta/sections/TOC; `projects.service.ts` + `domains.service.ts`                                                                                                                                                                                                                                                                                                                       | §5.3, §5.4                              |
 | `notes`           | `NotesIndex`, `NotesDetail`, search island (TanStack Query), `notes-browser`; `posts.service.ts` + `posts-client.service.ts`                                                                                                                                                                                                                                                                                                                               | §5.5                                    |
 | `contact`         | `ContactIndex` (`BlocksPage` for `contact`), `ContactFormBlock` (H1 + channels + form), `ContactForm` (TanStack Form + Server Action, works without JS), `ChannelCards` (email only in `mailto:` / copy handler)                                                                                                                                                                                                                                           | §5.6                                    |
-| `seo`             | metadata builders, JSON-LD, OG image template, sitemap/RSS builders                                                                                                                                                                                                                                                                                                                                                                                        | §5 intro                                |
+| `seo`             | `generateMetadata` builders (site/home/about/projects/project/notes/post/contact), `JsonLd` (Person/CreativeWork/BlogPosting/BreadcrumbList), `OgImage` (1200×630), sitemap + RSS builders; `GET /public/sitemap` client                                                                                                                                                                                                                                  | §5 intro                                |
 | `admin-core`      | `AdminShell`, sidebar, topbar, admin `CommandPalette`, `NotificationBell`, `EditorShell`, `PublishActions` (status pill + publish/unpublish + draft preview link), `MarkdownField` (TanStack Form field ↔ Tiptap `MarkdownEditor`, loaded with `next/dynamic` `ssr: false` so Tiptap stays out of public bundles), `RoleGate` (shows children for `admin` or `user` only), `useMe`/`useIsAdmin`, SSE hook, URL list-params hook, autosave hook, dirty guard, `SchemaForm` (`schema-to-fields` + zod 4 `toJSONSchema`) | §4.3                                    |
 | `admin-auth`      | `AdminAuthLogin` view (silent refresh, then login form), `ChangePasswordDialog`, `safe-next.util.ts`                                                                                                                                                                                                                                                                                                                                                       | §4.6                                    |
 | `admin-dashboard` | `AdminDashboardIndex`, stat/health/inbox/activity/chart cards                                                                                                                                                                                                                                                                                                                                                                                              | §5.7, §5.11                             |
@@ -70,7 +70,7 @@ Create only the folders a module needs.
 ```tsx
 // app/[locale]/(site)/projects/[slug]/page.tsx
 import { ProjectsDetail } from '@/modules/projects/views/ProjectsDetail';
-import { buildProjectMetadata } from '@/modules/seo/utils/project-metadata.util';
+import { buildProjectMetadata } from '@/modules/seo/utils/build-project-metadata.util';
 
 export const generateMetadata = buildProjectMetadata;
 
@@ -92,12 +92,13 @@ app/
 │   ├── layout.tsx
 │   └── (site)/
 │       ├── layout.tsx             # → core SiteShell (header, footer, beacon)
-│       ├── page.tsx               # → home/views/HomeIndex
+│       ├── page.tsx               # → home/views/HomeIndex + generateMetadata
+│       ├── opengraph-image.tsx    # 1200×630 ImageResponse from CMS
 │       ├── about/page.tsx         # → about/views/AboutIndex
 │       ├── projects/page.tsx      # → projects/views/ProjectsIndex
-│       ├── projects/[slug]/page.tsx
+│       ├── projects/[slug]/page.tsx + opengraph-image.tsx
 │       ├── notes/page.tsx         # → notes/views/NotesIndex
-│       ├── notes/[slug]/page.tsx
+│       ├── notes/[slug]/page.tsx + opengraph-image.tsx
 │       ├── contact/page.tsx       # → contact/views/ContactIndex
 │       ├── error.tsx, not-found.tsx
 │       └── rss.xml/route.ts

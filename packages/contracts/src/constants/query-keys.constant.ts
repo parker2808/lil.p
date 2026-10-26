@@ -10,6 +10,7 @@ export const qk = {
     site: (locale: Locale) => ['public', 'site', locale] as const,
     page: (key: PageKey, locale: Locale) => ['public', 'page', key, locale] as const,
     posts: (params: ListParams) => ['public', 'posts', params] as const,
+    sitemap: ['public', 'sitemap'] as const,
   },
   admin: {
     me: ['admin', 'me'] as const,

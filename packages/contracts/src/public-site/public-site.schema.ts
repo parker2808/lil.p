@@ -16,3 +16,12 @@ export const publicSiteSchema = z.object({
   socialLinks: z.array(publicSocialLinkSchema),
   profileStats: z.array(publicProfileStatSchema),
 });
+
+export const publicSitemapEntrySchema = z.object({
+  path: z.string(),
+  updatedAt: z.string(),
+});
+
+export const publicSitemapSchema = z.object({
+  entries: z.array(publicSitemapEntrySchema),
+});

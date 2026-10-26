@@ -1,0 +1,7 @@
+import { escapeJsonLd } from '../../utils/json-ld.util';
+
+export function JsonLd({ data }: { data: unknown }) {
+  return (
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: escapeJsonLd(data) }} />
+  );
+}
