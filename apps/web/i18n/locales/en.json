@@ -273,6 +273,33 @@
         "error": "Inbox could not be loaded.",
         "retry": "Retry",
         "empty": "No messages yet."
+      },
+      "activity": {
+        "error": "Activity could not be loaded.",
+        "retry": "Retry",
+        "empty": "No activity yet."
+      }
+    },
+    "audit": {
+      "title": "Audit log",
+      "latest": "Recent activity",
+      "viewAll": "Open audit log",
+      "empty": "No activity yet.",
+      "error": "The audit log could not be loaded.",
+      "retry": "Retry",
+      "system": "System",
+      "entityType": "Entity",
+      "user": "User",
+      "allEntities": "All entities",
+      "allUsers": "All users",
+      "clearFilters": "Clear filters",
+      "actions": {
+        "CREATE": "Create",
+        "UPDATE": "Update",
+        "PUBLISH": "Publish",
+        "ARCHIVE": "Archive",
+        "RESTORE": "Restore",
+        "LOGIN": "Login"
       }
     },
     "analytics": {

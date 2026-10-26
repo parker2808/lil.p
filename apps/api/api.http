@@ -1005,3 +1005,27 @@ Content-Type: application/json
 
 ### Public media redirect
 GET http://127.0.0.1:4000/api/public/media/filename
+
+### Admin audit (cursor)
+GET http://127.0.0.1:4000/api/admin/audit?limit=50
+
+### Admin audit filtered
+GET http://127.0.0.1:4000/api/admin/audit?entityType=project&limit=20
+
+### Admin projects bulk archive
+POST http://127.0.0.1:4000/api/admin/projects/bulk
+Content-Type: application/json
+
+{
+  "ids": [1, 2],
+  "action": "archive"
+}
+
+### Admin posts bulk archive
+POST http://127.0.0.1:4000/api/admin/posts/bulk
+Content-Type: application/json
+
+{
+  "ids": [1, 2],
+  "action": "archive"
+}

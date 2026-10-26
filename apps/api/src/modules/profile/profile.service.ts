@@ -4,6 +4,7 @@ import type { AdminProfile, Locale, ProfileUpdateInput, PublicProfile } from '@p
 import { NotSeededException } from '../../common/errors/not-seeded.exception';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { PublishingService } from '../publishing/publishing.service';
 import { SITE_TAGS } from '../publishing/tags.util';
 import { profileSelect } from './entities/profile.entity';
@@ -14,6 +15,7 @@ export class ProfileService {
   constructor(
     private readonly prisma: PrismaService,
     @Optional() private readonly publishing?: PublishingService,
+    @Optional() private readonly audit?: AuditService,
   ) {}
 
   async getPublic(locale: Locale): Promise<PublicProfile> {
@@ -65,6 +67,12 @@ export class ProfileService {
       where: { id: 1 },
       data,
       select: profileSelect,
+    });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'profile',
+      entityId: 1,
+      summary: 'Updated profile',
     });
     void this.publishing?.revalidate([...SITE_TAGS]);
     return toAdminDto(row);

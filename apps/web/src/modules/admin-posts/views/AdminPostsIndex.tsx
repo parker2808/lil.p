@@ -10,6 +10,7 @@ import { z } from 'zod';
 
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { useListParams } from '@/modules/admin-core/hooks/use-list-params.hook';
+import { useBulkArchivePosts } from '@/modules/admin-insights/hooks/use-admin-audit.hook';
 import { adminTableLabels } from '@/modules/admin-core/utils/table-labels.util';
 import { apiClient } from '@/modules/core/services/api-client.service';
 
@@ -29,6 +30,7 @@ export function AdminPostsIndex() {
   const { data, isError, refetch } = useAdminPosts(params);
   const list = data ?? { items: [], page: params.page, pageSize: params.pageSize, total: 0 };
   const archive = useArchiveAdminPost(params);
+  const bulkArchive = useBulkArchivePosts();
   const prefetch = usePrefetchAdminPost();
   const tags = useQuery({
     queryKey: qk.admin.all('tags'),
@@ -126,11 +128,7 @@ export function AdminPostsIndex() {
         onOpen={(row) => router.push(`/admin/posts/${row.id}`)}
         onEdit={(row) => router.push(`/admin/posts/${row.id}`)}
         onDelete={(row) => archive.mutate(row.id)}
-        onBulkDelete={(rows) => {
-          for (const row of rows) {
-            archive.mutate(row.id);
-          }
-        }}
+        onBulkDelete={(rows) => bulkArchive.mutate(rows)}
         onCreate={() => router.push('/admin/posts/new')}
         onClearFilters={() =>
           setParams({ q: undefined, status: undefined, tag: undefined, page: 1 })

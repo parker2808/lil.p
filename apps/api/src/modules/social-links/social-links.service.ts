@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, Optional } from '@nestjs/common';
 import type {
   AdminSocialLink,
   Locale,
@@ -10,6 +10,7 @@ import type {
 import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { socialLinkSelect } from './entities/social-link.entity';
 import { toAdminDto, toPublicSocialLink } from './entities/social-link.mapper';
 
@@ -17,7 +18,10 @@ const MAX_CTA = 2;
 
 @Injectable()
 export class SocialLinksService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly audit?: AuditService,
+  ) {}
 
   async listPublic(locale: Locale): Promise<PublicSocialLink[]> {
     const rows = await this.prisma.socialLink.findMany({
@@ -38,6 +42,12 @@ export class SocialLinksService {
 
   async reorder(ids: number[]): Promise<AdminSocialLink[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).socialLink, ids);
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'social-link',
+      entityId: ids[0] ?? 0,
+      summary: `Reordered ${ids.length} social links`,
+    });
     return this.listAdmin();
   }
 
@@ -62,6 +72,12 @@ export class SocialLinksService {
       },
       select: socialLinkSelect,
     });
+    await this.audit?.recordNow({
+      action: 'CREATE',
+      entityType: 'social-link',
+      entityId: row.id,
+      summary: `Created social link ${row.labelEn}`,
+    });
     return toAdminDto(row);
   }
 
@@ -84,12 +100,24 @@ export class SocialLinksService {
       data,
       select: socialLinkSelect,
     });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'social-link',
+      entityId: id,
+      summary: `Updated social link ${row.labelEn}`,
+    });
     return toAdminDto(row);
   }
 
   async remove(id: number): Promise<AdminSocialLink> {
     const current = await this.findRow(id);
     await this.prisma.socialLink.delete({ where: { id } });
+    await this.audit?.recordNow({
+      action: 'ARCHIVE',
+      entityType: 'social-link',
+      entityId: id,
+      summary: `Deleted social link ${current.labelEn}`,
+    });
     return toAdminDto(current);
   }
 

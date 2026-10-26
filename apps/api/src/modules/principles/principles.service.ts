@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import type {
   AdminPrinciple,
   Locale,
@@ -10,12 +10,16 @@ import type {
 import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService } from '../audit/audit.service';
 import { principleSelect } from './entities/principle.entity';
 import { toAdminDto, toPublicPrinciple } from './entities/principle.mapper';
 
 @Injectable()
 export class PrinciplesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly audit?: AuditService,
+  ) {}
 
   async listPublic(locale: Locale): Promise<PublicPrinciple[]> {
     const rows = await this.prisma.principle.findMany({
@@ -36,6 +40,12 @@ export class PrinciplesService {
 
   async reorder(ids: number[]): Promise<AdminPrinciple[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).principle, ids);
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'principle',
+      entityId: ids[0] ?? 0,
+      summary: `Reordered ${ids.length} principles`,
+    });
     return this.listAdmin();
   }
 
@@ -48,6 +58,12 @@ export class PrinciplesService {
       data: this.toWriteData(input) as Prisma.PrincipleUncheckedCreateInput,
       select: principleSelect,
     });
+    await this.audit?.recordNow({
+      action: 'CREATE',
+      entityType: 'principle',
+      entityId: row.id,
+      summary: `Created principle ${row.titleEn}`,
+    });
     return toAdminDto(row);
   }
 
@@ -58,12 +74,24 @@ export class PrinciplesService {
       data: this.toWriteData(input),
       select: principleSelect,
     });
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'principle',
+      entityId: id,
+      summary: `Updated principle ${row.titleEn}`,
+    });
     return toAdminDto(row);
   }
 
   async remove(id: number): Promise<AdminPrinciple> {
     const current = await this.findRow(id);
     await this.prisma.principle.delete({ where: { id } });
+    await this.audit?.recordNow({
+      action: 'ARCHIVE',
+      entityType: 'principle',
+      entityId: id,
+      summary: `Deleted principle ${current.titleEn}`,
+    });
     return toAdminDto(current);
   }
 

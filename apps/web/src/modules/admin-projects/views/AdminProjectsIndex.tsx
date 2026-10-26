@@ -15,6 +15,7 @@ import { z } from 'zod';
 
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { useListParams } from '@/modules/admin-core/hooks/use-list-params.hook';
+import { useBulkArchiveProjects } from '@/modules/admin-insights/hooks/use-admin-audit.hook';
 import { apiClient } from '@/modules/core/services/api-client.service';
 
 import { ProjectsTable } from '../components/ProjectsTable/ProjectsTable';
@@ -34,6 +35,7 @@ export function AdminProjectsIndex() {
   const { data, isError, refetch } = useAdminProjects(params);
   const list = data ?? { items: [], page: params.page, pageSize: params.pageSize, total: 0 };
   const archive = useArchiveAdminProject(params);
+  const bulkArchive = useBulkArchiveProjects();
   const move = useMoveAdminProject();
   const prefetch = usePrefetchAdminProject();
   const domains = useQuery({
@@ -159,11 +161,7 @@ export function AdminProjectsIndex() {
         onOpen={(row) => router.push(`/admin/projects/${row.id}`)}
         onEdit={(row) => router.push(`/admin/projects/${row.id}`)}
         onDelete={(row) => archive.mutate(row.id)}
-        onBulkDelete={(rows) => {
-          for (const row of rows) {
-            archive.mutate(row.id);
-          }
-        }}
+        onBulkDelete={(rows) => bulkArchive.mutate(rows)}
         onCreate={() => router.push('/admin/projects/new')}
         onClearFilters={() =>
           setParams({ q: undefined, status: undefined, domain: undefined, page: 1 })

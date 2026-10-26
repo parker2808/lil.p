@@ -11,6 +11,7 @@ import type {
   AdminProjectListItem,
   AdminProjectListPage,
   AdminProjectListParams,
+  BulkStatusInput,
   Locale,
   ProjectCreateInput,
   ProjectListParams,
@@ -24,6 +25,7 @@ import { paginate } from '../../common/utils/paginate.util';
 import { reorder } from '../../common/utils/reorder.util';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService, withAuditTx } from '../audit/audit.service';
 import {
   lintErrors,
   markdownAltErrors,
@@ -47,6 +49,7 @@ export class ProjectsService {
     private readonly prisma: PrismaService,
     @Optional() private readonly publishing?: PublishingService,
     @Optional() private readonly events?: EventEmitter2,
+    @Optional() private readonly audit?: AuditService,
   ) {}
 
   async listPublic(locale: Locale, query: ProjectListParams): Promise<PublicProjectListPage> {
@@ -155,6 +158,12 @@ export class ProjectsService {
 
   async reorder(ids: number[]): Promise<AdminProjectListItem[]> {
     await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).project, ids);
+    await this.audit?.recordNow({
+      action: 'UPDATE',
+      entityType: 'project',
+      entityId: ids[0] ?? 0,
+      summary: `Reordered ${ids.length} projects`,
+    });
     const rows = await this.prisma.project.findMany({
       select: projectSelect,
       orderBy: { sortOrder: 'asc' },
@@ -169,35 +178,44 @@ export class ProjectsService {
   }
 
   async create(input: ProjectCreateInput): Promise<AdminProject> {
-    const row = await this.prisma.project.create({
-      data: {
-        ...this.toWriteData(input),
-        status: 'DRAFT',
-        skills: input.skillIds ? { connect: input.skillIds.map((id) => ({ id })) } : undefined,
-        metrics: input.metrics
-          ? {
-              create: input.metrics.map((metric, index) => ({
-                labelEn: metric.labelEn,
-                labelVi: metric.labelVi,
-                before: metric.before ?? null,
-                after: metric.after ?? null,
-                value: metric.value,
-                sortOrder: metric.sortOrder ?? index,
-              })),
-            }
-          : undefined,
-        images: input.images
-          ? {
-              create: input.images.map((image, index) => ({
-                mediaId: image.mediaId,
-                captionEn: image.captionEn ?? null,
-                captionVi: image.captionVi ?? null,
-                sortOrder: image.sortOrder ?? index,
-              })),
-            }
-          : undefined,
-      },
-      select: projectSelect,
+    const row = await withAuditTx(this.prisma, this.audit, async (db) => {
+      const created = await db.project.create({
+        data: {
+          ...this.toWriteData(input),
+          status: 'DRAFT',
+          skills: input.skillIds ? { connect: input.skillIds.map((id) => ({ id })) } : undefined,
+          metrics: input.metrics
+            ? {
+                create: input.metrics.map((metric, index) => ({
+                  labelEn: metric.labelEn,
+                  labelVi: metric.labelVi,
+                  before: metric.before ?? null,
+                  after: metric.after ?? null,
+                  value: metric.value,
+                  sortOrder: metric.sortOrder ?? index,
+                })),
+              }
+            : undefined,
+          images: input.images
+            ? {
+                create: input.images.map((image, index) => ({
+                  mediaId: image.mediaId,
+                  captionEn: image.captionEn ?? null,
+                  captionVi: image.captionVi ?? null,
+                  sortOrder: image.sortOrder ?? index,
+                })),
+              }
+            : undefined,
+        },
+        select: projectSelect,
+      });
+      await this.audit?.record(db, {
+        action: 'CREATE',
+        entityType: 'project',
+        entityId: created.id,
+        summary: `Created project ${created.slug}`,
+      });
+      return created;
     });
     this.scheduleRevalidate(row.slug);
     return toAdminDto(row);
@@ -258,7 +276,14 @@ export class ProjectsService {
           });
         }
       }
-      return tx.project.findUniqueOrThrow({ where: { id }, select: projectSelect });
+      const updated = await tx.project.findUniqueOrThrow({ where: { id }, select: projectSelect });
+      await this.audit?.record(tx, {
+        action: 'UPDATE',
+        entityType: 'project',
+        entityId: id,
+        summary: `Updated project ${updated.slug}`,
+      });
+      return updated;
     });
     this.scheduleRevalidate(current.slug, row.slug);
     return toAdminDto(row);
@@ -267,13 +292,22 @@ export class ProjectsService {
   async publish(id: number): Promise<AdminProject> {
     const current = await this.findRow(id);
     this.assertPublishable(current);
-    const row = await this.prisma.project.update({
-      where: { id },
-      data: {
-        status: 'PUBLISHED',
-        publishedAt: current.publishedAt ?? new Date(),
-      },
-      select: projectSelect,
+    const row = await withAuditTx(this.prisma, this.audit, async (db) => {
+      const updated = await db.project.update({
+        where: { id },
+        data: {
+          status: 'PUBLISHED',
+          publishedAt: current.publishedAt ?? new Date(),
+        },
+        select: projectSelect,
+      });
+      await this.audit?.record(db, {
+        action: 'PUBLISH',
+        entityType: 'project',
+        entityId: id,
+        summary: `Published project ${updated.slug}`,
+      });
+      return updated;
     });
     this.events?.emit('content.published', { entity: 'project', id: row.id, slug: row.slug });
     this.scheduleRevalidate(row.slug);
@@ -282,10 +316,19 @@ export class ProjectsService {
 
   async unpublish(id: number): Promise<AdminProject> {
     const current = await this.findRow(id);
-    const row = await this.prisma.project.update({
-      where: { id },
-      data: { status: 'DRAFT' },
-      select: projectSelect,
+    const row = await withAuditTx(this.prisma, this.audit, async (db) => {
+      const updated = await db.project.update({
+        where: { id },
+        data: { status: 'DRAFT' },
+        select: projectSelect,
+      });
+      await this.audit?.record(db, {
+        action: 'UPDATE',
+        entityType: 'project',
+        entityId: id,
+        summary: `Unpublished project ${updated.slug}`,
+      });
+      return updated;
     });
     this.scheduleRevalidate(current.slug);
     return toAdminDto(row);
@@ -293,13 +336,83 @@ export class ProjectsService {
 
   async archive(id: number): Promise<AdminProject> {
     const current = await this.findRow(id);
-    const row = await this.prisma.project.update({
-      where: { id },
-      data: { status: 'ARCHIVED' },
-      select: projectSelect,
+    const row = await withAuditTx(this.prisma, this.audit, async (db) => {
+      const updated = await db.project.update({
+        where: { id },
+        data: { status: 'ARCHIVED' },
+        select: projectSelect,
+      });
+      await this.audit?.record(db, {
+        action: 'ARCHIVE',
+        entityType: 'project',
+        entityId: id,
+        summary: `Archived project ${updated.slug}`,
+      });
+      return updated;
     });
     this.scheduleRevalidate(current.slug);
     return toAdminDto(row);
+  }
+
+  async bulk(input: BulkStatusInput): Promise<{ count: number }> {
+    const slugs: string[] = [];
+    const published: ProjectRow[] = [];
+    const count = await this.prisma.$transaction(async (tx) => {
+      const rows = await tx.project.findMany({
+        where: { id: { in: input.ids } },
+        select: projectSelect,
+      });
+      if (rows.length !== input.ids.length) {
+        throw new NotFoundException({
+          code: 'NOT_FOUND',
+          message: 'One or more projects were not found',
+        });
+      }
+      const byId = new Map(rows.map((row) => [row.id, row]));
+      for (const id of input.ids) {
+        const current = byId.get(id);
+        if (!current) {
+          continue;
+        }
+        if (input.action === 'publish') {
+          this.assertPublishable(current);
+          await tx.project.update({
+            where: { id },
+            data: { status: 'PUBLISHED', publishedAt: current.publishedAt ?? new Date() },
+          });
+          await this.audit?.record(tx, {
+            action: 'PUBLISH',
+            entityType: 'project',
+            entityId: id,
+            summary: `Published project ${current.slug}`,
+          });
+          published.push(current);
+        } else if (input.action === 'unpublish') {
+          await tx.project.update({ where: { id }, data: { status: 'DRAFT' } });
+          await this.audit?.record(tx, {
+            action: 'UPDATE',
+            entityType: 'project',
+            entityId: id,
+            summary: `Unpublished project ${current.slug}`,
+          });
+        } else {
+          await tx.project.update({ where: { id }, data: { status: 'ARCHIVED' } });
+          await this.audit?.record(tx, {
+            action: 'ARCHIVE',
+            entityType: 'project',
+            entityId: id,
+            summary: `Archived project ${current.slug}`,
+          });
+        }
+        slugs.push(current.slug);
+      }
+      return input.ids.length;
+    });
+    for (const row of published) {
+      this.events?.emit('content.published', { entity: 'project', id: row.id, slug: row.slug });
+    }
+    this.scheduleRevalidate(...slugs);
+    return { count };
   }
 
   private async findRow(id: number) {

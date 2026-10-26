@@ -1,7 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Optional, UnauthorizedException } from '@nestjs/common';
 import type { ChangePasswordInput, LoginInput } from '@portfolio/contracts';
 import * as argon2 from 'argon2';
 
+import { AuditService } from '../audit/audit.service';
 import type { UserRow } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { TokenService } from './token.service';
@@ -21,6 +22,7 @@ export class AuthService {
   constructor(
     private readonly users: UsersService,
     private readonly tokens: TokenService,
+    @Optional() private readonly audit?: AuditService,
   ) {}
 
   async login(input: LoginInput): Promise<{ user: UserRow } & IssuedTokens> {
@@ -33,6 +35,13 @@ export class AuthService {
       });
     }
     const signedIn = await this.users.touchLastLogin(user.id);
+    await this.audit?.recordNow({
+      userId: signedIn.id,
+      action: 'LOGIN',
+      entityType: 'user',
+      entityId: signedIn.id,
+      summary: 'Signed in',
+    });
     const access = await this.tokens.signAccess(signedIn);
     const refresh = await this.tokens.signRefresh(signedIn);
     return { user: signedIn, access, refresh };
@@ -68,6 +77,13 @@ export class AuthService {
     }
     const passwordHash = await argon2.hash(input.newPassword, { type: argon2.argon2id });
     const updated = await this.users.updatePasswordHash(id, passwordHash);
+    await this.audit?.recordNow({
+      userId: updated.id,
+      action: 'UPDATE',
+      entityType: 'user',
+      entityId: updated.id,
+      summary: 'Changed password',
+    });
     return {
       user: updated,
       access: await this.tokens.signAccess(updated),

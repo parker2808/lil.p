@@ -4,6 +4,7 @@ import type {
   AdminPost,
   AdminPostListPage,
   AdminPostListParams,
+  BulkStatusInput,
   Locale,
   PostCreateInput,
   PostListParams,
@@ -18,6 +19,7 @@ import { readingMinutes } from '../../common/utils/reading-time.util';
 import { assertFresh } from '../../common/utils/stale.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService, withAuditTx } from '../audit/audit.service';
 import {
   lintErrors,
   markdownAltErrors,
@@ -41,6 +43,7 @@ export class PostsService {
     private readonly prisma: PrismaService,
     @Optional() private readonly publishing?: PublishingService,
     @Optional() private readonly events?: EventEmitter2,
+    @Optional() private readonly audit?: AuditService,
   ) {}
 
   async listPublic(locale: Locale, query: PostListParams): Promise<PublicPostListPage> {
@@ -134,29 +137,38 @@ export class PostsService {
   }
 
   async create(input: PostCreateInput): Promise<AdminPost> {
-    const row = await this.prisma.post.create({
-      data: {
-        slug: input.slug,
-        titleEn: input.titleEn,
-        titleVi: input.titleVi,
-        excerptEn: input.excerptEn,
-        excerptVi: input.excerptVi,
-        bodyEn: input.bodyEn,
-        bodyVi: input.bodyVi,
-        takeawaysEn: input.takeawaysEn,
-        takeawaysVi: input.takeawaysVi,
-        seoTitleEn: input.seoTitleEn,
-        seoTitleVi: input.seoTitleVi,
-        seoDescriptionEn: input.seoDescriptionEn,
-        seoDescriptionVi: input.seoDescriptionVi,
-        isFeatured: input.isFeatured ?? false,
-        sortOrder: input.sortOrder ?? 0,
-        coverId: input.coverId ?? null,
-        status: 'DRAFT',
-        readingMinutes: readingMinutes(input.bodyEn),
-        tags: input.tagIds ? { connect: input.tagIds.map((id) => ({ id })) } : undefined,
-      },
-      select: postSelect,
+    const row = await withAuditTx(this.prisma, this.audit, async (db) => {
+      const created = await db.post.create({
+        data: {
+          slug: input.slug,
+          titleEn: input.titleEn,
+          titleVi: input.titleVi,
+          excerptEn: input.excerptEn,
+          excerptVi: input.excerptVi,
+          bodyEn: input.bodyEn,
+          bodyVi: input.bodyVi,
+          takeawaysEn: input.takeawaysEn,
+          takeawaysVi: input.takeawaysVi,
+          seoTitleEn: input.seoTitleEn,
+          seoTitleVi: input.seoTitleVi,
+          seoDescriptionEn: input.seoDescriptionEn,
+          seoDescriptionVi: input.seoDescriptionVi,
+          isFeatured: input.isFeatured ?? false,
+          sortOrder: input.sortOrder ?? 0,
+          coverId: input.coverId ?? null,
+          status: 'DRAFT',
+          readingMinutes: readingMinutes(input.bodyEn),
+          tags: input.tagIds ? { connect: input.tagIds.map((id) => ({ id })) } : undefined,
+        },
+        select: postSelect,
+      });
+      await this.audit?.record(db, {
+        action: 'CREATE',
+        entityType: 'post',
+        entityId: created.id,
+        summary: `Created post ${created.slug}`,
+      });
+      return created;
     });
     this.scheduleRevalidate(row.slug);
     return toAdminDto(row);
@@ -182,7 +194,14 @@ export class PostsService {
           data: { tags: { set: tagIds.map((tagId) => ({ id: tagId })) } },
         });
       }
-      return tx.post.findUniqueOrThrow({ where: { id }, select: postSelect });
+      const updated = await tx.post.findUniqueOrThrow({ where: { id }, select: postSelect });
+      await this.audit?.record(tx, {
+        action: 'UPDATE',
+        entityType: 'post',
+        entityId: id,
+        summary: `Updated post ${updated.slug}`,
+      });
+      return updated;
     });
     this.scheduleRevalidate(current.slug, row.slug);
     return toAdminDto(row);
@@ -191,13 +210,22 @@ export class PostsService {
   async publish(id: number): Promise<AdminPost> {
     const current = await this.findRow(id);
     this.assertPublishable(current);
-    const row = await this.prisma.post.update({
-      where: { id },
-      data: {
-        status: 'PUBLISHED',
-        publishedAt: current.publishedAt ?? new Date(),
-      },
-      select: postSelect,
+    const row = await withAuditTx(this.prisma, this.audit, async (db) => {
+      const updated = await db.post.update({
+        where: { id },
+        data: {
+          status: 'PUBLISHED',
+          publishedAt: current.publishedAt ?? new Date(),
+        },
+        select: postSelect,
+      });
+      await this.audit?.record(db, {
+        action: 'PUBLISH',
+        entityType: 'post',
+        entityId: id,
+        summary: `Published post ${updated.slug}`,
+      });
+      return updated;
     });
     this.events?.emit('content.published', { entity: 'post', id: row.id, slug: row.slug });
     this.scheduleRevalidate(row.slug);
@@ -206,10 +234,19 @@ export class PostsService {
 
   async unpublish(id: number): Promise<AdminPost> {
     const current = await this.findRow(id);
-    const row = await this.prisma.post.update({
-      where: { id },
-      data: { status: 'DRAFT' },
-      select: postSelect,
+    const row = await withAuditTx(this.prisma, this.audit, async (db) => {
+      const updated = await db.post.update({
+        where: { id },
+        data: { status: 'DRAFT' },
+        select: postSelect,
+      });
+      await this.audit?.record(db, {
+        action: 'UPDATE',
+        entityType: 'post',
+        entityId: id,
+        summary: `Unpublished post ${updated.slug}`,
+      });
+      return updated;
     });
     this.scheduleRevalidate(current.slug);
     return toAdminDto(row);
@@ -217,13 +254,83 @@ export class PostsService {
 
   async archive(id: number): Promise<AdminPost> {
     const current = await this.findRow(id);
-    const row = await this.prisma.post.update({
-      where: { id },
-      data: { status: 'ARCHIVED' },
-      select: postSelect,
+    const row = await withAuditTx(this.prisma, this.audit, async (db) => {
+      const updated = await db.post.update({
+        where: { id },
+        data: { status: 'ARCHIVED' },
+        select: postSelect,
+      });
+      await this.audit?.record(db, {
+        action: 'ARCHIVE',
+        entityType: 'post',
+        entityId: id,
+        summary: `Archived post ${updated.slug}`,
+      });
+      return updated;
     });
     this.scheduleRevalidate(current.slug);
     return toAdminDto(row);
+  }
+
+  async bulk(input: BulkStatusInput): Promise<{ count: number }> {
+    const slugs: string[] = [];
+    const published: { id: number; slug: string }[] = [];
+    const count = await this.prisma.$transaction(async (tx) => {
+      const rows = await tx.post.findMany({
+        where: { id: { in: input.ids } },
+        select: postSelect,
+      });
+      if (rows.length !== input.ids.length) {
+        throw new NotFoundException({
+          code: 'NOT_FOUND',
+          message: 'One or more posts were not found',
+        });
+      }
+      const byId = new Map(rows.map((row) => [row.id, row]));
+      for (const id of input.ids) {
+        const current = byId.get(id);
+        if (!current) {
+          continue;
+        }
+        if (input.action === 'publish') {
+          this.assertPublishable(current);
+          await tx.post.update({
+            where: { id },
+            data: { status: 'PUBLISHED', publishedAt: current.publishedAt ?? new Date() },
+          });
+          await this.audit?.record(tx, {
+            action: 'PUBLISH',
+            entityType: 'post',
+            entityId: id,
+            summary: `Published post ${current.slug}`,
+          });
+          published.push({ id: current.id, slug: current.slug });
+        } else if (input.action === 'unpublish') {
+          await tx.post.update({ where: { id }, data: { status: 'DRAFT' } });
+          await this.audit?.record(tx, {
+            action: 'UPDATE',
+            entityType: 'post',
+            entityId: id,
+            summary: `Unpublished post ${current.slug}`,
+          });
+        } else {
+          await tx.post.update({ where: { id }, data: { status: 'ARCHIVED' } });
+          await this.audit?.record(tx, {
+            action: 'ARCHIVE',
+            entityType: 'post',
+            entityId: id,
+            summary: `Archived post ${current.slug}`,
+          });
+        }
+        slugs.push(current.slug);
+      }
+      return input.ids.length;
+    });
+    for (const row of published) {
+      this.events?.emit('content.published', { entity: 'post', id: row.id, slug: row.slug });
+    }
+    this.scheduleRevalidate(...slugs);
+    return { count };
   }
 
   private async findRow(id: number) {

@@ -7,8 +7,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 
 import { RoleGate } from '@/modules/admin-core/components/RoleGate/RoleGate';
+import { LATEST_AUDIT_PARAMS } from '@/modules/admin-insights/services/admin-audit.service';
 import { LATEST_INBOX_PARAMS } from '@/modules/admin-inbox/services/admin-inbox.service';
 
+import { ActivityCard } from '../components/ActivityCard/ActivityCard';
 import { ContentHealthCard } from '../components/ContentHealthCard/ContentHealthCard';
 import { InboxCard } from '../components/InboxCard/InboxCard';
 import { RangeToggle } from '../components/RangeToggle/RangeToggle';
@@ -65,6 +67,21 @@ export function AdminDashboardIndex({ range }: { range: StatsRange }) {
           }}
         >
           <InboxCard />
+        </SectionBoundary>
+        <SectionBoundary
+          labels={{
+            error: t('activity.error'),
+            retry: t('activity.retry'),
+            empty: t('activity.empty'),
+          }}
+          fallback={<HealthSkeleton />}
+          onReset={() => {
+            void queryClient.resetQueries({
+              queryKey: qk.admin.audit(LATEST_AUDIT_PARAMS),
+            });
+          }}
+        >
+          <ActivityCard />
         </SectionBoundary>
       </RoleGate>
     </div>

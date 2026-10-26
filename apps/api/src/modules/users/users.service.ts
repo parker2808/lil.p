@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, Optional } from '@nestjs/common';
 import type {
   AdminUser,
   AdminUserListPage,
@@ -14,12 +14,16 @@ import * as argon2 from 'argon2';
 import { paginate } from '../../common/utils/paginate.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
+import { AuditService, withAuditTx } from '../audit/audit.service';
 import { type UserRow, userSelect } from './entities/user.entity';
 import { toAdminUser } from './entities/user.mapper';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @Optional() private readonly audit?: AuditService,
+  ) {}
 
   findByEmail(email: string): Promise<UserRow | null> {
     return this.prisma.user.findUnique({ where: { email }, select: userSelect });
@@ -36,14 +40,23 @@ export class UsersService {
     role?: Role;
   }): Promise<UserRow> {
     const passwordHash = await argon2.hash(input.password, { type: argon2.argon2id });
-    return this.prisma.user.create({
-      data: {
-        email: input.email,
-        name: input.name,
-        passwordHash,
-        role: input.role ?? 'user',
-      },
-      select: userSelect,
+    return withAuditTx(this.prisma, this.audit, async (db) => {
+      const created = await db.user.create({
+        data: {
+          email: input.email,
+          name: input.name,
+          passwordHash,
+          role: input.role ?? 'user',
+        },
+        select: userSelect,
+      });
+      await this.audit?.record(db, {
+        action: 'CREATE',
+        entityType: 'user',
+        entityId: created.id,
+        summary: `Created user ${created.name}`,
+      });
+      return created;
     });
   }
 
@@ -116,6 +129,13 @@ export class UsersService {
         },
         select: userSelect,
       });
+      await this.audit?.record(tx, {
+        userId: actorId,
+        action: 'UPDATE',
+        entityType: 'user',
+        entityId: id,
+        summary: `Updated user ${updated.name}`,
+      });
       return toAdminUser(updated);
     });
   }
@@ -127,10 +147,19 @@ export class UsersService {
     }
     const passwordHash = await argon2.hash(password, { type: argon2.argon2id });
     return toAdminUser(
-      await this.prisma.user.update({
-        where: { id },
-        data: { passwordHash, tokenVersion: { increment: 1 } },
-        select: userSelect,
+      await withAuditTx(this.prisma, this.audit, async (db) => {
+        const updated = await db.user.update({
+          where: { id },
+          data: { passwordHash, tokenVersion: { increment: 1 } },
+          select: userSelect,
+        });
+        await this.audit?.record(db, {
+          action: 'UPDATE',
+          entityType: 'user',
+          entityId: id,
+          summary: `Set password for ${updated.name}`,
+        });
+        return updated;
       }),
     );
   }
