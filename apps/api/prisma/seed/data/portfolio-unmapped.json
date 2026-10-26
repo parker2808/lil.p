@@ -1,0 +1,223 @@
+{
+  "_note": "Fields from portfolio-data.json with no Prisma column, or values that cannot be stored as typed. Copied exactly. Do not invent replacements. PageSection became PageBlock (PLAN D26); titles that match a block key are also overlaid onto that block.",
+  "_meta": {
+    "generatedAt": "2026-10-26",
+    "sources": [
+      "/workspace/cv/parker-cv.pdf (text: /workspace/cv/parker-cv.txt)",
+      "/cursor/stores/user/portfolio/particula-fe.md",
+      "/cursor/stores/user/portfolio/cfw-backoffice-portal.md",
+      "/cursor/stores/user/portfolio/cfw-sales-crm-portal.md",
+      "plans/portfolio-design-system.md §1.5 (data model)"
+    ],
+    "conventions": "Bilingual fields are xxxEn / xxxVi columns per spec §1.5. TODO marks unknowns. <email>/<phone> are placeholders. All projects seeded as DRAFT."
+  },
+  "siteSettings": {
+    "availability": "TODO (OPEN | NOT_LOOKING | FREELANCE)",
+    "availabilityStoredAs": "OPEN",
+    "reason": "SiteSettings.availability is an enum (OPEN | NOT_LOOKING | FREELANCE)."
+  },
+  "pageSections": [
+    {
+      "page": "HOME",
+      "key": "hero",
+      "titleEn": null,
+      "titleVi": null,
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "page": "HOME",
+      "key": "stats",
+      "titleEn": "At a glance",
+      "titleVi": "Tóm tắt nhanh",
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "page": "HOME",
+      "key": "featured",
+      "titleEn": "Featured work",
+      "titleVi": "Dự án nổi bật",
+      "sortOrder": 2,
+      "isVisible": true
+    },
+    {
+      "page": "HOME",
+      "key": "domains",
+      "titleEn": "Domains",
+      "titleVi": "Lĩnh vực",
+      "sortOrder": 3,
+      "isVisible": true
+    },
+    {
+      "page": "HOME",
+      "key": "process",
+      "titleEn": "How I migrate a frontend",
+      "titleVi": "Cách mình migrate một frontend",
+      "sortOrder": 4,
+      "isVisible": true
+    },
+    {
+      "page": "HOME",
+      "key": "marquee",
+      "titleEn": "Tools I use",
+      "titleVi": "Công cụ mình dùng",
+      "sortOrder": 5,
+      "isVisible": true
+    },
+    {
+      "page": "HOME",
+      "key": "cta",
+      "titleEn": "Let's talk",
+      "titleVi": "Nói chuyện nhé",
+      "sortOrder": 6,
+      "isVisible": true
+    },
+    {
+      "page": "ABOUT",
+      "key": "work",
+      "titleEn": "Experience",
+      "titleVi": "Kinh nghiệm",
+      "sortOrder": 7,
+      "isVisible": true
+    },
+    {
+      "page": "ABOUT",
+      "key": "skills",
+      "titleEn": "Skills",
+      "titleVi": "Kỹ năng",
+      "sortOrder": 8,
+      "isVisible": true
+    },
+    {
+      "page": "ABOUT",
+      "key": "principles",
+      "titleEn": "How I work",
+      "titleVi": "Cách mình làm việc",
+      "sortOrder": 9,
+      "isVisible": true
+    },
+    {
+      "page": "PROJECTS",
+      "key": "work",
+      "titleEn": "Projects",
+      "titleVi": "Dự án",
+      "sortOrder": 10,
+      "isVisible": true
+    },
+    {
+      "page": "NOTES",
+      "key": "notes",
+      "titleEn": "Notes",
+      "titleVi": "Ghi chép",
+      "sortOrder": 11,
+      "isVisible": true
+    },
+    {
+      "page": "CONTACT",
+      "key": "cta",
+      "titleEn": "Contact",
+      "titleVi": "Liên hệ",
+      "sortOrder": 12,
+      "isVisible": true
+    }
+  ],
+  "skillCategorySlugs": [
+    {
+      "slug": "frontend",
+      "reason": "SkillCategory has no slug column; slug is a seed join key only."
+    },
+    {
+      "slug": "testing",
+      "reason": "SkillCategory has no slug column; slug is a seed join key only."
+    },
+    {
+      "slug": "backend",
+      "reason": "SkillCategory has no slug column; slug is a seed join key only."
+    },
+    {
+      "slug": "data",
+      "reason": "SkillCategory has no slug column; slug is a seed join key only."
+    },
+    {
+      "slug": "workflow",
+      "reason": "SkillCategory has no slug column; slug is a seed join key only."
+    }
+  ],
+  "experience": [
+    {
+      "key": "cmc-cfw",
+      "clientNote": "Client: Central Food Wholesale (Central Group), Thailand",
+      "evidence": "Git identities <email> (lilparker28) and co-author line 'Hung. Vu Van - CMC Global DU3.1 <email>'. Earliest commit 17 Jul 2026 (Back Office), CRM 7 Aug - 23 Sep 2026.",
+      "todo": "Exact start date with CMC Global for this engagement (CV says Kobizo until 'Now'; notes say Particula ended Dec 2025). Is it still ongoing?",
+      "reason": "Experience has no key / clientNote / evidence / todo columns."
+    },
+    {
+      "key": "kobizo",
+      "clientNote": null,
+      "evidence": null,
+      "todo": "CV says Feb 2024 - Now; git shows main frontend work Jul 2024 - Dec 2025. Confirm real start/end.",
+      "reason": "Experience has no key / clientNote / evidence / todo columns."
+    },
+    {
+      "key": "cmc-samsung",
+      "clientNote": "Client: Samsung SDS",
+      "evidence": null,
+      "todo": null,
+      "reason": "Experience has no key / clientNote / evidence / todo columns."
+    },
+    {
+      "key": "litgroup-fe",
+      "clientNote": null,
+      "evidence": null,
+      "todo": null,
+      "reason": "Experience has no key / clientNote / evidence / todo columns."
+    },
+    {
+      "key": "litgroup-be",
+      "clientNote": null,
+      "evidence": null,
+      "todo": null,
+      "reason": "Experience has no key / clientNote / evidence / todo columns."
+    }
+  ],
+  "profileStats": [
+    {
+      "labelEn": "Framework migrations",
+      "note": "Spec seed value. CV: Vue 2 -> Nuxt 3 (Particula). TODO confirm the second one.",
+      "reason": "ProfileStat has no note column."
+    }
+  ],
+  "projects": [
+    {
+      "slug": "msp-advanced",
+      "note": "Short entry from CV only. Needs notes like the other three before a full case study.",
+      "reason": "Project has no free-form note column."
+    },
+    {
+      "slug": "msp-app-expansion",
+      "note": "Short entry from CV only. Needs notes like the other three before a full case study.",
+      "reason": "Project has no free-form note column."
+    },
+    {
+      "slug": "migration-data-tool",
+      "note": "Short entry from CV only. Needs notes like the other three before a full case study.",
+      "reason": "Project has no free-form note column."
+    }
+  ],
+  "_skillsNote": "Depth levels (DAILY/SHIPPED/GROWING) are my reading of CV + notes. CV marks Python, PHP, Nest as basic and React/Next as 'a bit'. TODO Parker confirm.",
+  "_principlesNote": "Drafted from patterns in the notes (STRUCTURE.md, diff-only PUT, expected_version, unsaved guards). Spec only names principle 1. TODO Parker approve wording.",
+  "_postsNote": "Spec seeds 0 posts.",
+  "gaps": [
+    "Kobizo dates: CV says Feb 2024 - Now, git notes say main frontend Jul 2024 - Dec 2025. Which to show?",
+    "CMC Global for CFW: start date (first commit 17 Jul 2026), is it ongoing, and what Jan - Jun 2026 was.",
+    "CMC Global Samsung period (Jul 2022 - Jun 2024) overlaps Kobizo start Feb 2024 in the CV.",
+    "Domain, LinkedIn URL, availability, reply-time note.",
+    "English level for Profile.languages; degree name for Education.",
+    "Team size for both CFW projects; whether CFW / Particula names can be public (all marked isConfidential).",
+    "Lessons sections for every case study.",
+    "MSP Advanced, MSP App Expansion, Migration Data Tool: only CV text, no detailed notes.",
+    "Second 'framework migration' in the stats band; skill depth levels; principles wording.",
+    "Real email/phone stay as <email>/<phone> placeholders; Parker sets them in admin."
+  ]
+}

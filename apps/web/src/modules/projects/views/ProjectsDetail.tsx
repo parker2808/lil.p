@@ -39,6 +39,9 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
     tradeoffs: t('tradeoffs'),
     result: t('result'),
     retro: t('retro'),
+    notMine: t('notMine'),
+    released: t('released'),
+    notReleased: t('notReleased'),
   });
   const period = formatPeriod(project.startDate, project.endDate, locale, t('now'));
   const stack = project.skills.map((skill) => skill.name).join(' · ');
@@ -102,6 +105,9 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
                 tradeoffs: t('tradeoffs'),
                 result: t('result'),
                 retro: t('retro'),
+                notMine: t('notMine'),
+                released: t('released'),
+                notReleased: t('notReleased'),
               }}
             />
             <FactChips chips={project.factChips} />

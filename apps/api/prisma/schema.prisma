@@ -400,6 +400,11 @@ model Project {
   keyFactsVi      String        @db.Text
   factChipsEn     String
   factChipsVi     String
+  /// Teammate / backend work that must not be shown as the owner's.
+  notMineEn       String?       @db.Text
+  notMineVi       String?       @db.Text
+  /// `{ released: string[], notReleased: string[] }` — exact ticket/PR list from the source.
+  releaseStatus   Json?
   seoTitleEn      String?
   seoTitleVi      String?
   seoDescriptionEn String?      @db.Text

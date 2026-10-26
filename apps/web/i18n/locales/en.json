@@ -62,6 +62,9 @@
     "tradeoffs": "Trade-offs",
     "result": "Result",
     "retro": "Retro",
+    "notMine": "Not my work",
+    "released": "Released",
+    "notReleased": "Not released",
     "moreIn": "More in {name}",
     "more": "More case studies",
     "live": "Live site"

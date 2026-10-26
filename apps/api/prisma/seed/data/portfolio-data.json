@@ -1,0 +1,1250 @@
+{
+  "_meta": {
+    "generatedAt": "2026-10-26",
+    "sources": [
+      "/workspace/cv/parker-cv.pdf (text: /workspace/cv/parker-cv.txt)",
+      "/cursor/stores/user/portfolio/particula-fe.md",
+      "/cursor/stores/user/portfolio/cfw-backoffice-portal.md",
+      "/cursor/stores/user/portfolio/cfw-sales-crm-portal.md",
+      "plans/portfolio-design-system.md §1.5 (data model)"
+    ],
+    "conventions": "Bilingual fields are xxxEn / xxxVi columns per spec §1.5. TODO marks unknowns. <email>/<phone> are placeholders. All projects seeded as DRAFT."
+  },
+  "siteSettings": {
+    "id": 1,
+    "siteName": "Parker Vu",
+    "domain": "TODO",
+    "defaultLocale": "en",
+    "seoTitleEn": "Parker Vu, Frontend Developer (Vue, Nuxt, TypeScript)",
+    "seoTitleVi": "Parker Vu, Frontend Developer (Vue, Nuxt, TypeScript)",
+    "seoDescriptionEn": "Frontend developer from Hanoi. I build data-heavy web apps with Vue 3, Nuxt and TypeScript: rating platforms, back offices and sales tools.",
+    "seoDescriptionVi": "Frontend developer ở Hà Nội. Mình làm các web app nhiều dữ liệu bằng Vue 3, Nuxt và TypeScript: nền tảng rating, back office, công cụ cho sales.",
+    "ogImageId": null,
+    "footerNoteEn": "Built with Next.js and NestJS. Content lives in the admin.",
+    "footerNoteVi": "Làm bằng Next.js và NestJS. Nội dung quản lý trong admin.",
+    "contactIntroEn": "Have a frontend role or project in mind? Send me a message.",
+    "contactIntroVi": "Bạn có vị trí hay dự án frontend cần người? Nhắn mình nhé.",
+    "replyTimeNoteEn": "TODO (e.g. I usually reply within 2 days)",
+    "replyTimeNoteVi": "TODO (ví dụ: Mình thường trả lời trong 2 ngày)",
+    "contactEmail": "<email>",
+    "availability": "TODO (OPEN | NOT_LOOKING | FREELANCE)",
+    "availabilityNoteEn": "TODO",
+    "availabilityNoteVi": "TODO",
+    "analyticsEnabled": true,
+    "ambientEffects": true,
+    "marqueeEnabled": true
+  },
+  "profile": {
+    "id": 1,
+    "displayName": "Parker Vu",
+    "legalName": "Vu Van Hung (Hung Vu Van)",
+    "city": "Hanoi (Nam Tu Liem)",
+    "country": "Vietnam",
+    "timezone": "Asia/Ho_Chi_Minh",
+    "careerStartDate": "2021-01-01",
+    "headlineEn": "Frontend developer for data-heavy products",
+    "headlineVi": "Frontend developer cho các sản phẩm nhiều dữ liệu",
+    "headlineAccentEn": "data-heavy",
+    "headlineAccentVi": "nhiều dữ liệu",
+    "heroKickerEn": "> Frontend · Vue/Nuxt/TS",
+    "heroKickerVi": "> Frontend · Vue/Nuxt/TS",
+    "subheadlineEn": "I build rating platforms, back offices and sales tools with Vue 3, Nuxt and TypeScript. I care about clean structure and forms that do not lose data.",
+    "subheadlineVi": "Mình làm nền tảng rating, back office và công cụ cho sales bằng Vue 3, Nuxt, TypeScript. Mình chú trọng cấu trúc code gọn và form không làm mất dữ liệu.",
+    "bioEn": "I started in 2021 as a fullstack developer on a data migration tool (Flask, Laravel, Vue 2). Then I moved to frontend: Samsung SDS platforms at CMC Global, Particula at Kobizo, and Central Food Wholesale portals through CMC Global.\n\nAt Kobizo I led the frontend move from v1 to v2 on Nuxt 3 and was the top contributor on the repo. I like breaking big migrations into slices, and I write down the conventions so the team can follow them.",
+    "bioVi": "Mình bắt đầu từ 2021, làm fullstack cho một tool migrate dữ liệu (Flask, Laravel, Vue 2). Sau đó mình chuyển hẳn sang frontend: các platform của Samsung SDS ở CMC Global, Particula ở Kobizo, rồi các portal của Central Food Wholesale qua CMC Global.\n\nỞ Kobizo, mình dẫn việc chuyển frontend từ v1 sang v2 trên Nuxt 3 và là người commit nhiều nhất repo. Mình thích chia migration lớn thành từng phần nhỏ, và luôn viết lại convention để cả team làm theo.",
+    "languagesEn": "Vietnamese (native), English (working, TODO confirm level)",
+    "languagesVi": "Tiếng Việt (bản ngữ), tiếng Anh (dùng trong công việc, TODO xác nhận mức độ)",
+    "avatarId": null,
+    "resumeEnId": null,
+    "resumeViId": null,
+    "phone": "<phone>"
+  },
+  "navItems": [
+    {
+      "location": "HEADER",
+      "labelEn": "Home",
+      "labelVi": "Trang chủ",
+      "href": "/",
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "location": "HEADER",
+      "labelEn": "About",
+      "labelVi": "Giới thiệu",
+      "href": "/about",
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "location": "HEADER",
+      "labelEn": "Projects",
+      "labelVi": "Dự án",
+      "href": "/projects",
+      "sortOrder": 2,
+      "isVisible": true
+    },
+    {
+      "location": "HEADER",
+      "labelEn": "Notes",
+      "labelVi": "Ghi chép",
+      "href": "/notes",
+      "sortOrder": 3,
+      "isVisible": true
+    },
+    {
+      "location": "HEADER",
+      "labelEn": "Contact",
+      "labelVi": "Liên hệ",
+      "href": "/contact",
+      "sortOrder": 4,
+      "isVisible": true
+    }
+  ],
+  "socialLinks": [
+    {
+      "kind": "GITHUB",
+      "labelEn": "GitHub",
+      "labelVi": "GitHub",
+      "url": "https://github.com/parker2808",
+      "showInHeader": true,
+      "showInCta": true,
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "kind": "LINKEDIN",
+      "labelEn": "LinkedIn",
+      "labelVi": "LinkedIn",
+      "url": "TODO",
+      "showInHeader": true,
+      "showInCta": false,
+      "sortOrder": 1,
+      "isVisible": false
+    },
+    {
+      "kind": "EMAIL",
+      "labelEn": "Email",
+      "labelVi": "Email",
+      "url": "mailto:<email>",
+      "showInHeader": false,
+      "showInCta": true,
+      "sortOrder": 2,
+      "isVisible": true
+    }
+  ],
+  "pageSections": [
+    {
+      "page": "HOME",
+      "key": "hero",
+      "titleEn": null,
+      "titleVi": null,
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "page": "HOME",
+      "key": "stats",
+      "titleEn": "At a glance",
+      "titleVi": "Tóm tắt nhanh",
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "page": "HOME",
+      "key": "featured",
+      "titleEn": "Featured work",
+      "titleVi": "Dự án nổi bật",
+      "sortOrder": 2,
+      "isVisible": true
+    },
+    {
+      "page": "HOME",
+      "key": "domains",
+      "titleEn": "Domains",
+      "titleVi": "Lĩnh vực",
+      "sortOrder": 3,
+      "isVisible": true
+    },
+    {
+      "page": "HOME",
+      "key": "process",
+      "titleEn": "How I migrate a frontend",
+      "titleVi": "Cách mình migrate một frontend",
+      "sortOrder": 4,
+      "isVisible": true
+    },
+    {
+      "page": "HOME",
+      "key": "marquee",
+      "titleEn": "Tools I use",
+      "titleVi": "Công cụ mình dùng",
+      "sortOrder": 5,
+      "isVisible": true
+    },
+    {
+      "page": "HOME",
+      "key": "cta",
+      "titleEn": "Let's talk",
+      "titleVi": "Nói chuyện nhé",
+      "sortOrder": 6,
+      "isVisible": true
+    },
+    {
+      "page": "ABOUT",
+      "key": "work",
+      "titleEn": "Experience",
+      "titleVi": "Kinh nghiệm",
+      "sortOrder": 7,
+      "isVisible": true
+    },
+    {
+      "page": "ABOUT",
+      "key": "skills",
+      "titleEn": "Skills",
+      "titleVi": "Kỹ năng",
+      "sortOrder": 8,
+      "isVisible": true
+    },
+    {
+      "page": "ABOUT",
+      "key": "principles",
+      "titleEn": "How I work",
+      "titleVi": "Cách mình làm việc",
+      "sortOrder": 9,
+      "isVisible": true
+    },
+    {
+      "page": "PROJECTS",
+      "key": "work",
+      "titleEn": "Projects",
+      "titleVi": "Dự án",
+      "sortOrder": 10,
+      "isVisible": true
+    },
+    {
+      "page": "NOTES",
+      "key": "notes",
+      "titleEn": "Notes",
+      "titleVi": "Ghi chép",
+      "sortOrder": 11,
+      "isVisible": true
+    },
+    {
+      "page": "CONTACT",
+      "key": "cta",
+      "titleEn": "Contact",
+      "titleVi": "Liên hệ",
+      "sortOrder": 12,
+      "isVisible": true
+    }
+  ],
+  "profileStats": [
+    {
+      "labelEn": "Years building for the web",
+      "labelVi": "Năm làm web",
+      "value": null,
+      "suffix": "+",
+      "source": "YEARS_COMPUTED",
+      "iconKey": "calendar",
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "labelEn": "Products shipped",
+      "labelVi": "Sản phẩm đã làm",
+      "value": null,
+      "source": "PROJECT_COUNT",
+      "iconKey": "package",
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "labelEn": "Framework migrations",
+      "labelVi": "Lần migrate framework",
+      "value": "2",
+      "source": "MANUAL",
+      "iconKey": "git-branch",
+      "sortOrder": 2,
+      "isVisible": true,
+      "note": "Spec seed value. CV: Vue 2 -> Nuxt 3 (Particula). TODO confirm the second one."
+    },
+    {
+      "labelEn": "Enterprise platform (Samsung SDS)",
+      "labelVi": "Platform enterprise (Samsung SDS)",
+      "value": "1",
+      "source": "MANUAL",
+      "iconKey": "building",
+      "sortOrder": 3,
+      "isVisible": true
+    }
+  ],
+  "domains": [
+    {
+      "slug": "fintech-web3",
+      "nameEn": "Fintech / Web3 (ReFi)",
+      "nameVi": "Fintech / Web3 (ReFi)",
+      "descriptionEn": "Rating and analytics for tokenized real-world assets.",
+      "descriptionVi": "Rating và phân tích cho tài sản thực được token hóa.",
+      "hue": "AMBER",
+      "iconKey": "coins",
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "slug": "enterprise",
+      "nameEn": "Enterprise platforms",
+      "nameVi": "Platform enterprise",
+      "descriptionEn": "Internal tools for large companies: Samsung SDS, Central Food Wholesale.",
+      "descriptionVi": "Tool nội bộ cho doanh nghiệp lớn: Samsung SDS, Central Food Wholesale.",
+      "hue": "BLUE",
+      "iconKey": "building",
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "slug": "ecommerce-tooling",
+      "nameEn": "E-commerce tooling",
+      "nameVi": "Tool cho e-commerce",
+      "descriptionEn": "Moving store data between Shopify, BigCommerce, WooCommerce and Magento.",
+      "descriptionVi": "Chuyển dữ liệu cửa hàng giữa Shopify, BigCommerce, WooCommerce và Magento.",
+      "hue": "VIOLET",
+      "iconKey": "shopping-cart",
+      "sortOrder": 2,
+      "isVisible": true
+    },
+    {
+      "slug": "dx-testing",
+      "nameEn": "Developer experience & testing",
+      "nameVi": "Developer experience và testing",
+      "descriptionEn": "Project structure, conventions, Playwright and Vitest.",
+      "descriptionVi": "Cấu trúc project, convention, Playwright và Vitest.",
+      "hue": "JADE",
+      "iconKey": "flask-conical",
+      "sortOrder": 3,
+      "isVisible": true
+    }
+  ],
+  "skillCategories": [
+    {
+      "slug": "frontend",
+      "nameEn": "Frontend",
+      "nameVi": "Frontend",
+      "sortOrder": 0
+    },
+    {
+      "slug": "testing",
+      "nameEn": "Testing",
+      "nameVi": "Testing",
+      "sortOrder": 1
+    },
+    {
+      "slug": "backend",
+      "nameEn": "Backend",
+      "nameVi": "Backend",
+      "sortOrder": 2
+    },
+    {
+      "slug": "data",
+      "nameEn": "Data",
+      "nameVi": "Dữ liệu",
+      "sortOrder": 3
+    },
+    {
+      "slug": "workflow",
+      "nameEn": "Workflow",
+      "nameVi": "Quy trình",
+      "sortOrder": 4
+    }
+  ],
+  "skills": [
+    {
+      "name": "Vue 3",
+      "slug": "vue-3",
+      "category": "frontend",
+      "depth": "DAILY",
+      "showInMarquee": true,
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "name": "Nuxt 3",
+      "slug": "nuxt-3",
+      "category": "frontend",
+      "depth": "DAILY",
+      "showInMarquee": true,
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "name": "TypeScript",
+      "slug": "typescript",
+      "category": "frontend",
+      "depth": "DAILY",
+      "showInMarquee": true,
+      "sortOrder": 2,
+      "isVisible": true
+    },
+    {
+      "name": "JavaScript (ES6+)",
+      "slug": "javascript-es6+",
+      "category": "frontend",
+      "depth": "DAILY",
+      "showInMarquee": false,
+      "sortOrder": 3,
+      "isVisible": true
+    },
+    {
+      "name": "Pinia",
+      "slug": "pinia",
+      "category": "frontend",
+      "depth": "DAILY",
+      "showInMarquee": true,
+      "sortOrder": 4,
+      "isVisible": true
+    },
+    {
+      "name": "TanStack Vue Query",
+      "slug": "tanstack-vue-query",
+      "category": "frontend",
+      "depth": "DAILY",
+      "showInMarquee": true,
+      "sortOrder": 5,
+      "isVisible": true
+    },
+    {
+      "name": "Tailwind CSS",
+      "slug": "tailwind-css",
+      "category": "frontend",
+      "depth": "DAILY",
+      "showInMarquee": true,
+      "sortOrder": 6,
+      "isVisible": true
+    },
+    {
+      "name": "PrimeVue",
+      "slug": "primevue",
+      "category": "frontend",
+      "depth": "SHIPPED",
+      "showInMarquee": true,
+      "sortOrder": 7,
+      "isVisible": true
+    },
+    {
+      "name": "Vuetify 3",
+      "slug": "vuetify-3",
+      "category": "frontend",
+      "depth": "SHIPPED",
+      "showInMarquee": true,
+      "sortOrder": 8,
+      "isVisible": true
+    },
+    {
+      "name": "Vue 2",
+      "slug": "vue-2",
+      "category": "frontend",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 9,
+      "isVisible": true
+    },
+    {
+      "name": "Vuex",
+      "slug": "vuex",
+      "category": "frontend",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 10,
+      "isVisible": true
+    },
+    {
+      "name": "Nuxt 4",
+      "slug": "nuxt-4",
+      "category": "frontend",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 11,
+      "isVisible": true
+    },
+    {
+      "name": "Tiptap",
+      "slug": "tiptap",
+      "category": "frontend",
+      "depth": "SHIPPED",
+      "showInMarquee": true,
+      "sortOrder": 12,
+      "isVisible": true
+    },
+    {
+      "name": "Chart.js",
+      "slug": "chartjs",
+      "category": "frontend",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 13,
+      "isVisible": true
+    },
+    {
+      "name": "vee-validate + yup",
+      "slug": "vee-validate-yup",
+      "category": "frontend",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 14,
+      "isVisible": true
+    },
+    {
+      "name": "vue-i18n",
+      "slug": "vue-i18n",
+      "category": "frontend",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 15,
+      "isVisible": true
+    },
+    {
+      "name": "Storybook",
+      "slug": "storybook",
+      "category": "frontend",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 16,
+      "isVisible": true
+    },
+    {
+      "name": "SCSS",
+      "slug": "scss",
+      "category": "frontend",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 17,
+      "isVisible": true
+    },
+    {
+      "name": "Vite",
+      "slug": "vite",
+      "category": "frontend",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 18,
+      "isVisible": true
+    },
+    {
+      "name": "React / Next.js",
+      "slug": "react-nextjs",
+      "category": "frontend",
+      "depth": "GROWING",
+      "showInMarquee": false,
+      "sortOrder": 19,
+      "isVisible": true
+    },
+    {
+      "name": "Vitest",
+      "slug": "vitest",
+      "category": "testing",
+      "depth": "SHIPPED",
+      "showInMarquee": true,
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "name": "Playwright",
+      "slug": "playwright",
+      "category": "testing",
+      "depth": "SHIPPED",
+      "showInMarquee": true,
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "name": "Selenium",
+      "slug": "selenium",
+      "category": "testing",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 2,
+      "isVisible": true
+    },
+    {
+      "name": "Python Flask",
+      "slug": "python-flask",
+      "category": "backend",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "name": "PHP Laravel",
+      "slug": "php-laravel",
+      "category": "backend",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "name": "NestJS",
+      "slug": "nestjs",
+      "category": "backend",
+      "depth": "GROWING",
+      "showInMarquee": false,
+      "sortOrder": 2,
+      "isVisible": true
+    },
+    {
+      "name": "REST",
+      "slug": "rest",
+      "category": "backend",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 3,
+      "isVisible": true
+    },
+    {
+      "name": "GraphQL",
+      "slug": "graphql",
+      "category": "backend",
+      "depth": "GROWING",
+      "showInMarquee": false,
+      "sortOrder": 4,
+      "isVisible": true
+    },
+    {
+      "name": "OAuth",
+      "slug": "oauth",
+      "category": "backend",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 5,
+      "isVisible": true
+    },
+    {
+      "name": "MySQL",
+      "slug": "mysql",
+      "category": "data",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "name": "MariaDB",
+      "slug": "mariadb",
+      "category": "data",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "name": "MSSQL",
+      "slug": "mssql",
+      "category": "data",
+      "depth": "SHIPPED",
+      "showInMarquee": false,
+      "sortOrder": 2,
+      "isVisible": true
+    },
+    {
+      "name": "Git",
+      "slug": "git",
+      "category": "workflow",
+      "depth": "DAILY",
+      "showInMarquee": false,
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "name": "GitHub / GitLab / Bitbucket",
+      "slug": "github-gitlab-bitbucket",
+      "category": "workflow",
+      "depth": "DAILY",
+      "showInMarquee": false,
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "name": "Jira",
+      "slug": "jira",
+      "category": "workflow",
+      "depth": "DAILY",
+      "showInMarquee": false,
+      "sortOrder": 2,
+      "isVisible": true
+    },
+    {
+      "name": "Agile / Scrum",
+      "slug": "agile-scrum",
+      "category": "workflow",
+      "depth": "DAILY",
+      "showInMarquee": false,
+      "sortOrder": 3,
+      "isVisible": true
+    }
+  ],
+  "_skillsNote": "Depth levels (DAILY/SHIPPED/GROWING) are my reading of CV + notes. CV marks Python, PHP, Nest as basic and React/Next as 'a bit'. TODO Parker confirm.",
+  "experience": [
+    {
+      "key": "cmc-cfw",
+      "company": "CMC Global",
+      "clientNote": "Client: Central Food Wholesale (Central Group), Thailand",
+      "companyUrl": null,
+      "location": "Hanoi, Vietnam (TODO confirm onsite/remote)",
+      "employmentType": "FULL_TIME",
+      "roleEn": "Frontend Developer",
+      "roleVi": "Frontend Developer",
+      "summaryEn": "Frontend on two internal portals for Central Food Wholesale: the CDP Back Office and the Sales CRM.",
+      "summaryVi": "Làm frontend cho hai portal nội bộ của Central Food Wholesale: CDP Back Office và Sales CRM.",
+      "highlightsEn": "- Built the field configuration screen for customer verification (LOCK / VERIFY / OPEN for 205 fields).\n- Applied that config to the customer info form, with a confirm step before VERIFY changes are sent.\n- Built the visit-route review UI for sales: draft edits, frozen completed stops, drag and drop on iPad.\n- Built the first version of the AI recommendation tab (UI on a mock service).",
+      "highlightsVi": "- Làm màn field configuration cho customer verification (LOCK / VERIFY / OPEN cho 205 field).\n- Áp config đó vào form thông tin khách hàng, có bước xác nhận trước khi gửi thay đổi VERIFY.\n- Làm UI review tuyến viếng thăm cho sales: sửa dạng draft, khóa điểm đã viếng thăm, kéo thả chạy được trên iPad.\n- Làm bản đầu của tab AI recommendation (UI chạy trên service mock).",
+      "startDate": "2026-07",
+      "endDate": null,
+      "skills": [
+        "nuxt-3",
+        "nuxt-4",
+        "vuetify-3",
+        "pinia",
+        "tanstack-vue-query",
+        "typescript",
+        "vitest"
+      ],
+      "evidence": "Git identities <email> (lilparker28) and co-author line 'Hung. Vu Van - CMC Global DU3.1 <email>'. Earliest commit 17 Jul 2026 (Back Office), CRM 7 Aug - 23 Sep 2026.",
+      "todo": "Exact start date with CMC Global for this engagement (CV says Kobizo until 'Now'; notes say Particula ended Dec 2025). Is it still ongoing?",
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "key": "kobizo",
+      "company": "Kobizo",
+      "companyUrl": null,
+      "location": "TODO",
+      "employmentType": "FULL_TIME",
+      "roleEn": "Frontend Developer (main frontend on Particula)",
+      "roleVi": "Frontend Developer (frontend chính của Particula)",
+      "summaryEn": "Main frontend developer on Particula, a rating and analytics platform for tokenized real-world assets.",
+      "summaryVi": "Frontend chính của Particula, nền tảng rating và phân tích cho tài sản thực được token hóa.",
+      "highlightsEn": "- Led the v1 to v2 frontend migration on Nuxt 3. The legacy module tree went from 70 modules to 11.\n- Top contributor: about 416 of 1,791 commits on main.\n- Owned Report Generation Config and the Financial Statement module.\n- Set 1-hour staleTime caching across 52 queries.\n- Set up Playwright and data-test hooks on key flows.",
+      "highlightsVi": "- Dẫn việc migrate frontend từ v1 sang v2 trên Nuxt 3. Phần module cũ giảm từ 70 xuống 11.\n- Commit nhiều nhất repo: khoảng 416 trên 1.791 commit ở main.\n- Phụ trách Report Generation Config và module Financial Statement.\n- Cache staleTime 1 giờ cho 52 query.\n- Dựng Playwright và gắn data-test cho các luồng chính.",
+      "startDate": "2024-02",
+      "endDate": "2025-12",
+      "skills": [
+        "nuxt-3",
+        "vue-3",
+        "typescript",
+        "pinia",
+        "tanstack-vue-query",
+        "primevue",
+        "tailwind-css",
+        "tiptap",
+        "chartjs",
+        "playwright",
+        "vitest",
+        "storybook"
+      ],
+      "todo": "CV says Feb 2024 - Now; git shows main frontend work Jul 2024 - Dec 2025. Confirm real start/end.",
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "key": "cmc-samsung",
+      "company": "CMC Global",
+      "clientNote": "Client: Samsung SDS",
+      "companyUrl": null,
+      "location": "Hanoi, Vietnam",
+      "employmentType": "FULL_TIME",
+      "roleEn": "Frontend Developer",
+      "roleVi": "Frontend Developer",
+      "summaryEn": "Frontend on MSP App Expansion and MSP Advanced for Samsung SDS, working with a Korean team.",
+      "summaryVi": "Làm frontend cho MSP App Expansion và MSP Advanced của Samsung SDS, làm việc cùng team Hàn Quốc.",
+      "highlightsEn": "- Built frontend features with Vue 2 and the Lego framework.\n- Worked daily with the Korean team.\n- Fixed bugs and wrote unit tests.",
+      "highlightsVi": "- Làm tính năng frontend bằng Vue 2 và Lego framework.\n- Làm việc hằng ngày với team Hàn Quốc.\n- Fix bug và viết unit test.",
+      "startDate": "2022-07",
+      "endDate": "2024-06",
+      "skills": ["vue-2", "vuex"],
+      "sortOrder": 2,
+      "isVisible": true
+    },
+    {
+      "key": "litgroup-fe",
+      "company": "LitGroup",
+      "companyUrl": null,
+      "location": "TODO",
+      "employmentType": "FULL_TIME",
+      "roleEn": "Frontend Developer",
+      "roleVi": "Frontend Developer",
+      "summaryEn": "Frontend for a data migration tool used by US and UK store owners.",
+      "summaryVi": "Làm frontend cho tool migrate dữ liệu, khách hàng ở Mỹ và Anh.",
+      "highlightsEn": "- Built the migration tool UI with Vue 2 and TypeScript.\n- Managed large migration state with Pinia.\n- Fixed UI issues reported by customers.",
+      "highlightsVi": "- Làm UI tool migrate bằng Vue 2 và TypeScript.\n- Quản lý state migration lớn bằng Pinia.\n- Fix lỗi UI khách hàng báo.",
+      "startDate": "2022-01",
+      "endDate": "2022-06",
+      "skills": ["vue-2", "typescript", "pinia"],
+      "sortOrder": 3,
+      "isVisible": true
+    },
+    {
+      "key": "litgroup-be",
+      "company": "LitGroup",
+      "companyUrl": null,
+      "location": "TODO",
+      "employmentType": "FULL_TIME",
+      "roleEn": "Backend Developer",
+      "roleVi": "Backend Developer",
+      "summaryEn": "Backend for the same migration tool, with Flask and Laravel.",
+      "summaryVi": "Làm backend cho chính tool migrate đó, bằng Flask và Laravel.",
+      "highlightsEn": "- Built and maintained APIs for Shopify, BigCommerce, WooCommerce and Magento.\n- Helped customers fix migration errors, like unsupported custom data.\n- Worked on the Laravel management system.",
+      "highlightsVi": "- Viết và duy trì API cho Shopify, BigCommerce, WooCommerce, Magento.\n- Hỗ trợ khách xử lý lỗi migrate, ví dụ dữ liệu custom không được hỗ trợ.\n- Tham gia hệ thống quản lý viết bằng Laravel.",
+      "startDate": "2021-01",
+      "endDate": "2021-12",
+      "skills": ["python-flask", "php-laravel", "rest"],
+      "sortOrder": 4,
+      "isVisible": true
+    }
+  ],
+  "education": [
+    {
+      "school": "Hanoi University of Industry",
+      "degreeEn": "Bachelor (TODO confirm degree name)",
+      "degreeVi": "Cử nhân (TODO xác nhận tên bằng)",
+      "majorEn": "Computer Science",
+      "majorVi": "Khoa học máy tính",
+      "startDate": "2017-07",
+      "endDate": "2021-07",
+      "isVisible": true
+    }
+  ],
+  "principles": [
+    {
+      "titleEn": "Migrate in slices",
+      "titleVi": "Migrate từng phần",
+      "bodyEn": "Big rewrites fail. I move one module at a time and keep the app shippable.",
+      "bodyVi": "Viết lại một lần dễ hỏng. Mình chuyển từng module một, app lúc nào cũng deploy được.",
+      "iconKey": "layers",
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "titleEn": "Write the conventions down",
+      "titleVi": "Viết convention ra giấy",
+      "bodyEn": "A STRUCTURE.md and a scaffold command beat a long review thread.",
+      "bodyVi": "Một file STRUCTURE.md và một lệnh scaffold hiệu quả hơn nhiều vòng review.",
+      "iconKey": "book-open",
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "titleEn": "Never lose the user's edits",
+      "titleVi": "Không làm mất dữ liệu người dùng",
+      "bodyEn": "Drafts, diff-only saves, version checks and unsaved-change guards.",
+      "bodyVi": "Draft, chỉ gửi phần thay đổi, check version và chặn rời trang khi chưa lưu.",
+      "iconKey": "shield-check",
+      "sortOrder": 2,
+      "isVisible": true
+    }
+  ],
+  "_principlesNote": "Drafted from patterns in the notes (STRUCTURE.md, diff-only PUT, expected_version, unsaved guards). Spec only names principle 1. TODO Parker approve wording.",
+  "processSteps": [
+    {
+      "titleEn": "Audit",
+      "titleVi": "Khảo sát",
+      "captionEn": "Map modules, owners and dead code.",
+      "captionVi": "Liệt kê module, ai phụ trách, code thừa.",
+      "iconKey": "search",
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "titleEn": "Tokens & primitives",
+      "titleVi": "Token và primitive",
+      "captionEn": "Shared UI base and conventions first.",
+      "captionVi": "Dựng UI base và convention chung trước.",
+      "iconKey": "palette",
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "titleEn": "Strangler routes",
+      "titleVi": "Thay dần từng route",
+      "captionEn": "Move one route or module at a time.",
+      "captionVi": "Chuyển từng route, từng module.",
+      "iconKey": "git-branch",
+      "sortOrder": 2,
+      "isVisible": true
+    },
+    {
+      "titleEn": "Contract tests",
+      "titleVi": "Contract test",
+      "captionEn": "Lock behavior with tests before cutting.",
+      "captionVi": "Khóa hành vi bằng test trước khi cắt.",
+      "iconKey": "flask-conical",
+      "sortOrder": 3,
+      "isVisible": true
+    },
+    {
+      "titleEn": "Cut over",
+      "titleVi": "Chuyển hẳn",
+      "captionEn": "Remove the legacy tree.",
+      "captionVi": "Xóa hẳn phần code cũ.",
+      "iconKey": "rocket",
+      "sortOrder": 4,
+      "isVisible": true
+    }
+  ],
+  "projects": [
+    {
+      "slug": "particula",
+      "titleEn": "Particula",
+      "titleVi": "Particula",
+      "taglineEn": "Rating and analytics platform for tokenized real-world assets",
+      "taglineVi": "Nền tảng rating và phân tích cho tài sản thực được token hóa",
+      "client": "Kobizo (white-label deployments incl. Moody's and Polygon branches)",
+      "roleEn": "Main Frontend Developer",
+      "roleVi": "Frontend chính",
+      "teamSize": 6,
+      "startDate": "2024-07",
+      "endDate": "2025-12",
+      "versionFrom": "v1 (Vue 2)",
+      "versionTo": "v2 (Nuxt 3)",
+      "isFeatured": true,
+      "isConfidential": true,
+      "liveUrl": null,
+      "repoUrl": null,
+      "domain": "fintech-web3",
+      "experience": "kobizo",
+      "problemEn": "Particula rates and analyzes tokenized real-world assets: tokens, issuers, assets, providers and blockchains. The v1 frontend had grown to 70 legacy modules on Vue 2. It was hard to change and every team member structured code differently.",
+      "problemVi": "Particula chấm điểm và phân tích tài sản thực được token hóa: token, issuer, asset, provider và blockchain. Frontend v1 trên Vue 2 đã phình ra 70 module cũ. Code khó sửa, mỗi người viết một kiểu.",
+      "constraintsEn": "- Keep shipping features while migrating.\n- White-label portals for clients, with restricted demo access.\n- Data-heavy screens: charts, rating frameworks, long report editors.\n- Team of 6.",
+      "constraintsVi": "- Vừa migrate vừa phải ra tính năng.\n- Có portal white-label cho khách, demo phải giới hạn quyền truy cập.\n- Màn hình nặng dữ liệu: chart, rating framework, editor report dài.\n- Team 6 người.",
+      "approachEn": "- Led the v1 to v2 migration in two big passes (PAR-1977, PAR-2371) on Nuxt 3, Vue 3, PrimeVue 4 and TanStack Vue Query.\n- Wrote STRUCTURE.md: module layout, file-suffix rules and a scaffold command.\n- Owned Report Generation Config for AI-generated rating reports: a custom Tiptap placeholder node `{{key}}` with a text to JSON parser, a drag-and-drop section tree, diff-only saves and an unsaved-changes guard.\n- Built Report Project Management: a recursive document folder tree, upload rules per folder type and a confirm-before-close modal system.\n- Top contributor on the Rating module: rating frameworks, a red-flag threshold editor with overlap checks, manual grade override with audit log.\n- Built Custom Alerts, the Financial Statement module (sole author), the Blockchain Ecosystem page and parts of Admin AI Hub.",
+      "approachVi": "- Dẫn migrate v1 sang v2 qua hai đợt lớn (PAR-1977, PAR-2371) trên Nuxt 3, Vue 3, PrimeVue 4 và TanStack Vue Query.\n- Viết STRUCTURE.md: cách chia module, quy tắc hậu tố file và lệnh scaffold.\n- Phụ trách Report Generation Config cho report rating do AI sinh ra: node placeholder `{{key}}` tự viết trên Tiptap, parser hai chiều text và JSON, cây section kéo thả, chỉ lưu phần thay đổi, chặn rời trang khi chưa lưu.\n- Làm Report Project Management: cây thư mục tài liệu đệ quy, quy tắc upload theo loại thư mục, hệ thống modal xác nhận trước khi đóng.\n- Commit nhiều nhất module Rating: rating framework, editor ngưỡng red-flag có check chồng lấn, override điểm thủ công kèm audit log.\n- Làm Custom Alerts, module Financial Statement (một mình), trang Blockchain Ecosystem và một phần Admin AI Hub.",
+      "decisionsEn": "- TanStack Vue Query with a 1-hour staleTime on 52 queries, on top of SSR dehydrate/hydrate.\n- A generic Tiptap `CommandsExtension(name, char)` factory instead of a slash-only menu, so `/` and `#` share one code path.\n- Server-side RS256 demo-token check with jose. The public key stays in private runtime config.\n- Red-flag ranges sorted once, then checked for overlap in a single pass.",
+      "decisionsVi": "- Dùng TanStack Vue Query, staleTime 1 giờ cho 52 query, chạy trên SSR dehydrate/hydrate.\n- Viết factory `CommandsExtension(name, char)` cho Tiptap thay vì menu chỉ có `/`. Giờ `/` và `#` dùng chung một luồng code.\n- Verify demo token RS256 phía server bằng jose. Public key nằm trong private runtime config.\n- Sort các khoảng red-flag một lần rồi check chồng lấn trong một vòng lặp.",
+      "outcomeEn": "- Legacy `src/module`: 1,313 files in 70 modules down to 266 files in 11 (about -42.5k lines).\n- PAR-1977: 40 modules down to 23 with one set of conventions.\n- About 416 of 1,791 commits on main, the most on the team.\n- Fixed chart math bugs: top-holders 'Others' scaling, a market-share doughnut above 100%, duplicate chains.",
+      "outcomeVi": "- `src/module` cũ: từ 1.313 file trong 70 module xuống 266 file trong 11 module (bớt khoảng 42,5k dòng).\n- PAR-1977: từ 40 module xuống 23, dùng chung một bộ convention.\n- Khoảng 416 trên 1.791 commit ở main, nhiều nhất team.\n- Sửa lỗi tính toán chart: phần 'Others' của top holders, doughnut market share vượt 100%, chain bị trùng.",
+      "lessonsEn": "TODO (Parker to write)",
+      "lessonsVi": "TODO (Parker tự viết)",
+      "keyFactsEn": "70 → 11 legacy modules\n~416 / 1,791 commits\n52 queries cached\nTeam of 6",
+      "keyFactsVi": "70 → 11 module cũ\n~416 / 1.791 commit\n52 query được cache\nTeam 6 người",
+      "factChipsEn": "Vue 2 → Nuxt 3, PrimeVue 4, TanStack Query, Tiptap, Chart.js, Playwright",
+      "factChipsVi": "Vue 2 → Nuxt 3, PrimeVue 4, TanStack Query, Tiptap, Chart.js, Playwright",
+      "metrics": [
+        {
+          "labelEn": "Legacy modules",
+          "labelVi": "Module cũ",
+          "before": "70",
+          "after": "11",
+          "value": "70 → 11"
+        },
+        {
+          "labelEn": "Legacy files",
+          "labelVi": "File cũ",
+          "before": "1,313",
+          "after": "266",
+          "value": "1,313 → 266"
+        },
+        {
+          "labelEn": "Lines removed",
+          "labelVi": "Số dòng bớt được",
+          "value": "~42.5k"
+        },
+        {
+          "labelEn": "Queries with 1h cache",
+          "labelVi": "Query cache 1 giờ",
+          "value": "52"
+        }
+      ],
+      "skills": [
+        "nuxt-3",
+        "vue-3",
+        "typescript",
+        "pinia",
+        "tanstack-vue-query",
+        "primevue",
+        "tailwind-css",
+        "tiptap",
+        "chartjs",
+        "vee-validate-yup",
+        "storybook",
+        "vitest",
+        "playwright"
+      ],
+      "notMine": "Websocket layer (Laravel Echo/Reverb): Tim Vu. Squarified treemap algorithm and the original schema grid builder: Finn (Parker did a font-size fix and 24/39 later commits). Amplify config, branch-sync workflow, specific-token middleware: teammates. ZIP extraction, anomaly detection and AI generation run on the backend.",
+      "status": "DRAFT",
+      "publishedAt": null,
+      "sortOrder": 0,
+      "seoTitleEn": null,
+      "seoTitleVi": null,
+      "seoDescriptionEn": null,
+      "seoDescriptionVi": null
+    },
+    {
+      "slug": "cfw-back-office-field-config",
+      "titleEn": "CFW Back Office: customer field verification",
+      "titleVi": "CFW Back Office: xác minh field khách hàng",
+      "taglineEn": "Per-field LOCK / VERIFY / OPEN rules for customer master data",
+      "taglineVi": "Quy tắc LOCK / VERIFY / OPEN cho từng field dữ liệu khách hàng",
+      "client": "Central Food Wholesale (Central Group), via CMC Global",
+      "roleEn": "Frontend Developer (owner of the field-config slice)",
+      "roleVi": "Frontend Developer (phụ trách phần field config)",
+      "teamSize": null,
+      "startDate": "2026-07",
+      "endDate": "2026-10",
+      "isFeatured": true,
+      "isConfidential": true,
+      "liveUrl": null,
+      "repoUrl": null,
+      "domain": "enterprise",
+      "experience": "cmc-cfw",
+      "problemEn": "CDP Back Office is the internal portal for customer master data. The business wanted control over each customer field: some locked, some open, some needing verification before the change applies.",
+      "problemVi": "CDP Back Office là portal nội bộ quản lý dữ liệu khách hàng. Bên business cần kiểm soát từng field: field thì khóa, field thì mở, field thì phải xác minh rồi mới được áp dụng.",
+      "constraintsEn": "- 205 field keys in 16 groups, including 10 delivery address slots.\n- Several editors can change the config at the same time.\n- Verification itself runs on the backend. The portal only classifies edits and sends versions.\n- Existing stack: Nuxt 3 SPA, Vuetify 3, Pinia, i18n en-US / th-TH.",
+      "constraintsVi": "- 205 field chia 16 nhóm, có cả 10 slot địa chỉ giao hàng.\n- Nhiều người có thể sửa config cùng lúc.\n- Việc xác minh chạy ở backend. Portal chỉ phân loại thay đổi và gửi version.\n- Stack có sẵn: Nuxt 3 SPA, Vuetify 3, Pinia, i18n en-US / th-TH.",
+      "approachEn": "- Field configuration screen (YIMCMC-3734, #1223, sole feature author): each field gets LOCK, VERIFY or OPEN. Labels reuse the customer-detail i18n keys, so there is no second string table.\n- The Pinia draft keeps only modes that differ from the server. Reverting a field leaves no trace.\n- Save sends a diff-only PUT. Each row carries `expected_version`, and a 409 is shown as a stale edit.\n- Applied the config on the customer info form (YIMCMC-3751, #1227): a field registry maps field codes to form paths. Changes are split into verify / open / unmapped, and LOCK fields are never sent.\n- If any VERIFY field changed, save opens a confirm dialog first. Pending values are overlaid on the form.",
+      "approachVi": "- Màn field configuration (YIMCMC-3734, #1223, mình làm một mình): mỗi field đặt LOCK, VERIFY hoặc OPEN. Label dùng lại i18n key của trang customer detail, không cần thêm bảng string thứ hai.\n- Draft trong Pinia chỉ giữ những mode khác với server. Đổi field về như cũ là không còn dấu vết.\n- Khi lưu chỉ gửi phần thay đổi. Mỗi dòng kèm `expected_version`, lỗi 409 hiện thành chỉnh sửa đã cũ.\n- Áp config vào form thông tin khách hàng (YIMCMC-3751, #1227): registry map field code sang đường dẫn trong form. Thay đổi chia thành verify / open / unmapped, field LOCK không bao giờ được gửi.\n- Nếu có field VERIFY bị sửa, bấm lưu sẽ mở dialog xác nhận trước. Giá trị đang chờ duyệt được hiện đè lên form.",
+      "decisionsEn": "- Diff-only saves with optimistic versioning instead of sending the whole config.\n- Edit rights check customer and work-item permissions, plus staff level against customer level.\n- The confirm button ignores a second click while a request is in flight.",
+      "decisionsVi": "- Chỉ gửi phần thay đổi kèm version, không gửi cả config.\n- Quyền sửa check theo quyền customer, quyền work-item và cấp nhân viên so với cấp khách hàng.\n- Nút xác nhận bỏ qua lần bấm thứ hai khi request đang chạy.",
+      "outcomeEn": "- Field config (#1223) and the customer-form verify flow (#1227) are merged to `sit`.\n- Not released yet: assignee Update Data with rework prefill (YIMCMC-3836 / 3837) and a TypeScript to JavaScript conversion, both on an unmerged branch.\n- Small hotfixes merged: #1208 (keystroke bug in the 'other' channel input, co-authored), #1214, #1215 (Thai / English copy).",
+      "outcomeVi": "- Field config (#1223) và luồng verify trên form khách hàng (#1227) đã merge vào `sit`.\n- Chưa release: Update Data cho assignee kèm prefill khi bị yêu cầu làm lại (YIMCMC-3836 / 3837) và việc chuyển TypeScript sang JavaScript, đều nằm trên branch chưa merge.\n- Vài hotfix đã merge: #1208 (lỗi gõ phím ở ô 'other' channel, có co-author), #1214, #1215 (copy tiếng Thái / tiếng Anh).",
+      "lessonsEn": "TODO (Parker to write)",
+      "lessonsVi": "TODO (Parker tự viết)",
+      "keyFactsEn": "205 fields, 16 groups\n3 modes: LOCK / VERIFY / OPEN\n2 features merged to sit\n1 feature not released yet",
+      "keyFactsVi": "205 field, 16 nhóm\n3 mode: LOCK / VERIFY / OPEN\n2 tính năng đã merge vào sit\n1 tính năng chưa release",
+      "factChipsEn": "Nuxt 3 SPA, Vuetify 3, Pinia, diff-only PUT, 409 conflicts",
+      "factChipsVi": "Nuxt 3 SPA, Vuetify 3, Pinia, diff-only PUT, xử lý 409",
+      "metrics": [
+        {
+          "labelEn": "Fields configurable",
+          "labelVi": "Số field cấu hình được",
+          "value": "205"
+        },
+        {
+          "labelEn": "Field groups",
+          "labelVi": "Nhóm field",
+          "value": "16"
+        }
+      ],
+      "skills": ["nuxt-3", "vuetify-3", "pinia", "vee-validate-yup", "vue-i18n", "typescript"],
+      "releaseStatus": {
+        "released": ["#1223 YIMCMC-3734", "#1227 YIMCMC-3751", "#1208", "#1214", "#1215"],
+        "notReleased": ["YIMCMC-3836 / 3837 Update Data + rework prefill", "TS -> JS conversion"]
+      },
+      "notMine": "Bond Tran's June PRs (communication channels, credit info panel, new profile fields, layout fix). Customer Verification module shell, nav and permissions (Jack, Lea). Work-item dashboard (Jack), work-item list and detail dialog (Lea; Parker only added Update Data on it), Create Assignment dialog (Lea), VIP to Elite rename (Jack), rest of the portal. Approval logic runs on the backend.",
+      "status": "DRAFT",
+      "publishedAt": null,
+      "sortOrder": 1,
+      "seoTitleEn": null,
+      "seoTitleVi": null,
+      "seoDescriptionEn": null,
+      "seoDescriptionVi": null
+    },
+    {
+      "slug": "cfw-sales-crm",
+      "titleEn": "CFW Sales CRM: visit routes and AI recommendations",
+      "titleVi": "CFW Sales CRM: tuyến viếng thăm và AI recommendation",
+      "taglineEn": "Route review for sales reps on iPad, plus a first AI product recommendation UI",
+      "taglineVi": "Review tuyến viếng thăm cho sales trên iPad, kèm bản đầu UI gợi ý sản phẩm bằng AI",
+      "client": "Central Food Wholesale, via CMC Global",
+      "roleEn": "Frontend Developer",
+      "roleVi": "Frontend Developer",
+      "teamSize": null,
+      "startDate": "2026-08",
+      "endDate": "2026-09",
+      "isFeatured": true,
+      "isConfidential": true,
+      "liveUrl": null,
+      "repoUrl": null,
+      "domain": "enterprise",
+      "experience": "cmc-cfw",
+      "problemEn": "Sales reps get a generated day route of customers to visit. They needed to review and edit that route on an iPad without breaking visits that were already done.",
+      "problemVi": "Sales nhận một tuyến khách hàng cần ghé trong ngày, do hệ thống tạo. Họ cần xem và sửa tuyến đó trên iPad mà không làm hỏng những điểm đã ghé xong.",
+      "constraintsEn": "- Used on iPad, so drag and drop must work with touch.\n- Up to 9 customers per day.\n- Route calculation and the recommendation model are owned by others or the backend.\n- Stack: Nuxt 4 SPA, Vuetify 3, TanStack Vue Query, i18n th / en.",
+      "constraintsVi": "- Dùng trên iPad nên kéo thả phải chạy được bằng cảm ứng.\n- Tối đa 9 khách mỗi ngày.\n- Tính tuyến và model gợi ý là phần của người khác hoặc backend.\n- Stack: Nuxt 4 SPA, Vuetify 3, TanStack Vue Query, i18n th / en.",
+      "approachEn": "- Visit-route review UI (10 of 11 commits): customer table, available-customer pool and stops table, then an edit mode.\n- Edits go to a draft list. The map and route metrics stay on the saved list until Save.\n- Completed visits are frozen. Other stops can move around them, but they keep their slot.\n- Drag and drop uses VueDraggable with force-fallback for touch.\n- Customer pool: search, infinite scroll (15 per page), and the 9-per-day cap.\n- AI recommendation tab (YIMCMC-3712, #594, sole author of v1): customer panel, Top Picks / Win Back / New Items filters, product grid, in-memory cart in a drawer.",
+      "approachVi": "- UI review tuyến viếng thăm (10 trên 11 commit): bảng khách hàng, pool khách còn trống, bảng điểm dừng, rồi tới chế độ edit.\n- Thay đổi đi vào một danh sách draft. Bản đồ và số liệu tuyến giữ nguyên theo bản đã lưu cho tới khi bấm Save.\n- Điểm đã ghé xong bị khóa. Các điểm khác vẫn di chuyển quanh nó, nhưng nó giữ nguyên vị trí.\n- Kéo thả dùng VueDraggable với force-fallback cho màn cảm ứng.\n- Pool khách: có search, infinite scroll (15 khách mỗi trang), giới hạn 9 khách mỗi ngày.\n- Tab AI recommendation (YIMCMC-3712, #594, mình làm một mình bản đầu): panel khách hàng, lọc Top Picks / Win Back / New Items, lưới sản phẩm, giỏ hàng trong bộ nhớ hiện ở drawer.",
+      "decisionsEn": "- `draftTouched` stays true after any change in the session, so Save does not turn off when the list happens to match again.\n- Client-side sort by promotion priority (BMSM, COUPON, PWP), then similar-buy percent.\n- `keepPreviousData` so switching category does not blank the grid.\n- Cart lines keep a product snapshot, so changing category does not drop them.",
+      "decisionsVi": "- `draftTouched` giữ true sau mọi thay đổi trong phiên, nên nút Save không bị tắt khi danh sách vô tình trùng lại bản cũ.\n- Sort phía client theo độ ưu tiên khuyến mãi (BMSM, COUPON, PWP), rồi tới tỉ lệ khách tương tự đã mua.\n- Dùng `keepPreviousData` để đổi category không làm trống lưới sản phẩm.\n- Mỗi dòng trong giỏ giữ snapshot sản phẩm, nên đổi category không bị mất.",
+      "outcomeEn": "- 11 merged PRs on `sit` (7 Aug to 23 Sep 2026), with 15 test files.\n- The AI tab shipped as a mockup on a mock service. It does not place orders.\n- Turning it on per environment and the permission checks were added later by a teammate.",
+      "outcomeVi": "- 11 PR đã merge vào `sit` (7/8 đến 23/9/2026), kèm 15 file test.\n- Tab AI ra mắt dạng mockup, chạy trên service mock. Màn này không đặt hàng.\n- Việc bật tab theo môi trường và check quyền là do đồng đội thêm sau.",
+      "lessonsEn": "TODO (Parker to write)",
+      "lessonsVi": "TODO (Parker tự viết)",
+      "keyFactsEn": "10 of 11 commits on route review\n9 customers per day cap\nWorks with touch on iPad\n15 test files",
+      "keyFactsVi": "10 trên 11 commit cho route review\nTối đa 9 khách mỗi ngày\nKéo thả cảm ứng trên iPad\n15 file test",
+      "factChipsEn": "Nuxt 4, Vuetify 3, TanStack Query, VueDraggable, Vitest",
+      "factChipsVi": "Nuxt 4, Vuetify 3, TanStack Query, VueDraggable, Vitest",
+      "metrics": [
+        {
+          "labelEn": "Merged PRs",
+          "labelVi": "PR đã merge",
+          "value": "11"
+        },
+        {
+          "labelEn": "Test files",
+          "labelVi": "File test",
+          "value": "15"
+        }
+      ],
+      "skills": ["nuxt-4", "vuetify-3", "tanstack-vue-query", "typescript", "vitest"],
+      "notMine": "Google Routes and the Haversine fallback, geocoding, route snapshot cache, suggested-route view (Lea). Remove-by-status tweak in VisitRouteStopsTable (Jack). Reset-to-suggested, summary table, sidebar scroll, iPad spacing passes (teammates). AI feature flag and X_ORDERING permission gating (Lea, #601). The recommendation model and any order API. Bond Tran's dashboard fixes (#513, #526-528, #538) are his, not Parker's.",
+      "status": "DRAFT",
+      "publishedAt": null,
+      "sortOrder": 2,
+      "seoTitleEn": null,
+      "seoTitleVi": null,
+      "seoDescriptionEn": null,
+      "seoDescriptionVi": null
+    },
+    {
+      "slug": "msp-advanced",
+      "titleEn": "MSP Advanced",
+      "titleVi": "MSP Advanced",
+      "taglineEn": "Moved logic from the MSP App into a new product with a fresh design.",
+      "taglineVi": "Chuyển logic từ MSP App sang sản phẩm mới, kèm thiết kế mới.",
+      "client": "Samsung SDS",
+      "roleEn": "Frontend Developer",
+      "roleVi": "Frontend Developer",
+      "teamSize": 5,
+      "startDate": "2023-04",
+      "endDate": "2024-06",
+      "isFeatured": false,
+      "isConfidential": true,
+      "domain": "enterprise",
+      "experience": "cmc-samsung",
+      "skills": ["vue-2", "vuex"],
+      "problemEn": "TODO (only CV summary available)",
+      "problemVi": "TODO (mới có tóm tắt từ CV)",
+      "constraintsEn": "TODO",
+      "constraintsVi": "TODO",
+      "approachEn": "TODO",
+      "approachVi": "TODO",
+      "decisionsEn": "TODO",
+      "decisionsVi": "TODO",
+      "outcomeEn": "TODO",
+      "outcomeVi": "TODO",
+      "lessonsEn": "TODO",
+      "lessonsVi": "TODO",
+      "metrics": [],
+      "note": "Short entry from CV only. Needs notes like the other three before a full case study.",
+      "status": "DRAFT",
+      "publishedAt": null,
+      "sortOrder": 3,
+      "seoTitleEn": null,
+      "seoTitleVi": null,
+      "seoDescriptionEn": null,
+      "seoDescriptionVi": null
+    },
+    {
+      "slug": "msp-app-expansion",
+      "titleEn": "MSP App Expansion",
+      "titleVi": "MSP App Expansion",
+      "taglineEn": "Frontend for Samsung's tool to handle request issues coming from Jira.",
+      "taglineVi": "Frontend cho tool của Samsung xử lý các request issue đến từ Jira.",
+      "client": "Samsung SDS",
+      "roleEn": "Frontend Developer",
+      "roleVi": "Frontend Developer",
+      "teamSize": 15,
+      "startDate": "2022-07",
+      "endDate": "2023-04",
+      "isFeatured": false,
+      "isConfidential": true,
+      "domain": "enterprise",
+      "experience": "cmc-samsung",
+      "skills": ["vue-2", "vuex"],
+      "problemEn": "TODO (only CV summary available)",
+      "problemVi": "TODO (mới có tóm tắt từ CV)",
+      "constraintsEn": "TODO",
+      "constraintsVi": "TODO",
+      "approachEn": "TODO",
+      "approachVi": "TODO",
+      "decisionsEn": "TODO",
+      "decisionsVi": "TODO",
+      "outcomeEn": "TODO",
+      "outcomeVi": "TODO",
+      "lessonsEn": "TODO",
+      "lessonsVi": "TODO",
+      "metrics": [],
+      "note": "Short entry from CV only. Needs notes like the other three before a full case study.",
+      "status": "DRAFT",
+      "publishedAt": null,
+      "sortOrder": 4,
+      "seoTitleEn": null,
+      "seoTitleVi": null,
+      "seoDescriptionEn": null,
+      "seoDescriptionVi": null
+    },
+    {
+      "slug": "migration-data-tool",
+      "titleEn": "Migration Data Tool",
+      "titleVi": "Migration Data Tool",
+      "taglineEn": "Moves store data between Shopify, BigCommerce, WooCommerce, Magento and more.",
+      "taglineVi": "Chuyển dữ liệu cửa hàng giữa Shopify, BigCommerce, WooCommerce, Magento và nhiều nền tảng khác.",
+      "client": "US, UK customers (LitGroup)",
+      "roleEn": "Fullstack Developer",
+      "roleVi": "Fullstack Developer",
+      "teamSize": 15,
+      "startDate": "2021-01",
+      "endDate": "2022-06",
+      "isFeatured": false,
+      "isConfidential": true,
+      "domain": "ecommerce-tooling",
+      "experience": "litgroup-be",
+      "skills": ["python-flask", "php-laravel", "vue-2", "typescript", "pinia"],
+      "problemEn": "TODO (only CV summary available)",
+      "problemVi": "TODO (mới có tóm tắt từ CV)",
+      "constraintsEn": "TODO",
+      "constraintsVi": "TODO",
+      "approachEn": "TODO",
+      "approachVi": "TODO",
+      "decisionsEn": "TODO",
+      "decisionsVi": "TODO",
+      "outcomeEn": "TODO",
+      "outcomeVi": "TODO",
+      "lessonsEn": "TODO",
+      "lessonsVi": "TODO",
+      "metrics": [],
+      "note": "Short entry from CV only. Needs notes like the other three before a full case study.",
+      "status": "DRAFT",
+      "publishedAt": null,
+      "sortOrder": 5,
+      "seoTitleEn": null,
+      "seoTitleVi": null,
+      "seoDescriptionEn": null,
+      "seoDescriptionVi": null
+    }
+  ],
+  "posts": [],
+  "tags": [],
+  "_postsNote": "Spec seeds 0 posts.",
+  "contactTopics": [
+    {
+      "labelEn": "Job opportunity",
+      "labelVi": "Cơ hội việc làm",
+      "sortOrder": 0,
+      "isVisible": true
+    },
+    {
+      "labelEn": "Freelance project",
+      "labelVi": "Dự án freelance",
+      "sortOrder": 1,
+      "isVisible": true
+    },
+    {
+      "labelEn": "Just saying hi",
+      "labelVi": "Chào hỏi",
+      "sortOrder": 2,
+      "isVisible": true
+    }
+  ],
+  "gaps": [
+    "Kobizo dates: CV says Feb 2024 - Now, git notes say main frontend Jul 2024 - Dec 2025. Which to show?",
+    "CMC Global for CFW: start date (first commit 17 Jul 2026), is it ongoing, and what Jan - Jun 2026 was.",
+    "CMC Global Samsung period (Jul 2022 - Jun 2024) overlaps Kobizo start Feb 2024 in the CV.",
+    "Domain, LinkedIn URL, availability, reply-time note.",
+    "English level for Profile.languages; degree name for Education.",
+    "Team size for both CFW projects; whether CFW / Particula names can be public (all marked isConfidential).",
+    "Lessons sections for every case study.",
+    "MSP Advanced, MSP App Expansion, Migration Data Tool: only CV text, no detailed notes.",
+    "Second 'framework migration' in the stats band; skill depth levels; principles wording.",
+    "Real email/phone stay as <email>/<phone> placeholders; Parker sets them in admin."
+  ]
+}

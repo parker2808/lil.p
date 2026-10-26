@@ -15,7 +15,7 @@ import { parseSort } from '@portfolio/contracts';
 
 import { paginate } from '../../common/utils/paginate.util';
 import { reorder } from '../../common/utils/reorder.util';
-import type { Prisma } from '../../generated/prisma/client';
+import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { projectSelect } from './entities/project.entity';
 import {
@@ -265,6 +265,11 @@ export class ProjectsService {
     if (input.keyFactsVi !== undefined) assign('keyFactsVi', input.keyFactsVi);
     if (input.factChipsEn !== undefined) assign('factChipsEn', input.factChipsEn);
     if (input.factChipsVi !== undefined) assign('factChipsVi', input.factChipsVi);
+    if (input.notMineEn !== undefined) data.notMineEn = input.notMineEn;
+    if (input.notMineVi !== undefined) data.notMineVi = input.notMineVi;
+    if (input.releaseStatus !== undefined) {
+      data.releaseStatus = input.releaseStatus === null ? Prisma.JsonNull : input.releaseStatus;
+    }
     if (input.seoTitleEn !== undefined) data.seoTitleEn = input.seoTitleEn;
     if (input.seoTitleVi !== undefined) data.seoTitleVi = input.seoTitleVi;
     if (input.seoDescriptionEn !== undefined) data.seoDescriptionEn = input.seoDescriptionEn;

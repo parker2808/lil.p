@@ -23,7 +23,7 @@ docker-compose.yml        # dev: MySQL + Adminer (+ test DB under the `test` pro
 compose.prod.yml          # production: db, api, web, caddy, backup
 ```
 
-Content (profile, projects, posts, settings, translations, and each page's blocks: their order, layout and props) lives in MySQL and is edited in `/admin`. It is never committed as code. Code only decides which block _types_ exist (PLAN D26). Seed data in `apps/api/prisma/seed/` holds placeholders only (`<email>`, `<phone>`).
+Content (profile, projects, posts, settings, translations, and each page's blocks: their order, layout and props) lives in MySQL and is edited in `/admin`. It is never hard-coded in the web or UI apps. Code only decides which block _types_ exist (PLAN D26). Seed data in `apps/api/prisma/seed/` holds the owner CV (`data/portfolio-data.json`, loaded by the `baseline`/`owner` profile) and demo placeholders. Contact values stay `<email>` / `<phone>`.
 
 ## Dependency direction
 

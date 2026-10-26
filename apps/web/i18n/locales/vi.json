@@ -62,6 +62,9 @@
     "tradeoffs": "Đánh đổi",
     "result": "Kết quả",
     "retro": "Rút kinh nghiệm",
+    "notMine": "Không phải việc của mình",
+    "released": "Đã release",
+    "notReleased": "Chưa release",
     "moreIn": "Thêm trong {name}",
     "more": "Thêm case study",
     "live": "Site thật"

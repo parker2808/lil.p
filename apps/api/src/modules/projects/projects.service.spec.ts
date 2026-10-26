@@ -38,6 +38,9 @@ const published = {
   keyFactsVi: 'Không downtime\nSáu tháng',
   factChipsEn: 'Vue 2 → Nuxt 3, 0 downtime',
   factChipsVi: 'Vue 2 → Nuxt 3, 0 downtime',
+  notMineEn: 'Websocket layer: teammate.',
+  notMineVi: null,
+  releaseStatus: { released: ['#1223'], notReleased: ['TS -> JS conversion'] },
   seoTitleEn: null,
   seoTitleVi: null,
   seoDescriptionEn: null,
@@ -92,6 +95,11 @@ describe('ProjectsService', () => {
     expect(detail.repoUrl).toBeNull();
     expect(detail.keyFacts).toEqual(['Zero downtime', 'Six months']);
     expect(detail.topMetric?.label).toBe('Release freeze');
+    expect(detail.notMine).toBe('Websocket layer: teammate.');
+    expect(detail.releaseStatus).toEqual({
+      released: ['#1223'],
+      notReleased: ['TS -> JS conversion'],
+    });
   });
 
   it('filters published projects by skill slug', async () => {
