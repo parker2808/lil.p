@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [{ "name": "next" }],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@portfolio/ui/*": ["../../packages/ui/src/*"]
+    }
+  },
+  "include": ["app", "src", "next-env.d.ts", "vitest.config.mts"],
+  "exclude": ["node_modules"]
+}
