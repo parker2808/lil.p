@@ -1,12 +1,25 @@
 {
   "core": {
     "skip": "Bỏ qua đến nội dung",
-    "home": "Trang chủ"
+    "home": "Trang chủ",
+    "menu": "Menu",
+    "close": "Đóng",
+    "command": "Tìm và nhảy",
+    "theme": "Giao diện",
+    "themeLight": "Sáng",
+    "themeDark": "Tối",
+    "themeSystem": "Hệ thống",
+    "locale": "Ngôn ngữ",
+    "copyEmail": "Sao chép email",
+    "copied": "Đã sao chép",
+    "suggestLocale": "Trang này cũng có bản tiếng Anh",
+    "switchLocale": "Xem bằng tiếng Anh"
   },
   "states": {
     "loading": "Đang tải",
     "empty": "Chưa có nội dung",
     "error": "Đã xảy ra lỗi",
-    "retry": "Thử lại"
+    "retry": "Thử lại",
+    "notFound": "Không tìm thấy trang này"
   }
 }

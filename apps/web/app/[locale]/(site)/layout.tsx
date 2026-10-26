@@ -1,6 +1,17 @@
+import type { Locale } from '@portfolio/contracts';
 import type { ReactNode } from 'react';
 
-/** Site chrome (header/footer) arrives in T14. */
-export default function SiteLayout({ children }: { children: ReactNode }) {
-  return children;
+import { SiteShell } from '@/modules/core/components/SiteShell/SiteShell';
+
+export const dynamic = 'force-dynamic';
+
+export default async function SiteLayout({
+  children,
+  params,
+}: {
+  children: ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  return <SiteShell locale={locale as Locale}>{children}</SiteShell>;
 }

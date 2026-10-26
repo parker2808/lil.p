@@ -28,6 +28,15 @@ export default tseslint.config(
     },
   },
   {
+    files: ['scripts/**/*.{js,mjs,cjs}'],
+    languageOptions: {
+      globals: {
+        console: 'readonly',
+        process: 'readonly',
+      },
+    },
+  },
+  {
     files: [
       'packages/ui/src/components/**/*.{js,jsx,ts,tsx}',
       'src/components/**/*.{js,jsx,ts,tsx}',

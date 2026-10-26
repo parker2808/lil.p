@@ -1,6 +1,7 @@
 'use client';
 
 import { Monitor, Moon, Sun } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import { useSyncExternalStore } from 'react';
 
@@ -13,14 +14,14 @@ import {
   DropdownMenuTrigger,
 } from '@portfolio/ui/components/ui/dropdown-menu';
 
-const OPTIONS = [
-  { value: 'light', label: 'Light', icon: Sun },
-  { value: 'dark', label: 'Dark', icon: Moon },
-  { value: 'system', label: 'System', icon: Monitor },
-] as const;
-
 export function ThemeToggle() {
+  const t = useTranslations('core');
   const { theme, setTheme, resolvedTheme } = useTheme();
+  const OPTIONS = [
+    { value: 'light', label: t('themeLight'), icon: Sun },
+    { value: 'dark', label: t('themeDark'), icon: Moon },
+    { value: 'system', label: t('themeSystem'), icon: Monitor },
+  ] as const;
   const mounted = useSyncExternalStore(
     () => () => undefined,
     () => true,
@@ -37,7 +38,7 @@ export function ThemeToggle() {
           'border-border bg-card text-foreground inline-flex size-10 items-center justify-center rounded-md border',
           'hover:border-border-strong hover:bg-accent',
         )}
-        aria-label="Theme"
+        aria-label={t('theme')}
       >
         {mounted ? (
           <TriggerIcon className="size-4" aria-hidden />

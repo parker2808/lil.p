@@ -21,7 +21,8 @@
     "db:migrate": "pnpm --filter @portfolio/api db:migrate",
     "db:reset": "pnpm --filter @portfolio/api db:reset",
     "db:seed": "pnpm --filter @portfolio/api db:seed",
-    "db:studio": "pnpm --filter @portfolio/api db:studio"
+    "db:studio": "pnpm --filter @portfolio/api db:studio",
+    "check:content": "node scripts/check-content.mjs"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mjs,cjs}": [
