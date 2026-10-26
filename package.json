@@ -24,6 +24,9 @@
     "db:reset": "pnpm --filter @portfolio/api db:reset",
     "db:seed": "pnpm --filter @portfolio/api db:seed",
     "db:studio": "pnpm --filter @portfolio/api db:studio",
+    "prod:up": "docker compose -f compose.prod.yml up --build",
+    "prod:down": "docker compose -f compose.prod.yml down",
+    "prod:seed": "docker compose -f compose.prod.yml run --rm -e SEED_PROFILE=baseline api node dist/seed.js",
     "check:content": "node scripts/check-content.mjs",
     "check:deps": "node scripts/check-deps.mjs && node --test scripts/check-deps.test.mjs"
   },

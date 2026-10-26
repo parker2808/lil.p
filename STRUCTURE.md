@@ -20,7 +20,9 @@ infra/                    # Docker/server config files (mysql init SQL, Caddyfil
 scripts/                  # repo scripts: content/privacy checks, backup restore
 docs/                     # PLAN, design snapshot, sql-notes.sql, audit reports
 docker-compose.yml        # dev: MySQL + Adminer (+ test DB under the `test` profile)
-compose.prod.yml          # production: db, api, web, caddy, backup
+compose.prod.yml          # production: db, api, web, caddy (backup in T59)
+apps/web/Dockerfile       # multi-stage Next standalone image
+apps/api/Dockerfile       # multi-stage Nest image; entrypoint runs migrate deploy
 ```
 
 Content (profile, projects, posts, settings, translations, and each page's blocks: their order, layout and props) lives in MySQL and is edited in `/admin`. It is never hard-coded in the web or UI apps. Code only decides which block _types_ exist (PLAN D26). Seed data in `apps/api/prisma/seed/` holds the owner CV (`data/portfolio-data.json`, loaded by the `baseline`/`owner` profile) and demo placeholders. Contact values stay `<email>` / `<phone>`.

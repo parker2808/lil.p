@@ -8,8 +8,8 @@ import { seedAdmin } from './data/admin.data';
 import { seedBaseline } from './profiles/baseline.seed';
 import { seedDemo } from './profiles/demo.seed';
 
-config({ path: resolve(import.meta.dirname, '../../../../.env') });
-config({ path: resolve(import.meta.dirname, '../../../.env') });
+config({ path: resolve(process.cwd(), '../../.env') });
+config({ path: resolve(process.cwd(), '.env') });
 
 const profile =
   process.env.SEED_PROFILE === 'baseline' || process.env.SEED_PROFILE === 'owner'

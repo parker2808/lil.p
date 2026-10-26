@@ -27,6 +27,9 @@ pnpm db:migrate              # create / apply Prisma migrations (apps/api)
 pnpm db:reset                # drop + recreate + seed
 pnpm db:seed                 # re-run the seed (idempotent upserts)
 pnpm db:studio               # Prisma Studio GUI
+pnpm prod:up                 # production stack on http://localhost (Caddy :80)
+pnpm prod:seed               # one-off baseline seed inside the API image
+pnpm prod:down               # stop the production stack (named volumes keep data)
 docker compose up -d db adminer
 ```
 
@@ -70,6 +73,25 @@ Written for a first pass at backend. Glossary: spec [§1.6](./docs/design/portfo
 4. **Environment variables.** Passwords live in `.env`, never in git. `.env.example` shows which keys exist, with fake values. Compose reads `.env` and passes `MYSQL_*` into the `db` container. The API (later) will use `DATABASE_URL`.
 5. **Init scripts.** Files in `/docker-entrypoint-initdb.d` (`infra/mysql/init/`) run **only the first time** the volume is created. `01-dev-grants.sql` lets the `app` user create and drop databases, which Prisma's shadow database needs for `migrate dev` (avoids error P3014). If you already had a volume, run the grant from `01-dev-grants.sql` by hand in Adminer, or reset with `down -v`.
 6. **Healthcheck.** Compose pings MySQL (`mysqladmin ping -h localhost`) until it answers, so other services (Adminer now, the API in T58) start only when the DB is ready. `docker compose ps` shows `healthy` when that succeeds.
+
+## Production compose
+
+The whole stack (MySQL + API + Next + Caddy) runs from `compose.prod.yml`. Nothing but Caddy is published — open [http://localhost](http://localhost). Images are multi-stage and run as a non-root user. Media still goes to Cloudinary (T50); the `uploads` volume is reserved for T59 backups.
+
+```bash
+# JWT secrets must be set (32+ chars, different from each other):
+#   openssl rand -base64 48
+pnpm prod:up                 # docker compose -f compose.prod.yml up --build
+pnpm prod:seed               # SEED_PROFILE=baseline; node dist/seed.js
+```
+
+The API entrypoint runs `prisma migrate deploy` (only committed migrations) before it starts. `pnpm prod:seed` is a one-off — it is not part of every boot. Use `http://localhost`, not `:3000`; Caddy is the origin the browser and `WEB_ORIGIN` share.
+
+The web image stays near the 300 MB target. The API image is larger because Prisma 7's CLI (required for `migrate deploy`) ships engines and Studio on top of the Node 22 alpine base.
+
+10. **Multi-stage builds.** One stage installs and builds; the final stage copies only what runs, so images stay small.
+11. **`migrate deploy` vs `migrate dev`.** `deploy` only applies committed migrations, never creates new ones and never resets data. It is the only migrate command for production.
+12. **Service names as hostnames.** Inside compose, the web reaches the API at `http://api:4000`; nothing but Caddy is exposed.
 
 ## Git hooks
 

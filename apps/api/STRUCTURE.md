@@ -20,6 +20,9 @@ src/
 test/                     # integration tests against the test DB (supertest)
 api.http                  # one request per route, run with VS Code REST Client or curl
 prisma.config.ts          # Prisma CLI config (Prisma 7+)
+Dockerfile                # multi-stage production image (compose.prod.yml)
+docker-entrypoint.sh      # `prisma migrate deploy` then the given command
+scripts/bundle-seed.mjs   # `node dist/seed.js` after `pnpm build`
 ```
 
 ## How a request flows

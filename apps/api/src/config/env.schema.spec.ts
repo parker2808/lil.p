@@ -43,4 +43,18 @@ describe('envSchema', () => {
       }),
     ).toThrow(/differ/i);
   });
+
+  it('treats empty optional secrets as missing', () => {
+    const parsed = envSchema.parse({
+      ...valid,
+      REVALIDATE_SECRET: '',
+      ANALYTICS_SALT_SECRET: '',
+      CLOUDINARY_CLOUD_NAME: '',
+      WEB_INTERNAL_URL: '',
+    });
+    expect(parsed.REVALIDATE_SECRET).toBeUndefined();
+    expect(parsed.ANALYTICS_SALT_SECRET).toBeUndefined();
+    expect(parsed.CLOUDINARY_CLOUD_NAME).toBeUndefined();
+    expect(parsed.WEB_INTERNAL_URL).toBeUndefined();
+  });
 });
