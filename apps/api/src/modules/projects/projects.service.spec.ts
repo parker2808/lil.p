@@ -96,8 +96,18 @@ describe('ProjectsService', () => {
 
   it('filters published projects by skill slug', async () => {
     const findMany = vi.fn().mockResolvedValue([published]);
-    const service = new ProjectsService({ project: { findMany } } as never);
-    await service.listPublic('en', { skill: 'nuxt' });
+    const prisma = {
+      project: { findMany, count: vi.fn().mockResolvedValue(1) },
+      $transaction: vi.fn((ops: Promise<unknown>[]) => Promise.all(ops)),
+    };
+    const service = new ProjectsService(prisma as never);
+    const page = await service.listPublic('en', {
+      page: 1,
+      pageSize: 20,
+      sort: 'sortOrder',
+      skill: 'nuxt',
+    });
+    expect(page.total).toBe(1);
     expect(findMany).toHaveBeenCalledWith(
       expect.objectContaining({
         where: { status: 'PUBLISHED', skills: { some: { slug: 'nuxt' } } },
@@ -107,8 +117,12 @@ describe('ProjectsService', () => {
 
   it('lists only featured published projects when asked', async () => {
     const findMany = vi.fn().mockResolvedValue([published]);
-    const service = new ProjectsService({ project: { findMany } } as never);
-    await service.listPublic('en', { featured: '1' });
+    const prisma = {
+      project: { findMany, count: vi.fn().mockResolvedValue(1) },
+      $transaction: vi.fn((ops: Promise<unknown>[]) => Promise.all(ops)),
+    };
+    const service = new ProjectsService(prisma as never);
+    await service.listPublic('en', { page: 1, pageSize: 20, sort: 'sortOrder', featured: '1' });
     expect(findMany).toHaveBeenCalledWith(
       expect.objectContaining({
         where: { status: 'PUBLISHED', isFeatured: true },

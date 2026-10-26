@@ -62,6 +62,12 @@ GET http://127.0.0.1:4000/api/public/skills?locale=en&marquee=1
 ### Public posts
 GET http://127.0.0.1:4000/api/public/posts?locale=en
 
+### Public posts page 1 of 1
+GET http://127.0.0.1:4000/api/public/posts?locale=en&page=1&pageSize=1
+
+### Public posts pageSize too large (400)
+GET http://127.0.0.1:4000/api/public/posts?locale=en&pageSize=500
+
 ### Public posts vi (EN fallback)
 GET http://127.0.0.1:4000/api/public/posts/vue-to-react?locale=vi
 

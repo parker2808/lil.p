@@ -47,7 +47,7 @@ const posts = [
     takeawaysVi: 'Một route\nGiữ hợp đồng\nCắt sang sau cùng',
     isFeatured: false,
     status: 'PUBLISHED' as const,
-    publishedAt: new Date('2026-09-01'),
+    publishedAt: new Date('2026-09-01T00:00:00.000Z'),
     tagSlugs: ['migration'],
   },
   {
@@ -62,7 +62,7 @@ const posts = [
     takeawaysVi: 'Thẻ phiên bản\nTrước và sau\nMetadata mono',
     isFeatured: false,
     status: 'PUBLISHED' as const,
-    publishedAt: new Date('2026-08-15'),
+    publishedAt: new Date('2026-09-01T00:00:00.000Z'),
     tagSlugs: ['vue'],
   },
   {

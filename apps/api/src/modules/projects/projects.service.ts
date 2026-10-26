@@ -1,11 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type {
   Locale,
+  ProjectListParams,
   PublicProjectDetail,
-  PublicProjectListItem,
-  PublicProjectListQuery,
+  PublicProjectListPage,
 } from '@portfolio/contracts';
+import { parseSort } from '@portfolio/contracts';
 
+import { paginate } from '../../common/utils/paginate.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { projectSelect } from './entities/project.entity';
@@ -15,10 +17,7 @@ import { toPublicProjectDetail, toPublicProjectListItem } from './entities/proje
 export class ProjectsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async listPublic(
-    locale: Locale,
-    query: PublicProjectListQuery,
-  ): Promise<PublicProjectListItem[]> {
+  async listPublic(locale: Locale, query: ProjectListParams): Promise<PublicProjectListPage> {
     const where: Prisma.ProjectWhereInput = { status: 'PUBLISHED' };
     if (query.featured === '1' || query.featured === 'true') {
       where.isFeatured = true;
@@ -29,13 +28,34 @@ export class ProjectsService {
     if (query.skill) {
       where.skills = { some: { slug: query.skill } };
     }
+    if (query.q) {
+      where.OR = [{ titleEn: { contains: query.q } }, { titleVi: { contains: query.q } }];
+    }
 
-    const rows = await this.prisma.project.findMany({
-      where,
-      select: projectSelect,
-      orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }],
-    });
-    return rows.map((row) => toPublicProjectListItem(row, locale));
+    const { field, direction } = parseSort(query.sort);
+    const orderBy: Prisma.ProjectOrderByWithRelationInput[] = [
+      { [field]: direction } as Prisma.ProjectOrderByWithRelationInput,
+      { id: 'asc' },
+    ];
+    const { skip, take } = paginate(query.page, query.pageSize);
+
+    const [total, rows] = await this.prisma.$transaction([
+      this.prisma.project.count({ where }),
+      this.prisma.project.findMany({
+        where,
+        select: projectSelect,
+        orderBy,
+        skip,
+        take,
+      }),
+    ]);
+
+    return {
+      items: rows.map((row) => toPublicProjectListItem(row, locale)),
+      page: query.page,
+      pageSize: query.pageSize,
+      total,
+    };
   }
 
   async getPublic(slug: string, locale: Locale): Promise<PublicProjectDetail> {

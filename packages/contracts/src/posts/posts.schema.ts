@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { listParamsSchema, paginatedSchema } from '../common/list-params.schema';
 import { localeSchema } from '../common/locale.schema';
 import { publicTagSchema } from '../tags/tags.schema';
 
@@ -29,7 +30,12 @@ export const adminPostInputSchema = z.object({
 
 export const publicPostTagSchema = publicTagSchema.omit({ postCount: true });
 
-export const publicPostListQuerySchema = z.object({
+export const postListParamsSchema = listParamsSchema([
+  '-publishedAt',
+  'publishedAt',
+  '-id',
+  'id',
+]).extend({
   tag: z.string().min(1).optional(),
 });
 
@@ -44,6 +50,8 @@ export const publicPostListItemSchema = z.object({
   tags: z.array(publicPostTagSchema),
   lang: localeSchema,
 });
+
+export const publicPostListPageSchema = paginatedSchema(publicPostListItemSchema);
 
 export const publicPostDetailSchema = publicPostListItemSchema.extend({
   body: z.string(),
