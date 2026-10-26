@@ -7,6 +7,7 @@ import type {
   PublicEducation,
 } from '@portfolio/contracts';
 
+import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { educationSelect } from './entities/education.entity';
@@ -31,6 +32,11 @@ export class EducationService {
       orderBy: { sortOrder: 'asc' },
     });
     return rows.map(toAdminDto);
+  }
+
+  async reorder(ids: number[]): Promise<AdminEducation[]> {
+    await reorder(this.prisma, (tx) => (tx as Prisma.TransactionClient).education, ids);
+    return this.listAdmin();
   }
 
   async getAdmin(id: number): Promise<AdminEducation> {
