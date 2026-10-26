@@ -37,6 +37,17 @@
     "fallback": "EN",
     "downloadCv": "Tải CV"
   },
+  "projects": {
+    "all": "Tất cả",
+    "tech": "Công nghệ",
+    "any": "mọi",
+    "search": "Lọc theo công nghệ",
+    "clearFilters": "Xóa bộ lọc",
+    "noneFor": "Không có case study cho {name}",
+    "previous": "Trước",
+    "next": "Sau",
+    "pagination": "Trang dự án"
+  },
   "content": {
     "copy": "Sao chép",
     "copied": "Đã sao chép",

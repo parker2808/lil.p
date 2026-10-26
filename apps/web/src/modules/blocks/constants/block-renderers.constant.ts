@@ -22,6 +22,10 @@ import {
   PrincipleListSkeleton,
 } from '../components/PrincipleListBlock/PrincipleListBlock';
 import { ProcessBlock, ProcessSkeleton } from '../components/ProcessBlock/ProcessBlock';
+import {
+  ProjectsBrowserBlock,
+  ProjectsBrowserSkeleton,
+} from '../components/ProjectsBrowserBlock/ProjectsBrowserBlock';
 import { ProseBlock, ProseSkeleton } from '../components/ProseBlock/ProseBlock';
 import {
   SkillGroupsBlock,
@@ -58,6 +62,7 @@ export const BLOCK_RENDERERS = {
   'education-list': { component: EducationListBlock, skeleton: EducationListSkeleton },
   'cv-download': { component: CvDownloadBlock, skeleton: CvDownloadSkeleton },
   prose: { component: ProseBlock, skeleton: ProseSkeleton },
+  'projects-browser': { component: ProjectsBrowserBlock, skeleton: ProjectsBrowserSkeleton },
 } satisfies Record<BlockType, BlockRendererEntry>;
 
 export type BlockRenderers = Record<string, BlockRendererEntry | undefined>;

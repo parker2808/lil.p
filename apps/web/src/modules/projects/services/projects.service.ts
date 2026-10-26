@@ -4,6 +4,7 @@ import {
   type Locale,
   type ProjectListParams,
   type PublicProjectListItem,
+  type PublicProjectListPage,
   publicProjectListPageSchema,
 } from '@portfolio/contracts';
 
@@ -20,21 +21,29 @@ function queryString(params: Record<string, string | number | undefined>): strin
   return encoded ? `?${encoded}` : '';
 }
 
-export async function listProjects(
+export async function listProjectsPage(
   locale: Locale,
   params: Partial<ProjectListParams> = {},
-): Promise<PublicProjectListItem[]> {
-  const page = await apiServer(`/api/public/projects${queryString(params)}`, {
+): Promise<PublicProjectListPage> {
+  return apiServer(`/api/public/projects${queryString(params)}`, {
     locale,
     tags: ['projects'],
     schema: publicProjectListPageSchema,
   });
+}
+
+export async function listProjects(
+  locale: Locale,
+  params: Partial<ProjectListParams> = {},
+): Promise<PublicProjectListItem[]> {
+  const page = await listProjectsPage(locale, params);
   return page.items;
 }
 
 export async function getFeaturedProject(
   locale: Locale,
   projectId?: number | null,
+  filters: Pick<ProjectListParams, 'domain' | 'skill'> = {},
 ): Promise<PublicProjectListItem | null> {
   if (projectId) {
     const items = await listProjects(locale, { pageSize: 100, sort: 'sortOrder' });
@@ -44,6 +53,8 @@ export async function getFeaturedProject(
     featured: '1',
     pageSize: 1,
     sort: 'sortOrder',
+    domain: filters.domain,
+    skill: filters.skill,
   });
   return featured[0] ?? null;
 }
