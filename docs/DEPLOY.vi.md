@@ -12,8 +12,9 @@ Không commit secret. Tạo JWT bằng `openssl rand -base64 48`
 
 1. Tạo cluster Serverless miễn phí (tương thích MySQL).
 2. Tạo database (ví dụ `portfolio`).
-3. Copy connection string. Thêm `?sslaccept=strict` nếu chưa có. TiDB bắt
-   buộc TLS; adapter MariaDB của Prisma 7 đọc flag này từ `DATABASE_URL`.
+3. Copy connection string. Thêm `?sslaccept=strict&ssl=true` nếu chưa có.
+   TiDB bắt buộc TLS; adapter MariaDB của Prisma 7 đọc các flag này từ
+   `DATABASE_URL`.
 4. Các file migrate dùng `utf8mb4_unicode_ci`, `JSON`, foreign key và
    index — không có `FULLTEXT`, generated column, hay `CHECK`. Tương
    thích TiDB.
@@ -40,7 +41,7 @@ check `GET /api/health`, `prisma migrate deploy` trong entrypoint, rồi
 
    | Key                                             | Ghi chú                                                                    |
    | ----------------------------------------------- | -------------------------------------------------------------------------- |
-   | `DATABASE_URL`                                  | URL TiDB + `sslaccept=strict`                                              |
+   | `DATABASE_URL`                                  | URL TiDB + `sslaccept=strict&ssl=true`                                     |
    | `WEB_ORIGIN`                                    | Origin Vercel, ví dụ `https://your-app.vercel.app`                         |
    | `WEB_INTERNAL_URL`                              | Cùng origin Vercel (API POST revalidate)                                   |
    | `JWT_ACCESS_SECRET` / `JWT_REFRESH_SECRET`      | Hai giá trị `openssl rand -base64 48` khác nhau                            |
@@ -74,12 +75,12 @@ mỗi trang load (`ApiWarmup`) để giảm cold start.
 3. Install: `pnpm install --frozen-lockfile`.
 4. Env:
 
-   | Key                    | Ghi chú                                           |
-   | ---------------------- | ------------------------------------------------- |
-   | `API_URL`              | Origin Render (fetch server + rewrite)            |
-   | `NEXT_PUBLIC_API_URL`  | Cùng origin Render (browser, SSE, beacon, warmup) |
-   | `NEXT_PUBLIC_SITE_URL` | Origin Vercel                                     |
-   | `REVALIDATE_SECRET`    | Trùng Render                                      |
+   | Key                    | Ghi chú                                                                                                                                                                                                                  |
+   | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+   | `API_URL`              | Origin Render (fetch server + rewrite)                                                                                                                                                                                   |
+   | `NEXT_PUBLIC_API_URL`  | **Để trống** khi web và API khác domain. Browser phải gọi same-origin `/api/*` để Next rewrite sang Render và cookie nằm trên host Vercel. Set thành origin Render sẽ gắn cookie lên domain API và làm hỏng admin login. |
+   | `NEXT_PUBLIC_SITE_URL` | Origin Vercel                                                                                                                                                                                                            |
+   | `REVALIDATE_SECRET`    | Trùng Render                                                                                                                                                                                                             |
 
 5. Deploy. Mở `https://<vercel>/en` và `/admin/login`.
 6. Domain riêng: thêm trên Vercel, rồi cập nhật `WEB_ORIGIN`,

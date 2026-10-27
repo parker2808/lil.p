@@ -2,6 +2,7 @@ import { hasLocale } from 'next-intl';
 import { getRequestConfig } from 'next-intl/server';
 
 import { routing } from './routing';
+import { APP_TIME_ZONE } from './timezone';
 
 export default getRequestConfig(async ({ requestLocale }) => {
   const requested = await requestLocale;
@@ -9,6 +10,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     locale,
+    timeZone: APP_TIME_ZONE,
     messages: (await import(`./locales/${locale}.json`)).default,
   };
 });

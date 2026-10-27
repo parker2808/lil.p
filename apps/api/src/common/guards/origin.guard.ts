@@ -19,6 +19,8 @@ export class OriginGuard implements CanActivate {
     if (!MUTATING.has(request.method)) {
       return true;
     }
+    // Same-origin browser calls through the Vercel /api rewrite send
+    // Origin = WEB_ORIGIN (the Vercel host), not the Render API host.
     if (request.headers.origin !== this.config.webOrigin) {
       throw new ForbiddenException({
         code: 'BAD_ORIGIN',

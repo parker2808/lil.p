@@ -4,18 +4,50 @@ import { publicApiUrl } from '../utils/public-api-url.util';
 const AUTH_PATHS = ['/api/admin/', '/api/auth/me'];
 
 let refreshPromise: Promise<boolean> | null = null;
+let refreshFailed = false;
 
-function needsAuthRefresh(path: string): boolean {
+function requestPathname(url: string): string {
+  const base =
+    typeof window !== 'undefined' && window.location?.origin
+      ? window.location.origin
+      : 'http://localhost';
+  try {
+    return new URL(url, base).pathname;
+  } catch {
+    return url;
+  }
+}
+
+export function needsAuthRefresh(url: string): boolean {
+  const path = requestPathname(url);
   return AUTH_PATHS.some((prefix) => path === prefix || path.startsWith(prefix));
 }
 
+export function resetAuthRefresh(): void {
+  refreshPromise = null;
+  refreshFailed = false;
+}
+
 export async function refreshOnce(): Promise<boolean> {
+  if (refreshFailed) {
+    return false;
+  }
   if (!refreshPromise) {
     refreshPromise = fetch(publicApiUrl('/api/auth/refresh'), {
       method: 'POST',
       credentials: 'include',
     })
-      .then((response) => response.ok)
+      .then((response) => {
+        const ok = response.ok;
+        if (!ok) {
+          refreshFailed = true;
+        }
+        return ok;
+      })
+      .catch(() => {
+        refreshFailed = true;
+        return false;
+      })
       .finally(() => {
         refreshPromise = null;
       });

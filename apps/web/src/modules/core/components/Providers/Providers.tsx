@@ -1,9 +1,9 @@
 'use client';
 
+import { APP_TIME_ZONE } from '@i18n/timezone';
 import type { AbstractIntlMessages } from 'next-intl';
 import { NextIntlClientProvider } from 'next-intl';
 import type { ReactNode } from 'react';
-
 import { Toaster } from 'sonner';
 
 import { ApiWarmup } from '../ApiWarmup/ApiWarmup';
@@ -22,7 +22,7 @@ export function Providers({
   nonce?: string;
 }) {
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages} timeZone={APP_TIME_ZONE}>
       <QueryProvider>
         <ThemeProvider nonce={nonce}>
           <ApiWarmup />

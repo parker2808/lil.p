@@ -11,6 +11,7 @@ import {
   TEST_ADMIN,
   TEST_ORIGIN,
   TEST_USER,
+  testEmail,
   userAgent,
 } from './helpers/auth.helper';
 import { createTestApp } from './helpers/create-app';
@@ -105,6 +106,37 @@ describe('guards', () => {
         .send({ email: TEST_USER.email, password: 'wrong-password' })
         .expect(429);
       expect(limited.body.code).toBe('RATE_LIMITED');
+    } finally {
+      delete process.env.E2E_THROTTLE;
+    }
+  });
+
+  it('does not share the login limit across X-Forwarded-For clients', async () => {
+    process.env.E2E_THROTTLE = '1';
+    const email = testEmail('throttle-xff');
+    try {
+      for (let i = 0; i < 5; i += 1) {
+        await request(app.getHttpServer())
+          .post('/api/auth/login')
+          .set('Origin', TEST_ORIGIN)
+          .set('X-Forwarded-For', '203.0.113.10, 10.0.0.1')
+          .send({ email, password: 'wrong-password' })
+          .expect(401);
+      }
+      const limited = await request(app.getHttpServer())
+        .post('/api/auth/login')
+        .set('Origin', TEST_ORIGIN)
+        .set('X-Forwarded-For', '203.0.113.10, 10.0.0.1')
+        .send({ email, password: 'wrong-password' })
+        .expect(429);
+      expect(limited.body.code).toBe('RATE_LIMITED');
+
+      await request(app.getHttpServer())
+        .post('/api/auth/login')
+        .set('Origin', TEST_ORIGIN)
+        .set('X-Forwarded-For', '203.0.113.11, 10.0.0.1')
+        .send({ email, password: 'wrong-password' })
+        .expect(401);
     } finally {
       delete process.env.E2E_THROTTLE;
     }

@@ -6,6 +6,11 @@ import { requestIp } from '../utils/ip-hash.util';
 
 @Injectable()
 export class RateLimitGuard extends ThrottlerGuard {
+  /** Left-most X-Forwarded-For so Vercel→Render users are not one shared bucket. */
+  protected override async getTracker(req: Request): Promise<string> {
+    return requestIp(req);
+  }
+
   protected async throwThrottlingException(): Promise<void> {
     throw new HttpException(
       { code: 'RATE_LIMITED', message: 'Too many requests' },
@@ -16,9 +21,9 @@ export class RateLimitGuard extends ThrottlerGuard {
 
 @Injectable()
 export class LoginThrottleGuard extends RateLimitGuard {
-  protected async getTracker(req: Request): Promise<string> {
+  protected override async getTracker(req: Request): Promise<string> {
     const email = typeof req.body?.email === 'string' ? req.body.email : '';
-    return `${req.ip ?? 'unknown'}:${email}`;
+    return `${requestIp(req)}:${email}`;
   }
 }
 

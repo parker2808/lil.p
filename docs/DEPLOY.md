@@ -12,9 +12,9 @@ No secrets belong in git. Generate JWT secrets with
 
 1. Create a free TiDB Cloud Serverless cluster (MySQL compatible).
 2. Create a database (for example `portfolio`).
-3. Copy the connection string. Append `?sslaccept=strict` if it is not
-   already there. TiDB requires TLS; Prisma 7's MariaDB adapter reads that
-   query flag from `DATABASE_URL`.
+3. Copy the connection string. Append `?sslaccept=strict&ssl=true` if
+   those flags are not already there. TiDB requires TLS; Prisma 7's
+   MariaDB adapter reads those query flags from `DATABASE_URL`.
 4. Migrations in `apps/api/prisma/migrations/` use `utf8mb4_unicode_ci`,
    `JSON`, foreign keys and secondary indexes — no `FULLTEXT`, generated
    columns, or `CHECK` constraints. Those are TiDB-compatible.
@@ -43,7 +43,7 @@ entrypoint, then `node dist/main.js`. The process binds `0.0.0.0:$PORT`
 
    | Key                                             | Notes                                                                                       |
    | ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
-   | `DATABASE_URL`                                  | TiDB URL + `sslaccept=strict`                                                               |
+   | `DATABASE_URL`                                  | TiDB URL + `sslaccept=strict&ssl=true`                                                      |
    | `WEB_ORIGIN`                                    | The Vercel origin, e.g. `https://your-app.vercel.app`                                       |
    | `WEB_INTERNAL_URL`                              | Same as the Vercel origin (revalidate POSTs here)                                           |
    | `JWT_ACCESS_SECRET` / `JWT_REFRESH_SECRET`      | Two different `openssl rand -base64 48` values                                              |
@@ -81,13 +81,13 @@ that cold start.
 3. Install: `pnpm install --frozen-lockfile` (enable pnpm / Corepack).
 4. Environment variables:
 
-   | Key                    | Notes                                                                                  |
-   | ---------------------- | -------------------------------------------------------------------------------------- |
-   | `API_URL`              | Render origin, e.g. `https://portfolio-api.onrender.com` (server-side fetch + rewrite) |
-   | `NEXT_PUBLIC_API_URL`  | Same Render origin (browser fetch, SSE, beacon, warmup)                                |
-   | `NEXT_PUBLIC_SITE_URL` | This Vercel origin (`https://…`)                                                       |
-   | `REVALIDATE_SECRET`    | Same value as Render                                                                   |
-   | `WEB_ORIGIN`           | Same as `NEXT_PUBLIC_SITE_URL` if the web process reads it                             |
+   | Key                    | Notes                                                                                                                                                                                                                                                          |
+   | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | `API_URL`              | Render origin, e.g. `https://portfolio-api.onrender.com` (server-side fetch + rewrite)                                                                                                                                                                         |
+   | `NEXT_PUBLIC_API_URL`  | **Leave empty** when web and API are on different domains. The browser must call same-origin `/api/*` so Next rewrites to Render and cookies stay on the Vercel host. Setting this to the Render origin puts cookies on the API domain and breaks admin login. |
+   | `NEXT_PUBLIC_SITE_URL` | This Vercel origin (`https://…`)                                                                                                                                                                                                                               |
+   | `REVALIDATE_SECRET`    | Same value as Render                                                                                                                                                                                                                                           |
+   | `WEB_ORIGIN`           | Same as `NEXT_PUBLIC_SITE_URL` if the web process reads it                                                                                                                                                                                                     |
 
 5. Deploy. Open `https://<vercel>/en` and `/admin/login`.
 6. Custom domain (optional): add it in Vercel, then update `WEB_ORIGIN`,
