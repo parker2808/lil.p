@@ -153,6 +153,8 @@ describe('auth', () => {
     const refresh = cookie(first, 'refresh_token');
     expect(access && refresh).toBeTruthy();
 
+    // Origin is WEB_ORIGIN — the same header a browser sends through the
+    // Vercel /api rewrite (same-origin to the web host, not the Render host).
     const rotated = await request(app.getHttpServer())
       .post('/api/auth/refresh')
       .set('Origin', TEST_ORIGIN)

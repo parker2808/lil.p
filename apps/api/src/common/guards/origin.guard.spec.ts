@@ -30,4 +30,13 @@ describe('OriginGuard', () => {
   it('allows a write from WEB_ORIGIN', () => {
     expect(guard.canActivate(ctx('POST', WEB) as never)).toBe(true);
   });
+
+  it('allows POST refresh from the Vercel WEB_ORIGIN (same-origin rewrite)', () => {
+    const web = 'https://web.example.test';
+    const production = new OriginGuard({ webOrigin: web } as never);
+    expect(production.canActivate(ctx('POST', web) as never)).toBe(true);
+    expect(() => production.canActivate(ctx('POST', 'https://api.example.test') as never)).toThrow(
+      ForbiddenException,
+    );
+  });
 });

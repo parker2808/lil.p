@@ -15,9 +15,13 @@ import { AppConfigService } from './config/app-config.service';
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
-  const expressApp = app.getHttpAdapter().getInstance() as { set: (k: string, v: string) => void };
+  const expressApp = app.getHttpAdapter().getInstance() as {
+    set: (k: string, v: string | number) => void;
+  };
   const config = app.get(AppConfigService);
-  expressApp.set('trust proxy', config.isProduction ? '1' : 'loopback');
+  // Render is hop 1. Vercel /api rewrites add hop 2. Throttler still keys on
+  // the left-most X-Forwarded-For so each browser keeps its own budget.
+  expressApp.set('trust proxy', config.isProduction ? 2 : 'loopback');
   if (config.corsOrigins.length > 0) {
     app.enableCors({ origin: config.corsOrigins, credentials: true });
   }

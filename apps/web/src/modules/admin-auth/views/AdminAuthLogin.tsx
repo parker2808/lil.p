@@ -2,11 +2,14 @@
 
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-
-import { refreshOnce } from '@/modules/core/services/api-client.service';
+import { useEffect, useRef, useState } from 'react';
 
 import { LoginForm } from '../components/LoginForm/LoginForm';
+import {
+  clientHasAdminSession,
+  hasAdminLoginAutoRedirected,
+  markAdminLoginAutoRedirected,
+} from '../utils/client-session.util';
 import { safeAdminNext } from '../utils/safe-next.util';
 
 export function AdminAuthLogin() {
@@ -16,10 +19,18 @@ export function AdminAuthLogin() {
   const search = useSearchParams();
   const next = safeAdminNext(search.get('next'));
   const [ready, setReady] = useState(false);
+  const redirectedRef = useRef(false);
 
   useEffect(() => {
-    void refreshOnce().then((ok) => {
-      if (ok) {
+    if (redirectedRef.current || hasAdminLoginAutoRedirected()) {
+      setReady(true);
+      return;
+    }
+
+    void clientHasAdminSession().then((ok) => {
+      if (ok && !redirectedRef.current && !hasAdminLoginAutoRedirected()) {
+        redirectedRef.current = true;
+        markAdminLoginAutoRedirected();
         router.replace(next);
         return;
       }

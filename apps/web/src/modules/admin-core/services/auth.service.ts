@@ -1,9 +1,10 @@
 import type { LoginInput, Me } from '@portfolio/contracts';
 import { meSchema } from '@portfolio/contracts';
 
-import { apiClient } from '@/modules/core/services/api-client.service';
+import { apiClient, resetAuthRefresh } from '@/modules/core/services/api-client.service';
 
 export async function login(input: LoginInput): Promise<Me> {
+  resetAuthRefresh();
   const me = await apiClient<Me>('/api/auth/login', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
