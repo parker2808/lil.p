@@ -1,12 +1,29 @@
+# Dependencies
 node_modules
+
+# Secrets — only .env.example is committed
 .env
+.env.*
+!.env.example
+
+# Build output
 .next
 dist
-coverage
-uploads
 storybook-static
 *.tsbuildinfo
+
+# Generated code (recreated by postinstall / typecheck / build)
 apps/api/src/generated
+next-env.d.ts
+
+# Runtime data and test reports
+uploads
+coverage
 test-results
 playwright-report
 blob-report
+
+# Local tooling
+.vercel
+.DS_Store
+*.log

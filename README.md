@@ -3,110 +3,212 @@
 Portfolio monorepo: Next.js public site + admin (`apps/web`), NestJS API (`apps/api`), design system (`packages/ui`), and shared zod contracts (`packages/contracts`).
 
 Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./docs/PLAN.md).
-Free hosting (Vercel + Render + TiDB + Cloudinary): [docs/DEPLOY.md](./docs/DEPLOY.md).
 
-## Prerequisites
+## Environments
+
+There are three ways to run this repo. Each has its own setup — do not mix the steps.
+
+|                 | [Local development](#local-development)       | [Production-like (local)](#production-like-stack-on-your-machine) | [Production](#production)              |
+| --------------- | --------------------------------------------- | ----------------------------------------------------------------- | -------------------------------------- |
+| Purpose         | Day-to-day coding                             | Test the Docker images before deploy                              | The live site                          |
+| Web             | `pnpm dev` → http://localhost:3000            | Docker + Caddy → http://localhost                                 | Vercel                                 |
+| API             | `pnpm dev` → http://127.0.0.1:4000            | Docker (behind Caddy)                                             | Render (Docker, `render.yaml`)         |
+| Database        | Docker MySQL 8.4 (`docker-compose.yml`)       | Docker MySQL 8.4 (`compose.prod.yml`)                             | TiDB Cloud Serverless                  |
+| Media           | In-memory fallback (Cloudinary keys optional) | Cloudinary                                                        | Cloudinary                             |
+| Config lives in | Root `.env` (from `.env.example`)             | Root `.env`                                                       | Vercel + Render dashboards only        |
+| Migrations      | `pnpm db:migrate` (creates + applies)         | Applied on API boot (`migrate deploy`)                            | Applied on API boot (`migrate deploy`) |
+
+The root `.env` is for your machine only. Production secrets never go in `.env` or in git.
+
+## Local development
+
+### Prerequisites
 
 - Node 22 (`.nvmrc`; `nvm use`)
 - pnpm via [corepack](https://nodejs.org/api/corepack.html) (`corepack enable`) so it matches `packageManager` in `package.json`
-- Docker Desktop
+- Docker Desktop (running)
 - git
+
+### First-time setup
+
+Run these in order from the repo root. Every step is needed once per fresh clone.
+
+1. **Install dependencies** (also installs the Husky git hooks and generates the Prisma client):
+
+   ```bash
+   nvm use && corepack enable
+   pnpm install
+   ```
+
+2. **Create `.env`** and fill the values the API refuses to boot without:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   | Key                                                     | Local value                                                                                  |
+   | ------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+   | `MYSQL_USER` / `MYSQL_PASSWORD` / `MYSQL_ROOT_PASSWORD` | Anything. Keep `DATABASE_URL` / `DATABASE_URL_TEST` in sync with the same user and password. |
+   | `JWT_ACCESS_SECRET` / `JWT_REFRESH_SECRET`              | Two **different** values, 32+ chars: `openssl rand -base64 48`                               |
+   | `ADMIN_EMAIL` / `ADMIN_NAME` / `ADMIN_PASSWORD`         | Your local admin login. The seed creates this user only when all three are set.              |
+
+   Leave `CLOUDINARY_*`, `REVALIDATE_SECRET`, and `ANALYTICS_SALT_SECRET` blank unless you need them — the API falls back to in-memory media and skips revalidate and analytics.
+
+   > **Decide `MYSQL_*` before step 3.** MySQL creates the user and grants only the first time the Docker volume is created. If you change `MYSQL_USER` or a password later, reset the volume: `docker compose down -v && pnpm db:up` (this deletes local data).
+
+3. **Start MySQL + Adminer** and wait until `db` is `healthy`:
+
+   ```bash
+   pnpm db:up
+   docker compose ps
+   ```
+
+4. **Build the shared contracts.** The API, the seed, and the web app import `packages/contracts/dist/`, which is not in git:
+
+   ```bash
+   pnpm --filter @portfolio/contracts build
+   ```
+
+5. **Create the tables and seed demo content:**
+
+   ```bash
+   pnpm db:migrate
+   pnpm db:seed
+   ```
+
+6. **Start web + API:**
+
+   ```bash
+   pnpm dev
+   ```
+
+| URL                                                                    | What                                                                            |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| [http://localhost:3000](http://localhost:3000)                         | Public site                                                                     |
+| [http://localhost:3000/admin/login](http://localhost:3000/admin/login) | Admin (sign in with `ADMIN_EMAIL` / `ADMIN_PASSWORD`)                           |
+| [http://127.0.0.1:4000/api/health](http://127.0.0.1:4000/api/health)   | API health — expect `{"status":"ok","db":"ok"}`                                 |
+| [http://localhost:8080](http://localhost:8080)                         | Adminer — system **MySQL**, server **`db`**, user/password/database from `.env` |
+
+In Adminer the server is `db` (the Compose service name), not `localhost` — Adminer runs inside Docker too.
+
+### Daily workflow
+
+```bash
+pnpm db:up        # if Docker was stopped
+pnpm dev
+pnpm db:down      # when done; data stays in the `db-data` volume
+```
+
+After `git pull`, run `pnpm install`, `pnpm --filter @portfolio/contracts build`, and `pnpm db:migrate` if dependencies, contracts, or migrations changed.
+
+### Changing the database schema
+
+1. Edit `apps/api/prisma/schema.prisma`.
+2. `pnpm db:migrate --name short_description` — writes a new folder in `apps/api/prisma/migrations/` and applies it locally.
+3. Commit the migration folder together with the schema. Never edit a migration that is already on `main`; production applies them in order.
+
+`SEED_PROFILE=demo` (default) or `baseline` chooses the seed profile (PLAN D13). Seed values are placeholders; contact fields are `<email>` / `<phone>`. `pnpm db:reset` drops, re-migrates, and re-seeds the local database.
+
+### Troubleshooting
+
+- **`db` container exits on `pnpm db:up`, or `pnpm db:migrate` fails with P3014** (cannot create the shadow database): the volume was created with different `MYSQL_*` values than `.env` now has. Run `docker compose down -v && pnpm db:up`, then redo steps 5–6.
+- **`Cannot find module '@portfolio/contracts'`** (seed or API) or **`Could not find a declaration file for module '@portfolio/contracts'`**: run step 4, then restart `pnpm dev`.
+- **API exits with an env validation error**: `JWT_ACCESS_SECRET` / `JWT_REFRESH_SECRET` are missing, shorter than 32 chars, or equal.
+- **Port 3306 already in use**: another MySQL is running on your machine. Stop it, or the container cannot bind.
+- **Cannot sign in to `/admin`**: set all three `ADMIN_*` keys and run `pnpm db:seed` again.
+
+## Production
+
+Live hosting is **Vercel (web) + Render (API) + TiDB Cloud (MySQL) + Cloudinary (media)**. First-time provisioning, every env var, and the admin bootstrap are in [docs/DEPLOY.md](./docs/DEPLOY.md) ([Tiếng Việt](./docs/DEPLOY.vi.md)). Rollback and secret rotation: [docs/runbooks/deploy.md](./docs/runbooks/deploy.md), [docs/runbooks/secrets.md](./docs/runbooks/secrets.md).
+
+### How a change reaches production
+
+1. Open a PR (or push) to `main`. CI runs format, lint, typecheck, tests, content checks, build, and API e2e.
+2. Vercel and Render auto-deploy `main`.
+3. On boot, the API image runs `prisma migrate deploy` — it applies committed migrations only, never creates new ones, never resets data.
+
+Nothing else is run by hand on a normal deploy.
+
+### Rules for production
+
+- Env vars and secrets are set **only** in the Vercel and Render dashboards. Never copy them into the repo `.env` or commit them. Never reuse local secrets in production.
+- Never run `pnpm db:migrate`, `pnpm db:reset`, or `pnpm db:seed` with `DATABASE_URL` pointing at TiDB. `migrate dev` / `reset` can drop data, and the seed overwrites content rows.
+- New migrations are created locally (see [Changing the database schema](#changing-the-database-schema)) and reach production through `main`.
+- `infra/mysql/init/` and `docker-compose.yml` are local-only; production never uses them.
+- Before pushing: `pnpm lint && pnpm typecheck && pnpm test && pnpm format:check` (the pre-push hook runs `typecheck`).
+
+## Production-like stack on your machine
+
+Optional. `compose.prod.yml` runs the real production images (MySQL + API + Next + Caddy + daily backups) so you can test a release locally. Only Caddy is published: open [http://localhost](http://localhost), not `:3000`. It reads the same root `.env` (`MYSQL_*`, `JWT_*`); set `WEB_ORIGIN_PROD` / `NEXT_PUBLIC_SITE_URL_PROD` if you serve it on a different origin.
+
+```bash
+pnpm prod:up                 # build images and start (API runs migrate deploy on boot)
+pnpm prod:seed               # one-off: SEED_PROFILE=baseline, node dist/seed.js
+pnpm prod:backup             # one-shot mysqldump + uploads tarball
+scripts/backup/restore.sh    # load the newest dump into MYSQL_DATABASE (fresh DB)
+pnpm prod:down               # stop; named volumes keep the data
+```
+
+Images are multi-stage, run as a non-root user with a read-only root filesystem. Caddy adds HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and `X-Frame-Options: SAMEORIGIN`. Next sets a per-request CSP nonce in `proxy.ts`. Restore: [docs/runbooks/restore.md](./docs/runbooks/restore.md).
+
+## What is in git
+
+Commit source, config, and migrations. Everything a tool can regenerate, and every secret, is ignored (see `.gitignore`):
+
+| Ignored                                                                             | Recreated by                                                    |
+| ----------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `.env`, `.env.*` (except `.env.example`)                                            | You, from `.env.example` (local) or the dashboards (production) |
+| `node_modules/`                                                                     | `pnpm install`                                                  |
+| `packages/contracts/dist/`, `apps/*/dist/`                                          | `pnpm --filter @portfolio/contracts build`, `pnpm build`        |
+| `apps/api/src/generated/` (Prisma client)                                           | `pnpm install` (postinstall) or `pnpm typecheck`                |
+| `apps/web/next-env.d.ts`, `.next/`                                                  | `pnpm dev`, `pnpm build`, or `pnpm typecheck` (`next typegen`)  |
+| `coverage/`, `test-results/`, `playwright-report/`, `storybook-static/`, `uploads/` | Test, Storybook, and runtime output                             |
+| `.vercel/`, `.DS_Store`, `*.log`                                                    | Local tooling                                                   |
+
+When you add a new secret, add the key with a placeholder to `.env.example` and the real value to the dashboards.
 
 ## Commands
 
 ```bash
-pnpm install                 # all workspaces (also installs git hooks via Husky)
-pnpm dev                     # web :3000 + api :4000 in parallel (MySQL via docker compose)
+pnpm dev                     # web :3000 + api :4000 + contracts watch
 pnpm lint | typecheck | test | build
-pnpm format | format:check   # Prettier (one root config; format:check also runs in CI)
+pnpm format | format:check   # Prettier (format:check also runs in CI)
 pnpm check:content           # no CV strings in UI code, no email/phone anywhere
 pnpm check:placeholders      # DATABASE_URL: no seed placeholders in live rows (T60)
-pnpm check:deps              # no paid Tiptap packages or private Tiptap registry; every @tiptap/* and @dnd-kit/* is MIT
-pnpm db:up                   # MySQL :3306 + Adminer :8080 (127.0.0.1)
-pnpm db:down                 # stop containers; named volume `db-data` keeps the data
-pnpm db:logs                 # follow db + adminer logs
-pnpm db:migrate              # create / apply Prisma migrations (apps/api)
-pnpm db:reset                # drop + recreate + seed
-pnpm db:seed                 # re-run the seed (idempotent upserts)
+pnpm check:deps              # no paid Tiptap packages; every @tiptap/* and @dnd-kit/* is MIT
+
+pnpm db:up | db:down | db:logs   # local MySQL :3306 + Adminer :8080 (127.0.0.1)
+pnpm db:test:up              # throwaway test MySQL on :3307 (API e2e)
+pnpm db:migrate              # local only: create + apply migrations
+pnpm db:seed                 # local only: idempotent upserts
+pnpm db:reset                # local only: drop + migrate + seed
 pnpm db:studio               # Prisma Studio GUI
-pnpm prod:up                 # production stack on http://localhost (Caddy :80)
-pnpm prod:seed               # one-off baseline seed inside the API image
-pnpm prod:backup             # one-shot mysqldump + uploads tarball
-pnpm prod:down               # stop the production stack (named volumes keep data)
-docker compose up -d db adminer
+
+pnpm prod:up | prod:seed | prod:backup | prod:down   # production-like stack
 ```
-
-## Database
-
-Local MySQL 8.4 plus [Adminer](https://www.adminer.org/) (a browser UI to look inside it). Only these two run in Docker in development; the API and web apps come later and use `pnpm dev`. Copy `.env.example` to `.env` once, then start with one command:
-
-```bash
-cp .env.example .env         # real passwords live here; `.env` is git-ignored
-pnpm db:up                   # or: docker compose up -d db adminer
-docker compose ps            # wait until `db` is `healthy`
-```
-
-Adminer: [http://localhost:8080](http://localhost:8080). System **MySQL**, server **`db`** (the Compose service name — Adminer is also in Docker, so `localhost` would mean Adminer's own container), username **`app`**, password and database from `.env` (`MYSQL_PASSWORD`, `MYSQL_DATABASE=portfolio`).
-
-`pnpm db:down` stops the containers. Data stays. `docker compose down -v` deletes the `db-data` volume too (a full reset). If you already had a volume before `infra/mysql/init/01-dev-grants.sql` existed, run that GRANT in Adminer or reset with `down -v`.
-
-### Prisma (schema, migrate, seed)
-
-The API owns the schema in `apps/api/prisma/schema.prisma`. After MySQL is healthy:
-
-```bash
-pnpm db:migrate              # first run: `--name init-site` (already committed)
-pnpm db:seed                 # fills SiteSettings, Profile, nav, social, pages
-pnpm db:studio               # browse rows; Adminer works too
-```
-
-`SEED_PROFILE=demo` (default) or `baseline` chooses the seed profile (PLAN D13). Values are placeholders; contact fields are `<email>` / `<phone>`.
-
-7. **ORM.** Prisma turns `schema.prisma` into SQL tables and a typed client. You write `prisma.profile.findUnique({ where: { id: 1 } })` instead of SQL.
-8. **Migration.** `migrate dev --name init-site` writes a SQL file in `prisma/migrations/`. That file is committed and never edited.
-9. **Seed.** `upsert` on unique keys makes the script safe to run twice. Two profiles: `demo` (dev/CI) and `baseline` (production first boot).
-
-### Backend steps, explained
-
-Written for a first pass at backend. Glossary: spec [§1.6](./docs/design/portfolio-design-system.md#s-1-6).
-
-1. **Image vs container** (glossary §1.6). `mysql:8.4` is the packaged program; `docker compose up` starts a running copy of it. Pin the tag so everyone runs the same version. `adminer:5.4.2` is pinned the same way.
-2. **Port mapping.** `127.0.0.1:3306:3306` means "port 3306 on my laptop, reachable only from my laptop, goes to port 3306 in the container". Binding to `127.0.0.1` keeps the DB off your Wi-Fi network. Adminer is `127.0.0.1:8080:8080` for the same reason. If a local MySQL already uses 3306, stop it or the new container will fail to bind.
-3. **Volume.** `db-data` is a folder Docker keeps outside the container. `docker compose down` deletes the container but not the volume, so data survives. `docker compose down -v` deletes the volume too (a full reset).
-4. **Environment variables.** Passwords live in `.env`, never in git. `.env.example` shows which keys exist, with fake values. Compose reads `.env` and passes `MYSQL_*` into the `db` container. The API (later) will use `DATABASE_URL`.
-5. **Init scripts.** Files in `/docker-entrypoint-initdb.d` (`infra/mysql/init/`) run **only the first time** the volume is created. `01-dev-grants.sql` lets the `app` user create and drop databases, which Prisma's shadow database needs for `migrate dev` (avoids error P3014). If you already had a volume, run the grant from `01-dev-grants.sql` by hand in Adminer, or reset with `down -v`.
-6. **Healthcheck.** Compose pings MySQL (`mysqladmin ping -h localhost`) until it answers, so other services (Adminer now, the API in T58) start only when the DB is ready. `docker compose ps` shows `healthy` when that succeeds.
-
-## Production compose
-
-The whole stack (MySQL + API + Next + Caddy + daily backups) runs from `compose.prod.yml`. Nothing but Caddy is published — open [http://localhost](http://localhost). Images are multi-stage and run as a non-root user with a read-only root filesystem. Media still goes to Cloudinary (T50); the `uploads` volume is snapshotted with the database.
-
-```bash
-# JWT secrets must be set (32+ chars, different from each other):
-#   openssl rand -base64 48
-pnpm prod:up                 # docker compose -f compose.prod.yml up --build
-pnpm prod:seed               # SEED_PROFILE=baseline; node dist/seed.js
-pnpm prod:backup             # one-shot dump onto the backups volume
-scripts/backup/restore.sh    # load the newest dump into MYSQL_DATABASE (fresh DB)
-```
-
-The API entrypoint runs `prisma migrate deploy` (only committed migrations) before it starts. `pnpm prod:seed` is a one-off — it is not part of every boot. Use `http://localhost`, not `:3000`; Caddy is the origin the browser and `WEB_ORIGIN` share.
-
-Caddy adds HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and `X-Frame-Options: SAMEORIGIN`. Next sets a per-request CSP nonce in `proxy.ts` (`frame-ancestors 'self'` so the page builder can iframe the public site). Auth cookies are `Secure` when `NODE_ENV=production`. See [docs/runbooks/secrets.md](./docs/runbooks/secrets.md) and [docs/runbooks/restore.md](./docs/runbooks/restore.md).
-
-The web image stays near the 300 MB target. The API image is larger because Prisma 7's CLI (required for `migrate deploy`) ships engines and Studio on top of the Node 22 alpine base.
-
-10. **Multi-stage builds.** One stage installs and builds; the final stage copies only what runs, so images stay small.
-11. **`migrate deploy` vs `migrate dev`.** `deploy` only applies committed migrations, never creates new ones and never resets data. It is the only migrate command for production.
-12. **Service names as hostnames.** Inside compose, the web reaches the API at `http://api:4000`; nothing but Caddy is exposed.
-13. **Read-only root + backups.** Containers cannot write to their image; only volumes (`db-data`, `uploads`, `backups`, Caddy state) and `tmpfs` are writable. `backup` runs `mysqldump | gzip` daily and keeps 7 days. A backup only counts after `scripts/backup/restore.sh` has loaded it into an empty database.
 
 ## Git hooks
 
-`pnpm install` sets up [Husky](https://typicode.github.io/husky/) (v9). After that:
+`pnpm install` sets up [Husky](https://typicode.github.io/husky/) (v9):
 
 - **pre-commit** — formats and lint-fixes only the files you staged
-- **commit-msg** — commit messages must look like `chore: add hooks` or `feat(web): …` (same as PR titles)
+- **commit-msg** — messages must look like `chore: add hooks` or `feat(web): …` (same as PR titles)
 - **pre-push** — runs `pnpm typecheck`
 
 Beginner walkthrough: [STRUCTURE.md § Git hooks](./STRUCTURE.md#git-hooks-husky).
+
+## Background notes
+
+Written for a first pass at backend. Glossary: spec [§1.6](./docs/design/portfolio-design-system.md#s-1-6).
+
+1. **Image vs container.** `mysql:8.4` is the packaged program; `docker compose up` starts a running copy of it. Tags are pinned so everyone runs the same version.
+2. **Port mapping.** `127.0.0.1:3306:3306` means "port 3306 on my laptop, reachable only from my laptop, goes to port 3306 in the container". Binding to `127.0.0.1` keeps the DB off your Wi-Fi network.
+3. **Volume.** `db-data` is a folder Docker keeps outside the container. `docker compose down` keeps it; `docker compose down -v` deletes it (a full reset).
+4. **Init scripts.** Files in `infra/mysql/init/` run **only when the volume is first created**. `01-dev-grants.sh` lets `MYSQL_USER` create and drop databases, which Prisma's shadow database needs for `migrate dev`. That is why changing `MYSQL_*` later needs `down -v`.
+5. **Healthcheck.** Compose pings MySQL until it answers; `docker compose ps` shows `healthy` when it does.
+6. **ORM.** Prisma turns `schema.prisma` into SQL tables and a typed client: `prisma.profile.findUnique({ where: { id: 1 } })` instead of SQL.
+7. **`migrate dev` vs `migrate deploy`.** `dev` (local) diffs the schema, writes a new migration, and may reset the DB. `deploy` (production) only applies committed migrations and never resets data.
+8. **Seed.** `upsert` on unique keys makes the local seed safe to run twice. Profiles: `demo` (dev/CI) and `baseline` (production first boot).
+9. **Multi-stage builds.** One stage installs and builds; the final stage copies only what runs, so images stay small.
+10. **Service names as hostnames.** Inside compose, the web reaches the API at `http://api:4000`; only Caddy is exposed.
+11. **Read-only root + backups.** Containers write only to volumes and `tmpfs`. `backup` runs `mysqldump | gzip` daily and keeps 7 days. A backup only counts after `scripts/backup/restore.sh` has loaded it into an empty database.

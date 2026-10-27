@@ -46,25 +46,25 @@ Tất cả là tăng cường lũy tiến: tôn trọng `prefers-reduced-motion`
 
 **Kế hoạch triển khai** gồm 17 PR nối tiếp (stacked), R1 → R16 cộng R4b, mỗi PR có tiêu chí nghiệm thu và test (Vitest, Storybook, Playwright + axe, Lighthouse). Từ R5 trở đi, mỗi PR trang đều có mục “Loading” riêng với skeleton của trang đó và test không nhảy layout:
 
-| PR | Nội dung |
-| --- | --- |
-| R1 | Token + font |
-| R2 | Sửa lỗi dữ liệu hiển thị (block rỗng, TODO, tiêu đề lặp, Reveal ẩn nội dung) |
-| R3 | Header/footer public |
-| R4 | Bộ component public |
-| R4b | Nền tảng trạng thái tải: Skeleton/shimmer, nút loading, FetchBar, ảnh LQIP, công cụ test CLS |
-| R5 | Các block trang chủ (+ skeleton trang chủ) |
-| R6 | Shader hero |
-| R7 | Lớp vi tương tác |
-| R8 | Chuyển trang, thanh tiến trình route, màn mở đầu |
-| R9 | Projects + case study (+ skeleton, giữ dữ liệu cũ khi lọc) |
-| R10 | About + contact (+ trạng thái gửi form) |
-| R11 | Notes + trình đọc (+ skeleton 3 cột) |
-| R12 | Admin shell (KB) (+ thanh tiến trình teal, skeleton trong bảng lệnh) |
-| R13 | Bảng + dashboard admin (+ skeleton KPI/bảng, thanh refetch, cập nhật lạc quan) |
+| PR  | Nội dung                                                                                           |
+| --- | -------------------------------------------------------------------------------------------------- |
+| R1  | Token + font                                                                                       |
+| R2  | Sửa lỗi dữ liệu hiển thị (block rỗng, TODO, tiêu đề lặp, Reveal ẩn nội dung)                       |
+| R3  | Header/footer public                                                                               |
+| R4  | Bộ component public                                                                                |
+| R4b | Nền tảng trạng thái tải: Skeleton/shimmer, nút loading, FetchBar, ảnh LQIP, công cụ test CLS       |
+| R5  | Các block trang chủ (+ skeleton trang chủ)                                                         |
+| R6  | Shader hero                                                                                        |
+| R7  | Lớp vi tương tác                                                                                   |
+| R8  | Chuyển trang, thanh tiến trình route, màn mở đầu                                                   |
+| R9  | Projects + case study (+ skeleton, giữ dữ liệu cũ khi lọc)                                         |
+| R10 | About + contact (+ trạng thái gửi form)                                                            |
+| R11 | Notes + trình đọc (+ skeleton 3 cột)                                                               |
+| R12 | Admin shell (KB) (+ thanh tiến trình teal, skeleton trong bảng lệnh)                               |
+| R13 | Bảng + dashboard admin (+ skeleton KPI/bảng, thanh refetch, cập nhật lạc quan)                     |
 | R14 | Editor, page builder, media, inbox (+ skeleton editor, trạng thái lưu/xuất bản, tiến trình upload) |
-| R15 | Kiểm thử hiệu năng/a11y và tài liệu (+ quét CLS/loading toàn site) |
-| R16 | Thư viện Figma (tuỳ chọn) |
+| R15 | Kiểm thử hiệu năng/a11y và tài liệu (+ quét CLS/loading toàn site)                                 |
+| R16 | Thư viện Figma (tuỳ chọn)                                                                          |
 
 **Cách xem.** Mở `docs/design/redesign/index.html` trong trình duyệt (thêm `?dark=1` để xem giao diện tối; `home.html?intro=1` để xem màn mở đầu; `admin-loading.html?state=dashboard|table|editor|states` cho các trạng thái tải của admin). Ảnh chụp nằm trong `docs/design/redesign/screenshots/`, ảnh “trước” trong `screenshots/before/`.
 
@@ -124,41 +124,41 @@ Mockups are static HTML/CSS/JS written for review, not product code. `redesign.c
 
 Live data today: 0 published projects, 0 published posts, profile avatar and resume empty, several settings still hold `TODO`. The redesign has to look excellent with **this** data, not only with a full portfolio.
 
-| # | Area | Problem (what a visitor sees) | Root cause in code |
-| --- | --- | --- | --- |
-| P1 | Hierarchy | Home is a column of similar 30px section titles. Nothing signals “senior” in the first viewport besides the h1. | Every block uses the same `BlockHeading`. Band wrapper is `mx-auto max-w-5xl px-6 py-16` for every group (`apps/web/src/modules/blocks/components/BlockRenderer/BlockRenderer.tsx:49`, `:102`). |
-| P2 | Spacing | Large empty bands where a block has no data (case grid, post list). | `CaseGridBlock` returns `null` (`CaseGridBlock.tsx:38`) but `BlockRenderer` still wraps it in `SectionBoundary` + `BlockLayout` padding. |
-| P3 | Content quality | `TODO` is rendered publicly (hero status note, reply-time note, domain). | Settings strings shown verbatim; there is no placeholder guard. |
-| P4 | Content quality | Stat “0 Products shipped”. | `PROJECT_COUNT` resolves to 0 with no published projects; `StatBand` also starts every value at `'0'` (`packages/ui/src/components/StatBand/StatBand.tsx:16`). |
-| P5 | Consistency | Kicker renders “>_ > Frontend · Vue/Nuxt/TS” (double prompt). | `KickerPill` adds a terminal icon before `profile.heroKicker`, and the data already starts with `>` (`HeroBlock.tsx:55`). |
-| P6 | SEO / polish | Title “Parker Vu · Senior Frontend Engineer · Parker Vu”. | `formatTitle` appends the site name when the SEO title already contains it but is not equal to it (`apps/web/src/modules/seo/utils/title.util.ts:10`). |
-| P7 | Hierarchy | Two tools sections: “Tools I use” marquee plus “What I work with” skill groups. | `tech-marquee` and `skill-groups` both on home, both with headings. |
-| P8 | Typography | Three families (Be Vietnam Pro display, Inter body, JetBrains Mono); h3 at 12px inside skill groups; little contrast between levels. | `apps/web/src/modules/core/utils/fonts.util.ts:1–20`; type tokens in `globals.css`. |
-| P9 | Color | Near-white stone background with a teal accent used sparingly; reads as a template. Dark mode is an inverted copy with the same flatness. | `globals.css` tokens. |
-| P10 | Imagery | 0 images on every page. Avatar null, covers null, and the cards fall back to flat placeholders. | `CoverPlaceholder` is a plain box; no generative fallback. |
-| P11 | Motion | Content below the fold is `opacity-0` until an IntersectionObserver fires. Full-page captures, no-JS and slow devices see blank sections. | `packages/ui/src/components/Reveal/Reveal.tsx:16,25` (`useInView`). |
-| P12 | Motion | Motion is generic (fade-up, floating orbs). Nothing demonstrates modern platform skill. | `Atmosphere` orbs, `Reveal`. |
-| P13 | Layout | Narrow `max-w-5xl` column on a 1440 screen; no grid or rail; the footer is a single line. | `BlockRenderer` band wrapper; site footer. |
-| P14 | Components | Projects filter uses a native `<select>` next to custom chips; mismatched heights and radii. | `ProjectsBrowserBlock`. |
-| P15 | Responsiveness | Mobile hero is fine; bands keep 64px vertical padding even when empty; marquee duplicates content for screen readers. | Same as P2, plus the `TechMarquee` duplicate track (already hidden under reduced motion). |
-| P16 | a11y | Baseline is good (axe 0 serious/critical; Lighthouse a11y ≥ 95 in CI, see `docs/audits/2026-10-26-a11y-perf.md`). Risks to keep: count-up `aria-label` and the Reveal-hidden content. | — |
-| P17 | Performance | Lighthouse mobile performance 79 local / 59–64 on CI for home. The remaining cost is JS. | `docs/audits/2026-10-26-a11y-perf.md` |
-| P18 | Loading | Visitors never see a loading state. Clicking a nav link leaves the old page frozen, with no feedback, until the RSC payload arrives (worst on a cold Render free-tier API). The block skeletons that exist are one generic box (`h-80 w-full`, `animate-pulse`) unrelated to the block's shape. The contact button swaps “Send” for “Sending…”, so its width jumps, and it becomes `disabled`, which drops focus. Images are not covered: there is no placeholder. | No `loading.tsx` under `app/[locale]/(site)`. `SectionBoundary` wraps each block in `Suspense`, but the registry's skeletons are boxes (`HeroBlock.tsx:98`, `ProjectsBrowserBlock.tsx:99`, `block-renderers.constant.ts:52`). `packages/ui/src/components/ui/skeleton.tsx` uses `animate-pulse`. `ContactForm.tsx:257–268`. |
+| #   | Area            | Problem (what a visitor sees)                                                                                                                                                                                                                                                                                                                                                                                                                                      | Root cause in code                                                                                                                                                                                                                                                                                                          |
+| --- | --------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P1  | Hierarchy       | Home is a column of similar 30px section titles. Nothing signals “senior” in the first viewport besides the h1.                                                                                                                                                                                                                                                                                                                                                    | Every block uses the same `BlockHeading`. Band wrapper is `mx-auto max-w-5xl px-6 py-16` for every group (`apps/web/src/modules/blocks/components/BlockRenderer/BlockRenderer.tsx:49`, `:102`).                                                                                                                             |
+| P2  | Spacing         | Large empty bands where a block has no data (case grid, post list).                                                                                                                                                                                                                                                                                                                                                                                                | `CaseGridBlock` returns `null` (`CaseGridBlock.tsx:38`) but `BlockRenderer` still wraps it in `SectionBoundary` + `BlockLayout` padding.                                                                                                                                                                                    |
+| P3  | Content quality | `TODO` is rendered publicly (hero status note, reply-time note, domain).                                                                                                                                                                                                                                                                                                                                                                                           | Settings strings shown verbatim; there is no placeholder guard.                                                                                                                                                                                                                                                             |
+| P4  | Content quality | Stat “0 Products shipped”.                                                                                                                                                                                                                                                                                                                                                                                                                                         | `PROJECT_COUNT` resolves to 0 with no published projects; `StatBand` also starts every value at `'0'` (`packages/ui/src/components/StatBand/StatBand.tsx:16`).                                                                                                                                                              |
+| P5  | Consistency     | Kicker renders “>_ > Frontend · Vue/Nuxt/TS” (double prompt).                                                                                                                                                                                                                                                                                                                                                                                                      | `KickerPill` adds a terminal icon before `profile.heroKicker`, and the data already starts with `>` (`HeroBlock.tsx:55`).                                                                                                                                                                                                   |
+| P6  | SEO / polish    | Title “Parker Vu · Senior Frontend Engineer · Parker Vu”.                                                                                                                                                                                                                                                                                                                                                                                                          | `formatTitle` appends the site name when the SEO title already contains it but is not equal to it (`apps/web/src/modules/seo/utils/title.util.ts:10`).                                                                                                                                                                      |
+| P7  | Hierarchy       | Two tools sections: “Tools I use” marquee plus “What I work with” skill groups.                                                                                                                                                                                                                                                                                                                                                                                    | `tech-marquee` and `skill-groups` both on home, both with headings.                                                                                                                                                                                                                                                         |
+| P8  | Typography      | Three families (Be Vietnam Pro display, Inter body, JetBrains Mono); h3 at 12px inside skill groups; little contrast between levels.                                                                                                                                                                                                                                                                                                                               | `apps/web/src/modules/core/utils/fonts.util.ts:1–20`; type tokens in `globals.css`.                                                                                                                                                                                                                                         |
+| P9  | Color           | Near-white stone background with a teal accent used sparingly; reads as a template. Dark mode is an inverted copy with the same flatness.                                                                                                                                                                                                                                                                                                                          | `globals.css` tokens.                                                                                                                                                                                                                                                                                                       |
+| P10 | Imagery         | 0 images on every page. Avatar null, covers null, and the cards fall back to flat placeholders.                                                                                                                                                                                                                                                                                                                                                                    | `CoverPlaceholder` is a plain box; no generative fallback.                                                                                                                                                                                                                                                                  |
+| P11 | Motion          | Content below the fold is `opacity-0` until an IntersectionObserver fires. Full-page captures, no-JS and slow devices see blank sections.                                                                                                                                                                                                                                                                                                                          | `packages/ui/src/components/Reveal/Reveal.tsx:16,25` (`useInView`).                                                                                                                                                                                                                                                         |
+| P12 | Motion          | Motion is generic (fade-up, floating orbs). Nothing demonstrates modern platform skill.                                                                                                                                                                                                                                                                                                                                                                            | `Atmosphere` orbs, `Reveal`.                                                                                                                                                                                                                                                                                                |
+| P13 | Layout          | Narrow `max-w-5xl` column on a 1440 screen; no grid or rail; the footer is a single line.                                                                                                                                                                                                                                                                                                                                                                          | `BlockRenderer` band wrapper; site footer.                                                                                                                                                                                                                                                                                  |
+| P14 | Components      | Projects filter uses a native `<select>` next to custom chips; mismatched heights and radii.                                                                                                                                                                                                                                                                                                                                                                       | `ProjectsBrowserBlock`.                                                                                                                                                                                                                                                                                                     |
+| P15 | Responsiveness  | Mobile hero is fine; bands keep 64px vertical padding even when empty; marquee duplicates content for screen readers.                                                                                                                                                                                                                                                                                                                                              | Same as P2, plus the `TechMarquee` duplicate track (already hidden under reduced motion).                                                                                                                                                                                                                                   |
+| P16 | a11y            | Baseline is good (axe 0 serious/critical; Lighthouse a11y ≥ 95 in CI, see `docs/audits/2026-10-26-a11y-perf.md`). Risks to keep: count-up `aria-label` and the Reveal-hidden content.                                                                                                                                                                                                                                                                              | —                                                                                                                                                                                                                                                                                                                           |
+| P17 | Performance     | Lighthouse mobile performance 79 local / 59–64 on CI for home. The remaining cost is JS.                                                                                                                                                                                                                                                                                                                                                                           | `docs/audits/2026-10-26-a11y-perf.md`                                                                                                                                                                                                                                                                                       |
+| P18 | Loading         | Visitors never see a loading state. Clicking a nav link leaves the old page frozen, with no feedback, until the RSC payload arrives (worst on a cold Render free-tier API). The block skeletons that exist are one generic box (`h-80 w-full`, `animate-pulse`) unrelated to the block's shape. The contact button swaps “Send” for “Sending…”, so its width jumps, and it becomes `disabled`, which drops focus. Images are not covered: there is no placeholder. | No `loading.tsx` under `app/[locale]/(site)`. `SectionBoundary` wraps each block in `Suspense`, but the registry's skeletons are boxes (`HeroBlock.tsx:98`, `ProjectsBrowserBlock.tsx:99`, `block-renderers.constant.ts:52`). `packages/ui/src/components/ui/skeleton.tsx` uses `animate-pulse`. `ContactForm.tsx:257–268`. |
 
 ### 1.2 Admin CMS (code review + the live sign-in screen)
 
-| # | Area | Problem | Where |
-| --- | --- | --- | --- |
-| A1 | Layout | The whole document scrolls; sidebar and top bar scroll away on long forms (violates rules 1–4). | `AdminShell.tsx`: `flex min-h-dvh`, `main` is `flex-1 p-6`. |
-| A2 | Targets | Sidebar items are `h-8` (32px), below the KB `min-h-10` and below comfortable touch size. | `AdminSidebar.tsx:84` |
-| A3 | Hierarchy | Group labels and items share the muted style; the active state is only a background tint. | `AdminSidebar.tsx:76–84` |
-| A4 | Width | Forms and tables stretch to the full main width; long text fields have no reading measure. | `main.p-6` with no max width; `EditorShell`. |
-| A5 | Tables | `DataTable` has no mobile strategy; it either overflows the page or squeezes columns (violates rule 5). | `packages/ui/src/components/DataTable/DataTable.tsx` |
-| A6 | Palette | ⌘K exists (`apps/web/src/modules/admin-core/components/CommandPalette/CommandPalette.tsx`) but is a plain cmdk dialog with no grouping, skeleton or diacritics-insensitive search. | — |
-| A7 | Feedback | Health issues are a list; nothing ties an issue to the exact field, and there is no client-side TODO warning. | Dashboard / health widgets. |
-| A8 | Consistency | Sign-in is a centered card that shares nothing with the public brand. | `/admin/login` |
-| A9 | Visual | Same flat stone + teal as public, so admin and site feel identical but neither feels designed. | `globals.css` |
-| A10 | Loading | No route-level loading state or progress indicator, so a sidebar click looks ignored. Table skeleton rows are full-width `h-6` bars in auto-layout columns, so column widths jump when rows land. Five list hooks already use `keepPreviousData`, but nothing shows the refetch, so a filter change looks like a no-op. Sign-in has no pending state. Uploads report XHR progress that only the uploader shows. | No `loading.tsx` under `app/admin/(cms)`. `DataTable.tsx:391–395`. `use-admin-projects.hook.ts:26` (and posts, users, experience, notes search). `LoginForm.tsx:85`. `media-upload.service.ts`. Dashboard Suspense fallbacks are plain boxes (`AdminDashboardIndex.tsx`). |
+| #   | Area        | Problem                                                                                                                                                                                                                                                                                                                                                                                                         | Where                                                                                                                                                                                                                                                                     |
+| --- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A1  | Layout      | The whole document scrolls; sidebar and top bar scroll away on long forms (violates rules 1–4).                                                                                                                                                                                                                                                                                                                 | `AdminShell.tsx`: `flex min-h-dvh`, `main` is `flex-1 p-6`.                                                                                                                                                                                                               |
+| A2  | Targets     | Sidebar items are `h-8` (32px), below the KB `min-h-10` and below comfortable touch size.                                                                                                                                                                                                                                                                                                                       | `AdminSidebar.tsx:84`                                                                                                                                                                                                                                                     |
+| A3  | Hierarchy   | Group labels and items share the muted style; the active state is only a background tint.                                                                                                                                                                                                                                                                                                                       | `AdminSidebar.tsx:76–84`                                                                                                                                                                                                                                                  |
+| A4  | Width       | Forms and tables stretch to the full main width; long text fields have no reading measure.                                                                                                                                                                                                                                                                                                                      | `main.p-6` with no max width; `EditorShell`.                                                                                                                                                                                                                              |
+| A5  | Tables      | `DataTable` has no mobile strategy; it either overflows the page or squeezes columns (violates rule 5).                                                                                                                                                                                                                                                                                                         | `packages/ui/src/components/DataTable/DataTable.tsx`                                                                                                                                                                                                                      |
+| A6  | Palette     | ⌘K exists (`apps/web/src/modules/admin-core/components/CommandPalette/CommandPalette.tsx`) but is a plain cmdk dialog with no grouping, skeleton or diacritics-insensitive search.                                                                                                                                                                                                                              | —                                                                                                                                                                                                                                                                         |
+| A7  | Feedback    | Health issues are a list; nothing ties an issue to the exact field, and there is no client-side TODO warning.                                                                                                                                                                                                                                                                                                   | Dashboard / health widgets.                                                                                                                                                                                                                                               |
+| A8  | Consistency | Sign-in is a centered card that shares nothing with the public brand.                                                                                                                                                                                                                                                                                                                                           | `/admin/login`                                                                                                                                                                                                                                                            |
+| A9  | Visual      | Same flat stone + teal as public, so admin and site feel identical but neither feels designed.                                                                                                                                                                                                                                                                                                                  | `globals.css`                                                                                                                                                                                                                                                             |
+| A10 | Loading     | No route-level loading state or progress indicator, so a sidebar click looks ignored. Table skeleton rows are full-width `h-6` bars in auto-layout columns, so column widths jump when rows land. Five list hooks already use `keepPreviousData`, but nothing shows the refetch, so a filter change looks like a no-op. Sign-in has no pending state. Uploads report XHR progress that only the uploader shows. | No `loading.tsx` under `app/admin/(cms)`. `DataTable.tsx:391–395`. `use-admin-projects.hook.ts:26` (and posts, users, experience, notes search). `LoginForm.tsx:85`. `media-upload.service.ts`. Dashboard Suspense fallbacks are plain boxes (`AdminDashboardIndex.tsx`). |
 
 ---
 
@@ -192,16 +192,16 @@ The admin shares type, spacing, radius and motion tokens with the public site, a
 
 ## 3. Parker's layout rules → how each surface complies
 
-| Rule | Admin | Public |
-| --- | --- | --- |
-| 1. Full-viewport split panes, page never scrolls | `html` + `body` locked (`height: 100dvh; overflow: hidden`, the KB `docs-lock-scroll`); `.app` grid fixed below the top bar. | Public pages are long-form documents and keep document scroll. **Split-pane screens** (the notes reader at ≥ 1024px) lock the document like the KB. *Open question Q1.* |
-| 2. Sticky/fixed top nav always visible | Fixed `h-12` top bar, `bg-card/95 backdrop-blur`. | Sticky header is always visible (no hide-on-scroll); it only compacts 64 → 56px on a scroll timeline. |
-| 3. Left menu: one vertical scroll, never horizontal | `.pane-side`: `overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain`; labels `text-overflow: ellipsis`. | Notes reader left pane, same rules. |
-| 4. Content scrolls on its own, no nested scrollbars | `.pane-main` is the only scroller in the content column. Palette and TOC box lists are bounded overlays (`max-h-[min(24rem,50vh)]`), not nested page scrollers. | Filter pills **wrap**, never a horizontal scroller. Code blocks and tables scroll only on x inside themselves (rule 5). |
-| 5. Tables on mobile: scroll inside or cards ≤ 639px | `.table-wrap` x-only; rows with `td[data-label]` become cards ≤ 639px (`admin-projects` mobile screenshot). | Prose tables in posts and case studies: same `.table-wrap` + `data-label` (the Tiptap table output gets `data-label` from the header row at render). |
-| 6. Prefer shadcn/ui + TanStack | Sidebar, Sheet (drawer), Command (palette), Table + TanStack Table, Resizable (inspector), Tabs, Form + TanStack Form. | Sheet (mobile menu), Command (search), Tooltip, ToggleGroup (locale, view switch). |
-| 7. No hardcoded content | See [§0](#0-scope-constraints-how-to-review): API data + next-intl labels; computed numbering. | Same. |
-| 8. Figma deliverables editable | R16 (optional): variables for both palettes, text styles, the radius ladder and components built with auto-layout, not flattened screenshots. | Same file. |
+| Rule                                                | Admin                                                                                                                                                           | Public                                                                                                                                                                  |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Full-viewport split panes, page never scrolls    | `html` + `body` locked (`height: 100dvh; overflow: hidden`, the KB `docs-lock-scroll`); `.app` grid fixed below the top bar.                                    | Public pages are long-form documents and keep document scroll. **Split-pane screens** (the notes reader at ≥ 1024px) lock the document like the KB. _Open question Q1._ |
+| 2. Sticky/fixed top nav always visible              | Fixed `h-12` top bar, `bg-card/95 backdrop-blur`.                                                                                                               | Sticky header is always visible (no hide-on-scroll); it only compacts 64 → 56px on a scroll timeline.                                                                   |
+| 3. Left menu: one vertical scroll, never horizontal | `.pane-side`: `overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain`; labels `text-overflow: ellipsis`.                                           | Notes reader left pane, same rules.                                                                                                                                     |
+| 4. Content scrolls on its own, no nested scrollbars | `.pane-main` is the only scroller in the content column. Palette and TOC box lists are bounded overlays (`max-h-[min(24rem,50vh)]`), not nested page scrollers. | Filter pills **wrap**, never a horizontal scroller. Code blocks and tables scroll only on x inside themselves (rule 5).                                                 |
+| 5. Tables on mobile: scroll inside or cards ≤ 639px | `.table-wrap` x-only; rows with `td[data-label]` become cards ≤ 639px (`admin-projects` mobile screenshot).                                                     | Prose tables in posts and case studies: same `.table-wrap` + `data-label` (the Tiptap table output gets `data-label` from the header row at render).                    |
+| 6. Prefer shadcn/ui + TanStack                      | Sidebar, Sheet (drawer), Command (palette), Table + TanStack Table, Resizable (inspector), Tabs, Form + TanStack Form.                                          | Sheet (mobile menu), Command (search), Tooltip, ToggleGroup (locale, view switch).                                                                                      |
+| 7. No hardcoded content                             | See [§0](#0-scope-constraints-how-to-review): API data + next-intl labels; computed numbering.                                                                  | Same.                                                                                                                                                                   |
+| 8. Figma deliverables editable                      | R16 (optional): variables for both palettes, text styles, the radius ladder and components built with auto-layout, not flattened screenshots.                   | Same file.                                                                                                                                                              |
 
 ---
 
@@ -213,38 +213,38 @@ All tokens are CSS custom properties under shadcn names, so components do not ca
 
 **Public “Ink & Signal”**
 
-| Role | shadcn var | Light | Dark (“night ink”) | Notes |
-| --- | --- | --- | --- | --- |
-| Page | `--background` | `#f6f3ec` paper | `#111318` | Optional grain overlay (SVG noise, 5%). |
-| Raised | `--card` | `#fcfaf6` | `#181b22` | |
-| Sunken / band | `--muted` | `#eeeae0` | `#0b0d11` | BAND surface. |
-| Inverse | `--inverse` (new name) | `#16181f` | `#eee9df` | CTA band, code blocks. |
-| Text | `--foreground` | `#16181f` (16.2:1) | `#eee9df` (15.1:1) | |
-| Text 2 | `--muted-foreground` | `#474a54` (8.3:1) | `#b7b2a8` (8.9:1) | |
-| Text 3 | `--faint-foreground` (new) | `#686b75` (5.0:1) | `#8f8b83` (5.4:1) | Smallest allowed for body-size text. |
-| Rule | `--border` / `--input` | `#dcd6c9` / `#bfb8a8` | `#2a2e37` / `#3d424d` | |
-| Signal | `--primary` | `#e5482d` | `#ff6b4a` | Fills, marks, large type only. |
-| Signal ink | `--primary-ink` (new) | `#b3321a` (5.9:1) | `#ff8f74` (7.6:1) | Links, small text. |
-| Signal wash | `--primary-subtle` | `#fbe4da` | `#331a14` | Selection, decision callouts. |
-| Diff | `--add` / `--del` (+ `-wash`) | `#1e7a4c` / `#b42318` | `#5cc98f` / `#ff7d6e` | Metric before → after. |
-| Domain hues | `--hue-{jade,amber,blue,violet,rose}` (+ `-wash`) | see `redesign.css` | see `redesign.css` | The existing `Hue` enum drives covers and chips. |
+| Role          | shadcn var                                        | Light                 | Dark (“night ink”)    | Notes                                            |
+| ------------- | ------------------------------------------------- | --------------------- | --------------------- | ------------------------------------------------ |
+| Page          | `--background`                                    | `#f6f3ec` paper       | `#111318`             | Optional grain overlay (SVG noise, 5%).          |
+| Raised        | `--card`                                          | `#fcfaf6`             | `#181b22`             |                                                  |
+| Sunken / band | `--muted`                                         | `#eeeae0`             | `#0b0d11`             | BAND surface.                                    |
+| Inverse       | `--inverse` (new name)                            | `#16181f`             | `#eee9df`             | CTA band, code blocks.                           |
+| Text          | `--foreground`                                    | `#16181f` (16.2:1)    | `#eee9df` (15.1:1)    |                                                  |
+| Text 2        | `--muted-foreground`                              | `#474a54` (8.3:1)     | `#b7b2a8` (8.9:1)     |                                                  |
+| Text 3        | `--faint-foreground` (new)                        | `#686b75` (5.0:1)     | `#8f8b83` (5.4:1)     | Smallest allowed for body-size text.             |
+| Rule          | `--border` / `--input`                            | `#dcd6c9` / `#bfb8a8` | `#2a2e37` / `#3d424d` |                                                  |
+| Signal        | `--primary`                                       | `#e5482d`             | `#ff6b4a`             | Fills, marks, large type only.                   |
+| Signal ink    | `--primary-ink` (new)                             | `#b3321a` (5.9:1)     | `#ff8f74` (7.6:1)     | Links, small text.                               |
+| Signal wash   | `--primary-subtle`                                | `#fbe4da`             | `#331a14`             | Selection, decision callouts.                    |
+| Diff          | `--add` / `--del` (+ `-wash`)                     | `#1e7a4c` / `#b42318` | `#5cc98f` / `#ff7d6e` | Metric before → after.                           |
+| Domain hues   | `--hue-{jade,amber,blue,violet,rose}` (+ `-wash`) | see `redesign.css`    | see `redesign.css`    | The existing `Hue` enum drives covers and chips. |
 
 **Admin “KB teal”** (values from the interview-fe KB; only `--faint-foreground` changed)
 
-| shadcn var | KB name | Light | Dark |
-| --- | --- | --- | --- |
-| `--background` | `--bg` | `#f4f7f6` | `#0f1614` |
-| `--card` | `--bg-elevated` | `#ffffff` | `#1a2421` |
-| `--foreground` | `--ink` | `#14201c` | `#e7f0ec` |
-| `--muted-foreground` | `--ink-muted` | `#5a6b64` | `#9db0a8` |
-| `--faint-foreground` | `--ink-faint` | `#66776f` (KB `#8a9a93` is 2.9:1; darkened to 4.6:1 because it labels 11px groups) | `#879a92` |
-| `--border` | `--line` | `#d5e0db` | `#2a3833` |
-| `--primary` | `--accent` | `#0f766e` | `#2dd4bf` |
-| `--primary-subtle` | `--accent-soft` | `#ccfbf1` | `#134e4a` |
-| `--primary-ink` | `--accent-ink` | `#115e59` | `#5eead4` |
-| `--success` / `--success-subtle` | `--done` / `--done-soft` | `#15803d` / `#dcfce7` | `#4ade80` / `#14532d` |
-| `--glow-a` / `--glow-b` | `--bg-glow-a/-b` | `#d9efe9` / `#e8f0ec` | `#12201c` / `#15241f` |
-| `--code-bg` / `--code-fg` | same | `#0f1c18` / `#e7f5f1` | `#0a1210` / `#d5efe8` |
+| shadcn var                       | KB name                  | Light                                                                              | Dark                  |
+| -------------------------------- | ------------------------ | ---------------------------------------------------------------------------------- | --------------------- |
+| `--background`                   | `--bg`                   | `#f4f7f6`                                                                          | `#0f1614`             |
+| `--card`                         | `--bg-elevated`          | `#ffffff`                                                                          | `#1a2421`             |
+| `--foreground`                   | `--ink`                  | `#14201c`                                                                          | `#e7f0ec`             |
+| `--muted-foreground`             | `--ink-muted`            | `#5a6b64`                                                                          | `#9db0a8`             |
+| `--faint-foreground`             | `--ink-faint`            | `#66776f` (KB `#8a9a93` is 2.9:1; darkened to 4.6:1 because it labels 11px groups) | `#879a92`             |
+| `--border`                       | `--line`                 | `#d5e0db`                                                                          | `#2a3833`             |
+| `--primary`                      | `--accent`               | `#0f766e`                                                                          | `#2dd4bf`             |
+| `--primary-subtle`               | `--accent-soft`          | `#ccfbf1`                                                                          | `#134e4a`             |
+| `--primary-ink`                  | `--accent-ink`           | `#115e59`                                                                          | `#5eead4`             |
+| `--success` / `--success-subtle` | `--done` / `--done-soft` | `#15803d` / `#dcfce7`                                                              | `#4ade80` / `#14532d` |
+| `--glow-a` / `--glow-b`          | `--bg-glow-a/-b`         | `#d9efe9` / `#e8f0ec`                                                              | `#12201c` / `#15241f` |
+| `--code-bg` / `--code-fg`        | same                     | `#0f1c18` / `#e7f5f1`                                                              | `#0a1210` / `#d5efe8` |
 
 R1 adds a Vitest contrast test that reads the token table and asserts the AA pairs listed above, so a later color tweak cannot silently break contrast.
 
@@ -253,18 +253,19 @@ R1 adds a Vitest contrast test that reads the token table and asserts the AA pai
 - **Loading:** `next/font/google` with `IBM_Plex_Sans` (variable `wght 100–700`, `wdth 85–100`, roman + italic) and `IBM_Plex_Mono` (400, 500, italic 400). Subsets `latin`, `latin-ext`, `vietnamese`; `display: 'swap'`; the next/font metric fallback avoids CLS. These replace `fonts.util.ts`, so one display family is dropped.
 - **Scale** (fluid, `clamp`):
 
-  | Token | px | Role |
-  | --- | --- | --- |
-  | `--step--2` | 12 | Mono meta |
-  | `--step--1` | 14 | Small |
-  | `--step-0` | 16→17 | Body, line-height 1.62 |
-  | `--step-1` | 18→21 | Lead |
-  | `--step-2` | 22→28 | h3 |
-  | `--step-3` | 28→44 | h2, `wdth 90` |
-  | `--step-4` | 36→68 | Page h1 |
-  | `--step-5` | 48→144 | Hero, `wght 650 · wdth 85 · tracking −0.045em` |
+  | Token       | px     | Role                                           |
+  | ----------- | ------ | ---------------------------------------------- |
+  | `--step--2` | 12     | Mono meta                                      |
+  | `--step--1` | 14     | Small                                          |
+  | `--step-0`  | 16→17  | Body, line-height 1.62                         |
+  | `--step-1`  | 18→21  | Lead                                           |
+  | `--step-2`  | 22→28  | h3                                             |
+  | `--step-3`  | 28→44  | h2, `wdth 90`                                  |
+  | `--step-4`  | 36→68  | Page h1                                        |
+  | `--step-5`  | 48→144 | Hero, `wght 650 · wdth 85 · tracking −0.045em` |
 
   The accent word is italic `wght 300 · wdth 100` in signal color. The admin uses the same families at a denser scale: 14px UI, 26px page title, 11px uppercase group labels.
+
 - **Vietnamese:**
   - `:lang(vi)` raises display leading 0.94 → 1.06 and tight leading 1.05 → 1.14, so stacked marks (Ở, Ẫ, Ữ, Ặ) never collide with the line above.
   - Line-mask reveals pad `0.06em` block-start/end so marks are not clipped by `overflow: clip`.
@@ -280,16 +281,16 @@ R1 adds a Vitest contrast test that reads the token table and asserts the AA pai
 
 **Ladder** (size decides the step; capsules stay round, like iOS):
 
-| Token | Value | Use (element height) |
-| --- | --- | --- |
-| `--radius-2xs` | 4 | ≤ 20px: kbd, inline code, checkbox |
-| `--radius-xs` | 6 | 20–28px: tags, badges, thumbnails |
-| `--radius-sm` | 8 | 28–36px: small buttons, segments |
-| **`--radius`** | **10** | **36–48px: buttons, inputs, nav items (base)** |
-| `--radius-lg` | 14 | cards ≤ 360px, menus, popovers, toasts |
-| `--radius-xl` | 20 | large cards, panels, media, palette |
-| `--radius-2xl` | 28 | dialogs, sheets, hero media, stacked cards |
-| `--radius-full` | 9999 | chips, avatars, switches |
+| Token           | Value  | Use (element height)                           |
+| --------------- | ------ | ---------------------------------------------- |
+| `--radius-2xs`  | 4      | ≤ 20px: kbd, inline code, checkbox             |
+| `--radius-xs`   | 6      | 20–28px: tags, badges, thumbnails              |
+| `--radius-sm`   | 8      | 28–36px: small buttons, segments               |
+| **`--radius`**  | **10** | **36–48px: buttons, inputs, nav items (base)** |
+| `--radius-lg`   | 14     | cards ≤ 360px, menus, popovers, toasts         |
+| `--radius-xl`   | 20     | large cards, panels, media, palette            |
+| `--radius-2xl`  | 28     | dialogs, sheets, hero media, stacked cards     |
+| `--radius-full` | 9999   | chips, avatars, switches                       |
 
 Every step is `calc(<px> * var(--k))`, with `--k: 1` by default. R1 replaces today's `--radius: 0.5rem` ladder (`globals.css:8, 270–273`) and maps Tailwind `rounded-*` onto it, so existing shadcn components inherit it.
 
@@ -299,21 +300,40 @@ Every step is `calc(<px> * var(--k))`, with `--k: 1` by default. R1 replaces tod
 
    ```css
    @supports (corner-shape: squircle) {
-     :root { --k: 1.5; }            /* a squircle reads tighter; scale the ladder */
-     .sq, .btn, .card, … { corner-shape: squircle; }
-     .chip, .avatar, .switch { corner-shape: round; }
+     :root {
+       --k: 1.5;
+     } /* a squircle reads tighter; scale the ladder */
+     .sq,
+     .btn,
+     .card,
+     … {
+       corner-shape: squircle;
+     }
+     .chip,
+     .avatar,
+     .switch {
+       corner-shape: round;
+     }
    }
    ```
 
    Chromium ships it today (verified in Chrome 156 in this environment); other engines fall back to the circular `border-radius`, and the design is valid either way. `--k: 1.5` is the optical match; tune it in R1 against `foundations.html` (round 28 vs squircle 28 vs squircle 42).
+
 2. **SVG `clip-path: path()` / `mask`.** For a few large media surfaces only (hero media, case-study cover), if Parker wants squircles in Safari and Firefox too. Generate the path with `figma-squircle` (MIT, ~2 KB) from a `ResizeObserver`. Costs: a JS dependency, a repaint on resize, and borders and shadows must be drawn inside the mask. **Not** for controls.
 3. **Houdini paint worklet** (`paint(squircle)`). Chromium-only and therefore redundant with option 1. Rejected.
 
 **Concentric nesting.** The inner radius equals the outer radius minus the padding, and never drops below `--radius-2xs`:
 
 ```css
-.nest { --r-outer: var(--radius-2xl); --pad: 12px; border-radius: var(--r-outer); padding: var(--pad); }
-.nest > .nest-inner { border-radius: max(var(--radius-2xs), calc(var(--r-outer) - var(--pad))); }
+.nest {
+  --r-outer: var(--radius-2xl);
+  --pad: 12px;
+  border-radius: var(--r-outer);
+  padding: var(--pad);
+}
+.nest > .nest-inner {
+  border-radius: max(var(--radius-2xs), calc(var(--r-outer) - var(--pad)));
+}
 ```
 
 It is used for stacked case cards (sheet 2xl, cover 2xl − 12), media tiles, the editor card preview, swatches, and the cover badge (`calc(--radius-xl − 16px)`). R4 ships it as a `Nest` primitive (Tailwind plugin utility `rounded-nest`) with a Storybook story.
@@ -345,6 +365,7 @@ The public signature hover is a hard print offset, `--shadow-press: 4px 4px 0 0 
   - intro curtain: ≤ 700ms on `--ease-expo`
 
   All of these are static under reduced motion.
+
 - **Reduced motion:** a global rule collapses durations to 0.01ms, and the specific scroll-driven effects are disabled. The ticker becomes a static wrapped row; pins and stacks become static; the shader shows its poster. Content is never hidden behind motion: SSR HTML has the final state.
 
 ---
@@ -372,80 +393,80 @@ Legend: **new** (new component), **restyle** (same API, new look), **extend** (n
 
 ### 6.1 Shared foundations (`packages/ui`)
 
-| Component | Status | Notes |
-| --- | --- | --- |
-| Tokens + `@theme inline` mapping | restyle | R1; both scopes. |
-| `Button` (`ui/button.tsx`) | extend | Variants `default`, `ghost`, `signal`, `link`; sizes `sm`/`md`/`lg`; public hover = print offset; admin = tint. |
-| `Kbd`, `Badge`, `StatusPill` | restyle | Status colors for DRAFT / PUBLISHED / ARCHIVED. |
-| `Nest` | new | Concentric radius wrapper ([§4.4](#44-radius-10px-base-apple-style-scale-continuous-corners)). |
-| `Chip`, `FilterChip` | new | Capsule, `aria-pressed`, wraps (rule 4). |
-| `Tag` | new | Mono, `--radius-xs`. |
-| `Monogram` | new | Initial(s) from `profile.displayName`; avatar fallback. |
-| `GenerativeCover` | new | Props `{ hue, title, slug, version? }`. Glyph = first letters of the title words; pattern (dots / stripes / rings) = FNV-1a hash of the slug mod 3; deterministic for SSR. Replaces `CoverPlaceholder` when `cover` is null. |
-| `MetricDiff` | new | `before` (strike, `--del`) → `after` (`--add`) from `publicProjectMetricSchema`. Replaces `DiffStat` styling. |
-| `EmptyState` | restyle | Hatched panel and glyph; label from i18n. |
-| `Prose` | restyle | Plex scale, numbered h2, `table-wrap` + `data-label`, inverse code blocks. |
-| `CodeBlock` | restyle | Inverse surface, x-only scroll. |
-| `Callout`, `DecisionCard`, `KeyFacts`, `TakeawaysCard` | restyle | Callout note/decision; key facts as a hairline grid. |
-| `Reveal` | **replace** | CSS view-timeline reveal; JS fallback only adds a class after hydration and never sets `opacity-0` in SSR (fixes P11). |
-| `StatBand` / `StatCard` | restyle | SSR renders the final value; the CSS `@property --n` count-up overlays it on a view timeline (fixes P4 flash). |
-| `TechMarquee` | restyle | `Ticker`: thin strip, WAAPI velocity, static row under reduced motion. |
-| `Timeline` | restyle | Commit-graph style with a scroll-filled line. |
-| `ProcessFlow` | restyle | Pinned on ≥ 961px with a named view timeline; vertical list below. |
-| `PrincipleList`, `SkillGroup` | restyle | Two-column principles; skill matrix with depth bars. |
-| `Atmosphere` | replace | `HeroStage`: poster gradient plus the lazy shader island (R6). |
-| `Skeleton` (`ui/skeleton.tsx`) | **rewrite** | Translate-based shimmer (`::after`), surface-mixed colours, `--si` stagger, static under reduced motion; zero-specificity radius so wrappers keep their own (R4b). Replaces `animate-pulse`. |
-| `SkeletonText` | new | `lines`, `widths`, inherits the type token: each line `1lh`, bar clipped to cap / x-height (R4b). |
-| `SkeletonScope` | new | Wrapper for fallbacks: `aria-hidden` shapes, delayed fade-in (100ms), one `role="status"` label (R4b). |
-| `Button` | extend | `loading` already exists (`button.tsx:42–75`); switch to `aria-disabled` + activation guard so focus stays, add a `done` state with `doneLabel` (R4b). |
-| `ProgressBar`, `FetchBar`, `Spinner` | new / restyle | Determinate (`--v`), indeterminate refetch strip, and the existing spinner restyled (R4b). |
-| `useAnnounce` / `LiveRegion` | new | One polite region per layout for Sending… / Sent / errors (R4b). |
+| Component                                              | Status        | Notes                                                                                                                                                                                                                        |
+| ------------------------------------------------------ | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Tokens + `@theme inline` mapping                       | restyle       | R1; both scopes.                                                                                                                                                                                                             |
+| `Button` (`ui/button.tsx`)                             | extend        | Variants `default`, `ghost`, `signal`, `link`; sizes `sm`/`md`/`lg`; public hover = print offset; admin = tint.                                                                                                              |
+| `Kbd`, `Badge`, `StatusPill`                           | restyle       | Status colors for DRAFT / PUBLISHED / ARCHIVED.                                                                                                                                                                              |
+| `Nest`                                                 | new           | Concentric radius wrapper ([§4.4](#44-radius-10px-base-apple-style-scale-continuous-corners)).                                                                                                                               |
+| `Chip`, `FilterChip`                                   | new           | Capsule, `aria-pressed`, wraps (rule 4).                                                                                                                                                                                     |
+| `Tag`                                                  | new           | Mono, `--radius-xs`.                                                                                                                                                                                                         |
+| `Monogram`                                             | new           | Initial(s) from `profile.displayName`; avatar fallback.                                                                                                                                                                      |
+| `GenerativeCover`                                      | new           | Props `{ hue, title, slug, version? }`. Glyph = first letters of the title words; pattern (dots / stripes / rings) = FNV-1a hash of the slug mod 3; deterministic for SSR. Replaces `CoverPlaceholder` when `cover` is null. |
+| `MetricDiff`                                           | new           | `before` (strike, `--del`) → `after` (`--add`) from `publicProjectMetricSchema`. Replaces `DiffStat` styling.                                                                                                                |
+| `EmptyState`                                           | restyle       | Hatched panel and glyph; label from i18n.                                                                                                                                                                                    |
+| `Prose`                                                | restyle       | Plex scale, numbered h2, `table-wrap` + `data-label`, inverse code blocks.                                                                                                                                                   |
+| `CodeBlock`                                            | restyle       | Inverse surface, x-only scroll.                                                                                                                                                                                              |
+| `Callout`, `DecisionCard`, `KeyFacts`, `TakeawaysCard` | restyle       | Callout note/decision; key facts as a hairline grid.                                                                                                                                                                         |
+| `Reveal`                                               | **replace**   | CSS view-timeline reveal; JS fallback only adds a class after hydration and never sets `opacity-0` in SSR (fixes P11).                                                                                                       |
+| `StatBand` / `StatCard`                                | restyle       | SSR renders the final value; the CSS `@property --n` count-up overlays it on a view timeline (fixes P4 flash).                                                                                                               |
+| `TechMarquee`                                          | restyle       | `Ticker`: thin strip, WAAPI velocity, static row under reduced motion.                                                                                                                                                       |
+| `Timeline`                                             | restyle       | Commit-graph style with a scroll-filled line.                                                                                                                                                                                |
+| `ProcessFlow`                                          | restyle       | Pinned on ≥ 961px with a named view timeline; vertical list below.                                                                                                                                                           |
+| `PrincipleList`, `SkillGroup`                          | restyle       | Two-column principles; skill matrix with depth bars.                                                                                                                                                                         |
+| `Atmosphere`                                           | replace       | `HeroStage`: poster gradient plus the lazy shader island (R6).                                                                                                                                                               |
+| `Skeleton` (`ui/skeleton.tsx`)                         | **rewrite**   | Translate-based shimmer (`::after`), surface-mixed colours, `--si` stagger, static under reduced motion; zero-specificity radius so wrappers keep their own (R4b). Replaces `animate-pulse`.                                 |
+| `SkeletonText`                                         | new           | `lines`, `widths`, inherits the type token: each line `1lh`, bar clipped to cap / x-height (R4b).                                                                                                                            |
+| `SkeletonScope`                                        | new           | Wrapper for fallbacks: `aria-hidden` shapes, delayed fade-in (100ms), one `role="status"` label (R4b).                                                                                                                       |
+| `Button`                                               | extend        | `loading` already exists (`button.tsx:42–75`); switch to `aria-disabled` + activation guard so focus stays, add a `done` state with `doneLabel` (R4b).                                                                       |
+| `ProgressBar`, `FetchBar`, `Spinner`                   | new / restyle | Determinate (`--v`), indeterminate refetch strip, and the existing spinner restyled (R4b).                                                                                                                                   |
+| `useAnnounce` / `LiveRegion`                           | new           | One polite region per layout for Sending… / Sent / errors (R4b).                                                                                                                                                             |
 
 ### 6.2 Public app (`apps/web/src/modules/core`, `blocks`, `projects`, `notes`)
 
-| Component | Status | Notes |
-| --- | --- | --- |
-| `SiteHeader` | restyle | Monogram wordmark, numbered nav, anchor-positioned indicator, ⌘K, EN/VI `ToggleGroup`, theme toggle (VT circular reveal), mobile `Sheet`. |
-| `SiteFooter` | restyle | Columns from `nav.footer` + `socialLinks`; giant wordmark from `profile.displayName` (aria-hidden). |
-| `SectionHeader` (`BlockHeading`) | restyle | `§` index computed from the rendered order, label, title, aside link. |
-| `HeroBlock` | restyle | Line-masked h1 split from `headline` / `headlineAccent`; status card from `settings.availability` + `profile.city/country/timezone/careerStartDate`. Kicker icon removed, or the leading `>` stripped once (P5). |
-| `CaseCard`, `FeaturedCaseBlock`, `CaseGridBlock` | restyle | `GenerativeCover`, metric diff, sticky stack variant. Container queries switch card layout (row ↔ stacked) by card width, not viewport. |
-| `ProjectsBrowserBlock` | restyle | Filter chips (domain, skill) replace the native `select` (P14); Grid / Index `ToggleGroup`; Index rows with a hover preview. |
-| `CaseStudyView` | restyle | Crumbs, facts bar, cover (shared element), metrics board, sticky TOC with progress, `notMine` callout, release status, next case. |
-| `NotesBrowserBlock` | restyle | Pinned post, tag chips, search, year groups, EN badge for fallback. |
-| `PostReader` | new layout | KB three-pane at ≥ 1024: notes nav \| article (48rem) \| “On this page” tree. Below that, a collapsible TOC box. |
-| `CursorFollower`, `Magnetic`, `Tilt`, `RowPreview` | new | R7, behind `MotionProvider` (fine pointer + motion allowed). |
-| `PageTransition` | new | R8, View Transitions. |
-| `VitalsHud` | new, optional | `web-vitals` (MIT, ~2 KB) shows live LCP/INP/CLS behind a footer toggle; demonstrates measurement. |
-| `X.Skeleton` per block and view | rewrite | One layout-matched skeleton per block in the registry and per public view (`HeroBlock.Skeleton`, `CaseStudyView.Skeleton`, `PostReader.Skeleton`, …), used by `loading.tsx` and `SectionBoundary` (R5, R9–R11). |
-| `RouteProgress` + `PendingLink` | new | `useLinkStatus()` reporter inside next-intl `Link`, a `useSyncExternalStore` counter, and a 2px header bar; shared with admin (R8, R12). |
-| `IntroCurtain` | new | First-visit ink curtain + nonce'd gate script (R8). |
-| `CmsImage` | new | `next/image` wrapper: width/height from `publicImageSchema`, `lqipUrl()` + server `getBlurDataURL()`, fade-in on load (R4b). |
+| Component                                          | Status        | Notes                                                                                                                                                                                                            |
+| -------------------------------------------------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `SiteHeader`                                       | restyle       | Monogram wordmark, numbered nav, anchor-positioned indicator, ⌘K, EN/VI `ToggleGroup`, theme toggle (VT circular reveal), mobile `Sheet`.                                                                        |
+| `SiteFooter`                                       | restyle       | Columns from `nav.footer` + `socialLinks`; giant wordmark from `profile.displayName` (aria-hidden).                                                                                                              |
+| `SectionHeader` (`BlockHeading`)                   | restyle       | `§` index computed from the rendered order, label, title, aside link.                                                                                                                                            |
+| `HeroBlock`                                        | restyle       | Line-masked h1 split from `headline` / `headlineAccent`; status card from `settings.availability` + `profile.city/country/timezone/careerStartDate`. Kicker icon removed, or the leading `>` stripped once (P5). |
+| `CaseCard`, `FeaturedCaseBlock`, `CaseGridBlock`   | restyle       | `GenerativeCover`, metric diff, sticky stack variant. Container queries switch card layout (row ↔ stacked) by card width, not viewport.                                                                          |
+| `ProjectsBrowserBlock`                             | restyle       | Filter chips (domain, skill) replace the native `select` (P14); Grid / Index `ToggleGroup`; Index rows with a hover preview.                                                                                     |
+| `CaseStudyView`                                    | restyle       | Crumbs, facts bar, cover (shared element), metrics board, sticky TOC with progress, `notMine` callout, release status, next case.                                                                                |
+| `NotesBrowserBlock`                                | restyle       | Pinned post, tag chips, search, year groups, EN badge for fallback.                                                                                                                                              |
+| `PostReader`                                       | new layout    | KB three-pane at ≥ 1024: notes nav \| article (48rem) \| “On this page” tree. Below that, a collapsible TOC box.                                                                                                 |
+| `CursorFollower`, `Magnetic`, `Tilt`, `RowPreview` | new           | R7, behind `MotionProvider` (fine pointer + motion allowed).                                                                                                                                                     |
+| `PageTransition`                                   | new           | R8, View Transitions.                                                                                                                                                                                            |
+| `VitalsHud`                                        | new, optional | `web-vitals` (MIT, ~2 KB) shows live LCP/INP/CLS behind a footer toggle; demonstrates measurement.                                                                                                               |
+| `X.Skeleton` per block and view                    | rewrite       | One layout-matched skeleton per block in the registry and per public view (`HeroBlock.Skeleton`, `CaseStudyView.Skeleton`, `PostReader.Skeleton`, …), used by `loading.tsx` and `SectionBoundary` (R5, R9–R11).  |
+| `RouteProgress` + `PendingLink`                    | new           | `useLinkStatus()` reporter inside next-intl `Link`, a `useSyncExternalStore` counter, and a 2px header bar; shared with admin (R8, R12).                                                                         |
+| `IntroCurtain`                                     | new           | First-visit ink curtain + nonce'd gate script (R8).                                                                                                                                                              |
+| `CmsImage`                                         | new           | `next/image` wrapper: width/height from `publicImageSchema`, `lqipUrl()` + server `getBlurDataURL()`, fade-in on load (R4b).                                                                                     |
 
 ### 6.3 Admin (`apps/web/src/modules/admin-*`)
 
-| Component | Status | Notes |
-| --- | --- | --- |
-| `AdminShell` | rewrite layout | KB `h-dvh`: fixed `Topbar` + `.app` grid of panes, document locked (fixes A1). |
-| `AdminSidebar` | restyle | Roman-numeral group labels (computed), `min-h-10` items, `border-l-2` + `primary-subtle` active, counts from `/api/admin/stats` (A2, A3). |
-| `Topbar` | restyle | Brand, crumbs, DocSearch button, View site, `NotificationBell`, theme. |
-| `AdminDrawer` | new | `Sheet` with the same nav, `w-[min(100%,20rem)]`. |
-| `AdminCommandPalette` | restyle | DocSearch: `pt-[14vh]`, `max-w-xl`, groups, skeleton rows, highlighted matches, diacritics-insensitive filter (`normalize('NFD')` + strip combining marks + `đ→d`), keyboard footer (A6). |
-| `DataTable` | extend | `cardLabels` → `td[data-label]` for ≤ 639px cards; `ThemedCheckbox`; facets; bulk bar; density toggle; x-only wrap (A5). |
-| `ThemedCheckbox` | new | KB 0.12s scale-in check; `indeterminate`. |
-| Dashboard widgets | restyle | KPI cards with sparkline; health ring + issue rows that deep-link to the field (A7); views bars; inbox preview. |
-| `EditorShell` | restyle | Focus mode: outline pane \| 48rem canvas \| publish pane; admin nav in the drawer. |
-| `LocaleTabs` | extend | Completeness meter per locale (computed client-side from filled localized fields). |
-| `MarkdownEditor` | restyle | Toolbar and slash menu restyled; extensions unchanged. |
-| `PublishChecks` | new (client) | Mirrors `/api/admin/health` kinds for the open record and adds client-only checks (TODO placeholder, empty VI). |
-| Page builder | restyle | Block rows with visibility state (hidden publicly when data is empty), `Resizable` inspector, preset picker limited to the block's `layouts`, PLAIN/BAND surface. |
-| `MediaLibrary` | restyle | Grid + details pane, alt EN/VI, “missing alt” filter. |
-| Inbox | restyle | List + reading pane. |
-| Sign in | restyle | Split art/form (teal grid art), error callout, `Button loading` while signing in. |
-| Admin `loading.tsx` + view skeletons | new | Shell-level fallback in `app/admin/(cms)/loading.tsx`; `Dashboard.Skeleton`, `DataTable` skeleton rows (fixed columns), `EditorShell.Skeleton`, `MediaGrid.Skeleton`, `Inbox.Skeleton` (R12–R14). |
-| `DataTable` pending props | extend | `isLoading` keeps its meaning (skeleton rows); new `isFetching` shows the header `FetchBar` and dims rows; `skeletonRows` count (R13). |
-| `SaveStatus` | restyle | Four states (saved, dirty, saving, error + Retry) in a fixed-width slot (R14). |
-| `UploadQueue` | new | Per-file progress rows from `media-upload.service.ts` events, retry on error (R14). |
+| Component                            | Status         | Notes                                                                                                                                                                                             |
+| ------------------------------------ | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AdminShell`                         | rewrite layout | KB `h-dvh`: fixed `Topbar` + `.app` grid of panes, document locked (fixes A1).                                                                                                                    |
+| `AdminSidebar`                       | restyle        | Roman-numeral group labels (computed), `min-h-10` items, `border-l-2` + `primary-subtle` active, counts from `/api/admin/stats` (A2, A3).                                                         |
+| `Topbar`                             | restyle        | Brand, crumbs, DocSearch button, View site, `NotificationBell`, theme.                                                                                                                            |
+| `AdminDrawer`                        | new            | `Sheet` with the same nav, `w-[min(100%,20rem)]`.                                                                                                                                                 |
+| `AdminCommandPalette`                | restyle        | DocSearch: `pt-[14vh]`, `max-w-xl`, groups, skeleton rows, highlighted matches, diacritics-insensitive filter (`normalize('NFD')` + strip combining marks + `đ→d`), keyboard footer (A6).         |
+| `DataTable`                          | extend         | `cardLabels` → `td[data-label]` for ≤ 639px cards; `ThemedCheckbox`; facets; bulk bar; density toggle; x-only wrap (A5).                                                                          |
+| `ThemedCheckbox`                     | new            | KB 0.12s scale-in check; `indeterminate`.                                                                                                                                                         |
+| Dashboard widgets                    | restyle        | KPI cards with sparkline; health ring + issue rows that deep-link to the field (A7); views bars; inbox preview.                                                                                   |
+| `EditorShell`                        | restyle        | Focus mode: outline pane \| 48rem canvas \| publish pane; admin nav in the drawer.                                                                                                                |
+| `LocaleTabs`                         | extend         | Completeness meter per locale (computed client-side from filled localized fields).                                                                                                                |
+| `MarkdownEditor`                     | restyle        | Toolbar and slash menu restyled; extensions unchanged.                                                                                                                                            |
+| `PublishChecks`                      | new (client)   | Mirrors `/api/admin/health` kinds for the open record and adds client-only checks (TODO placeholder, empty VI).                                                                                   |
+| Page builder                         | restyle        | Block rows with visibility state (hidden publicly when data is empty), `Resizable` inspector, preset picker limited to the block's `layouts`, PLAIN/BAND surface.                                 |
+| `MediaLibrary`                       | restyle        | Grid + details pane, alt EN/VI, “missing alt” filter.                                                                                                                                             |
+| Inbox                                | restyle        | List + reading pane.                                                                                                                                                                              |
+| Sign in                              | restyle        | Split art/form (teal grid art), error callout, `Button loading` while signing in.                                                                                                                 |
+| Admin `loading.tsx` + view skeletons | new            | Shell-level fallback in `app/admin/(cms)/loading.tsx`; `Dashboard.Skeleton`, `DataTable` skeleton rows (fixed columns), `EditorShell.Skeleton`, `MediaGrid.Skeleton`, `Inbox.Skeleton` (R12–R14). |
+| `DataTable` pending props            | extend         | `isLoading` keeps its meaning (skeleton rows); new `isFetching` shows the header `FetchBar` and dims rows; `skeletonRows` count (R13).                                                            |
+| `SaveStatus`                         | restyle        | Four states (saved, dirty, saving, error + Retry) in a fixed-width slot (R14).                                                                                                                    |
+| `UploadQueue`                        | new            | Per-file progress rows from `media-upload.service.ts` events, retry on error (R14).                                                                                                               |
 
 ---
 
@@ -550,19 +571,19 @@ The current build shows almost no loading feedback (P18, A10). This section defi
 
 **Rule 2: one mechanism per situation.**
 
-| Situation | Mechanism | What the user sees |
-| --- | --- | --- |
-| Navigating to a route segment whose data is not ready | `loading.tsx` per segment, shown at once by the router | That page's skeleton under the real header/shell |
-| A block or panel whose data streams | `SectionBoundary` / `<Suspense fallback={<X.Skeleton/>}>` | That block's skeleton; blocks above it are already interactive |
-| Client query, first load | `useSuspenseQuery` inside a boundary (admin), or `isPending` → `X.Skeleton` | Skeleton |
-| Client query, refetch with data on screen | `isFetching && !isPending`, with `placeholderData: keepPreviousData` (already in 5 hooks) | Previous data dimmed to 60% plus a 2px `FetchBar`; no skeleton, focus and scroll kept |
-| Any client navigation still pending after 120ms | `useLinkStatus()` in each `Link`, reported to a tiny store read by `RouteProgress` | 2px bar on the header edge (signal on public, teal in admin) |
-| Mutation / form submit | `mutation.isPending`, TanStack Form `isSubmitting` | `Button loading`: width locked, spinner, `aria-busy`; double submits ignored |
-| Autosave | Existing `SaveStatus` on `mutation.status` | Saved · v14 → Unsaved changes → Saving… → Couldn't save · Retry |
-| Toggles and reordering (featured, drag order, read/unread) | Optimistic `onMutate` snapshot, `onError` rollback, `onSettled` invalidate | Instant change; a toast with Retry on failure |
-| Upload | XHR progress from `media-upload.service.ts` | Per-file `ProgressBar` with %, error row with Retry |
-| Image | `width`/`height` + Cloudinary LQIP | Reserved box → blurred preview → full image fades in |
-| First hard load of a session (public) | `IntroCurtain` | Ink curtain, ≤ 700ms |
+| Situation                                                  | Mechanism                                                                                 | What the user sees                                                                    |
+| ---------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Navigating to a route segment whose data is not ready      | `loading.tsx` per segment, shown at once by the router                                    | That page's skeleton under the real header/shell                                      |
+| A block or panel whose data streams                        | `SectionBoundary` / `<Suspense fallback={<X.Skeleton/>}>`                                 | That block's skeleton; blocks above it are already interactive                        |
+| Client query, first load                                   | `useSuspenseQuery` inside a boundary (admin), or `isPending` → `X.Skeleton`               | Skeleton                                                                              |
+| Client query, refetch with data on screen                  | `isFetching && !isPending`, with `placeholderData: keepPreviousData` (already in 5 hooks) | Previous data dimmed to 60% plus a 2px `FetchBar`; no skeleton, focus and scroll kept |
+| Any client navigation still pending after 120ms            | `useLinkStatus()` in each `Link`, reported to a tiny store read by `RouteProgress`        | 2px bar on the header edge (signal on public, teal in admin)                          |
+| Mutation / form submit                                     | `mutation.isPending`, TanStack Form `isSubmitting`                                        | `Button loading`: width locked, spinner, `aria-busy`; double submits ignored          |
+| Autosave                                                   | Existing `SaveStatus` on `mutation.status`                                                | Saved · v14 → Unsaved changes → Saving… → Couldn't save · Retry                       |
+| Toggles and reordering (featured, drag order, read/unread) | Optimistic `onMutate` snapshot, `onError` rollback, `onSettled` invalidate                | Instant change; a toast with Retry on failure                                         |
+| Upload                                                     | XHR progress from `media-upload.service.ts`                                               | Per-file `ProgressBar` with %, error row with Retry                                   |
+| Image                                                      | `width`/`height` + Cloudinary LQIP                                                        | Reserved box → blurred preview → full image fades in                                  |
+| First hard load of a session (public)                      | `IntroCurtain`                                                                            | Ink curtain, ≤ 700ms                                                                  |
 
 **Rule 3: timing.**
 
@@ -600,6 +621,7 @@ The current build shows almost no loading feedback (P18, A10). This section defi
   - `settings.ambientEffects` is true
 
   Client navigations never show it.
+
 - **Safety.**
   - The real page is server-rendered underneath, and the curtain is `aria-hidden` with `pointer-events: none`, so input is never blocked.
   - It holds no large text or image, so it cannot become the LCP element.
@@ -623,29 +645,29 @@ The current build shows almost no loading feedback (P18, A10). This section defi
 
 ### 8.1 What each technique demonstrates
 
-| Technique | Where | FE skill it shows | Cost / fallback |
-| --- | --- | --- | --- |
-| CSS scroll-driven animations (`animation-timeline: scroll()` / `view()`, named `view-timeline`, `animation-range`) | Section reveals, header compaction, process fill, commit-graph fill, footer wordmark, reading progress, sticky-stack recede | Modern CSS platform depth; moving motion off the main thread; replacing JS observers | 0 KB JS, compositor-friendly. `@supports` gate; IntersectionObserver class fallback; static under reduced motion. |
-| Typed custom properties (`@property --n`) + `counter()` count-up | Stats | Houdini Properties & Values; SSR-first motion (final number in HTML, no hydration flash or CLS) | 0 KB JS; falls back to the static number. |
-| Variable-font kinetic type (`wght` / `wdth` on scroll) | Hero h1, next-case hover, footer wordmark | Typography engineering with one variable file instead of several static weights | No extra bytes; `font-stretch` is animatable. |
-| Line-mask headline reveal, VI-safe | Hero | Detail-oriented i18n typography (diacritic padding, `:lang(vi)` leading) | CSS only. |
-| Sticky stacking cards + pinned section | Selected work, process | Layout mastery: sticky + timelines + containment; graceful static mode | CSS only; off < 961px. |
-| CSS anchor positioning | Header nav indicator | Newest layout primitive, with an `@supports not` underline fallback | CSS only. |
-| View Transitions: route crossfade, shared-element cover morph, theme circular reveal | Card → case study; theme toggle | Router integration, progressive enhancement, `view-transition-name` hygiene (unique per page) | Feature-detected; plain navigation otherwise. |
-| WebGL2 fragment shader (fbm domain warp, theme-aware uniforms, pointer-reactive) | Hero stage | Graphics programming plus performance discipline: dynamic import after LCP, DPR cap 1.5, pause offscreen (IntersectionObserver) and on `visibilitychange`, context-loss handling, poster fallback | ≤ 4 KB gz; skipped for reduced motion, Save-Data, `ambientEffects=false`, no WebGL2. |
-| rAF-lerped cursor follower, magnetic buttons, card tilt | Hero, CTA, cards | Interaction design at 60 fps (transforms only, passive listeners, one rAF loop), input-modality detection (`pointer: fine`) | ≤ 5 KB gz total; never hides the system cursor; off on touch. |
-| Cursor-following row preview | Projects index | Pointer-driven UI with deterministic generative content | Fine pointer only. |
-| WAAPI `playbackRate` ticker velocity | Ticker | Web Animations API | Static row fallback. |
-| Generative covers (hash-seeded pattern, domain hue, glyph) | Every card while `cover` is null | Design-system thinking under real data constraints; deterministic SSR output | CSS gradients, no images. |
-| Continuous corners (`corner-shape`) + concentric radius maths | Everywhere | Design-system rigor and progressive enhancement | CSS only. |
-| Container queries | Case cards | Component-level responsiveness | CSS only. |
-| KB-style split panes with independent scrollers | Admin, notes reader | App-shell architecture, scroll containment, focus management | CSS + small hooks. |
-| Diacritics-insensitive search | Admin palette, notes search | Unicode normalization (`NFD`, combining marks, `đ`) | Pure function, unit-tested. |
-| Optional vitals HUD | Footer toggle | Measuring what you ship (`web-vitals`) | ~2 KB gz, loaded on demand. |
-| Streaming SSR with layout-matched skeletons (`loading.tsx` + per-block Suspense, `1lh` text lines, bounded text, fixed table columns) | Every route, both apps | React Server Components streaming, Suspense boundary design, CLS engineering proven by a parity test | CSS only; fallbacks are server components. |
-| Pending-UI choreography: `useLinkStatus` route bar, `keepPreviousData` + FetchBar, optimistic updates with rollback, `aria-busy` buttons | Navigation, filters, tables, toggles, forms | Server-state UX with TanStack Query, perceived performance, accessible async feedback | < 1 KB JS (route store); everything else is existing libraries. |
-| Cloudinary LQIP blur-up with no backend change | Every real image | Image pipeline thinking: URL transforms, server-side base64 inlining, data cache | ~300 B per image inlined; falls back to the reserved box. |
-| First-visit curtain gated before first paint | Public, once per session | Critical-render-path control (nonce'd inline script, no CLS, no LCP element, no input block) | ~0.3 KB inline; skipped for reduced motion and `ambientEffects=false`. |
+| Technique                                                                                                                                | Where                                                                                                                       | FE skill it shows                                                                                                                                                                                 | Cost / fallback                                                                                                   |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| CSS scroll-driven animations (`animation-timeline: scroll()` / `view()`, named `view-timeline`, `animation-range`)                       | Section reveals, header compaction, process fill, commit-graph fill, footer wordmark, reading progress, sticky-stack recede | Modern CSS platform depth; moving motion off the main thread; replacing JS observers                                                                                                              | 0 KB JS, compositor-friendly. `@supports` gate; IntersectionObserver class fallback; static under reduced motion. |
+| Typed custom properties (`@property --n`) + `counter()` count-up                                                                         | Stats                                                                                                                       | Houdini Properties & Values; SSR-first motion (final number in HTML, no hydration flash or CLS)                                                                                                   | 0 KB JS; falls back to the static number.                                                                         |
+| Variable-font kinetic type (`wght` / `wdth` on scroll)                                                                                   | Hero h1, next-case hover, footer wordmark                                                                                   | Typography engineering with one variable file instead of several static weights                                                                                                                   | No extra bytes; `font-stretch` is animatable.                                                                     |
+| Line-mask headline reveal, VI-safe                                                                                                       | Hero                                                                                                                        | Detail-oriented i18n typography (diacritic padding, `:lang(vi)` leading)                                                                                                                          | CSS only.                                                                                                         |
+| Sticky stacking cards + pinned section                                                                                                   | Selected work, process                                                                                                      | Layout mastery: sticky + timelines + containment; graceful static mode                                                                                                                            | CSS only; off < 961px.                                                                                            |
+| CSS anchor positioning                                                                                                                   | Header nav indicator                                                                                                        | Newest layout primitive, with an `@supports not` underline fallback                                                                                                                               | CSS only.                                                                                                         |
+| View Transitions: route crossfade, shared-element cover morph, theme circular reveal                                                     | Card → case study; theme toggle                                                                                             | Router integration, progressive enhancement, `view-transition-name` hygiene (unique per page)                                                                                                     | Feature-detected; plain navigation otherwise.                                                                     |
+| WebGL2 fragment shader (fbm domain warp, theme-aware uniforms, pointer-reactive)                                                         | Hero stage                                                                                                                  | Graphics programming plus performance discipline: dynamic import after LCP, DPR cap 1.5, pause offscreen (IntersectionObserver) and on `visibilitychange`, context-loss handling, poster fallback | ≤ 4 KB gz; skipped for reduced motion, Save-Data, `ambientEffects=false`, no WebGL2.                              |
+| rAF-lerped cursor follower, magnetic buttons, card tilt                                                                                  | Hero, CTA, cards                                                                                                            | Interaction design at 60 fps (transforms only, passive listeners, one rAF loop), input-modality detection (`pointer: fine`)                                                                       | ≤ 5 KB gz total; never hides the system cursor; off on touch.                                                     |
+| Cursor-following row preview                                                                                                             | Projects index                                                                                                              | Pointer-driven UI with deterministic generative content                                                                                                                                           | Fine pointer only.                                                                                                |
+| WAAPI `playbackRate` ticker velocity                                                                                                     | Ticker                                                                                                                      | Web Animations API                                                                                                                                                                                | Static row fallback.                                                                                              |
+| Generative covers (hash-seeded pattern, domain hue, glyph)                                                                               | Every card while `cover` is null                                                                                            | Design-system thinking under real data constraints; deterministic SSR output                                                                                                                      | CSS gradients, no images.                                                                                         |
+| Continuous corners (`corner-shape`) + concentric radius maths                                                                            | Everywhere                                                                                                                  | Design-system rigor and progressive enhancement                                                                                                                                                   | CSS only.                                                                                                         |
+| Container queries                                                                                                                        | Case cards                                                                                                                  | Component-level responsiveness                                                                                                                                                                    | CSS only.                                                                                                         |
+| KB-style split panes with independent scrollers                                                                                          | Admin, notes reader                                                                                                         | App-shell architecture, scroll containment, focus management                                                                                                                                      | CSS + small hooks.                                                                                                |
+| Diacritics-insensitive search                                                                                                            | Admin palette, notes search                                                                                                 | Unicode normalization (`NFD`, combining marks, `đ`)                                                                                                                                               | Pure function, unit-tested.                                                                                       |
+| Optional vitals HUD                                                                                                                      | Footer toggle                                                                                                               | Measuring what you ship (`web-vitals`)                                                                                                                                                            | ~2 KB gz, loaded on demand.                                                                                       |
+| Streaming SSR with layout-matched skeletons (`loading.tsx` + per-block Suspense, `1lh` text lines, bounded text, fixed table columns)    | Every route, both apps                                                                                                      | React Server Components streaming, Suspense boundary design, CLS engineering proven by a parity test                                                                                              | CSS only; fallbacks are server components.                                                                        |
+| Pending-UI choreography: `useLinkStatus` route bar, `keepPreviousData` + FetchBar, optimistic updates with rollback, `aria-busy` buttons | Navigation, filters, tables, toggles, forms                                                                                 | Server-state UX with TanStack Query, perceived performance, accessible async feedback                                                                                                             | < 1 KB JS (route store); everything else is existing libraries.                                                   |
+| Cloudinary LQIP blur-up with no backend change                                                                                           | Every real image                                                                                                            | Image pipeline thinking: URL transforms, server-side base64 inlining, data cache                                                                                                                  | ~300 B per image inlined; falls back to the reserved box.                                                         |
+| First-visit curtain gated before first paint                                                                                             | Public, once per session                                                                                                    | Critical-render-path control (nonce'd inline script, no CLS, no LCP element, no input block)                                                                                                      | ~0.3 KB inline; skipped for reduced motion and `ambientEffects=false`.                                            |
 
 ### 8.2 Budgets (CI-enforced where possible)
 
@@ -1000,23 +1022,24 @@ No flattened screenshots.
 
 - **Public chrome labels are new keys in both `en.json` and `vi.json`:**
 
-  | Group | Keys |
-  | --- | --- |
-  | `core.header.*` | search, menu, theme, language |
-  | `core.footer.*` | column titles, last-published |
-  | `blocks.hero.status.*` | availability, basedIn, localTime, experience, dailyStack |
-  | `projects.view.*` | grid, index |
-  | `projects.empty` | |
-  | `notes.reader.*` | onThisPage, collapseAll, expandAll, readingTime, fallbackBanner |
-  | `notes.empty` | |
-  | `core.copy.*` | copy, copied |
-  | `core.cursor.*` | view, open |
-  | `states.notUploaded` | |
-  | `states.*` (loading) | `loading` exists; new: `loadingPage`, `loadingProjects`, `loadingCaseStudy`, `loadingNotes`, `loadingNote`, `updatingResults`, `sending`, `sent`, `sendFailed` (one key per region, not an interpolated noun, so the Vietnamese reads naturally) |
+  | Group                  | Keys                                                                                                                                                                                                                                             |
+  | ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+  | `core.header.*`        | search, menu, theme, language                                                                                                                                                                                                                    |
+  | `core.footer.*`        | column titles, last-published                                                                                                                                                                                                                    |
+  | `blocks.hero.status.*` | availability, basedIn, localTime, experience, dailyStack                                                                                                                                                                                         |
+  | `projects.view.*`      | grid, index                                                                                                                                                                                                                                      |
+  | `projects.empty`       |                                                                                                                                                                                                                                                  |
+  | `notes.reader.*`       | onThisPage, collapseAll, expandAll, readingTime, fallbackBanner                                                                                                                                                                                  |
+  | `notes.empty`          |                                                                                                                                                                                                                                                  |
+  | `core.copy.*`          | copy, copied                                                                                                                                                                                                                                     |
+  | `core.cursor.*`        | view, open                                                                                                                                                                                                                                       |
+  | `states.notUploaded`   |                                                                                                                                                                                                                                                  |
+  | `states.*` (loading)   | `loading` exists; new: `loadingPage`, `loadingProjects`, `loadingCaseStudy`, `loadingNotes`, `loadingNote`, `updatingResults`, `sending`, `sent`, `sendFailed` (one key per region, not an interpolated noun, so the Vietnamese reads naturally) |
 
   Admin pending labels (`admin.states.saving`, `saved`, `unsaved`, `saveFailed`, `publishing`, `published`, `uploading`, `loadingTable`) go to `en.json` only.
 
   Vietnamese strings are reviewed in R15.
+
 - **Admin stays English-only** (`admin.*` keys in `en.json` only, as today). Content still edits EN/VI through `LocaleTabs`.
 - **Computed, never translated:** section indices, roman numerals, `01 / 03` counters and dates. Dates use `Intl.DateTimeFormat(locale)` (`27 thg 10, 2026` on `/vi`).
 - **Fallback content:** when VI is missing, the EN field renders with `lang="en"` inside the `/vi` page, plus the existing fallback banner (restyled as a callout).
@@ -1028,18 +1051,18 @@ No flattened screenshots.
 
 None of these are part of R1–R16 (including R4b). Each needs a NestJS / Prisma / API change.
 
-| Idea | Why it needs BE | Frontend stop-gap in this plan |
-| --- | --- | --- |
-| `TODO_PLACEHOLDER` health issue kind | `/api/admin/health` has no such kind | Client-side check in `PublishChecks` and the field warning (R14); public guard (R2). |
-| Scheduled publishing (“Scheduled” status) | Status enum is DRAFT / PUBLISHED / ARCHIVED; no future `publishedAt` workflow for projects | Not shown. |
-| Stored image placeholders (blurhash / dominant color computed at upload) and focal point | No such fields on media | Cloudinary LQIP derived from the URL at render time (R4b `CmsImage`), plus `GenerativeCover` and aspect-ratio boxes. |
-| Remembering the real block order per page for `loading.tsx` on a cold cache | The public API has no lightweight “layout only” endpoint | `loading.tsx` uses the cached page layout when present, or else a per-route default skeleton. |
-| Public project gallery | Public detail schema has no `images[]` | Images inside markdown only. |
-| Per-block “hide on public when empty” setting | Visibility is computed, not stored | Computed in the renderer (R2) and shown in the page builder (R14). |
-| `INVERSE` block surface | `BLOCK_SURFACES` is PLAIN / BAND | `cta-band` renders inverse by block type. |
-| Server-side diacritics-insensitive search for posts/projects | Search runs client-side over the loaded page | Client filter (R11, R12). |
-| Pinned / featured post flag | No such field | “Pinned” = the newest published post. |
-| Per-locale OG images generated from the new design | Needs an image route with fonts + data; could run on Vercel OG but touches SEO config | Existing OG. |
+| Idea                                                                                     | Why it needs BE                                                                            | Frontend stop-gap in this plan                                                                                       |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------- |
+| `TODO_PLACEHOLDER` health issue kind                                                     | `/api/admin/health` has no such kind                                                       | Client-side check in `PublishChecks` and the field warning (R14); public guard (R2).                                 |
+| Scheduled publishing (“Scheduled” status)                                                | Status enum is DRAFT / PUBLISHED / ARCHIVED; no future `publishedAt` workflow for projects | Not shown.                                                                                                           |
+| Stored image placeholders (blurhash / dominant color computed at upload) and focal point | No such fields on media                                                                    | Cloudinary LQIP derived from the URL at render time (R4b `CmsImage`), plus `GenerativeCover` and aspect-ratio boxes. |
+| Remembering the real block order per page for `loading.tsx` on a cold cache              | The public API has no lightweight “layout only” endpoint                                   | `loading.tsx` uses the cached page layout when present, or else a per-route default skeleton.                        |
+| Public project gallery                                                                   | Public detail schema has no `images[]`                                                     | Images inside markdown only.                                                                                         |
+| Per-block “hide on public when empty” setting                                            | Visibility is computed, not stored                                                         | Computed in the renderer (R2) and shown in the page builder (R14).                                                   |
+| `INVERSE` block surface                                                                  | `BLOCK_SURFACES` is PLAIN / BAND                                                           | `cta-band` renders inverse by block type.                                                                            |
+| Server-side diacritics-insensitive search for posts/projects                             | Search runs client-side over the loaded page                                               | Client filter (R11, R12).                                                                                            |
+| Pinned / featured post flag                                                              | No such field                                                                              | “Pinned” = the newest published post.                                                                                |
+| Per-locale OG images generated from the new design                                       | Needs an image route with fonts + data; could run on Vercel OG but touches SEO config      | Existing OG.                                                                                                         |
 
 ---
 
@@ -1056,14 +1079,14 @@ None of these are part of R1–R16 (including R4b). Each needs a NestJS / Prisma
 
 **Risks**
 
-| Risk | Mitigation |
-| --- | --- |
-| Scroll-driven animations and anchor positioning are not in every engine | Everything is behind `@supports`; static designs are complete; Playwright runs the static path too. |
-| View Transitions + App Router APIs are still settling | R8 starts with a spike and a feature flag; fallback to instant navigation. |
-| Motion and the shader cost Lighthouse points | Budgets in CI (R5, R6, R15); LCP is text; the shader loads after LCP and is tiny. |
-| Big type and condensed widths with long Vietnamese words | `text-wrap: balance`, `hyphens: auto` with `lang`, clamp-based sizes, long-VI Storybook fixtures in R4–R5. |
-| Locking the document in admin breaks existing flows (dialogs, toasts, dnd) | R12 runs the existing admin e2e suite; Radix portals stay at body level; dnd-kit autoscroll targets the main pane. |
-| Design drift between mockups and app | R15 visual baselines; foundations story as the single reference. |
-| Skeletons drift from their components as layouts change | Each skeleton is colocated and built from the same wrapper; parity tests (±1px) run per card type, and the CLS sweep in R15 covers every route. |
-| `loading.tsx` hides a fast page behind a flash of skeleton | Skeletons fade in from 100ms; the route bar waits 120ms; cached routes render without either (asserted in R8). |
-| The intro curtain hurts LCP or annoys repeat visitors | Session-gated, ≤ 700ms, no input block, no LCP candidate, `?intro=0`; LCP delta asserted in R8; Q6 lets Parker turn it off. |
+| Risk                                                                       | Mitigation                                                                                                                                      |
+| -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Scroll-driven animations and anchor positioning are not in every engine    | Everything is behind `@supports`; static designs are complete; Playwright runs the static path too.                                             |
+| View Transitions + App Router APIs are still settling                      | R8 starts with a spike and a feature flag; fallback to instant navigation.                                                                      |
+| Motion and the shader cost Lighthouse points                               | Budgets in CI (R5, R6, R15); LCP is text; the shader loads after LCP and is tiny.                                                               |
+| Big type and condensed widths with long Vietnamese words                   | `text-wrap: balance`, `hyphens: auto` with `lang`, clamp-based sizes, long-VI Storybook fixtures in R4–R5.                                      |
+| Locking the document in admin breaks existing flows (dialogs, toasts, dnd) | R12 runs the existing admin e2e suite; Radix portals stay at body level; dnd-kit autoscroll targets the main pane.                              |
+| Design drift between mockups and app                                       | R15 visual baselines; foundations story as the single reference.                                                                                |
+| Skeletons drift from their components as layouts change                    | Each skeleton is colocated and built from the same wrapper; parity tests (±1px) run per card type, and the CLS sweep in R15 covers every route. |
+| `loading.tsx` hides a fast page behind a flash of skeleton                 | Skeletons fade in from 100ms; the route bar waits 120ms; cached routes render without either (asserted in R8).                                  |
+| The intro curtain hurts LCP or annoys repeat visitors                      | Session-gated, ≤ 700ms, no input block, no LCP candidate, `?intro=0`; LCP delta asserted in R8; Q6 lets Parker turn it off.                     |
