@@ -11,8 +11,8 @@ Source: read-only review of GitHub `parker2808/interview-senior-fe` (README, pac
 - Stack: Nuxt 3 + Nitro, Vue 3, TypeScript, Tailwind CSS, @nuxtjs/i18n (vi/en, no_prefix), marked, Vercel (Nitro vercel preset), private Vercel Blob (progress), Vitest, GitHub Actions.
 - Links:
   - Live: https://parker-interview-senior-fe.vercel.app
-  - App repo: https://github.com/parker2808/interview-senior-fe (TODO: confirm public)
-  - Data repo: <private-data-repo> (PRIVATE, do not link publicly unless Parker confirms)
+  - App repo: https://github.com/parker2808/interview-senior-fe (public, OK to link, confirmed 2026-10-27)
+  - Data repo: <private-data-repo> (PRIVATE: describe only, never link publicly, confirmed 2026-10-27)
 - Contact placeholders only: <email>, <phone>.
 
 ## What Parker built (verified from repo)
@@ -34,10 +34,11 @@ Source: read-only review of GitHub `parker2808/interview-senior-fe` (README, pac
 - Generated indexes (`sync-*-index.mjs --check`) keep catalogs in sync with source files.
 - Redeploy: push to `main` → GitHub Action POSTs the Vercel Deploy Hook (secret `VERCEL_DEPLOY_HOOK_URL`) → Vercel rebuild pulls content with a read-only fine-grained token (`CONTENT_REPO_TOKEN`). Failed build keeps the previous deployment serving.
 
-## Release status (not live yet)
+## Release status
 
-- GitHub OAuth + owner-only Access/Sharing admin: PR #27, OPEN, not merged. Do not present as shipped.
-- From memory, not re-verified in code this pass: diacritic-insensitive search, OAuth restricted to parker2808 + middleware locking write APIs, CDN caching. Confirm before publishing.
+- GitHub OAuth + owner-only Access/Sharing admin (PR #27): present as "In development" (confirmed 2026-10-27).
+- Confirmed by Parker 2026-10-27: diacritic-insensitive search, middleware locking write APIs, CDN caching.
+- Metrics: personal-use tool, Parker says usage numbers are not worth featuring; do not add any.
 
 ## AI-assisted workflow (honest)
 
@@ -50,12 +51,7 @@ Built with cloud AI coding agents: planning and review with Claude, execution wi
 
 ## TODO (confirm with Parker)
 
-- Can the data repo be mentioned/linked publicly? (Private now.)
-- Is the app repo public, and OK to link?
-- Ship status of PR #27 (OAuth): include or leave out?
-- Confirm diacritic-insensitive search and CDN caching details.
-- Any usage numbers? None in repo: do not invent.
-- Lessons section is a draft.
+- Review Problem statement and Lessons (sent to Parker 2026-10-27).
 
 ---
 
@@ -76,8 +72,8 @@ Preparing for Senior FE interviews meant scattered notes, plans and Q&A across f
 
 - Content/app split: private JSON repo + public app; content pulled at build time and served via Nitro APIs only.
 - Deploy hook: merging content to main triggers a Vercel rebuild, so content updates need no app PR. CI validation gates bad content; a failed build keeps the old site.
-- Auth: lightweight PIN gates with HttpOnly cookies and separate scopes for reading Q&A vs editing progress. (GitHub OAuth owner-only admin is in progress, PR #27.)
-- Caching: content is static per build and served from server assets. (CDN cache headers: TODO confirm.)
+- Auth: lightweight PIN gates with HttpOnly cookies and separate scopes for reading Q&A vs editing progress. (GitHub OAuth owner-only admin: in development.)
+- Caching: content is static per build and served from server assets. Public KB and plan pages are served behind CDN caching.
 - i18n: `Localized { en, vi }` at the data level plus @nuxtjs/i18n for UI chrome, no URL prefix, so switching language is instant.
 
 ## Architecture
@@ -126,8 +122,8 @@ flowchart LR
 
 - Tách nội dung khỏi app: repo JSON riêng tư, app kéo về lúc build và chỉ trả ra qua API của Nitro.
 - Deploy hook: merge nội dung vào main là Vercel tự build lại, không cần PR bên app. CI chặn nội dung lỗi; build hỏng thì bản cũ vẫn chạy.
-- Xác thực: khoá bằng PIN và cookie HttpOnly, tách quyền xem Q&A với quyền sửa tiến độ. (Đăng nhập GitHub OAuth chỉ cho chủ repo đang làm ở PR #27.)
-- Cache: nội dung cố định theo mỗi lần build, phục vụ từ server assets. (Header cache CDN: cần xác nhận.)
+- Xác thực: khoá bằng PIN và cookie HttpOnly, tách quyền xem Q&A với quyền sửa tiến độ. (Đăng nhập GitHub OAuth chỉ cho chủ repo: đang phát triển.)
+- Cache: nội dung cố định theo mỗi lần build, phục vụ từ server assets. Trang kiến thức và lộ trình công khai được cache qua CDN.
 - Đa ngôn ngữ: dữ liệu luôn có cả `en` và `vi`, giao diện dùng @nuxtjs/i18n không prefix URL, đổi ngôn ngữ là đổi ngay.
 
 ## Kiến trúc

@@ -58,6 +58,13 @@ describe('portfolio mapper', () => {
     expect(particula?.lessonsEn).toBe('TODO (Parker to write)');
     expect(particula?.isConfidential).toBe(true);
 
+    const interview = projects.find((project) => project.slug === 'interview-senior-fe');
+    expect(interview?.isConfidential).toBe(false);
+    expect(interview?.repoUrl).toBe('https://github.com/parker2808/interview-senior-fe');
+    expect(interview?.decisionsEn).toMatch(/In development/);
+    expect(interview?.problemEn).toMatch(/UNDER PARKER'S REVIEW/);
+    expect(interview?.lessonsEn).toMatch(/UNDER PARKER'S REVIEW/);
+
     const lilP = projects.find((project) => project.slug === 'lil-p');
     expect(lilP?.isConfidential).toBe(false);
     expect(lilP?.notMineVi).toMatch(/Tiptap/);

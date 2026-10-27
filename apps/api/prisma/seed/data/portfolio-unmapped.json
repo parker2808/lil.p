@@ -222,7 +222,7 @@
     },
     {
       "slug": "interview-senior-fe",
-      "note": "Source: docs/case-studies/interview-senior-fe.md. Counts (22 topics, 142 questions, 33 PRs) quoted from the app README / PR list. Content lives in a private data repository: described, never named or linked. NOT SHIPPED: GitHub OAuth + owner-only admin (PR #27, open, not merged). UNVERIFIED (confirm before publishing): diacritic-insensitive search, OAuth restricted to the owner + middleware locking write APIs, CDN caching. repoUrl null until Parker confirms the app repo is public. No usage numbers.",
+      "note": "Source: docs/case-studies/interview-senior-fe.md (updated 2026-10-27). Counts (22 topics, 142 questions, 33 PRs) quoted from repo READMEs/PR list; no usage metrics by Parker's choice. Data repo is private: described only, never named or linked. GitHub OAuth (PR #27): In development. Search, write-API middleware and CDN caching confirmed by Parker 2026-10-27. Problem and Lessons under Parker's review.",
       "reason": "Project has no free-form note column."
     },
     {

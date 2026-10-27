@@ -51,9 +51,11 @@ describe('build-content-migration', () => {
       projects.filter((project) => !project.isConfidential).map((project) => project.slug),
     ).toEqual(['lil-j-birthday-site', 'interview-senior-fe', 'lil-p']);
     const interview = projects.find((project) => project.slug === 'interview-senior-fe');
-    expect(interview?.repoUrl).toBeNull();
+    expect(interview?.repoUrl).toBe('https://github.com/parker2808/interview-senior-fe');
     expect(interview?.status).toBe('DRAFT');
-    expect(interview?.decisionsEn).toMatch(/NOT shipped/i);
+    expect(interview?.decisionsEn).toMatch(/In development/);
+    expect(interview?.problemEn).toMatch(/UNDER PARKER'S REVIEW/);
+    expect(interview?.lessonsEn).toMatch(/UNDER PARKER'S REVIEW/);
     expect(projects.every((project) => project.status === 'DRAFT')).toBe(true);
   });
 
