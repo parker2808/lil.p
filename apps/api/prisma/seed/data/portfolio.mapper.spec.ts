@@ -35,8 +35,19 @@ describe('portfolio mapper', () => {
     expect(data.profile.phone).toBe('<phone>');
   });
 
-  it('forces every project to DRAFT and keeps notMine / releaseStatus / TODO lessons', () => {
+  it('keeps each project status from the data and keeps notMine / releaseStatus / TODO lessons', () => {
     const projects = mapProjects(data);
+    expect(projects.map((project) => project.slug)).toEqual([
+      'particula',
+      'cfw-back-office-field-config',
+      'cfw-sales-crm',
+      'msp-advanced',
+      'msp-app-expansion',
+      'migration-data-tool',
+      'lil-j-birthday-site',
+      'ctrack-crystal',
+      'lil-p',
+    ]);
     expect(projects.every((project) => project.status === 'DRAFT')).toBe(true);
     expect(projects.every((project) => project.publishedAt === null)).toBe(true);
 
@@ -44,6 +55,12 @@ describe('portfolio mapper', () => {
     expect(particula?.notMineEn).toMatch(/Tim Vu/);
     expect(particula?.notMineVi).toBeNull();
     expect(particula?.lessonsEn).toBe('TODO (Parker to write)');
+    expect(particula?.isConfidential).toBe(true);
+
+    const lilP = projects.find((project) => project.slug === 'lil-p');
+    expect(lilP?.isConfidential).toBe(false);
+    expect(lilP?.notMineVi).toMatch(/Tiptap/);
+    expect(lilP?.repoUrl).toBe('https://github.com/parker2808/lil.p');
 
     const backOffice = projects.find((project) => project.slug === 'cfw-back-office-field-config');
     expect(backOffice?.releaseStatus).toEqual({

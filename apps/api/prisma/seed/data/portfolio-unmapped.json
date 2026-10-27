@@ -1,15 +1,20 @@
 {
   "_note": "Fields from portfolio-data.json with no Prisma column, or values that cannot be stored as typed. Copied exactly. Do not invent replacements. PageSection became PageBlock (PLAN D26); titles that match a block key are also overlaid onto that block.",
   "_meta": {
-    "generatedAt": "2026-10-26",
+    "generatedAt": "2026-10-27",
     "sources": [
       "/workspace/cv/parker-cv.pdf (text: /workspace/cv/parker-cv.txt)",
-      "/cursor/stores/user/portfolio/particula-fe.md",
-      "/cursor/stores/user/portfolio/cfw-backoffice-portal.md",
-      "/cursor/stores/user/portfolio/cfw-sales-crm-portal.md",
-      "plans/portfolio-design-system.md §1.5 (data model)"
+      "docs/case-studies/particula-fe.md",
+      "docs/case-studies/cfw-backoffice-portal.md",
+      "docs/case-studies/cfw-sales-crm-portal.md",
+      "docs/case-studies/lil-j-birthday-site.md",
+      "docs/case-studies/ctrack-crystal.md",
+      "docs/case-studies/lil-p.md",
+      "docs/design/portfolio-design-system.md §1.5 (data model)",
+      "docs/PLAN.md",
+      "docs/DEPLOY.md"
     ],
-    "conventions": "Bilingual fields are xxxEn / xxxVi columns per spec §1.5. TODO marks unknowns. <email>/<phone> are placeholders. All projects seeded as DRAFT."
+    "conventions": "Bilingual fields are xxxEn / xxxVi columns per spec §1.5. TODO marks unknowns. <email>/<phone> are placeholders. Project status comes from each row (all DRAFT unless Parker publishes)."
   },
   "siteSettings": {
     "availability": "TODO (OPEN | NOT_LOOKING | FREELANCE)",
@@ -148,7 +153,7 @@
     {
       "key": "cmc-cfw",
       "clientNote": "Client: Central Food Wholesale (Central Group), Thailand",
-      "evidence": "Git identities <email> (lilparker28) and co-author line 'Hung. Vu Van - CMC Global DU3.1 <email>'. Earliest commit 17 Jul 2026 (Back Office), CRM 7 Aug - 23 Sep 2026.",
+      "evidence": "Git identities <email> (lilparker28) and co-author line 'Hung. Vu Van - CMC Global DU3.1 <<email>>'. Earliest commit 17 Jul 2026 (Back Office), CRM 7 Aug - 23 Sep 2026.",
       "todo": "Exact start date with CMC Global for this engagement (CV says Kobizo until 'Now'; notes say Particula ended Dec 2025). Is it still ongoing?",
       "reason": "Experience has no key / clientNote / evidence / todo columns."
     },
@@ -202,6 +207,21 @@
     {
       "slug": "migration-data-tool",
       "note": "Short entry from CV only. Needs notes like the other three before a full case study.",
+      "reason": "Project has no free-form note column."
+    },
+    {
+      "slug": "lil-j-birthday-site",
+      "note": "Source: /cursor/stores/user/portfolio/lil-j-birthday-site.md (from lil.j). Personal project: domain/experience null. Stack items without skill slugs: Framer Motion, WebGL, Canvas 2D, Cloudinary, Web Audio.",
+      "reason": "Project has no free-form note column."
+    },
+    {
+      "slug": "ctrack-crystal",
+      "note": "Source: /cursor/stores/user/portfolio/ctrack-crystal.md (CV entry). No metrics given. TODO: employer/experience key, confirm overlap with CFW projects (Jul–Oct 2026), client name confidential unless Parker confirms. Jest/Supertest/Robot Framework have no skill slugs.",
+      "reason": "Project has no free-form note column."
+    },
+    {
+      "slug": "lil-p",
+      "note": "Source: docs/case-studies/lil-p.md (this repo). No public traffic or performance metrics in git. Domain dx-testing; no employer experience row.",
       "reason": "Project has no free-form note column."
     }
   ],

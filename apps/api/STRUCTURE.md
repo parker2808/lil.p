@@ -23,6 +23,7 @@ prisma.config.ts          # Prisma CLI config (Prisma 7+)
 Dockerfile                # multi-stage production image (compose.prod.yml)
 docker-entrypoint.sh      # `prisma migrate deploy` then the given command
 scripts/bundle-seed.mjs   # `node dist/seed.js` after `pnpm build`
+scripts/build-content-migration.ts  # JSON → prisma/migrations/20261027150000_portfolio_content/
 ```
 
 ## How a request flows
@@ -47,8 +48,8 @@ Keep that order in mind: guards decide whether a request is allowed, pipes check
 
 | Folder | What it is, in plain words | What goes in it |
 | --- | --- | --- |
-| `prisma/` | The database's source of truth. `schema.prisma` lists every table and column; `migrate dev` turns your edits into SQL files in `migrations/` | `schema.prisma`, `migrations/` (committed, never edited after applying), `seed/` |
-| `prisma/seed/` | Scripts that fill an empty DB with starting rows | `seed.ts` (entry), `profiles/demo.seed.ts` (dev/CI placeholder data), `profiles/baseline.seed.ts` + `profiles/owner.seed.ts` (owner CV: `data/portfolio-data.json`, projects `DRAFT`, 0 posts, no demo messages/views), `data/portfolio.mapper.ts` (exact-value mapping), `data/portfolio-unmapped.json` (fields with no model), `data/*.data.ts` (demo placeholders, `<email>`/`<phone>` only), `audit.seed.ts` (`pnpm --filter @portfolio/api seed:audit`, 5,000 rows, dev only) |
+| `prisma/` | The database's source of truth. `schema.prisma` lists every table and column; `migrate dev` turns your edits into SQL files in `migrations/` | `schema.prisma`, `migrations/` (committed; the content migration is generated, not hand-edited), `seed/` |
+| `prisma/seed/` | Scripts that fill an empty DB with starting rows | `seed.ts` (entry), `profiles/demo.seed.ts` (dev/CI placeholder data), `profiles/baseline.seed.ts` + `profiles/owner.seed.ts` (owner CV: `data/portfolio-data.json`, projects keep their JSON status, 0 posts, no demo messages/views), `data/portfolio.mapper.ts` (exact-value mapping), `data/portfolio-unmapped.json` (fields with no model), `data/*.data.ts` (demo placeholders, `<email>`/`<phone>` only), `audit.seed.ts` (`pnpm --filter @portfolio/api seed:audit`, 5,000 rows, dev only) |
 | `src/config/` | Settings that live outside the code (`.env`). Read once at start-up and validated, so a missing `DATABASE_URL` or a too-short `JWT_ACCESS_SECRET` fails at boot instead of at the first request. Production secrets: [docs/runbooks/secrets.md](../../docs/runbooks/secrets.md). T61: `CROSS_SITE_COOKIES`, `COOKIE_DOMAIN`, `CORS_ORIGINS`, `PORT` | `env.schema.ts` (zod), `app-config.service.ts` (typed getters), `config.module.ts` |
 | `src/prisma/` | The code side of Prisma: one shared `PrismaClient` wrapped as a Nest provider. Services inject it instead of creating their own connection | `prisma.module.ts` (global), `prisma.service.ts` (Prisma 7 + MariaDB adapter) |
 | `src/generated/` | Output of `prisma generate`. Do not edit. Regenerated on `pnpm install`, typecheck, and build | `prisma/` (client, enums, models) |
