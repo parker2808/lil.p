@@ -97,6 +97,12 @@ describe('portfolio content migration', () => {
     ).toBeTruthy();
     expect(await prisma.navItem.findFirst({ where: { labelEn: 'Work' } })).toBeTruthy();
     expect(await prisma.navItem.findFirst({ where: { labelEn: 'Home' } })).toBeNull();
+    const home = await prisma.page.findUnique({
+      where: { key: 'HOME' },
+      include: { publishedVersion: true },
+    });
+    expect(JSON.stringify(home?.publishedVersion?.snapshot)).toContain('Featured case study');
+    expect(JSON.stringify(home?.publishedVersion?.snapshot)).not.toContain('Featured work');
   });
 
   it('still accepts the owner seed after migrate', async () => {
