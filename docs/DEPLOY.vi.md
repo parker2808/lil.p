@@ -60,6 +60,16 @@ check `GET /api/health`, `prisma migrate deploy` trong entrypoint, rồi
    node dist/seed.js
    ```
 
+   Nếu `prisma migrate deploy` chết giữa chừng (P3009 / P3018), đánh
+   rollback migration đó trước deploy tiếp. Cwd image là `/app`. Docker
+   Command:
+
+   ```bash
+   prisma migrate resolve --rolled-back 20261027150000_portfolio_content
+   ```
+
+   Rồi trả Docker Command về `node dist/main.js` và deploy lại.
+
 5. Kiểm tra `https://<render-host>/api/health` trả
    `{ "status": "ok", "db": "ok" }`.
 

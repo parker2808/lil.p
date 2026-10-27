@@ -33,6 +33,25 @@ describe('build-content-migration', () => {
     expect(sql).toContain("'<phone>'");
   });
 
+  it('avoids TiDB 1052 ambiguous A on join-table upserts', () => {
+    expect(sql).toContain('INSERT IGNORE INTO `_ExperienceToSkill`');
+    expect(sql).toContain('INSERT IGNORE INTO `_ProjectToSkill`');
+    const statements = splitSqlStatements(sql);
+    expect(
+      statements.some((statement) => /ON DUPLICATE KEY UPDATE\s+`A`\s*=\s*`A`/i.test(statement)),
+    ).toBe(false);
+    expect(statements.some((statement) => /SELECT[^\n]*AS `A`[^\n]*AS `B`/i.test(statement))).toBe(
+      false,
+    );
+    const joinStatements = statements.filter((statement) =>
+      statement.startsWith('INSERT IGNORE INTO `_'),
+    );
+    expect(joinStatements).toHaveLength(2);
+    expect(
+      joinStatements.every((statement) => !statement.includes('ON DUPLICATE KEY UPDATE')),
+    ).toBe(true);
+  });
+
   it('keeps confidential flags and draft status from the JSON', () => {
     const projects = mapProjects(loadPortfolioData());
     expect(projects).toHaveLength(counts.project);

@@ -14,6 +14,10 @@ not a VPS. Step-by-step (beginner): [docs/DEPLOY.md](../DEPLOY.md)
    (`SEED_PROFILE=baseline`). Do not re-seed a live DB — it wipes
    content rows. Regenerate the SQL with
    `pnpm --filter @portfolio/api content:migration`.
+   If a content migration is stuck as failed (P3009), one-off Docker
+   Command from `/app`:
+   `prisma migrate resolve --rolled-back 20261027150000_portfolio_content`
+   then reset the command to `node dist/main.js` and redeploy.
 5. Open the Vercel origin. Sign in at `/admin/login`. Change the password.
 
 ## Rolling forward
