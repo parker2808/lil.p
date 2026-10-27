@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>About · Ink &amp; Signal mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <style>
+    .intro { padding: clamp(40px, 7vw, 104px) 0 var(--s-8); }
+    .portrait { grid-column: 1 / span 4; }
+    .portrait .frame { aspect-ratio: 4 / 5; border-radius: var(--radius-2xl); background: var(--paper-sunken); border: 1px solid var(--rule); display: grid; place-items: center; position: relative; overflow: hidden; }
+    .portrait .frame::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--rule-strong) 1px, transparent 1.2px); background-size: 14px 14px; opacity: .6; }
+    .portrait .frame span { position: relative; font: italic 200 160px/1 var(--font-sans); letter-spacing: -0.06em; color: var(--signal); }
+    .portrait dl { margin: 16px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; font-size: 14px; }
+    .portrait dt { font: 500 11px/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
+    .portrait dd { margin: 0; text-align: right; }
+    .bio { grid-column: 6 / -1; }
+    .bio .prose { margin-top: 32px; font-size: var(--step-1); }
+    .bio .prose p:first-child::first-letter { font: italic 300 4.2em/0.8 var(--font-sans); float: left; margin: 6px 10px 0 0; color: var(--signal); }
+    .edu { display: grid; grid-template-columns: 1fr auto; padding: 20px 0; border-bottom: 1px solid var(--rule); gap: 4px 24px; }
+    .edu:first-child { border-top: 1px solid var(--ink); }
+    .cv { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gutter); }
+    .cv a { display: flex; justify-content: space-between; align-items: center; padding: 24px; border: 1px solid var(--rule-strong); border-radius: var(--radius-xl); background: var(--paper-raised); transition: transform var(--dur-2) var(--ease-out), box-shadow var(--dur-2) var(--ease-out); }
+    .cv a:hover { transform: translate(-3px, -3px); box-shadow: var(--shadow-press); }
+    .cv b { font: 600 var(--step-2)/1.1 var(--font-sans); font-stretch: 90%; letter-spacing: -0.02em; }
+    @media (max-width: 960px) { .portrait, .bio { grid-column: 1 / -1; } .portrait .frame { aspect-ratio: 16/10; } .cv { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body class="paper-grain" data-page="about">
+  <div data-chrome="header"></div>
+  <main id="main">
+    <!-- about-intro block (SPLIT_4_8): profile.avatar (monogram fallback), city, timezone, availability, bio (markdown), languages -->
+    <section class="intro">
+      <div class="container grid">
+        <div class="portrait">
+          <div class="frame" role="img" aria-label="Parker Vu"><span>P</span></div>
+          <dl>
+            <dt>Based in</dt><dd>Hanoi, Vietnam</dd>
+            <dt>Local time</dt><dd class="num" data-local-time="Asia/Ho_Chi_Minh">18:35</dd>
+            <dt>Status</dt><dd><span class="status">Open to roles</span></dd>
+            <dt>Languages</dt><dd>Vietnamese, English</dd>
+          </dl>
+        </div>
+        <div class="bio">
+          <span class="meta">§02 — About</span>
+          <h1 class="display t-h1" style="margin-top:20px">Parker Vu <span class="subtle" style="font-size:.42em;font-style:italic;letter-spacing:0">(Vũ Văn Hùng)</span></h1>
+          <div class="prose">
+            <p>I started in 2021 as a fullstack developer on a data migration tool (Flask, Laravel, Vue 2). Then I moved to frontend: enterprise platforms at CMC Global, Particula at Kobizo, and wholesale portals through CMC Global.</p>
+            <p>At Kobizo I led the frontend move from v1 to v2 on Nuxt 3 and was the top contributor on the repo. I like breaking big migrations into slices, and I write down the conventions so the team can follow them.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- stat-band (compact) -->
+    <section class="section section--sunken" style="padding:56px 0">
+      <div class="container"><div class="stats" style="border-top-color:var(--rule-strong)">
+        <div class="stat"><div class="v" style="font-size:var(--step-3)">5<sup>+</sup></div><div class="l">Years building for the web</div></div>
+        <div class="stat"><div class="v" style="font-size:var(--step-3)">4</div><div class="l">Products shipped</div></div>
+        <div class="stat"><div class="v" style="font-size:var(--step-3)">2</div><div class="l">Framework migrations</div></div>
+        <div class="stat"><div class="v" style="font-size:var(--step-3)">1</div><div class="l">Enterprise platform</div></div>
+      </div></div>
+    </section>
+
+    <!-- timeline block → commit graph; experiences grouped by company -->
+    <section class="section">
+      <div class="container">
+        <div class="sec-head"><div class="sec-index"><span class="n">§01</span><span class="label">Experience</span><span class="bar"></span></div><h2 class="sec-title display t-h2">Experience</h2></div>
+        <div class="grid"><div class="rail"></div><div class="rail-content gitlog">
+          <div class="commit is-now">
+            <span class="when">2022 — now</span><span class="node"></span>
+            <div><h3>CMC Global</h3><span class="meta">Hanoi, Vietnam</span>
+              <div class="role"><b>Frontend Developer</b><span class="meta">Jul 2026 — now</span><p>Frontend on two internal portals for a food wholesaler: the CDP back office and the sales CRM.</p></div>
+              <div class="role"><b>Frontend Developer</b><span class="meta">Jul 2022 — Jun 2024</span><p>MSP App Expansion and MSP Advanced, working with a Korean team.</p>
+                <ul class="hl"><li>Moved app logic into the new design system.</li><li>Unit tests and issue triage UI for a 15-person team.</li></ul></div>
+            </div>
+          </div>
+          <div class="commit">
+            <span class="when">2024 — 2025</span><span class="node"></span>
+            <div><h3>Kobizo</h3><span class="meta">Remote</span>
+              <div class="role"><b>Frontend Developer (main frontend on Particula)</b><span class="meta">Feb 2024 — Dec 2025</span><p>Main frontend developer on a rating and analytics platform for tokenized real-world assets.</p>
+                <ul class="hl"><li>Led the v1 → v2 move to Nuxt 3.</li><li>Replaced Axios with TanStack Query.</li><li>Introduced Playwright specs.</li></ul></div>
+            </div>
+          </div>
+          <div class="commit">
+            <span class="when">2021 — 2022</span><span class="node"></span>
+            <div><h3>LitGroup</h3><span class="meta">Hanoi, Vietnam</span>
+              <div class="role"><b>Frontend Developer</b><span class="meta">Jan 2022 — Jun 2022</span><p>Frontend for a data migration tool used by US and UK store owners.</p></div>
+              <div class="role"><b>Backend Developer</b><span class="meta">Jan 2021 — Dec 2021</span><p>Backend for the same migration tool, with Flask and Laravel.</p></div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- principle-list block -->
+    <section class="section">
+      <div class="container">
+        <div class="sec-head"><div class="sec-index"><span class="n">§02</span><span class="label">How I work</span><span class="bar"></span></div><h2 class="sec-title display t-h2">Three rules I keep</h2></div>
+        <div class="grid"><div class="rail"></div><div class="rail-content principles">
+          <div class="principle"><span class="n">i.</span><div><h3>Migrate in slices</h3><p>Big rewrites fail. I move one module at a time and keep the app shippable.</p></div></div>
+          <div class="principle"><span class="n">ii.</span><div><h3>Write the conventions down</h3><p>A STRUCTURE.md and a scaffold command beat a long review thread.</p></div></div>
+          <div class="principle"><span class="n">iii.</span><div><h3>Never lose the user's edits</h3><p>Drafts, diff-only saves, version checks and unsaved-change guards.</p></div></div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- skill-groups block: columns = Skill.depth (DAILY/SHIPPED/GROWING) -->
+    <section class="section section--sunken">
+      <div class="container">
+        <div class="sec-head"><div class="sec-index"><span class="n">§03</span><span class="label">Skills</span><span class="bar"></span></div><h2 class="sec-title display t-h2">Grouped by depth, not by logo</h2></div>
+        <div class="skill-matrix">
+          <div class="skill-col"><h3>Daily <span class="depth" aria-label="depth 3 of 3"><i class="on"></i><i class="on"></i><i class="on"></i></span></h3><ul><li class="tag">Vue 3</li><li class="tag">Nuxt 3</li><li class="tag">TypeScript</li><li class="tag">Pinia</li><li class="tag">TanStack Query</li><li class="tag">Tailwind CSS</li><li class="tag">PrimeVue</li><li class="tag">Playwright</li></ul></div>
+          <div class="skill-col"><h3>Shipped <span class="depth" aria-label="depth 2 of 3"><i class="on"></i><i class="on"></i><i></i></span></h3><ul><li class="tag">Vue 2 / Vuex</li><li class="tag">Vitest</li><li class="tag">REST / GraphQL</li><li class="tag">Flask</li><li class="tag">Laravel</li><li class="tag">MySQL</li><li class="tag">Tiptap</li></ul></div>
+          <div class="skill-col"><h3>Growing <span class="depth" aria-label="depth 1 of 3"><i class="on"></i><i></i><i></i></span></h3><ul><li class="tag">React</li><li class="tag">Next.js</li><li class="tag">NestJS</li><li class="tag">Prisma</li></ul></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- education-list + cv-download blocks -->
+    <section class="section">
+      <div class="container grid">
+        <div class="rail"><span class="meta">§04 — Education</span></div>
+        <div class="rail-content">
+          <div class="edu"><b>Hanoi University of Industry</b><span class="meta">2017 — 2021</span><span class="muted" style="font-size:14px">Bachelor · Computer Science</span></div>
+        </div>
+        <div class="rail" style="margin-top:64px"><span class="meta">§05 — Curriculum vitae</span></div>
+        <div class="rail-content" style="margin-top:64px">
+          <p class="muted" style="margin-bottom:20px">One page, two locales.</p>
+          <div class="cv">
+            <a href="#"><span><span class="meta">PDF · English</span><br /><b>CV — EN</b></span><span aria-hidden="true">↓</span></a>
+            <a href="#" lang="vi"><span><span class="meta">PDF · Tiếng Việt</span><br /><b>CV — VI</b></span><span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div data-chrome="footer"></div>
+  <script src="chrome.js"></script>
+  <script src="mock.js"></script>
+  <script src="mock-motion.js" defer></script>
+</body>
+</html>

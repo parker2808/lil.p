@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redesign mockups · index</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <style>
+    .idx { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top: 24px; }
+    .idx a { display: flex; flex-direction: column; gap: 6px; padding: 18px; border: 1px solid var(--rule); border-radius: var(--radius-xl); background: var(--paper-raised); transition: box-shadow var(--dur-2), transform var(--dur-2) var(--ease-out); }
+    .idx a:hover { box-shadow: var(--shadow-press); transform: translate(-2px, -2px); }
+    .idx b { font-weight: 600; font-size: var(--step-1); }
+    .idx span { color: var(--ink-2); font-size: var(--step--1); }
+  </style>
+</head>
+<body class="paper-grain">
+  <main class="section" id="main"><div class="container">
+    <span class="meta">docs/design/redesign · static mockups, not product code</span>
+    <h1 class="display t-h1" style="margin-top:12px">Portfolio redesign</h1>
+    <p class="lead" style="margin-top:12px">Open any page. Add <code>?dark=1</code> for the dark theme or <code>?capture=1</code> to freeze motion. Plan: <code>docs/plans/ui-redesign.md</code>.</p>
+
+    <h2 class="meta" style="margin-top:40px">Public · Ink &amp; Signal</h2>
+    <div class="idx">
+      <a href="home.html"><b>Home</b><span>Shader hero, kinetic type, count-up stats, stacked cards, pinned process</span></a>
+      <a href="projects.html"><b>Projects</b><span>Filter pills (wrap), grid / index views, hover preview</span></a>
+      <a href="case-study.html"><b>Case study</b><span>Facts bar, metrics board, sticky TOC, shared-element cover</span></a>
+      <a href="about.html"><b>About / CV</b><span>Commit-graph timeline, principles, skill matrix, CV EN/VI</span></a>
+      <a href="contact.html"><b>Contact</b><span>Line inputs, topic pills, success state</span></a>
+      <a href="notes.html"><b>Notes</b><span>Pinned post, tags, year groups, empty state</span></a>
+      <a href="post.html"><b>Post</b><span>KB-style 3-pane reader at ≥ 1024px</span></a>
+      <a href="loading.html"><b>Loading states</b><span>Layout-matched skeletons, route bar, refetch, submit, LQIP, first-visit curtain</span></a>
+      <a href="home.html?intro=1"><b>First-visit loader</b><span>Ink curtain, once per session, ≤ 700ms</span></a>
+      <a href="foundations.html"><b>Foundations</b><span>Palettes, Plex scale + Vietnamese, radius ladder, squircle, motion</span></a>
+    </div>
+
+    <h2 class="meta" style="margin-top:40px">Admin · KB patterns</h2>
+    <div class="idx">
+      <a href="admin-login.html"><b>Sign in</b><span>Split art / form, error state</span></a>
+      <a href="admin-dashboard.html"><b>Dashboard</b><span>Stats, content health, quick actions, inbox</span></a>
+      <a href="admin-dashboard.html?palette=1"><b>Command palette</b><span>DocSearch overlay, ⌘K</span></a>
+      <a href="admin-dashboard.html?drawer=1"><b>Mobile drawer</b><span>Open at a narrow width</span></a>
+      <a href="admin-projects.html"><b>Projects table</b><span>TanStack Table, facets, bulk bar, rule-5 cards</span></a>
+      <a href="admin-editor.html"><b>Project editor</b><span>Outline · canvas (48rem) · publish pane, Tiptap</span></a>
+      <a href="admin-pages.html"><b>Page builder</b><span>Block list, empty-data flags, inspector</span></a>
+      <a href="admin-media.html"><b>Media</b><span>Grid + details with alt EN / VI</span></a>
+      <a href="admin-inbox.html"><b>Inbox</b><span>List + reading pane</span></a>
+      <a href="admin-loading.html"><b>Loading: dashboard</b><span>Labels render at once, numbers wait; teal route bar</span></a>
+      <a href="admin-loading.html?state=table"><b>Loading: table</b><span>Interactive toolbar, row-shaped skeletons</span></a>
+      <a href="admin-loading.html?state=editor"><b>Loading: editor</b><span>Outline · canvas · publish pane skeletons</span></a>
+      <a href="admin-loading.html?state=states"><b>Pending states</b><span>Save status, busy buttons, refetch, optimistic, uploads</span></a>
+    </div>
+  </div></main>
+  <script src="mock.js"></script>
+</body>
+</html>

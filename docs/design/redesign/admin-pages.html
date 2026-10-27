@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin pages · redesign mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    .page-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .resize { position: relative; }
+    .resize::before { content: ""; position: absolute; left: -3px; top: 50%; width: 6px; height: 40px; margin-top: -20px; border-radius: 3px; background: var(--input); }
+    .mini-prev { --r-outer: var(--radius-lg); --pad: 6px; border: 1px solid var(--rule); border-radius: var(--r-outer); padding: var(--pad); background: var(--card); }
+    .mini-prev .scr { border-radius: calc(var(--r-outer) - var(--pad)); background: #f6f3ec; color: #16181f; padding: 14px; aspect-ratio: 16/10; overflow: hidden; display: grid; grid-template-columns: 7fr 5fr; gap: 10px; align-content: start; }
+    .mini-prev .scr b { font: 600 22px/0.95 var(--font-sans); font-stretch: 85%; letter-spacing: -0.04em; }
+    .mini-prev .scr em { color: #e5482d; font-weight: 300; }
+    .mini-prev .scr .card { border: 1px solid #dcd6c9; border-radius: 8px; background: #fcfaf6; height: 70px; align-self: end; }
+  </style>
+</head>
+<body class="admin" data-nav="pages" data-crumbs="Site/Pages/Home">
+  <div data-admin="top"></div>
+  <div class="app has-aside">
+    <div data-admin="side"></div>
+    <main class="pane pane-main" id="main">
+      <div class="wrap" style="max-width:52rem">
+        <div class="page-head animate-fade-up">
+          <div><h1>Home</h1><p>Draft edited 3 days ago · published version v9</p></div>
+          <div class="actions"><button class="btn btn--ghost">Preview draft</button><button class="btn">Publish page</button></div>
+        </div>
+        <!-- GET /api/admin/pages/:key — blocks from the contracts registry (defineBlock, LAYOUT_PRESETS, BLOCK_SURFACES) -->
+        <div class="page-tabs" role="tablist" aria-label="Pages">
+          <button class="chip chip--filter" aria-pressed="true">Home</button><button class="chip chip--filter">About</button><button class="chip chip--filter">Projects</button><button class="chip chip--filter">Notes</button><button class="chip chip--filter">Contact</button>
+        </div>
+        <div class="animate-fade-up" style="--i:1">
+          <div class="blk" aria-selected="true"><span class="drag" aria-label="Drag Hero">⋮⋮</span><span class="ico">HE</span><div style="min-width:0"><b>Hero <span class="meta" style="font-weight:400">hero</span></b><small>SPLIT_7_5 · profile.headline + status card</small></div><div class="tools"><span class="st st--pub">Visible</span><button class="icon-btn" style="width:28px;height:28px" aria-label="More for Hero">⋯</button></div></div>
+          <div class="blk"><span class="drag" aria-label="Drag Stat band">⋮⋮</span><span class="ico">ST</span><div style="min-width:0"><b>Stat band <span class="meta" style="font-weight:400">stat-band</span></b><small>BAND · 4 stats (PROJECT_COUNT hidden while 0)</small></div><div class="tools"><span class="st st--pub">Visible</span><button class="icon-btn" style="width:28px;height:28px" aria-label="More for Stat band">⋯</button></div></div>
+          <div class="blk"><span class="drag" aria-label="Drag Tech marquee">⋮⋮</span><span class="ico">TM</span><div style="min-width:0"><b>Tech marquee <span class="meta" style="font-weight:400">tech-marquee</span></b><small>BAND · 10 skills · marqueeEnabled</small></div><div class="tools"><span class="st st--pub">Visible</span><button class="icon-btn" style="width:28px;height:28px" aria-label="More for Tech marquee">⋯</button></div></div>
+          <div class="blk"><span class="drag" aria-label="Drag Featured case">⋮⋮</span><span class="ico">FC</span><div style="min-width:0"><b>Featured case <span class="meta" style="font-weight:400">featured-case</span></b><small>Particula v2</small></div><div class="tools"><span class="st st--pub">Visible</span><button class="icon-btn" style="width:28px;height:28px" aria-label="More for Featured case">⋯</button></div></div>
+          <div class="blk"><span class="drag" aria-label="Drag Domain grid">⋮⋮</span><span class="ico">DG</span><div style="min-width:0"><b>Domain grid <span class="meta" style="font-weight:400">domain-grid</span></b><small>FOUR · BAND · 4 domains</small></div><div class="tools"><span class="st st--pub">Visible</span><button class="icon-btn" style="width:28px;height:28px" aria-label="More for Domain grid">⋯</button></div></div>
+          <div class="blk is-empty"><span class="drag" aria-label="Drag Case grid">⋮⋮</span><span class="ico">CG</span><div style="min-width:0"><b>Case grid <span class="meta" style="font-weight:400">case-grid</span></b><small>THREE · 0 published projects</small></div><div class="tools"><span class="st st--warn">Hidden publicly · no data</span><button class="icon-btn" style="width:28px;height:28px" aria-label="More for Case grid">⋯</button></div></div>
+          <div class="blk"><span class="drag" aria-label="Drag Process">⋮⋮</span><span class="ico">PR</span><div style="min-width:0"><b>Process <span class="meta" style="font-weight:400">process</span></b><small>TWO · BAND · 5 steps</small></div><div class="tools"><span class="st st--pub">Visible</span><button class="icon-btn" style="width:28px;height:28px" aria-label="More for Process">⋯</button></div></div>
+          <div class="blk"><span class="drag" aria-label="Drag Skill groups">⋮⋮</span><span class="ico">SG</span><div style="min-width:0"><b>Skill groups <span class="meta" style="font-weight:400">skill-groups</span></b><small>3 groups</small></div><div class="tools"><span class="st st--pub">Visible</span><button class="icon-btn" style="width:28px;height:28px" aria-label="More for Skill groups">⋯</button></div></div>
+          <div class="blk is-empty"><span class="drag" aria-label="Drag Post list">⋮⋮</span><span class="ico">PL</span><div style="min-width:0"><b>Post list <span class="meta" style="font-weight:400">post-list</span></b><small>0 published posts</small></div><div class="tools"><span class="st st--warn">Hidden publicly · no data</span><button class="icon-btn" style="width:28px;height:28px" aria-label="More for Post list">⋯</button></div></div>
+          <div class="blk"><span class="drag" aria-label="Drag CTA band">⋮⋮</span><span class="ico">CT</span><div style="min-width:0"><b>CTA band <span class="meta" style="font-weight:400">cta-band</span></b><small>availability OPEN</small></div><div class="tools"><span class="st st--pub">Visible</span><button class="icon-btn" style="width:28px;height:28px" aria-label="More for CTA band">⋯</button></div></div>
+          <button class="add-blk">+ Add block <span class="kbd">/</span></button>
+        </div>
+        <p class="meta" style="margin-top:16px;text-transform:none;letter-spacing:0">Blocks whose data is empty are hidden on the public site and flagged here, so the public page never shows an empty band.</p>
+      </div>
+    </main>
+    <!-- Inspector: react-resizable-panels handle on the left edge -->
+    <aside class="pane pane-aside resize" aria-label="Block inspector">
+      <div class="aside-sect"><span class="outline-l">Block · Hero · v1</span>
+        <div class="field"><label>Layout <span class="hint">hero allows SPLIT_7_5, ONE</span></label>
+          <div class="presets" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+            <button class="preset" aria-pressed="true"><span class="pv" style="grid-template-columns:7fr 5fr"><i></i><i></i></span>SPLIT_7_5</button>
+            <button class="preset"><span class="pv" style="grid-template-columns:1fr"><i></i></span>ONE</button>
+          </div>
+        </div>
+      </div>
+      <div class="aside-sect"><div class="field"><label>Surface</label><div class="seg" role="group" aria-label="Surface"><button aria-pressed="true">PLAIN</button><button>BAND</button></div></div></div>
+      <div class="aside-sect"><span class="outline-l">Primary CTA</span>
+        <div class="field"><label>Label · EN</label><input class="input" value="View case studies" /></div>
+        <div class="field" style="margin-top:10px"><label lang="vi">Label · VI <span class="st st--warn" style="height:18px">empty</span></label><input class="input" lang="vi" placeholder="Xem case study" /></div>
+        <div class="field" style="margin-top:10px"><label>Link</label><input class="input" value="/projects" /></div>
+      </div>
+      <div class="aside-sect" style="display:grid;gap:8px">
+        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="themed-checkbox" checked /> Show availability (status card)</label>
+        <label style="display:flex;gap:8px;align-items:center"><input type="checkbox" class="themed-checkbox" checked /> Show diagram (hero visual)</label>
+      </div>
+      <div class="aside-sect"><span class="outline-l">Preview</span>
+        <div class="mini-prev"><div class="scr"><b>Frontend developer for <em>data-heavy</em> products</b><span class="card"></span></div></div>
+      </div>
+    </aside>
+  </div>
+  <script src="admin-chrome.js"></script>
+  <script src="mock.js"></script>
+</body>
+</html>

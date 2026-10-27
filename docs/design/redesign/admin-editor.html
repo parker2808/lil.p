@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin project editor · redesign mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<!-- Focus mode: the KB 3-pane with the section outline on the left (admin nav moves to the drawer, ☰ in the top bar). -->
+<body class="admin admin--focus" data-nav="projects" data-crumbs="Content/Projects/Particula v2">
+  <div data-admin="top"></div>
+  <div class="app has-aside">
+    <nav class="pane pane-side" aria-label="Sections">
+      <span class="outline-l">I. Card &amp; facts</span>
+      <a class="nav-it" href="#title" aria-current="page"><span class="lbl">Title &amp; tagline</span><span class="ok">✓</span></a>
+      <a class="nav-it" href="#facts"><span class="lbl">Facts</span><span class="ok">✓</span></a>
+      <a class="nav-it" href="#"><span class="lbl">Cover &amp; gallery</span><span class="warn">ALT</span></a>
+      <a class="nav-it" href="#"><span class="lbl">Metrics</span><span class="count count--muted">3</span></a>
+      <span class="outline-l">II. Case study</span>
+      <a class="nav-it" href="#"><span class="lbl">Problem</span><span class="ok">✓</span></a>
+      <a class="nav-it" href="#"><span class="lbl">Constraints</span><span class="ok">✓</span></a>
+      <a class="nav-it" href="#approach"><span class="lbl">Approach</span><span class="warn">VI</span></a>
+      <a class="nav-it" href="#"><span class="lbl">Decisions</span><span class="ok">✓</span></a>
+      <a class="nav-it" href="#"><span class="lbl">Outcome</span><span class="warn">VI</span></a>
+      <a class="nav-it" href="#"><span class="lbl">Lessons</span><span class="ok">✓</span></a>
+      <span class="outline-l">III. Meta</span>
+      <a class="nav-it" href="#"><span class="lbl">SEO</span></a>
+      <a class="nav-it" href="#"><span class="lbl">Skills &amp; domain</span></a>
+    </nav>
+
+    <!-- Canvas: KB reading width (48rem). Same fields as today's project form; only layout and styling change. -->
+    <main class="pane pane-main" id="main">
+      <div class="wrap--prose animate-fade-up">
+        <div class="loc-tabs" role="tablist" aria-label="Locale">
+          <button role="tab" aria-selected="true">English <span class="meter" aria-hidden="true"><i style="width:100%"></i></span></button>
+          <button role="tab" aria-selected="false" lang="vi">Tiếng Việt <span class="meter warn" aria-hidden="true"><i style="width:62%"></i></span><span class="meta">62%</span></button>
+          <button role="tab" aria-selected="false">Side by side</button>
+        </div>
+        <textarea class="big-title" id="title" rows="1" aria-label="Title (EN)">Particula v2: moving a rating platform from Vue 2 to Nuxt 3</textarea>
+        <div class="field" style="margin-top:12px"><textarea class="textarea" style="min-height:64px" aria-label="Tagline (EN)">Six months, one route at a time. A component library on PrimeVue, server state in TanStack Query, and Playwright specs before every cut.</textarea><span class="hint" style="text-align:right">138 / 160</span></div>
+
+        <div class="sect" id="facts"><h3><span class="n">02</span>Facts</h3>
+          <div class="fset">
+            <div class="field"><label>Client <span class="req">*</span></label><input class="input" value="Kobizo" /></div>
+            <div class="field"><label>Role (EN) <span class="req">*</span></label><input class="input" value="Main frontend" /></div>
+            <div class="field"><label>Start</label><input class="input" value="2024-02" /></div>
+            <div class="field"><label>End <span class="hint">empty = now</span></label><input class="input" placeholder="—" /></div>
+            <div class="field"><label>Version from → to</label><div style="display:flex;gap:8px"><input class="input" value="v1" /><input class="input" value="v2" /></div></div>
+            <div class="field"><label>Team size</label><input class="input" value="6" /></div>
+          </div>
+        </div>
+
+        <div class="sect" id="approach"><h3><span class="n">05</span>Approach <span class="st st--warn" style="margin-left:auto">VI missing</span></h3>
+          <!-- Existing Tiptap editor (MIT packages) restyled with tokens; extensions unchanged -->
+          <div class="tiptap">
+            <div class="bar" role="toolbar" aria-label="Formatting">
+              <button aria-pressed="true">P</button><button>H2</button><button>H3</button><span class="sep"></span>
+              <button><b>B</b></button><button><i>I</i></button><button>`c`</button><button>Link</button><span class="sep"></span>
+              <button>• List</button><button>1. List</button><button>❝</button><button>Callout</button><button>{ }</button><button>Image</button>
+              <button style="margin-left:auto">Preview</button>
+            </div>
+            <div class="doc prose" style="max-width:none">
+              <p>We put Nuxt 3 in front and proxied unknown routes to v1. Each sprint moved one route group, behind contract tests that pinned the <code>API</code> shape.</p>
+              <p class="subtle">/call|</p>
+              <div class="slash" role="listbox" aria-label="Insert block">
+                <div aria-selected="true"><i>!</i>Callout · decision<span class="kbd">↵</span></div>
+                <div><i>i</i>Callout · note</div>
+                <div><i>{}</i>Code block</div>
+                <div><i>▣</i>Image from media</div>
+              </div>
+              <p style="margin-top:150px">&nbsp;</p>
+            </div>
+            <div class="foot"><span>412 words</span><span>Allowed: h2–h3, callout, code, image, link</span></div>
+          </div>
+          <p class="field-warn" style="margin-top:8px">⚠ This field still contains a “TODO” placeholder in VI. It will be hidden on the public site until replaced.</p>
+        </div>
+      </div>
+    </main>
+
+    <aside class="pane pane-aside" aria-label="Publish">
+      <div class="aside-sect">
+        <span class="outline-l">Publish</span>
+        <div class="panel"><div class="body" style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span class="st st--draft">DRAFT</span><span class="savebar"><span class="dot"></span>Saved · v14</span></div>
+          <div style="display:flex;gap:8px"><button class="btn btn--ghost" style="flex:1">Preview</button><button class="btn" style="flex:1">Publish</button></div>
+          <button class="btn btn--ghost btn--sm">Version history</button>
+        </div></div>
+      </div>
+      <div class="aside-sect">
+        <span class="outline-l">Publish checks · 4 / 6</span>
+        <div class="check"><span class="ic ok">✓</span>English title, tagline, role</div>
+        <div class="check"><span class="ic ok">✓</span>Domain set</div>
+        <div class="check"><span class="ic ok">✓</span>2–4 key facts</div>
+        <div class="check"><span class="ic ok">✓</span>Slug is unique</div>
+        <div class="check"><span class="ic bad">!</span><span>Cover image needs alt text · <a class="link" href="admin-media.html">Fix</a></span></div>
+        <div class="check"><span class="ic bad">!</span><span>“TODO” found in Outcome (VI) · client-side check</span></div>
+      </div>
+      <div class="aside-sect">
+        <span class="outline-l">Card preview · /projects</span>
+        <div class="nest" style="--r-outer:var(--radius-xl);--pad:8px;background:var(--card);border:1px solid var(--rule)">
+          <div class="cover cover--amber cover--rings nest-inner" style="aspect-ratio:16/10"><span class="glyph" style="font-size:110px" aria-hidden="true">Pa</span><span class="ver">v1 → v2</span></div>
+          <p style="margin:10px 4px 4px;font:600 15px/1.25 var(--font-sans)">Particula v2: Vue 2 → Nuxt 3</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+  <script src="admin-chrome.js"></script>
+  <script src="mock.js"></script>
+</body>
+</html>

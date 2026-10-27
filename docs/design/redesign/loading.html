@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Loading states · Ink &amp; Signal mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <style>
+    /* Review board layout (not product) */
+    .lb-intro { padding: clamp(40px, 6vw, 88px) 0 var(--s-7); }
+    .lb-intro h1 { grid-column: 4 / -1; }
+    .lb-intro .lead { grid-column: 4 / span 7; margin-top: var(--s-5); }
+    .lb-intro .actions { grid-column: 4 / -1; display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-6); }
+    @media (max-width: 960px) { .lb-intro h1, .lb-intro .lead, .lb-intro .actions { grid-column: 1 / -1; } }
+    .lb-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); row-gap: var(--s-2); padding: var(--s-7) 0 var(--s-5); border-top: 1px solid var(--ink); }
+    .lb-head .n { grid-column: 1 / span 3; font: 500 12px/1.6 var(--font-mono); color: var(--signal-ink); }
+    .lb-head h2 { grid-column: 4 / span 6; font: 600 var(--step-2)/1.15 var(--font-sans); letter-spacing: -0.02em; }
+    .lb-head p { grid-column: 4 / span 7; color: var(--ink-2); font-size: var(--step--1); }
+    .lb-head code { grid-column: 4 / -1; font: 500 12px/1.6 var(--font-mono); color: var(--ink-3); }
+    @media (max-width: 960px) { .lb-head > * { grid-column: 1 / -1 !important; } }
+    .lb-frame { border-block: 1px dashed var(--rule-strong); position: relative; }
+    .lb-frame::before { content: attr(data-label); position: absolute; right: var(--margin); top: -11px; z-index: 3; font: 500 11px/1 var(--font-mono); letter-spacing: .04em; padding: 5px 8px; border-radius: var(--radius-xs); background: var(--ink); color: var(--paper); }
+    .lb-spec { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gutter); }
+    .lb-spec > figure { margin: 0; display: grid; gap: var(--s-3); align-content: start; }
+    .lb-spec figcaption { font-size: var(--step--1); color: var(--ink-2); }
+    .lb-spec figcaption b { display: block; font: 500 11px/1.6 var(--font-mono); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-3); }
+    .lb-spec--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    @media (max-width: 860px) { .lb-spec, .lb-spec--4 { grid-template-columns: 1fr; } }
+    .lb-pad { padding-block: var(--s-7) var(--s-8); }
+
+    /* Skeleton text styles = the same type tokens the real components use */
+    .k-h3 { font: 560 var(--step-2)/1.12 var(--font-sans); }
+    .k-meta { font: 500 var(--step--2)/1.4 var(--font-mono); }
+    .k-small { font-size: var(--step--1); line-height: var(--leading-body); }
+    .hero .h1-skel { grid-column: 1 / span 9; grid-row: 2; width: 11ch; max-width: 100%; }
+    @media (max-width: 960px) { .hero .h1-skel { grid-column: 1 / -1; grid-row: auto; } }
+    .ticker-track.is-static { animation: none; flex-wrap: nowrap; }
+
+    /* projects.html layout (copied: the skeleton imports the page's own grid) */
+    .page-head { padding: clamp(40px, 7vw, 104px) 0 48px; }
+    .page-head .h1 { grid-column: 4 / -1; }
+    .page-head .lead { grid-column: 4 / span 6; margin-top: 24px; }
+    .page-head .count { grid-column: 1 / span 3; grid-row: 1; align-self: start; padding-top: 1.2em; }
+    .browser-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 16px 0; border-block: 1px solid var(--rule); }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; } .tools { display: flex; gap: 8px; align-items: center; }
+    .results { display: flex; justify-content: space-between; margin: 32px 0 24px; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px var(--gutter); }
+    .cards .case-card.is-featured { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: end; }
+    .cards .case-card.is-featured .cover { grid-column: 1 / span 8; aspect-ratio: 16 / 9; }
+    .cards .case-card.is-featured .fc-body { grid-column: 9 / -1; display: flex; flex-direction: column; gap: 16px; padding-bottom: 8px; }
+    .cards .case-card.is-featured .k-h3 { font-size: var(--step-3); }
+    @media (max-width: 960px) { .page-head .h1, .page-head .lead, .page-head .count { grid-column: 1 / -1; grid-row: auto; } }
+    @media (max-width: 860px) { .cards { grid-template-columns: 1fr; } .cards .case-card.is-featured { display: flex; } }
+
+    /* case-study.html layout (copied) */
+    .cs-title { grid-column: 1 / span 10; margin-top: 32px; }
+    .cs-tagline { grid-column: 1 / span 7; margin-top: 24px; }
+    @media (max-width: 960px) { .cs-title, .cs-tagline { grid-column: 1 / -1; } }
+
+    /* post.html reader (3 panes, framed at a fixed height for the board) */
+    .reader-skel { display: grid; grid-template-columns: 15rem minmax(0, 1fr) 14rem; height: 560px; border: 1px solid var(--rule); border-radius: var(--radius-2xl); overflow: hidden; background: var(--paper); }
+    .reader-skel > div { padding: var(--s-5); overflow: hidden; }
+    .reader-skel > div + div { border-left: 1px solid var(--rule); }
+    .reader-skel .art { max-width: 48rem; width: 100%; margin: 0 auto; padding: var(--s-7) var(--s-6); border-left: 0; }
+    .reader-skel .nav-l { display: grid; gap: 10px; align-content: start; }
+    @media (max-width: 1023px) { .reader-skel { grid-template-columns: 1fr; height: auto; } .reader-skel .side { display: none; } .reader-skel > div + div { border-left: 0; } }
+
+    /* parity demo */
+    .parity { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gutter); align-items: start; }
+    .parity > div { outline: 1px dashed color-mix(in oklab, var(--signal) 60%, transparent); outline-offset: 8px; border-radius: var(--radius-xl); }
+    .clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2lh; }
+    .parity-readout { margin-top: var(--s-5); font: 500 12px/1.6 var(--font-mono); color: var(--ink-2); }
+    .parity-readout b { color: var(--add); font-weight: 500; }
+    @media (max-width: 760px) { .parity { grid-template-columns: 1fr; row-gap: var(--s-7); } }
+
+    /* states */
+    .btn-row { display: flex; flex-wrap: wrap; gap: var(--s-3); align-items: center; }
+    .mini-header { position: relative; height: 56px; display: flex; align-items: center; gap: var(--s-3); padding: 0 var(--s-4); border: 1px solid var(--rule); border-radius: var(--radius-lg); background: var(--paper-raised); }
+    .mini-header .route-progress { bottom: -1px; left: 12px; right: 12px; }
+    .form { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 24px; padding: 28px; background: var(--paper-raised); border: 1px solid var(--rule); border-radius: var(--radius-2xl); box-shadow: var(--shadow-2); }
+    .form .full { grid-column: 1 / -1; } .form .foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .form .textarea { min-height: 96px; }
+    @media (max-width: 960px) { .form { grid-template-columns: 1fr; padding: 22px; } }
+    .rows-demo { border: 1px solid var(--rule); border-radius: var(--radius-xl); overflow: hidden; background: var(--paper-raised); }
+    .rows-demo .fetch-bar { margin-bottom: -2px; }
+    .rows-demo .r { display: grid; grid-template-columns: 56px 1fr auto; gap: var(--s-4); padding: 14px var(--s-4); border-top: 1px solid var(--rule); font-size: var(--step--1); }
+    .rows-demo .r:first-of-type { border-top: 0; }
+    .rows-demo .r .i { font: 500 12px/1.6 var(--font-mono); color: var(--ink-3); }
+    .two { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s-7) var(--gutter); }
+    .two > :first-child { grid-column: 1 / span 6; } .two > :last-child { grid-column: 8 / -1; }
+    @media (max-width: 960px) { .two > * { grid-column: 1 / -1 !important; } }
+    .rules { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--rule); font-size: var(--step--1); }
+    .rules li { display: grid; grid-template-columns: 28px 1fr; gap: var(--s-2); padding: 12px 0; border-bottom: 1px solid var(--rule); color: var(--ink-2); }
+    .rules li b { color: var(--ink); font-weight: 600; }
+    .rules li::before { content: "→"; font-family: var(--font-mono); color: var(--signal-ink); }
+    .demo-photo { --lqip: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23f2c38b'/%3E%3Cstop offset='1' stop-color='%23e5482d'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='160' height='100' fill='url(%23g)'/%3E%3Ccircle cx='112' cy='38' r='16' fill='%23fff3d6'/%3E%3Cpath d='M0 70 Q40 50 80 66 T160 60 V100 H0Z' fill='%2316181f' opacity='.8'/%3E%3Cpath d='M0 82 Q50 70 100 84 T160 80 V100 H0Z' fill='%2316181f'/%3E%3C/svg%3E"); }
+  </style>
+</head>
+<body class="paper-grain" data-page="home">
+  <div data-chrome="header"></div>
+  <p class="sr-only" role="status" data-live></p>
+
+  <main id="main">
+    <section class="lb-intro">
+      <div class="container grid" style="row-gap:0">
+        <div class="sec-index" style="grid-column:1/span 3;display:flex;gap:12px;align-items:center;align-self:start;padding-top:1em"><span class="n mono" style="color:var(--signal-ink)">R4b</span><span class="meta">Loading system</span></div>
+        <h1 class="display t-h1">Every wait has a shape.</h1>
+        <p class="lead">Skeletons are built from the same grid, aspect ratios and line boxes as the content they stand in for, so nothing moves when data lands. Shimmer is a compositor-only sweep and stops under reduced motion. Each board names the Next.js file or TanStack state that renders it.</p>
+        <div class="actions">
+          <button class="btn" data-sim-nav>Simulate a slow navigation <span class="arrow">→</span></button>
+          <a class="btn btn--ghost" href="home.html?intro=1">Play the first-visit loader</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 1. Home ============ -->
+    <div class="container"><header class="lb-head">
+      <span class="n">01 · Home</span>
+      <h2>Home: one skeleton per block, streamed</h2>
+      <p>The page shell (header, footer, section rails) renders at once. Each block sits in its own Suspense boundary with a colocated <code style="grid-column:auto">Block.Skeleton</code>, so the hero can paint while lower blocks are still streaming. The shader poster is plain CSS, so the hero never waits on WebGL.</p>
+      <code>app/[locale]/(site)/loading.tsx → &lt;PageSkeleton blocks={layout}&gt; · per block: &lt;Suspense fallback={&lt;Hero.Skeleton/&gt;}&gt;</code>
+    </header></div>
+    <div class="lb-frame" data-label="loading.tsx · /en" aria-busy="true">
+      <span class="sr-only">Loading home page…</span>
+      <section class="hero skel-scope" aria-hidden="true">
+        <div class="hero-stage"></div>
+        <div class="container grid">
+          <div class="span-12"><span class="kicker meta" style="display:flex;margin-bottom:var(--s-6)"><span class="skel skel-line" style="--w:220px"></span></span></div>
+          <div class="h1-skel display t-hero">
+            <span class="skel skel-line" style="--w:92%"></span>
+            <span class="skel skel-line" style="--w:100%;--si:1"></span>
+            <span class="skel skel-line" style="--w:84%;--si:2"></span>
+            <span class="skel skel-line" style="--w:70%;--si:3"></span>
+          </div>
+          <div class="lead hero-sub skel-p" style="width:100%"><span class="skel skel-line"></span><span class="skel skel-line"></span><span class="skel skel-line"></span></div>
+          <div class="hero-ctas"><span class="skel" style="width:190px;height:44px;border-radius:var(--radius)"></span><span class="skel" style="width:150px;height:44px;border-radius:var(--radius)"></span></div>
+          <div class="hero-card status-card">
+            <header><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="meta">status.json</span></header>
+            <dl>
+              <dt><span class="skel skel-line" style="--w:90px"></span></dt><dd><span class="skel skel-line" style="--w:110px;margin-left:auto"></span></dd>
+              <dt><span class="skel skel-line" style="--w:70px"></span></dt><dd><span class="skel skel-line" style="--w:120px;margin-left:auto"></span></dd>
+              <dt><span class="skel skel-line" style="--w:80px"></span></dt><dd><span class="skel skel-line" style="--w:90px;margin-left:auto"></span></dd>
+              <dt><span class="skel skel-line" style="--w:84px"></span></dt><dd><span class="skel skel-line" style="--w:70px;margin-left:auto"></span></dd>
+              <dt><span class="skel skel-line" style="--w:76px"></span></dt><dd><span class="skel skel-line" style="--w:130px;margin-left:auto"></span></dd>
+            </dl>
+          </div>
+        </div>
+      </section>
+      <div class="ticker" aria-hidden="true"><div class="ticker-track is-static">
+        <span class="ticker-item"><span class="skel skel-line" style="--w:56px"></span></span><span class="ticker-item"><span class="skel skel-line" style="--w:64px"></span></span><span class="ticker-item"><span class="skel skel-line" style="--w:88px"></span></span><span class="ticker-item"><span class="skel skel-line" style="--w:48px"></span></span><span class="ticker-item"><span class="skel skel-line" style="--w:110px"></span></span><span class="ticker-item"><span class="skel skel-line" style="--w:92px"></span></span><span class="ticker-item"><span class="skel skel-line" style="--w:70px"></span></span><span class="ticker-item"><span class="skel skel-line" style="--w:80px"></span></span><span class="ticker-item"><span class="skel skel-line" style="--w:60px"></span></span><span class="ticker-item"><span class="skel skel-line" style="--w:52px"></span></span>
+      </div></div>
+      <section class="section skel-scope" aria-hidden="true">
+        <div class="container">
+          <div class="sec-head">
+            <div class="sec-index"><span class="n">§01</span><span class="skel skel-line k-meta" style="--w:80px"></span><span class="bar"></span></div>
+            <div class="sec-title display t-h2"><span class="skel skel-line"></span><span class="skel skel-line" style="--w:64%"></span></div>
+          </div>
+          <div class="grid"><div class="rail"></div>
+            <div class="rail-content stats">
+              <div class="stat"><div class="v"><span class="skel skel-line" style="--w:1.3em"></span></div><div class="l"><span class="skel skel-line" style="--w:80%"></span></div></div>
+              <div class="stat"><div class="v"><span class="skel skel-line" style="--w:.9em;--si:1"></span></div><div class="l"><span class="skel skel-line" style="--w:64%"></span></div></div>
+              <div class="stat"><div class="v"><span class="skel skel-line" style="--w:.9em;--si:2"></span></div><div class="l"><span class="skel skel-line" style="--w:90%"></span></div></div>
+              <div class="stat"><div class="v"><span class="skel skel-line" style="--w:.9em;--si:3"></span></div><div class="l"><span class="skel skel-line" style="--w:72%"></span></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section skel-scope" aria-hidden="true">
+        <div class="container">
+          <div class="sec-head">
+            <div class="sec-index"><span class="n">§03</span><span class="skel skel-line k-meta" style="--w:96px"></span><span class="bar"></span></div>
+            <div class="sec-title display t-h2"><span class="skel skel-line" style="--w:44%"></span></div>
+          </div>
+          <div class="stack">
+            <div class="stack-card" style="position:static;animation:none"><div class="case-card">
+              <div class="cover skel"></div>
+              <div class="sc-body">
+                <span class="skel skel-line k-meta" style="--w:46%"></span>
+                <div class="k-h3"><span class="skel skel-line"></span><span class="skel skel-line" style="--w:72%"></span></div>
+                <div class="k-small skel-p"><span class="skel skel-line"></span><span class="skel skel-line"></span></div>
+                <span class="skel skel-line k-meta" style="--w:120px"></span>
+              </div>
+            </div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============ 2. Projects ============ -->
+    <div class="container"><header class="lb-head">
+      <span class="n">02 · Projects</span>
+      <h2>Projects: same grid, same featured span</h2>
+      <p>The filter bar stays interactive while the list is pending. Changing a filter keeps the previous results on screen, dimmed, with a refetch bar (see board 06). The full skeleton only appears on a cold load.</p>
+      <code>app/[locale]/(site)/projects/loading.tsx · useQuery({ placeholderData: keepPreviousData }) · isPending → &lt;ProjectGrid.Skeleton count={3}/&gt;</code>
+    </header></div>
+    <div class="lb-frame" data-label="projects/loading.tsx" aria-busy="true">
+      <span class="sr-only">Loading case studies…</span>
+      <div class="skel-scope" aria-hidden="true">
+        <section class="page-head">
+          <div class="container grid" style="row-gap:0">
+            <div class="count sec-index" style="display:flex;gap:12px;align-items:center"><span class="n mono" style="color:var(--signal-ink)">§03</span><span class="skel skel-line k-meta" style="--w:48px"></span></div>
+            <div class="h1 display t-h1"><span class="skel skel-line" style="--w:52%"></span></div>
+            <div class="lead"><span class="skel skel-line" style="--w:70%"></span></div>
+          </div>
+        </section>
+        <section style="padding-bottom: var(--s-9)">
+          <div class="container">
+            <div class="browser-bar">
+              <div class="pills"><span class="skel skel-pill" style="width:72px;height:30px"></span><span class="skel skel-pill" style="width:136px;height:30px"></span><span class="skel skel-pill" style="width:112px;height:30px"></span><span class="skel skel-pill" style="width:150px;height:30px"></span><span class="skel skel-pill" style="width:120px;height:30px"></span></div>
+              <div class="tools"><span class="skel skel-pill" style="width:104px;height:30px"></span><span class="skel" style="width:132px;height:40px;border-radius:var(--radius)"></span></div>
+            </div>
+            <div class="results"><span class="skel skel-line k-meta" style="--w:180px"></span><span class="skel skel-line k-meta" style="--w:110px"></span></div>
+            <div class="cards">
+              <div class="case-card is-featured">
+                <div class="cover skel"></div>
+                <div class="fc-body">
+                  <span class="skel skel-line k-meta" style="--w:70%"></span>
+                  <div class="k-h3"><span class="skel skel-line"></span><span class="skel skel-line" style="--w:80%"></span></div>
+                  <div class="k-small skel-p"><span class="skel skel-line"></span><span class="skel skel-line"></span></div>
+                  <div style="display:flex;gap:8px"><span class="skel" style="width:120px;height:26px;border-radius:var(--radius-xs)"></span><span class="skel" style="width:64px;height:26px;border-radius:var(--radius-xs)"></span><span class="skel" style="width:96px;height:26px;border-radius:var(--radius-xs)"></span></div>
+                </div>
+              </div>
+              <div class="case-card"><div class="cover skel" style="--si:1"></div><span class="skel skel-line k-meta" style="--w:40%"></span><div class="k-h3"><span class="skel skel-line"></span><span class="skel skel-line" style="--w:60%"></span></div><div class="k-small skel-p"><span class="skel skel-line"></span><span class="skel skel-line"></span></div></div>
+              <div class="case-card"><div class="cover skel" style="--si:2"></div><span class="skel skel-line k-meta" style="--w:34%"></span><div class="k-h3"><span class="skel skel-line"></span><span class="skel skel-line" style="--w:76%"></span></div><div class="k-small skel-p"><span class="skel skel-line"></span><span class="skel skel-line"></span></div></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- ============ 3. Case study ============ -->
+    <div class="container"><header class="lb-head">
+      <span class="n">03 · Case study</span>
+      <h2>Case study: the cover keeps its box</h2>
+      <p>On a click from a card, the View Transition morphs the cover first, so the skeleton below it is the only thing that fades. The facts bar keeps its five columns and the cover keeps its 21:9 box. Prose is shown as paragraph-shaped lines.</p>
+      <code>app/[locale]/(site)/projects/[slug]/loading.tsx → &lt;CaseStudy.Skeleton/&gt; · cover keeps view-transition-name</code>
+    </header></div>
+    <div class="lb-frame" data-label="projects/[slug]/loading.tsx" aria-busy="true">
+      <span class="sr-only">Loading case study…</span>
+      <section class="cs-hero skel-scope" aria-hidden="true">
+        <div class="container grid" style="row-gap:0">
+          <div class="crumbs span-12"><span class="skel skel-line" style="--w:260px"></span></div>
+          <div class="display t-h1 cs-title"><span class="skel skel-line"></span><span class="skel skel-line" style="--w:66%"></span></div>
+          <div class="lead cs-tagline skel-p" style="width:100%"><span class="skel skel-line"></span><span class="skel skel-line"></span></div>
+        </div>
+        <div class="container" style="margin-top:48px">
+          <div class="facts-bar">
+            <div><span class="skel skel-line" style="--w:40%;font:500 11px/1.4 var(--font-mono)"></span><span class="skel skel-line" style="--w:76%;margin-top:6px"></span></div>
+            <div><span class="skel skel-line" style="--w:40%;font:500 11px/1.4 var(--font-mono)"></span><span class="skel skel-line" style="--w:60%;margin-top:6px"></span></div>
+            <div><span class="skel skel-line" style="--w:52%;font:500 11px/1.4 var(--font-mono)"></span><span class="skel skel-line" style="--w:84%;margin-top:6px"></span></div>
+            <div><span class="skel skel-line" style="--w:36%;font:500 11px/1.4 var(--font-mono)"></span><span class="skel skel-line" style="--w:50%;margin-top:6px"></span></div>
+            <div><span class="skel skel-line" style="--w:48%;font:500 11px/1.4 var(--font-mono)"></span><span class="skel skel-line" style="--w:44%;margin-top:6px"></span></div>
+          </div>
+        </div>
+        <div class="container" style="margin-top:48px"><div class="cover skel" style="aspect-ratio:21/9"></div></div>
+      </section>
+    </div>
+
+    <!-- ============ 4. Notes reader ============ -->
+    <div class="container"><header class="lb-head">
+      <span class="n">04 · Notes</span>
+      <h2>Notes reader: panes paint first, the article streams</h2>
+      <p>The notes list and the table of contents have their own boundaries. Below 1024px only the article column remains, as on the live page.</p>
+      <code>app/[locale]/(site)/notes/[slug]/loading.tsx → &lt;Reader.Skeleton/&gt; (nav · article 48rem · toc)</code>
+    </header></div>
+    <div class="container lb-pad" aria-busy="true">
+      <span class="sr-only">Loading note…</span>
+      <div class="reader-skel skel-scope" aria-hidden="true">
+        <div class="side nav-l">
+          <span class="skel skel-line k-meta" style="--w:60%"></span>
+          <span class="skel" style="height:40px;border-radius:var(--radius)"></span>
+          <span class="skel skel-line k-small" style="--w:84%"></span><span class="skel skel-line k-small" style="--w:70%"></span><span class="skel skel-line k-small" style="--w:90%"></span><span class="skel skel-line k-small" style="--w:62%"></span>
+          <span class="skel skel-line k-meta" style="--w:50%;margin-top:16px"></span>
+          <span class="skel skel-line k-small" style="--w:76%"></span><span class="skel skel-line k-small" style="--w:66%"></span>
+        </div>
+        <div class="art">
+          <span class="skel skel-line k-meta" style="--w:30%"></span>
+          <div class="display t-h1" style="margin-top:16px;font-size:var(--step-3)"><span class="skel skel-line"></span><span class="skel skel-line" style="--w:56%"></span></div>
+          <div class="skel-p" style="margin-top:28px"><span class="skel skel-line"></span><span class="skel skel-line"></span><span class="skel skel-line"></span><span class="skel skel-line"></span></div>
+          <div class="skel" style="margin-top:28px;height:120px;border-radius:var(--radius-lg)"></div>
+          <div class="skel-p" style="margin-top:28px"><span class="skel skel-line"></span><span class="skel skel-line"></span><span class="skel skel-line"></span></div>
+        </div>
+        <div class="side nav-l">
+          <span class="skel skel-line k-meta" style="--w:70%"></span>
+          <span class="skel skel-line k-small" style="--w:80%"></span><span class="skel skel-line k-small" style="--w:64%;margin-left:12px"></span><span class="skel skel-line k-small" style="--w:72%;margin-left:12px"></span><span class="skel skel-line k-small" style="--w:86%"></span><span class="skel skel-line k-small" style="--w:58%"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 5. Parity rule ============ -->
+    <div class="container"><header class="lb-head">
+      <span class="n">05 · Parity</span>
+      <h2>The no-shift rule, measured</h2>
+      <p>Media boxes come from aspect ratios or from width and height. Text boxes are bounded by a two-line clamp plus <code style="grid-column:auto">min-height: 2lh</code>, and the skeleton draws exactly two lines. The Playwright parity test compares these two boxes on every card type.</p>
+      <code>e2e/loading.spec.ts → expect(skeletonBox).toEqual(contentBox) ± 1px · CLS ≤ 0.02 on delayed API routes</code>
+    </header></div>
+    <div class="container lb-pad">
+      <div class="parity">
+        <div data-parity="skel" aria-hidden="true"><div class="case-card">
+          <div class="cover skel"></div>
+          <span class="skel skel-line k-meta" style="--w:40%"></span>
+          <div class="k-h3"><span class="skel skel-line"></span><span class="skel skel-line" style="--w:60%"></span></div>
+          <div class="k-small skel-p"><span class="skel skel-line"></span><span class="skel skel-line"></span></div>
+        </div></div>
+        <div data-parity="real"><article class="case-card">
+          <div class="cover cover--blue"><div class="cover-meta"><span class="chip"><span class="dot hue-blue"></span>Enterprise</span><span class="meta" style="color:inherit">NDA-safe</span></div><span class="glyph" aria-hidden="true">Ms</span><span class="ver">MSP App → Advanced</span></div>
+          <span class="meta">CMC Global · 2022 — 2024</span>
+          <h3 class="clamp-2"><a href="case-study.html">Re-platforming an enterprise console</a></h3>
+          <p class="clamp-2">Moved app logic into a new design system, issue triage UI and unit tests for a 15-person team.</p>
+        </article></div>
+      </div>
+      <p class="parity-readout" data-parity-readout>Skeleton — · Content — · Δ —</p>
+    </div>
+
+    <!-- ============ 6. Pending + submitting ============ -->
+    <div class="container"><header class="lb-head">
+      <span class="n">06 · Pending</span>
+      <h2>Navigation, refetch and submit</h2>
+      <p>The route bar only appears if a navigation is still pending after 120ms. A refetch never replaces content with a skeleton. A submit locks the button width, keeps focus, and announces its state politely.</p>
+      <code>useLinkStatus() → &lt;RouteProgress/&gt; · isFetching &amp;&amp; !isPending → &lt;FetchBar/&gt; · form.state.isSubmitting / mutation.isPending → &lt;Button loading&gt;</code>
+    </header></div>
+    <div class="container lb-pad">
+      <div class="lb-spec">
+        <figure>
+          <div class="mini-header"><span class="monogram">P</span><span class="meta">Header · route pending</span><div class="route-progress" data-route-progress data-state="frozen" aria-hidden="true"><i></i></div></div>
+          <figcaption><b>Route progress</b>2px signal bar on the header edge. Hidden for the first 120ms, trickles to 92%, then completes and fades on commit. Under reduced motion it shows a static bar.</figcaption>
+        </figure>
+        <figure>
+          <div class="rows-demo">
+            <div class="fetch-bar" role="progressbar" aria-label="Updating results"></div>
+            <div class="r is-stale"><span class="i">Oct 12</span><span>Diff-only saves: never lose a form edit</span><span class="meta">6 min</span></div>
+            <div class="r is-stale"><span class="i">Sep 28</span><span>Strangler routes in Nuxt 3</span><span class="meta">9 min</span></div>
+            <div class="r is-stale"><span class="i">Sep 03</span><span>Writing STRUCTURE.md</span><span class="meta">4 min</span></div>
+          </div>
+          <figcaption><b>Background refetch</b>When a filter changes, the previous rows stay on screen at 60% opacity (keepPreviousData) under a sliding bar. Focus and scroll position are kept.</figcaption>
+        </figure>
+        <figure>
+          <div class="btn-row">
+            <button class="btn btn--signal" type="button">Send <span class="arrow">→</span></button>
+            <button class="btn btn--signal" type="button" aria-busy="true" aria-disabled="true">Send <span class="arrow">→</span></button>
+            <button class="btn" type="button" data-state="done">Sent ✓</button>
+          </div>
+          <div class="btn-row" style="margin-top:8px"><button class="btn btn--ghost btn--sm" type="button" data-sim-busy data-busy-label="Sending…" data-done-label="Sent ✓">Try it: send</button></div>
+          <figcaption><b>Button states</b>Idle, then busy (the label stays in the DOM so the width is locked, with a spinner overlay and aria-busy), then done for 1.4s. Double submit is impossible.</figcaption>
+        </figure>
+      </div>
+
+      <div class="two" style="margin-top:var(--s-8)">
+        <form class="form" aria-busy="true" onsubmit="return false" novalidate>
+          <div class="field"><label for="n">Name</label><input id="n" class="input input--line" value="Minh Tran" readonly /></div>
+          <div class="field"><label for="e">Email</label><input id="e" class="input input--line" value="&lt;email&gt;" readonly /></div>
+          <fieldset class="field full" style="border:0;padding:0;margin:0"><legend style="font-size:13px;font-weight:500;margin-bottom:8px">Topic</legend>
+            <div class="topic-group"><label><input type="radio" name="t" checked /><span>Job opportunity</span></label><label><input type="radio" name="t" /><span>Freelance project</span></label></div>
+          </fieldset>
+          <div class="field full"><label for="m">Message</label><textarea id="m" class="input textarea" readonly>We are hiring a senior frontend for a dashboard rewrite…</textarea></div>
+          <div class="full foot"><span class="hint"><span class="spinner" aria-hidden="true"></span>&nbsp; Sending your message…</span><button class="btn btn--signal" type="submit" aria-busy="true" aria-disabled="true">Send message <span class="arrow">→</span></button></div>
+        </form>
+        <ul class="rules">
+          <li><span><b>Contact form submitting.</b> TanStack Form <code>isSubmitting</code> sets <code>aria-busy</code> on the form. Inputs dim and stop taking input, but keep their values. The submit button is locked.</span></li>
+          <li><span><b>Errors keep the draft.</b> On failure the button returns to idle, the error shows inline under the form (role="alert"), and nothing typed is lost.</span></li>
+          <li><span><b>Success replaces the form</b> with the existing “sent” card at the same height, so the footer does not jump.</span></li>
+          <li><span><b>Announcements.</b> One polite live region per page reads “Sending…”, then “Sent” or the error. Spinners are aria-hidden.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- ============ 7. Images ============ -->
+    <div class="container"><header class="lb-head">
+      <span class="n">07 · Images</span>
+      <h2>Images: reserved box, Cloudinary LQIP, fade-in</h2>
+      <p>The loader inserts <code style="grid-column:auto">w_32,e_blur:1000,q_1,f_auto</code> after <code style="grid-column:auto">/upload/</code> for a ~300 byte preview. The server inlines it as <code style="grid-column:auto">blurDataURL</code>, so the placeholder paints on first render without another request. Generated covers (no image) need no placeholder.</p>
+      <code>&lt;CmsImage image={publicImage}/&gt; → next/image placeholder="blur" blurDataURL={lqip(url)} width/height from the API</code>
+    </header></div>
+    <div class="container lb-pad">
+      <div class="lb-spec">
+        <figure><div class="lqip"></div><figcaption><b>1 · Box reserved</b>width × height from the API sets the aspect ratio before any byte arrives.</figcaption></figure>
+        <figure><div class="lqip demo-photo"></div><figcaption><b>2 · LQIP painted</b>The inlined 32px preview, blurred and scaled to hide the pixels.</figcaption></figure>
+        <figure><div class="lqip demo-photo is-loaded" id="lqip-live"><img alt="Abstract sunset over dark hills (demo image)" width="1600" height="1000" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23f2c38b'/%3E%3Cstop offset='1' stop-color='%23e5482d'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='160' height='100' fill='url(%23g)'/%3E%3Ccircle cx='112' cy='38' r='16' fill='%23fff3d6'/%3E%3Cpath d='M0 70 Q40 50 80 66 T160 60 V100 H0Z' fill='%2316181f' opacity='.8'/%3E%3Cpath d='M0 82 Q50 70 100 84 T160 80 V100 H0Z' fill='%2316181f'/%3E%3C/svg%3E" /></div>
+          <figcaption><b>3 · Full image</b>Fades in (560ms) and un-blurs on load, with no fade under reduced motion. <button class="link mono" style="border:0;background:none;padding:0;cursor:pointer" data-lqip-replay="#lqip-live">Replay ↻</button></figcaption></figure>
+      </div>
+    </div>
+
+    <!-- ============ 8. Initial loader ============ -->
+    <div class="container"><header class="lb-head">
+      <span class="n">08 · First visit</span>
+      <h2>The ink curtain: once per session, at most 700ms, never blocks input</h2>
+      <p>Only the first hard load of a session gets it. A tiny inline script in &lt;head&gt; sets <code style="grid-column:auto">html.intro</code> before first paint, but only if sessionStorage is empty, motion is allowed and Settings.ambientEffects is on. The real page renders under the curtain (SSR), so input is never blocked. The overlay holds no large text, so it cannot become the LCP element.</p>
+      <code>app/[locale]/(site)/layout.tsx → &lt;IntroCurtain/&gt; (server) + inline gate script · hero line-up delayed +400ms while html.intro</code>
+    </header></div>
+    <div class="container lb-pad">
+      <div class="lb-spec lb-spec--4" aria-label="Curtain frames">
+        <figure><div class="curtain-frame"><div class="ink"><div style="display:grid;justify-items:center"><span class="monogram">P</span><span class="stroke" style="scale:.15 1"></span></div></div></div><figcaption><b>0ms</b>Ink sheet with the monogram. The signal stroke starts drawing.</figcaption></figure>
+        <figure><div class="curtain-frame"><div class="ink"><div style="display:grid;justify-items:center"><span class="monogram">P</span><span class="stroke"></span></div></div></div><figcaption><b>340ms</b>The stroke completes. The mark lifts and fades.</figcaption></figure>
+        <figure><div class="curtain-frame"><div class="page" style="align-content:end;padding-bottom:12%"><i style="display:block;height:12px;width:62%;background:var(--ink);border-radius:2px;translate:0 4px"></i><i style="display:block;height:12px;width:48%;background:var(--ink);border-radius:2px;opacity:.45;translate:0 10px"></i></div><div class="ink" style="clip-path:inset(0 0 52% 0)"></div></div><figcaption><b>540ms</b>The curtain wipes upward (clip-path) and the hero lines begin to rise.</figcaption></figure>
+        <figure><div class="curtain-frame"><div class="page"><i style="display:block;height:12px;width:62%;background:var(--ink);border-radius:2px"></i><i style="display:block;height:12px;width:78%;background:var(--ink);border-radius:2px"></i><i style="display:block;height:12px;width:40%;background:var(--signal);border-radius:2px"></i><i style="display:block;height:6px;width:54%;background:var(--ink-3);border-radius:2px;margin-top:8px"></i></div></div><figcaption><b>700ms</b>Removed (visibility hidden). Later visits in the session skip it, and so do client navigations.</figcaption></figure>
+      </div>
+    </div>
+  </main>
+
+  <div data-chrome="footer"></div>
+  <script src="chrome.js"></script>
+  <script src="mock.js"></script>
+  <script>
+    (function () {
+      var s = document.querySelector('[data-parity="skel"]'), r = document.querySelector('[data-parity="real"]'), o = document.querySelector('[data-parity-readout]');
+      var run = function () {
+        var a = s.getBoundingClientRect().height, b = r.getBoundingClientRect().height, d = Math.abs(a - b);
+        o.innerHTML = 'Skeleton ' + a.toFixed(1) + 'px · Content ' + b.toFixed(1) + 'px · Δ <b>' + d.toFixed(1) + 'px</b>';
+      };
+      document.fonts.ready.then(run);
+      addEventListener('resize', run);
+    })();
+  </script>
+</body>
+</html>

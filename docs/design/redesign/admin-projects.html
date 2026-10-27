@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin projects · redesign mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin" data-nav="projects" data-crumbs="Content/Projects">
+  <div data-admin="top"></div>
+  <div class="app">
+    <div data-admin="side"></div>
+    <main class="pane pane-main" id="main">
+      <div class="wrap">
+        <div class="page-head animate-fade-up">
+          <div><h1>Projects</h1><p>Case studies on /projects. Drag rows to set the public order.</p></div>
+          <div class="actions"><button class="btn btn--ghost">Export CSV</button><a class="btn" href="admin-editor.html">New project</a></div>
+        </div>
+        <!-- DataTable (TanStack Table): GET /api/admin/projects; filters live in the URL (nuqs-style search params) -->
+        <section class="panel animate-fade-up" style="--i:1;overflow:hidden">
+          <div class="toolbar">
+            <label class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input placeholder="Search title, slug, client" aria-label="Search projects" /><span class="kbd">/</span></label>
+            <button class="facet">Status <b>Any</b></button>
+            <button class="facet">Domain <b>Any</b></button>
+            <button class="facet on">Missing VI ×</button>
+            <span style="margin-left:auto" class="seg" role="group" aria-label="Density"><button aria-pressed="true">Comfort</button><button>Compact</button></span>
+          </div>
+          <div class="bulk" role="region" aria-label="Bulk actions"><b>2 selected</b><button class="btn btn--ghost btn--sm">Publish</button><button class="btn btn--ghost btn--sm">Archive</button><button class="btn btn--ghost btn--sm" style="margin-left:auto">Clear</button></div>
+          <!-- rule 5: x-only scroll inside the table; ≤ 639px rows become cards via data-label -->
+          <div class="table-wrap">
+          <table class="table">
+            <thead><tr><th style="width:36px"><input type="checkbox" class="themed-checkbox" aria-label="Select all" data-indeterminate /></th><th style="width:28px" class="hide-cards"><span class="sr-only">Order</span></th><th>Project</th><th>Domain</th><th>Status</th><th>Locales</th><th>Featured</th><th>Updated</th><th style="width:40px"><span class="sr-only">Actions</span></th></tr></thead>
+            <tbody>
+              <tr aria-selected="true">
+                <td data-label=""><input type="checkbox" class="themed-checkbox" aria-label="Select Particula v2" checked /></td>
+                <td data-label="" class="hide-cards"><span class="drag" aria-label="Drag to reorder">⋮⋮</span></td>
+                <td data-label="Project"><div class="title"><span class="thumb" style="background:var(--hue-amber-wash);color:var(--hue-amber)">Pa</span><div style="min-width:0"><b>Particula v2</b><small>/projects/particula-v2 · Kobizo</small></div></div></td>
+                <td data-label="Domain"><span class="chip" style="height:24px;font-size:12px"><span class="dot hue-amber"></span>Fintech</span></td>
+                <td data-label="Status"><span class="st st--draft">DRAFT</span></td>
+                <td data-label="Locales"><span class="loc"><i class="ok">EN</i><i class="miss">VI</i></span></td>
+                <td data-label="Featured" class="subtle">★</td>
+                <td data-label="Updated" class="subtle">2h ago</td>
+                <td data-label=""><button class="icon-btn" style="width:28px;height:28px" aria-label="Actions for Particula v2">⋯</button></td>
+              </tr>
+              <tr aria-selected="true">
+                <td data-label=""><input type="checkbox" class="themed-checkbox" aria-label="Select MSP Advanced" checked /></td>
+                <td data-label="" class="hide-cards"><span class="drag" aria-label="Drag to reorder">⋮⋮</span></td>
+                <td data-label="Project"><div class="title"><span class="thumb" style="background:var(--hue-blue-wash);color:var(--hue-blue)">Ms</span><div style="min-width:0"><b>MSP Advanced</b><small>/projects/msp-advanced · CMC Global</small></div></div></td>
+                <td data-label="Domain"><span class="chip" style="height:24px;font-size:12px"><span class="dot hue-blue"></span>Enterprise</span></td>
+                <td data-label="Status"><span class="st st--draft">DRAFT</span></td>
+                <td data-label="Locales"><span class="loc"><i class="ok">EN</i><i class="ok">VI</i></span></td>
+                <td data-label="Featured" class="subtle">—</td>
+                <td data-label="Updated" class="subtle">1d ago</td>
+                <td data-label=""><button class="icon-btn" style="width:28px;height:28px" aria-label="Actions for MSP Advanced">⋯</button></td>
+              </tr>
+              <tr>
+                <td data-label=""><input type="checkbox" class="themed-checkbox" aria-label="Select CFW back office &amp; CRM" /></td>
+                <td data-label="" class="hide-cards"><span class="drag" aria-label="Drag to reorder">⋮⋮</span></td>
+                <td data-label="Project"><div class="title"><span class="thumb" style="background:var(--hue-blue-wash);color:var(--hue-blue)">Cf</span><div style="min-width:0"><b>CFW back office &amp; CRM</b><small>/projects/cfw-portals · CMC Global</small></div></div></td>
+                <td data-label="Domain"><span class="chip" style="height:24px;font-size:12px"><span class="dot hue-blue"></span>Enterprise</span></td>
+                <td data-label="Status"><span class="st st--draft">DRAFT</span></td>
+                <td data-label="Locales"><span class="loc"><i class="ok">EN</i><i class="ok">VI</i></span></td>
+                <td data-label="Featured" class="subtle">—</td>
+                <td data-label="Updated" class="subtle">3d ago</td>
+                <td data-label=""><button class="icon-btn" style="width:28px;height:28px" aria-label="Actions for CFW back office &amp; CRM">⋯</button></td>
+              </tr>
+              <tr>
+                <td data-label=""><input type="checkbox" class="themed-checkbox" aria-label="Select Cart migration tool" /></td>
+                <td data-label="" class="hide-cards"><span class="drag" aria-label="Drag to reorder">⋮⋮</span></td>
+                <td data-label="Project"><div class="title"><span class="thumb" style="background:var(--hue-violet-wash);color:var(--hue-violet)">Cm</span><div style="min-width:0"><b>Cart migration tool</b><small>/projects/cart-migration · LitGroup</small></div></div></td>
+                <td data-label="Domain"><span class="chip" style="height:24px;font-size:12px"><span class="dot hue-violet"></span>E-commerce</span></td>
+                <td data-label="Status"><span class="st st--pub">PUBLISHED</span></td>
+                <td data-label="Locales"><span class="loc"><i class="ok">EN</i><i class="miss">VI</i></span></td>
+                <td data-label="Featured" class="subtle">—</td>
+                <td data-label="Updated" class="subtle">1w ago</td>
+                <td data-label=""><button class="icon-btn" style="width:28px;height:28px" aria-label="Actions for Cart migration tool">⋯</button></td>
+              </tr>
+              <tr>
+                <td data-label=""><input type="checkbox" class="themed-checkbox" aria-label="Select This portfolio" /></td>
+                <td data-label="" class="hide-cards"><span class="drag" aria-label="Drag to reorder">⋮⋮</span></td>
+                <td data-label="Project"><div class="title"><span class="thumb" style="background:var(--hue-jade-wash);color:var(--hue-jade)">Lp</span><div style="min-width:0"><b>This portfolio</b><small>/projects/lil-p · Personal</small></div></div></td>
+                <td data-label="Domain"><span class="chip" style="height:24px;font-size:12px"><span class="dot hue-jade"></span>DX</span></td>
+                <td data-label="Status"><span class="st st--arch">ARCHIVED</span></td>
+                <td data-label="Locales"><span class="loc"><i class="ok">EN</i><i class="ok">VI</i></span></td>
+                <td data-label="Featured" class="subtle">—</td>
+                <td data-label="Updated" class="subtle">2w ago</td>
+                <td data-label=""><button class="icon-btn" style="width:28px;height:28px" aria-label="Actions for This portfolio">⋯</button></td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+          <div class="tfoot"><span>5 projects · 1 published</span><span>Page 1 of 1</span></div>
+        </section>
+        <p class="meta" style="margin-top:16px;text-transform:none;letter-spacing:0">Statuses are the existing enum (DRAFT / PUBLISHED / ARCHIVED). No "Scheduled" state: that needs API support (plan §11).</p>
+      </div>
+    </main>
+  </div>
+  <script src="admin-chrome.js"></script>
+  <script src="mock.js"></script>
+  <script>document.querySelectorAll('[data-indeterminate]').forEach(function (c) { c.indeterminate = true; });</script>
+</body>
+</html>

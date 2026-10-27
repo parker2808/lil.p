@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin inbox · redesign mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    .mail { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: 12px; }
+    @media (max-width: 1100px) { .mail { grid-template-columns: 1fr; } }
+    .reading header { display: block; }
+    .reading .from { display: flex; gap: 12px; align-items: center; }
+  </style>
+</head>
+<body class="admin" data-nav="inbox" data-crumbs="Workspace/Inbox">
+  <div data-admin="top"></div>
+  <div class="app">
+    <div data-admin="side"></div>
+    <main class="pane pane-main" id="main">
+      <div class="wrap">
+        <div class="page-head animate-fade-up">
+          <div><h1>Inbox</h1><p>Messages from the contact form · 2 unread</p></div>
+          <div class="actions"><span class="seg" role="group" aria-label="Filter"><button aria-pressed="true">All</button><button>Unread</button><button>Archived</button></span></div>
+        </div>
+        <div class="mail animate-fade-up" style="--i:1">
+          <section class="panel" style="overflow:hidden" aria-label="Messages">
+          <div class="msg unread" aria-current="true"><b>Minh Tran</b><span class="meta">10:42</span><p><b style="font-weight:500;display:inline">Job opportunity</b> · We are hiring a senior frontend for a fintech dashboard team…</p></div>
+          <div class="msg unread"><b>Sarah K.</b><span class="meta">Yesterday</span><p><b style="font-weight:500;display:inline">Freelance project</b> · Nuxt 2 → 3 migration for a dashboard with ~60 routes…</p></div>
+          <div class="msg"><b>Duc Le</b><span class="meta">Oct 24</span><p><b style="font-weight:500;display:inline">Just saying hi</b> · Loved the case study about strangler routes…</p></div>
+          <div class="msg"><b>Anna P.</b><span class="meta">Oct 20</span><p><b style="font-weight:500;display:inline">Speaking</b> · Would you talk about forms at our meetup in Hanoi?</p></div>
+          </section>
+          <article class="panel reading" aria-label="Message">
+            <header style="padding:16px">
+              <div class="from"><span class="avatar">M</span><div><b style="font-weight:600">Minh Tran</b><div class="meta" style="text-transform:none;letter-spacing:0">&lt;email&gt; · Today 10:42</div></div><span class="st st--new" style="margin-left:auto">Job opportunity</span></div>
+            </header>
+            <div class="body prose" style="max-width:none">
+              <p>Hi Parker, we are hiring a senior frontend for a fintech dashboard team. Your Particula case study is close to what we do: lots of tables, filters and charts.</p>
+              <p>Would you be open to a call next week?</p>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 16px"><a class="btn" href="#">Reply by email</a><button class="btn btn--ghost">Mark unread</button><button class="btn btn--ghost">Archive</button></div>
+          </article>
+        </div>
+      </div>
+    </main>
+  </div>
+  <script src="admin-chrome.js"></script>
+  <script src="mock.js"></script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Case study · Ink &amp; Signal mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <style>
+    .cs-title { grid-column: 1 / span 10; margin-top: 32px; text-wrap: balance; }
+    .cs-tagline { grid-column: 1 / span 7; margin-top: 24px; }
+    .cs-links { grid-column: 9 / -1; justify-self: end; align-self: end; display: flex; gap: 8px; }
+    .cs-body { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); padding: var(--s-8) 0 var(--section-y); }
+    .cs-body aside { grid-column: 1 / span 3; }
+    .cs-body article { grid-column: 4 / span 8; }
+    .figure { margin: 2em 0; }
+    .figure .cover { aspect-ratio: 16 / 9; }
+    .figure figcaption { margin-top: 12px; }
+    @media (max-width: 960px) {
+      .cs-title, .cs-tagline, .cs-links { grid-column: 1 / -1; justify-self: start; }
+      .cs-body aside { display: none; }
+      .cs-body article { grid-column: 1 / -1; }
+    }
+  </style>
+</head>
+<body class="paper-grain" data-page="projects">
+  <div data-chrome="header"></div>
+  <main id="main">
+    <!-- Project detail route /[locale]/projects/[slug]: GET /api/public/projects/:slug -->
+    <section class="cs-hero">
+      <div class="container grid" style="row-gap:0">
+        <nav class="crumbs span-12" aria-label="Breadcrumb"><a href="projects.html">Work</a><span>/</span><span class="chip" style="height:24px"><span class="dot hue-amber"></span>Fintech / Web3</span><span>/</span><span aria-current="page">Particula v2</span></nav>
+        <h1 class="display t-h1 cs-title">Particula v2: moving a rating platform from Vue 2 to Nuxt 3 <em>without a freeze</em></h1>
+        <p class="lead cs-tagline">Six months, one route at a time. A component library on PrimeVue, server state in TanStack Query, and Playwright specs before every cut.</p>
+        <div class="cs-links"><a class="btn btn--ghost btn--sm" href="#">Live site ↗</a></div>
+      </div>
+      <div class="container" style="margin-top:48px">
+        <dl class="facts-bar">
+          <div><dt>Role</dt><dd>Main frontend</dd></div>
+          <div><dt>Client</dt><dd>Kobizo</dd></div>
+          <div><dt>Timeline</dt><dd class="num">Feb 2024 — now</dd></div>
+          <div><dt>Team</dt><dd class="num">6 people</dd></div>
+          <div><dt>Version</dt><dd class="mono" style="text-transform:none">v1 → v2</dd></div>
+        </dl>
+      </div>
+      <div class="container" style="margin-top:48px">
+        <div class="cover cover--amber cover--rings vt-cover-particula" style="aspect-ratio:21/9"><div class="cover-meta"><span class="chip"><span class="dot hue-amber"></span>Fintech / Web3</span><span class="meta" style="color:inherit">cover · 2400×1028</span></div><span class="glyph" aria-hidden="true">Pa</span></div>
+      </div>
+    </section>
+
+    <!-- ProjectMetric rows: before / after / value -->
+    <section class="section section--sunken" style="padding: 72px 0">
+      <div class="container grid">
+        <div class="rail"><span class="meta">Outcome in numbers</span></div>
+        <div class="rail-content metrics-board">
+          <div class="metric"><div class="before">4.1s</div><div class="after num">1.6s<small>−61%</small></div><div class="l">LCP on the asset page (p75, mobile)</div></div>
+          <div class="metric"><div class="before">0</div><div class="after num">120<small>+120</small></div><div class="l">Playwright specs in CI</div></div>
+          <div class="metric"><div class="before">38</div><div class="after num">14<small>−24</small></div><div class="l">Duplicate requests per session</div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="cs-body">
+        <aside>
+          <nav class="toc" aria-label="On this page">
+            <span class="meta" style="margin-bottom:12px">On this page</span>
+            <a href="#problem"><span class="n">01</span>Problem</a>
+            <a href="#constraints"><span class="n">02</span>Constraints</a>
+            <a href="#approach" aria-current="true"><span class="n">03</span>Approach</a>
+            <a href="#decisions"><span class="n">04</span>Decisions</a>
+            <a href="#outcome"><span class="n">05</span>Outcome</a>
+            <a href="#lessons"><span class="n">06</span>Lessons</a>
+            <div class="progress" aria-hidden="true"><i></i></div>
+            <div style="margin-top:32px;display:flex;flex-wrap:wrap;gap:6px"><span class="tag">Nuxt 3</span><span class="tag">Vue 3</span><span class="tag">PrimeVue</span><span class="tag">TanStack Query</span><span class="tag">Playwright</span></div>
+          </nav>
+        </aside>
+        <article class="prose">
+          <div class="keyfacts" style="margin-bottom:48px">
+            <div><div class="k">Stack decision</div><div class="v">Axios → TanStack Query</div></div>
+            <div><div class="k">Migration path</div><div class="v">Strangler routes, no freeze</div></div>
+            <div><div class="k">UI base</div><div class="v">PrimeVue + own tokens</div></div>
+            <div><div class="k">Safety net</div><div class="v">Contract + E2E tests first</div></div>
+          </div>
+
+          <h2 id="problem"><span class="n">01</span>Problem</h2>
+          <p>The v1 investor app was a Vue 2 tree with global event buses and no tests. Every release broke a form somewhere, and the team could not stop shipping for a rewrite.</p>
+          <h2 id="constraints"><span class="n">02</span>Constraints</h2>
+          <ul><li>Ratings for 20+ asset classes had to stay online.</li><li>Two developers on the frontend, one designer part time.</li><li>No feature freeze longer than one sprint.</li></ul>
+          <h2 id="approach"><span class="n">03</span>Approach</h2>
+          <p>We put Nuxt 3 in front and proxied unknown routes to v1. Each sprint moved one route group, behind contract tests that pinned the API shape.</p>
+          <figure class="figure">
+            <div class="cover cover--amber cover--stripes"><div class="cover-meta"><span class="meta" style="color:inherit">ProjectImage · hidden when isConfidential</span></div></div>
+            <figcaption class="meta">Fig. 1 — Route groups moved per sprint</figcaption>
+          </figure>
+          <div class="callout callout--decision"><b>Decision</b><span>Strangler over big-bang: a slower start, but the app shipped every week.</span></div>
+          <pre><code><span class="c">// nuxt.config.ts — legacy fallback</span>
+<span class="k">export default</span> defineNuxtConfig({
+  routeRules: { <span class="s">'/legacy/**'</span>: { proxy: <span class="s">'https://v1.internal/**'</span> } },
+})</code></pre>
+          <h2 id="decisions"><span class="n">04</span>Decisions</h2>
+          <blockquote>Server state is not app state. Moving it to TanStack Query removed half of our store.</blockquote>
+          <h2 id="outcome"><span class="n">05</span>Outcome</h2>
+          <p>v2 replaced v1 fully after six months. The numbers above are from the last two weeks before cut-over.</p>
+          <h2 id="lessons"><span class="n">06</span>Lessons</h2>
+          <p>Write the conventions down before the second developer joins. A <code>STRUCTURE.md</code> beat every review thread.</p>
+        </article>
+      </div>
+
+      <a class="next-case" href="case-study.html">
+        <div><span class="meta">Next case study</span><div class="t">Re-platforming an enterprise console →</div></div>
+        <span class="chip"><span class="dot hue-blue"></span>Enterprise</span>
+      </a>
+    </div>
+  </main>
+  <div data-chrome="footer"></div>
+  <script src="chrome.js"></script>
+  <script src="mock.js"></script>
+  <script src="mock-motion.js" defer></script>
+</body>
+</html>
