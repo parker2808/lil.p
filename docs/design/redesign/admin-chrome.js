@@ -68,6 +68,7 @@
       '<a class="btn btn--ghost btn--sm hide-mobile" href="home.html">View site ↗</a>' +
       '<button class="icon-btn" aria-label="Notifications, 2 unread">' + svg('M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0', 15) + '<span class="dot-badge"></span></button>' +
       '<button class="icon-btn" data-theme-toggle aria-label="Toggle theme">' + svg('M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z', 15) + '</button>' +
+      '<div class="route-progress" data-route-progress aria-hidden="true"><i></i></div>' +
       '</header>' +
       '<div class="drawer-backdrop" data-drawer-close></div>' +
       '<div class="drawer" role="dialog" aria-modal="true" aria-label="Navigation"><header><b>Portfolio CMS</b><button class="icon-btn" data-drawer-close aria-label="Close navigation">×</button></header><nav class="pane pane-side" aria-label="Admin">' + navHTML() + foot + '</nav></div>' +

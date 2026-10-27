@@ -26,7 +26,7 @@
       '<div class="seg" role="group" aria-label="Language"><a href="#" aria-current="true">EN</a><a href="#" lang="vi">VI</a></div>' +
       '<button class="icon-btn" data-theme-toggle aria-label="Toggle theme"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>' +
       '<button class="icon-btn menu-btn" aria-label="Open menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>' +
-      '</div></div></header>';
+      '</div></div><div class="route-progress" data-route-progress aria-hidden="true"><i></i></div></header>';
   }
 
   var f = document.querySelector('[data-chrome="footer"]');

@@ -248,6 +248,7 @@ body.admin {
   .table-wrap:has(td[data-label]) td:last-child { border-bottom: 0; }
   .table-wrap:has(td[data-label]) td::before { content: attr(data-label); font: 600 .68rem/1.6 var(--font-sans); letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3); }
   .table-wrap:has(td[data-label]) td[data-label=""]::before { content: none; }
+  .hide-cards { display: none !important; }
 }
 
 /* ---------- 10. Editor (canvas + inspector) ------------------------- */
@@ -328,6 +329,34 @@ body.admin {
 .msg.unread b::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--primary); margin-right: 8px; vertical-align: 1px; }
 .msg[aria-current="true"] { background: var(--primary-subtle); border-left-color: var(--primary); }
 .msg[aria-current="true"] p { color: var(--primary-ink); }
+
+/* ---------- 12b. Loading states ------------------------------------ */
+/* Shared .skel / .fetch-bar / .progress-bar / .btn[aria-busy] come from
+   redesign.css and pick up teal through --signal → --primary. Static UI
+   strings (headings, labels, toolbars) render immediately; only data is skeleton. */
+.panel > header { position: relative; }
+.panel > header .fetch-bar { position: absolute; inset: auto 0 -1px 0; } /* refetch never shifts layout */
+.skel-tr .title .thumb { border-color: transparent; background: var(--skel-bg); } /* same .title/.thumb boxes as a real row → same height */
+@media (max-width: 639px) { .table-wrap:has(.skel-tr) table { min-width: 0 !important; } .skel-tr .title > div { width: 160px; flex: none !important; } }
+.savebar .spinner { width: 10px; height: 10px; border-width: 1.5px; color: var(--ink-3); }
+.savebar.is-dirty .dot { background: var(--warn); }
+.savebar.is-error { color: var(--del); }
+.savebar.is-error .dot { background: var(--del); }
+.upload { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.upload:last-child { border-bottom: 0; }
+.upload .thumb { grid-row: 1 / span 2; }
+.upload .progress-bar { grid-column: 2; }
+.upload .pct { font: 500 12px/1 var(--font-mono); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.upload.is-error .pct, .upload.is-error small { color: var(--del); }
+.upload.is-error .progress-bar > i { background: var(--del); }
+.is-pending { opacity: .7; }
+.toast { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--radius-lg); background: var(--foreground); color: var(--background); font-size: 13px; box-shadow: var(--shadow-pop); }
+.toast button { margin-left: auto; border: 0; background: none; color: inherit; text-decoration: underline; cursor: pointer; font: inherit; }
+/* Review board: unlocks the document so the whole specimen sheet can be captured (not product). */
+html:has(body.admin--board) { height: auto; overflow: auto; }
+body.admin--board { height: auto; overflow: auto; }
+.admin--board .app { position: relative; inset: auto; margin-top: var(--app-header-h); min-height: calc(100dvh - var(--app-header-h)); }
+.admin--board .pane { overflow: visible; }
 
 /* ---------- 13. Sign in --------------------------------------------- */
 html:has(body.admin-login) { overflow: auto; height: auto; }

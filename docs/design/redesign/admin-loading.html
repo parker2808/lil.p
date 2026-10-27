@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin loading states · redesign mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    .dash-cols { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 12px; margin-top: 12px; }
+    @media (max-width: 1100px) { .dash-cols { grid-template-columns: 1fr; } }
+    .issue { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--rule); }
+    .issue:last-child { border-bottom: 0; }
+    .qa { display: grid; gap: 8px; }
+    .qa a { display: flex; justify-content: space-between; align-items: center; min-height: 40px; padding: 0 12px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--paper); }
+    .view-switch { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .view-switch a { font: 500 12px/1 var(--font-mono); padding: 7px 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--ink-2); background: var(--card); }
+    .view-switch a[aria-current="page"] { background: var(--primary-subtle); color: var(--primary-ink); border-color: transparent; }
+    .board { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); gap: 12px; align-items: start; }
+    .board .panel > .body { display: grid; gap: 10px; }
+    .board .note { font-size: 12px; color: var(--ink-3); }
+    .board .note code { font: 500 11.5px/1.5 var(--font-mono); background: var(--paper-sunken); padding: 1px 4px; border-radius: var(--radius-2xs); }
+    .state-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 32px; }
+    .state-row > .meta { flex: none; }
+    .mini-table .r { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .mini-table .r:last-child { border-bottom: 0; }
+    .star { width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--card); color: var(--warn); }
+  </style>
+</head>
+<body class="admin" data-nav="dashboard" data-crumbs="Workspace/Dashboard">
+  <div data-admin="top"></div>
+
+  <!-- ============ View: dashboard (app/admin/(cms)/loading.tsx + Suspense per panel) ============ -->
+  <div class="app" data-view="dashboard">
+    <div data-admin="side"></div>
+    <main class="pane pane-main" id="main" aria-busy="true">
+      <div class="wrap">
+        <nav class="view-switch" aria-label="Mockup state"></nav>
+        <div class="page-head">
+          <div><h1>Dashboard</h1><p><span class="skel skel-line" style="--w:420px;max-width:100%"></span></p></div>
+          <div class="actions"><a class="btn btn--ghost" href="admin-pages.html">Open pages</a><a class="btn" href="admin-editor.html">New project</a></div>
+        </div>
+        <span class="sr-only" role="status">Loading dashboard…</span>
+        <!-- <StatsSkeleton/>: the four labels are i18n strings and render at once; only numbers wait -->
+        <div class="kpis skel-scope">
+          <div class="panel kpi"><span class="meta">Views · 30 days</span><div class="v"><span class="skel skel-line" style="--w:3.2ch"></span></div><div class="d"><span class="skel skel-line" style="--w:70%"></span></div></div>
+          <div class="panel kpi"><span class="meta">Projects</span><div class="v"><span class="skel skel-line" style="--w:2.2ch;--si:1"></span></div><div class="d"><span class="skel skel-line" style="--w:54%"></span></div></div>
+          <div class="panel kpi"><span class="meta">Posts</span><div class="v"><span class="skel skel-line" style="--w:2.2ch;--si:2"></span></div><div class="d"><span class="skel skel-line" style="--w:36%"></span></div></div>
+          <div class="panel kpi"><span class="meta">Inbox</span><div class="v"><span class="skel skel-line" style="--w:1.4ch;--si:3"></span></div><div class="d"><span class="skel skel-line" style="--w:60%"></span></div></div>
+        </div>
+        <div class="dash-cols">
+          <section class="panel skel-scope" aria-hidden="true">
+            <header><h2>Content health</h2><span class="skel skel-line meta" style="--w:96px"></span></header>
+            <div style="display:flex;gap:16px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--rule)"><span class="skel skel-circle" style="width:64px;height:64px;flex:none"></span><div class="skel-p" style="flex:1;font-size:13px"><span class="skel skel-line"></span><span class="skel skel-line"></span></div></div>
+            <div data-repeat="4"><div class="issue"><span class="skel" style="width:32px;height:32px"></span><div><span class="skel skel-line" style="--w:46%;font-weight:600"></span><span class="skel skel-line" style="--w:72%;font-size:12px"></span></div><span class="skel" style="width:52px;height:28px;border-radius:var(--radius-sm)"></span></div></div>
+          </section>
+          <section class="panel">
+            <header><h2>Quick actions</h2></header>
+            <div class="body qa">
+              <a href="admin-editor.html">New project <span class="kbd">N P</span></a>
+              <a href="#">New post <span class="kbd">N N</span></a>
+              <a href="admin-media.html">Upload media <span class="kbd">U</span></a>
+              <a href="admin-pages.html">Edit home page <span class="kbd">G H</span></a>
+            </div>
+          </section>
+        </div>
+        <div class="dash-cols">
+          <section class="panel skel-scope" aria-hidden="true">
+            <header><h2>Views per day</h2><div class="seg" role="group" aria-label="Range"><button>7d</button><button aria-pressed="true">30d</button><button>90d</button></div></header>
+            <div class="body"><div class="skel" style="height:150px;border-radius:var(--radius)"></div><div style="display:flex;justify-content:space-between;margin-top:8px"><span class="skel skel-line meta" style="--w:48px"></span><span class="skel skel-line meta" style="--w:110px"></span><span class="skel skel-line meta" style="--w:48px"></span></div></div>
+          </section>
+          <section class="panel skel-scope" aria-hidden="true">
+            <header><h2>Inbox</h2><a class="link meta" href="admin-inbox.html">All →</a></header>
+            <div data-repeat="3"><div class="msg"><span class="skel skel-line" style="--w:40%;font-weight:600"></span><span class="skel" style="width:44px;height:22px;border-radius:var(--radius-xs)"></span><p><span class="skel skel-line" style="--w:86%"></span></p></div></div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ============ View: table (projects/loading.tsx → DataTable pending) ============ -->
+  <div class="app" data-view="table">
+    <div data-admin="side"></div>
+    <main class="pane pane-main" id="main" aria-busy="true">
+      <div class="wrap">
+        <nav class="view-switch" aria-label="Mockup state"></nav>
+        <div class="page-head">
+          <div><h1>Projects</h1><p>Case studies on /projects. Drag rows to set the public order.</p></div>
+          <div class="actions"><button class="btn btn--ghost">Export CSV</button><a class="btn" href="admin-editor.html">New project</a></div>
+        </div>
+        <section class="panel" style="overflow:hidden">
+          <!-- the toolbar is interactive during the first load; typing queues the next query -->
+          <div class="toolbar">
+            <label class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input placeholder="Search title, slug, client" aria-label="Search projects" /><span class="kbd">/</span></label>
+            <button class="facet">Status <b>Any</b></button>
+            <button class="facet">Domain <b>Any</b></button>
+            <span style="margin-left:auto" class="seg" role="group" aria-label="Density"><button aria-pressed="true">Comfort</button><button>Compact</button></span>
+          </div>
+          <div class="table-wrap">
+            <table class="table" aria-busy="true" aria-describedby="tbl-status" style="table-layout:fixed;min-width:860px">
+              <colgroup><col style="width:36px" /><col style="width:28px" /><col /><col style="width:150px" /><col style="width:110px" /><col style="width:96px" /><col style="width:88px" /><col style="width:104px" /><col style="width:48px" /></colgroup>
+              <thead><tr><th style="width:36px"><input type="checkbox" class="themed-checkbox" aria-label="Select all" disabled /></th><th style="width:28px"><span class="sr-only">Order</span></th><th>Project</th><th>Domain</th><th>Status</th><th>Locales</th><th>Featured</th><th>Updated</th><th style="width:40px"><span class="sr-only">Actions</span></th></tr></thead>
+              <tbody class="skel-scope" data-repeat="6">
+                <tr class="skel-tr" aria-hidden="true">
+                  <td data-label=""><span class="skel" style="width:16px;height:16px;border-radius:var(--radius-2xs)"></span></td>
+                  <td data-label="" class="hide-cards"><span class="skel skel-line" style="--w:12px"></span></td>
+                  <td data-label="Project"><div class="title"><span class="thumb skel"></span><div style="min-width:0;flex:1"><span class="skel skel-line" style="--w:46%;font-weight:600"></span><span class="skel skel-line" style="--w:78%;font-size:12px"></span></div></div></td>
+                  <td data-label="Domain"><span class="skel skel-pill" style="width:84px;height:24px"></span></td>
+                  <td data-label="Status"><span class="skel" style="width:64px;height:22px;border-radius:var(--radius-xs)"></span></td>
+                  <td data-label="Locales"><span class="skel" style="width:52px;height:18px;border-radius:var(--radius-2xs)"></span></td>
+                  <td data-label="Featured"><span class="skel skel-line" style="--w:14px"></span></td>
+                  <td data-label="Updated"><span class="skel skel-line" style="--w:52px"></span></td>
+                  <td data-label=""><span class="skel" style="width:28px;height:28px;border-radius:var(--radius)"></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="tfoot"><span id="tbl-status" role="status">Loading projects…</span><span class="skel skel-line" style="--w:72px"></span></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- ============ View: editor (projects/[id]/loading.tsx, focus mode) ============ -->
+  <div class="app has-aside" data-view="editor">
+    <nav class="pane pane-side skel-scope" aria-label="Sections" aria-hidden="true">
+      <span class="outline-l">I. Card &amp; facts</span>
+      <div data-repeat="4"><div class="nav-it"><span class="skel skel-line" style="--w:70%"></span></div></div>
+      <span class="outline-l" style="margin-top:16px">II. Case study</span>
+      <div data-repeat="6"><div class="nav-it"><span class="skel skel-line" style="--w:58%"></span></div></div>
+      <span class="outline-l" style="margin-top:16px">III. Meta</span>
+      <div data-repeat="2"><div class="nav-it"><span class="skel skel-line" style="--w:50%"></span></div></div>
+    </nav>
+    <main class="pane pane-main" id="main" aria-busy="true">
+      <div class="wrap--prose">
+        <nav class="view-switch" aria-label="Mockup state"></nav>
+        <span class="sr-only" role="status">Loading project…</span>
+        <div class="skel-scope" aria-hidden="true">
+          <div class="loc-tabs"><button disabled>English <span class="skel" style="width:36px;height:4px;display:inline-block"></span></button><button disabled lang="vi">Tiếng Việt <span class="skel" style="width:36px;height:4px;display:inline-block"></span></button><button disabled>Side by side</button></div>
+          <div style="font:600 30px/1.15 var(--font-sans)"><span class="skel skel-line"></span><span class="skel skel-line" style="--w:62%"></span></div>
+          <div class="skel" style="margin-top:12px;height:64px;border-radius:var(--radius)"></div>
+          <div class="sect"><h3><span class="n">02</span>Facts</h3>
+            <div class="fset" data-repeat="6"><div class="field"><span class="skel skel-line" style="--w:38%;font-size:13px"></span><span class="skel" style="height:36px;border-radius:var(--radius)"></span></div></div>
+          </div>
+          <div class="sect"><h3><span class="n">03</span>Problem</h3>
+            <div class="tiptap">
+              <div class="bar"><button disabled>P</button><button disabled>H2</button><button disabled>H3</button><span class="sep"></span><button disabled><b>B</b></button><button disabled><i>I</i></button><button disabled>Link</button></div>
+              <div class="doc"><div class="skel-p" style="font-size:15px"><span class="skel skel-line"></span><span class="skel skel-line"></span><span class="skel skel-line"></span><span class="skel skel-line"></span><span class="skel skel-line"></span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <aside class="pane pane-aside skel-scope" aria-label="Publish" aria-hidden="true">
+      <div class="aside-sect">
+        <span class="outline-l">Publish</span>
+        <div class="panel"><div class="body" style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span class="skel" style="width:64px;height:22px;border-radius:var(--radius-xs)"></span><span class="skel skel-line" style="--w:84px;font-size:12px"></span></div>
+          <div style="display:flex;gap:8px"><span class="skel" style="flex:1;height:36px;border-radius:var(--radius)"></span><span class="skel" style="flex:1;height:36px;border-radius:var(--radius)"></span></div>
+          <span class="skel" style="height:28px;border-radius:var(--radius-sm)"></span>
+        </div></div>
+      </div>
+      <div class="aside-sect">
+        <span class="outline-l">Pre-publish checks</span>
+        <div data-repeat="5"><div class="check"><span class="skel skel-circle" style="width:18px;height:18px"></span><span class="skel skel-line" style="--w:76%"></span></div></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ============ View: states (mutations, refetch, uploads) ============ -->
+  <div class="app" data-view="states">
+    <div data-admin="side"></div>
+    <main class="pane pane-main" id="main">
+      <div class="wrap">
+        <nav class="view-switch" aria-label="Mockup state"></nav>
+        <div class="page-head">
+          <div><h1>Pending and submitting states</h1><p>Every mutation shows where it is. Server data on screen is never swapped for a skeleton on refetch.</p></div>
+        </div>
+        <p class="sr-only" role="status" data-live></p>
+        <div class="board">
+          <section class="panel">
+            <header><h2>Save status (autosave)</h2></header>
+            <div class="body">
+              <div class="state-row"><span class="meta">Idle</span><span class="savebar"><span class="dot"></span>Saved · v14</span></div>
+              <div class="state-row"><span class="meta">Dirty</span><span class="savebar is-dirty"><span class="dot"></span>Unsaved changes</span></div>
+              <div class="state-row"><span class="meta">Saving</span><span class="savebar"><span class="spinner" aria-hidden="true"></span>Saving…</span></div>
+              <div class="state-row"><span class="meta">Error</span><span class="savebar is-error"><span class="dot"></span>Couldn’t save · <button class="link" style="border:0;background:none;padding:0;cursor:pointer;font:inherit">Retry</button></span></div>
+              <p class="note">The existing <code>SaveStatus</code>, driven by <code>mutation.status</code>. The text changes, the slot width does not.</p>
+            </div>
+          </section>
+          <section class="panel">
+            <header><h2>Mutation buttons</h2></header>
+            <div class="body">
+              <div class="state-row"><span class="meta">Idle</span><button class="btn">Publish</button></div>
+              <div class="state-row"><span class="meta">Pending</span><button class="btn" aria-busy="true" aria-disabled="true">Publish</button></div>
+              <div class="state-row"><span class="meta">Done</span><button class="btn" data-state="done">Published ✓</button></div>
+              <div class="state-row"><span class="meta">Try it</span><button class="btn btn--ghost btn--sm" data-sim-busy data-busy-label="Publishing…" data-done-label="Published ✓">Publish draft</button></div>
+              <p class="note"><code>&lt;Button loading={m.isPending}&gt;</code> sets aria-busy and aria-disabled, locks the width and blocks double submits. Done shows for 1.4s, then a toast.</p>
+            </div>
+          </section>
+          <section class="panel" style="overflow:hidden">
+            <header><h2>Refetch keeps previous data</h2><span class="meta">Status: Published</span><div class="fetch-bar" role="progressbar" aria-label="Updating"></div></header>
+            <div class="mini-table">
+              <div class="r is-stale"><span class="thumb" style="width:28px;height:22px">Pa</span><span>Particula v2</span><span class="st st--draft">DRAFT</span></div>
+              <div class="r is-stale"><span class="thumb" style="width:28px;height:22px">Ms</span><span>MSP Advanced</span><span class="st st--draft">DRAFT</span></div>
+              <div class="r is-stale"><span class="thumb" style="width:28px;height:22px">Cm</span><span>Cart migration</span><span class="st st--draft">DRAFT</span></div>
+            </div>
+            <div class="body" style="padding-top:0"><p class="note"><code>placeholderData: keepPreviousData</code>. When <code>isFetching</code> is true and <code>isPending</code> is false, rows dim to 60% under a 2px bar in the header. Nothing shifts.</p></div>
+          </section>
+          <section class="panel">
+            <header><h2>Optimistic toggle</h2></header>
+            <div class="body">
+              <div class="state-row"><span>Featured on /projects</span><span style="display:flex;gap:8px;align-items:center"><span class="spinner" style="color:var(--ink-3)" aria-hidden="true"></span><span class="star is-pending" aria-label="Featured, saving">★</span></span></div>
+              <div class="toast" role="status">Couldn’t update “Particula v2”. Change reverted. <button>Retry</button></div>
+              <p class="note"><code>onMutate</code> updates the cache and snapshots it. <code>onError</code> rolls back and shows a toast. <code>onSettled</code> invalidates. Used for featured, order (drag) and read/unread.</p>
+            </div>
+          </section>
+          <section class="panel">
+            <header><h2>Upload progress</h2><span class="meta">3 files</span></header>
+            <div class="body" style="gap:0">
+              <div class="upload"><span class="thumb">✓</span><span>particula-cover.jpg</span><span class="pct">100%</span><div class="progress-bar" style="--v:100"><i></i></div></div>
+              <div class="upload"><span class="thumb" style="background:var(--paper-sunken);color:var(--ink-3)">62</span><span>msp-console.png</span><span class="pct">62%</span><div class="progress-bar" role="progressbar" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" aria-label="msp-console.png" style="--v:62"><i></i></div></div>
+              <div class="upload is-error"><span class="thumb" style="background:var(--del-wash);color:var(--del)">!</span><span>diagram.svg <small>· type not allowed</small></span><button class="btn btn--ghost btn--sm">Retry</button><div class="progress-bar" style="--v:100"><i></i></div></div>
+              <p class="note" style="margin-top:10px">XHR progress from the existing <code>media-upload.service.ts</code>. The grid tile reserves its 4:3 box and shows the LQIP when done.</p>
+            </div>
+          </section>
+          <section class="panel">
+            <header><h2>Palette and infinite lists</h2></header>
+            <div class="body">
+              <div class="palette" style="animation:none;box-shadow:none"><div class="list" style="padding:4px">
+                <div class="opt" aria-selected="true"><span></span><b><mark>Parti</mark>cula v2: Vue 2 → Nuxt 3</b><span class="st st--draft">DRAFT</span></div>
+                <div class="skel skel-row" aria-hidden="true"></div><div class="skel skel-row" aria-hidden="true" style="--si:1"></div>
+              </div></div>
+              <p class="note">Local commands show at once. Server matches show skeleton rows while the debounced query (150ms) is pending. The end of the inbox list renders two skeleton rows while <code>fetchNextPage</code> runs.</p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Mockup state (?state=dashboard|table|editor|states): keep one view before the shell renders.
+    (function () {
+      var views = { dashboard: ['dashboard', 'Workspace/Dashboard'], table: ['projects', 'Content/Projects'], editor: ['projects', 'Content/Projects/Loading…'], states: ['dashboard', 'Workspace/Loading states'] };
+      var p = new URLSearchParams(location.search);
+      var v = views[p.get('state')] ? p.get('state') : 'dashboard';
+      document.querySelectorAll('[data-view]').forEach(function (el) { if (el.getAttribute('data-view') !== v) el.remove(); });
+      document.body.setAttribute('data-nav', views[v][0]);
+      document.body.setAttribute('data-crumbs', views[v][1]);
+      if (v === 'editor') document.body.classList.add('admin--focus');
+      if (v === 'states') document.body.classList.add('admin--board');
+      var sw = document.querySelector('.view-switch');
+      var extra = (p.get('dark') === '1' ? '&dark=1' : '') + (p.get('capture') === '1' ? '&capture=1' : '');
+      if (sw) sw.innerHTML = Object.keys(views).map(function (k) { return '<a href="?state=' + k + extra + '"' + (k === v ? ' aria-current="page"' : '') + '>' + k + '</a>'; }).join('');
+      document.querySelectorAll('[data-repeat]').forEach(function (el) {
+        var n = +el.getAttribute('data-repeat'), tpl = el.firstElementChild;
+        for (var i = 1; i < n; i++) { var c = tpl.cloneNode(true); c.style.setProperty('--si', i); el.appendChild(c); }
+        if (el.tagName === 'DIV' && !el.className) el.style.display = 'contents';
+      });
+      if (v !== 'states') document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('[data-route-progress]').forEach(function (b) { b.dataset.state = 'frozen'; });
+      });
+    })();
+  </script>
+  <script src="admin-chrome.js"></script>
+  <script src="mock.js"></script>
+</body>
+</html>

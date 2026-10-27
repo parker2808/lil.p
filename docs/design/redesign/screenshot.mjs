@@ -38,11 +38,13 @@ const DESK = ['desktop', 'desktop-dark'];
 const pages = [
   ['home', 'home', '', ALL], ['projects', 'projects', '', ALL], ['case-study', 'case-study', '', ALL],
   ['about', 'about', '', ALL], ['contact', 'contact', '', ALL], ['notes', 'notes', '', ALL], ['post', 'post', '', ALL],
-  ['foundations', 'foundations', '', ALL],
+  ['foundations', 'foundations', '', ALL], ['loading', 'loading', '', ALL],
   ['admin-login', 'admin-login', '', ALL], ['admin-dashboard', 'admin-dashboard', '', ALL],
   ['admin-palette', 'admin-dashboard', '&palette=1', DESK], ['admin-drawer', 'admin-dashboard', '&drawer=1', ['mobile']],
   ['admin-projects', 'admin-projects', '', ALL], ['admin-editor', 'admin-editor', '', DESK],
   ['admin-pages', 'admin-pages', '', DESK], ['admin-media', 'admin-media', '', DESK], ['admin-inbox', 'admin-inbox', '', DESK],
+  ['admin-loading', 'admin-loading', '&state=dashboard', ALL], ['admin-loading-table', 'admin-loading', '&state=table', ALL],
+  ['admin-loading-editor', 'admin-loading', '&state=editor', DESK], ['admin-loading-states', 'admin-loading', '&state=states', ALL],
 ];
 const variants = {
   desktop: { width: 1440, height: 900, dark: false },
