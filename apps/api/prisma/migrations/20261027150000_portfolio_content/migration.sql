@@ -428,7 +428,14 @@ Backend (NestJS)
 01/2026 – present', 'Team 18 người
 Backend (NestJS)
 01/2026 – nay', 'Node.js, NestJS, TypeScript, MySQL, REST APIs, Jest, Supertest, Robot Framework, Git', 'Node.js, NestJS, TypeScript, MySQL, REST APIs, Jest, Supertest, Robot Framework, Git', 'TODO (not specified yet)', NULL, NULL, NULL, NULL, NULL, NULL, 'DRAFT', NULL, 7, 2, NULL, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3)),
-  (9, 'lil-p', 'lil.p', 'lil.p', 'Bilingual portfolio and admin CMS: Next.js + NestJS, block pages, Tiptap, free Vercel + Render + TiDB + Cloudinary hosting.', 'Portfolio song ngữ và CMS admin: Next.js + NestJS, page dựng từ block, Tiptap, host miễn phí Vercel + Render + TiDB + Cloudinary.', 'Personal project', 'Solo developer (owner)', 'Lập trình viên (một mình, owner)', 1, '2026-10-01', NULL, NULL, NULL, 0, 0, NULL, 'https://github.com/parker2808/lil.p', 'Need a public portfolio that is also a real CMS: bilingual EN/VI, admin-editable pages, case studies and notes, with no hard-coded visitor copy and no paid hosting.', 'Cần một portfolio công khai đồng thời là CMS thật: song ngữ EN/VI, page sửa được trong admin, case study và ghi chép, không hard-code nội dung visitor và không host trả phí.', '- Content lives in MySQL and is edited in /admin; UI code holds only chrome labels and the block registry (PLAN ground rule 1).
+  (9, 'interview-senior-fe', 'Interview Senior FE', 'Interview Senior FE', 'Bilingual (vi/en) Senior Frontend interview-prep app: knowledge base, 30-day study plan, practice path and a PIN-protected Q&A bank.', 'Ứng dụng ôn phỏng vấn Senior Frontend song ngữ (vi/en): kho kiến thức, lộ trình 30 ngày, phần thực hành và bộ Q&A khoá PIN.', 'Personal project', 'Solo owner (product, architecture, content model, AI-assisted implementation, review and merge)', 'Chủ dự án một mình (sản phẩm, kiến trúc, mô hình nội dung, triển khai với AI, review và merge)', 1, '2026-09-01', NULL, NULL, NULL, 0, 0, 'https://parker-interview-senior-fe.vercel.app', NULL, 'Senior FE interview prep meant scattered notes, plans and Q&A. Parker wanted one place to study daily, track progress and rehearse answers in Vietnamese and English, with content not easy to scrape or tied to app code.', 'Ôn phỏng vấn Senior FE với ghi chú, lộ trình, câu hỏi rải rác rất khó theo. Parker muốn một chỗ để học mỗi ngày, theo dõi tiến độ, luyện trả lời bằng cả tiếng Việt và tiếng Anh, nội dung không dễ bị lấy và không dính vào code app.', 'Solo, limited time; execution delegated to AI agents so code had to stay easy to review. Bilingual content editable without app changes. Private Q&A answers must not ship in client JS. Free/cheap hosting on Vercel, no database.', 'Làm một mình, ít thời gian; code giao cho AI agent nên phải dễ review. Nội dung song ngữ sửa được mà không đụng app. Câu trả lời Q&A không được lộ trong JS client. Host rẻ/miễn phí trên Vercel, không database.', 'Nuxt 3 + Nitro app with content in a separate private data repository, pulled at build time and served only through server APIs. Every string is {en, vi}; docs are typed blocks rendered by a shared BlockRenderer. Modules for hub, knowledge base, study plan, practice and interview Q&A. The data repo''s CI validates en/vi parity, block schema, heading ids, anchors, Q&A counts, plan budgets, practice prerequisites and a PII check; merging to main fires a Vercel deploy hook, and a failed build keeps the previous deployment. Started on Netlify, moved to Vercel, then to bilingual JSON APIs (PR #25).', 'App Nuxt 3 + Nitro, nội dung nằm ở một repo dữ liệu riêng tư, được kéo về lúc build và chỉ trả ra qua API phía server. Mọi chuỗi đều {en, vi}; tài liệu là các block có kiểu, render bằng BlockRenderer dùng chung. Chia module hub, kho kiến thức, lộ trình, thực hành, Q&A. CI của repo dữ liệu kiểm tra đủ en/vi, schema block, heading id, anchor, số câu Q&A, giới hạn lộ trình, quan hệ bước thực hành và kiểm tra PII; merge vào main gọi deploy hook của Vercel, build lỗi thì bản cũ vẫn chạy. Bắt đầu trên Netlify, chuyển sang Vercel, rồi sang API JSON song ngữ (PR #25).', 'Content/app split with build-time pull. Deploy hook so content updates need no app PR. PIN gates (6-digit, HttpOnly cookie, 12h, HMAC-signed, separate read vs edit scopes); GitHub OAuth owner-only admin (PR #27) is NOT shipped (open, not merged). Content static per build from server assets (CDN cache headers: TODO confirm). Localized {en, vi} data plus @nuxtjs/i18n with no URL prefix for instant switching.', 'Tách nội dung khỏi app, kéo lúc build. Deploy hook để cập nhật nội dung không cần PR app. Khoá PIN (6 số, cookie HttpOnly, 12 giờ, ký HMAC, tách quyền xem và sửa); đăng nhập GitHub OAuth cho chủ repo (PR #27) CHƯA phát hành (đang mở, chưa merge). Nội dung cố định theo mỗi build từ server assets (header cache CDN: cần xác nhận). Dữ liệu {en, vi} cùng @nuxtjs/i18n không prefix URL, đổi ngôn ngữ ngay.', 'Live site with knowledge base, 30-day plan, practice path, design page and PIN-protected Q&A in vi and en. Content updates by merging to the data repo, no app release. 33 PRs in about four weeks, each reviewed by Parker.', 'Trang đã chạy với kho kiến thức, lộ trình 30 ngày, thực hành, trang thiết kế và Q&A khoá PIN, đủ vi và en. Cập nhật nội dung chỉ cần merge repo dữ liệu, không release app. 33 PR trong khoảng bốn tuần, PR nào Parker cũng review.', 'DRAFT (Parker to confirm): separating content from code early made the bilingual rewrite simpler; CI validation matters more when AI agents write content; layout bugs show up only on real devices, so check early.', 'BẢN NHÁP (Parker xác nhận): tách nội dung khỏi code sớm giúp viết lại song ngữ nhẹ hơn; script kiểm tra trong CI càng quan trọng khi AI viết nội dung; lỗi layout chỉ lộ trên máy thật, nên kiểm sớm.', '33 PRs in ~4 weeks
+22 KB topics (vi/en)
+142-question Q&A bank
+Solo, AI-assisted', '33 PR trong ~4 tuần
+22 chủ đề kiến thức (vi/en)
+Bộ 142 câu hỏi
+Một mình, có AI hỗ trợ', 'Nuxt 3, Nitro, Vue 3, TypeScript, Tailwind CSS, @nuxtjs/i18n, marked, Vercel Blob, Vitest, GitHub Actions', 'Nuxt 3, Nitro, Vue 3, TypeScript, Tailwind CSS, @nuxtjs/i18n, marked, Vercel Blob, Vitest, GitHub Actions', 'No human teammates. Code largely generated by AI coding agents (Claude for planning/review, grok for execution) under Parker''s direction, with every PR reviewed and merged by him. Third-party: Nuxt, Vue, Tailwind, @nuxtjs/i18n, marked, Vercel platform.', NULL, NULL, NULL, NULL, NULL, NULL, 'DRAFT', NULL, 8, NULL, NULL, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3)),
+  (10, 'lil-p', 'lil.p', 'lil.p', 'Bilingual portfolio and admin CMS: Next.js + NestJS, block pages, Tiptap, free Vercel + Render + TiDB + Cloudinary hosting.', 'Portfolio song ngữ và CMS admin: Next.js + NestJS, page dựng từ block, Tiptap, host miễn phí Vercel + Render + TiDB + Cloudinary.', 'Personal project', 'Solo developer (owner)', 'Lập trình viên (một mình, owner)', 1, '2026-10-01', NULL, NULL, NULL, 0, 0, NULL, 'https://github.com/parker2808/lil.p', 'Need a public portfolio that is also a real CMS: bilingual EN/VI, admin-editable pages, case studies and notes, with no hard-coded visitor copy and no paid hosting.', 'Cần một portfolio công khai đồng thời là CMS thật: song ngữ EN/VI, page sửa được trong admin, case study và ghi chép, không hard-code nội dung visitor và không host trả phí.', '- Content lives in MySQL and is edited in /admin; UI code holds only chrome labels and the block registry (PLAN ground rule 1).
 - Privacy: never commit a real email or phone; seeds use <email> / <phone>.
 - Auth is JWT in httpOnly cookies, roles admin and user only (D7, D24).
 - Admin Markdown editor must stay on free MIT Tiptap packages (D25).
@@ -464,7 +471,7 @@ Vercel + Render + TiDB + Cloudinary
 Solo', '67 task trong plan
 69 PR đã merge (2026-10-27)
 Vercel + Render + TiDB + Cloudinary
-Làm một mình', 'Next.js, NestJS, Prisma, TiDB, Tiptap, dnd-kit, next-intl, Vercel, Render', 'Next.js, NestJS, Prisma, TiDB, Tiptap, dnd-kit, next-intl, Vercel, Render', 'Design spec, Figma, mockups and the practice roadmap (snapshotted in docs/design/). shadcn CLI primitives. Tiptap, dnd-kit, Next.js, NestJS, Prisma, TiDB, Cloudinary, Vercel and Render as libraries or hosts. cursor/* implementation PRs were written with Cursor AI agents under Parker''s direction; PLAN decisions marked Parker are his.', 'Spec thiết kế, Figma, mockup và practice roadmap (snapshot trong docs/design/). Primitive do shadcn CLI sinh. Tiptap, dnd-kit, Next.js, NestJS, Prisma, TiDB, Cloudinary, Vercel và Render là thư viện hoặc host. Các PR cursor/* viết cùng Cursor AI agent dưới sự chỉ đạo của Parker; quyết định PLAN gắn Parker là của anh ấy.', NULL, NULL, NULL, NULL, NULL, 'DRAFT', NULL, 8, 4, NULL, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3))
+Làm một mình', 'Next.js, NestJS, Prisma, TiDB, Tiptap, dnd-kit, next-intl, Vercel, Render', 'Next.js, NestJS, Prisma, TiDB, Tiptap, dnd-kit, next-intl, Vercel, Render', 'Design spec, Figma, mockups and the practice roadmap (snapshotted in docs/design/). shadcn CLI primitives. Tiptap, dnd-kit, Next.js, NestJS, Prisma, TiDB, Cloudinary, Vercel and Render as libraries or hosts. cursor/* implementation PRs were written with Cursor AI agents under Parker''s direction; PLAN decisions marked Parker are his.', 'Spec thiết kế, Figma, mockup và practice roadmap (snapshot trong docs/design/). Primitive do shadcn CLI sinh. Tiptap, dnd-kit, Next.js, NestJS, Prisma, TiDB, Cloudinary, Vercel và Render là thư viện hoặc host. Các PR cursor/* viết cùng Cursor AI agent dưới sự chỉ đạo của Parker; quyết định PLAN gắn Parker là của anh ấy.', NULL, NULL, NULL, NULL, NULL, 'DRAFT', NULL, 9, 4, NULL, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3))
 ON DUPLICATE KEY UPDATE
   `slug` = VALUES(`slug`),
   `titleEn` = VALUES(`titleEn`),
@@ -527,8 +534,12 @@ VALUES
   (9, 7, 'Story steps', 'Số bước', NULL, NULL, '15', 0, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3)),
   (10, 7, 'Overlap cases', 'Case overlap', NULL, NULL, '2,880 / 0 fail', 1, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3)),
   (11, 7, 'PRs merged', 'PR đã merge', NULL, NULL, '9', 2, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3)),
-  (12, 9, 'Plan tasks', 'Task trong plan', NULL, NULL, '67', 0, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3)),
-  (13, 9, 'Merged PRs (2026-10-27)', 'PR đã merge (2026-10-27)', NULL, NULL, '69', 1, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3))
+  (12, 9, 'PRs merged', 'PR', NULL, NULL, '33', 0, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3)),
+  (13, 9, 'Knowledge-base topics', 'Chủ đề kiến thức', NULL, NULL, '22', 1, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3)),
+  (14, 9, 'Q&A questions', 'Câu hỏi Q&A', NULL, NULL, '142', 2, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3)),
+  (15, 9, 'Practice steps', 'Bước thực hành', NULL, NULL, '33 (p01–p33)', 3, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3)),
+  (16, 10, 'Plan tasks', 'Task trong plan', NULL, NULL, '67', 0, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3)),
+  (17, 10, 'Merged PRs (2026-10-27)', 'PR đã merge (2026-10-27)', NULL, NULL, '69', 1, CURRENT_TIMESTAMP(3), CURRENT_TIMESTAMP(3))
 ON DUPLICATE KEY UPDATE
   `projectId` = VALUES(`projectId`),
   `labelEn` = VALUES(`labelEn`),
@@ -683,6 +694,18 @@ SELECT p.id AS `A`, s.id AS `B` FROM `project` p INNER JOIN `skill` s ON p.slug 
 UNION ALL
 SELECT p.id AS `A`, s.id AS `B` FROM `project` p INNER JOIN `skill` s ON p.slug = 'ctrack-crystal' AND s.slug = 'git'
 UNION ALL
+SELECT p.id AS `A`, s.id AS `B` FROM `project` p INNER JOIN `skill` s ON p.slug = 'interview-senior-fe' AND s.slug = 'nuxt-3'
+UNION ALL
+SELECT p.id AS `A`, s.id AS `B` FROM `project` p INNER JOIN `skill` s ON p.slug = 'interview-senior-fe' AND s.slug = 'vue-3'
+UNION ALL
+SELECT p.id AS `A`, s.id AS `B` FROM `project` p INNER JOIN `skill` s ON p.slug = 'interview-senior-fe' AND s.slug = 'typescript'
+UNION ALL
+SELECT p.id AS `A`, s.id AS `B` FROM `project` p INNER JOIN `skill` s ON p.slug = 'interview-senior-fe' AND s.slug = 'tailwind-css'
+UNION ALL
+SELECT p.id AS `A`, s.id AS `B` FROM `project` p INNER JOIN `skill` s ON p.slug = 'interview-senior-fe' AND s.slug = 'vue-i18n'
+UNION ALL
+SELECT p.id AS `A`, s.id AS `B` FROM `project` p INNER JOIN `skill` s ON p.slug = 'interview-senior-fe' AND s.slug = 'vitest'
+UNION ALL
 SELECT p.id AS `A`, s.id AS `B` FROM `project` p INNER JOIN `skill` s ON p.slug = 'lil-p' AND s.slug = 'react-nextjs'
 UNION ALL
 SELECT p.id AS `A`, s.id AS `B` FROM `project` p INNER JOIN `skill` s ON p.slug = 'lil-p' AND s.slug = 'typescript'
@@ -821,9 +844,9 @@ WHERE p.`key` = 'CONTACT' AND p.publishedVersionId IS NULL;
 --   profile_stat: 4
 --   process_step: 5
 --   domain: 4
---   project: 9
---   project_metric: 13
+--   project: 10
+--   project_metric: 17
 --   page: 5
 --   page_block: 22
 --   _ExperienceToSkill: 27
---   _ProjectToSkill: 52
+--   _ProjectToSkill: 58

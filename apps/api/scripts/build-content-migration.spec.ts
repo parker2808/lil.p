@@ -22,6 +22,8 @@ describe('build-content-migration', () => {
     expect(sql).toContain("'lil-p'");
     expect(sql).toContain("'lil-j-birthday-site'");
     expect(sql).toContain("'ctrack-crystal'");
+    expect(sql).toContain("'interview-senior-fe'");
+    expect(sql).not.toContain('interview-fe-data');
     expect(sql.toLowerCase()).not.toContain('delete from `user`');
     expect(sql.toLowerCase()).not.toContain('truncate');
     expect(sql.toLowerCase()).not.toContain('drop table');
@@ -47,7 +49,11 @@ describe('build-content-migration', () => {
     ]);
     expect(
       projects.filter((project) => !project.isConfidential).map((project) => project.slug),
-    ).toEqual(['lil-j-birthday-site', 'lil-p']);
+    ).toEqual(['lil-j-birthday-site', 'interview-senior-fe', 'lil-p']);
+    const interview = projects.find((project) => project.slug === 'interview-senior-fe');
+    expect(interview?.repoUrl).toBeNull();
+    expect(interview?.status).toBe('DRAFT');
+    expect(interview?.decisionsEn).toMatch(/NOT shipped/i);
     expect(projects.every((project) => project.status === 'DRAFT')).toBe(true);
   });
 
@@ -80,7 +86,7 @@ describe('build-content-migration', () => {
       profile_stat: 4,
       process_step: 5,
       domain: 4,
-      project: 9,
+      project: 10,
       page: 5,
     });
     expect(counts.skill).toBeGreaterThan(20);

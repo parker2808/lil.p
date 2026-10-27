@@ -60,7 +60,7 @@ describe('portfolio content migration', () => {
     const projects = await prisma.project.findMany({
       select: { slug: true, status: true, isConfidential: true },
     });
-    expect(projects).toHaveLength(9);
+    expect(projects).toHaveLength(10);
     expect(projects.every((project) => project.status === 'DRAFT')).toBe(true);
     expect(projects.find((project) => project.slug === 'ctrack-crystal')?.isConfidential).toBe(
       true,

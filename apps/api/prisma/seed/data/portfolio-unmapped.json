@@ -9,12 +9,13 @@
       "docs/case-studies/cfw-sales-crm-portal.md",
       "docs/case-studies/lil-j-birthday-site.md",
       "docs/case-studies/ctrack-crystal.md",
+      "docs/case-studies/interview-senior-fe.md",
       "docs/case-studies/lil-p.md",
       "docs/design/portfolio-design-system.md §1.5 (data model)",
       "docs/PLAN.md",
       "docs/DEPLOY.md"
     ],
-    "conventions": "Bilingual fields are xxxEn / xxxVi columns per spec §1.5. TODO marks unknowns. <email>/<phone> are placeholders. Project status comes from each row (all DRAFT unless Parker publishes)."
+    "conventions": "Bilingual fields are xxxEn / xxxVi columns per spec §1.5. TODO marks unknowns. <email>/<phone> are placeholders. Project status comes from each row (all DRAFT unless Parker publishes). Private content-data repository is described, never named or linked."
   },
   "siteSettings": {
     "availability": "TODO (OPEN | NOT_LOOKING | FREELANCE)",
@@ -217,6 +218,11 @@
     {
       "slug": "ctrack-crystal",
       "note": "Source: /cursor/stores/user/portfolio/ctrack-crystal.md (CV entry). No metrics given. TODO: employer/experience key, confirm overlap with CFW projects (Jul–Oct 2026), client name confidential unless Parker confirms. Jest/Supertest/Robot Framework have no skill slugs.",
+      "reason": "Project has no free-form note column."
+    },
+    {
+      "slug": "interview-senior-fe",
+      "note": "Source: docs/case-studies/interview-senior-fe.md. Counts (22 topics, 142 questions, 33 PRs) quoted from the app README / PR list. Content lives in a private data repository: described, never named or linked. NOT SHIPPED: GitHub OAuth + owner-only admin (PR #27, open, not merged). UNVERIFIED (confirm before publishing): diacritic-insensitive search, OAuth restricted to the owner + middleware locking write APIs, CDN caching. repoUrl null until Parker confirms the app repo is public. No usage numbers.",
       "reason": "Project has no free-form note column."
     },
     {

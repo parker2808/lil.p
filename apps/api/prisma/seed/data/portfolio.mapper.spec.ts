@@ -46,6 +46,7 @@ describe('portfolio mapper', () => {
       'migration-data-tool',
       'lil-j-birthday-site',
       'ctrack-crystal',
+      'interview-senior-fe',
       'lil-p',
     ]);
     expect(projects.every((project) => project.status === 'DRAFT')).toBe(true);
