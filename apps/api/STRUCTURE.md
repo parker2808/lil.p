@@ -21,7 +21,7 @@ test/                     # integration tests against the test DB (supertest)
 api.http                  # one request per route, run with VS Code REST Client or curl
 prisma.config.ts          # Prisma CLI config (Prisma 7+)
 Dockerfile                # multi-stage production image (compose.prod.yml)
-docker-entrypoint.sh      # `prisma migrate deploy` then the given command
+docker-entrypoint.sh      # `prisma migrate deploy` then the given command (skipped when argv[0] is `prisma`)
 scripts/bundle-seed.mjs   # `node dist/seed.js` after `pnpm build`
 scripts/build-content-migration.ts  # JSON → prisma/migrations/20261027150000_portfolio_content/
 ```

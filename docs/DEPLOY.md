@@ -75,6 +75,19 @@ entrypoint, then `node dist/main.js`. The process binds `0.0.0.0:$PORT`
    node dist/seed.js
    ```
 
+   If `prisma migrate deploy` fails mid-migration (Prisma P3009 / P3018),
+   mark that migration rolled back **before** the next deploy. Image
+   cwd is `/app` (same as `node dist/seed.js`). Set the Render **Docker
+   Command** to:
+
+   ```bash
+   prisma migrate resolve --rolled-back 20261027150000_portfolio_content
+   ```
+
+   Then reset Docker Command to `node dist/main.js` (or empty) and
+   deploy again so the entrypoint can apply the fixed SQL. The
+   entrypoint skips auto-deploy when the command starts with `prisma`.
+
    `SEED_PROFILE=baseline` is already in the Blueprint. Skip this if
    migrate already loaded the CV and you only need an admin: set
    `ADMIN_EMAIL` / `ADMIN_NAME` / `ADMIN_PASSWORD` and run seed on an

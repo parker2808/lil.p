@@ -14,6 +14,21 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { createTestApp } from './helpers/create-app';
 import { migrateTestDb, truncateTables } from './helpers/reset-db';
 
+async function joinCount(
+  prisma: PrismaService,
+  table: '_ExperienceToSkill' | '_ProjectToSkill',
+): Promise<Array<{ c: number | bigint }>> {
+  return prisma.$queryRawUnsafe(`SELECT COUNT(*) AS c FROM \`${table}\``);
+}
+
+function experienceSkillCount(prisma: PrismaService) {
+  return joinCount(prisma, '_ExperienceToSkill');
+}
+
+function projectSkillCount(prisma: PrismaService) {
+  return joinCount(prisma, '_ProjectToSkill');
+}
+
 async function applyContentSql(prisma: PrismaService): Promise<void> {
   const statements = splitSqlStatements(readFileSync(MIGRATION_SQL_PATH, 'utf8'));
   for (const statement of statements) {
@@ -56,6 +71,8 @@ describe('portfolio content migration', () => {
     expect(await prisma.projectMetric.count()).toBe(counts.project_metric);
     expect(await prisma.page.count()).toBe(counts.page);
     expect(await prisma.pageBlock.count()).toBe(counts.page_block);
+    expect(Number((await experienceSkillCount(prisma))[0]?.c)).toBe(counts._ExperienceToSkill);
+    expect(Number((await projectSkillCount(prisma))[0]?.c)).toBe(counts._ProjectToSkill);
 
     const projects = await prisma.project.findMany({
       select: { slug: true, status: true, isConfidential: true },
@@ -85,6 +102,8 @@ describe('portfolio content migration', () => {
     expect(await prisma.user.findUnique({ where: { email: keepEmail } })).toBeTruthy();
     expect(await prisma.project.count()).toBe(counts.project);
     expect(await prisma.navItem.count()).toBe(counts.nav_item);
+    expect(Number((await experienceSkillCount(prisma))[0]?.c)).toBe(counts._ExperienceToSkill);
+    expect(Number((await projectSkillCount(prisma))[0]?.c)).toBe(counts._ProjectToSkill);
   });
 
   it('still accepts the demo seed after migrate', async () => {

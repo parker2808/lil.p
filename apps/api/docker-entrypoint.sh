@@ -18,6 +18,13 @@ fi
 
 mkdir -p /app/uploads || true
 
+# One-off Prisma CLI (migrate resolve, etc.) skips auto-deploy so P3009
+# can be cleared. Docker Command example:
+#   prisma migrate resolve --rolled-back 20261027150000_portfolio_content
+if [ "${1:-}" = "prisma" ]; then
+  exec "$@"
+fi
+
 echo "Applying Prisma migrations…"
 prisma migrate deploy
 
