@@ -51,7 +51,7 @@ Built with cloud AI coding agents: planning and review with Claude, execution wi
 
 ## TODO (confirm with Parker)
 
-- Review Problem statement and Lessons (sent to Parker 2026-10-27).
+- None. Problem and Lessons approved by Parker 2026-10-27.
 
 ---
 
@@ -97,7 +97,7 @@ flowchart LR
 - Content can be updated by merging to the data repo, without app releases.
 - Iterated quickly through 33 PRs in about four weeks, each reviewed by Parker.
 
-## Lessons (TODO draft, Parker to confirm)
+## Lessons
 
 - Separating content from code early made the later bilingual rewrite much simpler.
 - Validation scripts in CI matter more when AI agents write the content.
@@ -136,7 +136,7 @@ Xem sơ đồ mermaid ở bản EN phía trên.
 - Cập nhật nội dung chỉ cần merge bên repo data, không phải release app.
 - Đi qua 33 PR trong khoảng bốn tuần, PR nào Parker cũng tự review.
 
-## Bài học (bản nháp, Parker xác nhận)
+## Bài học
 
 - Tách nội dung khỏi code từ sớm giúp lần viết lại song ngữ nhẹ hơn hẳn.
 - Khi AI viết nội dung thì script kiểm tra trong CI càng quan trọng.

@@ -54,8 +54,10 @@ describe('build-content-migration', () => {
     expect(interview?.repoUrl).toBe('https://github.com/parker2808/interview-senior-fe');
     expect(interview?.status).toBe('DRAFT');
     expect(interview?.decisionsEn).toMatch(/In development/);
-    expect(interview?.problemEn).toMatch(/UNDER PARKER'S REVIEW/);
-    expect(interview?.lessonsEn).toMatch(/UNDER PARKER'S REVIEW/);
+    expect(interview?.problemEn).toMatch(/scattered notes, plans and Q&A/);
+    expect(interview?.lessonsEn).toMatch(/Separating content from code early/);
+    expect(interview?.problemEn).not.toMatch(/UNDER PARKER'S REVIEW/);
+    expect(interview?.lessonsEn).not.toMatch(/UNDER PARKER'S REVIEW/);
     expect(projects.every((project) => project.status === 'DRAFT')).toBe(true);
   });
 

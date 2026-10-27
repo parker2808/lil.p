@@ -222,7 +222,7 @@
     },
     {
       "slug": "interview-senior-fe",
-      "note": "Source: docs/case-studies/interview-senior-fe.md (updated 2026-10-27). Counts (22 topics, 142 questions, 33 PRs) quoted from repo READMEs/PR list; no usage metrics by Parker's choice. Data repo is private: described only, never named or linked. GitHub OAuth (PR #27): In development. Search, write-API middleware and CDN caching confirmed by Parker 2026-10-27. Problem and Lessons under Parker's review.",
+      "note": "Source: docs/case-studies/interview-senior-fe.md (updated 2026-10-27). Counts (22 topics, 142 questions, 33 PRs) quoted from repo READMEs/PR list; no usage metrics by Parker's choice. Data repo is private: described only, never named or linked. GitHub OAuth (PR #27): In development. Search, write-API middleware and CDN caching confirmed by Parker 2026-10-27. Problem and Lessons approved by Parker 2026-10-27.",
       "reason": "Project has no free-form note column."
     },
     {

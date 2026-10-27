@@ -62,8 +62,10 @@ describe('portfolio mapper', () => {
     expect(interview?.isConfidential).toBe(false);
     expect(interview?.repoUrl).toBe('https://github.com/parker2808/interview-senior-fe');
     expect(interview?.decisionsEn).toMatch(/In development/);
-    expect(interview?.problemEn).toMatch(/UNDER PARKER'S REVIEW/);
-    expect(interview?.lessonsEn).toMatch(/UNDER PARKER'S REVIEW/);
+    expect(interview?.problemEn).toMatch(/scattered notes, plans and Q&A/);
+    expect(interview?.lessonsEn).toMatch(/Separating content from code early/);
+    expect(interview?.problemEn).not.toMatch(/UNDER PARKER'S REVIEW/);
+    expect(interview?.lessonsEn).not.toMatch(/UNDER PARKER'S REVIEW/);
 
     const lilP = projects.find((project) => project.slug === 'lil-p');
     expect(lilP?.isConfidential).toBe(false);
