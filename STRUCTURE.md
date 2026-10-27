@@ -26,7 +26,7 @@ apps/web/Dockerfile       # multi-stage Next standalone image
 apps/api/Dockerfile       # multi-stage Nest image; entrypoint runs migrate deploy
 ```
 
-Content (profile, projects, posts, settings, translations, and each page's blocks: their order, layout and props) lives in MySQL and is edited in `/admin`. It is never hard-coded in the web or UI apps. Code only decides which block _types_ exist (PLAN D26). Seed data in `apps/api/prisma/seed/` holds the owner CV (`data/portfolio-data.json`, loaded by the `baseline`/`owner` profile) and demo placeholders. Contact values stay `<email>` / `<phone>`.
+Content (profile, projects, posts, settings, translations, and each page's blocks: their order, layout and props) lives in MySQL and is edited in `/admin`. It is never hard-coded in the web or UI apps. Code only decides which block _types_ exist (PLAN D26). Owner CV backup: `apps/api/prisma/seed/data/portfolio-data.json` plus `docs/case-studies/`. `pnpm --filter @portfolio/api content:migration` regenerates the Prisma data migration (`prisma/migrations/20261027150000_portfolio_content/`) that `prisma migrate deploy` applies on Render. Seed profiles still exist: `demo` (dev/CI) and `baseline`/`owner` (first boot / local reset). Demo seed replaces nav/social/topics **and** published `page_version` rows so Playwright keeps mockup copy after `migrate deploy`. Contact values stay `<email>` / `<phone>`.
 
 ## Dependency direction
 
@@ -142,6 +142,7 @@ pnpm check:content           # no CV strings in UI code, no email/phone anywhere
 pnpm check:placeholders      # DATABASE_URL: 0 seed placeholders in live/published rows
 pnpm check:deps              # no paid Tiptap packages or private Tiptap registry; every @tiptap/* and @dnd-kit/* is MIT
 pnpm db:migrate | db:reset | db:seed | db:studio
+pnpm --filter @portfolio/api content:migration   # regenerate owner-content SQL from the JSON
 docker compose up -d db adminer
 ```
 

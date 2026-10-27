@@ -24,3 +24,6 @@ docs/PLAN.vi.md
 
 # App STRUCTURE tables are hand-authored; Prettier expands them past readable width
 apps/*/STRUCTURE.md
+
+# Generated owner-content SQL (pnpm --filter @portfolio/api content:migration)
+apps/api/prisma/migrations/20261027150000_portfolio_content/migration.sql

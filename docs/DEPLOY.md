@@ -56,16 +56,31 @@ entrypoint, then `node dist/main.js`. The process binds `0.0.0.0:$PORT`
 
 3. `CROSS_SITE_COOKIES=1` is set by the Blueprint. Cookies are
    `SameSite=None; Secure`. CORS allows `WEB_ORIGIN`.
-4. After the first deploy is healthy, seed **once** from a Render shell
-   (do not seed on every boot — the owner seed wipes content rows):
+4. `prisma migrate deploy` (API image entrypoint) applies schema **and**
+   the generated owner-content migration
+   (`20261027150000_portfolio_content`). That upserts profile, settings,
+   experience, skills, projects (DRAFT, `isConfidential` as in the JSON),
+   and page drafts. It does not delete `user` rows or extra rows Parker
+   added. To regenerate the SQL after editing the JSON:
+
+   ```bash
+   pnpm --filter @portfolio/api content:migration
+   ```
+
+5. After the first deploy is healthy, create the admin user **once** from
+   a Render shell if `/admin/login` has no account. Do not re-run the
+   owner seed on a live database — `seedOwner` wipes content rows:
 
    ```bash
    node dist/seed.js
    ```
 
-   `SEED_PROFILE=baseline` is already in the Blueprint.
+   `SEED_PROFILE=baseline` is already in the Blueprint. Skip this if
+   migrate already loaded the CV and you only need an admin: set
+   `ADMIN_EMAIL` / `ADMIN_NAME` / `ADMIN_PASSWORD` and run seed on an
+   empty user table, or create the user in the DB.
 
-5. Confirm `https://<render-host>/api/health` returns
+6. Confirm `https://<render-host>/api/health` returns
    `{ "status": "ok", "db": "ok" }`.
 
 Free web services spin down after ~15 minutes idle. The Next app sends a

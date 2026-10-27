@@ -156,39 +156,20 @@ export async function seedSite(prisma: PrismaClient): Promise<void> {
     update: profileData,
   });
 
+  // Replace chrome rows so migrate-deployed owner nav/social cannot leak into demo.
+  await prisma.navItem.deleteMany();
+  await prisma.socialLink.deleteMany();
+  await prisma.contactTopic.deleteMany();
+
   for (const item of navItemsData) {
-    const existing = await prisma.navItem.findFirst({
-      where: { location: item.location, href: item.href },
-    });
-    if (existing) {
-      await prisma.navItem.update({
-        where: { id: existing.id },
-        data: item,
-      });
-    } else {
-      await prisma.navItem.create({ data: item });
-    }
+    await prisma.navItem.create({ data: item });
   }
 
   for (const topic of contactTopicsData) {
-    await prisma.contactTopic.upsert({
-      where: { slug: topic.slug },
-      create: topic,
-      update: topic,
-    });
+    await prisma.contactTopic.create({ data: topic });
   }
 
   for (const link of socialLinksData) {
-    const existing = await prisma.socialLink.findFirst({
-      where: { kind: link.kind },
-    });
-    if (existing) {
-      await prisma.socialLink.update({
-        where: { id: existing.id },
-        data: link,
-      });
-    } else {
-      await prisma.socialLink.create({ data: link });
-    }
+    await prisma.socialLink.create({ data: link });
   }
 }

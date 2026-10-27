@@ -9,7 +9,11 @@ not a VPS. Step-by-step (beginner): [docs/DEPLOY.md](../DEPLOY.md)
 1. Create TiDB, Cloudinary, Render Blueprint, Vercel project (DEPLOY.md).
 2. Paste env vars in each dashboard. No secrets in git.
 3. Wait for Render `GET /api/health` `{status,db}=ok`.
-4. Seed once in a Render shell: `node dist/seed.js` (`SEED_PROFILE=baseline`).
+4. `prisma migrate deploy` loads the owner CV (content migration). Seed
+   once only if you still need the admin user: `node dist/seed.js`
+   (`SEED_PROFILE=baseline`). Do not re-seed a live DB — it wipes
+   content rows. Regenerate the SQL with
+   `pnpm --filter @portfolio/api content:migration`.
 5. Open the Vercel origin. Sign in at `/admin/login`. Change the password.
 
 ## Rolling forward

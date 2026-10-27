@@ -450,13 +450,17 @@ export async function seedPages(
 }
 
 export async function publishSeedPages(prisma: PrismaClient): Promise<void> {
+  // migrate deploy may have published owner snapshots first. Seed must
+  // replace those so demo/CI Playwright still sees mockup copy (v1).
+  await prisma.page.updateMany({
+    data: { publishedVersionId: null, publishedAt: null },
+  });
+  await prisma.pageVersion.deleteMany();
+
   const pages = await prisma.page.findMany({
-    include: { blocks: { orderBy: { sortOrder: 'asc' } }, publishedVersion: true },
+    include: { blocks: { orderBy: { sortOrder: 'asc' } } },
   });
   for (const page of pages) {
-    if (page.publishedVersionId) {
-      continue;
-    }
     const snapshot = {
       seo: {
         seoTitleEn: page.seoTitleEn,

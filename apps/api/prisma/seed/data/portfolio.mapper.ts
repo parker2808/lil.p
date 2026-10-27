@@ -382,8 +382,8 @@ export function mapProjects(data: PortfolioJson) {
     seoTitleVi: optionalText(row.seoTitleVi),
     seoDescriptionEn: optionalText(row.seoDescriptionEn),
     seoDescriptionVi: optionalText(row.seoDescriptionVi),
-    notMineEn: optionalText(row.notMine),
-    notMineVi: null,
+    notMineEn: optionalText(row.notMineEn) ?? optionalText(row.notMine),
+    notMineVi: optionalText(row.notMineVi),
     releaseStatus: mapReleaseStatus(row.releaseStatus),
     skillSlugs: Array.isArray(row.skills) ? row.skills.map((slug) => String(slug)) : [],
     metrics: Array.isArray(row.metrics)
@@ -399,10 +399,17 @@ export function mapProjects(data: PortfolioJson) {
           };
         })
       : [],
-    status: 'DRAFT' satisfies ContentStatus,
-    publishedAt: null,
+    status: parseContentStatus(row.status),
+    publishedAt: row.status === 'PUBLISHED' ? parseMonthDate(optionalText(row.publishedAt)) : null,
     sortOrder: int(row.sortOrder),
   }));
+}
+
+function parseContentStatus(value: unknown): ContentStatus {
+  if (value === 'PUBLISHED' || value === 'ARCHIVED' || value === 'DRAFT') {
+    return value;
+  }
+  return 'DRAFT';
 }
 
 /**
