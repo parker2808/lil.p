@@ -186,7 +186,7 @@ With no project images today, every cover is a **generative cover**: domain hue,
 
 The admin shares type, spacing, radius and motion tokens with the public site, and every shadcn variable name, so `packages/ui` components render correctly in either scope.
 
-**Shape.** One radius ladder based on 10px. Size decides the step. Continuous (squircle) corners are used where supported, and nested surfaces stay concentric. See [§4.4](#44-radius--10px-base-apple-style-scale-continuous-corners).
+**Shape.** One radius ladder based on 10px. Size decides the step. Continuous (squircle) corners are used where supported, and nested surfaces stay concentric. See [§4.4](#44-radius-10px-base-apple-style-scale-continuous-corners).
 
 ---
 
@@ -377,7 +377,7 @@ Legend: **new** (new component), **restyle** (same API, new look), **extend** (n
 | Tokens + `@theme inline` mapping | restyle | R1; both scopes. |
 | `Button` (`ui/button.tsx`) | extend | Variants `default`, `ghost`, `signal`, `link`; sizes `sm`/`md`/`lg`; public hover = print offset; admin = tint. |
 | `Kbd`, `Badge`, `StatusPill` | restyle | Status colors for DRAFT / PUBLISHED / ARCHIVED. |
-| `Nest` | new | Concentric radius wrapper ([§4.4](#44-radius--10px-base-apple-style-scale-continuous-corners)). |
+| `Nest` | new | Concentric radius wrapper ([§4.4](#44-radius-10px-base-apple-style-scale-continuous-corners)). |
 | `Chip`, `FilterChip` | new | Capsule, `aria-pressed`, wraps (rule 4). |
 | `Tag` | new | Mono, `--radius-xs`. |
 | `Monogram` | new | Initial(s) from `profile.displayName`; avatar fallback. |
