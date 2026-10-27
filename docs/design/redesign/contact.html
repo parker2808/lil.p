@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact · Ink &amp; Signal mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <style>
+    .contact { padding: clamp(40px, 7vw, 104px) 0 var(--section-y); }
+    .contact .left { grid-column: 1 / span 5; display: flex; flex-direction: column; gap: 24px; }
+    .contact .right { grid-column: 7 / -1; }
+    .channels { border-top: 1px solid var(--ink); margin-top: 16px; }
+    .channel { display: grid; grid-template-columns: 96px 1fr auto; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--rule); }
+    .form { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 24px; padding: 32px; background: var(--paper-raised); border: 1px solid var(--rule); border-radius: var(--radius-2xl); box-shadow: var(--shadow-2); }
+    .form .full { grid-column: 1 / -1; }
+    .form .foot { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .sent { display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: var(--radius-lg); background: var(--add-wash); color: var(--add); font-size: 14px; margin-top: 24px; }
+    @media (max-width: 960px) { .contact .left, .contact .right { grid-column: 1 / -1; } .form { grid-template-columns: 1fr; padding: 24px; } }
+  </style>
+</head>
+<body class="paper-grain" data-page="contact">
+  <div data-chrome="header"></div>
+  <main id="main">
+    <!-- contact-form block: eyebrow/title/intro (block props) + settings.contactIntro, replyTimeNote, availability, contactEmail, socialLinks, contact-topics -->
+    <section class="contact">
+      <div class="container grid">
+        <div class="left">
+          <span class="meta">§05 — Contact</span>
+          <h1 class="display t-h1">Let’s talk about <em>your product</em>.</h1>
+          <p class="lead">Senior frontend roles or a migration done right. Have a frontend role or project in mind? Send me a message.</p>
+          <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><span class="status">Open to roles</span><span class="meta">Usually replies within 2 days</span></div>
+          <div class="channels">
+            <div class="channel"><span class="meta">Email</span><span class="mono" style="text-transform:none;font-size:14px">&lt;email&gt;</span><button class="btn btn--ghost btn--sm" data-copy><span data-copy-label>Copy</span></button></div>
+            <div class="channel"><span class="meta">GitHub</span><span>parker2808</span><a class="btn btn--ghost btn--sm" href="#">Open ↗</a></div>
+            <div class="channel"><span class="meta">Time zone</span><span class="num" data-local-time="Asia/Ho_Chi_Minh">18:35</span><span class="meta">Hanoi</span></div>
+          </div>
+        </div>
+        <div class="right">
+          <form class="form" onsubmit="return false" novalidate>
+            <div class="field"><label for="n">Name</label><input id="n" class="input input--line" autocomplete="name" placeholder="Your name" /></div>
+            <div class="field"><label for="e">Email</label><input id="e" class="input input--line" type="email" autocomplete="email" placeholder="you@company" /></div>
+            <fieldset class="field full" style="border:0;padding:0;margin:0"><legend style="font-size:13px;font-weight:500;margin-bottom:8px">Topic</legend>
+              <div class="topic-group">
+                <label><input type="radio" name="t" checked /><span>Job opportunity</span></label>
+                <label><input type="radio" name="t" /><span>Freelance project</span></label>
+                <label><input type="radio" name="t" /><span>Just saying hi</span></label>
+              </div>
+            </fieldset>
+            <div class="field full"><label for="m">Message</label><textarea id="m" class="input textarea" placeholder="What are you building, and where does the frontend hurt?"></textarea><span class="hint" style="text-align:right">0 / 2000</span></div>
+            <div class="full foot"><span class="hint">No tracking. Your message goes to the admin inbox only.</span><button class="btn btn--signal" type="submit">Send message <span class="arrow">→</span></button></div>
+          </form>
+          <div class="sent" role="status"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 5 5 9-10"/></svg>Success state: “Thanks, message received. I will reply to your email.”</div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div data-chrome="footer"></div>
+  <script src="chrome.js"></script>
+  <script src="mock.js"></script>
+  <script src="mock-motion.js" defer></script>
+</body>
+</html>

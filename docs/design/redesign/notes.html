@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Notes · Ink &amp; Signal mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <style>
+    .page-head { padding: clamp(40px, 7vw, 104px) 0 48px; }
+    .page-head h1 { grid-column: 4 / -1; }
+    .page-head .lead { grid-column: 4 / span 6; margin-top: 24px; }
+    .page-head .count { grid-column: 1 / span 3; grid-row: 1; padding-top: 1.2em; }
+    .pinned { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); padding: 40px 0; border-top: 1px solid var(--ink); position: relative; }
+    .pinned .when { grid-column: 1 / span 3; }
+    .pinned .body { grid-column: 4 / span 7; display: flex; flex-direction: column; gap: 16px; }
+    .pinned h2 a::after { content: ""; position: absolute; inset: 0; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: center; margin: 48px 0 0; padding: 16px 0; }
+    .search { display: flex; align-items: center; gap: 8px; border: 1px solid var(--rule-strong); border-radius: var(--radius); padding: 0 10px; height: 40px; min-width: 260px; background: var(--paper-raised); }
+    .search input { border: 0; background: none; outline: none; flex: 1; }
+    .year { font: 300 var(--step-3)/1 var(--font-sans); font-stretch: 85%; letter-spacing: -0.04em; color: var(--ink-3); margin: 56px 0 16px; }
+    .vi-badge { font: 500 10px/1 var(--font-mono); padding: 3px 5px; border: 1px solid var(--rule-strong); border-radius: 2px; color: var(--ink-3); margin-left: 8px; vertical-align: 4px; }
+    @media (max-width: 960px) { .page-head h1, .page-head .lead, .page-head .count, .pinned .when, .pinned .body { grid-column: 1 / -1; grid-row: auto; } }
+  </style>
+</head>
+<body class="paper-grain" data-page="notes">
+  <div data-chrome="header"></div>
+  <main id="main">
+    <!-- page-header block -->
+    <section class="page-head"><div class="container grid" style="row-gap:0">
+      <div class="count"><span class="meta"><span style="color:var(--signal-ink)">§04</span>&nbsp;&nbsp;Notes</span></div>
+      <h1 class="display t-h1">Notes</h1>
+      <p class="lead">Short posts about work in progress.</p>
+    </div></section>
+
+    <!-- notes-browser block: featured post pinned, tag filter, search (⌘K reuses the palette), grouped by year -->
+    <section style="padding-bottom:var(--section-y)"><div class="container">
+      <article class="pinned">
+        <div class="when"><span class="meta">Pinned · Oct 12, 2026</span></div>
+        <div class="body">
+          <h2 class="display t-h2"><a href="post.html">Diff-only saves: never lose a form edit again</a></h2>
+          <p class="muted">How drafts, version checks and unsaved-change guards work together in a CMS editor.</p>
+          <div style="display:flex;gap:8px"><span class="tag">forms</span><span class="tag">ux</span><span class="meta" style="margin-left:8px;align-self:center">6 min read</span></div>
+        </div>
+      </article>
+
+      <div class="toolbar">
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="chip chip--filter" aria-pressed="true">All <span class="count">7</span></button>
+          <button class="chip chip--filter" aria-pressed="false">migration <span class="count">3</span></button>
+          <button class="chip chip--filter" aria-pressed="false">forms <span class="count">2</span></button>
+          <button class="chip chip--filter" aria-pressed="false">dx <span class="count">2</span></button>
+        </div>
+        <label class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input placeholder="Search notes" aria-label="Search notes" /><span class="kbd">/</span></label>
+      </div>
+
+      <div class="year">2026</div>
+      <div class="index-list">
+        <article class="index-row"><span class="i">Sep 28</span><h3><a href="post.html">Strangler routes in Nuxt 3, step by step</a></h3><span class="muted" style="font-size:14px">The routing trick that let us ship v2 one page at a time.</span><span class="tag" style="justify-self:start">migration</span><span class="go">9 min →</span></article>
+        <article class="index-row"><span class="i">Sep 03</span><h3><a href="post.html">Writing STRUCTURE.md so reviews get shorter</a></h3><span class="muted" style="font-size:14px">Conventions as a file, not as comments.</span><span class="tag" style="justify-self:start">dx</span><span class="go">4 min →</span></article>
+        <article class="index-row"><span class="i">Aug 17</span><h3><a href="post.html">TanStack Query as the only server cache<span class="vi-badge" title="Vietnamese translation not available">EN</span></a></h3><span class="muted" style="font-size:14px">What moved out of Pinia, and what stayed.</span><span class="tag" style="justify-self:start">migration</span><span class="go">7 min →</span></article>
+      </div>
+      <div class="year">2025</div>
+      <div class="index-list">
+        <article class="index-row"><span class="i">Dec 02</span><h3><a href="post.html">Playwright specs that survive a redesign</a></h3><span class="muted" style="font-size:14px">Role-based locators and fixtures from the API.</span><span class="tag" style="justify-self:start">testing</span><span class="go">8 min →</span></article>
+      </div>
+      <div style="display:flex;justify-content:center;margin-top:48px"><button class="btn btn--ghost">Load older notes</button></div>
+
+      <h2 class="meta" style="margin:96px 0 16px">Empty state (today: 0 published notes)</h2>
+      <div class="empty">
+        <span class="glyph" aria-hidden="true">¶</span>
+        <b>No notes yet</b>
+        <p class="muted" style="max-width:40ch;font-size:14px">Nothing published here yet. (Generic i18n chrome label, not content.)</p>
+        <a class="btn btn--ghost btn--sm" href="projects.html">Read case studies →</a>
+      </div>
+    </div></section>
+  </main>
+  <div data-chrome="footer"></div>
+  <script src="chrome.js"></script>
+  <script src="mock.js"></script>
+  <script src="mock-motion.js" defer></script>
+</body>
+</html>

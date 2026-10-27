@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projects · Ink &amp; Signal mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <style>
+    .browser-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 16px 0; border-block: 1px solid var(--rule); position: sticky; top: var(--header-h); background: color-mix(in oklab, var(--paper) 92%, transparent); backdrop-filter: blur(10px); z-index: 5; }
+    .pills { display: flex; flex-wrap: wrap; gap: 8px; } /* layout rule 4: wrap, never a nested horizontal scroller */
+    .tools { display: flex; gap: 8px; align-items: center; }
+    .results { display: flex; justify-content: space-between; margin: 32px 0 24px; }
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 64px var(--gutter); }
+    .cards .case-card:first-child { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gutter); align-items: end; }
+    .cards .case-card:first-child .cover { grid-column: 1 / span 8; aspect-ratio: 16 / 9; }
+    .cards .case-card:first-child .fc-body { grid-column: 9 / -1; display: flex; flex-direction: column; gap: 16px; padding-bottom: 8px; }
+    .cards .case-card:first-child h3 { font-size: var(--step-3); }
+    @media (max-width: 860px) {
+      .cards { grid-template-columns: 1fr; }
+      .cards .case-card:first-child { display: flex; }
+    }
+    .page-head { padding: clamp(40px, 7vw, 104px) 0 48px; }
+    .page-head h1 { grid-column: 4 / -1; }
+    .page-head .lead { grid-column: 4 / span 6; margin-top: 24px; }
+    .page-head .count { grid-column: 1 / span 3; grid-row: 1; align-self: start; padding-top: 1.2em; }
+    @media (max-width: 960px) { .page-head h1, .page-head .lead, .page-head .count { grid-column: 1 / -1; grid-row: auto; } }
+  </style>
+</head>
+<body class="paper-grain" data-page="projects">
+  <div data-chrome="header"></div>
+  <main id="main">
+    <!-- page-header block -->
+    <section class="page-head">
+      <div class="container grid" style="row-gap:0">
+        <div class="count sec-index" style="display:flex;gap:12px;align-items:center"><span class="n mono" style="color:var(--signal-ink)">§03</span><span class="meta">Work</span></div>
+        <h1 class="display t-h1">Case studies</h1>
+        <p class="lead">Migrations, platforms, and this site.</p>
+      </div>
+    </section>
+
+    <!-- projects-browser block: ?domain=&tech=&view= in the URL (TanStack Query keyed on them) -->
+    <section style="padding-bottom: var(--section-y)">
+      <div class="container">
+        <div class="browser-bar" role="toolbar" aria-label="Filter case studies">
+          <div class="pills">
+            <button class="chip chip--filter" aria-pressed="true">All <span class="count">5</span></button>
+            <button class="chip chip--filter" aria-pressed="false"><span class="dot hue-amber"></span>Fintech / Web3 <span class="count">1</span></button>
+            <button class="chip chip--filter" aria-pressed="false"><span class="dot hue-blue"></span>Enterprise <span class="count">2</span></button>
+            <button class="chip chip--filter" aria-pressed="false"><span class="dot hue-violet"></span>E-commerce tooling <span class="count">1</span></button>
+            <button class="chip chip--filter" aria-pressed="false"><span class="dot hue-jade"></span>DX &amp; testing <span class="count">1</span></button>
+          </div>
+          <div class="tools">
+            <button class="chip chip--filter" aria-haspopup="listbox">Tech: any ▾</button>
+            <div class="seg" role="group" aria-label="View"><button aria-pressed="true">Cards</button><button aria-pressed="false">Index</button></div>
+          </div>
+        </div>
+
+        <div class="results"><span class="meta">5 case studies · featured first</span><span class="meta">Sorted by date ↓</span></div>
+
+        <div class="cards">
+          <article class="case-card">
+            <div class="cover cover--amber cover--rings vt-cover-particula" data-tilt data-cursor="View"><div class="cover-meta"><span class="chip"><span class="dot hue-amber"></span>Fintech / Web3</span><span class="meta" style="color:inherit">Featured</span></div><span class="glyph" aria-hidden="true">Pa</span><span class="ver">v1 → v2</span></div>
+            <div class="fc-body">
+            <span class="meta">Kobizo · 2024 — now · Main frontend</span>
+            <h3><a href="case-study.html">Particula v2: Vue 2 → Nuxt 3, shipped in slices</a></h3>
+            <p>Led the rewrite of a rating platform for tokenized real-world assets.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="metric-diff"><span class="lbl">LCP</span><span class="from">4.1s</span>→<span class="to">1.6s</span></span><span class="tag">Nuxt 3</span><span class="tag">TanStack Query</span><span class="tag">PrimeVue</span></div>
+            </div>
+          </article>
+          <article class="case-card">
+            <div class="cover cover--blue"><div class="cover-meta"><span class="chip"><span class="dot hue-blue"></span>Enterprise</span><span class="meta" style="color:inherit">NDA-safe</span></div><span class="glyph" aria-hidden="true">Ms</span><span class="ver">MSP App → Advanced</span></div>
+            <span class="meta">CMC Global · 2022 — 2024</span>
+            <h3><a href="case-study.html">Re-platforming an enterprise console</a></h3>
+            <p>Moved app logic into a new design system with a Korean team.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="tag">Vue 3</span><span class="tag">Vitest</span></div>
+          </article>
+          <article class="case-card">
+            <div class="cover cover--blue cover--stripes"><div class="cover-meta"><span class="chip"><span class="dot hue-blue"></span>Enterprise</span></div><span class="glyph" aria-hidden="true">Cf</span><span class="ver">Back office · CRM</span></div>
+            <span class="meta">CMC Global · 2026 — now</span>
+            <h3><a href="case-study.html">Two portals for a food wholesaler</a></h3>
+            <p>CDP back office and a sales CRM sharing one component base.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="tag">Nuxt 3</span><span class="tag">Tailwind</span></div>
+          </article>
+          <article class="case-card">
+            <div class="cover cover--violet"><div class="cover-meta"><span class="chip"><span class="dot hue-violet"></span>E-commerce tooling</span></div><span class="glyph" aria-hidden="true">Cm</span><span class="ver">4 platforms</span></div>
+            <span class="meta">LitGroup · 2021 — 2022</span>
+            <h3><a href="case-study.html">A cart migration tool for store owners</a></h3>
+            <p>APIs first, then the Vue 2 + Pinia frontend for long jobs.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="metric-diff"><span class="lbl">Stores / mo</span><span class="to">+300</span></span><span class="tag">Flask</span><span class="tag">Laravel</span></div>
+          </article>
+          <article class="case-card">
+            <div class="cover cover--rings"><div class="cover-meta"><span class="chip"><span class="dot hue-jade"></span>DX &amp; testing</span></div><span class="glyph" aria-hidden="true">Lp</span><span class="ver">Next.js · NestJS</span></div>
+            <span class="meta">Personal · 2026</span>
+            <h3><a href="case-study.html">This portfolio: a block CMS built in public</a></h3>
+            <p>App Router, NestJS, Prisma on TiDB and a Tiptap editor.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap"><span class="tag">Next.js</span><span class="tag">NestJS</span></div>
+          </article>
+        </div>
+
+        <h2 class="meta" style="margin:96px 0 16px">Same data, “Index” view</h2>
+        <div class="index-list">
+          <article class="index-row" data-preview="cover--amber cover--rings" data-glyph="Pa"><span class="i">01</span><h3><a href="case-study.html">Particula v2</a></h3><span class="muted" style="font-size:14px">Kobizo · Main frontend</span><span class="chip" style="justify-self:start"><span class="dot hue-amber"></span>Fintech</span><span class="go">2024 →</span></article>
+          <article class="index-row" data-preview="cover--blue" data-glyph="Ms"><span class="i">02</span><h3><a href="case-study.html">MSP Advanced</a></h3><span class="muted" style="font-size:14px">CMC Global · Frontend</span><span class="chip" style="justify-self:start"><span class="dot hue-blue"></span>Enterprise</span><span class="go">2022 →</span></article>
+          <article class="index-row" data-preview="cover--violet cover--stripes" data-glyph="Cm"><span class="i">03</span><h3><a href="case-study.html">Cart migration tool</a></h3><span class="muted" style="font-size:14px">LitGroup · Fullstack</span><span class="chip" style="justify-self:start"><span class="dot hue-violet"></span>E-commerce</span><span class="go">2021 →</span></article>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div data-chrome="footer"></div>
+  <script src="chrome.js"></script>
+  <script src="mock.js"></script>
+  <script src="mock-motion.js" defer></script>
+</body>
+</html>

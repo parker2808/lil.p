@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Post · Ink &amp; Signal mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <style>
+    /* Reader = the KB pattern from interview-fe (layout rules 1–4):
+       ≥ 1024px: h-dvh split, document locked, each pane scrolls on its own.
+       < 1024px: a normal document; the TOC becomes a collapsible box. */
+    .reader { display: grid; grid-template-columns: minmax(0, 1fr); }
+    .pane { min-width: 0; }
+    .pane-nav, .pane-toc { display: none; }
+    .reader-main { padding: clamp(32px, 6vw, 72px) var(--margin) var(--section-y); }
+    .reader-main .inner { max-width: 48rem; margin: 0 auto; }
+    @media (min-width: 1024px) {
+      html:has(.reader) { height: 100dvh; overflow: hidden; }
+      body:has(.reader) { height: 100dvh; display: flex; flex-direction: column; }
+      body:has(.reader) .site-footer, body:has(.reader) .mock-bar { display: none; }
+      .reader { flex: 1; min-height: 0; grid-template-columns: 16rem minmax(0, 1fr) 16rem; }
+      .pane { overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; }
+      .pane-nav { display: block; border-right: 1px solid var(--rule); padding: 24px 12px 40px; background: color-mix(in oklab, var(--paper-sunken) 55%, transparent); }
+      .pane-toc { display: block; border-left: 1px solid var(--rule); padding: 28px 16px; }
+      .reader-main { padding-inline: clamp(24px, 4vw, 64px); }
+      .toc-box { display: none; }
+    }
+    @media (min-width: 1280px) { .reader { grid-template-columns: 18rem minmax(0, 1fr) 18rem; } }
+
+    .nav-group + .nav-group { margin-top: 24px; }
+    .nav-label { display: block; padding: 0 12px 8px; font: 600 11px/1.3 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+    .nav-item { display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 6px 12px; border-left: 2px solid transparent; border-radius: var(--radius); font-size: 14px; color: var(--ink-2); }
+    .nav-item span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; } /* rule 3: ellipsis, never x-scroll */
+    .nav-item:hover { background: var(--paper-raised); color: var(--ink); }
+    .nav-item[aria-current="page"] { border-left-color: var(--signal); background: var(--signal-wash); color: var(--signal-ink); font-weight: 600; }
+    .nav-item .meta { flex: none; }
+
+    .read-progress { position: sticky; top: 0; z-index: 2; height: 2px; margin: calc(-1 * clamp(32px, 6vw, 72px)) calc(-1 * var(--margin)) clamp(32px, 6vw, 72px); background: var(--rule); }
+    .read-progress i { display: block; height: 100%; background: var(--signal); transform-origin: left; scale: .34 1; }
+    @supports (animation-timeline: scroll()) {
+      .read-progress i { animation: grow linear both; animation-timeline: scroll(nearest); }
+      @media (max-width: 1023px) { .read-progress { position: fixed; top: var(--header-h); left: 0; right: 0; margin: 0; z-index: 39; } .read-progress i { animation-timeline: scroll(root); } }
+    }
+    .post-head { display: flex; flex-direction: column; gap: 24px; margin-bottom: 40px; }
+    .byline { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; padding: 16px 0; border-block: 1px solid var(--rule); }
+    .takeaways { margin-top: 56px; border: 1px solid var(--ink); border-radius: var(--radius-xl); padding: 28px; box-shadow: var(--shadow-press); background: var(--paper-raised); }
+    .takeaways ol { margin: 16px 0 0; padding-left: 1.4em; display: grid; gap: 8px; }
+    .takeaways li::marker { font-family: var(--font-mono); color: var(--signal-ink); }
+    .fallback { margin-bottom: 32px; }
+
+    .toc-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .toc-tree { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+    .toc-tree ul { list-style: none; margin: 2px 0 0 14px; padding: 0 0 0 10px; border-left: 1px solid var(--rule); display: grid; gap: 2px; }
+    .toc-tree a { display: block; padding: 6px 10px; border-radius: var(--radius-sm); font-size: 13px; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .toc-tree a:hover { color: var(--ink); background: var(--paper-raised); }
+    .toc-tree a[aria-current="true"] { color: var(--signal-ink); background: var(--signal-wash); font-weight: 600; }
+    .toc-box { border: 1px solid var(--rule); border-radius: var(--radius-lg); background: var(--paper-raised); margin-bottom: 32px; }
+    .toc-box summary { cursor: pointer; padding: 12px 16px; list-style: none; display: flex; justify-content: space-between; }
+    .toc-box .toc-tree { max-height: min(24rem, 50vh); overflow-y: auto; overscroll-behavior: contain; padding: 0 8px 12px; }
+    .mini-foot { margin-top: 64px; padding-top: 16px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    @media (max-width: 1023px) { .mini-foot { display: none; } }
+  </style>
+</head>
+<body data-page="notes">
+  <div data-chrome="header"></div>
+  <main id="main" class="reader">
+    <!-- Left pane: notes navigation from GET /api/public/posts (grouped by tag, newest first) -->
+    <nav class="pane pane-nav" aria-label="Notes">
+      <div class="nav-group">
+        <span class="nav-label">I. Forms</span>
+        <a class="nav-item" href="post.html" aria-current="page"><span>Diff-only saves: never lose a form edit again</span><span class="meta">6m</span></a>
+        <a class="nav-item" href="post.html"><span>Unsaved-change guards that do not nag</span><span class="meta">5m</span></a>
+      </div>
+      <div class="nav-group">
+        <span class="nav-label">II. Migration</span>
+        <a class="nav-item" href="post.html"><span>Strangler routes in Nuxt 3, step by step</span><span class="meta">9m</span></a>
+        <a class="nav-item" href="post.html"><span>Contract tests before the cut-over</span><span class="meta">7m</span></a>
+      </div>
+      <div class="nav-group">
+        <span class="nav-label">III. DX</span>
+        <a class="nav-item" href="post.html"><span>Writing STRUCTURE.md so reviews get shorter</span><span class="meta">4m</span></a>
+      </div>
+    </nav>
+
+    <!-- Content pane: GET /api/public/posts/:slug -->
+    <article class="pane reader-main" data-reader-pane>
+      <div class="read-progress" aria-hidden="true"><i></i></div>
+      <div class="inner">
+        <div class="callout fallback" role="note" lang="vi"><b>VI</b><span>Bài này chưa có bản tiếng Việt, đang hiển thị bản tiếng Anh. <a class="link" href="notes.html">Xem danh sách tiếng Việt</a></span></div>
+        <header class="post-head">
+          <nav class="crumbs" aria-label="Breadcrumb"><a href="notes.html">Notes</a><span>/</span><span>forms</span></nav>
+          <h1 class="display t-h1" style="text-wrap:balance">Diff-only saves: never lose a <em>form edit</em> again</h1>
+          <p class="lead">How drafts, version checks and unsaved-change guards work together in a CMS editor.</p>
+          <div class="byline"><span class="monogram" aria-hidden="true">P</span><span>Parker Vu</span><span class="meta">Oct 12, 2026</span><span class="meta">6 min read</span><span style="margin-left:auto;display:flex;gap:6px"><span class="tag">forms</span><span class="tag">ux</span></span></div>
+        </header>
+
+        <details class="toc-box"><summary><span class="meta">On this page</span><span class="meta">3</span></summary>
+          <ul class="toc-tree"><li><a href="#s1" aria-current="true">01 Send only what changed</a></li><li><a href="#s2">02 Guard the exit</a></li><li><a href="#s3">03 Compare options</a></li></ul>
+        </details>
+
+        <div class="prose">
+          <p>Most lost edits are not bugs in the save button. They are races: a second tab, a slow request, a token refresh in the middle of a long form.</p>
+          <h2 id="s1"><span class="n">01</span>Send only what changed</h2>
+          <p>The editor keeps the last saved snapshot. On save, it sends a patch with the changed fields and the <code>version</code> it started from.</p>
+          <pre><code><span class="k">const</span> patch = diff(saved, draft)
+<span class="k">await</span> api.patch(<span class="s">`/admin/posts/${id}`</span>, { ...patch, version })</code></pre>
+          <div class="callout"><b>Note</b><span>A 409 means someone else saved first. Show both versions; never overwrite silently.</span></div>
+          <h2 id="s2"><span class="n">02</span>Guard the exit</h2>
+          <p>Route changes and tab closes ask before discarding a dirty form. The guard reads the same diff, so it never nags about a clean form.</p>
+          <blockquote>If the user typed it, the app owns it until it is saved.</blockquote>
+          <h2 id="s3"><span class="n">03</span>Compare options</h2>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Strategy</th><th>Payload</th><th>Conflict handling</th></tr></thead>
+            <tbody>
+              <tr><td data-label="Strategy">Full replace</td><td data-label="Payload">Whole document</td><td data-label="Conflict handling">Last write wins</td></tr>
+              <tr><td data-label="Strategy">Diff + version</td><td data-label="Payload">Changed fields</td><td data-label="Conflict handling">409, show both</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <aside class="takeaways" aria-labelledby="tk">
+          <span class="meta" id="tk">Key takeaways</span>
+          <ol><li>Diff against the last saved snapshot, not the initial load.</li><li>Send the version you started from; handle 409 visibly.</li><li>One dirty-state source for save, guard and badge.</li></ol>
+        </aside>
+        <a class="next-case" href="post.html" style="margin-top:72px">
+          <div><span class="meta">Next note</span><div class="t" style="font-size:var(--step-3)">Strangler routes in Nuxt 3 →</div></div>
+          <span class="tag">migration</span>
+        </a>
+        <div class="mini-foot"><span class="meta">© 2026 Parker Vu</span><a class="meta link" href="notes.html">All notes</a></div>
+      </div>
+    </article>
+
+    <!-- Right pane: "On this page" tree from the post's headings (IntersectionObserver on the pane, rootMargin -20% 0 -60% 0) -->
+    <aside class="pane pane-toc" aria-label="On this page">
+      <div class="toc-title"><span class="meta">On this page</span><button class="btn btn--ghost btn--sm" type="button">Collapse all</button></div>
+      <ul class="toc-tree">
+        <li><a href="#s1" aria-current="true">01 Send only what changed</a></li>
+        <li><a href="#s2">02 Guard the exit</a></li>
+        <li><a href="#s3">03 Compare options</a></li>
+      </ul>
+      <div class="meta" style="margin-top:24px">6 min read · 3 sections</div>
+    </aside>
+  </main>
+  <div data-chrome="footer"></div>
+  <script src="chrome.js"></script>
+  <script src="mock.js"></script>
+  <script src="mock-motion.js" defer></script>
+</body>
+</html>

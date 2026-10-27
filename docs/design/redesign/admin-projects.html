@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin projects · Ink &amp; Signal mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin" data-nav="projects" data-crumbs="Admin/Content/Projects">
+  <div class="shell">
+    <div data-admin="side"></div>
+    <div>
+      <div data-admin="top"></div>
+      <main class="main" id="main">
+        <div class="page-bar">
+          <div><h1 class="t-page">Projects</h1><p>Case studies on /projects. Drag to set the order on the public list.</p></div>
+          <div class="actions"><button class="btn btn--ghost">Export CSV</button><a class="btn" href="admin-editor.html">+ New project</a></div>
+        </div>
+        <!-- DataTable (TanStack Table): GET /api/admin/projects?status=&domainId=&q=&sort= ; URL holds filters -->
+        <section class="panel">
+          <div class="toolbar">
+            <label class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input placeholder="Search title, slug, client" aria-label="Search projects" /><span class="kbd">/</span></label>
+            <button class="facet">Status: <b>Any</b></button>
+            <button class="facet">Domain: <b>Any</b></button>
+            <button class="facet">Locale: <b>Missing VI</b> ×</button>
+            <span style="margin-left:auto" class="seg" role="group" aria-label="Density"><button aria-pressed="true">Comfort</button><button>Compact</button></span>
+          </div>
+          <div class="bulk" role="region" aria-label="Bulk actions"><span><b>2</b> selected</span><button class="btn btn--ghost btn--sm">Publish</button><button class="btn btn--ghost btn--sm">Archive</button><button class="btn btn--ghost btn--sm" style="margin-left:auto">Clear</button></div>
+          <div style="overflow-x:auto">
+          <table class="table">
+            <thead><tr><th style="width:36px"><span class="cb">–</span></th><th style="width:28px"></th><th>Project</th><th>Domain</th><th>Status</th><th>Locales</th><th>Featured</th><th>Updated</th><th style="width:40px"></th></tr></thead>
+            <tbody>
+              <tr aria-selected="true"><td><span class="cb on">✓</span></td><td><span class="drag" aria-label="Drag to reorder">⋮⋮</span></td><td><div class="title"><span class="thumb" style="background:var(--hue-amber-wash);color:var(--hue-amber)">Pa</span><div><b>Particula v2</b><small>/projects/particula-v2 · Kobizo</small></div></div></td><td><span class="chip" style="height:22px;font-size:12px"><span class="dot hue-amber"></span>Fintech</span></td><td><span class="st st--draft">DRAFT</span></td><td><span class="loc"><i class="ok">EN</i><i class="miss">VI</i></span></td><td>★</td><td class="subtle">2h ago</td><td><button class="icon-btn" style="width:28px;height:28px" aria-label="Row actions">⋯</button></td></tr>
+              <tr aria-selected="true"><td><span class="cb on">✓</span></td><td><span class="drag">⋮⋮</span></td><td><div class="title"><span class="thumb" style="background:var(--hue-blue-wash);color:var(--hue-blue)">Ms</span><div><b>MSP Advanced</b><small>/projects/msp-advanced · CMC Global</small></div></div></td><td><span class="chip" style="height:22px;font-size:12px"><span class="dot hue-blue"></span>Enterprise</span></td><td><span class="st st--draft">DRAFT</span></td><td><span class="loc"><i class="ok">EN</i><i class="ok">VI</i></span></td><td class="subtle">—</td><td class="subtle">1d ago</td><td><button class="icon-btn" style="width:28px;height:28px">⋯</button></td></tr>
+              <tr><td><span class="cb"></span></td><td><span class="drag">⋮⋮</span></td><td><div class="title"><span class="thumb" style="background:var(--hue-blue-wash);color:var(--hue-blue)">Cf</span><div><b>CFW back office &amp; CRM</b><small>/projects/cfw-portals · CMC Global</small></div></div></td><td><span class="chip" style="height:22px;font-size:12px"><span class="dot hue-blue"></span>Enterprise</span></td><td><span class="st st--sched">SCHEDULED</span></td><td><span class="loc"><i class="ok">EN</i><i class="ok">VI</i></span></td><td class="subtle">—</td><td class="subtle">3d ago</td><td><button class="icon-btn" style="width:28px;height:28px">⋯</button></td></tr>
+              <tr><td><span class="cb"></span></td><td><span class="drag">⋮⋮</span></td><td><div class="title"><span class="thumb" style="background:var(--hue-violet-wash);color:var(--hue-violet)">Cm</span><div><b>Cart migration tool</b><small>/projects/cart-migration · LitGroup</small></div></div></td><td><span class="chip" style="height:22px;font-size:12px"><span class="dot hue-violet"></span>E-commerce</span></td><td><span class="st st--pub">PUBLISHED</span></td><td><span class="loc"><i class="ok">EN</i><i class="miss">VI</i></span></td><td class="subtle">—</td><td class="subtle">1w ago</td><td><button class="icon-btn" style="width:28px;height:28px">⋯</button></td></tr>
+              <tr><td><span class="cb"></span></td><td><span class="drag">⋮⋮</span></td><td><div class="title"><span class="thumb">Lp</span><div><b>This portfolio</b><small>/projects/lil-p · Personal</small></div></div></td><td><span class="chip" style="height:22px;font-size:12px"><span class="dot hue-jade"></span>DX</span></td><td><span class="st st--arch">ARCHIVED</span></td><td><span class="loc"><i class="ok">EN</i><i class="ok">VI</i></span></td><td class="subtle">—</td><td class="subtle">2w ago</td><td><button class="icon-btn" style="width:28px;height:28px">⋯</button></td></tr>
+            </tbody>
+          </table>
+          </div>
+          <div class="tfoot"><span>5 projects · 1 published</span><span>Page 1 of 1</span></div>
+        </section>
+        <p class="meta" style="margin-top:16px">Status values shown are the existing enum (DRAFT / PUBLISHED / ARCHIVED). “Scheduled” is only rendered if the API already exposes a future publishedAt; otherwise it is out of scope (see plan §9).</p>
+      </main>
+    </div>
+  </div>
+  <script src="admin-chrome.js"></script>
+  <script src="mock.js"></script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Home · Ink &amp; Signal mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+</head>
+<body class="paper-grain" data-page="home">
+  <div data-chrome="header"></div>
+
+  <main id="main">
+    <!-- hero block (SPLIT_7_5): profile.heroKicker, headline, headlineAccent, subheadline, primary/secondary CTA; aside = StatusCard -->
+    <!-- .hero-stage: WebGL2 shader (mock-motion.js) over a CSS poster; skipped when Settings.ambientEffects=false, reduced motion or Save-Data -->
+    <section class="hero">
+      <div class="hero-stage" aria-hidden="true"><canvas data-hero-shader></canvas></div>
+      <div class="container grid">
+        <div class="span-12">
+          <span class="kicker meta"><span class="caret" aria-hidden="true"></span>Frontend · Vue / Nuxt / TS</span>
+        </div>
+        <h1 class="display t-hero" aria-label="Frontend developer for data-heavy products">
+          <span class="line" aria-hidden="true"><span style="--i:0">Frontend</span></span>
+          <span class="line" aria-hidden="true"><span style="--i:1">developer for</span></span>
+          <span class="line" aria-hidden="true"><span style="--i:2"><em>data&#8209;heavy</em></span></span>
+          <span class="line" aria-hidden="true"><span style="--i:3">products</span></span>
+        </h1>
+        <p class="lead hero-sub">I build rating platforms, back offices and sales tools with Vue 3, Nuxt and TypeScript. I care about clean structure and forms that do not lose data.</p>
+        <div class="hero-ctas">
+          <a class="btn" href="projects.html">View case studies <span class="arrow">→</span></a>
+          <a class="btn btn--ghost" href="about.html">Download CV</a>
+        </div>
+        <aside class="hero-card status-card" aria-label="Status">
+          <header>
+            <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="meta">status.json</span>
+          </header>
+          <dl>
+            <dt>Availability</dt><dd><span class="status">Open to roles</span></dd>
+            <dt>Based in</dt><dd>Hanoi, Vietnam</dd>
+            <dt>Local time</dt><dd class="num" data-local-time="Asia/Ho_Chi_Minh">18:35 GMT+7</dd>
+            <dt>Experience</dt><dd class="num">5+ years</dd>
+            <dt>Daily stack</dt><dd>Vue 3 · Nuxt 3 · TS</dd>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <!-- tech-marquee block → Ticker (heading hidden by default; static row when marqueeEnabled=false or reduced motion) -->
+    <div class="ticker" aria-label="Tools I use">
+      <div class="ticker-track">
+        <span class="ticker-item">Vue 3</span><span class="ticker-item">Nuxt 3</span><span class="ticker-item">TypeScript</span><span class="ticker-item">Pinia</span><span class="ticker-item">TanStack Query</span><span class="ticker-item">Tailwind CSS</span><span class="ticker-item">PrimeVue</span><span class="ticker-item">Playwright</span><span class="ticker-item">Vitest</span><span class="ticker-item">Tiptap</span>
+        <span class="ticker-item" aria-hidden="true">Vue 3</span><span class="ticker-item" aria-hidden="true">Nuxt 3</span><span class="ticker-item" aria-hidden="true">TypeScript</span><span class="ticker-item" aria-hidden="true">Pinia</span><span class="ticker-item" aria-hidden="true">TanStack Query</span><span class="ticker-item" aria-hidden="true">Tailwind CSS</span><span class="ticker-item" aria-hidden="true">PrimeVue</span><span class="ticker-item" aria-hidden="true">Playwright</span><span class="ticker-item" aria-hidden="true">Vitest</span><span class="ticker-item" aria-hidden="true">Tiptap</span>
+      </div>
+    </div>
+
+    <!-- stat-band block: profileStats; a stat whose value resolves to 0 is not rendered -->
+    <section class="section">
+      <div class="container">
+        <div class="sec-head">
+          <div class="sec-index"><span class="n">§01</span><span class="label">At a glance</span><span class="bar"></span></div>
+          <h2 class="sec-title display t-h2">Five years of moving products forward <em>without breaking them</em>.</h2>
+        </div>
+        <div class="grid"><div class="rail"></div>
+          <div class="rail-content stats" data-reveal>
+            <div class="stat"><div class="v" data-n style="--to:5"><span class="val">5</span><sup>+</sup></div><div class="l">Years building for the web</div></div>
+            <div class="stat"><div class="v" data-n style="--to:4"><span class="val">4</span></div><div class="l">Products shipped</div></div>
+            <div class="stat"><div class="v" data-n style="--to:2"><span class="val">2</span></div><div class="l">Framework migrations</div></div>
+            <div class="stat"><div class="v" data-n style="--to:1"><span class="val">1</span></div><div class="l">Enterprise platform (Samsung SDS)</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- featured-case block -->
+    <section class="section">
+      <div class="container">
+        <div class="sec-head">
+          <div class="sec-index"><span class="n">§02</span><span class="label">Featured</span><span class="bar"></span></div>
+          <h2 class="sec-title display t-h2">Featured work</h2>
+          <div class="sec-aside"><a class="link mono" href="projects.html">All case studies →</a></div>
+        </div>
+        <article class="feature" data-reveal>
+          <a class="cover cover--amber cover--rings vt-cover-particula" href="case-study.html" aria-label="Particula v2 case study" data-cursor="View">
+            <div class="cover-meta"><span class="chip"><span class="dot hue-amber"></span>Fintech / Web3</span><span class="meta" style="color:inherit">2024 — now</span></div>
+            <span class="glyph" aria-hidden="true">Pa</span>
+            <span class="ver">v1 <span aria-hidden="true">→</span> v2</span>
+          </a>
+          <div class="feature-body">
+            <span class="meta">Kobizo · Main frontend</span>
+            <h3 class="display t-h2">Particula v2: Vue 2 → Nuxt 3, shipped in slices</h3>
+            <p class="muted">Led the rewrite of a rating platform for tokenized real-world assets. Strangler routes, a PrimeVue-based component library and TanStack Query for server state.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <span class="metric-diff"><span class="lbl">LCP</span><span class="from">4.1s</span>→<span class="to">1.6s</span></span>
+              <span class="metric-diff"><span class="lbl">E2E specs</span><span class="from">0</span>→<span class="to">120</span></span>
+            </div>
+            <div><a class="btn" href="case-study.html">Read the case study <span class="arrow">→</span></a></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- case-grid block (THREE) -->
+    <section class="section">
+      <div class="container">
+        <div class="sec-head">
+          <div class="sec-index"><span class="n">§03</span><span class="label">Selected work</span><span class="bar"></span></div>
+          <h2 class="sec-title display t-h2">Selected work</h2>
+        </div>
+        <!-- sticky stacking cards: each pins under the header and recedes as the next arrives (static list < 960px / reduced motion) -->
+        <div class="stack">
+          <div class="stack-card"><article class="case-card">
+            <div class="cover cover--blue" data-tilt data-cursor="View"><div class="cover-meta"><span class="chip"><span class="dot hue-blue"></span>Enterprise</span><span class="meta" style="color:inherit">01 / 03</span></div><span class="glyph" aria-hidden="true">Ms</span><span class="ver">MSP App → Advanced</span></div>
+            <div class="sc-body"><span class="meta">CMC Global · 2022 — 2024</span><h3><a href="case-study.html">Re-platforming an enterprise console with a Korean team</a></h3><p>Moved app logic into a new design system, issue triage UI and unit tests for a 15-person team.</p><span class="link mono" aria-hidden="true">Read case study →</span></div>
+          </article></div>
+          <div class="stack-card"><article class="case-card">
+            <div class="cover cover--violet cover--stripes" data-tilt data-cursor="View"><div class="cover-meta"><span class="chip"><span class="dot hue-violet"></span>E-commerce tooling</span><span class="meta" style="color:inherit">02 / 03</span></div><span class="glyph" aria-hidden="true">Cm</span><span class="ver">4 platforms</span></div>
+            <div class="sc-body"><span class="meta">LitGroup · 2021 — 2022</span><h3><a href="case-study.html">A cart migration tool for US and UK store owners</a></h3><p>Flask and Laravel APIs first, then the Vue 2 + Pinia frontend for long-running jobs.</p><span class="link mono" aria-hidden="true">Read case study →</span></div>
+          </article></div>
+          <div class="stack-card"><article class="case-card">
+            <div class="cover " data-tilt data-cursor="View"><div class="cover-meta"><span class="chip"><span class="dot hue-jade"></span>DX &amp; testing</span><span class="meta" style="color:inherit">03 / 03</span></div><span class="glyph" aria-hidden="true">Lp</span><span class="ver">Next.js · NestJS</span></div>
+            <div class="sc-body"><span class="meta">Personal · 2026</span><h3><a href="case-study.html">This portfolio: a block CMS built in public</a></h3><p>Next.js App Router, NestJS, Prisma on TiDB, Tiptap editor and a publish pipeline.</p><span class="link mono" aria-hidden="true">Read case study →</span></div>
+          </article></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- domain-grid block (FOUR, surface BAND → sunken) -->
+    <section class="section section--sunken">
+      <div class="container">
+        <div class="sec-head">
+          <div class="sec-index"><span class="n">§04</span><span class="label">Domains</span><span class="bar"></span></div>
+          <h2 class="sec-title display t-h2">Grouped by the problem, not the stack</h2>
+        </div>
+        <div class="domain-grid">
+          <a class="domain" href="projects.html" style="--h:var(--hue-amber);--hw:var(--hue-amber-wash)" data-reveal>
+            <span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="5"/><path d="M18 10a5 5 0 1 1-8 6"/></svg></span>
+            <h3>Fintech / Web3 (ReFi)</h3><p>Rating and analytics for tokenized real-world assets.</p><span class="meta">1 case study →</span>
+          </a>
+          <a class="domain" href="projects.html" style="--h:var(--hue-blue);--hw:var(--hue-blue-wash)" data-reveal>
+            <span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M10 21v-4h4v4"/></svg></span>
+            <h3>Enterprise platforms</h3><p>Internal tools for large companies and their back offices.</p><span class="meta">2 case studies →</span>
+          </a>
+          <a class="domain" href="projects.html" style="--h:var(--hue-violet);--hw:var(--hue-violet-wash)" data-reveal>
+            <span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M3 4h2l2.4 11h11l2-8H6"/></svg></span>
+            <h3>E-commerce tooling</h3><p>Moving store data between Shopify, BigCommerce, WooCommerce and Magento.</p><span class="meta">1 case study →</span>
+          </a>
+          <a class="domain" href="projects.html" data-reveal>
+            <span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg></span>
+            <h3>Developer experience &amp; testing</h3><p>Conventions, scaffolds and test suites that keep teams fast.</p><span class="meta">1 case study →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- process block: pinned on ≥ 961px; the fill line and each step are driven by a named view timeline -->
+    <section class="section process-pin">
+      <div class="container">
+        <div class="sec-head">
+          <div class="sec-index"><span class="n">§05</span><span class="label">Process</span><span class="bar"></span></div>
+          <h2 class="sec-title display t-h2">How I migrate a frontend</h2>
+          <p class="sec-intro">A strangler path: keep shipping while the old tree is replaced branch by branch.</p>
+        </div>
+        <ol class="process">
+          <li class="step" data-reveal style="--i:0"><span class="node">01</span><h3>Audit</h3><p>Map modules, owners and dead code.</p></li>
+          <li class="step" data-reveal style="--i:1"><span class="node">02</span><h3>Tokens &amp; primitives</h3><p>Shared UI base and conventions first.</p></li>
+          <li class="step" data-reveal style="--i:2"><span class="node">03</span><h3>Strangler routes</h3><p>Move one route or module at a time.</p></li>
+          <li class="step" data-reveal style="--i:3"><span class="node">04</span><h3>Contract tests</h3><p>Lock behaviour with data before cutting.</p></li>
+          <li class="step" data-reveal style="--i:4"><span class="node">05</span><h3>Cut over</h3><p>Remove the legacy tree.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- post-list block: hidden entirely when there are no published posts (today) -->
+    <section class="section">
+      <div class="container">
+        <div class="sec-head">
+          <div class="sec-index"><span class="n">§06</span><span class="label">Writing</span><span class="bar"></span></div>
+          <h2 class="sec-title display t-h2">Latest notes</h2>
+          <div class="sec-aside"><a class="link mono" href="notes.html">All notes →</a></div>
+        </div>
+        <div class="index-list">
+          <article class="index-row" data-reveal><span class="i">Oct 12</span><h3><a href="post.html">Diff-only saves: never lose a form edit again</a></h3><span class="muted" style="font-size:14px">How version checks and drafts work together.</span><span class="tag" style="justify-self:start">forms</span><span class="go">6 min →</span></article>
+          <article class="index-row" data-reveal><span class="i">Sep 28</span><h3><a href="post.html">Strangler routes in Nuxt 3, step by step</a></h3><span class="muted" style="font-size:14px">The routing trick that let us ship v2 one page at a time.</span><span class="tag" style="justify-self:start">migration</span><span class="go">9 min →</span></article>
+          <article class="index-row" data-reveal><span class="i">Sep 03</span><h3><a href="post.html">Writing STRUCTURE.md so reviews get shorter</a></h3><span class="muted" style="font-size:14px">Conventions as a file, not as comments.</span><span class="tag" style="justify-self:start">dx</span><span class="go">4 min →</span></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- cta-band block → inverse surface -->
+    <section class="section--inverse cta">
+      <div class="container grid">
+        <div class="rail"><span class="meta">§07 — Contact</span></div>
+        <div class="rail-content">
+          <h2 class="big">Let’s talk <em class="accent-word">about your product</em>.</h2>
+          <p class="lead" style="margin-top:24px">Senior frontend roles or a migration done right. Hanoi, GMT+7.</p>
+          <div class="row">
+            <button class="copy-mail" data-copy><span>&lt;email&gt;</span><span class="mono" data-copy-label>Copy</span></button>
+            <a class="btn btn--ghost" style="--b-fg:var(--ink-inverse);--b-bd:currentColor" href="#">GitHub ↗</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div data-chrome="footer"></div>
+  <script src="chrome.js"></script>
+  <script src="mock.js"></script>
+  <script src="mock-motion.js" defer></script>
+</body>
+</html>
