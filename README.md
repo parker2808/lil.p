@@ -69,12 +69,14 @@ Run these in order from the repo root. Every step is needed once per fresh clone
    pnpm --filter @portfolio/contracts build
    ```
 
-5. **Create the tables and seed demo content:**
+5. **Create the tables and the admin user.** `db:migrate` applies every migration, including `20261027150000_portfolio_content`, which loads the real portfolio content (the same data production has):
 
    ```bash
    pnpm db:migrate
-   pnpm db:seed
+   pnpm db:seed:admin
    ```
+
+   Want placeholder demo data instead (published projects, posts, inbox messages)? Run `pnpm db:seed` after `db:migrate`. It replaces the portfolio content with demo rows — see [Local data: real content vs demo](#local-data-real-content-vs-demo).
 
 6. **Start web + API:**
 
@@ -107,15 +109,27 @@ After `git pull`, run `pnpm install`, `pnpm --filter @portfolio/contracts build`
 2. `pnpm db:migrate --name short_description` — writes a new folder in `apps/api/prisma/migrations/` and applies it locally.
 3. Commit the migration folder together with the schema. Never edit a migration that is already on `main`; production applies them in order.
 
-`SEED_PROFILE=demo` (default) or `baseline` chooses the seed profile (PLAN D13). Seed values are placeholders; contact fields are `<email>` / `<phone>`. `pnpm db:reset` drops, re-migrates, and re-seeds the local database.
+### Local data: real content vs demo
+
+| You want                                                       | Run                                   |
+| -------------------------------------------------------------- | ------------------------------------- |
+| Real portfolio content, exactly as production (projects DRAFT) | `pnpm db:reset && pnpm db:seed:admin` |
+| Demo placeholders (`SEED_PROFILE=demo`)                        | `pnpm db:reset && pnpm db:seed`       |
+| Only (re)create the admin login, content untouched             | `pnpm db:seed:admin`                  |
+
+- `pnpm db:reset` drops the local database and re-applies every migration (content included). Prisma 7 does **not** seed on reset. When an AI agent runs it, Prisma asks for your explicit confirmation first.
+- Do not re-run the content migration SQL by hand on top of demo data (`prisma db execute --file …portfolio_content/migration.sql`). Demo rows reuse the same slugs with different ids, so the upserts update the wrong rows and fail with `project_domainId_fkey`. Use `pnpm db:reset` instead.
+- `pnpm db:seed` profiles (PLAN D13): `demo` (default) or `baseline` (`SEED_PROFILE=baseline`). `demo` rewrites most content tables but upserts some by slug, so it can leave real and demo rows mixed; `baseline` wipes content and reloads the portfolio JSON. Seed contact fields are `<email>` / `<phone>`.
 
 ### Troubleshooting
 
 - **`db` container exits on `pnpm db:up`, or `pnpm db:migrate` fails with P3014** (cannot create the shadow database): the volume was created with different `MYSQL_*` values than `.env` now has. Run `docker compose down -v && pnpm db:up`, then redo steps 5–6.
 - **`Cannot find module '@portfolio/contracts'`** (seed or API) or **`Could not find a declaration file for module '@portfolio/contracts'`**: run step 4, then restart `pnpm dev`.
 - **API exits with an env validation error**: `JWT_ACCESS_SECRET` / `JWT_REFRESH_SECRET` are missing, shorter than 32 chars, or equal.
+- **http://localhost:3000 does not load, only Nest logs appear**: `pnpm dev` was run inside `apps/api`, which starts the API alone. Run it from the repo root (`cd` to `lil.p/`) so web, API, and contracts start together.
 - **Port 3306 already in use**: another MySQL is running on your machine. Stop it, or the container cannot bind.
-- **Cannot sign in to `/admin`**: set all three `ADMIN_*` keys and run `pnpm db:seed` again.
+- **Cannot sign in to `/admin`**: set all three `ADMIN_*` keys and run `pnpm db:seed:admin`.
+- **`Cannot add or update a child row … project_domainId_fkey`** when loading content: demo and real content are mixed. Run `pnpm db:reset && pnpm db:seed:admin`.
 
 ## Production
 
@@ -180,8 +194,9 @@ pnpm check:deps              # no paid Tiptap packages; every @tiptap/* and @dnd
 pnpm db:up | db:down | db:logs   # local MySQL :3306 + Adminer :8080 (127.0.0.1)
 pnpm db:test:up              # throwaway test MySQL on :3307 (API e2e)
 pnpm db:migrate              # local only: create + apply migrations
-pnpm db:seed                 # local only: idempotent upserts
-pnpm db:reset                # local only: drop + migrate + seed
+pnpm db:seed                 # local only: replace content with the demo (or baseline) profile + admin
+pnpm db:seed:admin           # local only: create/update the admin from ADMIN_*; content untouched
+pnpm db:reset                # local only: drop + re-apply all migrations (no seed)
 pnpm db:studio               # Prisma Studio GUI
 
 pnpm prod:up | prod:seed | prod:backup | prod:down   # production-like stack
