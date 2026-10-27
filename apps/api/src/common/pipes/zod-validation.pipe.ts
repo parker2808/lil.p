@@ -16,7 +16,7 @@ export function flattenZodError(error: z.ZodError): Record<string, string[]> {
  * Failure → 400 `VALIDATION_FAILED` with `fieldErrors` keyed by path.
  */
 export class ZodValidationPipe<T extends z.ZodType> implements PipeTransform {
-  constructor(private readonly schema: T) {}
+  constructor(readonly schema: T) {}
 
   transform(value: unknown): z.infer<T> {
     const parsed = this.schema.safeParse(value);

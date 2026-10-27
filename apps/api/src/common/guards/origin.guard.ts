@@ -21,12 +21,28 @@ export class OriginGuard implements CanActivate {
     }
     // Same-origin browser calls through the Vercel /api rewrite send
     // Origin = WEB_ORIGIN (the Vercel host), not the Render API host.
-    if (request.headers.origin !== this.config.webOrigin) {
-      throw new ForbiddenException({
-        code: 'BAD_ORIGIN',
-        message: 'Invalid origin',
-      });
+    if (request.headers.origin === this.config.webOrigin) {
+      return true;
     }
-    return true;
+    // Swagger UI (/api/docs, never in production) is served by the API itself.
+    if (!this.config.isProduction && isSameOrigin(request)) {
+      return true;
+    }
+    throw new ForbiddenException({
+      code: 'BAD_ORIGIN',
+      message: 'Invalid origin',
+    });
+  }
+}
+
+function isSameOrigin(request: Request): boolean {
+  const { origin, host } = request.headers;
+  if (!origin || !host) {
+    return false;
+  }
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
   }
 }

@@ -9,7 +9,7 @@ This file covers how `apps/api` is laid out and what each folder is for. It is w
 ```text
 prisma/                   # the database definition: schema, migrations, seed
 src/
-├── main.ts               # starts the app: prefix /api, global pipes/filters, listen :4000
+├── main.ts               # starts the app: prefix /api, Swagger UI at /api/docs (not in production), listen :4000
 ├── app.module.ts         # root module: imports every feature module
 ├── config/               # reads and validates .env once
 ├── prisma/               # PrismaService: the one DB connection everyone injects
@@ -55,6 +55,7 @@ Keep that order in mind: guards decide whether a request is allowed, pipes check
 | `src/generated/` | Output of `prisma generate`. Do not edit. Regenerated on `pnpm install`, typecheck, and build | `prisma/` (client, enums, models) |
 | `src/common/guards/` | A guard runs before the controller and answers yes/no | `jwt-auth.guard.ts` (global: verifies the access token from the `access_token` cookie), `jwt-refresh.guard.ts` (only on `POST /auth/refresh`: verifies the `refresh_token` cookie), `roles.guard.ts` (`admin`/`user`), `origin.guard.ts` |
 | `src/common/pipes/` | A pipe checks or transforms input before the controller sees it | `zod-validation.pipe.ts` |
+| `src/common/swagger/` | Interactive API docs at `/api/docs` (JSON at `/api/docs-json`; `/` redirects there). Off when `NODE_ENV=production`. Bodies and query params come from each route's `ZodValidationPipe` schema, so controllers need no swagger decorators | `setup-swagger.ts` |
 | `src/common/filters/` | A filter catches thrown errors and writes the error response, so every error looks the same | `all-exceptions.filter.ts` (maps Prisma `P2002` → 409, `P2025` → 404) |
 | `src/common/interceptors/` | Wraps the controller call, for things that happen around every request | `logging.interceptor.ts` (method, path, status, ms, request id; never bodies or passwords) |
 | `src/common/decorators/` | Small labels you put on a route or parameter | `public.decorator.ts` (`@Public()`), `roles.decorator.ts` (`@Roles('admin')`, `@Roles('admin', 'user')`), `current-user.decorator.ts` (`@CurrentUser()` → `{ id, role }`) |
