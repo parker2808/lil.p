@@ -682,6 +682,8 @@ Each PR stacks on the previous one (R1 on `main` after this docs PR merges). Eve
   - `rounded-*` utilities map onto the ladder.
   - Squircle shows in Chromium; round corners elsewhere.
   - Vietnamese diacritics render in Plex on `/vi` with no clipping.
+  - Every duration token is mapped into `@theme` and zeroed by the reduced-motion rule. Today `--dur-fast` is left out (`globals.css:184–188`), so fast hover transitions still animate.
+  - `--container` is the only page-width source. Today it is defined (1120px) but unused, and `BlockRenderer` / `SiteHeader` hardcode `max-w-5xl`.
 - **Tests:**
   - Vitest contrast test over the token pairs in [§4.1](#41-color).
   - Storybook “Foundations” story (palette, type, radius, motion), ported from `foundations.html`.
@@ -892,6 +894,7 @@ Each PR stacks on the previous one (R1 on `main` after this docs PR merges). Eve
   - At ≥ 1024 `document.scrollingElement.scrollHeight === innerHeight` and each pane scrolls independently.
   - Below 1024 the page scrolls normally.
   - Switching EN ↔ VI keeps the reading position.
+  - A post with a `cover` shows it (through `CmsImage`) on the pinned card and in the reader. Today `PostCard`'s featured variant always renders `CoverPlaceholder` (`PostCard.tsx:42`); the generative cover is only the fallback.
 - **Loading:**
   - `notes/loading.tsx` (list rows) and `notes/[slug]/loading.tsx` (`PostReader.Skeleton`: nav, article, TOC at ≥ 1024; article only below).
   - Notes search keeps previous results with a `FetchBar` (`use-notes-search.hook.ts` already uses `keepPreviousData`).
