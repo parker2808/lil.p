@@ -32,29 +32,37 @@ const browser = await chromium.launch({
   args: ['--no-sandbox', '--disable-dev-shm-usage'],
 });
 
+// [output name, file, extra query, variants]
+const ALL = ['desktop', 'desktop-dark', 'mobile'];
+const DESK = ['desktop', 'desktop-dark'];
 const pages = [
-  'home', 'projects', 'case-study', 'about', 'contact', 'notes', 'post',
-  'admin-login', 'admin-dashboard', 'admin-projects', 'admin-editor', 'admin-pages', 'admin-media', 'admin-inbox', 'foundations',
+  ['home', 'home', '', ALL], ['projects', 'projects', '', ALL], ['case-study', 'case-study', '', ALL],
+  ['about', 'about', '', ALL], ['contact', 'contact', '', ALL], ['notes', 'notes', '', ALL], ['post', 'post', '', ALL],
+  ['foundations', 'foundations', '', ALL],
+  ['admin-login', 'admin-login', '', ALL], ['admin-dashboard', 'admin-dashboard', '', ALL],
+  ['admin-palette', 'admin-dashboard', '&palette=1', DESK], ['admin-drawer', 'admin-dashboard', '&drawer=1', ['mobile']],
+  ['admin-projects', 'admin-projects', '', ALL], ['admin-editor', 'admin-editor', '', DESK],
+  ['admin-pages', 'admin-pages', '', DESK], ['admin-media', 'admin-media', '', DESK], ['admin-inbox', 'admin-inbox', '', DESK],
 ];
-const variants = [
-  { tag: 'desktop', width: 1440, height: 900, dark: false },
-  { tag: 'desktop-dark', width: 1440, height: 900, dark: true },
-  { tag: 'mobile', width: 390, height: 844, dark: false },
-];
+const variants = {
+  desktop: { width: 1440, height: 900, dark: false },
+  'desktop-dark': { width: 1440, height: 900, dark: true },
+  mobile: { width: 390, height: 844, dark: false },
+};
 
-for (const name of pages.filter((p) => !only.length || only.includes(p))) {
-  for (const v of variants) {
-    if (name.startsWith('admin-') && v.tag === 'mobile' && name !== 'admin-dashboard' && name !== 'admin-login') continue;
+for (const [name, file, extra, tags] of pages.filter((p) => !only.length || only.includes(p[0]))) {
+  for (const tag of tags) {
+    const v = variants[tag];
     const page = await browser.newPage({ viewport: { width: v.width, height: v.height }, deviceScaleFactor: 1 });
-    const qs = `?capture=1${v.dark ? '&dark=1' : ''}`;
-    await page.goto(`http://127.0.0.1:4178/${name}.html${qs}`, { waitUntil: 'networkidle', timeout: 60000 });
+    const qs = `?capture=1${v.dark ? '&dark=1' : ''}${extra}`;
+    await page.goto(`http://127.0.0.1:4178/${file}.html${qs}`, { waitUntil: 'networkidle', timeout: 60000 });
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(250);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-    if (overflow > 0) console.warn(`! ${name} ${v.tag}: horizontal overflow ${overflow}px`);
-    await page.screenshot({ path: join(out, `${name}-${v.tag}.jpg`), fullPage: true, type: 'jpeg', quality: 78 });
+    if (overflow > 0) console.warn(`! ${name} ${tag}: horizontal overflow ${overflow}px`);
+    await page.screenshot({ path: join(out, `${name}-${tag}.jpg`), fullPage: true, type: 'jpeg', quality: 78 });
     await page.close();
-    console.log(`${name}-${v.tag}.jpg`);
+    console.log(`${name}-${tag}.jpg`);
   }
 }
 

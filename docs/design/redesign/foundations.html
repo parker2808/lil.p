@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Foundations · redesign mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    .f-sec { padding: 56px 0; border-top: 1px solid var(--rule); }
+    .f-sec h2 { font: 600 var(--step-3)/1.05 var(--font-sans); font-stretch: 90%; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .f-sec > .container > p { color: var(--ink-2); max-width: 70ch; margin-bottom: 28px; }
+    .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .sw { --r-outer: var(--radius-lg); --pad: 6px; border: 1px solid var(--rule); border-radius: var(--r-outer); padding: var(--pad); background: var(--paper-raised); font-size: 12px; }
+    .sw i { display: block; height: 56px; border-radius: max(var(--radius-2xs), calc(var(--r-outer) - var(--pad))); border: 1px solid color-mix(in oklab, var(--ink) 10%, transparent); }
+    .sw b { display: block; margin: 8px 4px 0; font: 600 12px/1.3 var(--font-mono); }
+    .sw span { display: block; margin: 2px 4px 2px; color: var(--ink-3); font-family: var(--font-mono); }
+    .palette-box { border: 1px solid var(--rule); border-radius: var(--radius-2xl); padding: 20px; }
+    .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    @media (max-width: 960px) { .two { grid-template-columns: 1fr; } }
+    .type-row { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+    .type-row .meta { line-height: 1.5; }
+    @media (max-width: 760px) { .type-row { grid-template-columns: 1fr; } }
+    .space-row { display: flex; align-items: center; gap: 16px; padding: 6px 0; font: 500 12px/1 var(--font-mono); color: var(--ink-2); }
+    .space-row i { height: 12px; background: var(--signal); border-radius: 2px; }
+    .radii { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
+    .radius-card { display: grid; gap: 10px; font-size: 12px; }
+    .radius-card .shape { background: var(--signal-wash); border: 1.5px solid var(--signal); display: grid; place-items: center; color: var(--signal-ink); font: 600 11px/1 var(--font-mono); }
+    .cmp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    @media (max-width: 760px) { .cmp { grid-template-columns: 1fr; } }
+    .cmp .shape { height: 180px; background: var(--ink); color: var(--paper); display: grid; place-items: end start; padding: 16px; font: 500 12px/1.4 var(--font-mono); }
+    .nest-demo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    @media (max-width: 760px) { .nest-demo { grid-template-columns: 1fr; } }
+    .nest-demo .nest { background: var(--paper-raised); border: 1px solid var(--rule); }
+    .nest-demo .nest-inner { height: 120px; background: var(--hue-blue-wash); border: 1px solid color-mix(in oklab, var(--hue-blue) 25%, transparent); display: grid; place-items: center; font: 500 12px/1.4 var(--font-mono); color: var(--hue-blue); text-align: center; }
+    .shadows { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 24px; }
+    .shadows div { height: 100px; border-radius: var(--radius-xl); background: var(--paper-raised); display: grid; place-items: center; font: 500 12px/1 var(--font-mono); }
+    .motion { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .motion > div { border: 1px solid var(--rule); border-radius: var(--radius-lg); padding: 14px; font-size: 13px; }
+    .motion .track { height: 4px; background: var(--rule); border-radius: 2px; margin-top: 12px; position: relative; }
+    .motion .track i { position: absolute; left: 0; top: -4px; width: 12px; height: 12px; border-radius: 50%; background: var(--signal); animation: slide 2.4s infinite alternate; }
+    @keyframes slide { to { left: calc(100% - 12px); } }
+    .vi-sample { font: 600 var(--step-4)/var(--leading-display) var(--font-sans); font-stretch: 85%; letter-spacing: var(--tracking-display); }
+  </style>
+</head>
+<body class="paper-grain" data-page="">
+  <div data-chrome="header"></div>
+  <main id="main">
+    <section class="section" style="padding-bottom:40px">
+      <div class="container">
+        <span class="meta">Foundations · R1 tokens</span>
+        <h1 class="display t-h1" style="margin-top:16px;max-width:16ch">One type system, two palettes, <em>one radius ladder</em>.</h1>
+        <p class="lead" style="margin-top:20px">Public site: “Ink &amp; Signal”. Admin: the interview-fe KB teal. Both use IBM Plex Sans + IBM Plex Mono, the same spacing, motion and radius tokens, and the same shadcn variable names, so packages/ui components render in either scope.</p>
+      </div>
+    </section>
+
+    <section class="f-sec"><div class="container">
+      <h2>Color</h2>
+      <p>Public text pairs meet WCAG AA at body size; --signal is for fills, marks and large type, --signal-ink for links and small text. Admin tokens are the KB values, except --ink-faint, which is darkened to 4.6:1 because it is used for 11px group labels.</p>
+      <div class="two">
+        <div class="palette-box">
+          <span class="meta">Public · Ink &amp; Signal (light)</span>
+          <div class="swatches" style="margin-top:14px">
+            <div class="sw"><i style="background:#f6f3ec"></i><b>--paper</b><span>#f6f3ec · background</span></div>
+            <div class="sw"><i style="background:#fcfaf6"></i><b>--paper-raised</b><span>#fcfaf6 · card</span></div>
+            <div class="sw"><i style="background:#16181f"></i><b>--ink</b><span>#16181f · 16.2:1</span></div>
+            <div class="sw"><i style="background:#474a54"></i><b>--ink-2</b><span>#474a54 · 8.3:1</span></div>
+            <div class="sw"><i style="background:#e5482d"></i><b>--signal</b><span>#e5482d · primary</span></div>
+            <div class="sw"><i style="background:#b3321a"></i><b>--signal-ink</b><span>#b3321a · 5.9:1</span></div>
+            <div class="sw"><i style="background:#1e7a4c"></i><b>--add</b><span>#1e7a4c · after</span></div>
+            <div class="sw"><i style="background:#b42318"></i><b>--del</b><span>#b42318 · before</span></div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:14px;flex-wrap:wrap"><span class="chip"><span class="dot hue-jade"></span>JADE</span><span class="chip"><span class="dot hue-amber"></span>AMBER</span><span class="chip"><span class="dot hue-blue"></span>BLUE</span><span class="chip"><span class="dot hue-violet"></span>VIOLET</span><span class="chip"><span class="dot hue-rose"></span>ROSE</span></div>
+        </div>
+        <div class="palette-box admin" style="background:var(--background);color:var(--foreground)">
+          <span class="meta">Admin · KB teal (light)</span>
+          <div class="swatches" style="margin-top:14px">
+            <div class="sw"><i style="background:#f4f7f6"></i><b>--background</b><span>#f4f7f6 · KB --bg</span></div>
+            <div class="sw"><i style="background:#ffffff"></i><b>--card</b><span>#fff · --bg-elevated</span></div>
+            <div class="sw"><i style="background:#14201c"></i><b>--foreground</b><span>#14201c · --ink</span></div>
+            <div class="sw"><i style="background:#5a6b64"></i><b>--muted-fg</b><span>#5a6b64 · --ink-muted</span></div>
+            <div class="sw"><i style="background:#0f766e"></i><b>--primary</b><span>#0f766e · --accent</span></div>
+            <div class="sw"><i style="background:#ccfbf1"></i><b>--primary-subtle</b><span>#ccfbf1 · --accent-soft</span></div>
+            <div class="sw"><i style="background:#115e59"></i><b>--primary-ink</b><span>#115e59 · --accent-ink</span></div>
+            <div class="sw"><i style="background:#d5e0db"></i><b>--border</b><span>#d5e0db · --line</span></div>
+          </div>
+        </div>
+      </div>
+    </div></section>
+
+    <section class="f-sec"><div class="container">
+      <h2>Type · IBM Plex Sans + Plex Mono</h2>
+      <p>Variable Plex Sans (wght 100–700, wdth 85–100) gives a condensed display cut without a second family. Both families load the <code>vietnamese</code> subset through next/font. Under <code>:lang(vi)</code> the display leading opens from 0.94 to 1.06 so stacked marks (Ở, Ẫ, Ữ) never touch the line above, and line masks pad 0.06em so marks are not clipped.</p>
+      <div class="type-row"><span class="meta">--step-5 · 48→144<br />hero · wght 650 · wdth 85</span><span class="display t-hero" style="font-size:clamp(3rem,1.2rem+5vw,6rem)">Senior <em>frontend</em></span></div>
+      <div class="type-row"><span class="meta">--step-4 · 36→68<br />page h1</span><span class="display t-h1">Case studies</span></div>
+      <div class="type-row"><span class="meta">--step-3 · 28→44<br />h2 · wdth 90</span><span class="t-h2 display">Grouped by the problem</span></div>
+      <div class="type-row"><span class="meta">--step-2 · 22→28<br />h3</span><span class="t-h3">Re-platforming an enterprise console</span></div>
+      <div class="type-row"><span class="meta">--step-1 · 18→21<br />lead</span><span class="lead">I build rating platforms, back offices and sales tools.</span></div>
+      <div class="type-row"><span class="meta">--step-0 · 16→17<br />body · 1.62</span><span>Most lost edits are not bugs in the save button. They are races.</span></div>
+      <div class="type-row"><span class="meta">--step--2 · 12<br />Plex Mono · meta</span><span class="meta" style="color:var(--ink-2)">Kobizo · 2024 — now · 6 min read</span></div>
+      <div class="type-row" lang="vi"><span class="meta">Vietnamese · :lang(vi)</span><div><div class="vi-sample display">Lập trình viên <em>frontend</em> cho sản phẩm nhiều dữ liệu</div><p style="margin-top:12px">Ở đây, mỗi thay đổi được lưu bản nháp trước khi xuất bản. Những dấu chồng như Ẫ, Ữ, Ỡ, Ặ hiển thị rõ ràng.</p><p class="meta" style="margin-top:8px">Cập nhật · 27 thg 10, 2026 · đọc 6 phút</p></div></div>
+    </div></section>
+
+    <section class="f-sec"><div class="container">
+      <h2>Spacing · 4px base</h2>
+      <p>Section rhythm is fluid (<code>--section-y: clamp(72px, 10vw, 160px)</code>); components use the fixed steps.</p>
+      <div class="space-row"><i style="width:4px"></i>--s-1 · 4</div><div class="space-row"><i style="width:8px"></i>--s-2 · 8</div><div class="space-row"><i style="width:12px"></i>--s-3 · 12</div><div class="space-row"><i style="width:16px"></i>--s-4 · 16</div><div class="space-row"><i style="width:24px"></i>--s-5 · 24</div><div class="space-row"><i style="width:32px"></i>--s-6 · 32</div><div class="space-row"><i style="width:48px"></i>--s-7 · 48</div><div class="space-row"><i style="width:64px"></i>--s-8 · 64</div><div class="space-row"><i style="width:96px"></i>--s-9 · 96</div><div class="space-row"><i style="width:128px"></i>--s-10 · 128</div>
+    </div></section>
+
+    <section class="f-sec"><div class="container">
+      <h2>Radius · 10px base, scaled by size</h2>
+      <p>Like Apple's system shapes: small controls get small radii, large surfaces larger ones, capsules stay fully round. Where <code>corner-shape: squircle</code> is supported, every step is multiplied by <code>--k: 1.5</code> because a continuous corner reads smaller than a circular arc of the same value.</p>
+      <div class="radii">
+        <div class="radius-card"><div class="shape sq" style="height:28px;border-radius:var(--radius-2xs)">2xs</div><span><b>--radius-2xs · 4</b><br />kbd, inline code, checkbox</span></div>
+        <div class="radius-card"><div class="shape sq" style="height:32px;border-radius:var(--radius-xs)">xs</div><span><b>--radius-xs · 6</b><br />tags, badges, thumbs</span></div>
+        <div class="radius-card"><div class="shape sq" style="height:36px;border-radius:var(--radius-sm)">sm</div><span><b>--radius-sm · 8</b><br />small buttons, segments</span></div>
+        <div class="radius-card"><div class="shape sq" style="height:44px;border-radius:var(--radius)">base</div><span><b>--radius · 10</b><br />buttons, inputs, nav items</span></div>
+        <div class="radius-card"><div class="shape sq" style="height:72px;border-radius:var(--radius-lg)">lg</div><span><b>--radius-lg · 14</b><br />cards, menus, toasts</span></div>
+        <div class="radius-card"><div class="shape sq" style="height:96px;border-radius:var(--radius-xl)">xl</div><span><b>--radius-xl · 20</b><br />panels, media, palette</span></div>
+        <div class="radius-card"><div class="shape sq" style="height:120px;border-radius:var(--radius-2xl)">2xl</div><span><b>--radius-2xl · 28</b><br />dialogs, sheets, hero media</span></div>
+        <div class="radius-card"><div class="shape capsule" style="height:36px;border-radius:var(--radius-full)">full</div><span><b>--radius-full</b><br />chips, avatars, toggles</span></div>
+      </div>
+
+      <h3 class="t-h3" style="margin-top:40px">Round vs continuous</h3>
+      <div class="cmp" style="margin-top:16px">
+        <div class="shape" style="border-radius:28px;corner-shape:round">border-radius: 28px<br />corner-shape: round</div>
+        <div class="shape" style="border-radius:28px;corner-shape:squircle">28px · squircle<br />same value reads tighter</div>
+        <div class="shape" style="border-radius:42px;corner-shape:squircle">42px (28 × k) · squircle<br />optical match, smooth curvature</div>
+      </div>
+
+      <h3 class="t-h3" style="margin-top:40px">Concentric nesting · inner = outer − padding</h3>
+      <div class="nest-demo" style="margin-top:16px">
+        <div class="nest" style="--r-outer:var(--radius-2xl);--pad:12px"><div class="nest-inner">outer 2xl · pad 12<br />inner = 2xl − 12</div></div>
+        <div class="nest" style="--r-outer:var(--radius-xl);--pad:8px"><div class="nest-inner">outer xl · pad 8<br />inner = xl − 8</div></div>
+        <div class="nest" style="--r-outer:var(--radius-lg);--pad:24px"><div class="nest-inner">outer lg · pad 24<br />clamped to 2xs</div></div>
+      </div>
+    </div></section>
+
+    <section class="f-sec"><div class="container">
+      <h2>Elevation</h2>
+      <p>Hairlines first. Shadows only for things that float: menus, the palette, sticky stacked cards. The public signature hover is a hard “print offset”, never a blur.</p>
+      <div class="shadows"><div style="box-shadow:var(--shadow-hair)">--shadow-hair</div><div style="box-shadow:var(--shadow-1)">--shadow-1</div><div style="box-shadow:var(--shadow-2)">--shadow-2</div><div style="box-shadow:var(--shadow-pop)">--shadow-pop</div><div style="box-shadow:4px 4px 0 0 var(--ink);border:1px solid var(--ink)">--shadow-press</div></div>
+    </div></section>
+
+    <section class="f-sec"><div class="container">
+      <h2>Motion</h2>
+      <p>Durations in five steps; one ease shared with the admin (the KB <code>--ease</code>). Everything collapses to near-instant under <code>prefers-reduced-motion</code>, and decorative loops stop.</p>
+      <div class="motion">
+        <div><b>--dur-1 · 120ms</b><br /><span class="subtle">hover color, focus</span></div>
+        <div><b>--dur-2 · 200ms</b><br /><span class="subtle">buttons, chips</span></div>
+        <div><b>--dur-3 · 320ms</b><br /><span class="subtle">menus, drawer, page out</span></div>
+        <div><b>--dur-4 · 560ms</b><br /><span class="subtle">page in, shared element</span></div>
+        <div><b>--dur-5 · 900ms</b><br /><span class="subtle">hero line reveal, theme reveal</span></div>
+        <div><b>--ease-out</b> cubic-bezier(.22,1,.36,1)<div class="track"><i style="animation-timing-function:var(--ease-out)"></i></div></div>
+        <div><b>--ease-expo</b> cubic-bezier(.16,1,.3,1)<div class="track"><i style="animation-timing-function:var(--ease-expo)"></i></div></div>
+        <div><b>--ease-spring</b> linear(…)<div class="track"><i style="animation-timing-function:var(--ease-spring)"></i></div></div>
+      </div>
+    </div></section>
+  </main>
+  <div data-chrome="footer"></div>
+  <script src="chrome.js"></script>
+  <script src="mock.js"></script>
+</body>
+</html>

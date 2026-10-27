@@ -3,60 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin dashboard · Ink &amp; Signal mockup</title>
+  <title>Admin dashboard · redesign mockup</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
   <link rel="stylesheet" href="redesign.css" />
   <link rel="stylesheet" href="admin.css" />
   <style>
-    .dash-cols { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 12px; margin-top: 12px; }
-    .issue { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--rule); }
+    .dash-cols { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 12px; margin-top: 12px; }
+    @media (max-width: 1100px) { .dash-cols { grid-template-columns: 1fr; } }
+    .issue { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--rule); }
     .issue:last-child { border-bottom: 0; }
-    .issue .k { width: 28px; height: 28px; border-radius: 4px; display: grid; place-items: center; font: 500 11px/1 var(--font-mono); }
-    .bars { display: grid; grid-template-columns: repeat(30, 1fr); align-items: end; gap: 3px; height: 160px; padding-top: 8px; }
-    .bars i { background: color-mix(in oklab, var(--ink) 20%, transparent); border-radius: 2px 2px 0 0; }
-    .bars i.hi { background: var(--signal); }
-    .seg-range { margin-left: auto; }
+    .issue .k { width: 32px; height: 32px; border-radius: var(--radius-sm); display: grid; place-items: center; font: 600 10px/1 var(--font-mono); }
+    .issue b { font-weight: 600; display: block; }
+    .issue small { color: var(--ink-3); font-size: 12px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bars { display: grid; grid-template-columns: repeat(30, 1fr); align-items: end; gap: 3px; height: 150px; }
+    .bars i { background: color-mix(in oklab, var(--primary) 28%, transparent); border-radius: 3px 3px 0 0; }
+    .bars i.hi { background: var(--primary); }
     .qa { display: grid; gap: 8px; }
-    .qa a { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border: 1px solid var(--rule); border-radius: var(--r-sm); background: var(--paper); }
-    .qa a:hover { border-color: var(--ink-3); }
+    .qa a { display: flex; justify-content: space-between; align-items: center; min-height: 40px; padding: 0 12px; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--paper); }
+    .qa a:hover { border-color: var(--primary); color: var(--primary-ink); }
+    .ring { --p: 64; width: 64px; height: 64px; border-radius: 50%; background: conic-gradient(var(--primary) calc(var(--p) * 1%), var(--paper-sunken) 0); display: grid; place-items: center; flex: none; }
+    .ring::after { content: attr(data-v); width: 48px; height: 48px; border-radius: 50%; background: var(--card); display: grid; place-items: center; font: 600 14px/1 var(--font-sans); }
   </style>
 </head>
-<body class="admin" data-nav="dashboard" data-crumbs="Admin/Dashboard">
-  <div class="shell">
+<body class="admin" data-nav="dashboard" data-crumbs="Workspace/Dashboard">
+  <div data-admin="top"></div>
+  <div class="app">
     <div data-admin="side"></div>
-    <div>
-      <div data-admin="top"></div>
-      <main class="main" id="main">
-        <div class="page-bar">
-          <div><h1 class="t-page">Good evening, Parker</h1><p>2 pages have unpublished drafts. 3 health issues block a clean publish.</p></div>
-          <div class="actions"><a class="btn btn--ghost" href="admin-pages.html">Open pages</a><a class="btn" href="admin-editor.html">+ New project</a></div>
+    <main class="pane pane-main" id="main">
+      <div class="wrap">
+        <div class="page-head animate-fade-up">
+          <div><h1>Dashboard</h1><p>2 pages have unpublished drafts · 3 health issues to fix before a clean publish.</p></div>
+          <div class="actions"><a class="btn btn--ghost" href="admin-pages.html">Open pages</a><a class="btn" href="admin-editor.html">New project</a></div>
         </div>
 
-        <!-- GET /api/admin/stats?range=30d -->
+        <!-- GET /api/admin/stats?range=30d (projects/posts status counts, messages.unread, views) -->
         <div class="kpis">
-          <div class="panel kpi"><span class="meta">Views · 30d</span><div class="v">1,284</div><div class="d up">▲ 18% vs prev</div>
-            <svg class="spark" viewBox="0 0 120 32" preserveAspectRatio="none"><polyline fill="none" stroke="var(--signal)" stroke-width="1.5" points="0,26 10,24 20,25 30,20 40,22 50,16 60,18 70,12 80,14 90,9 100,11 110,6 120,8"/></svg></div>
-          <div class="panel kpi"><span class="meta">Projects</span><div class="v">0 <span class="subtle" style="font-size:16px">/ 5</span></div><div class="d down">5 drafts · 0 published</div></div>
-          <div class="panel kpi"><span class="meta">Notes</span><div class="v">0 <span class="subtle" style="font-size:16px">/ 2</span></div><div class="d" style="color:var(--ink-3)">2 drafts</div></div>
-          <div class="panel kpi"><span class="meta">Inbox</span><div class="v">2</div><div class="d" style="color:var(--signal-ink)">unread messages</div></div>
+          <div class="panel kpi animate-fade-up" style="--i:1"><span class="meta">Views · 30 days</span><div class="v">1,284</div><div class="d up">▲ 18% vs previous 30 days</div>
+            <svg class="spark" viewBox="0 0 120 32" preserveAspectRatio="none" aria-hidden="true"><polyline fill="none" stroke="var(--primary)" stroke-width="1.6" points="0,26 10,24 20,25 30,20 40,22 50,16 60,18 70,12 80,14 90,9 100,11 110,6 120,8"/></svg></div>
+          <div class="panel kpi animate-fade-up" style="--i:2"><span class="meta">Projects</span><div class="v">0 <span class="subtle" style="font-size:15px;font-weight:500">/ 5</span></div><div class="d">5 drafts · 0 published</div></div>
+          <div class="panel kpi animate-fade-up" style="--i:3"><span class="meta">Posts</span><div class="v">0 <span class="subtle" style="font-size:15px;font-weight:500">/ 2</span></div><div class="d">2 drafts</div></div>
+          <div class="panel kpi animate-fade-up" style="--i:4"><span class="meta">Inbox</span><div class="v">2</div><div class="d" style="color:var(--primary-ink)">unread messages</div></div>
         </div>
 
         <div class="dash-cols">
-          <!-- GET /api/admin/health -->
-          <section class="panel">
-            <header><h2>Content health</h2><span class="meta">11 checks · 3 issues</span></header>
-            <div class="issue"><span class="k" style="background:var(--warn-wash);color:var(--warn)">VI</span><div><b style="font-weight:500">Missing Vietnamese</b><div class="subtle" style="font-size:12px">Particula v2 · fields: tagline, outcome</div></div><a class="btn btn--ghost btn--sm" href="admin-editor.html">Fix</a></div>
-            <div class="issue"><span class="k" style="background:var(--warn-wash);color:var(--warn)">ALT</span><div><b style="font-weight:500">Image without alt text</b><div class="subtle" style="font-size:12px">2 media items used by published blocks</div></div><a class="btn btn--ghost btn--sm" href="admin-media.html">Fix</a></div>
-            <div class="issue"><span class="k" style="background:var(--del-wash);color:var(--del)">PG</span><div><b style="font-weight:500">Home has a stale draft</b><div class="subtle" style="font-size:12px">Draft edited 3 days ago, not published</div></div><a class="btn btn--ghost btn--sm" href="admin-pages.html">Review</a></div>
-            <div class="issue"><span class="k" style="background:var(--add-wash);color:var(--add)">✓</span><div><b style="font-weight:500">8 more checks pass</b><div class="subtle" style="font-size:12px">Domains, key facts, marquee skills, publish lint, broken refs…</div></div><span class="meta">OK</span></div>
+          <!-- GET /api/admin/health: issue kinds map to icons + deep links -->
+          <section class="panel animate-fade-up" style="--i:5">
+            <header><h2>Content health</h2><span class="meta">10 checks · 3 issues</span></header>
+            <div style="display:flex;gap:16px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--rule)"><span class="ring" style="--p:70" data-v="7/10" aria-label="7 of 10 checks pass"></span><p class="muted" style="font-size:13px">Fix the items below to get a clean publish. Each row opens the exact field.</p></div>
+            <div class="issue"><span class="k" style="background:var(--warn-wash);color:var(--warn)">VI</span><div><b>Missing Vietnamese</b><small>Particula v2 · tagline, outcome · MISSING_VI</small></div><a class="btn btn--ghost btn--sm" href="admin-editor.html">Fix</a></div>
+            <div class="issue"><span class="k" style="background:var(--warn-wash);color:var(--warn)">ALT</span><div><b>Images without alt text</b><small>2 media items used by published blocks · MISSING_ALT</small></div><a class="btn btn--ghost btn--sm" href="admin-media.html">Fix</a></div>
+            <div class="issue"><span class="k" style="background:var(--del-wash);color:var(--del)">PG</span><div><b>Home has a stale draft</b><small>Draft edited 3 days ago, not published · PAGE_STALE_DRAFT</small></div><a class="btn btn--ghost btn--sm" href="admin-pages.html">Review</a></div>
+            <div class="issue"><span class="k" style="background:var(--success-subtle);color:var(--success)">✓</span><div><b>7 more checks pass</b><small>Domains, key facts, marquee skills, publish lint, broken refs…</small></div><span class="meta">OK</span></div>
           </section>
-          <section class="panel">
+          <section class="panel animate-fade-up" style="--i:6">
             <header><h2>Quick actions</h2></header>
             <div class="body qa">
               <a href="admin-editor.html">New project <span class="kbd">N P</span></a>
-              <a href="#">New note <span class="kbd">N N</span></a>
+              <a href="#">New post <span class="kbd">N N</span></a>
               <a href="admin-media.html">Upload media <span class="kbd">U</span></a>
               <a href="admin-pages.html">Edit home page <span class="kbd">G H</span></a>
             </div>
@@ -64,24 +69,24 @@
         </div>
 
         <div class="dash-cols">
-          <section class="panel">
-            <header><h2>Views per day</h2><div class="seg seg-range" role="group" aria-label="Range"><button>7d</button><button aria-pressed="true">30d</button><button>90d</button></div></header>
+          <section class="panel animate-fade-up" style="--i:7">
+            <header><h2>Views per day</h2><div class="seg" role="group" aria-label="Range"><button>7d</button><button aria-pressed="true">30d</button><button>90d</button></div></header>
             <div class="body">
-              <div class="bars" aria-label="Bar chart of views per day">
+              <div class="bars" role="img" aria-label="Views per day, last 30 days, peak 96 on Oct 23">
                 <i style="height:30%"></i><i style="height:42%"></i><i style="height:38%"></i><i style="height:51%"></i><i style="height:33%"></i><i style="height:28%"></i><i style="height:46%"></i><i style="height:52%"></i><i style="height:61%"></i><i style="height:40%"></i><i style="height:36%"></i><i style="height:58%"></i><i style="height:64%"></i><i style="height:47%"></i><i style="height:44%"></i><i style="height:39%"></i><i style="height:55%"></i><i style="height:70%"></i><i style="height:62%"></i><i style="height:49%"></i><i style="height:53%"></i><i style="height:66%"></i><i style="height:72%"></i><i style="height:58%"></i><i style="height:61%"></i><i style="height:77%"></i><i class="hi" style="height:94%"></i><i style="height:69%"></i><i style="height:63%"></i><i style="height:71%"></i>
               </div>
               <div style="display:flex;justify-content:space-between;margin-top:8px" class="meta"><span>Sep 28</span><span>Peak · Oct 23 · 96</span><span>Oct 27</span></div>
             </div>
           </section>
-          <section class="panel">
+          <section class="panel animate-fade-up" style="--i:8">
             <header><h2>Inbox</h2><a class="link meta" href="admin-inbox.html">All →</a></header>
-            <div class="msg unread" style="cursor:default"><b>Minh Tran</b><span class="st st--new">NEW</span><p>Job opportunity · We are hiring a senior frontend for…</p></div>
-            <div class="msg unread" style="cursor:default"><b>Sarah K.</b><span class="st st--new">NEW</span><p>Freelance project · Nuxt 2 → 3 migration for a dashboard…</p></div>
-            <div class="msg" style="cursor:default;border-bottom:0"><b>Duc Le</b><span class="st st--draft">READ</span><p>Just saying hi · Loved the case study about…</p></div>
+            <div class="msg unread"><b>Minh Tran</b><span class="st st--new">NEW</span><p>Job opportunity · We are hiring a senior frontend for…</p></div>
+            <div class="msg unread"><b>Sarah K.</b><span class="st st--new">NEW</span><p>Freelance project · Nuxt 2 → 3 migration for a dashboard…</p></div>
+            <div class="msg" style="border-bottom:0"><b>Duc Le</b><span class="st st--draft">READ</span><p>Just saying hi · Loved the case study about…</p></div>
           </section>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   </div>
   <script src="admin-chrome.js"></script>
   <script src="mock.js"></script>

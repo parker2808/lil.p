@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin media · redesign mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,100..700;1,85..100,100..700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&display=swap" />
+  <link rel="stylesheet" href="redesign.css" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body class="admin" data-nav="media" data-crumbs="Site/Media">
+  <div data-admin="top"></div>
+  <div class="app has-aside">
+    <div data-admin="side"></div>
+    <main class="pane pane-main" id="main">
+      <div class="wrap">
+        <div class="page-head animate-fade-up">
+          <div><h1>Media</h1><p>Cloudinary uploads · 8 items · 2 without alt text</p></div>
+          <div class="actions"><button class="btn btn--ghost">Missing alt only</button><button class="btn">Upload</button></div>
+        </div>
+        <div class="drop">Drop images here or <button class="btn btn--ghost btn--sm">Browse</button><span class="meta">JPG · PNG · WEBP · SVG</span></div>
+        <div class="media-grid animate-fade-up" style="--i:1" role="listbox" aria-label="Media">
+          <div class="media" aria-selected="true" role="option"><div class="img cover--amber" style="background:var(--hue-amber-wash);color:var(--hue-amber)">Pa</div><div class="cap"><span>particula-cover.webp</span><span class="meta">2400×1028</span></div></div>
+          <div class="media" role="option"><div class="img cover--blue" style="background:var(--hue-blue-wash);color:var(--hue-blue)">Ms</div><div class="cap"><span>msp-console.webp</span><span class="st st--warn">No alt</span></div></div>
+          <div class="media" role="option"><div class="img cover--violet" style="background:var(--hue-violet-wash);color:var(--hue-violet)">Cm</div><div class="cap"><span>cart-flow.png</span><span class="st st--warn">No alt</span></div></div>
+          <div class="media" role="option"><div class="img cover--jade" style="background:var(--hue-jade-wash);color:var(--hue-jade)">Lp</div><div class="cap"><span>lil-p-cms.webp</span><span class="meta">1920×1080</span></div></div>
+          <div class="media" role="option"><div class="img cover--rose" style="background:var(--hue-rose-wash);color:var(--hue-rose)">Av</div><div class="cap"><span>avatar.jpg</span><span class="meta">800×800</span></div></div>
+          <div class="media" role="option"><div class="img cover--blue" style="background:var(--hue-blue-wash);color:var(--hue-blue)">Cf</div><div class="cap"><span>cfw-crm.webp</span><span class="meta">1920×1200</span></div></div>
+          <div class="media" role="option"><div class="img cover--amber" style="background:var(--hue-amber-wash);color:var(--hue-amber)">Og</div><div class="cap"><span>og-default.png</span><span class="meta">1200×630</span></div></div>
+          <div class="media" role="option"><div class="img cover--violet" style="background:var(--hue-violet-wash);color:var(--hue-violet)">Dg</div><div class="cap"><span>diagram-strangler.svg</span><span class="meta">vector</span></div></div>
+        </div>
+      </div>
+    </main>
+    <aside class="pane pane-aside" aria-label="Media details">
+      <div class="aside-sect"><span class="outline-l">Details</span>
+        <div class="nest" style="--r-outer:var(--radius-lg);--pad:6px;border:1px solid var(--rule);background:var(--card)"><div class="nest-inner" style="aspect-ratio:21/9;display:grid;place-items:center;background:var(--hue-amber-wash);color:var(--hue-amber);font:italic 300 48px/1 var(--font-sans)">Pa</div></div>
+        <p style="margin-top:10px;font-weight:600">particula-cover.webp</p><p class="meta">2400×1028 · 184 KB · used by 2 blocks</p>
+      </div>
+      <div class="aside-sect"><div class="field"><label>Alt text · EN <span class="req">*</span></label><textarea class="textarea" style="min-height:72px">Particula v2 rating dashboard with an asset score chart.</textarea></div></div>
+      <div class="aside-sect"><div class="field"><label lang="vi">Alt text · VI</label><textarea class="textarea" style="min-height:72px" lang="vi">Bảng điều khiển xếp hạng Particula v2 với biểu đồ điểm tài sản.</textarea></div></div>
+      <div class="aside-sect" style="display:flex;gap:8px"><button class="btn" style="flex:1">Save</button><button class="btn btn--ghost">Copy URL</button></div>
+    </aside>
+  </div>
+  <script src="admin-chrome.js"></script>
+  <script src="mock.js"></script>
+</body>
+</html>
