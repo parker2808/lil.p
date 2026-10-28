@@ -31,7 +31,7 @@ export function AdminShell({
   return (
     <MeProvider me={me}>
       <AdminUiProvider>
-        <div className="bg-background text-foreground flex min-h-dvh">
+        <div className="bg-background text-foreground admin-shell flex h-dvh overflow-hidden">
           <a
             href="#content"
             className="bg-primary text-primary-foreground focus:z-skip sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:rounded-md focus:px-3 focus:py-2"
@@ -40,7 +40,7 @@ export function AdminShell({
           </a>
           <AdminLiveEvents />
           <AdminSidebar />
-          <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex min-h-0 min-w-0 flex-1 flex-col">
             <Topbar
               crumbs={crumbs}
               actions={
@@ -50,7 +50,11 @@ export function AdminShell({
                 </>
               }
             />
-            <main id="content" tabIndex={-1} className="flex-1 p-6 outline-none">
+            <main
+              id="content"
+              tabIndex={-1}
+              className="admin-main min-h-0 flex-1 overflow-x-hidden overflow-y-auto p-6 outline-none"
+            >
               {children}
             </main>
           </div>

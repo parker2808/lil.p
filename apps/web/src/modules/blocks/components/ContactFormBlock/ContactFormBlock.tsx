@@ -1,3 +1,4 @@
+import { isPlaceholderText } from '@/modules/core/utils/placeholder.util';
 import type { PublicBlock } from '@portfolio/contracts';
 import { Atmosphere } from '@portfolio/ui/components/Atmosphere/Atmosphere';
 import { Eyebrow } from '@portfolio/ui/components/Eyebrow/Eyebrow';
@@ -37,16 +38,16 @@ export async function ContactFormBlock({
         {props.intro ? (
           <p className="text-prose text-muted-foreground max-w-prose">{props.intro}</p>
         ) : null}
-        {site.settings.contactIntro ? (
+        {!isPlaceholderText(site.settings.contactIntro) ? (
           <p className="text-prose text-muted-foreground max-w-prose">
             {site.settings.contactIntro}
           </p>
         ) : null}
         <div className="flex flex-wrap items-center gap-2">
-          {site.settings.availabilityNote ? (
+          {!isPlaceholderText(site.settings.availabilityNote) ? (
             <Badge variant="primary">{site.settings.availabilityNote}</Badge>
           ) : null}
-          {site.settings.replyTimeNote ? (
+          {!isPlaceholderText(site.settings.replyTimeNote) ? (
             <p className="text-ui-meta text-muted-foreground">{site.settings.replyTimeNote}</p>
           ) : null}
         </div>

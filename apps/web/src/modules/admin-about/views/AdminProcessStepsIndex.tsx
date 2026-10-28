@@ -42,6 +42,8 @@ export function AdminProcessStepsIndex() {
       title={t('title')}
       items={list.data ?? []}
       isError={list.isError}
+      isLoading={list.isPending}
+      isFetching={list.isFetching}
       canWrite={canWrite}
       fields={[
         { name: 'titleEn', label: t('fields.titleEn'), kind: 'text' },

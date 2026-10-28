@@ -45,6 +45,8 @@ export function SmallEntityIndex<T extends SmallEntityRow>({
   title,
   items,
   isError,
+  isLoading,
+  isFetching,
   canWrite,
   fields,
   defaults,
@@ -65,6 +67,8 @@ export function SmallEntityIndex<T extends SmallEntityRow>({
   title: string;
   items: T[];
   isError?: boolean;
+  isLoading?: boolean;
+  isFetching?: boolean;
   canWrite: boolean;
   fields: SmallField[];
   defaults: Record<string, unknown>;
@@ -193,6 +197,8 @@ export function SmallEntityIndex<T extends SmallEntityRow>({
         pageSize={Math.max(filtered.length, 1)}
         hasFilters={Boolean(q)}
         isError={isError}
+        isLoading={isLoading}
+        isFetching={isFetching}
         canWrite={canWrite}
         labels={labels}
         onOpen={(row) => {

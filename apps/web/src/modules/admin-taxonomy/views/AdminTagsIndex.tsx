@@ -36,6 +36,8 @@ export function AdminTagsIndex() {
       title={t('title')}
       items={list.data ?? []}
       isError={list.isError}
+      isLoading={list.isPending}
+      isFetching={list.isFetching}
       canWrite={canWrite}
       fields={[
         { name: 'nameEn', label: t('fields.nameEn'), kind: 'text' },

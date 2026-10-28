@@ -13,7 +13,8 @@
     "copyEmail": "Sao chép email",
     "copied": "Đã sao chép",
     "suggestLocale": "Trang này cũng có bản tiếng Anh",
-    "switchLocale": "Xem bằng tiếng Anh"
+    "switchLocale": "Xem bằng tiếng Anh",
+    "loading": "Đang tải"
   },
   "draft": {
     "banner": "Bạn đang xem bản nháp. Khách vẫn thấy bản đã xuất bản.",
@@ -95,7 +96,10 @@
     "notReleased": "Chưa release",
     "moreIn": "Thêm trong {name}",
     "more": "Thêm case study",
-    "live": "Site thật"
+    "live": "Site thật",
+    "grid": "Lưới",
+    "index": "Danh sách",
+    "title": "Dự án"
   },
   "notes": {
     "all": "Tất cả",
@@ -107,7 +111,8 @@
     "next": "Sau",
     "pagination": "Trang ghi chú",
     "results": "{count} ghi chú",
-    "note": "Ghi chú"
+    "note": "Ghi chú",
+    "title": "Ghi chép"
   },
   "content": {
     "copy": "Sao chép",

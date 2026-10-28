@@ -33,9 +33,16 @@ export function AdminSidebar() {
         <p className="text-ui-title truncate font-medium">{collapsed ? name.slice(0, 1) : name}</p>
       </SidebarHeader>
       <SidebarContent>
-        {groups.map((group) => (
+        {groups.map((group, index) => (
           <SidebarGroup key={group.key}>
-            {collapsed ? null : <SidebarGroupLabel>{t(`groups.${group.key}`)}</SidebarGroupLabel>}
+            {collapsed ? null : (
+              <SidebarGroupLabel>
+                <span className="mr-2 font-mono" aria-hidden>
+                  {['I', 'II', 'III', 'IV', 'V'][index] ?? index + 1}
+                </span>
+                {t(`groups.${group.key}`)}
+              </SidebarGroupLabel>
+            )}
             <SidebarMenu>
               {group.items.map((item) => {
                 const active =
@@ -44,7 +51,11 @@ export function AdminSidebar() {
                 const itemNode = (
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton asChild active={active}>
-                      <Link href={item.href} title={t(item.key)}>
+                      <Link
+                        href={item.href}
+                        title={t(item.key)}
+                        aria-current={active ? 'page' : undefined}
+                      >
                         {collapsed ? t(item.key).slice(0, 1) : t(item.key)}
                       </Link>
                     </SidebarMenuButton>
@@ -74,9 +85,14 @@ export function AdminMobileNav() {
 
   return (
     <nav className="flex flex-col gap-4">
-      {groups.map((group) => (
+      {groups.map((group, index) => (
         <div key={group.key} className="flex flex-col gap-1">
-          <p className="text-ui-meta text-muted-foreground">{t(`groups.${group.key}`)}</p>
+          <p className="text-ui-meta text-muted-foreground">
+            <span className="mr-2 font-mono" aria-hidden>
+              {['I', 'II', 'III', 'IV', 'V'][index] ?? index + 1}
+            </span>
+            {t(`groups.${group.key}`)}
+          </p>
           {group.items.map((item) => (
             <Button
               key={item.href}

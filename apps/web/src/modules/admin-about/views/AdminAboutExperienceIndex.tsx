@@ -25,7 +25,7 @@ export function AdminAboutExperienceIndex() {
   const router = useRouter();
   const canWrite = useIsAdmin();
   const { params, setParams } = useListParams(adminExperienceListParamsSchema);
-  const { data, isError, refetch } = useAdminExperience(params);
+  const { data, isError, refetch, isPending, isFetching } = useAdminExperience(params);
   const list = data ?? { items: [], page: params.page, pageSize: params.pageSize, total: 0 };
   const toggle = useToggleExperienceVisible(params);
   const remove = useRemoveAdminExperience(params);
@@ -75,6 +75,8 @@ export function AdminAboutExperienceIndex() {
         sort={params.sort}
         hasFilters={hasFilters}
         isError={isError}
+        isLoading={isPending}
+        isFetching={isFetching}
         canWrite={canWrite}
         labels={adminTableLabels(table, {
           empty: t('empty'),

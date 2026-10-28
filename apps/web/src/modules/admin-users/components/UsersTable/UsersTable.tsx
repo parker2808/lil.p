@@ -16,6 +16,8 @@ export function UsersTable({
   sort,
   hasFilters,
   isError,
+  isLoading,
+  isFetching,
   canWrite,
   labels,
   columnLabels,
@@ -36,6 +38,8 @@ export function UsersTable({
   sort: string;
   hasFilters: boolean;
   isError?: boolean;
+  isLoading?: boolean;
+  isFetching?: boolean;
   canWrite: boolean;
   labels: DataTableLabels;
   columnLabels: {
@@ -155,6 +159,8 @@ export function UsersTable({
       sort={sort}
       hasFilters={hasFilters}
       isError={isError}
+      isLoading={isLoading}
+      isFetching={isFetching}
       canWrite={canWrite}
       labels={labels}
       onSortChange={onSortChange}

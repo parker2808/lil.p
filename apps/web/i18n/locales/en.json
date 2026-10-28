@@ -13,7 +13,8 @@
     "copyEmail": "Copy email",
     "copied": "Copied",
     "suggestLocale": "This page is also available in Vietnamese",
-    "switchLocale": "View in Vietnamese"
+    "switchLocale": "View in Vietnamese",
+    "loading": "Loading"
   },
   "draft": {
     "banner": "You are previewing drafts. Visitors still see the published site.",
@@ -95,7 +96,10 @@
     "notReleased": "Not released",
     "moreIn": "More in {name}",
     "more": "More case studies",
-    "live": "Live site"
+    "live": "Live site",
+    "grid": "Grid",
+    "index": "Index",
+    "title": "Case studies"
   },
   "notes": {
     "all": "All",
@@ -107,7 +111,8 @@
     "next": "Next",
     "pagination": "Notes pages",
     "results": "{count} notes",
-    "note": "Note"
+    "note": "Note",
+    "title": "Notes"
   },
   "content": {
     "copy": "Copy",
@@ -206,13 +211,16 @@
     },
     "login": {
       "title": "Sign in",
-      "intro": "Admin is English only. Use the account from the seed env.",
+      "intro": "Admin workspace",
       "email": "Email",
       "password": "Password",
       "submit": "Sign in",
       "invalid": "Those credentials did not work.",
       "rateLimited": "Too many attempts. Try again in a minute.",
-      "checking": "Checking session"
+      "checking": "Checking session",
+      "workspace": "P / CMS",
+      "artTitle": "A quiet place to shape what comes next.",
+      "artNote": "Content · Craft · Publish"
     },
     "dashboard": {
       "title": "Dashboard",
@@ -956,7 +964,8 @@
       "altEn": "Alt text (English)",
       "altVi": "Alt text (Vietnamese)",
       "saveAlt": "Save alt",
-      "delete": "Delete"
+      "delete": "Delete",
+      "selectItem": "Select a file to inspect"
     },
     "topics": {
       "title": "Contact topics",

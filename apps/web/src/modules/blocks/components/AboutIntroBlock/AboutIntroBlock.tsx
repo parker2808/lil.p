@@ -1,3 +1,4 @@
+import { isPlaceholderText } from '@/modules/core/utils/placeholder.util';
 import type { PublicBlock } from '@portfolio/contracts';
 import { Eyebrow } from '@portfolio/ui/components/Eyebrow/Eyebrow';
 import { Reveal } from '@portfolio/ui/components/Reveal/Reveal';
@@ -53,7 +54,7 @@ export async function AboutIntroBlock({
             <span>{cityLine}</span>
           </p>
         ) : null}
-        {props.showAvailability ? (
+        {props.showAvailability && !isPlaceholderText(site.settings.availabilityNote) ? (
           <Badge variant="primary">{site.settings.availabilityNote}</Badge>
         ) : null}
         {resumeUrl ? (

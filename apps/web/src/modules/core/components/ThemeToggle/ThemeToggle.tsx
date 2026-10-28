@@ -4,6 +4,7 @@ import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
 import { useSyncExternalStore } from 'react';
+import { flushSync } from 'react-dom';
 
 import { cn } from '@portfolio/ui/lib/utils';
 import {
@@ -28,6 +29,23 @@ export function ThemeToggle() {
     () => false,
   );
 
+  function changeTheme(value: string) {
+    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection
+      ?.saveData;
+    if (
+      !document.startViewTransition ||
+      matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      saveData
+    ) {
+      setTheme(value);
+      return;
+    }
+    const transition = document.startViewTransition(() => {
+      flushSync(() => setTheme(value));
+    });
+    void transition.ready.catch(() => undefined);
+  }
+
   const current = theme ?? 'system';
   const TriggerIcon = mounted && resolvedTheme === 'dark' ? Moon : Sun;
 
@@ -47,7 +65,7 @@ export function ThemeToggle() {
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuRadioGroup value={current} onValueChange={setTheme}>
+        <DropdownMenuRadioGroup value={current} onValueChange={changeTheme}>
           {OPTIONS.map(({ value, label, icon: Icon }) => (
             <DropdownMenuRadioItem key={value} value={value} aria-pressed={current === value}>
               <Icon className="size-4" aria-hidden />

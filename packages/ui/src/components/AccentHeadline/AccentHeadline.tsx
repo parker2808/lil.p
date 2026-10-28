@@ -20,7 +20,7 @@ export function AccentHeadline({
   return (
     <Comp className={cn('font-heading text-display font-bold', className)}>
       {text.slice(0, index)}
-      <span className="text-primary">{accent}</span>
+      <span className="headline-accent text-primary">{accent}</span>
       {text.slice(index + accent.length)}
     </Comp>
   );

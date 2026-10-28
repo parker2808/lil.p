@@ -1,19 +1,16 @@
+import { isPlaceholderText } from '@/modules/core/utils/placeholder.util';
 import type { PublicBlock } from '@portfolio/contracts';
 import { AccentHeadline } from '@portfolio/ui/components/AccentHeadline/AccentHeadline';
-import { Atmosphere } from '@portfolio/ui/components/Atmosphere/Atmosphere';
+import { HeroStage } from '@/modules/core/components/HeroStage/HeroStage';
 import { KickerPill } from '@portfolio/ui/components/KickerPill/KickerPill';
-import { MigrationDiagram } from '@portfolio/ui/components/MigrationDiagram/MigrationDiagram';
 import { Reveal } from '@portfolio/ui/components/Reveal/Reveal';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { buttonVariants } from '@portfolio/ui/components/ui/button';
 import { cn } from '@portfolio/ui/lib/utils';
 import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
-import { getTranslations } from 'next-intl/server';
 
 import { Link } from '@i18n/navigation';
 import { getSite } from '@/modules/core/services/site.service';
-import { listProcessSteps } from '@/modules/home/services/process-steps.service';
-import { getFeaturedProject } from '@/modules/projects/services/projects.service';
 
 import type { BlockContext } from '../../types/entities/block-context.type';
 
@@ -27,32 +24,27 @@ export async function HeroBlock({ block, context }: { block: PublicBlock; contex
     showDiagram?: boolean;
   };
   const split = block.layout === 'SPLIT_7_5' && Boolean(props.showDiagram);
-  const [site, featured, steps, t] = await Promise.all([
-    getSite(context.locale),
-    split ? getFeaturedProject(context.locale) : Promise.resolve(null),
-    split ? listProcessSteps(context.locale) : Promise.resolve([]),
-    getTranslations('blocks'),
-  ]);
+  const site = await getSite(context.locale);
 
   return (
     <Reveal
       eager
       className={
         split
-          ? 'relative col-span-full grid items-center gap-8 overflow-hidden lg:grid-cols-12'
-          : 'relative col-span-full overflow-hidden'
+          ? 'hero-layout relative col-span-full grid items-center gap-8 lg:grid-cols-12'
+          : 'hero-layout relative col-span-full'
       }
       lang={block.lang}
     >
-      {site.settings.ambientEffects ? <Atmosphere variant="hero" enabled /> : null}
+      {props.showDiagram ? <HeroStage enabled={site.settings.ambientEffects} /> : null}
       <div
         className={
           split
-            ? 'relative flex flex-col gap-6 lg:col-span-7'
-            : 'relative mx-auto flex max-w-3xl flex-col gap-6'
+            ? 'hero-copy relative flex flex-col gap-6 lg:col-span-9'
+            : 'hero-copy relative flex flex-col gap-6'
         }
       >
-        <KickerPill>{site.profile.heroKicker}</KickerPill>
+        <KickerPill>{site.profile.heroKicker?.replace(/^\s*>+\s*/, '')}</KickerPill>
         <AccentHeadline
           text={site.profile.headline}
           accent={site.profile.headlineAccent}
@@ -61,7 +53,7 @@ export async function HeroBlock({ block, context }: { block: PublicBlock; contex
         <p className="text-prose text-muted-foreground max-w-prose" lang={site.profile.lang}>
           {site.profile.subheadline}
         </p>
-        {props.showAvailability ? (
+        {!split && props.showAvailability && !isPlaceholderText(site.settings.availabilityNote) ? (
           <Badge variant="primary">{site.settings.availabilityNote}</Badge>
         ) : null}
         <div className="flex flex-wrap gap-3">
@@ -80,16 +72,16 @@ export async function HeroBlock({ block, context }: { block: PublicBlock; contex
           ) : null}
         </div>
       </div>
-      {split ? (
-        <div className="relative lg:col-span-5">
-          <MigrationDiagram
-            versionFrom={featured?.versionFrom}
-            versionTo={featured?.versionTo}
-            skills={featured?.skills}
-            fallbackSteps={steps}
-            label={t('diagram')}
-          />
-        </div>
+      {split && props.showAvailability && !isPlaceholderText(site.settings.availabilityNote) ? (
+        <aside className="hero-status lg:col-span-3">
+          <header aria-hidden>
+            <i />
+            <i />
+            <i />
+          </header>
+          <p>{site.settings.availabilityNote}</p>
+          <div>{[site.profile.city, site.profile.timezone].filter(Boolean).join(' · ')}</div>
+        </aside>
       ) : null}
     </Reveal>
   );

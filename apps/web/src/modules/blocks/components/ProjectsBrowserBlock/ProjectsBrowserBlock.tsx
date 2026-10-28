@@ -1,3 +1,4 @@
+import { ProjectsView } from '@/modules/projects/components/ProjectsView/ProjectsView';
 import type { PublicBlock } from '@portfolio/contracts';
 import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
 import { getTranslations } from 'next-intl/server';
@@ -74,24 +75,26 @@ export async function ProjectsBrowserBlock({
           }}
         />
       </div>
-      <ProjectsGrid
-        items={items}
-        featured={featured}
-        page={page.page}
-        pageSize={page.pageSize}
-        total={page.total}
-        domain={query.domain}
-        skill={query.skill}
-        emptyMessage={emptyMessage}
-        labels={{
-          nda: blocks('nda'),
-          clearFilters: t('clearFilters'),
-          previous: t('previous'),
-          next: t('next'),
-          pagination: t('pagination'),
-        }}
-        renderLink={renderAppLink}
-      />
+      <ProjectsView>
+        <ProjectsGrid
+          items={items}
+          featured={featured}
+          page={page.page}
+          pageSize={page.pageSize}
+          total={page.total}
+          domain={query.domain}
+          skill={query.skill}
+          emptyMessage={emptyMessage}
+          labels={{
+            nda: blocks('nda'),
+            clearFilters: t('clearFilters'),
+            previous: t('previous'),
+            next: t('next'),
+            pagination: t('pagination'),
+          }}
+          renderLink={renderAppLink}
+        />
+      </ProjectsView>
     </>
   );
 }

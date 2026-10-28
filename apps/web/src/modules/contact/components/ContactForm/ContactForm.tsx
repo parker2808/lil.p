@@ -256,7 +256,7 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
 
       <Button
         type="submit"
-        disabled={pending}
+        loading={pending}
         onClick={() => {
           if (!formRef.current) {
             return;
@@ -264,7 +264,7 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
           sendFrom(formRef.current);
         }}
       >
-        {pending ? t('sending') : t('send')}
+        {t('send')}
       </Button>
     </form>
   );

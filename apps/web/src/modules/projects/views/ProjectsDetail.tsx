@@ -1,3 +1,4 @@
+import { cloudinaryPreview } from '@portfolio/ui/utils/cloudinary-preview.util';
 import type { Locale } from '@portfolio/contracts';
 import { ContentProgress } from '@portfolio/ui/components/ContentProgress/ContentProgress';
 import { CoverPlaceholder } from '@portfolio/ui/components/CoverPlaceholder/CoverPlaceholder';
@@ -78,7 +79,7 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
             maskImage: 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
           }}
         />
-        <div className="relative mx-auto flex max-w-5xl flex-col gap-10 px-6 py-16">
+        <div className="relative mx-auto flex max-w-[var(--container)] flex-col gap-10 px-6 py-16">
           <CaseStudyHeader
             project={project}
             labels={{ back: t('back'), nda: blocks('nda'), version: t('version') }}
@@ -96,7 +97,7 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
           />
         </div>
       </header>
-      <div className="mx-auto flex max-w-5xl flex-col gap-16 px-6 pb-16">
+      <div className="mx-auto flex max-w-[var(--container)] flex-col gap-16 px-6 pb-16">
         {project.isConfidential ? null : project.cover ? (
           // Public cover uses API srcset + locale alt (T51); next/image cannot attach srcset.
           // eslint-disable-next-line @next/next/no-img-element -- srcset from media DTO
@@ -110,10 +111,22 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
             fetchPriority="high"
             decoding="async"
             className="w-full rounded-xl object-cover"
-            style={{ aspectRatio: '21 / 9' }}
+            style={{
+              aspectRatio: '21 / 9',
+              backgroundImage: cloudinaryPreview(project.cover.url)
+                ? `url("${cloudinaryPreview(project.cover.url)}")`
+                : undefined,
+              backgroundSize: 'cover',
+            }}
           />
         ) : (
-          <CoverPlaceholder hue={hue} ratio="21 / 9" className="rounded-xl" />
+          <CoverPlaceholder
+            title={project.title}
+            slug={project.slug}
+            hue={hue}
+            ratio="21 / 9"
+            className="rounded-xl"
+          />
         )}
         <div className="grid items-start gap-10 lg:grid-cols-12">
           <aside className="lg:order-2 lg:col-span-4">

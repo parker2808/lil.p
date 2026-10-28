@@ -9,6 +9,7 @@ import {
   CARD_INTERACTIVE,
   CARD_TITLE_LINK,
 } from '@portfolio/ui/utils/card-chrome.util';
+import { cloudinaryPreview } from '@portfolio/ui/utils/cloudinary-preview.util';
 import { BADGE_HUE } from '@portfolio/ui/utils/hue.util';
 import { defaultRenderLink, type RenderLink } from '@portfolio/ui/utils/render-link.util';
 import { ArrowUpRight } from 'lucide-react';
@@ -58,10 +59,21 @@ export function CaseCard({
               'w-full object-cover',
               featured ? 'rounded-lg lg:col-span-7' : 'border-b',
             )}
-            style={{ aspectRatio: '16 / 10' }}
+            style={{
+              aspectRatio: '16 / 10',
+              backgroundImage: cloudinaryPreview(project.cover.url)
+                ? `url("${cloudinaryPreview(project.cover.url)}")`
+                : undefined,
+              backgroundSize: 'cover',
+            }}
           />
         ) : (
-          <CoverPlaceholder hue={hue} className={cn(featured ? 'lg:col-span-7' : 'border-b')} />
+          <CoverPlaceholder
+            title={project.title}
+            slug={project.slug}
+            hue={hue}
+            className={cn(featured ? 'lg:col-span-7' : 'border-b')}
+          />
         )}
         <div className={cn('flex flex-1 flex-col gap-2', featured ? 'lg:col-span-5' : 'p-4')}>
           <div className="flex flex-wrap items-center gap-1.5">

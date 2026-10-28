@@ -16,8 +16,8 @@ export function SiteFooter({
   const sha = buildSha?.slice(0, 7);
 
   return (
-    <footer className="border-t">
-      <div className="text-meta mx-auto flex max-w-5xl flex-wrap items-center gap-x-4 gap-y-2 px-6 py-6 font-mono">
+    <footer className="site-footer border-t">
+      <div className="site-container text-meta mx-auto flex flex-wrap items-center gap-x-6 gap-y-4 py-10 font-mono">
         <span>{name}</span>
         {nav.map((item) => (
           <Link
@@ -39,6 +39,9 @@ export function SiteFooter({
           </a>
         ))}
         {sha ? <span className="text-muted-foreground">{sha}</span> : null}
+      </div>
+      <div className="site-container footer-wordmark" aria-hidden>
+        {name}
       </div>
     </footer>
   );

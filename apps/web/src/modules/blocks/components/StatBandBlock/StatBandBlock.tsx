@@ -22,9 +22,10 @@ export async function StatBandBlock({
     statIds?: number[];
   };
   const site = await getSite(context.locale);
-  const selected = props.statIds?.length
+  const candidates = props.statIds?.length
     ? site.profileStats.filter((stat) => props.statIds!.includes(stat.id))
     : site.profileStats;
+  const selected = candidates.filter((stat) => !/^0(?:[.,]0+)?$/.test(String(stat.value).trim()));
   if (selected.length < 2) {
     return null;
   }

@@ -27,7 +27,7 @@ export function AdminPostsIndex() {
   const router = useRouter();
   const canWrite = useIsAdmin();
   const { params, setParams } = useListParams(adminPostListParamsSchema);
-  const { data, isError, refetch } = useAdminPosts(params);
+  const { data, isError, refetch, isPending, isFetching } = useAdminPosts(params);
   const list = data ?? { items: [], page: params.page, pageSize: params.pageSize, total: 0 };
   const archive = useArchiveAdminPost(params);
   const bulkArchive = useBulkArchivePosts();
@@ -90,6 +90,8 @@ export function AdminPostsIndex() {
         sort={params.sort}
         hasFilters={hasFilters}
         isError={isError}
+        isLoading={isPending}
+        isFetching={isFetching}
         canWrite={canWrite}
         labels={adminTableLabels(table, {
           empty: t('empty'),

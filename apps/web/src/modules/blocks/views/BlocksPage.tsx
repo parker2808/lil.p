@@ -1,3 +1,5 @@
+import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
+import type { ReactNode } from 'react';
 import type { Locale, PageKey, PublicPagePreview } from '@portfolio/contracts';
 import { draftMode } from 'next/headers';
 import { getTranslations } from 'next-intl/server';
@@ -29,10 +31,31 @@ export async function BlocksPage({
   const draft = await draftMode();
   const t = await getTranslations('states');
   const preview = page as PublicPagePreview;
+  // Resolve async blocks before writing their wrappers. This also preserves a complete
+  // initial HTML document without the client script needed to reveal streamed chunks.
+  const resolved: Record<number, ReactNode> = Object.fromEntries(
+    await Promise.all(
+      page.blocks.map(async (block) => {
+        try {
+          const entry = BLOCK_RENDERERS[block.type];
+          return [
+            block.id,
+            entry ? await entry.component({ block, context: { locale, searchParams } }) : null,
+          ];
+        } catch {
+          return [
+            block.id,
+            <ErrorState key={block.id} message={t('error')} retryLabel={t('retry')} />,
+          ];
+        }
+      }),
+    ),
+  );
 
   return (
     <BlockRenderer
       blocks={page.blocks}
+      resolved={resolved}
       invalidBlocks={'invalidBlocks' in preview ? preview.invalidBlocks : []}
       draft={draft.isEnabled}
       context={{ locale, searchParams }}

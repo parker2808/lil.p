@@ -2,30 +2,31 @@
 @import 'tw-animate-css';
 @import './code-syntax.css';
 @import './editor.css';
+@import './redesign.css';
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --radius: 0.5rem;
+  --radius: 10px;
 
-  --background: #fafaf9;
-  --foreground: #18181b;
-  --card: #ffffff;
-  --card-foreground: #18181b;
-  --popover: #ffffff;
-  --popover-foreground: #18181b;
-  --primary: #0f766e;
+  --background: #f6f3ec;
+  --foreground: #16181f;
+  --card: #fcfaf6;
+  --card-foreground: #16181f;
+  --popover: #fcfaf6;
+  --popover-foreground: #16181f;
+  --primary: #b3321a;
   --primary-foreground: #ffffff;
-  --secondary: #f2f2ef;
-  --secondary-foreground: #18181b;
-  --muted: #f2f2ef;
-  --muted-foreground: #52525b;
-  --accent: #f2f2ef;
-  --accent-foreground: #18181b;
+  --secondary: #eeeae0;
+  --secondary-foreground: #16181f;
+  --muted: #eeeae0;
+  --muted-foreground: #474a54;
+  --accent: #fbe4da;
+  --accent-foreground: #b3321a;
   --destructive: #b42318;
   --destructive-foreground: #ffffff;
-  --border: #e4e4e0;
-  --input: #8a8a93;
-  --ring: #0f766e;
+  --border: #dcd6c9;
+  --input: #bfb8a8;
+  --ring: #b3321a;
   --chart-1: #0f766e;
   --chart-2: #1d4ed8;
   --chart-3: #93370d;
@@ -41,10 +42,10 @@
   --sidebar-ring: #0f766e;
 
   /* extensions */
-  --subtle-foreground: #6b6b74;
-  --primary-hover: #115e59;
-  --primary-subtle: #e3f2ef;
-  --primary-subtle-foreground: #115e59;
+  --subtle-foreground: #62656f;
+  --primary-hover: #922813;
+  --primary-subtle: #fbe4da;
+  --primary-subtle-foreground: #b3321a;
   --success: #067647;
   --success-subtle: #e6f1ec;
   --warning: #93370d;
@@ -54,8 +55,8 @@
   --destructive-subtle: #f7e9e8;
 
   /* v2: bands, atmosphere, domain hues */
-  --band: #f3f5f3;
-  --border-strong: #cfcfc9;
+  --band: #eeeae0;
+  --border-strong: #bfb8a8;
   --grid-line: rgb(15 118 110 / 0.06);
   --glow: rgb(15 118 110 / 0.1);
   --glow-button: var(--shadow-1);
@@ -92,30 +93,30 @@
   --z-toast: 600;
   --z-skip: 700;
 
-  --container: 1120px;
+  --container: 1320px;
   --measure: 66ch;
 }
 
 .dark {
-  --background: #0a0f0e;
-  --foreground: #e8efed;
-  --card: #111817;
-  --card-foreground: #e8efed;
-  --popover: #172120;
-  --popover-foreground: #e8efed;
-  --primary: #2dd4bf;
-  --primary-foreground: #042f2b;
-  --secondary: #172120;
-  --secondary-foreground: #e8efed;
-  --muted: #172120;
-  --muted-foreground: #9db0ab;
-  --accent: #172120;
-  --accent-foreground: #e8efed;
+  --background: #111318;
+  --foreground: #eee9df;
+  --card: #181b22;
+  --card-foreground: #eee9df;
+  --popover: #181b22;
+  --popover-foreground: #eee9df;
+  --primary: #ff8f74;
+  --primary-foreground: #16181f;
+  --secondary: #0b0d11;
+  --secondary-foreground: #eee9df;
+  --muted: #0b0d11;
+  --muted-foreground: #b7b2a8;
+  --accent: #331a14;
+  --accent-foreground: #ff8f74;
   --destructive: #f97066;
   --destructive-foreground: #0a0f0e;
-  --border: #233230;
-  --input: #62807a;
-  --ring: #2dd4bf;
+  --border: #2a2e37;
+  --input: #3d424d;
+  --ring: #ff8f74;
   --chart-1: #2dd4bf;
   --chart-2: #7aa2f7;
   --chart-3: #fdb022;
@@ -130,10 +131,10 @@
   --sidebar-border: #233230;
   --sidebar-ring: #2dd4bf;
 
-  --subtle-foreground: #809590;
-  --primary-hover: #5eead4;
-  --primary-subtle: #0f2e2b;
-  --primary-subtle-foreground: #5eead4;
+  --subtle-foreground: #8f8b83;
+  --primary-hover: #ffac97;
+  --primary-subtle: #331a14;
+  --primary-subtle-foreground: #ff8f74;
   --success: #47cd89;
   --success-subtle: #1a2f25;
   --warning: #fdb022;
@@ -142,8 +143,8 @@
   --info-subtle: #1b2540;
   --destructive-subtle: #3a1f1f;
 
-  --band: #0d1412;
-  --border-strong: #2f4542;
+  --band: #0b0d11;
+  --border-strong: #3d424d;
   --grid-line: rgb(45 212 191 / 0.08);
   --glow: rgb(45 212 191 / 0.18);
   --glow-button: 0 0 24px -6px rgb(45 212 191 / 0.55);
@@ -267,21 +268,22 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --radius-sm: calc(var(--radius) - 4px); /* 4px  badges, kbd, inline code */
-  --radius-md: calc(var(--radius) - 2px); /* 6px  buttons, inputs */
-  --radius-lg: var(--radius); /* 8px  cards, menus, code blocks */
-  --radius-xl: calc(var(--radius) + 4px); /* 12px dialogs, media */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: var(--radius);
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
 
-  --font-heading:
-    var(--font-be-vietnam-pro), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-heading: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
 
-  --text-display: clamp(2.5rem, 1.5rem + 4vw, 4rem);
-  --text-display--line-height: 1.1;
-  --text-title: clamp(2.125rem, 1.6rem + 2.2vw, 3rem);
+  --text-display: clamp(3rem, 1.2rem + 7.6vw, 9rem);
+  --text-display--line-height: 0.98;
+  --text-title: clamp(2.25rem, 1.5rem + 3.2vw, 4.25rem);
   --text-title--line-height: 1.2;
-  --text-heading: clamp(1.625rem, 1.5rem + 0.5vw, 1.875rem);
+  --text-heading: clamp(1.75rem, 1.4rem + 1.5vw, 2.75rem);
   --text-heading--line-height: 1.3;
   --text-subheading: 1.25rem;
   --text-subheading--line-height: 1.4;

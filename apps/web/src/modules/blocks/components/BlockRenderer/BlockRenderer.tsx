@@ -15,6 +15,7 @@ export function BlockRenderer({
   context,
   labels,
   registry,
+  resolved,
 }: {
   blocks: PublicBlock[];
   invalidBlocks?: InvalidPreviewBlock[];
@@ -22,6 +23,7 @@ export function BlockRenderer({
   context: BlockContext;
   labels: { error: string; retry: string; empty: string; unknown?: string };
   registry: BlockRenderers;
+  resolved?: Record<number, ReactNode>;
 }) {
   const groups: Array<PublicBlock | InvalidPreviewBlock>[] = [];
   const queue: Array<PublicBlock | InvalidPreviewBlock> = [...blocks];
@@ -30,6 +32,7 @@ export function BlockRenderer({
   }
 
   for (const block of queue) {
+    if (resolved && block.id in resolved && resolved[block.id] === null) continue;
     const last = groups.at(-1);
     const surface = 'surface' in block ? block.surface : 'PLAIN';
     if (surface === 'BAND' && last?.[0] && 'surface' in last[0] && last[0].surface === 'BAND') {
@@ -42,11 +45,13 @@ export function BlockRenderer({
   return (
     <>
       {groups.map((group) => {
-        const rendered = group.map((block) => renderEntry(block, context, labels, registry, draft));
+        const rendered = group.map((block) =>
+          renderEntry(block, context, labels, registry, draft, resolved),
+        );
         if (group[0] && 'surface' in group[0] && group[0].surface === 'BAND') {
           return (
-            <Band key={group.map((block) => block.id).join('-')}>
-              <div className="mx-auto max-w-5xl px-6 py-16">{rendered}</div>
+            <Band className="public-band" key={group.map((block) => block.id).join('-')}>
+              <div className="site-container public-block">{rendered}</div>
             </Band>
           );
         }
@@ -62,6 +67,7 @@ function renderEntry(
   labels: { error: string; retry: string; empty: string; unknown?: string },
   registry: BlockRenderers,
   draft: boolean,
+  resolved?: Record<number, ReactNode>,
 ): ReactNode {
   if (!('layout' in block)) {
     if (!draft) {
@@ -93,16 +99,29 @@ function renderEntry(
   const Renderer = entry.component;
   const Fallback = entry.skeleton;
 
-  return (
-    <SectionBoundary key={block.id} fallback={<Fallback />} labels={labels}>
-      <BlockLayout
-        layout={block.layout}
-        id={block.key}
-        data-block-id={block.id}
-        className={block.surface === 'PLAIN' ? 'mx-auto max-w-5xl px-6 py-16' : undefined}
-      >
+  const content = (
+    <BlockLayout
+      key={block.id}
+      layout={block.layout}
+      id={block.key}
+      data-block-id={block.id}
+      data-block-type={block.type}
+      className={block.surface === 'PLAIN' ? 'site-container public-block' : undefined}
+    >
+      {resolved && block.id in resolved ? (
+        resolved[block.id]
+      ) : (
         <Renderer block={block} context={context} />
-      </BlockLayout>
+      )}
+    </BlockLayout>
+  );
+  // Already resolved server content needs no client Suspense boundary. In particular,
+  // React's streamed hidden containers cannot be revealed when JavaScript is off.
+  return resolved ? (
+    content
+  ) : (
+    <SectionBoundary key={block.id} fallback={<Fallback />} labels={labels}>
+      {content}
     </SectionBoundary>
   );
 }

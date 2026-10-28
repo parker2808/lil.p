@@ -23,6 +23,8 @@ export function ProjectsTable({
   sort,
   hasFilters,
   isError,
+  isLoading,
+  isFetching,
   canWrite,
   labels,
   columnLabels,
@@ -46,6 +48,8 @@ export function ProjectsTable({
   sort: string;
   hasFilters: boolean;
   isError?: boolean;
+  isLoading?: boolean;
+  isFetching?: boolean;
   canWrite: boolean;
   labels: DataTableLabels;
   columnLabels: {
@@ -169,6 +173,8 @@ export function ProjectsTable({
       sort={sort}
       hasFilters={hasFilters}
       isError={isError}
+      isLoading={isLoading}
+      isFetching={isFetching}
       canWrite={canWrite}
       labels={labels}
       onSortChange={onSortChange}

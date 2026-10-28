@@ -32,7 +32,7 @@ export function AdminProjectsIndex() {
   const router = useRouter();
   const canWrite = useIsAdmin();
   const { params, setParams } = useListParams(adminProjectListParamsSchema);
-  const { data, isError, refetch } = useAdminProjects(params);
+  const { data, isError, refetch, isPending, isFetching } = useAdminProjects(params);
   const list = data ?? { items: [], page: params.page, pageSize: params.pageSize, total: 0 };
   const archive = useArchiveAdminProject(params);
   const bulkArchive = useBulkArchiveProjects();
@@ -98,6 +98,8 @@ export function AdminProjectsIndex() {
         sort={params.sort}
         hasFilters={hasFilters}
         isError={isError}
+        isLoading={isPending}
+        isFetching={isFetching}
         canWrite={canWrite}
         labels={{
           empty: t('empty'),

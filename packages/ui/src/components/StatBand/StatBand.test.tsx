@@ -29,3 +29,14 @@ describe('StatBand', () => {
     expect(screen.getByLabelText('4 Products shipped')).toBeInTheDocument();
   });
 });
+
+it('renders final numbers on the server and omits zero statistics', async () => {
+  const { renderToStaticMarkup } = await import('react-dom/server');
+  const stats = [
+    ...profileStatFixtures.slice(0, 2),
+    { ...profileStatFixtures[0]!, id: 999, value: '0', label: 'Empty metric' },
+  ];
+  const html = renderToStaticMarkup(<StatBand stats={stats} />);
+  expect(html).toContain('5+');
+  expect(html).not.toContain('Empty metric');
+});

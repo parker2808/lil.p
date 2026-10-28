@@ -1,3 +1,4 @@
+import { Link } from '@i18n/navigation';
 import type { Locale } from '@portfolio/contracts';
 import { ContentProgress } from '@portfolio/ui/components/ContentProgress/ContentProgress';
 import { SectionNav } from '@portfolio/ui/components/SectionNav/SectionNav';
@@ -40,7 +41,7 @@ export async function NotesDetail({ locale, slug }: { locale: Locale; slug: stri
   const crumbs = crumbLabel[locale];
 
   return (
-    <article className="mx-auto max-w-5xl px-6 py-16">
+    <article className="notes-reader">
       <JsonLd data={blogPostingJsonLd(post, locale)} />
       <JsonLd
         data={breadcrumbListJsonLd([
@@ -49,9 +50,27 @@ export async function NotesDetail({ locale, slug }: { locale: Locale; slug: stri
           { name: post.title, url: absoluteUrl(locale, `/notes/${post.slug}`) },
         ])}
       />
-      <ContentProgress />
-      <div className="grid items-start gap-10 lg:grid-cols-12">
-        <div className="flex flex-col gap-10 lg:col-span-8">
+      <ContentProgress scrollTargetId="reader-content" />
+      <nav className="reader-index" aria-label={t('title')}>
+        <Link href="/notes" className="font-mono text-xs uppercase">
+          {t('title')}
+        </Link>
+        <ol>
+          {ordered.map((item, index) => (
+            <li key={item.id}>
+              <Link
+                href={`/notes/${item.slug}`}
+                aria-current={item.slug === slug ? 'page' : undefined}
+              >
+                <span aria-hidden>{String(index + 1).padStart(2, '0')}</span>
+                {item.title}
+              </Link>
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <div className="reader-body grid items-start gap-10 lg:grid-cols-12">
+        <div id="reader-content" className="flex flex-col gap-10 lg:col-span-8">
           <PostHeader
             post={post}
             dateLabel={dateLabel}

@@ -17,7 +17,7 @@ export async function SiteShell({ locale, children }: { locale: Locale; children
   const draft = await draftMode();
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="public-site flex min-h-dvh flex-col">
       <PageViewBeacon enabled={site.settings.analyticsEnabled} />
       <SkipLink />
       {draft.isEnabled ? <PreviewBridge /> : null}

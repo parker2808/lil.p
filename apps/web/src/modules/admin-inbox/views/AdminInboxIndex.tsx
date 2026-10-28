@@ -22,7 +22,7 @@ export function AdminInboxIndex() {
   const canWrite = useIsAdmin();
   const router = useRouter();
   const { params, setParams } = useListParams(adminContactMessageListParamsSchema);
-  const { data, isError, refetch } = useAdminMessages(params);
+  const { data, isError, refetch, isPending, isFetching } = useAdminMessages(params);
   const mutations = useInboxMutations();
   const list = data ?? { items: [], page: params.page, pageSize: params.pageSize, total: 0 };
   const status = params.status;
@@ -51,6 +51,8 @@ export function AdminInboxIndex() {
         sort={params.sort}
         hasFilters={Boolean(params.q || params.status)}
         isError={isError}
+        isLoading={isPending}
+        isFetching={isFetching}
         canWrite={canWrite}
         labels={adminTableLabels(table, {
           empty: t('empty'),
