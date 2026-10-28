@@ -99,6 +99,7 @@ export function DataTable<TData>({
   onDelete,
   onBulkDelete,
   isLoading = false,
+  isFetching = false,
   isError = false,
   hasFilters = false,
   onRetry,
@@ -124,6 +125,7 @@ export function DataTable<TData>({
   onDelete?: (row: TData) => void;
   onBulkDelete?: (rows: TData[]) => void;
   isLoading?: boolean;
+  isFetching?: boolean;
   isError?: boolean;
   hasFilters?: boolean;
   onRetry?: () => void;
@@ -277,6 +279,8 @@ export function DataTable<TData>({
       tabIndex={0}
       data-slot="data-table"
       data-density={density}
+      aria-busy={isLoading || isFetching}
+      data-fetching={isFetching || undefined}
       className="outline-none"
       onKeyDown={onKeyDown}
     >
@@ -340,7 +344,7 @@ export function DataTable<TData>({
         </div>
       ) : null}
 
-      <div className="hidden overflow-x-auto md:block">
+      <div className={cn('overflow-x-auto', renderCard && 'hidden sm:block')}>
         <Table style={{ width: table.getCenterTotalSize() }}>
           <TableHeader>
             {table.getHeaderGroups().map((group) => (
@@ -391,9 +395,14 @@ export function DataTable<TData>({
             {isLoading
               ? Array.from({ length: 5 }, (_, index) => (
                   <TableRow key={`skeleton-${index}`}>
-                    <TableCell colSpan={columns.length + 1}>
-                      <Skeleton className="h-6 w-full" />
+                    <TableCell>
+                      <Skeleton className="size-4" />
                     </TableCell>
+                    {table.getVisibleLeafColumns().map((column) => (
+                      <TableCell key={column.id} style={{ width: column.getSize() }}>
+                        <Skeleton className="h-5 w-4/5" />
+                      </TableCell>
+                    ))}
                   </TableRow>
                 ))
               : table.getRowModel().rows.map((row, index) => (
@@ -433,7 +442,14 @@ export function DataTable<TData>({
       </div>
 
       {renderCard ? (
-        <ul className="flex flex-col gap-3 md:hidden">
+        <ul className="flex flex-col gap-3 sm:hidden">
+          {isLoading
+            ? Array.from({ length: 5 }, (_, i) => (
+                <li key={i}>
+                  <Skeleton className="h-20 w-full" />
+                </li>
+              ))
+            : null}
           {(isLoading ? [] : data).map((row) => (
             <li key={rowId(row)}>{renderCard(row)}</li>
           ))}

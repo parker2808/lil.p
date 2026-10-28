@@ -41,6 +41,7 @@ export default defineConfig({
   testDir: './e2e',
   testMatch: [
     'public.spec.ts',
+    'redesign.spec.ts',
     'contact.spec.ts',
     'admin-publish.spec.ts',
     'admin-pages.spec.ts',

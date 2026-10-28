@@ -30,7 +30,7 @@ export function SectionNav({
           setCurrent(visible.target.id);
         }
       },
-      { rootMargin: '-20% 0px -70% 0px' },
+      { root: headings[0]?.closest('#reader-content') ?? null, rootMargin: '-20% 0px -70% 0px' },
     );
     headings.forEach((heading) => observer.observe(heading));
     return () => observer.disconnect();

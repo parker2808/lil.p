@@ -20,7 +20,7 @@ export default async function AdminRootLayout({ children }: { children: ReactNod
   const nonce = await requestNonce();
   return (
     <html lang="en" className={fontClassName} suppressHydrationWarning>
-      <body className="bg-background text-ui text-foreground min-h-dvh font-sans antialiased">
+      <body className="admin bg-background text-ui text-foreground min-h-dvh font-sans antialiased">
         <Providers locale="en" messages={en} nonce={nonce}>
           {children}
         </Providers>

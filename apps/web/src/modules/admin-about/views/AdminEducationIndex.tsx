@@ -49,6 +49,8 @@ export function AdminEducationIndex() {
       title={t('title')}
       items={list.data ?? []}
       isError={list.isError}
+      isLoading={list.isPending}
+      isFetching={list.isFetching}
       canWrite={canWrite}
       fields={[
         { name: 'school', label: t('fields.school'), kind: 'text' },

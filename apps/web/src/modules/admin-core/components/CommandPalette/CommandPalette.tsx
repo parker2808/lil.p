@@ -1,5 +1,7 @@
 'use client';
 
+import { normalizeSearch } from '../../utils/search.util';
+
 import { Button } from '@portfolio/ui/components/ui/button';
 import {
   Dialog,
@@ -56,12 +58,12 @@ export function AdminCommandPalette() {
     );
     if (isAdmin) {
       routes.push(
-        { href: '/admin/projects?new=1', label: t('palette.newProject') },
-        { href: '/admin/posts?new=1', label: t('palette.newPost') },
+        { href: '/admin/projects/new', label: t('palette.newProject') },
+        { href: '/admin/posts/new', label: t('palette.newPost') },
       );
     }
-    const needle = query.trim().toLowerCase();
-    return needle ? routes.filter((item) => item.label.toLowerCase().includes(needle)) : routes;
+    const needle = normalizeSearch(query);
+    return needle ? routes.filter((item) => normalizeSearch(item.label).includes(needle)) : routes;
   }, [isAdmin, query, role, t]);
 
   return (
@@ -70,9 +72,10 @@ export function AdminCommandPalette() {
         <Button
           variant="outline"
           size="sm"
-          className="h-8"
+          className="h-9 gap-2"
           aria-label={`${t('palette.open')} ${META}${KEY}`}
         >
+          <span className="hidden lg:inline">{t('palette.open')}</span>
           <Kbd>{META}</Kbd>
           <Kbd>{KEY}</Kbd>
         </Button>

@@ -77,6 +77,8 @@ export function BlockRow({
 
   return (
     <div
+      data-slot="block-row"
+      data-selected={selected || undefined}
       className={
         highlighted
           ? 'border-destructive bg-card flex items-center gap-2 rounded-md border p-2'
@@ -93,8 +95,12 @@ export function BlockRow({
       >
         <Icon name={(meta?.icon ?? 'circle-dot') as IconKey} className="size-4 shrink-0" />
         <span className="text-ui min-w-0 truncate font-medium">{block.type}</span>
-        <span className="text-ui-meta text-muted-foreground font-mono">{block.key}</span>
-        <Badge variant="outline">{block.layout}</Badge>
+        <span className="text-ui-meta text-muted-foreground hidden font-mono sm:inline">
+          {block.key}
+        </span>
+        <Badge variant="outline" className="hidden sm:inline-flex">
+          {block.layout}
+        </Badge>
       </button>
       <Switch
         checked={block.isVisible}

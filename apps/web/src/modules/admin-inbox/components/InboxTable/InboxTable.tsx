@@ -22,6 +22,8 @@ export function InboxTable({
   sort,
   hasFilters,
   isError,
+  isLoading,
+  isFetching,
   canWrite,
   labels,
   columnLabels,
@@ -42,6 +44,8 @@ export function InboxTable({
   sort: string;
   hasFilters: boolean;
   isError?: boolean;
+  isLoading?: boolean;
+  isFetching?: boolean;
   canWrite: boolean;
   labels: DataTableLabels;
   columnLabels: { name: string; topic: string; status: string; created: string; actions: string };
@@ -126,6 +130,8 @@ export function InboxTable({
       sort={sort}
       hasFilters={hasFilters}
       isError={isError}
+      isLoading={isLoading}
+      isFetching={isFetching}
       canWrite={canWrite}
       labels={labels}
       rowId={(row) => String(row.id)}

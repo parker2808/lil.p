@@ -5,17 +5,19 @@ import { Menu } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
-import { Link } from '@i18n/navigation';
+import { Link, usePathname } from '@i18n/navigation';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
 import { cn } from '@portfolio/ui/lib/utils';
 
+import { RoutePending } from '../RoutePending/RoutePending';
 import { CommandPalette } from '../CommandPalette/CommandPalette';
 import { LocaleSwitch } from '../LocaleSwitch/LocaleSwitch';
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
 
 export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }) {
   const t = useTranslations('core');
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -28,12 +30,18 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
   return (
     <header
       className={cn(
-        'bg-background/80 z-header sticky top-0 backdrop-blur-md',
+        'site-header bg-background/90 z-header sticky top-0 border-b backdrop-blur-md',
         scrolled && 'shadow-1',
       )}
     >
-      <div className="mx-auto flex h-14 max-w-5xl items-center gap-4 px-6">
-        <Link href="/" className="font-heading text-ui font-semibold">
+      <div className="site-container mx-auto flex h-16 items-center gap-6">
+        <Link
+          href="/"
+          className="font-heading text-ui inline-flex items-center gap-3 font-semibold"
+        >
+          <span className="site-monogram" aria-hidden>
+            {name.slice(0, 1)}
+          </span>
           {name}
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
@@ -41,10 +49,17 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
             <Link
               key={item.id}
               href={item.href}
+              aria-current={
+                pathname === item.href ||
+                (item.href !== '/' && pathname.startsWith(`${item.href}/`))
+                  ? 'page'
+                  : undefined
+              }
               data-slot="nav-link"
               className="text-ui text-muted-foreground hover:text-foreground inline-flex h-8 items-center px-2 transition-colors"
             >
               {item.label}
+              <RoutePending />
             </Link>
           ))}
         </nav>
@@ -67,10 +82,17 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
                   <Link
                     key={item.id}
                     href={item.href}
+                    aria-current={
+                      pathname === item.href ||
+                      (item.href !== '/' && pathname.startsWith(`${item.href}/`))
+                        ? 'page'
+                        : undefined
+                    }
                     data-slot="nav-link"
                     className="text-ui text-muted-foreground hover:text-foreground inline-flex h-8 items-center px-2 transition-colors"
                   >
                     {item.label}
+                    <RoutePending />
                   </Link>
                 ))}
               </nav>

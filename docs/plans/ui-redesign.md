@@ -2,6 +2,8 @@
 
 Status: proposal for review · Owner: Parker · Mockups: [`docs/design/redesign/`](../design/redesign/index.html) · Screenshots: [`docs/design/redesign/screenshots/`](../design/redesign/screenshots/)
 
+Implementation review (29 Oct 2026): [shipped surfaces, checks, screenshots and remaining proposal work](../audits/2026-10-29-redesign/README.md).
+
 ---
 
 ## Tóm tắt (Tiếng Việt)

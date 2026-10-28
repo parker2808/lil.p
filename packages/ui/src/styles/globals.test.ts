@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const cssPath = resolve(here, 'globals.css');
-const colorsPath = resolve(here, '../../../../docs/design/colors.json');
+const colorsPath = resolve(here, '../../../../docs/design/redesign-colors.json');
 
 const TEXT_SIZE_TOKENS = [
   '--text-display',
@@ -131,4 +131,37 @@ describe('globals.css tokens', () => {
       expect(css.includes(`${token}:`)).toBe(true);
     }
   });
+});
+
+function luminance(color: Rgba): number {
+  const channels = color
+    .slice(0, 3)
+    .map((value) => (value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4));
+  return channels[0]! * 0.2126 + channels[1]! * 0.7152 + channels[2]! * 0.0722;
+}
+
+it('keeps public and CMS text palettes at AA contrast in both themes', () => {
+  const css = readFileSync(cssPath, 'utf8');
+  const admin = readFileSync(resolve(here, 'redesign.css'), 'utf8');
+  for (const [source, selector] of [
+    [css, ':root'],
+    [css, '.dark'],
+    [admin, '.admin'],
+    [admin, '.dark .admin'],
+  ]) {
+    const tokens = parseDeclarations(extractBlock(source!, selector!));
+    for (const [fg, bg] of [
+      ['foreground', 'background'],
+      ['muted-foreground', 'background'],
+      ['subtle-foreground', 'background'],
+      ['primary-foreground', 'primary'],
+    ]) {
+      const a = luminance(parseColor(tokens.get(`--${fg}`)!)!);
+      const b = luminance(parseColor(tokens.get(`--${bg}`)!)!);
+      expect(
+        (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05),
+        `${selector} ${fg}/${bg}`,
+      ).toBeGreaterThanOrEqual(4.5);
+    }
+  }
 });

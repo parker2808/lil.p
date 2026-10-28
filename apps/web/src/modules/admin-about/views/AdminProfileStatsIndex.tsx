@@ -49,6 +49,8 @@ export function AdminProfileStatsIndex() {
       title={t('title')}
       items={list.data ?? []}
       isError={list.isError}
+      isLoading={list.isPending}
+      isFetching={list.isFetching}
       canWrite={canWrite}
       fields={[
         { name: 'labelEn', label: t('fields.labelEn'), kind: 'text' },

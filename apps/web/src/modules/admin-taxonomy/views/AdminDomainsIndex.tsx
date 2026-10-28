@@ -61,6 +61,8 @@ export function AdminDomainsIndex() {
       title={t('title')}
       items={list.data ?? []}
       isError={list.isError}
+      isLoading={list.isPending}
+      isFetching={list.isFetching}
       canWrite={canWrite}
       fields={[
         { name: 'slug', label: t('fields.slug'), kind: 'text' },

@@ -32,7 +32,7 @@ export function AdminUsersIndex() {
   const table = useTranslations('admin.table');
   const canWrite = useIsAdmin();
   const { params, setParams } = useListParams(adminUserListParamsSchema);
-  const { data, isError, refetch } = useAdminUsers(params);
+  const { data, isError, refetch, isPending, isFetching } = useAdminUsers(params);
   const mutations = useUserMutations();
   const list = data ?? { items: [], page: params.page, pageSize: params.pageSize, total: 0 };
   const [formOpen, setFormOpen] = useState(false);
@@ -76,6 +76,8 @@ export function AdminUsersIndex() {
         sort={params.sort}
         hasFilters={Boolean(params.q)}
         isError={isError}
+        isLoading={isPending}
+        isFetching={isFetching}
         canWrite={canWrite}
         labels={adminTableLabels(table, {
           empty: t('empty'),

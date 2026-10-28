@@ -11,7 +11,7 @@ export function BlockHeading({ heading, id }: { heading?: BlockHeadingProps; id?
   }
 
   return (
-    <div className="col-span-full flex flex-col gap-2">
+    <div className="block-heading col-span-full">
       {heading.eyebrow ? <Eyebrow>{heading.eyebrow}</Eyebrow> : null}
       <SectionHeader
         id={id}

@@ -11,6 +11,12 @@ export function formatTitle(seoTitle: string, siteName: string): string {
   const title = seoTitle.trim();
   const name = siteName.trim();
   if (!title) return name;
-  if (!name || title === name) return title;
+  if (
+    !name ||
+    title
+      .split(/\s+[·|—–]\s+/)
+      .some((part) => part.toLocaleLowerCase() === name.toLocaleLowerCase())
+  )
+    return title;
   return `${title} · ${name}`;
 }

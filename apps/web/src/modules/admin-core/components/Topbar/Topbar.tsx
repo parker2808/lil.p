@@ -31,7 +31,7 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
   const [passwordOpen, setPasswordOpen] = useState(false);
 
   return (
-    <header className="border-border flex h-12 items-center gap-3 border-b px-4">
+    <header className="admin-topbar border-border flex h-12 shrink-0 items-center gap-3 border-b px-4">
       <Sheet>
         <SheetTrigger asChild>
           <Button variant="ghost" size="sm" className="h-8 md:hidden" aria-label={t('menu')}>
@@ -52,7 +52,7 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
       >
         {t('toggleSidebar')}
       </Button>
-      <Breadcrumb aria-label={t('breadcrumb')}>
+      <Breadcrumb className="hidden sm:block" aria-label={t('breadcrumb')}>
         <BreadcrumbList>
           {crumbs.map((crumb) => (
             <BreadcrumbItem key={crumb.label}>{crumb.label}</BreadcrumbItem>
@@ -68,7 +68,9 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
                 <AvatarFallback className="text-ui">{initial}</AvatarFallback>
               </Avatar>
               <span className="text-ui hidden sm:inline">{me.name}</span>
-              <Badge variant="outline">{me.role}</Badge>
+              <Badge variant="outline" className="hidden sm:inline-flex">
+                {me.role}
+              </Badge>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

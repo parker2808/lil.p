@@ -48,6 +48,10 @@ export function SaveStatus({
   return (
     <div
       data-slot="save-status"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      aria-busy={state === 'saving'}
       className={cn('text-ui-meta flex items-center gap-2', tone, className)}
     >
       <span>{text}</span>

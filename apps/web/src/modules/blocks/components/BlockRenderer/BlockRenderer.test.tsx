@@ -70,3 +70,16 @@ describe('BlockRenderer', () => {
     expect(screen.getByText('cta-ok')).toBeInTheDocument();
   });
 });
+
+it('drops resolved empty entries before band grouping and layout padding', () => {
+  const { container } = render(
+    <BlockRenderer
+      blocks={[block({ surface: 'BAND' }), block({ id: 2, key: 'empty' })]}
+      context={context}
+      labels={labels}
+      registry={{ hero: { component: () => null, skeleton: () => null } }}
+      resolved={{ 1: null, 2: null }}
+    />,
+  );
+  expect(container).toBeEmptyDOMElement();
+});
