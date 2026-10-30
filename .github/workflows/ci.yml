@@ -4,21 +4,19 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   lint-typecheck-unit:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-
-      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
@@ -30,6 +28,7 @@ jobs:
 
   api-e2e:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     services:
       mysql:
         image: mysql:8.4
@@ -52,11 +51,6 @@ jobs:
       WEB_ORIGIN: http://localhost:3000
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
       - name: Compose test database and JWT env
         run: |
           user=app
@@ -74,12 +68,13 @@ jobs:
           refresh_b=secret-at-least-32-chars
           echo "JWT_ACCESS_SECRET=${access_a}-${access_b}!!" >> "$GITHUB_ENV"
           echo "JWT_REFRESH_SECRET=${refresh_a}-${refresh_b}!" >> "$GITHUB_ENV"
-      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
       - run: pnpm --filter @portfolio/contracts build
       - run: pnpm --filter @portfolio/api test:e2e
 
   web-e2e:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     services:
       mysql:
         image: mysql:8.4
@@ -105,12 +100,7 @@ jobs:
       NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
       - run: pnpm --filter @portfolio/contracts build
       - run: pnpm --filter @portfolio/api build
       - run: pnpm --filter @portfolio/web build

@@ -2,7 +2,7 @@
 
 ## Common rules
 
-Source: `ai-memory/rules/COMMON_RULES.md` (copied verbatim below).
+Source: `<private-memory-repo>/rules/COMMON_RULES.md` (copied verbatim below).
 
 <!-- prettier-ignore-start -->
 
@@ -28,12 +28,12 @@ Built only from what the repos, PR history, CI and bot exports actually show (re
 
 ## 3. Merging (absolute)
 - **Never merge, deploy, or close a PR without Parker's explicit OK ("merge").** Open the PR and stop. One PR at a time.
-- Only exception: `parker2808/ai-memory` may be auto-merged after a secrets/PII scan passes.
+- Only exception: `<private-memory-repo>` may be auto-merged after a secrets/PII scan passes.
 - **Never touch PR #27 in `interview-senior-fe`** (GitHub OAuth, in development).
 
 ## 4. PROJECT_CONTEXT.md + context-check CI
 - Every PR to `main` that changes files outside the exempt paths must update `PROJECT_CONTEXT.md` (status/open items + changelog sections) in the same PR.
-- CI `context-check` fails if `PROJECT_CONTEXT.md` is missing at HEAD or not in the diff for non-exempt changes. Exempt: `docs/` (plus content folders in interview-fe-data).
+- CI `context-check` fails if `PROJECT_CONTEXT.md` is missing at HEAD or not in the diff for non-exempt changes. Exempt: `docs/` (plus content folders in <private-content-repo>).
 - The `skip-context` label bypasses the check; use only when Parker agrees.
 - Record new decisions from Parker (with date) in PROJECT_CONTEXT.md in your PR. Never invent rules.
 
@@ -41,7 +41,7 @@ Built only from what the repos, PR history, CI and bot exports actually show (re
 - Never commit, paste, print or log secrets: `.env` values, tokens, passcodes, API keys, deploy hook URLs, auth codes. Not in code, PRs, logs or chat.
 - Never commit Parker's phone number or personal email. Use `<email>` and `<phone>` placeholders.
 - Public repos: `lil.p`, `lil.j`, `interview-senior-fe`. Never name or link private repos there (write `<private-content-repo>`).
-- Private: `interview-fe-data`, `ai-memory`.
+- Private: `<private-content-repo>`, `<private-memory-repo>`.
 
 ## 6. Facts and content
 - Never invent facts, dates, metrics, memories, places, captions or confirmations. Mark unknowns as **(uncertain)** or leave blank and list them as open items.
@@ -58,7 +58,7 @@ Built only from what the repos, PR history, CI and bot exports actually show (re
 ## 8. Checks before opening a PR
 - Run the repo's own checks (listed in its project rules) and paste the results in the PR body.
 - Run a secrets/PII grep on the diff (tokens, `@` emails, phone numbers) before pushing.
-- Package managers: lil.p uses pnpm (workspace, husky + commitlint); interview-senior-fe uses npm (`package-lock.json`); lil.j and interview-fe-data have no package manager (static site / JSON + node scripts).
+- Package managers: lil.p uses pnpm (workspace, husky + commitlint); interview-senior-fe uses npm (`package-lock.json`); lil.j and <private-content-repo> have no package manager (static site / JSON + node scripts).
 
 <!-- prettier-ignore-end -->
 
@@ -80,7 +80,11 @@ Built only from what the repos, PR history, CI and bot exports actually show (re
 
 ### CI workflows and context
 
-- `.github/workflows/ci.yml` runs `lint-typecheck-unit`, `api-e2e`, and `web-e2e` on pull requests and pushes to `main`.
+- `.github/workflows/ci.yml` runs `lint-typecheck-unit`, `api-e2e`, and `web-e2e` in parallel on pull requests, pushes to `main`, and manual `workflow_dispatch` runs.
+- Concurrency group `ci-${{ github.ref }}` cancels stale runs only for pull requests; runs on `main` are never cancelled.
+- Every job sets `timeout-minutes` (20 for `lint-typecheck-unit` and `web-e2e`, 15 for `api-e2e`). Keep a timeout on any new job.
+- All three jobs use the composite action `.github/actions/setup` (`pnpm/action-setup`, `actions/setup-node` with Node 22 and `cache: pnpm`, then `pnpm install --frozen-lockfile`). Change setup there, not per job.
+- Follow the shared front-end CI/CD lessons in Parker's memory repo when changing CI. Keep every existing check; deploy is out of scope for CI changes.
 - `.github/workflows/context-check.yml` runs for pull requests to `main`; its script requires `PROJECT_CONTEXT.md` at HEAD and an update in the diff when files outside `docs/` change. Update §7 Open items and §9 Changelog. The `skip-context` label bypasses this job only with Parker's agreement.
 
 ### Content and data

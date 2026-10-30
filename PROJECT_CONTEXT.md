@@ -47,7 +47,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
-- Agent rules PR awaits Parker's review; do not merge until Parker explicitly approves.
+- CI standardization PR (`chore/cicd-standard`) awaits Parker's review; do not merge until Parker explicitly approves.
 - Owner/baseline projects are still DRAFT (demo seed publishes projects) → publish migration pending (idempotent, TiDB-safe DRAFT→PUBLISHED, set `publishedAt` when null; update seed data).
 - Render P3009: run `npx prisma migrate resolve --rolled-back 20261027150000_portfolio_content` once, then redeploy.
 - Review follow-ups: 4px radius step, squircle coverage, About avatar placeholder, mobile stat band, `/projects` gap, page-specific skeletons (admin tables too), slow pages.
@@ -58,6 +58,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-10-31: Standardized CI per the shared front-end CI/CD lessons in Parker's memory repo: `ci.yml` adds `workflow_dispatch`, a `ci-${{ github.ref }}` concurrency group (cancels stale PR runs only), `timeout-minutes` on every job, and the composite action `.github/actions/setup` used by all three jobs. All existing checks kept; no deploy changes. `AGENT_RULES.md` CI section updated. Pending Parker's review.
 
 - 2026-10-31: Added `AGENT_RULES.md` with the shared rules copied verbatim and lil.p project rules; linked it from `AGENTS.md`. Pending Parker's review.
 
