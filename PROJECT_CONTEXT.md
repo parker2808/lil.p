@@ -50,12 +50,15 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - Owner/baseline projects are still DRAFT (demo seed publishes projects) → publish migration pending (idempotent, TiDB-safe DRAFT→PUBLISHED, set `publishedAt` when null; update seed data).
 - Render P3009: run `npx prisma migrate resolve --rolled-back 20261027150000_portfolio_content` once, then redeploy.
 - Review follow-ups: 4px radius step, squircle coverage, About avatar placeholder, mobile stat band, `/projects` gap, page-specific skeletons (admin tables too), slow pages.
+- No favicon/app icon yet: browsers still request `/favicon.ico` (now a clean 404, no API call).
 
 ## 8. Deferred
 
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-10-30: Fixed flaky web-e2e "CMS panes contain scrolling": admin `main` is now the containing block, so Radix Switch hidden inputs rendered before hydration no longer stretch the document. `apiServer` returns notFound() for unsupported locales (e.g. `/favicon.ico` hitting `[locale]`) instead of calling the API.
 
 - 2026-10-30: Corrected local JWT setup and seed-status scope; clarified file-level CI enforcement and rejected missing/deleted context files.
 
