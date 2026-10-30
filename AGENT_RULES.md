@@ -80,7 +80,11 @@ Built only from what the repos, PR history, CI and bot exports actually show (re
 
 ### CI workflows and context
 
-- `.github/workflows/ci.yml` runs `lint-typecheck-unit`, `api-e2e`, and `web-e2e` on pull requests and pushes to `main`.
+- `.github/workflows/ci.yml` runs `lint-typecheck-unit`, `api-e2e`, and `web-e2e` in parallel on pull requests, pushes to `main`, and manual `workflow_dispatch` runs.
+- Concurrency group `ci-${{ github.ref }}` cancels stale runs only for pull requests; runs on `main` are never cancelled.
+- Every job sets `timeout-minutes` (20 for `lint-typecheck-unit` and `web-e2e`, 15 for `api-e2e`). Keep a timeout on any new job.
+- All three jobs use the composite action `.github/actions/setup` (`pnpm/action-setup`, `actions/setup-node` with Node 22 and `cache: pnpm`, then `pnpm install --frozen-lockfile`). Change setup there, not per job.
+- Follow the shared front-end CI/CD lessons in Parker's memory repo when changing CI. Keep every existing check; deploy is out of scope for CI changes.
 - `.github/workflows/context-check.yml` runs for pull requests to `main`; its script requires `PROJECT_CONTEXT.md` at HEAD and an update in the diff when files outside `docs/` change. Update §7 Open items and §9 Changelog. The `skip-context` label bypasses this job only with Parker's agreement.
 
 ### Content and data
