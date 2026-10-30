@@ -4,6 +4,13 @@ vi.mock('server-only', () => ({}));
 vi.mock('next/headers', () => ({
   cookies: async () => ({ get: () => undefined }),
 }));
+vi.mock('next/navigation', () => ({
+  notFound: () => {
+    throw new Error('NEXT_NOT_FOUND');
+  },
+}));
+
+import type { Locale } from '@portfolio/contracts';
 
 import { ApiError } from '../utils/api-error.util';
 import { apiServer } from './api-server.service';
@@ -38,5 +45,15 @@ describe('apiServer', () => {
       message: 'missing',
       requestId: 'req-1',
     });
+  });
+
+  it('treats an unsupported locale as not found without calling the API', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(
+      apiServer('/api/public/site', { locale: 'favicon.ico' as Locale }),
+    ).rejects.toThrow('NEXT_NOT_FOUND');
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });

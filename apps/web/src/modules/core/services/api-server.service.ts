@@ -1,7 +1,8 @@
 import 'server-only';
 
-import type { Locale } from '@portfolio/contracts';
+import { type Locale, localeSchema } from '@portfolio/contracts';
 import { cookies } from 'next/headers';
+import { notFound } from 'next/navigation';
 import type { z } from 'zod';
 
 import { apiErrorFromResponse } from '../utils/api-error.util';
@@ -21,6 +22,11 @@ export async function apiServer<T>(
 ): Promise<T> {
   const url = new URL(path.startsWith('/') ? path : `/${path}`, API_URL);
   if (options.locale) {
+    // `[locale]` segments render in parallel with the layout's notFound(),
+    // so unmatched paths like /favicon.ico still reach here.
+    if (!localeSchema.safeParse(options.locale).success) {
+      notFound();
+    }
     url.searchParams.set('locale', options.locale);
   }
 

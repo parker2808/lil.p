@@ -53,7 +53,7 @@ export function AdminShell({
             <main
               id="content"
               tabIndex={-1}
-              className="admin-main min-h-0 flex-1 overflow-x-hidden overflow-y-auto p-6 outline-none"
+              className="admin-main relative min-h-0 flex-1 overflow-x-hidden overflow-y-auto p-6 outline-none"
             >
               {children}
             </main>
