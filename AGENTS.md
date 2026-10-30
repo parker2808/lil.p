@@ -1,5 +1,7 @@
 # AGENTS.md
 
+**Read [`AGENT_RULES.md`](AGENT_RULES.md) for common and lil.p-specific rules.**
+
 **Read [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md) in full before doing anything.** It holds every requirement, confirmed and forbidden fact, and workflow rule for this repo.
 
 Hard rules (details in PROJECT_CONTEXT.md):
