@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT — lil.p (portfolio)
 
-Mandatory reading for every agent. Update §7 and §9 in every PR to `main`.
+Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (docs-only PRs are exempt). CI checks file presence and a file-level update, not individual sections; `skip-context` bypasses CI.
 
 ## 1. Requirements
 
@@ -35,7 +35,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main`.
 
 ## 5. Workflow
 
-- Local: `cp .env.example .env && pnpm install && pnpm db:up && pnpm db:migrate && pnpm db:seed && pnpm dev` (web 3000, API 4000, Adminer 8080).
+- Local: copy `.env.example` to `.env`, then configure two distinct JWT secrets of at least 32 characters each (see [README setup](README.md#local-development)). Run `pnpm install && pnpm db:up && pnpm db:migrate && pnpm db:seed && pnpm dev` (web 3000, API 4000, Adminer 8080).
 - Branch off `main`, conventional commits, open a PR, monitor CI until all checks are green.
 - Stacked PRs are OK. **Never merge without Parker's explicit OK.**
 
@@ -47,7 +47,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main`.
 
 ## 7. Open items
 
-- Projects are still DRAFT → publish migration pending (idempotent, TiDB-safe DRAFT→PUBLISHED, set `publishedAt` when null; update seed data).
+- Owner/baseline projects are still DRAFT (demo seed publishes projects) → publish migration pending (idempotent, TiDB-safe DRAFT→PUBLISHED, set `publishedAt` when null; update seed data).
 - Render P3009: run `npx prisma migrate resolve --rolled-back 20261027150000_portfolio_content` once, then redeploy.
 - Review follow-ups: 4px radius step, squircle coverage, About avatar placeholder, mobile stat band, `/projects` gap, page-specific skeletons (admin tables too), slow pages.
 
@@ -56,5 +56,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main`.
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-10-30: Corrected local JWT setup and seed-status scope; clarified file-level CI enforcement and rejected missing/deleted context files.
 
 - 2026-10-30: Added PROJECT_CONTEXT.md, AGENTS.md, context-check CI (T3 Code setup).
