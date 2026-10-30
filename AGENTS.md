@@ -1,6 +1,7 @@
 # AGENTS.md
 
 **Read [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md) in full before doing anything.** It holds every requirement, confirmed and forbidden fact, and workflow rule for this repo.
+Agents must also follow [`.agents/RULES.md`](.agents/RULES.md).
 
 Hard rules (details in PROJECT_CONTEXT.md):
 
