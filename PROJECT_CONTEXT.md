@@ -15,7 +15,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - API: NestJS 11, Prisma 7 (mariadb adapter). JWT auth with `admin` / `user` roles. Swagger at `/api/docs` (off in production).
 - DB: MySQL 8.4 (Docker) locally, TiDB Cloud Serverless in production.
 - Editor: Tiptap (core + free extensions only), Markdown storage, shadcn toolbar.
-- Hosting: Vercel (web), Render free (API), TiDB Cloud Serverless (DB), Cloudinary (images).
+- Hosting: Vercel (web, functions in `sin1` via root `vercel.json`), Render free (API), TiDB Cloud Serverless (DB), Cloudinary (images). cron-job.org pings `/api/health` every 10 min.
+- Rendering: public `/[locale]` pages static/ISR (1 h, shared `public` cache tag expired by admin saves); `/notes` + `/projects` index render per request on cached data; `/admin` dynamic. Public CSP has no nonce (`'unsafe-inline'` scripts); `/admin` and draft-mode requests get nonce + `'strict-dynamic'`.
 
 ## 3. Design (confirmed)
 
@@ -53,12 +54,16 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - `20261027150000_portfolio_content/migration.sql` stays frozen permanently — its bytes are what Render prod replays, so it is never regenerated. `data/portfolio-data.json` is already PUBLISHED; `build-content-migration.ts` `assertCommittedMigrationMatches` and `build-content-migration.spec.ts` permanently normalize (DRAFT→PUBLISHED) when comparing regenerated SQL to the committed file; the publish itself is the idempotent `20261031120000_publish_all_content` migration.
 - Review follow-ups: 4px radius step, squircle coverage, About avatar placeholder, mobile stat band, `/projects` gap, page-specific skeletons (admin tables too), slow pages.
 - No favicon/app icon yet: browsers still request `/favicon.ico` (now a clean 404, no API call).
+- `perf/static-isr-and-api-latency` (pending review, not pushed): after deploy, confirm `x-vercel-id` ends in `::sin1` and public pages return `x-vercel-cache: HIT`/`STALE`; confirm the Vercel Root Directory is still the repo root (that is where `vercel.json` is read).
+- Perf follow-ups (uncertain, not done): `render.yaml` has no `region` (Blueprint default is Oregon) while prod was measured in Singapore; region cannot change on an existing service, so only matters for a re-created service. TiDB reports `8.0.11-TiDB`, below the adapter's 8.0.13 relation-JOIN cutoff, so nested `include`s use extra round trips (likely why `/api/public/projects` ~1 s vs ~0.3 s for others). `/notes` and `/projects` could become static if filtering moved client-side. The API `/api/revalidate` webhook covers only pages, posts, projects, domains, skills, profile and site settings; the admin `revalidatePublicContent` action covers the rest. A block that fails to load during ISR regeneration is cached as its inline error state until the next revalidation.
 
 ## 8. Deferred
 
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-10-31: Speed (Parker's task, prod measured from Vietnam: web functions ran in `iad1` while API + DB are in Singapore; every page `private, no-store`). Root `vercel.json` pins functions to `sin1`. Public `/[locale]` pages are now static/ISR: `force-dynamic` removed, the locale layout prerenders only when `/api/health` answers (build passes with the API down), slug pages `generateStaticParams`, home/about/contact read `searchParams` only in draft mode. `apiServer` public reads never touch cookies/headers and always carry the `public` tag; the new admin-only `revalidatePublicContent` server action (`updateTag`) runs after admin mutations that change live content via `usePublicCacheSync` in `AdminShell` (draft-only ones opt out with `meta.publicCache`). A failed sitemap/RSS fetch during `next build` makes the route render per request instead of caching empty output. CSP: nonce + `'strict-dynamic'` on `/admin` and draft-mode requests; public routes use `script-src 'self' 'unsafe-inline'`, other directives unchanged. API pool and health checked, no change needed. README gains a Stack section. Spec with acceptance criteria AC1–AC9, results and before/after timings: `docs/specs/2026-10-31-perf-static-isr.md`. Pending Parker's review.
 
 - 2026-10-31: Publish-all-content (Parker's explicit task): added data-only migration `20261031120000_publish_all_content` (idempotent DRAFT→PUBLISHED for `project` + `post`, backfills `publishedAt`, plain SQL valid on MySQL 8.4 + TiDB, no schema change). Backup `portfolio-data.json` and owner/baseline seed now seed projects as PUBLISHED with `publishedAt` stamped at seed time (no invented dates). `posts.data.ts` keeps one intentional demo DRAFT post. Pending Parker's review.
 

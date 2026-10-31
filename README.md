@@ -4,6 +4,26 @@ Portfolio monorepo: Next.js public site + admin (`apps/web`), NestJS API (`apps/
 
 Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./docs/PLAN.md).
 
+## Stack
+
+| Layer     | What runs                                                                                                                                                                 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Monorepo  | pnpm 10, Node 22, TypeScript 5.9, zod 4 contracts in `packages/contracts`                                                                                                 |
+| Web       | Next.js 16.4 (App Router, `proxy.ts`), React 19.3, next-intl 4 (`/en`, `/vi`), TanStack Query 5, shadcn UI in `packages/ui`                                               |
+| API       | NestJS 11, Prisma 7 with the `@prisma/adapter-mariadb` driver adapter (one shared pool), JWT in httpOnly cookies                                                          |
+| Database  | MySQL 8.4 in Docker locally, TiDB Cloud Serverless in production                                                                                                          |
+| Hosting   | Vercel for web (functions pinned to `sin1` Singapore in `vercel.json`, next to the API and DB), Render free for the API (Singapore), Cloudinary for media. All free tiers |
+| Keep-warm | A cron-job.org job pings `GET /api/health` (`SELECT 1`) every 10 minutes so the Render free instance does not spin down; `ApiWarmup` also pings it on page load           |
+
+### Caching and rendering
+
+- Public pages under `/[locale]` are static and use ISR. Home, about, contact, project and note detail pages, RSS, OG images and the sitemap are prerendered at build when the API answers, otherwise on first visit.
+- Public API reads (`apiServer` without `withAuth`) never read cookies or headers. They use `fetch` with `next: { revalidate: 3600, tags }`, and every one carries the shared `public` tag.
+- Admin saves expire the cache right away. Successful admin mutations that change live content call the `revalidatePublicContent` server action (admins only, `updateTag('public')`); draft-only and non-public ones opt out with `meta.publicCache`. The API still posts per-entity tags to `/api/revalidate` for the content it publishes.
+- `/notes` and `/projects` filter and paginate by query string, so they render per request, but their API reads still come from the data cache. `/admin` is always dynamic.
+- If the API is down at build time, the build still succeeds: nothing is prerendered and ISR fills the pages on first visit.
+- CSP: `/admin` and draft-mode requests (the site-wide `__prerender_bypass` cookie) get a per-request nonce with `'strict-dynamic'`. Public pages share cached HTML, so they use `script-src 'self' 'unsafe-inline'` with every other directive unchanged (see `csp.util.ts`).
+
 ## Environments
 
 There are three ways to run this repo. Each has its own setup — do not mix the steps.
@@ -11,7 +31,7 @@ There are three ways to run this repo. Each has its own setup — do not mix the
 |                 | [Local development](#local-development)       | [Production-like (local)](#production-like-stack-on-your-machine) | [Production](#production)              |
 | --------------- | --------------------------------------------- | ----------------------------------------------------------------- | -------------------------------------- |
 | Purpose         | Day-to-day coding                             | Test the Docker images before deploy                              | The live site                          |
-| Web             | `pnpm dev` → http://localhost:3000            | Docker + Caddy → http://localhost                                 | Vercel                                 |
+| Web             | `pnpm dev` → http://localhost:3000            | Docker + Caddy → http://localhost                                 | Vercel (`sin1`)                        |
 | API             | `pnpm dev` → http://127.0.0.1:4000            | Docker (behind Caddy)                                             | Render (Docker, `render.yaml`)         |
 | Database        | Docker MySQL 8.4 (`docker-compose.yml`)       | Docker MySQL 8.4 (`compose.prod.yml`)                             | TiDB Cloud Serverless                  |
 | Media           | In-memory fallback (Cloudinary keys optional) | Cloudinary                                                        | Cloudinary                             |
@@ -163,7 +183,7 @@ scripts/backup/restore.sh    # load the newest dump into MYSQL_DATABASE (fresh D
 pnpm prod:down               # stop; named volumes keep the data
 ```
 
-Images are multi-stage, run as a non-root user with a read-only root filesystem. Caddy adds HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and `X-Frame-Options: SAMEORIGIN`. Next sets a per-request CSP nonce in `proxy.ts`. Restore: [docs/runbooks/restore.md](./docs/runbooks/restore.md).
+Images are multi-stage, run as a non-root user with a read-only root filesystem. Caddy adds HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and `X-Frame-Options: SAMEORIGIN`. Next sets a per-request CSP nonce in `proxy.ts` for `/admin` and draft mode. Restore: [docs/runbooks/restore.md](./docs/runbooks/restore.md).
 
 ## What is in git
 

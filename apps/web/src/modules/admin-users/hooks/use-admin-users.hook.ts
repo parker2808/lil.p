@@ -27,18 +27,22 @@ export function useUserMutations() {
 
   return {
     create: useMutation({
+      meta: { publicCache: 'skip' },
       mutationFn: createAdminUser,
       onSuccess: invalidate,
     }),
     update: useMutation({
+      meta: { publicCache: 'skip' },
       mutationFn: ({ id, body }: { id: number; body: Parameters<typeof updateAdminUser>[1] }) =>
         updateAdminUser(id, body),
       onSuccess: invalidate,
     }),
     signOut: useMutation({
+      meta: { publicCache: 'skip' },
       mutationFn: signOutAdminUser,
     }),
     setPassword: useMutation({
+      meta: { publicCache: 'skip' },
       mutationFn: ({ id, password }: { id: number; password: string }) =>
         setAdminUserPassword(id, { password }),
     }),
