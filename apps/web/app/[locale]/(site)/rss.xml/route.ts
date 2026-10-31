@@ -1,4 +1,5 @@
 import type { Locale } from '@portfolio/contracts';
+import { connection } from 'next/server';
 
 import { getSite } from '@/modules/core/services/site.service';
 import { isBuildPhase } from '@/modules/core/utils/build-phase.util';
@@ -32,19 +33,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ loc
       headers: { 'content-type': 'application/rss+xml; charset=utf-8' },
     });
   } catch (error) {
-    if (!isBuildPhase()) {
-      throw error;
+    // Same as sitemap.ts: render per request rather than cache an empty feed.
+    if (isBuildPhase()) {
+      await connection();
     }
-    return new Response(
-      renderRss({
-        title: '',
-        siteUrl: siteUrl(),
-        feedUrl: absoluteUrl(typed, '/rss.xml'),
-        description: '',
-        locale: typed,
-        posts: [],
-      }),
-      { headers: { 'content-type': 'application/rss+xml; charset=utf-8' } },
-    );
+    throw error;
   }
 }

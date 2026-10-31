@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { connection } from 'next/server';
 
 import { isBuildPhase } from '@/modules/core/utils/build-phase.util';
 import { getSitemap } from '@/modules/seo/services/sitemap.service';
@@ -26,9 +27,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ];
     });
   } catch (error) {
-    if (!isBuildPhase()) {
-      throw error;
+    // API down at build: bail out to per-request rendering (connection() throws
+    // while prerendering) instead of caching an empty sitemap for an hour.
+    if (isBuildPhase()) {
+      await connection();
     }
-    return [];
+    throw error;
   }
 }
