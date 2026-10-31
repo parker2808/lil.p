@@ -336,21 +336,10 @@
 .admin [data-slot='table-cell'] {
   padding-block: 12px;
 }
-.admin [data-slot='editor-shell'] {
-  height: 100%;
-}
-.admin [data-slot='editor-shell'] > div:last-child {
-  overflow: hidden;
-}
-.admin [data-slot='editor-shell'] > div:last-child > * {
-  min-height: 0;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-gutter: stable;
-}
-.admin [data-slot='editor-shell'] > div:last-child > aside {
-  border-left: 1px solid var(--border);
-  padding-left: 20px;
+@media (min-width: 1024px) {
+  .admin-main:has([data-layout='split']) {
+    overflow-y: hidden;
+  }
 }
 .login-art {
   display: flex;

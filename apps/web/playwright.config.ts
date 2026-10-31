@@ -48,6 +48,7 @@ export default defineConfig({
     'a11y.spec.ts',
     'lighthouse.spec.ts',
     'ux-overlay.spec.ts',
+    'admin-scroll.spec.ts',
   ],
   fullyParallel: false,
   workers: 1,
