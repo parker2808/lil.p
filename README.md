@@ -169,7 +169,7 @@ Nothing else is run by hand on a normal deploy.
 - Never run `pnpm db:migrate`, `pnpm db:reset`, or `pnpm db:seed` with `DATABASE_URL` pointing at TiDB. `migrate dev` / `reset` can drop data, and the seed overwrites content rows.
 - New migrations are created locally (see [Changing the database schema](#changing-the-database-schema)) and reach production through `main`.
 - `infra/mysql/init/` and `docker-compose.yml` are local-only; production never uses them.
-- Before pushing: `pnpm lint && pnpm typecheck && pnpm test && pnpm format:check` (the pre-push hook runs `typecheck`).
+- Before pushing: `pnpm check:all` (format, lint, typecheck, test, content, deps, build; prints only failures, `--e2e` adds E2E). The pre-push hook runs `typecheck`.
 
 ## Production-like stack on your machine
 
@@ -205,6 +205,7 @@ When you add a new secret, add the key with a placeholder to `.env.example` and 
 
 ```bash
 pnpm dev                     # web :3000 + api :4000 + contracts watch
+pnpm check:all [--e2e]           # all pre-PR checks, failures only
 pnpm lint | typecheck | test | build
 pnpm format | format:check   # Prettier (format:check also runs in CI)
 pnpm check:content           # no CV strings in UI code, no email/phone anywhere

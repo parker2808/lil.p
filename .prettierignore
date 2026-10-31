@@ -22,6 +22,9 @@ docs/design/
 docs/PLAN.md
 docs/PLAN.vi.md
 
+# Archived doc pieces are kept verbatim
+docs/archive/
+
 # App STRUCTURE tables are hand-authored; Prettier expands them past readable width
 apps/*/STRUCTURE.md
 
