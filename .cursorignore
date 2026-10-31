@@ -1,0 +1,22 @@
+# Token savings: keep large, generated or duplicate files out of Cursor Agent context.
+# .gitignore, .env files and lockfiles are already ignored by Cursor.
+# Generated / build output
+graphify-out/*
+!graphify-out/GRAPH_REPORT.md
+apps/api/src/generated/
+**/.next/
+**/coverage/
+**/playwright-report/
+**/test-results/
+*.tsbuildinfo
+# Binary design assets
+docs/design/redesign/screenshots/
+# Vietnamese duplicates of English docs (edit the English file; translate on request)
+docs/**/*.vi.md
+# Static HTML mockups and their large CSS/JS (reference only)
+docs/design/mockups/
+docs/design/redesign/*.css
+docs/design/redesign/*.js
+docs/design/redesign/*.mjs
+# Large one-off content migration (94 KB); schema.prisma is the source of truth
+apps/api/prisma/migrations/20261027150000_portfolio_content/

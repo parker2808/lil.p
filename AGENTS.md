@@ -6,7 +6,8 @@ Read `PROJECT_CONTEXT.md` in full and `docs/LESSONS.md` before starting. Append 
 
 - Work in a T3 worktree on a task branch; never edit or commit on `main` or `master`.
 - One task = one branch/worktree = one PR. Stay in scope; do not edit another agent's branch. Record out-of-scope work in `PROJECT_CONTEXT.md` §7.
-- Read `graphify-out/GRAPH_REPORT.md` for navigation. Query exact names with `graphify explain "Name"` or `graphify path "A" "B"`; open only needed file ranges, each file once. Refresh with `graphify update .` after code changes.
+- Small tasks: skip Graphify; find code with `rg` and open only needed line ranges. Big tasks: read `graphify-out/GRAPH_REPORT.md` (~10k tokens), query `graphify explain "Name"` or `graphify path "A" "B"`, run `graphify update .` after code changes.
+- Token budget: never read `pnpm-lock.yaml`, `docs/PLAN*.md`, `docs/design/**` (large), `*.vi.md`, seed JSON or migration SQL in full; use `rg`/line ranges. Pipe long test/build/E2E output through `tail -n 80`. See `.cursorignore`.
 - Do small tasks directly. For big tasks, write a plan of at most 20 lines and a spec in `docs/specs/` before coding; work in checked steps, then hand off the plan and diff for review.
 - Run agent work via `~/ai-tools/t3-run.sh` watchdog so model failures or quota limits are reported.
 - Agents stay within the plan, add no dependencies without approval, and never merge.

@@ -66,6 +66,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: Token savings: `.cursorignore` for generated, binary and duplicate files; AGENTS.md small tasks skip Graphify and avoid reading large files.
 - 2026-11-01: Trimmed this changelog to the latest 5 entries; full history moved to `docs/CHANGELOG_ARCHIVE.md`.
 - 2026-10-31: Husky branch/secret-scan guardrails, gitleaks CI, canonical `AGENTS.md`, `docs/LESSONS.md`.
 - 2026-10-31: Perf: functions pinned to `sin1`; public pages static/ISR, revalidated after admin mutations; nonce CSP only on `/admin`/draft. Spec: `docs/specs/2026-10-31-perf-static-isr.md`.
