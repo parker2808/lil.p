@@ -10,6 +10,28 @@ import {
 
 const handleI18n = createMiddleware(routing);
 
+const adminRoutes = new Set([
+  'analytics',
+  'audit',
+  'domains',
+  'education',
+  'experience',
+  'inbox',
+  'login',
+  'media',
+  'pages',
+  'posts',
+  'principles',
+  'process',
+  'profile',
+  'projects',
+  'site',
+  'skills',
+  'stats',
+  'tags',
+  'users',
+]);
+
 function applySecurityHeaders(response: NextResponse, csp: string): NextResponse {
   response.headers.set('Content-Security-Policy', csp);
   response.headers.set(
@@ -68,7 +90,12 @@ export function proxy(request: NextRequest) {
     login.searchParams.set('next', `${pathname}${secured.nextUrl.search}`);
     return applySecurityHeaders(NextResponse.redirect(login), csp);
   }
-  return applySecurityHeaders(NextResponse.next({ request: { headers: secured.headers } }), csp);
+  const adminSection = pathname.split('/')[2];
+  const status = adminSection && !adminRoutes.has(adminSection) ? 404 : 200;
+  return applySecurityHeaders(
+    NextResponse.next({ request: { headers: secured.headers }, status }),
+    csp,
+  );
 }
 
 export const config = {
