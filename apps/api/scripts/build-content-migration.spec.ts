@@ -4,9 +4,9 @@ import { describe, expect, it } from 'vitest';
 
 import { loadPortfolioData, mapProjects } from '../prisma/seed/data/portfolio.mapper';
 import {
-  assertCommittedMigrationMatches,
   buildContentMigration,
   MIGRATION_SQL_PATH,
+  normalizeContentMigrationStatus,
   splitSqlStatements,
 } from './build-content-migration';
 
@@ -18,7 +18,7 @@ describe('build-content-migration', () => {
     expect(sql).toContain('ON DUPLICATE KEY UPDATE');
     expect(sql).toContain('INSERT INTO `project`');
     expect(sql).toMatch(/`status`,/);
-    expect(sql).toContain("'DRAFT'");
+    expect(sql).toContain("'PUBLISHED'");
     expect(sql).toContain("'lil-p'");
     expect(sql).toContain("'lil-j-birthday-site'");
     expect(sql).toContain("'ctrack-crystal'");
@@ -52,7 +52,7 @@ describe('build-content-migration', () => {
     ).toBe(true);
   });
 
-  it('keeps confidential flags and draft status from the JSON', () => {
+  it('keeps confidential flags and publish status from the JSON', () => {
     const projects = mapProjects(loadPortfolioData());
     expect(projects).toHaveLength(counts.project);
     expect(
@@ -71,13 +71,13 @@ describe('build-content-migration', () => {
     ).toEqual(['lil-j-birthday-site', 'interview-senior-fe', 'lil-p']);
     const interview = projects.find((project) => project.slug === 'interview-senior-fe');
     expect(interview?.repoUrl).toBe('https://github.com/parker2808/interview-senior-fe');
-    expect(interview?.status).toBe('DRAFT');
+    expect(interview?.status).toBe('PUBLISHED');
     expect(interview?.decisionsEn).toMatch(/In development/);
     expect(interview?.problemEn).toMatch(/scattered notes, plans and Q&A/);
     expect(interview?.lessonsEn).toMatch(/Separating content from code early/);
     expect(interview?.problemEn).not.toMatch(/UNDER PARKER'S REVIEW/);
     expect(interview?.lessonsEn).not.toMatch(/UNDER PARKER'S REVIEW/);
-    expect(projects.every((project) => project.status === 'DRAFT')).toBe(true);
+    expect(projects.every((project) => project.status === 'PUBLISHED')).toBe(true);
   });
 
   it('splits statements without breaking quoted JSON', () => {
@@ -89,10 +89,10 @@ describe('build-content-migration', () => {
     );
   });
 
-  it('matches the committed Prisma migration SQL', () => {
-    assertCommittedMigrationMatches();
+  it('matches the committed portfolio_content migration SQL up to the status flip', () => {
+    // The committed migration stays frozen permanently (its bytes are replayed on Render); only the DRAFT -> PUBLISHED flip is normalized.
     const committed = readFileSync(MIGRATION_SQL_PATH, 'utf8');
-    expect(committed).toBe(sql);
+    expect(normalizeContentMigrationStatus(committed)).toBe(normalizeContentMigrationStatus(sql));
   });
 
   it('declares the expected row counts', () => {

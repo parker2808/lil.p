@@ -48,8 +48,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 ## 7. Open items
 
 - CI standardization PR (`chore/cicd-standard`) awaits Parker's review; do not merge until Parker explicitly approves.
-- Owner/baseline projects are still DRAFT (demo seed publishes projects) → publish migration pending (idempotent, TiDB-safe DRAFT→PUBLISHED, set `publishedAt` when null; update seed data).
-- Render P3009: run `npx prisma migrate resolve --rolled-back 20261027150000_portfolio_content` once, then redeploy.
+- ~~Owner/baseline projects are still DRAFT (demo seed publishes projects) → publish migration pending~~ → resolved on `feat/publish-all-content` (pending review): idempotent TiDB-safe migration `20261031120000_publish_all_content` publishes every `project` / `post` DRAFT and backfills `publishedAt`; backup data + owner/baseline seed now seed PUBLISHED with `publishedAt` stamped at seed time.
+- Render P3009: before deploying `20261031120000_publish_all_content`, prod on Render may still show P3009 on `20261027150000_portfolio_content`; run `npx prisma migrate resolve --rolled-back 20261027150000_portfolio_content` once, then redeploy.
+- `20261027150000_portfolio_content/migration.sql` stays frozen permanently — its bytes are what Render prod replays, so it is never regenerated. `data/portfolio-data.json` is already PUBLISHED; `build-content-migration.ts` `assertCommittedMigrationMatches` and `build-content-migration.spec.ts` permanently normalize (DRAFT→PUBLISHED) when comparing regenerated SQL to the committed file; the publish itself is the idempotent `20261031120000_publish_all_content` migration.
 - Review follow-ups: 4px radius step, squircle coverage, About avatar placeholder, mobile stat band, `/projects` gap, page-specific skeletons (admin tables too), slow pages.
 - No favicon/app icon yet: browsers still request `/favicon.ico` (now a clean 404, no API call).
 
@@ -58,6 +59,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-10-31: Publish-all-content (Parker's explicit task): added data-only migration `20261031120000_publish_all_content` (idempotent DRAFT→PUBLISHED for `project` + `post`, backfills `publishedAt`, plain SQL valid on MySQL 8.4 + TiDB, no schema change). Backup `portfolio-data.json` and owner/baseline seed now seed projects as PUBLISHED with `publishedAt` stamped at seed time (no invented dates). `posts.data.ts` keeps one intentional demo DRAFT post. Pending Parker's review.
 
 - 2026-10-31: Added Graphify code map (`graphify-out/GRAPH_REPORT.md` committed, rest of `graphify-out/` gitignored; built with `--code-only`, no model calls) and shortened `AGENT_RULES.md` to ~30 lines pointing to the shared common rules and TOKEN_FLOW in `<private-memory-repo>`. Pending Parker's review.
 

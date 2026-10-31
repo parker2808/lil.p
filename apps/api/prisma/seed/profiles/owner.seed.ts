@@ -21,7 +21,8 @@ import {
 
 /**
  * Production first boot (PLAN D13 + owner CV). Values come from
- * `data/portfolio-data.json`. Projects stay DRAFT. 0 posts.
+ * `data/portfolio-data.json`. Projects are PUBLISHED with `publishedAt`
+ * (stamped at seed time for PUBLISHED rows without a date). 0 posts.
  */
 export async function seedOwner(prisma: PrismaClient): Promise<void> {
   const data = loadPortfolioData();
