@@ -33,33 +33,42 @@ function requestWithNonce(request: NextRequest, nonce: string, csp: string): Nex
 }
 
 export function proxy(request: NextRequest) {
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
   const apiOrigin = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ?? '';
-  const csp = buildContentSecurityPolicy(nonce, apiOrigin ? [apiOrigin] : []);
-  const secured = requestWithNonce(request, nonce, csp);
-  const { pathname } = secured.nextUrl;
+  const connectSrc = apiOrigin ? [apiOrigin] : [];
+  const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith('/admin')) {
-    const isLogin = pathname === '/admin/login' || pathname.startsWith('/admin/login/');
-    if (isLogin) {
-      return applySecurityHeaders(
-        NextResponse.next({ request: { headers: secured.headers } }),
-        csp,
-      );
-    }
-    // Cross-site cookies live on the Render host (D28), so this edge
-    // redirect cannot see them. Admin pages handle 401 themselves.
-    if (!apiOrigin && !secured.cookies.get('access_token')) {
-      const login = secured.nextUrl.clone();
-      login.pathname = '/admin/login';
-      login.search = '';
-      login.searchParams.set('next', `${pathname}${secured.nextUrl.search}`);
-      return applySecurityHeaders(NextResponse.redirect(login), csp);
-    }
-    return applySecurityHeaders(NextResponse.next({ request: { headers: secured.headers } }), csp);
+  const isAdmin = pathname.startsWith('/admin');
+  // Public pages are static/ISR and shared across visitors, so they get the
+  // nonce-less policy (see csp.util.ts). /admin and draft-mode requests (the
+  // site-wide bypass cookie skips the cache) render per request and get a nonce.
+  if (!isAdmin && !request.cookies.has('__prerender_bypass')) {
+    return applySecurityHeaders(
+      handleI18n(request),
+      buildContentSecurityPolicy(undefined, connectSrc),
+    );
   }
 
-  return applySecurityHeaders(handleI18n(secured), csp);
+  const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
+  const csp = buildContentSecurityPolicy(nonce, connectSrc);
+  const secured = requestWithNonce(request, nonce, csp);
+  if (!isAdmin) {
+    // The CSP is per request now, so no shared cache may store it. Next keeps
+    // this header, and a forged cookie still gets the cached HTML.
+    const response = applySecurityHeaders(handleI18n(secured), csp);
+    response.headers.set('Cache-Control', 'private, no-store');
+    return response;
+  }
+  const isLogin = pathname === '/admin/login' || pathname.startsWith('/admin/login/');
+  // Cross-site cookies live on the Render host (D28), so this edge
+  // redirect cannot see them. Admin pages handle 401 themselves.
+  if (!isLogin && !apiOrigin && !secured.cookies.get('access_token')) {
+    const login = secured.nextUrl.clone();
+    login.pathname = '/admin/login';
+    login.search = '';
+    login.searchParams.set('next', `${pathname}${secured.nextUrl.search}`);
+    return applySecurityHeaders(NextResponse.redirect(login), csp);
+  }
+  return applySecurityHeaders(NextResponse.next({ request: { headers: secured.headers } }), csp);
 }
 
 export const config = {

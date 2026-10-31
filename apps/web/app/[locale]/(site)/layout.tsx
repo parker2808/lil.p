@@ -3,8 +3,6 @@ import type { ReactNode } from 'react';
 
 import { SiteShell } from '@/modules/core/components/SiteShell/SiteShell';
 
-export const dynamic = 'force-dynamic';
-
 export default async function SiteLayout({
   children,
   params,
