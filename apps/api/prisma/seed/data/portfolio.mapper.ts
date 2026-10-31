@@ -400,7 +400,8 @@ export function mapProjects(data: PortfolioJson) {
         })
       : [],
     status: parseContentStatus(row.status),
-    publishedAt: row.status === 'PUBLISHED' ? parseMonthDate(optionalText(row.publishedAt)) : null,
+    // PUBLISHED rows without a stored date get the seed run time (the migration's NOW(3)).
+    publishedAt: publishedAtFor(parseContentStatus(row.status), row.publishedAt),
     sortOrder: int(row.sortOrder),
   }));
 }
@@ -410,6 +411,13 @@ function parseContentStatus(value: unknown): ContentStatus {
     return value;
   }
   return 'DRAFT';
+}
+
+function publishedAtFor(status: ContentStatus, value: unknown): Date | null {
+  if (status !== 'PUBLISHED') {
+    return null;
+  }
+  return parseMonthDate(optionalText(value)) ?? new Date();
 }
 
 /**

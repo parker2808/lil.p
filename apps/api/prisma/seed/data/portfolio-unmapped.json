@@ -15,7 +15,7 @@
       "docs/PLAN.md",
       "docs/DEPLOY.md"
     ],
-    "conventions": "Bilingual fields are xxxEn / xxxVi columns per spec §1.5. TODO marks unknowns. <email>/<phone> are placeholders. Project status comes from each row (all DRAFT unless Parker publishes). Private content-data repository is described, never named or linked."
+    "conventions": "Bilingual fields are xxxEn / xxxVi columns per spec §1.5. TODO marks unknowns. <email>/<phone> are placeholders. Project status comes from each row (PUBLISHED for all rows since Parker published all content on 2026-10-31). Private content-data repository is described, never named or linked."
   },
   "siteSettings": {
     "availability": "TODO (OPEN | NOT_LOOKING | FREELANCE)",

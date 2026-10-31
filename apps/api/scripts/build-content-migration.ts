@@ -1228,10 +1228,20 @@ export function writeContentMigration(): { sql: string; counts: ContentCounts } 
   return built;
 }
 
+/**
+ * The committed 20261027150000_portfolio_content migration stays frozen
+ * permanently (Render prod replays those exact bytes after the P3009
+ * resolve), so the only allowed drift from the regenerated SQL is the
+ * data publish's DRAFT -> PUBLISHED status flip.
+ */
+export function normalizeContentMigrationStatus(value: string): string {
+  return value.replaceAll("'DRAFT'", "'PUBLISHED'");
+}
+
 export function assertCommittedMigrationMatches(): void {
   const built = buildContentMigration();
   const committed = readFileSync(MIGRATION_SQL_PATH, 'utf8');
-  if (committed !== built.sql) {
+  if (normalizeContentMigrationStatus(committed) !== normalizeContentMigrationStatus(built.sql)) {
     throw new Error(
       `${MIGRATION_SQL_PATH} is stale. Run pnpm --filter @portfolio/api content:migration`,
     );

@@ -3,7 +3,7 @@ import { seedOwner } from './owner.seed';
 
 /**
  * Production first boot (PLAN D13, spec §1.5). Loads the owner's portfolio
- * JSON via `seedOwner`: projects stay DRAFT, 0 posts, no demo inbox messages
+ * JSON via `seedOwner`: projects are PUBLISHED, 0 posts, no demo inbox messages
  * or page views. Contact stays `<email>` / `<phone>` until Parker edits in
  * `/admin` (T60).
  */

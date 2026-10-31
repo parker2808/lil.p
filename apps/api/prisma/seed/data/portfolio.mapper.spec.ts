@@ -49,8 +49,8 @@ describe('portfolio mapper', () => {
       'interview-senior-fe',
       'lil-p',
     ]);
-    expect(projects.every((project) => project.status === 'DRAFT')).toBe(true);
-    expect(projects.every((project) => project.publishedAt === null)).toBe(true);
+    expect(projects.every((project) => project.status === 'PUBLISHED')).toBe(true);
+    expect(projects.every((project) => project.publishedAt !== null)).toBe(true);
 
     const particula = projects.find((project) => project.slug === 'particula');
     expect(particula?.notMineEn).toMatch(/Tim Vu/);
