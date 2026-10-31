@@ -37,9 +37,11 @@ export function proxy(request: NextRequest) {
   const connectSrc = apiOrigin ? [apiOrigin] : [];
   const { pathname } = request.nextUrl;
 
+  const isAdmin = pathname.startsWith('/admin');
   // Public pages are static/ISR and shared across visitors, so they get the
-  // nonce-less policy (see csp.util.ts); only always-dynamic /admin gets a nonce.
-  if (!pathname.startsWith('/admin')) {
+  // nonce-less policy (see csp.util.ts). /admin and draft-mode requests (the
+  // site-wide bypass cookie skips the cache) render per request and get a nonce.
+  if (!isAdmin && !request.cookies.has('__prerender_bypass')) {
     return applySecurityHeaders(
       handleI18n(request),
       buildContentSecurityPolicy(undefined, connectSrc),
@@ -49,6 +51,13 @@ export function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
   const csp = buildContentSecurityPolicy(nonce, connectSrc);
   const secured = requestWithNonce(request, nonce, csp);
+  if (!isAdmin) {
+    // The CSP is per request now, so no shared cache may store it. Next keeps
+    // this header, and a forged cookie still gets the cached HTML.
+    const response = applySecurityHeaders(handleI18n(secured), csp);
+    response.headers.set('Cache-Control', 'private, no-store');
+    return response;
+  }
   const isLogin = pathname === '/admin/login' || pathname.startsWith('/admin/login/');
   // Cross-site cookies live on the Render host (D28), so this edge
   // redirect cannot see them. Admin pages handle 401 themselves.

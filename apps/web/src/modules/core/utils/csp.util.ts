@@ -1,14 +1,16 @@
 /**
  * Content-Security-Policy (T59).
  *
- * With a nonce (admin, always dynamic): Next 16 applies it to its own scripts
- * when this header is set on both the request (so RSC sees it) and the response.
+ * With a nonce (`/admin`, plus any request carrying the draft-mode cookie,
+ * which is site-wide and makes public pages render per request): Next 16
+ * applies it to its own scripts when this header is set on both the request
+ * (so RSC sees it) and the response.
  *
- * Without a nonce (public `[locale]` routes, static/ISR): the cached HTML is
- * shared by every visitor, so a per-request nonce cannot match it. Next's
- * inline RSC/bootstrap scripts differ per page and per build, so hashes are not
- * practical either; `'unsafe-inline'` is the only option Next supports there.
- * Every other directive is identical to the admin policy.
+ * Without a nonce (public `[locale]` routes outside draft mode, static/ISR):
+ * the cached HTML is shared by every visitor, so a per-request nonce cannot
+ * match it. Next's inline RSC/bootstrap scripts differ per page and per build,
+ * so hashes are not practical either; `'unsafe-inline'` is the only option
+ * Next supports there. Every other directive is identical to the nonce policy.
  *
  * `frame-ancestors 'self'` (not `'none'`) lets the page builder's live preview
  * iframe the public site from the same origin (T52a); no other site may frame us.
