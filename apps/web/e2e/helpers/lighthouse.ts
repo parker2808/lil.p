@@ -5,6 +5,7 @@ import lighthouse from 'lighthouse';
 export type LighthouseScores = {
   performance: number;
   accessibility: number;
+  totalBlockingTime: number;
 };
 
 export async function runMobileLighthouse(url: string): Promise<LighthouseScores> {
@@ -31,6 +32,7 @@ export async function runMobileLighthouse(url: string): Promise<LighthouseScores
     return {
       performance: Math.round((categories?.performance?.score ?? 0) * 100),
       accessibility: Math.round((categories?.accessibility?.score ?? 0) * 100),
+      totalBlockingTime: result?.lhr.audits['total-blocking-time']?.numericValue ?? Infinity,
     };
   } finally {
     await chrome.kill();

@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P0-5 T25: local mobile `/vi` Lighthouse TBT passed; real-device battery impact remains unmeasured.
 - P0-4 T12a hides unfinished public text at the web API boundary; source CMS fields still need editorial replacement.
 - P0-2 T1 admin editor scroll is stacked on P0-1 T0: narrow editors use `main` as the scroll region; desktop editors split into independent columns.
 - P0 UX series in progress: P0-1 T0 "close mobile menus on navigation" is stacked as `ux/p0-1-t0-close-mobile-menus`; later tasks in the series build on it. It also made the admin mobile sheet nav scrollable (`AdminMobileNav` `min-h-0 flex-1 overflow-y-auto`) because unscrollable sheet content blocked taps below the fold.
@@ -70,6 +71,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
 - 2026-11-01: P0-4 T12a: hide TODO/TBD text from public routes, guard About experience and skills fields, and show the compact location caption.
+- 2026-11-01: P0-5 T25: render the static hero on mobile, touch, and reduced motion; load the desktop shader during idle time.
 - 2026-11-01: P0-2 T1: admin editor scroll uses one `main` region below `lg` and independently scrolling columns at `lg`; responsive e2e coverage added.
 - 2026-11-01: Big docs split into short indexes + verbatim pieces in `docs/archive/` and `docs/design/archive/`; `pnpm check:all` prints only failing checks.
 - 2026-11-01: P0-1 T0: public site header and admin topbar mobile Sheets are controlled and close when `usePathname()` changes (`use-close-on-navigate` hook), nav links wrapped in `SheetClose asChild`; new `e2e/ux-overlay.spec.ts` (mobile 375x667: dialogs close on tap/Esc, body stays unlocked, scrolling works) + hook unit tests. Admin mobile nav sheet content is scrollable.
