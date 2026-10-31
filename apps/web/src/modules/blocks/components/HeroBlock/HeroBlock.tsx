@@ -11,6 +11,7 @@ import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
 
 import { Link } from '@i18n/navigation';
 import { getSite } from '@/modules/core/services/site.service';
+import { LOCATION_CAPTION } from '@/modules/core/constants/location-caption.constant';
 
 import type { BlockContext } from '../../types/entities/block-context.type';
 
@@ -80,7 +81,7 @@ export async function HeroBlock({ block, context }: { block: PublicBlock; contex
             <i />
           </header>
           <p>{site.settings.availabilityNote}</p>
-          <div>{[site.profile.city, site.profile.timezone].filter(Boolean).join(' · ')}</div>
+          <div>{LOCATION_CAPTION}</div>
         </aside>
       ) : null}
     </Reveal>

@@ -7,6 +7,7 @@ import type { z } from 'zod';
 
 import { PUBLIC_CACHE_TAG, PUBLIC_REVALIDATE_SECONDS } from '../constants/cache.constant';
 import { apiErrorFromResponse } from '../utils/api-error.util';
+import { guardPublicText } from '../utils/placeholder.util';
 
 const API_URL = process.env.API_URL ?? 'http://127.0.0.1:4000';
 
@@ -74,7 +75,8 @@ export async function apiServer<T>(path: string, options: ApiServerOptions<T> = 
   }
 
   const json: unknown = await response.json();
-  return options.schema ? options.schema.parse(json) : (json as T);
+  const parsed = options.schema ? options.schema.parse(json) : (json as T);
+  return path.startsWith('/api/public/') ? guardPublicText(parsed) : parsed;
 }
 
 /** Build-time probe: prerender only when the API answers, otherwise ISR fills pages on first visit. */

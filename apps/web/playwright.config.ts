@@ -50,6 +50,7 @@ export default defineConfig({
     'ux-overlay.spec.ts',
     'admin-scroll.spec.ts',
     'ux-404.spec.ts',
+    'content-guard.spec.ts',
   ],
   fullyParallel: false,
   workers: 1,
