@@ -7,7 +7,7 @@ Read `PROJECT_CONTEXT.md` in full and `docs/LESSONS.md` before starting. Append 
 - Work in a T3 worktree on a task branch; never edit or commit on `main` or `master`.
 - One task = one branch/worktree = one PR. Stay in scope; do not edit another agent's branch. Record out-of-scope work in `PROJECT_CONTEXT.md` §7.
 - Small tasks: skip Graphify; find code with `rg` and open only needed line ranges. Big tasks: read `graphify-out/GRAPH_REPORT.md` (~10k tokens), query `graphify explain "Name"` or `graphify path "A" "B"`, run `graphify update .` after code changes.
-- Token budget: never read `pnpm-lock.yaml`, `docs/PLAN*.md`, `docs/design/**` (large), `*.vi.md`, seed JSON or migration SQL in full; use `rg`/line ranges. Pipe long test/build/E2E output through `tail -n 80`. See `.cursorignore`.
+- Token budget: never read `pnpm-lock.yaml`, `docs/archive/**`, `docs/design/**`, `*.vi.md` or migration SQL in full; big docs have short indexes (`docs/PLAN.md`, `docs/plans/ui-redesign.md`) linking to pieces. Look up i18n keys (`apps/web/i18n/locales/*.json`) and seed data (`apps/api/prisma/seed/data/*.json`) with `rg` or `jq`, never open them whole. Use `pnpm check:all` instead of raw check output. See `.cursorignore`.
 - Do small tasks directly. For big tasks, write a plan of at most 20 lines and a spec in `docs/specs/` before coding; work in checked steps, then hand off the plan and diff for review.
 - Run agent work via `~/ai-tools/t3-run.sh` watchdog so model failures or quota limits are reported.
 - Agents stay within the plan, add no dependencies without approval, and never merge.
@@ -20,8 +20,7 @@ Read `PROJECT_CONTEXT.md` in full and `docs/LESSONS.md` before starting. Append 
 
 ## Checks and PRs
 
-- Before a code PR, run `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:content`, `pnpm check:deps`, and `pnpm build`.
-- Run API and web E2E as CI does: `pnpm --filter @portfolio/api test:e2e` and `pnpm --filter @portfolio/web test:e2e`.
+- Before a code PR, run `pnpm check:all` (format, lint, typecheck, test, content, deps, build; prints only failures). Add `--e2e` to also run API and web E2E as CI does.
 - For docs-only work, run Prettier on changed files and `pnpm check:content`. Report check results in the PR.
 - CI in `.github/workflows/ci.yml` uses `.github/actions/setup`; keep job timeouts and cancellation of stale PR runs.
 - Use a `<type>/<topic>` branch and conventional commits (commitlint). Open one PR and watch CI until green.

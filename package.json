@@ -29,6 +29,7 @@
     "prod:down": "docker compose -f compose.prod.yml down",
     "prod:seed": "docker compose -f compose.prod.yml run --rm -e SEED_PROFILE=baseline api node dist/seed.js",
     "prod:backup": "docker compose -f compose.prod.yml run --rm -e BACKUP_ONCE=1 backup",
+    "check:all": "node scripts/check-all.mjs",
     "check:content": "node scripts/check-content.mjs",
     "check:placeholders": "node scripts/check-placeholders.mjs",
     "check:deps": "node scripts/check-deps.mjs && node --test scripts/check-deps.test.mjs && node --test scripts/check-placeholders.test.mjs"
