@@ -1,1 +1,15 @@
-pnpm exec lint-staged
+branch=$(git symbolic-ref --quiet --short HEAD || true)
+case "$branch" in
+  main|master)
+    echo "Commit blocked: create a task branch/worktree instead of committing on $branch." >&2
+    exit 1
+    ;;
+esac
+
+pnpm exec lint-staged || exit $?
+
+if command -v gitleaks >/dev/null 2>&1; then
+  gitleaks protect --staged --redact
+else
+  echo "Warning: gitleaks is not installed; skipping staged secret scan." >&2
+fi

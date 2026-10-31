@@ -47,6 +47,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- Git guardrails and canonical `AGENTS.md` are pending review in `chore/guardrails-agents-md`; do not merge without Parker's OK.
 - CI standardization PR (`chore/cicd-standard`) awaits Parker's review; do not merge until Parker explicitly approves.
 - ~~Owner/baseline projects are still DRAFT (demo seed publishes projects) → publish migration pending~~ → resolved on `feat/publish-all-content` (pending review): idempotent TiDB-safe migration `20261031120000_publish_all_content` publishes every `project` / `post` DRAFT and backfills `publishedAt`; backup data + owner/baseline seed now seed PUBLISHED with `publishedAt` stamped at seed time.
 - Render P3009: before deploying `20261031120000_publish_all_content`, prod on Render may still show P3009 on `20261027150000_portfolio_content`; run `npx prisma migrate resolve --rolled-back 20261027150000_portfolio_content` once, then redeploy.
@@ -59,6 +60,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-10-31: Added Husky branch/secret-scan guardrails, gitleaks CI, canonical `AGENTS.md`, and `docs/LESSONS.md`; `AGENT_RULES.md` now points to `AGENTS.md`. Pending Parker's review.
 
 - 2026-10-31: Publish-all-content (Parker's explicit task): added data-only migration `20261031120000_publish_all_content` (idempotent DRAFT→PUBLISHED for `project` + `post`, backfills `publishedAt`, plain SQL valid on MySQL 8.4 + TiDB, no schema change). Backup `portfolio-data.json` and owner/baseline seed now seed projects as PUBLISHED with `publishedAt` stamped at seed time (no invented dates). `posts.data.ts` keeps one intentional demo DRAFT post. Pending Parker's review.
 
