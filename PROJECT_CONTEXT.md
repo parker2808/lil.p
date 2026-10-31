@@ -59,6 +59,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-10-31: Added Graphify code map (`graphify-out/GRAPH_REPORT.md` committed, rest of `graphify-out/` gitignored; built with `--code-only`, no model calls) and shortened `AGENT_RULES.md` to ~30 lines pointing to the shared common rules and TOKEN_FLOW in `<private-memory-repo>`. Pending Parker's review.
+
 - 2026-10-31: Standardized CI per the shared front-end CI/CD lessons in Parker's memory repo: `ci.yml` adds `workflow_dispatch`, a `ci-${{ github.ref }}` concurrency group (cancels stale PR runs only), `timeout-minutes` on every job, and the composite action `.github/actions/setup` used by all three jobs. All existing checks kept; no deploy changes. `AGENT_RULES.md` CI section updated. Pending Parker's review.
 
 - 2026-10-31: Added `AGENT_RULES.md` with the shared rules copied verbatim and lil.p project rules; linked it from `AGENTS.md`. Pending Parker's review.
