@@ -19,10 +19,10 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 
 - Public pages under `/[locale]` are static and use ISR. Home, about, contact, project and note detail pages, RSS, OG images and the sitemap are prerendered at build when the API answers, otherwise on first visit.
 - Public API reads (`apiServer` without `withAuth`) never read cookies or headers. They use `fetch` with `next: { revalidate: 3600, tags }`, and every one carries the shared `public` tag.
-- Admin saves expire the cache right away. Every successful admin mutation calls the `revalidatePublicContent` server action (admins only, `updateTag('public')`). The API still posts per-entity tags to `/api/revalidate` for the content it publishes.
+- Admin saves expire the cache right away. Successful admin mutations that change live content call the `revalidatePublicContent` server action (admins only, `updateTag('public')`); draft-only and non-public ones opt out with `meta.publicCache`. The API still posts per-entity tags to `/api/revalidate` for the content it publishes.
 - `/notes` and `/projects` filter and paginate by query string, so they render per request, but their API reads still come from the data cache. `/admin` is always dynamic.
 - If the API is down at build time, the build still succeeds: nothing is prerendered and ISR fills the pages on first visit.
-- CSP: `/admin` keeps a per-request nonce with `'strict-dynamic'`. Public pages share cached HTML, so they use `script-src 'self' 'unsafe-inline'` with every other directive unchanged (see `csp.util.ts`).
+- CSP: `/admin` and draft-mode requests (the site-wide `__prerender_bypass` cookie) get a per-request nonce with `'strict-dynamic'`. Public pages share cached HTML, so they use `script-src 'self' 'unsafe-inline'` with every other directive unchanged (see `csp.util.ts`).
 
 ## Environments
 
@@ -183,7 +183,7 @@ scripts/backup/restore.sh    # load the newest dump into MYSQL_DATABASE (fresh D
 pnpm prod:down               # stop; named volumes keep the data
 ```
 
-Images are multi-stage, run as a non-root user with a read-only root filesystem. Caddy adds HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and `X-Frame-Options: SAMEORIGIN`. Next sets a per-request CSP nonce in `proxy.ts`. Restore: [docs/runbooks/restore.md](./docs/runbooks/restore.md).
+Images are multi-stage, run as a non-root user with a read-only root filesystem. Caddy adds HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and `X-Frame-Options: SAMEORIGIN`. Next sets a per-request CSP nonce in `proxy.ts` for `/admin` and draft mode. Restore: [docs/runbooks/restore.md](./docs/runbooks/restore.md).
 
 ## What is in git
 
