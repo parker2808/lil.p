@@ -128,7 +128,8 @@ describe('portfolio content migration', () => {
     await seedOwner(prisma);
     expect(await prisma.project.count()).toBe(counts.project);
     expect(await prisma.project.findUnique({ where: { slug: 'lil-p' } })).toMatchObject({
-      status: 'DRAFT',
+      status: 'PUBLISHED',
+      publishedAt: expect.any(Date),
       isConfidential: false,
     });
     expect(await prisma.post.count()).toBe(0);
