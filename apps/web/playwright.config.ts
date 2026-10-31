@@ -49,6 +49,7 @@ export default defineConfig({
     'lighthouse.spec.ts',
     'ux-overlay.spec.ts',
     'admin-scroll.spec.ts',
+    'ux-404.spec.ts',
   ],
   fullyParallel: false,
   workers: 1,

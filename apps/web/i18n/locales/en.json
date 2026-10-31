@@ -28,6 +28,13 @@
     "retry": "Retry",
     "notFound": "This page is missing"
   },
+  "notFound": {
+    "description": "The page you requested could not be found. Try one of these places instead.",
+    "linksLabel": "Explore the site",
+    "home": "Home",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
   "blocks": {
     "nda": "NDA",
     "projects": "projects",
@@ -125,6 +132,11 @@
     "keyTakeaways": "Key takeaways"
   },
   "admin": {
+    "notFound": {
+      "title": "Admin page not found",
+      "description": "The admin page you requested could not be found.",
+      "dashboard": "Back to dashboard"
+    },
     "nav": {
       "groups": {
         "main": "Workspace",
