@@ -103,7 +103,9 @@ that cold start.
 ## 4. Vercel (web)
 
 1. **Add New Project** from this GitHub repo. Framework: Next.js.
-   Root directory: repo root (monorepo).
+   Root directory: repo root (monorepo). The root `vercel.json` pins functions
+   to `sin1` (Singapore, next to Render and TiDB); keep it at the Root Directory
+   if that setting ever changes.
 2. Build command:
    `pnpm --filter @portfolio/contracts build && pnpm --filter @portfolio/web build`
 3. Install: `pnpm install --frozen-lockfile` (enable pnpm / Corepack).
