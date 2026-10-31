@@ -48,9 +48,9 @@ for (const viewport of [
   });
 }
 
-test('editor columns scroll independently at 1280px', async ({ page }) => {
+test('editor columns scroll independently at 1280x800', async ({ page }) => {
   test.setTimeout(180_000);
-  await page.setViewportSize({ width: 1280, height: 667 });
+  await page.setViewportSize({ width: 1280, height: 800 });
   await signIn(page);
 
   for (const { path } of editors) {
@@ -60,6 +60,7 @@ test('editor columns scroll independently at 1280px', async ({ page }) => {
     const aside = page.locator('[data-slot="editor-shell"] > div:last-child > aside').first();
     await expect(column).toBeVisible();
     await expect(aside).toBeVisible();
+    expect(await main.evaluate((element) => getComputedStyle(element).overflowY)).toBe('auto');
     expect(await column.evaluate((element) => getComputedStyle(element).overflowY)).toBe('auto');
     expect(await aside.evaluate((element) => getComputedStyle(element).overflowY)).toBe('auto');
     expect(await column.evaluate((element) => element.scrollHeight)).toBeGreaterThan(

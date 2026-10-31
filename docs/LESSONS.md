@@ -6,4 +6,3 @@
 - 2026-11-01: Playwright device descriptors include a browser; `devices['iPhone SE']` forces WebKit. For the pinned Chromium project use explicit `viewport`/`hasTouch`/`isMobile` instead.
 - 2026-11-01: A Radix modal overlay blocks pointer events, so an e2e that re-opens an already-open dialog on its covered trigger hangs forever; close via Escape before reopening.
 - 2026-11-01: Admin sheets render `<AdminMobileNav>` (18 links): without `min-h-0 flex-1 overflow-y-auto` on the nav the sheet content overflows below the fold and taps below 667px hang on scrollIntoView; the admin document never scrolls (`.admin-main` is the scroller), so admin scroll checks must assert pane scrollTop.
-- 2026-11-01: Editor columns need a constrained height only at `lg`; applying height and nested overflow rules below that breakpoint creates competing scroll regions and hides lower form fields.
