@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- Git guardrails and canonical `AGENTS.md` are pending review in `chore/guardrails-agents-md`; do not merge without Parker's OK.
 - CI standardization PR (`chore/cicd-standard`) awaits Parker's review; do not merge until Parker explicitly approves.
 - ~~Owner/baseline projects are still DRAFT (demo seed publishes projects) → publish migration pending~~ → resolved on `feat/publish-all-content` (pending review): idempotent TiDB-safe migration `20261031120000_publish_all_content` publishes every `project` / `post` DRAFT and backfills `publishedAt`; backup data + owner/baseline seed now seed PUBLISHED with `publishedAt` stamped at seed time.
 - Render P3009: before deploying `20261031120000_publish_all_content`, prod on Render may still show P3009 on `20261027150000_portfolio_content`; run `npx prisma migrate resolve --rolled-back 20261027150000_portfolio_content` once, then redeploy.
@@ -62,6 +63,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-10-31: Added Husky branch/secret-scan guardrails, gitleaks CI, canonical `AGENTS.md`, and `docs/LESSONS.md`; `AGENT_RULES.md` now points to `AGENTS.md`. Pending Parker's review.
 
 - 2026-10-31: Speed (Parker's task, prod measured from Vietnam: web functions ran in `iad1` while API + DB are in Singapore; every page `private, no-store`). Root `vercel.json` pins functions to `sin1`. Public `/[locale]` pages are now static/ISR: `force-dynamic` removed, the locale layout prerenders only when `/api/health` answers (build passes with the API down), slug pages `generateStaticParams`, home/about/contact read `searchParams` only in draft mode. `apiServer` public reads never touch cookies/headers and always carry the `public` tag; the new admin-only `revalidatePublicContent` server action (`updateTag`) runs after admin mutations that change live content via `usePublicCacheSync` in `AdminShell` (draft-only ones opt out with `meta.publicCache`). A failed sitemap/RSS fetch during `next build` makes the route render per request instead of caching empty output. CSP: nonce + `'strict-dynamic'` on `/admin` and draft-mode requests; public routes use `script-src 'self' 'unsafe-inline'`, other directives unchanged. API pool and health checked, no change needed. README gains a Stack section. Spec with acceptance criteria AC1–AC9, results and before/after timings: `docs/specs/2026-10-31-perf-static-isr.md`. Pending Parker's review.
 

@@ -1,12 +1,34 @@
-# AGENTS.md
+# AGENTS.md — lil.p rules
 
-**Read [`AGENT_RULES.md`](AGENT_RULES.md) for common and lil.p-specific rules.**
+Read `PROJECT_CONTEXT.md` in full and `docs/LESSONS.md` before starting. Append one line to `docs/LESSONS.md` for each new lesson.
 
-**Read [`PROJECT_CONTEXT.md`](PROJECT_CONTEXT.md) in full before doing anything.** It holds every requirement, confirmed and forbidden fact, and workflow rule for this repo.
+## Start and scope
 
-Hard rules (details in PROJECT_CONTEXT.md):
+- Work in a T3 worktree on a task branch; never edit or commit on `main` or `master`.
+- One task = one branch/worktree = one PR. Stay in scope; do not edit another agent's branch. Record out-of-scope work in `PROJECT_CONTEXT.md` §7.
+- Read `graphify-out/GRAPH_REPORT.md` for navigation. Query exact names with `graphify explain "Name"` or `graphify path "A" "B"`; open only needed file ranges, each file once. Refresh with `graphify update .` after code changes.
+- Do small tasks directly. For big tasks, write a plan of at most 20 lines and a spec in `docs/specs/` before coding; work in checked steps, then hand off the plan and diff for review.
+- Run agent work via `~/ai-tools/t3-run.sh` watchdog so model failures or quota limits are reported.
+- Agents stay within the plan, add no dependencies without approval, and never merge.
 
-- This repo is **public**: no secrets, no real contact info (use `<email>` / `<phone>` placeholders), never name or link any private data repo.
-- One task = one branch/worktree = one PR. Never merge to `main` without Parker's explicit OK. Watch CI until green.
-- Stay inside your task's scope; don't edit other agents' branches.
-- **Every PR to `main` must update `PROJECT_CONTEXT.md` (§7 open items and §9 changelog) in the same PR.** CI (`context-check`) checks that the file exists at HEAD and is changed for non-docs PRs; it does not validate individual sections. Changes only under `docs/` are exempt from the update check, and the `skip-context` label bypasses CI.
+## Stack and content
+
+- Public pnpm 10 monorepo on Node 22: `apps/web` (Next 16, React 19), `apps/api` (Nest 11, Prisma 7), `packages/contracts` (zod), `packages/ui`.
+- Local database is MySQL 8.4; production database is TiDB. Install with `pnpm install --frozen-lockfile`.
+- Content lives in the database and admin CMS; seeds are in `apps/api/prisma/seed/`, migrations in `apps/api/prisma/migrations/`, block definitions in `packages/contracts/src/blocks/definitions/`.
+
+## Checks and PRs
+
+- Before a code PR, run `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm check:content`, `pnpm check:deps`, and `pnpm build`.
+- Run API and web E2E as CI does: `pnpm --filter @portfolio/api test:e2e` and `pnpm --filter @portfolio/web test:e2e`.
+- For docs-only work, run Prettier on changed files and `pnpm check:content`. Report check results in the PR.
+- CI in `.github/workflows/ci.yml` uses `.github/actions/setup`; keep job timeouts and cancellation of stale PR runs.
+- Use a `<type>/<topic>` branch and conventional commits (commitlint). Open one PR and watch CI until green.
+- Every PR to `main` updates `PROJECT_CONTEXT.md` §7 and §9; `context-check` enforces a file change for non-docs PRs. Use `skip-context` only with Parker's OK.
+- Never merge to `main` without Parker's explicit OK.
+
+## Public repo limits
+
+- No secrets, tokens, `.env` values, or real contact info in the repo, PRs, logs, or chat. Use `<email>` and `<phone>` placeholders.
+- Never name or link a private repo; use `<private-content-repo>` or `<private-memory-repo>` placeholders.
+- Use free services and free Tiptap extensions only. R16 (Figma) is dropped.
