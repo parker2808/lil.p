@@ -17,4 +17,17 @@ describe('buildContentSecurityPolicy', () => {
     const csp = buildContentSecurityPolicy('n', ['https://api.example.test']);
     expect(csp).toContain("connect-src 'self' https://api.example.test");
   });
+
+  it('falls back to inline scripts without a nonce and keeps every other directive', () => {
+    const extra = ['https://api.example.test'];
+    const nonced = buildContentSecurityPolicy('n', extra).split('; ');
+    const open = buildContentSecurityPolicy(undefined, extra).split('; ');
+
+    expect(open).toContain("script-src 'self' 'unsafe-inline'");
+    expect(open.join('; ')).not.toContain("'nonce-");
+    expect(open.join('; ')).not.toContain("'strict-dynamic'");
+    expect(open.filter((d) => !d.startsWith('script-src'))).toEqual(
+      nonced.filter((d) => !d.startsWith('script-src')),
+    );
+  });
 });

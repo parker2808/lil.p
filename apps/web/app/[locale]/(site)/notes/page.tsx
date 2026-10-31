@@ -4,6 +4,9 @@ import { setRequestLocale } from 'next-intl/server';
 import { NotesIndex } from '@/modules/notes/views/NotesIndex';
 import { buildNotesMetadata } from '@/modules/seo/utils/notes-metadata.util';
 
+// Filters live in searchParams, so render per request. Declared, not inferred: with the API
+// down at build Next never renders this page and would call it static. Public fetches set
+// their own `revalidate`, so they still hit the data cache.
 export const dynamic = 'force-dynamic';
 
 export const generateMetadata = buildNotesMetadata;

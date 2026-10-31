@@ -18,6 +18,22 @@ async function headingOrder(page: Page, earlier: string, later: string): Promise
   expect(firstBox?.y).toBeLessThan(secondBox?.y ?? Number.POSITIVE_INFINITY);
 }
 
+// `/en` is ISR and the API's revalidate webhook is fire-and-forget, so reload until it lands.
+async function expectPublicHome(
+  page: Page,
+  earlier: string,
+  later: string,
+  stackHeadings: number,
+): Promise<void> {
+  await expect(async () => {
+    await page.goto('/en');
+    await headingOrder(page, earlier, later);
+    await expect(page.getByRole('heading', { name: 'Stack' })).toHaveCount(stackHeadings, {
+      timeout: 2_000,
+    });
+  }).toPass({ timeout: 30_000 });
+}
+
 async function moveWorkAboveFeatured(page: Page): Promise<void> {
   const origin = new URL(page.url()).origin;
   const response = await page.request.get('/api/admin/pages/home');
@@ -62,9 +78,7 @@ test.describe('admin pages', () => {
     await page.getByRole('button', { name: 'Publish' }).click();
     await expect(page.getByText(/Published v/)).toBeVisible({ timeout: 20_000 });
 
-    await page.goto('/en');
-    await headingOrder(page, 'Selected work', 'Featured case study');
-    await expect(page.getByRole('heading', { name: 'Stack' })).toHaveCount(0);
+    await expectPublicHome(page, 'Selected work', 'Featured case study', 0);
 
     await page.goto('/admin/pages/home');
     const origin = new URL(page.url()).origin;
@@ -82,8 +96,6 @@ test.describe('admin pages', () => {
     });
     expect(published.ok(), await published.text()).toBeTruthy();
 
-    await page.goto('/en');
-    await headingOrder(page, 'Featured case study', 'Selected work');
-    await expect(page.getByRole('heading', { name: 'Stack' })).toBeVisible();
+    await expectPublicHome(page, 'Featured case study', 'Selected work', 1);
   });
 });

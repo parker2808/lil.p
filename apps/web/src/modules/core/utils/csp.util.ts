@@ -1,19 +1,31 @@
 /**
- * Per-request Content-Security-Policy (T59).
+ * Content-Security-Policy (T59).
  *
- * Next 16 applies the nonce to its own scripts when this header is set on both
- * the request (so RSC sees it) and the response. `frame-ancestors 'self'`
- * (not `'none'`) lets the page builder's live preview iframe the public site
- * from the same origin (T52a); no other site may frame us.
+ * With a nonce (admin, always dynamic): Next 16 applies it to its own scripts
+ * when this header is set on both the request (so RSC sees it) and the response.
+ *
+ * Without a nonce (public `[locale]` routes, static/ISR): the cached HTML is
+ * shared by every visitor, so a per-request nonce cannot match it. Next's
+ * inline RSC/bootstrap scripts differ per page and per build, so hashes are not
+ * practical either; `'unsafe-inline'` is the only option Next supports there.
+ * Every other directive is identical to the admin policy.
+ *
+ * `frame-ancestors 'self'` (not `'none'`) lets the page builder's live preview
+ * iframe the public site from the same origin (T52a); no other site may frame us.
  *
  * `upgrade-insecure-requests` stays off here so local HTTP Caddy still works;
  * T61 adds it once the origin is HTTPS.
  */
-export function buildContentSecurityPolicy(nonce: string, extraConnectSrc: string[] = []): string {
+export function buildContentSecurityPolicy(
+  nonce: string | undefined,
+  extraConnectSrc: string[] = [],
+): string {
   const connect = ["'self'", ...extraConnectSrc.filter(Boolean)].join(' ');
   return [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`,
+    nonce
+      ? `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`
+      : "script-src 'self' 'unsafe-inline'",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https://res.cloudinary.com",
     "font-src 'self'",

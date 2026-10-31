@@ -6,6 +6,7 @@ import type { ReactNode } from 'react';
 
 import { useAdminEvents } from '../../hooks/use-admin-events.hook';
 import { MeProvider } from '../../hooks/use-me.hook';
+import { usePublicCacheSync } from '../../hooks/use-public-cache-sync.hook';
 import { AdminUiProvider } from '../../stores/admin-ui.store';
 import { AdminSidebar } from '../AdminSidebar/AdminSidebar';
 import { AdminCommandPalette } from '../CommandPalette/CommandPalette';
@@ -14,6 +15,7 @@ import { Topbar } from '../Topbar/Topbar';
 
 function AdminLiveEvents() {
   useAdminEvents();
+  usePublicCacheSync();
   return null;
 }
 

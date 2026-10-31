@@ -1,10 +1,10 @@
 import type { MetadataRoute } from 'next';
 
+import { isBuildPhase } from '@/modules/core/utils/build-phase.util';
 import { getSitemap } from '@/modules/seo/services/sitemap.service';
 import { absoluteUrl } from '@/modules/seo/utils/site-url.util';
 
-// CI `next build` has no Nest process.
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
@@ -25,7 +25,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         },
       ];
     });
-  } catch {
+  } catch (error) {
+    if (!isBuildPhase()) {
+      throw error;
+    }
     return [];
   }
 }
