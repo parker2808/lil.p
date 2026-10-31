@@ -22,6 +22,7 @@ export function useAdminProject(id: number | null) {
 export function useCreateAdminProject() {
   const queryClient = useQueryClient();
   return useMutation({
+    meta: { publicCache: 'unless-draft' },
     mutationFn: createAdminProject,
     onSuccess: (project) => {
       queryClient.setQueryData(qk.admin.detail('projects', project.id), project);
@@ -33,6 +34,7 @@ export function useCreateAdminProject() {
 export function useSaveAdminProject() {
   const queryClient = useQueryClient();
   return useMutation({
+    meta: { publicCache: 'unless-draft' },
     mutationFn: ({ id, body }: { id: number; body: Parameters<typeof updateAdminProject>[1] }) =>
       updateAdminProject(id, body),
     onSuccess: (project) => {

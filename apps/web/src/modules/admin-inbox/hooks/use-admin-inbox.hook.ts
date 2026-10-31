@@ -39,6 +39,7 @@ export function useInboxMutations() {
 
   return {
     setStatus: useMutation({
+      meta: { publicCache: 'skip' },
       mutationFn: ({ id, status }: { id: number; status: ContactMessageStatus }) =>
         updateAdminMessage(id, { status }),
       onMutate: async ({ id, status }) => {

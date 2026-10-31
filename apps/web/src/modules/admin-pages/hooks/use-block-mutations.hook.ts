@@ -31,27 +31,32 @@ export function useBlockMutations(key: PageKey, labels: { reorderFailed: string 
   }
 
   const add = useMutation({
+    meta: { publicCache: 'skip' },
     mutationFn: (body: BlockCreateInput) => createAdminBlock(key, body),
     onSuccess: invalidate,
   });
 
   const update = useMutation({
+    meta: { publicCache: 'skip' },
     mutationFn: ({ id, body }: { id: number; body: BlockUpdateInput }) =>
       updateAdminBlock(key, id, body),
     onSuccess: invalidate,
   });
 
   const duplicate = useMutation({
+    meta: { publicCache: 'skip' },
     mutationFn: (id: number) => duplicateAdminBlock(key, id),
     onSuccess: invalidate,
   });
 
   const remove = useMutation({
+    meta: { publicCache: 'skip' },
     mutationFn: (id: number) => deleteAdminBlock(key, id),
     onSuccess: invalidate,
   });
 
   const toggle = useMutation({
+    meta: { publicCache: 'skip' },
     mutationFn: ({
       id,
       isVisible,
@@ -86,6 +91,7 @@ export function useBlockMutations(key: PageKey, labels: { reorderFailed: string 
   });
 
   const reorder = useMutation({
+    meta: { publicCache: 'skip' },
     mutationFn: (ids: number[]) => reorderAdminBlocks(key, ids),
     onMutate: async (ids) => {
       await queryClient.cancelQueries({ queryKey: detailKey });
@@ -117,6 +123,7 @@ export function useBlockMutations(key: PageKey, labels: { reorderFailed: string 
   });
 
   const savePage = useMutation({
+    meta: { publicCache: 'skip' },
     mutationFn: updateAdminPage.bind(null, key),
     onSuccess: (page) => {
       queryClient.setQueryData(detailKey, page);

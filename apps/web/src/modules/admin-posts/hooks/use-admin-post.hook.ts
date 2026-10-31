@@ -22,6 +22,7 @@ export function useAdminPost(id: number | null) {
 export function useCreateAdminPost() {
   const queryClient = useQueryClient();
   return useMutation({
+    meta: { publicCache: 'unless-draft' },
     mutationFn: createAdminPost,
     onSuccess: (post) => {
       queryClient.setQueryData(qk.admin.detail('posts', post.id), post);
@@ -33,6 +34,7 @@ export function useCreateAdminPost() {
 export function useSaveAdminPost() {
   const queryClient = useQueryClient();
   return useMutation({
+    meta: { publicCache: 'unless-draft' },
     mutationFn: ({ id, body }: { id: number; body: Parameters<typeof updateAdminPost>[1] }) =>
       updateAdminPost(id, body),
     onSuccess: (post) => {
