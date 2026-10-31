@@ -28,7 +28,7 @@ describe('POST /api/revalidate', () => {
     expect(revalidateTag).not.toHaveBeenCalled();
   });
 
-  it('revalidates each tag when the secret matches', async () => {
+  it('expires each tag immediately when the secret matches', async () => {
     vi.stubEnv('REVALIDATE_SECRET', 'expected-secret-value');
     const response = await POST(
       new Request('http://localhost/api/revalidate', {
@@ -41,8 +41,8 @@ describe('POST /api/revalidate', () => {
       }),
     );
     expect(response.status).toBe(200);
-    expect(revalidateTag).toHaveBeenCalledWith('posts', 'max');
-    expect(revalidateTag).toHaveBeenCalledWith('post:a', 'max');
+    expect(revalidateTag).toHaveBeenCalledWith('posts', { expire: 0 });
+    expect(revalidateTag).toHaveBeenCalledWith('post:a', { expire: 0 });
   });
 
   it('revalidates paths when they are provided', async () => {

@@ -51,6 +51,7 @@ export function usePublishPage(key: PageKey) {
 export function useRestorePage(key: PageKey) {
   const invalidate = useInvalidatePage(key);
   return useMutation({
+    meta: { publicCache: 'skip' },
     mutationFn: (version: number) => restoreAdminPage(key, version),
     onSuccess: invalidate,
   });
@@ -59,6 +60,7 @@ export function useRestorePage(key: PageKey) {
 export function useDiscardPage(key: PageKey) {
   const invalidate = useInvalidatePage(key);
   return useMutation({
+    meta: { publicCache: 'skip' },
     mutationFn: () => discardAdminPage(key),
     onSuccess: invalidate,
   });

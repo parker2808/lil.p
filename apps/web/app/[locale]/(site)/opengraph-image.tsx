@@ -1,10 +1,13 @@
 import type { Locale } from '@portfolio/contracts';
 import { ImageResponse } from 'next/og';
 
+import { localeStaticParams } from '@/modules/core/utils/static-params.util';
 import { OgImage } from '@/modules/seo/components/OgImage/OgImage';
 import { loadHomeOg } from '@/modules/seo/utils/og-image.util';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
+// Image routes do not inherit the locale layout's params.
+export const generateStaticParams = localeStaticParams;
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 

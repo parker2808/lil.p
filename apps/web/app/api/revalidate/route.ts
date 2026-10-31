@@ -18,8 +18,9 @@ export async function POST(request: Request): Promise<NextResponse> {
     ? body.paths.filter((path): path is string => typeof path === 'string' && path.startsWith('/'))
     : [];
 
+  // Public pages are ISR: expire now so the next visit shows the publish, not a stale copy.
   for (const tag of tags) {
-    revalidateTag(tag, 'max');
+    revalidateTag(tag, { expire: 0 });
   }
   for (const path of paths) {
     revalidatePath(path);

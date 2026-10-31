@@ -79,7 +79,8 @@ mỗi trang load (`ApiWarmup`) để giảm cold start.
 ## 4. Vercel (web)
 
 1. **Add New Project** từ repo GitHub. Framework: Next.js. Root: root
-   monorepo.
+   monorepo. File `vercel.json` ở root ghim function về `sin1` (Singapore,
+   gần Render và TiDB); nếu đổi Root Directory thì chuyển file theo.
 2. Build:
    `pnpm --filter @portfolio/contracts build && pnpm --filter @portfolio/web build`
 3. Install: `pnpm install --frozen-lockfile`.

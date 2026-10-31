@@ -1,11 +1,17 @@
 import type { Locale } from '@portfolio/contracts';
+import { connection } from 'next/server';
 
 import { getSite } from '@/modules/core/services/site.service';
+import { isBuildPhase } from '@/modules/core/utils/build-phase.util';
+import { localeStaticParams } from '@/modules/core/utils/static-params.util';
 import { listPosts } from '@/modules/notes/services/posts.service';
 import { renderRss } from '@/modules/seo/utils/rss.util';
 import { absoluteUrl, siteUrl } from '@/modules/seo/utils/site-url.util';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
+
+// Route handlers do not inherit the locale layout's params.
+export const generateStaticParams = localeStaticParams;
 
 export async function GET(_request: Request, { params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -26,17 +32,11 @@ export async function GET(_request: Request, { params }: { params: Promise<{ loc
     return new Response(xml, {
       headers: { 'content-type': 'application/rss+xml; charset=utf-8' },
     });
-  } catch {
-    return new Response(
-      renderRss({
-        title: '',
-        siteUrl: siteUrl(),
-        feedUrl: absoluteUrl(typed, '/rss.xml'),
-        description: '',
-        locale: typed,
-        posts: [],
-      }),
-      { headers: { 'content-type': 'application/rss+xml; charset=utf-8' } },
-    );
+  } catch (error) {
+    // Same as sitemap.ts: render per request rather than cache an empty feed.
+    if (isBuildPhase()) {
+      await connection();
+    }
+    throw error;
   }
 }
