@@ -12,8 +12,9 @@ import {
   DropdownMenuTrigger,
 } from '@portfolio/ui/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
+import { useCloseOnNavigate } from '@portfolio/ui/hooks/use-close-on-navigate.hook';
 import { useTranslations } from 'next-intl';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { ChangePasswordDialog } from '@/modules/admin-auth/components/ChangePasswordDialog/ChangePasswordDialog';
 
@@ -27,12 +28,14 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
   const me = useMe();
   const { toggleCollapsed } = useAdminUi();
   const router = useRouter();
+  const pathname = usePathname();
+  const menu = useCloseOnNavigate(pathname);
   const initial = me.name.slice(0, 1);
   const [passwordOpen, setPasswordOpen] = useState(false);
 
   return (
     <header className="admin-topbar border-border flex h-12 shrink-0 items-center gap-3 border-b px-4">
-      <Sheet>
+      <Sheet open={menu.open} onOpenChange={menu.onOpenChange}>
         <SheetTrigger asChild>
           <Button variant="ghost" size="sm" className="h-8 md:hidden" aria-label={t('menu')}>
             {t('menu')}
