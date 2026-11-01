@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-01: Tailwind's `@theme inline` compiles type utility sizes to literal CSS, so changing scoped `--text-*` variables does not rescale them; public metadata also renders some `font-mono` labels as paragraphs, requiring a Sans paragraph rule.
 - 2026-11-01: The git stash is shared by every worktree, so a failed `git stash push` followed by `git stash pop` applied another branch's old stash; compare against base with `git diff > patch && git apply -R patch` instead of the stash.
 - 2026-11-01: `next build` bakes the API proxy target (port 4000) into the web build, so a local Playwright run with a custom `API_PORT` fails sign-in with a 500; use the default ports or rebuild with the same env.
 
