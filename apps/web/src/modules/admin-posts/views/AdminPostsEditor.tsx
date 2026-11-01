@@ -12,6 +12,7 @@ import { z } from 'zod';
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
 import { PublishActions } from '@/modules/admin-core/components/PublishActions/PublishActions';
 import { RoleGate } from '@/modules/admin-core/components/RoleGate/RoleGate';
+import { useAdminBack } from '@/modules/admin-core/hooks/use-admin-back.hook';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
 import { useSaveStatus } from '@/modules/admin-core/hooks/use-save-status.hook';
 import { useDirtyGuard } from '@/modules/admin-core/hooks/use-dirty-guard.hook';
@@ -64,6 +65,7 @@ function PostEditorForm({ initial }: { initial: PostFormValues }) {
   const t = useTranslations('admin.posts.editor');
   const editorT = useTranslations('admin.editor');
   const contentT = useTranslations('content');
+  const back = useAdminBack('posts');
   const router = useRouter();
   const queryClient = useQueryClient();
   const readOnly = !useIsAdmin();
@@ -176,6 +178,7 @@ function PostEditorForm({ initial }: { initial: PostFormValues }) {
   return (
     <EditorShell
       title={form.titleEn || t('untitled')}
+      back={back}
       saveStatus={saveStatus.state}
       savedText={saveStatus.text}
       onLoadLatest={() => {

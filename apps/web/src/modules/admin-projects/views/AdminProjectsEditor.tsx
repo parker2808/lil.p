@@ -18,6 +18,7 @@ import { listAdminExperience } from '@/modules/admin-about/services/experience.s
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
 import { PublishActions } from '@/modules/admin-core/components/PublishActions/PublishActions';
 import { RoleGate } from '@/modules/admin-core/components/RoleGate/RoleGate';
+import { useAdminBack } from '@/modules/admin-core/hooks/use-admin-back.hook';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
 import { useSaveStatus } from '@/modules/admin-core/hooks/use-save-status.hook';
 import { useDirtyGuard } from '@/modules/admin-core/hooks/use-dirty-guard.hook';
@@ -71,6 +72,7 @@ function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
   const statusT = useTranslations('admin.projects.status');
   const editorT = useTranslations('admin.editor');
   const contentT = useTranslations('content');
+  const back = useAdminBack('projects');
   const router = useRouter();
   const readOnly = !useIsAdmin();
   const create = useCreateAdminProject();
@@ -185,6 +187,7 @@ function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
   return (
     <EditorShell
       title={form.titleEn || t('untitled')}
+      back={back}
       saveStatus={saveStatus.state}
       savedText={saveStatus.text}
       onLoadLatest={() => {

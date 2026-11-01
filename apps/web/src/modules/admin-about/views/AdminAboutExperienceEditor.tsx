@@ -8,6 +8,7 @@ import { useMemo, useState } from 'react';
 import { z } from 'zod';
 
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
+import { useAdminBack } from '@/modules/admin-core/hooks/use-admin-back.hook';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
 import { useSaveStatus } from '@/modules/admin-core/hooks/use-save-status.hook';
 import { useDirtyGuard } from '@/modules/admin-core/hooks/use-dirty-guard.hook';
@@ -53,6 +54,7 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
   const t = useTranslations('admin.experience.editor');
   const editorT = useTranslations('admin.editor');
   const contentT = useTranslations('content');
+  const back = useAdminBack('experience');
   const router = useRouter();
   const readOnly = !useIsAdmin();
   const create = useCreateAdminExperience();
@@ -139,6 +141,7 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
   return (
     <EditorShell
       title={form.company || t('untitled')}
+      back={back}
       saveStatus={saveStatus.state}
       savedText={saveStatus.text}
       onLoadLatest={() => {

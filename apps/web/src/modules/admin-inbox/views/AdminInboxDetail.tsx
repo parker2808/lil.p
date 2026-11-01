@@ -1,14 +1,18 @@
 'use client';
 
+import { PageHeader } from '@portfolio/ui/components/PageHeader/PageHeader';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 
+import { useAdminBack } from '@/modules/admin-core/hooks/use-admin-back.hook';
+
 import { useAdminMessage, useInboxMutations } from '../hooks/use-admin-inbox.hook';
 
 export function AdminInboxDetail({ id }: { id: number }) {
   const t = useTranslations('admin.inbox');
+  const back = useAdminBack('inbox');
   const { data, isError, isLoading, refetch } = useAdminMessage(id);
   const mutations = useInboxMutations();
 
@@ -29,10 +33,12 @@ export function AdminInboxDetail({ id }: { id: number }) {
 
   return (
     <article className="flex max-w-3xl flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-ui-title font-semibold">{data.name}</h1>
-        <Badge>{t(`status.${data.status}`)}</Badge>
-      </div>
+      <PageHeader
+        title={data.name}
+        back={back}
+        linkComponent={Link}
+        actions={<Badge>{t(`status.${data.status}`)}</Badge>}
+      />
       <p className="text-ui-meta text-muted-foreground">
         {data.topic?.labelEn ?? t('noTopic')} · {new Date(data.createdAt).toLocaleString()}
       </p>
@@ -64,7 +70,7 @@ export function AdminInboxDetail({ id }: { id: number }) {
         >
           {t('markSpam')}
         </Button>
-        <Link href="/admin/inbox" className="text-ui">
+        <Link href={back.href} className="text-ui hidden sm:inline">
           {t('back')}
         </Link>
       </div>
