@@ -495,9 +495,6 @@
   }
 }
 @media (max-width: 767px) {
-  .admin .dashboard-stats-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
   .block-heading {
     grid-template-columns: 1fr;
     gap: 8px;
@@ -866,6 +863,13 @@
   font-weight: 600;
   letter-spacing: -0.03em;
   margin-top: 8px;
+}
+.admin .dashboard-metric {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
 .headline-accent {
   font-style: italic;

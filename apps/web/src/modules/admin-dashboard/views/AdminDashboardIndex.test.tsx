@@ -1,8 +1,8 @@
-import { adminStatsFixture, type Me } from '@portfolio/contracts';
+import { adminHealthFixture, adminStatsFixture, type Me } from '@portfolio/contracts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { MeProvider } from '@/modules/admin-core/hooks/use-me.hook';
 
@@ -18,8 +18,6 @@ vi.mock('../services/dashboard.service', () => ({
 }));
 
 vi.mock('@/modules/admin-inbox/services/admin-inbox.service', () => ({
-  LATEST_INBOX_PARAMS: { page: 1, pageSize: 5, sort: '-createdAt' },
-  listAdminMessages: vi.fn().mockResolvedValue({ items: [], page: 1, pageSize: 5, total: 0 }),
   fetchUnreadCount: vi.fn().mockResolvedValue({ unread: 0 }),
 }));
 
@@ -52,17 +50,40 @@ function renderDashboard() {
 }
 
 describe('AdminDashboardIndex', () => {
-  it('keeps stats visible when the health card fails', async () => {
+  afterEach(cleanup);
+
+  it('keeps the action cards visible when the health card fails', async () => {
     fetchStats.mockResolvedValue(adminStatsFixture);
     fetchHealth.mockRejectedValue(new Error('health down'));
 
     renderDashboard();
 
     await waitFor(() => {
-      expect(screen.getByText('Projects published')).toBeInTheDocument();
+      expect(screen.getByRole('region', { name: 'Unpublished drafts' })).toBeInTheDocument();
     });
+    expect(screen.getByRole('region', { name: 'Page views · 30d' })).toBeInTheDocument();
     expect(screen.getByText('Content health could not be loaded.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();
     expect(screen.queryByText('Projects without a domain · 1')).toBeNull();
+  });
+
+  it('renders the four action cards for an admin, each with a link', async () => {
+    fetchStats.mockResolvedValue(adminStatsFixture);
+    fetchHealth.mockResolvedValue(adminHealthFixture);
+
+    renderDashboard();
+
+    expect(await screen.findByText('Inbox zero')).toBeInTheDocument();
+    const expected = [
+      ['Unread messages', '/admin/inbox'],
+      ['Unpublished drafts', '/admin/projects?status=DRAFT'],
+      ['Page views · 30d', '/admin/analytics'],
+      ['Recent activity', '/admin/audit'],
+    ] as const;
+    for (const [name, href] of expected) {
+      const card = await screen.findByRole('region', { name });
+      expect(within(card).getAllByRole('link')[0]).toHaveAttribute('href', href);
+    }
+    expect(screen.getByText('No activity yet.')).toBeInTheDocument();
   });
 });

@@ -1,5 +1,5 @@
 import {
-  adminContactMessageListPageSchema,
+  adminAuditListPageSchema,
   adminHealthSchema,
   adminStatsSchema,
   parseStatsRange,
@@ -8,7 +8,7 @@ import {
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
 import { AdminDashboardIndex } from '@/modules/admin-dashboard/views/AdminDashboardIndex';
-import { LATEST_INBOX_PARAMS } from '@/modules/admin-inbox/services/admin-inbox.service';
+import { LATEST_AUDIT_PARAMS } from '@/modules/admin-insights/services/admin-audit.service';
 import { apiServer } from '@/modules/core/services/api-server.service';
 import { getQueryClient } from '@/modules/core/utils/query-client.util';
 
@@ -39,11 +39,11 @@ export default async function AdminHomePage({
       queryFn: () => apiServer('/api/admin/health', { withAuth: true, schema: adminHealthSchema }),
     }),
     queryClient.prefetchQuery({
-      queryKey: qk.admin.list('messages', LATEST_INBOX_PARAMS),
+      queryKey: qk.admin.audit(LATEST_AUDIT_PARAMS),
       queryFn: () =>
-        apiServer('/api/admin/messages?page=1&pageSize=5&sort=-createdAt', {
+        apiServer(`/api/admin/audit?limit=${LATEST_AUDIT_PARAMS.limit}`, {
           withAuth: true,
-          schema: adminContactMessageListPageSchema,
+          schema: adminAuditListPageSchema,
         }),
     }),
   ]);

@@ -77,6 +77,7 @@ export default defineConfig({
     'admin-ia.spec.ts',
     'admin-bottom-bar.spec.ts',
     'editor-split.spec.ts',
+    'admin-dashboard.spec.ts',
   ],
   // Snapshots hold computed styles, not pixels, so one file serves every platform.
   snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}{ext}',

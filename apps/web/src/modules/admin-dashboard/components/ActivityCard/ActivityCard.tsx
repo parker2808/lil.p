@@ -3,19 +3,17 @@
 import type { AdminAuditLog } from '@portfolio/contracts';
 import { ActivityFeed } from '@portfolio/ui/components/ActivityFeed/ActivityFeed';
 import { AuditRow } from '@portfolio/ui/components/AuditRow/AuditRow';
-import { Card, CardContent, CardHeader, CardTitle } from '@portfolio/ui/components/ui/card';
+import { EmptyState } from '@portfolio/ui/components/EmptyState/EmptyState';
 import { useLocale, useTranslations } from 'next-intl';
-import Link from 'next/link';
 
 import { useAdminAudit } from '@/modules/admin-insights/hooks/use-admin-audit.hook';
 import { LATEST_AUDIT_PARAMS } from '@/modules/admin-insights/services/admin-audit.service';
 
+import { DashboardCard } from '../ActionCards/ActionCards';
+
 export function ActivityCard() {
-  const { data, isError, error } = useAdminAudit(LATEST_AUDIT_PARAMS);
-  if (isError) {
-    throw error;
-  }
-  return <ActivityCardView items={data?.items ?? []} />;
+  const { data } = useAdminAudit(LATEST_AUDIT_PARAMS);
+  return <ActivityCardView items={data.items} />;
 }
 
 export function ActivityCardView({ items }: { items: AdminAuditLog[] }) {
@@ -34,26 +32,18 @@ export function ActivityCardView({ items }: { items: AdminAuditLog[] }) {
   };
 
   return (
-    <Card surface="admin">
-      <CardHeader surface="admin" className="flex flex-row items-center justify-between gap-3 pb-3">
-        <CardTitle className="text-ui-title">{t('latest')}</CardTitle>
-        <Link href="/admin/audit" className="text-ui">
-          {t('viewAll')}
-        </Link>
-      </CardHeader>
-      <CardContent>
-        {items.length === 0 ? (
-          <p className="text-ui text-muted-foreground">{t('empty')}</p>
-        ) : (
-          <ActivityFeed empty={t('empty')}>
-            {items.map((item) => (
-              <li key={item.id}>
-                <AuditRow item={item} labels={labels} locale={locale} />
-              </li>
-            ))}
-          </ActivityFeed>
-        )}
-      </CardContent>
-    </Card>
+    <DashboardCard title={t('latest')} action={t('viewAll')} href="/admin/audit">
+      {items.length === 0 ? (
+        <EmptyState title={t('empty')} className="flex-1 py-6" />
+      ) : (
+        <ActivityFeed empty={t('empty')}>
+          {items.map((item) => (
+            <li key={item.id}>
+              <AuditRow item={item} labels={labels} locale={locale} />
+            </li>
+          ))}
+        </ActivityFeed>
+      )}
+    </DashboardCard>
   );
 }
