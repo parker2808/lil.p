@@ -36,7 +36,7 @@ test.describe('admin login', () => {
 
     await page.goto('/admin/login');
     await page.getByLabel('Email').fill(E2E_ADMIN.email);
-    await page.getByLabel('Password').fill(e2eAdminPin());
+    await page.getByLabel('Password', { exact: true }).fill(e2eAdminPin());
 
     const submit = page.locator('button[type="submit"]');
     await submit.click();
