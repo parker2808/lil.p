@@ -1,4 +1,5 @@
-import type { Hue } from '@portfolio/contracts';
+import type { Hue, IconKey } from '@portfolio/contracts';
+import { Icon } from '@portfolio/ui/components/Icon/Icon';
 import { cn } from '@portfolio/ui/lib/utils';
 
 export function CoverPlaceholder({
@@ -7,12 +8,14 @@ export function CoverPlaceholder({
   className,
   title = '',
   slug = '',
+  iconKey,
 }: {
   hue?: Hue;
   ratio?: '16 / 10' | '21 / 9';
   className?: string;
   title?: string;
   slug?: string;
+  iconKey?: IconKey;
 }) {
   const hueVar = `--hue-${hue.toLowerCase()}`;
 
@@ -40,6 +43,7 @@ export function CoverPlaceholder({
           .join('')}
       </span>
       <span className="cover-slug">{slug}</span>
+      {iconKey ? <Icon name={iconKey} className="cover-product-icon" /> : null}
     </div>
   );
 }

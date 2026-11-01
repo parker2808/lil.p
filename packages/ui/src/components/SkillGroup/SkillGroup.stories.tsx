@@ -14,6 +14,6 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     groups: skillsGroupedFixture,
-    labels: { daily: 'Daily', shipped: 'Shipped', growing: 'Growing' },
+    labels: { other: 'Other' },
   },
 };

@@ -1,5 +1,19 @@
 # Lessons
 
+- 2026-11-02: A Radix Dialog with no `DialogTrigger` focuses nothing on close (its default refocuses the trigger ref), so a palette opened from several controls stores `document.activeElement` on open and refocuses it in `onCloseAutoFocus`; `IconButton` also brings Radix Tooltip and the popper, which the public layout bundle avoids.
+- 2026-11-01: A second `LocaleSwitch` (footer) duplicates the header's "Language" nav landmark, which `ux-404.spec.ts` fails because it asserts zero axe violations of any impact; give the copy its own label and scope page-wide "VI"/"EN" link selectors to a landmark ("Việc" also substring-matches "VI").
+- 2026-11-01: `portfolio-data.json` and `pagesData` both feed the frozen `20261027150000_portfolio_content` migration and a spec compares the regenerated SQL, so owner copy changes go in the `owner-copy.data.ts` overlay that only `seedOwner` applies.
+- 2026-11-01: The shared test MySQL uses `caching_sha2_password` and its auth cache is flushed when other worktrees run `FLUSH PRIVILEGES`, so the API pool fails with code 45028; run one TCP `mysql -h127.0.0.1` login as `app` inside the container right before Playwright.
+- 2026-11-01: The e2e demo seed has 4 case studies and the `baseline` seed has the real 10, but `apps/web/.next/cache/fetch-cache` survives `next build`, so delete it before pointing Playwright at a different database or the old API data is served.
+- 2026-11-01: `CaseStudySections` imports the server-only `Markdown` renderer, so a Vitest file that tests its pure `caseStudyToc` helper must `vi.mock` the Markdown module first.
+- 2026-11-01: Project list rows already select localized role and outcome fields, so cards can derive a clean result line without a schema migration; keep mock cover paths mapped by slug and let real media win.
+- 2026-11-01: A Radix Sheet portal renders outside `.public-site` and `.site-header`, so mobile menu styles need an explicit sheet class instead of ancestor-scoped selectors.
+- 2026-11-01: Demo skills reuse sort orders across categories and are created concurrently, so an ID tie-break can reorder badges and change full-page visual height; sort badges in the visual fixture before capturing screenshots.
+- 2026-11-01: When stacked branches independently merge the same main commit, merge the updated base into the child and keep both task entries when resolving shared context files.
+- 2026-11-01: A radius token change updates computed-style JSON snapshots as well as pixel screenshots; run the focused admin style E2E specs after changing the shared `--radius` value.
+- 2026-11-01: Playwright's default snapshot update keeps screenshots when they remain within the configured 1% diff tolerance; use `--update-snapshots=all` to commit every intended Linux baseline refresh.
+- 2026-11-01: `globals.css` imports `redesign.css` before declaring its root tokens, so redesign token overrides need the more specific `html:root` selector to win in the cascade.
+- 2026-11-01: Tailwind's `@theme inline` compiles type utility sizes to literal CSS, so changing scoped `--text-*` variables does not rescale them; public metadata also renders some `font-mono` labels as paragraphs, requiring a Sans paragraph rule.
 - 2026-11-01: The git stash is shared by every worktree, so a failed `git stash push` followed by `git stash pop` applied another branch's old stash; compare against base with `git diff > patch && git apply -R patch` instead of the stash.
 - 2026-11-01: `next build` bakes the API proxy target (port 4000) into the web build, so a local Playwright run with a custom `API_PORT` fails sign-in with a 500; use the default ports or rebuild with the same env.
 

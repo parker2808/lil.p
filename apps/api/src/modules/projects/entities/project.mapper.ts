@@ -16,7 +16,7 @@ import { pickGroup } from '../../../i18n/pick-locale.util';
 import { toAdminMedia, toPublicImage } from '../../media/media.mapper';
 import type { ProjectRow } from './project.entity';
 
-const LIST_TEXT = ['title', 'tagline', 'factChips'] as const;
+const LIST_TEXT = ['title', 'tagline', 'role', 'outcome', 'factChips'] as const;
 const DETAIL_TEXT = [
   'title',
   'tagline',
@@ -58,6 +58,19 @@ function splitChips(value: string): string[] {
     .map((chip) => chip.trim())
     .filter(Boolean)
     .slice(0, 6);
+}
+
+function resultLine(value: string): string {
+  const line = value
+    .split(/\n|(?<=[.!?])\s/)
+    .map((part) =>
+      part
+        .replace(/^[#>*\s-]+/, '')
+        .replace(/[*_`[\]]/g, '')
+        .trim(),
+    )
+    .find((part) => part && !/\b(?:TODO|TBD)\b/i.test(part));
+  return line ?? '';
 }
 
 function toMetric(row: ProjectRow['metrics'][number], locale: Locale): PublicProjectMetric {
@@ -107,6 +120,8 @@ function toListBase(row: ProjectRow, locale: Locale): PublicProjectListItem {
     slug: row.slug,
     title: values.title ?? '',
     tagline: values.tagline ?? '',
+    role: values.role ?? '',
+    result: resultLine(values.outcome ?? ''),
     client: row.client,
     isFeatured: row.isFeatured,
     isConfidential: row.isConfidential,
