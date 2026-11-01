@@ -43,6 +43,47 @@ for (const width of [390, 1440]) {
   }
 }
 
+test('public paragraphs use Sans and stay within 75ch', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
+  let checked = 0;
+  for (const route of routes) {
+    await page.goto(route);
+    await page.evaluate(() => document.fonts.ready);
+    const paragraphs = await page.locator('.public-site p').evaluateAll((elements) =>
+      elements
+        .filter((element) => element.getClientRects().length && element.textContent?.trim())
+        .map((element) => ({
+          text: element.textContent?.trim().slice(0, 50),
+          font: getComputedStyle(element).fontFamily,
+        })),
+    );
+    checked += paragraphs.length;
+    for (const paragraph of paragraphs) {
+      expect(paragraph.font, `${route}: ${paragraph.text}`).toMatch(/IBM Plex Sans|IBM_Plex_Sans/);
+      expect(paragraph.font, `${route}: ${paragraph.text}`).not.toMatch(
+        /IBM Plex Mono|IBM_Plex_Mono/,
+      );
+    }
+
+    if (!['/en/about', '/en/projects/particula'].includes(route)) continue;
+    const widestLineInCh = await page.locator('main p').evaluateAll((elements) => {
+      let widest = 0;
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d')!;
+      for (const element of elements) {
+        if (!element.getClientRects().length) continue;
+        const style = getComputedStyle(element);
+        context.font = `${style.fontSize} ${style.fontFamily}`;
+        const ch = context.measureText('0').width;
+        widest = Math.max(widest, element.getBoundingClientRect().width / ch);
+      }
+      return widest;
+    });
+    expect(widestLineInCh, route).toBeLessThanOrEqual(75);
+  }
+  expect(checked).toBeGreaterThan(0);
+});
+
 test('public content remains visible without JavaScript', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();

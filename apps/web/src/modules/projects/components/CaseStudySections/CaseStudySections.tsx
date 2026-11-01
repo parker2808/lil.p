@@ -15,6 +15,8 @@ type SectionSpec = {
   release?: { title: string; items: string[] }[];
 };
 
+const decisionId = (index: number) => `tradeoff-${index + 1}`;
+
 export function caseStudyToc(
   project: PublicProjectDetail,
   labels: {
@@ -47,6 +49,11 @@ export function caseStudyToc(
   }
   if (decisions.length) {
     items.push({ id: 'tradeoffs', title: labels.tradeoffs, depth: 2 });
+    decisions.forEach((card, index) => {
+      if (card.title) {
+        items.push({ id: decisionId(index), title: card.title, depth: 3 });
+      }
+    });
   }
   if (project.outcome) {
     items.push({ id: 'result', title: labels.result, depth: 2 });
@@ -116,18 +123,18 @@ export async function CaseStudySections({
         }
         return (
           <section key={section.id} className="flex flex-col gap-3">
-            <p className="text-eyebrow text-subtle-foreground font-mono uppercase">
-              {section.eyebrow}
-            </p>
-            <h2 id={section.id} className="sr-only">
+            <h2
+              id={section.id}
+              className="case-study-heading text-eyebrow text-subtle-foreground font-mono uppercase"
+            >
               {section.eyebrow}
             </h2>
             {hasBody ? <Markdown source={section.body!} /> : null}
             {hasScope ? <RequirementColumns columns={section.scope!} /> : null}
             {hasDecisions
-              ? section.decisions!.map((card) =>
+              ? section.decisions!.map((card, index) =>
                   card.title ? (
-                    <DecisionCard key={card.title} title={card.title}>
+                    <DecisionCard key={card.title} id={decisionId(index)} title={card.title}>
                       <Markdown source={card.body} compact />
                     </DecisionCard>
                   ) : (

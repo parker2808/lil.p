@@ -51,6 +51,7 @@ function sampleProject(over: Partial<PublicProjectDetail> = {}): PublicProjectDe
     slug: 'live-case',
     title: 'Live case',
     tagline: 'A short tagline',
+    result: '',
     client: 'Client',
     isFeatured: false,
     isConfidential: false,
