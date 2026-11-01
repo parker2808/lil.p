@@ -16,7 +16,14 @@
     "copied": "Copied",
     "suggestLocale": "This page is also available in Vietnamese",
     "switchLocale": "View in Vietnamese",
-    "loading": "Loading"
+    "loading": "Loading",
+    "search": "Search",
+    "searchSite": "Search projects, notes and pages",
+    "paletteGoTo": "Go to",
+    "paletteCaseStudies": "Case studies",
+    "paletteActions": "Actions",
+    "toggleTheme": "Toggle theme",
+    "switchLanguage": "Switch language"
   },
   "footer": {
     "ctaTitle": "Let's work together?",

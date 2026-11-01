@@ -16,7 +16,14 @@
     "copied": "Đã sao chép",
     "suggestLocale": "Trang này cũng có bản tiếng Anh",
     "switchLocale": "Xem bằng tiếng Anh",
-    "loading": "Đang tải"
+    "loading": "Đang tải",
+    "search": "Tìm kiếm",
+    "searchSite": "Tìm dự án, ghi chép và trang",
+    "paletteGoTo": "Đi tới",
+    "paletteCaseStudies": "Dự án",
+    "paletteActions": "Thao tác",
+    "toggleTheme": "Đổi giao diện",
+    "switchLanguage": "Đổi ngôn ngữ"
   },
   "footer": {
     "ctaTitle": "Cùng làm việc nhé?",

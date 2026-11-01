@@ -77,6 +77,7 @@ export default defineConfig({
     'split-js.spec.ts',
     'hero-stats.spec.ts',
     'footer.spec.ts',
+    'search-palette.spec.ts',
     'visual.spec.ts',
   ],
   // Snapshots hold computed styles, not pixels, so one file serves every platform.

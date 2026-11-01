@@ -22,17 +22,21 @@ import {
 import { useCloseOnNavigate } from '@portfolio/ui/hooks/use-close-on-navigate.hook';
 import { cn } from '@portfolio/ui/lib/utils';
 
-import { CommandPalette } from '../CommandPalette/CommandPalette';
+import { CommandPalette, type PaletteCaseStudy } from '../CommandPalette/CommandPalette';
 import { LocaleSwitch } from '../LocaleSwitch/LocaleSwitch';
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
 
 export function SiteHeader({
   name,
   nav,
+  caseStudies,
+  email,
   resumeUrl,
 }: {
   name: string;
   nav: PublicNavItem[];
+  caseStudies: PaletteCaseStudy[];
+  email?: string;
   resumeUrl?: string;
 }) {
   const t = useTranslations('core');
@@ -57,6 +61,16 @@ export function SiteHeader({
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const palette = (
+    <CommandPalette
+      nav={nav}
+      caseStudies={caseStudies}
+      email={email}
+      resumeUrl={resumeUrl}
+      compact={!desktop}
+    />
+  );
 
   return (
     <header
@@ -94,11 +108,12 @@ export function SiteHeader({
           ))}
         </nav>
         <div className="ml-auto hidden items-center gap-2 md:flex">
-          {desktop ? <CommandPalette nav={nav} /> : null}
+          {desktop ? palette : null}
           <LocaleSwitch />
           <ThemeToggle />
         </div>
-        <div className="ml-auto md:hidden">
+        <div className="ml-auto flex items-center gap-2 md:hidden">
+          {desktop ? null : palette}
           <Sheet open={menu.open} onOpenChange={menu.onOpenChange}>
             <SheetTrigger asChild>
               <Button surface="public" variant="outline" size="sm" aria-label={t('menu')}>
