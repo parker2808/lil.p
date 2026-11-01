@@ -405,7 +405,8 @@ html:root {
   letter-spacing: -0.025em;
 }
 .public-site .project-card-meta {
-  font: 0.75rem var(--font-mono);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
 }
 .public-site .project-card-result {
   line-height: 1.45;
