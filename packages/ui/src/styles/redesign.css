@@ -826,6 +826,37 @@ html:root {
 .projects-filters {
   min-height: 72px;
 }
+.case-study-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--space-4) var(--space-6);
+  padding: var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+}
+.public-site .case-study-heading {
+  line-height: var(--text-eyebrow--line-height);
+  letter-spacing: var(--text-eyebrow--letter-spacing);
+}
+/* Clears the 64px sticky site header when a TOC link jumps to a heading. */
+.case-study-body :is(h2, h3)[id] {
+  scroll-margin-top: calc(64px + var(--space-6));
+}
+.case-study-toc-sheet {
+  max-width: 22rem;
+}
+@media (min-width: 1024px) {
+  .case-study-aside {
+    position: sticky;
+    top: calc(64px + var(--space-6));
+    max-height: calc(100dvh - 64px - var(--space-12));
+    overflow-y: auto;
+  }
+  .case-study-aside .redesign-section-nav {
+    position: static;
+  }
+}
 .public-site .public-block:has(+ .public-block > .projects-filters) {
   padding-bottom: 0;
 }
