@@ -16,6 +16,16 @@ const ACTION_VARIANT: Record<
   LOGIN: 'outline',
 };
 
+export function AuditActionBadge({
+  action,
+  label,
+}: {
+  action: AdminAuditLog['action'];
+  label: string;
+}) {
+  return <Badge variant={ACTION_VARIANT[action]}>{label}</Badge>;
+}
+
 export function AuditRow({
   item,
   labels,
@@ -36,7 +46,7 @@ export function AuditRow({
       data-slot="audit-row"
       className={cn('flex flex-wrap items-baseline gap-x-3 gap-y-1 py-2', className)}
     >
-      <Badge variant={ACTION_VARIANT[item.action]}>{labels.actions[item.action]}</Badge>
+      <AuditActionBadge action={item.action} label={labels.actions[item.action]} />
       <span className="text-ui min-w-0 flex-1">{item.summary}</span>
       <span className="text-ui-meta text-muted-foreground">{item.userName ?? labels.system}</span>
       <time

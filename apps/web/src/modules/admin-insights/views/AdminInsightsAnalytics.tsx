@@ -1,6 +1,7 @@
 'use client';
 
 import { qk, type StatsRange } from '@portfolio/contracts';
+import { AdminTable } from '@portfolio/ui/components/AdminTable/AdminTable';
 import { SectionBoundary } from '@portfolio/ui/components/SectionBoundary/SectionBoundary';
 import { ViewsAreaChart } from '@portfolio/ui/components/ui/chart';
 import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
@@ -54,33 +55,31 @@ function AnalyticsChart({ range }: { range: StatsRange }) {
         </p>
       </div>
       <ViewsAreaChart data={data.views.byDay} viewsLabel={t('series')} />
-      <table className="sr-only">
-        <caption>{t('tableCaption')}</caption>
-        <thead>
-          <tr>
-            <th>{t('date')}</th>
-            <th>{t('series')}</th>
-            <th>{t('visitorsHead')}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.views.byDay.map((day) => (
-            <tr key={day.date}>
-              <td>{day.date}</td>
-              <td>{day.views}</td>
-              <td>{day.visitors}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <AdminTable
+        visuallyHidden
+        label={t('tableCaption')}
+        columns={[
+          { id: 'date', header: t('date'), cell: (day) => day.date },
+          { id: 'views', header: t('series'), cell: (day) => day.views },
+          { id: 'visitors', header: t('visitorsHead'), cell: (day) => day.visitors },
+        ]}
+        data={data.views.byDay}
+        rowId={(day) => day.date}
+        empty={t('empty')}
+        error={t('error')}
+      />
       <div className="grid gap-6 md:grid-cols-2">
         <TopList
           title={t('topPages')}
+          labelHeader={t('path')}
+          viewsHeader={t('series')}
           empty={t('noPages')}
           items={data.views.topPages.map((item) => ({ label: item.path, views: item.views }))}
         />
         <TopList
           title={t('topReferrers')}
+          labelHeader={t('referrer')}
+          viewsHeader={t('series')}
           empty={t('noReferrers')}
           items={data.views.topReferrers.map((item) => ({ label: item.host, views: item.views }))}
         />
@@ -91,28 +90,40 @@ function AnalyticsChart({ range }: { range: StatsRange }) {
 
 function TopList({
   title,
+  labelHeader,
+  viewsHeader,
   empty,
   items,
 }: {
   title: string;
+  labelHeader: string;
+  viewsHeader: string;
   empty: string;
   items: Array<{ label: string; views: number }>;
 }) {
   return (
     <section>
       <h2 className="text-ui-title mb-3 font-medium">{title}</h2>
-      {items.length === 0 ? (
-        <p className="text-ui-meta text-muted-foreground">{empty}</p>
-      ) : (
-        <ul className="flex flex-col gap-2">
-          {items.map((item) => (
-            <li key={item.label} className="text-ui-meta flex justify-between gap-3">
-              <span className="truncate">{item.label}</span>
-              <span className="tabular-nums">{formatCount(item.views)}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+      <AdminTable
+        label={title}
+        columns={[
+          {
+            id: 'label',
+            header: labelHeader,
+            cell: (item) => <span className="block max-w-xs truncate">{item.label}</span>,
+          },
+          {
+            id: 'views',
+            header: viewsHeader,
+            className: 'text-right',
+            cell: (item) => <span className="tabular-nums">{formatCount(item.views)}</span>,
+          },
+        ]}
+        data={items}
+        rowId={(item) => item.label}
+        empty={<p className="text-ui-meta text-muted-foreground">{empty}</p>}
+        error={null}
+      />
     </section>
   );
 }
