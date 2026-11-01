@@ -48,7 +48,7 @@ export function SectionNav({
             href={`#${item.id}`}
             aria-current={current === item.id ? 'true' : undefined}
             className={cn(
-              'text-meta text-muted-foreground border-border block border-l-2 py-1.5 pl-3',
+              'tap text-meta text-muted-foreground border-border block border-l-2 py-1.5 pl-3',
               item.depth === 3 && 'pl-6',
               current === item.id && 'text-foreground border-primary font-medium',
             )}

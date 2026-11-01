@@ -46,7 +46,7 @@ export function CaseStudyToc({
   return (
     <>
       <Collapsible className="lg:hidden">
-        <CollapsibleTrigger className="text-eyebrow text-subtle-foreground inline-flex items-center gap-2 font-mono uppercase">
+        <CollapsibleTrigger className="tap text-eyebrow text-subtle-foreground inline-flex items-center gap-2 font-mono uppercase">
           {labels.onThisPage}
           <ChevronDown className="size-4" />
         </CollapsibleTrigger>
@@ -54,7 +54,10 @@ export function CaseStudyToc({
           <ol className="flex flex-col">
             {items.map((item) => (
               <li key={item.id}>
-                <a href={`#${item.id}`} className="text-meta text-muted-foreground block py-1.5">
+                <a
+                  href={`#${item.id}`}
+                  className="tap text-meta text-muted-foreground block py-1.5"
+                >
                   {item.title}
                 </a>
               </li>

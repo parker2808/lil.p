@@ -42,7 +42,12 @@ export function PageHeader({
       ) : null}
       <div className="flex flex-wrap items-center gap-3">
         <div className="min-w-0 flex-1">
-          <h1 className="text-heading truncate font-semibold">{title}</h1>
+          <h1
+            className="text-heading truncate font-semibold"
+            title={typeof title === 'string' ? title : undefined}
+          >
+            {title}
+          </h1>
         </div>
         {actions}
       </div>

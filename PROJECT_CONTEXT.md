@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P2-4 T16: public link targets and admin mobile stats grid are adjusted; the new 375px e2e checks visible public links and buttons in both locales. Coarse-pointer 44px targets and truncation tooltips still need device-level review.
 - P2-2: `/projects` is ISR with browser URL filters and the existing `projects` publish tag; confirm the second `/vi/projects` request is `x-vercel-cache: HIT` on the stacked PR preview deployment.
 - P2-1 T13a: `/projects` keeps the browser filters' mobile and desktop height reserved and uses a route loading skeleton shaped like the page header, filters, view switch, and cards; Lighthouse checks mobile `/vi/projects` CLS at 0.1 or less.
 - P1-23 T9 adds app and Apple icons, distinct admin route titles, and the existing home OG image to about/contact/notes/projects; metadata e2e checks cover public and admin routes.
@@ -90,6 +91,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P2-4 T16: add tap target sizing, mobile dashboard column, truncated-name titles, selection/scrollbar colors, and public-route target e2e coverage.
 - 2026-11-01: P2-2: make `/projects` ISR with client-side URL filters, preserving draft version previews and testing filter reloads.
 - 2026-11-01: P2-1 T13a: align `/projects` loading geometry with its server-rendered list and guard mobile CLS in Lighthouse.
 - 2026-11-01: P1-23 T9: add app icons, admin page titles, and a shared OG image for public index routes.

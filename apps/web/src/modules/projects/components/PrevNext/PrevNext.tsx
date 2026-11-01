@@ -18,7 +18,10 @@ export function PrevNext({
   return (
     <nav className="border-border flex flex-col gap-4 border-t pt-8 sm:flex-row sm:justify-between">
       {prev ? (
-        <Link href={`/projects/${prev.slug}`} className="text-body hover:text-primary">
+        <Link
+          href={`/projects/${prev.slug}`}
+          className="tap text-body hover:text-primary flex-col items-start"
+        >
           <span className="text-eyebrow text-subtle-foreground block font-mono uppercase">
             {labels.previous}
           </span>
@@ -30,7 +33,7 @@ export function PrevNext({
       {next ? (
         <Link
           href={`/projects/${next.slug}`}
-          className="text-body hover:text-primary sm:text-right"
+          className="tap text-body hover:text-primary flex-col items-start sm:items-end sm:text-right"
         >
           <span className="text-eyebrow text-subtle-foreground block font-mono uppercase">
             {labels.next}

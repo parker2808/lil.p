@@ -53,7 +53,7 @@ export function StatsCardsView({ stats }: { stats: AdminStats }) {
   ] as const;
 
   return (
-    <div className="grid grid-cols-2 gap-3 xl:grid-cols-5">
+    <div className="dashboard-stats-grid grid grid-cols-2 gap-3 xl:grid-cols-5">
       {cards.map((card) => {
         const delta =
           'current' in card && card.current !== undefined && card.previous !== undefined
