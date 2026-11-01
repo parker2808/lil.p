@@ -153,4 +153,23 @@ describe('contact inbox', () => {
     const unread = await admin.get('/api/admin/messages/unread-count').expect(200);
     expect(unread.body.unread).toBe(0);
   });
+
+  it('hides archived messages from the default inbox until restored', async () => {
+    await request(app.getHttpServer())
+      .post('/api/public/contact')
+      .set('Origin', TEST_ORIGIN)
+      .send(contactBody())
+      .expect(201);
+
+    const admin = await adminAgent(app);
+    const list = await admin.get('/api/admin/messages').expect(200);
+    const id = list.body.items[0].id as number;
+    await admin.patch(`/api/admin/messages/${id}`).send({ status: 'ARCHIVED' }).expect(200);
+    expect((await admin.get('/api/admin/messages').expect(200)).body.total).toBe(0);
+    const archived = await admin.get('/api/admin/messages?status=ARCHIVED').expect(200);
+    expect(archived.body.items[0].id).toBe(id);
+
+    await admin.patch(`/api/admin/messages/${id}`).send({ status: 'READ' }).expect(200);
+    expect((await admin.get('/api/admin/messages').expect(200)).body.total).toBe(1);
+  });
 });

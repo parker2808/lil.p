@@ -74,6 +74,7 @@ export {
   adminContactMessageListParamsSchema,
   adminContactMessageSchema,
   adminContactMessageTopicSchema,
+  CONTACT_MESSAGE_HIDDEN_STATUSES,
   CONTACT_MESSAGE_MAX,
   CONTACT_MESSAGE_STATUSES,
   contactMessageStatusSchema,

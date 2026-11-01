@@ -10,7 +10,7 @@ import type {
   UnreadCount,
   UpdateContactMessageInput,
 } from '@portfolio/contracts';
-import { parseSort } from '@portfolio/contracts';
+import { CONTACT_MESSAGE_HIDDEN_STATUSES, parseSort } from '@portfolio/contracts';
 import type { Request } from 'express';
 
 import { hashIp, requestIp } from '../../common/utils/ip-hash.util';
@@ -57,7 +57,7 @@ export class ContactService {
     const { field, direction } = parseSort(params.sort);
     const where: Prisma.ContactMessageWhereInput = params.status
       ? { status: params.status }
-      : { status: { not: 'SPAM' } };
+      : { status: { notIn: [...CONTACT_MESSAGE_HIDDEN_STATUSES] } };
     const [rows, total] = await this.prisma.$transaction([
       this.prisma.contactMessage.findMany({
         where,
