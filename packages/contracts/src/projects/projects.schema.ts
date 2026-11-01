@@ -62,6 +62,8 @@ export const publicProjectListItemSchema = z.object({
   slug: z.string(),
   title: z.string(),
   tagline: z.string(),
+  role: z.string(),
+  result: z.string(),
   client: z.string(),
   isFeatured: z.boolean(),
   isConfidential: z.boolean(),
@@ -85,7 +87,6 @@ export const projectReleaseStatusSchema = z.object({
 });
 
 export const publicProjectDetailSchema = publicProjectListItemSchema.extend({
-  role: z.string(),
   teamSize: z.number().int().nullable(),
   liveUrl: z.string().nullable(),
   repoUrl: z.string().nullable(),

@@ -404,6 +404,15 @@ html:root {
   line-height: 1.15;
   letter-spacing: -0.025em;
 }
+.public-site .project-card-meta {
+  font: 0.75rem var(--font-mono);
+}
+.public-site .project-card-result {
+  line-height: 1.45;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .public-site .redesign-domain-card {
   box-shadow: none;
   background: transparent;
@@ -623,6 +632,14 @@ html:root {
   border-radius: var(--radius-xs);
   background: var(--card);
   padding: 4px 8px;
+}
+.cover-product-icon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 24px;
+  height: 24px;
+  color: var(--cover-hue, currentColor);
 }
 .redesign-empty-state {
   background: repeating-linear-gradient(

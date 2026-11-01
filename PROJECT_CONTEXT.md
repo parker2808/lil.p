@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P5-4 T27: project cards show role, year, a short result from existing outcome content, and three skill chips; six abstract covers are mapped for initial portfolio slugs. Parker still needs real 16:10 covers and published metrics for final content.
 - P5-3 T26: the public mobile menu fills the viewport, marks the current 56px navigation row, and keeps language, theme, CV, and contact actions at the bottom.
 - P5-2 T23b: radius, spacing, and motion tokens are scoped through `redesign.css`; the public case cards and admin panels use the new radius scale, and the Linux Chromium visual baselines were regenerated.
 - P5-1 T23a: public typography uses the six-step Sans scale and 65ch paragraph measure; Linux Chromium visual baselines were regenerated once for this change.
@@ -103,6 +104,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-01: P5-4 T27: add featured project card content, six abstract covers, card tests, and a project-card e2e guard.
 
 - 2026-11-01: P5-3 T26: full-screen public mobile menu with segmented language/theme controls and a 375px navigation e2e check.
   Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).

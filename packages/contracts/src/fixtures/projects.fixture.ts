@@ -13,6 +13,8 @@ export const projectFixture: PublicProjectListItem = {
   slug: 'sample-migration',
   title: 'Sample migration case',
   tagline: 'Move a storefront without a release freeze.',
+  role: 'Frontend Engineer',
+  result: 'Weekly delivery continued.',
   client: 'Sample client',
   isFeatured: true,
   isConfidential: false,

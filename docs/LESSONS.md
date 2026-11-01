@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-01: Project list rows already select localized role and outcome fields, so cards can derive a clean result line without a schema migration; keep mock cover paths mapped by slug and let real media win.
 - 2026-11-01: A Radix Sheet portal renders outside `.public-site` and `.site-header`, so mobile menu styles need an explicit sheet class instead of ancestor-scoped selectors.
 - 2026-11-01: Playwright's default snapshot update keeps screenshots when they remain within the configured 1% diff tolerance; use `--update-snapshots=all` to commit every intended Linux baseline refresh.
 - 2026-11-01: `globals.css` imports `redesign.css` before declaring its root tokens, so redesign token overrides need the more specific `html:root` selector to win in the cascade.
