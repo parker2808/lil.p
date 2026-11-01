@@ -9,3 +9,4 @@
 - 2026-11-01: Next can stream an admin `notFound()` page inside an async authenticated layout with HTTP 200; mark unknown admin sections as 404 in the proxy while the catch-all renders the shell page.
 - 2026-11-01: Published seed records can still contain unfinished fields across case studies, so guard public API text after schema parsing to keep those fields out of every route.
 - 2026-11-01: A canvas rendered before media checks still appears in mobile DOM even if the shader import is skipped; gate the canvas element along with the import.
+- 2026-11-01: A mobile-only shader guard does not prevent global client providers and desktop-only controls from hydrating on mobile; keep route-specific providers and controls out of the mobile bundle.

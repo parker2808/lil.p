@@ -4,10 +4,8 @@ import { APP_TIME_ZONE } from '@i18n/timezone';
 import type { AbstractIntlMessages } from 'next-intl';
 import { NextIntlClientProvider } from 'next-intl';
 import { type ReactNode, useEffect } from 'react';
-import { Toaster } from 'sonner';
 
 import { ApiWarmup } from '../ApiWarmup/ApiWarmup';
-import { QueryProvider } from './QueryProvider';
 import { ThemeProvider } from './ThemeProvider';
 
 export function Providers({
@@ -39,13 +37,10 @@ export function Providers({
   }, []);
   return (
     <NextIntlClientProvider locale={locale} messages={messages} timeZone={APP_TIME_ZONE}>
-      <QueryProvider>
-        <ThemeProvider nonce={nonce}>
-          <ApiWarmup />
-          {children}
-          <Toaster />
-        </ThemeProvider>
-      </QueryProvider>
+      <ThemeProvider nonce={nonce}>
+        <ApiWarmup />
+        {children}
+      </ThemeProvider>
     </NextIntlClientProvider>
   );
 }

@@ -2,6 +2,7 @@
 
 import type { PublicNavItem } from '@portfolio/contracts';
 import { Menu } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -18,15 +19,27 @@ import { useCloseOnNavigate } from '@portfolio/ui/hooks/use-close-on-navigate.ho
 import { cn } from '@portfolio/ui/lib/utils';
 
 import { RoutePending } from '../RoutePending/RoutePending';
-import { CommandPalette } from '../CommandPalette/CommandPalette';
 import { LocaleSwitch } from '../LocaleSwitch/LocaleSwitch';
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
+
+const CommandPalette = dynamic(() =>
+  import('../CommandPalette/CommandPalette').then((module) => module.CommandPalette),
+);
 
 export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }) {
   const t = useTranslations('core');
   const pathname = usePathname();
   const menu = useCloseOnNavigate(pathname);
   const [scrolled, setScrolled] = useState(false);
+  const [desktop, setDesktop] = useState(false);
+
+  useEffect(() => {
+    const media = matchMedia('(min-width: 768px)');
+    const update = () => setDesktop(media.matches);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -72,7 +85,7 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
           ))}
         </nav>
         <div className="ml-auto hidden items-center gap-2 md:flex">
-          <CommandPalette nav={nav} />
+          {desktop ? <CommandPalette nav={nav} /> : null}
           <LocaleSwitch />
           <ThemeToggle />
         </div>
