@@ -2,10 +2,14 @@ import { cloudinaryPreview } from '@portfolio/ui/utils/cloudinary-preview.util';
 import type { Locale } from '@portfolio/contracts';
 import { ContentProgress } from '@portfolio/ui/components/ContentProgress/ContentProgress';
 import { CoverPlaceholder } from '@portfolio/ui/components/CoverPlaceholder/CoverPlaceholder';
+import { CtaBand } from '@portfolio/ui/components/CtaBand/CtaBand';
 import { FactChips } from '@portfolio/ui/components/FactChips/FactChips';
 import { KeyFacts } from '@portfolio/ui/components/KeyFacts/KeyFacts';
+import { Button } from '@portfolio/ui/components/ui/button';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+
+import { Link } from '@i18n/navigation';
 
 import { JsonLd } from '@/modules/seo/components/JsonLd/JsonLd';
 import {
@@ -164,6 +168,16 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
           nda={blocks('nda')}
         />
         <PrevNext prev={prev} next={next} labels={{ previous: t('previous'), next: t('next') }} />
+        <CtaBand
+          title={t('ctaTitle')}
+          intro={t('ctaIntro')}
+          iconKey="mail"
+          actions={
+            <Button surface="public" asChild>
+              <Link href="/contact">{t('ctaAction')}</Link>
+            </Button>
+          }
+        />
       </div>
     </article>
   );

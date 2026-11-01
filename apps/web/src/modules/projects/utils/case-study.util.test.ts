@@ -40,4 +40,21 @@ describe('projectNeighbors', () => {
     expect(prev?.slug).toBe('sample-migration');
     expect(next?.slug).toBe('sample-overflow');
   });
+
+  it('wraps around so the first and last case studies get both links', () => {
+    expect(projectNeighbors(projectFixtures, 'sample-migration').prev?.slug).toBe(
+      'sample-overflow',
+    );
+    expect(projectNeighbors(projectFixtures, 'sample-overflow').next?.slug).toBe(
+      'sample-migration',
+    );
+  });
+
+  it('returns no neighbors for a single or unknown case study', () => {
+    expect(projectNeighbors(projectFixtures.slice(0, 1), 'sample-migration')).toEqual({
+      prev: null,
+      next: null,
+    });
+    expect(projectNeighbors(projectFixtures, 'missing')).toEqual({ prev: null, next: null });
+  });
 });
