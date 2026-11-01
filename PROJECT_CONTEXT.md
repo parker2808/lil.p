@@ -110,6 +110,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-02: Add `docs/DEPLOY_AND_CI_RERUN.md`, the runbook for deploying `main` to Vercel after the rate limit resets, re-running CI and Vercel checks, re-enabling `hotfix/*` deploys, verification and rollback.
 - 2026-11-02: P5-8 T30b: 404 search field and mobile header search button open the ⌘K palette, which now groups Go to / Case studies / Actions; the "view in English" banner is a dismissible toast; `search-palette.spec.ts` e2e.
 - 2026-11-01: P5-7 T30a: three-column public footer (CTA, sitemap, socials with ⌘K hint) with a localized last-updated date and VI/EN switch; footer e2e at 375/1280px with axe.
 - 2026-11-01: P5-6 T29: new About page (mock avatar, three-line intro, timeline with Mono years, category skill groups), list formatter that drops TODO items, approved owner About copy and public names in a seed overlay, and an About e2e. Spec: `docs/specs/2026-11-01-p5-6-about-page.md`.
