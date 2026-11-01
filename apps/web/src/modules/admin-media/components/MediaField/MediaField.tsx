@@ -43,7 +43,9 @@ export function MediaField({
               className="size-14 rounded-md object-cover"
             />
           ) : (
-            <p className="text-ui-meta truncate">{value.originalName}</p>
+            <p className="text-ui-meta truncate" title={value.originalName}>
+              {value.originalName}
+            </p>
           )}
           {readOnly ? null : (
             <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null)}>

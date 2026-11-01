@@ -69,12 +69,7 @@ export function AdminCommandPalette() {
   return (
     <Dialog open={paletteOpen} onOpenChange={setPaletteOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="h-9 gap-2"
-          aria-label={`${t('palette.open')} ${META}${KEY}`}
-        >
+        <Button variant="outline" size="sm" aria-label={`${t('palette.open')} ${META}${KEY}`}>
           <span className="hidden lg:inline">{t('palette.open')}</span>
           <Kbd>{META}</Kbd>
           <Kbd>{KEY}</Kbd>
@@ -93,7 +88,7 @@ export function AdminCommandPalette() {
             <li key={item.href}>
               <Button
                 variant="ghost"
-                className="h-8 w-full justify-start"
+                className="w-full justify-start"
                 onClick={() => {
                   setPaletteOpen(false);
                   router.push(item.href);

@@ -1,18 +1,9 @@
 'use client';
 
 import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@portfolio/ui/components/ui/alert-dialog';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Checkbox } from '@portfolio/ui/components/ui/checkbox';
+import { ConfirmDialog } from '@portfolio/ui/components/ui/confirm-dialog';
 import { Dialog, DialogContent, DialogTitle } from '@portfolio/ui/components/ui/dialog';
 import {
   DropdownMenu,
@@ -281,7 +272,7 @@ export function DataTable<TData>({
       data-density={density}
       aria-busy={isLoading || isFetching}
       data-fetching={isFetching || undefined}
-      className="outline-none"
+      className="redesign-data-table outline-none"
       onKeyDown={onKeyDown}
     >
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
@@ -349,7 +340,7 @@ export function DataTable<TData>({
           <TableHeader>
             {table.getHeaderGroups().map((group) => (
               <TableRow key={group.id}>
-                <TableHead className="w-10">
+                <TableHead surface="muted" className="w-10">
                   <Checkbox
                     checked={table.getIsAllPageRowsSelected()}
                     onCheckedChange={(value) => table.toggleAllPageRowsSelected(Boolean(value))}
@@ -359,6 +350,7 @@ export function DataTable<TData>({
                 {group.headers.map((header) => (
                   <TableHead
                     key={header.id}
+                    surface="muted"
                     className="relative"
                     style={{ width: header.getSize() }}
                     aria-sort={
@@ -395,11 +387,15 @@ export function DataTable<TData>({
             {isLoading
               ? Array.from({ length: 5 }, (_, index) => (
                   <TableRow key={`skeleton-${index}`}>
-                    <TableCell>
+                    <TableCell density="comfortable">
                       <Skeleton className="size-4" />
                     </TableCell>
                     {table.getVisibleLeafColumns().map((column) => (
-                      <TableCell key={column.id} style={{ width: column.getSize() }}>
+                      <TableCell
+                        key={column.id}
+                        density="comfortable"
+                        style={{ width: column.getSize() }}
+                      >
                         <Skeleton className="h-5 w-4/5" />
                       </TableCell>
                     ))}
@@ -413,9 +409,10 @@ export function DataTable<TData>({
                     onClick={() => setActiveIndex(index)}
                     onDoubleClick={() => onOpen?.(row.original)}
                   >
-                    <TableCell className="w-10">
+                    <TableCell density="comfortable" className="w-10">
                       <Checkbox
                         checked={row.getIsSelected()}
+                        aria-label={`${labels.shortcuts.select}: ${rowId(row.original)}`}
                         onCheckedChange={(value) => {
                           if (typeof window !== 'undefined' && lastSelected.current !== null) {
                             const event = window.event as MouseEvent | undefined;
@@ -431,7 +428,11 @@ export function DataTable<TData>({
                       />
                     </TableCell>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
+                      <TableCell
+                        key={cell.id}
+                        density="comfortable"
+                        style={{ width: cell.column.getSize() }}
+                      >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}
@@ -477,36 +478,21 @@ export function DataTable<TData>({
         </Button>
       </div>
 
-      <AlertDialog
+      <ConfirmDialog
         open={pendingDelete !== null}
         onOpenChange={(open) => !open && setPendingDelete(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{labels.confirmDeleteTitle}</AlertDialogTitle>
-            <AlertDialogDescription>{labels.confirmDelete}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{labels.cancel}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (!pendingDelete) {
-                  return;
-                }
-                if (pendingDelete.length > 1) {
-                  onBulkDelete?.(pendingDelete);
-                } else if (pendingDelete[0]) {
-                  onDelete?.(pendingDelete[0]);
-                }
-                setPendingDelete(null);
-                setRowSelection({});
-              }}
-            >
-              {labels.bulkDelete}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        title={labels.confirmDeleteTitle}
+        description={labels.confirmDelete}
+        cancelLabel={labels.cancel}
+        confirmLabel={labels.bulkDelete}
+        onConfirm={() => {
+          if (!pendingDelete) return;
+          if (pendingDelete.length > 1) onBulkDelete?.(pendingDelete);
+          else if (pendingDelete[0]) onDelete?.(pendingDelete[0]);
+          setPendingDelete(null);
+          setRowSelection({});
+        }}
+      />
 
       <Dialog open={helpOpen} onOpenChange={setHelpOpen}>
         <DialogContent>

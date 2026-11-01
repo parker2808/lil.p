@@ -3,14 +3,14 @@ import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
 export function PageSkeleton({
   variant = 'page',
 }: {
-  variant?: 'page' | 'grid' | 'article' | 'admin' | 'editor';
+  variant?: 'page' | 'grid' | 'article' | 'admin' | 'editor' | 'table';
 }) {
   return (
     <div
       aria-busy="true"
       data-slot="page-skeleton"
       className={
-        variant === 'admin' || variant === 'editor'
+        variant === 'admin' || variant === 'editor' || variant === 'table'
           ? 'flex flex-col gap-6'
           : 'site-container public-block flex flex-col gap-8'
       }
@@ -27,6 +27,23 @@ export function PageSkeleton({
             ))}
           </div>
         </>
+      ) : variant === 'table' ? (
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center justify-between gap-3">
+            <Skeleton className="h-8 w-full max-w-64" />
+            <Skeleton className="h-8 w-24 shrink-0" />
+          </div>
+          <div className="flex flex-col gap-px overflow-hidden rounded-lg border">
+            <Skeleton className="h-9 rounded-none" />
+            {Array.from({ length: 8 }, (_, i) => (
+              <div key={i} className="flex items-center gap-4 px-4 py-3">
+                <Skeleton className="h-5 flex-[3]" />
+                <Skeleton className="h-5 flex-[2]" />
+                <Skeleton className="hidden h-5 flex-1 sm:block" />
+              </div>
+            ))}
+          </div>
+        </div>
       ) : variant === 'editor' ? (
         <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
           <Skeleton className="h-96" />

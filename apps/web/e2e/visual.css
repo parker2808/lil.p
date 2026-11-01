@@ -1,0 +1,4 @@
+/* The WebGL hero shader animates; the static CSS poster behind it stays in the screenshot. */
+.hero-stage canvas {
+  visibility: hidden;
+}

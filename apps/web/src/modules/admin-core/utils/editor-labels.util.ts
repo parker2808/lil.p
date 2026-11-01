@@ -39,6 +39,7 @@ export function editorLabelsFromMessages(t: (key: string) => string): MarkdownEd
     tableDeleteColumn: t('tableDeleteColumn'),
     tableDelete: t('tableDelete'),
     divider: t('divider'),
+    more: t('more'),
     plainText: t('plainText'),
     slashEmpty: t('slashEmpty'),
     shortcuts: {

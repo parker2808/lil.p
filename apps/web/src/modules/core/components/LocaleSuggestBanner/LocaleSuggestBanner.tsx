@@ -34,13 +34,16 @@ export function LocaleSuggestBanner() {
   const other = locale === 'en' ? 'vi' : 'en';
 
   return (
-    <div className="bg-primary-subtle text-primary-subtle-foreground text-ui flex items-center justify-center gap-4 px-6 py-2">
-      <Link href={pathname} locale={other}>
+    <aside
+      aria-label={t('locale')}
+      className="bg-primary-subtle text-primary-subtle-foreground text-ui flex items-center justify-center gap-4 px-6 py-2"
+    >
+      <Link href={pathname} locale={other} className="tap">
         {t('switchLocale')}
       </Link>
       <button
         type="button"
-        className="text-meta underline-offset-2 hover:underline"
+        className="tap text-meta underline-offset-2 hover:underline"
         onClick={() => {
           document.cookie = COOKIE;
           setHidden(true);
@@ -48,6 +51,6 @@ export function LocaleSuggestBanner() {
       >
         {t('close')}
       </button>
-    </div>
+    </aside>
   );
 }

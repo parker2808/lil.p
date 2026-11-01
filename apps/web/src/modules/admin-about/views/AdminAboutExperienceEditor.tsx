@@ -7,8 +7,11 @@ import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { z } from 'zod';
 
+import { AdminLoadError } from '@/modules/admin-core/components/AdminLoadError/AdminLoadError';
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
+import { useAdminBack } from '@/modules/admin-core/hooks/use-admin-back.hook';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
+import { useSaveStatus } from '@/modules/admin-core/hooks/use-save-status.hook';
 import { useDirtyGuard } from '@/modules/admin-core/hooks/use-dirty-guard.hook';
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { editorLabelsFromMessages } from '@/modules/admin-core/utils/editor-labels.util';
@@ -34,7 +37,13 @@ export function AdminAboutExperienceEditor({ experienceId }: { experienceId: num
   const existing = useAdminExperienceRow(experienceId);
 
   if (experienceId !== null && existing.isError) {
-    return <p className="text-destructive">{t('loadError')}</p>;
+    return (
+      <AdminLoadError
+        navKey="experience"
+        message={t('loadError')}
+        onRetry={() => void existing.refetch()}
+      />
+    );
   }
   if (experienceId !== null && !existing.data) {
     return <p>{t('loading')}</p>;
@@ -52,6 +61,7 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
   const t = useTranslations('admin.experience.editor');
   const editorT = useTranslations('admin.editor');
   const contentT = useTranslations('content');
+  const back = useAdminBack('experience');
   const router = useRouter();
   const readOnly = !useIsAdmin();
   const create = useCreateAdminExperience();
@@ -96,6 +106,7 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
       return { updatedAt: result.updatedAt };
     },
   });
+  const saveStatus = useSaveStatus(autosave);
 
   useDirtyGuard(!readOnly && snapshot !== baseline);
 
@@ -137,8 +148,9 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
   return (
     <EditorShell
       title={form.company || t('untitled')}
-      saveStatus={autosave.status === 'dirty' ? 'idle' : autosave.status}
-      savedText={autosave.savedAt ? editorT('saved', { seconds: 1 }) : undefined}
+      back={back}
+      saveStatus={saveStatus.state}
+      savedText={saveStatus.text}
       onLoadLatest={() => {
         setForm(initial);
         setBaseline(JSON.stringify(toExperienceCreateInput(initial)));
@@ -154,7 +166,7 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
         readOnly: editorT('readOnly'),
         properties: editorT('properties'),
         saving: editorT('saving'),
-        saved: editorT('saved', { seconds: 0 }),
+        saved: editorT('saved'),
         offline: editorT('offline'),
         conflict: editorT('conflict'),
         loadLatest: editorT('loadLatest'),

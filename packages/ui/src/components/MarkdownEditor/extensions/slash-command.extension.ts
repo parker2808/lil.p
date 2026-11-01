@@ -110,6 +110,7 @@ export const SlashCommand = Extension.create<{ labels: MarkdownEditorLabels }>({
         tableDeleteColumn: '',
         tableDelete: '',
         divider: 'Divider',
+        more: '',
         plainText: '',
         slashEmpty: 'No matches',
         shortcuts: {

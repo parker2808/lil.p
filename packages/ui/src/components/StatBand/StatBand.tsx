@@ -8,7 +8,12 @@ function StatItem({ stat, compact }: { stat: PublicProfileStat; compact: boolean
   const name = `${display} ${stat.label}`;
 
   return (
-    <div data-slot="stat-item" role="group" aria-label={name} className="flex flex-col gap-2">
+    <div
+      data-slot="stat-item"
+      role="group"
+      aria-label={name}
+      className="redesign-stat-item flex flex-col gap-2"
+    >
       <span className="bg-muted text-primary inline-flex size-10 items-center justify-center rounded-md">
         <Icon name={stat.iconKey} className={compact ? 'size-4' : 'size-5'} />
       </span>
@@ -48,6 +53,7 @@ export function StatBand({
       data-slot="stat-band"
       data-variant={variant}
       className={cn(
+        'redesign-stat-band',
         'grid grid-cols-2 gap-x-4 gap-y-6',
         variant === 'compact' ? 'md:grid-cols-4' : 'md:grid-cols-4 md:gap-6',
         className,

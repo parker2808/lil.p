@@ -34,7 +34,7 @@ export default async function LocaleLayout({
   }
 
   setRequestLocale(locale);
-  const messages = await getMessages();
+  const { admin: _admin, ...messages } = await getMessages();
   const nonce = (await draftMode()).isEnabled ? await requestNonce() : undefined;
 
   return (

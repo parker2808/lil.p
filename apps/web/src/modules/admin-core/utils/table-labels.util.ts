@@ -1,5 +1,25 @@
 import type { DataTableLabels } from '@portfolio/ui/components/DataTable/DataTable';
 
+import type { AdminListTableLabels } from '../components/AdminListTable/AdminListTable';
+
+export function adminListTableLabels(
+  table: (key: string) => string,
+  copy: Omit<
+    AdminListTableLabels,
+    'retry' | 'select' | 'selectAll' | 'previous' | 'next' | 'cancel'
+  >,
+): AdminListTableLabels {
+  return {
+    ...copy,
+    retry: table('retry'),
+    select: table('select'),
+    selectAll: table('selectAll'),
+    previous: table('previous'),
+    next: table('next'),
+    cancel: table('cancel'),
+  };
+}
+
 export function adminTableLabels(
   table: (key: string) => string,
   copy: Pick<

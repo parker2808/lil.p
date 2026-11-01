@@ -6,7 +6,7 @@ import { Badge } from '@portfolio/ui/components/ui/badge';
 import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
 
 import { ChannelCards } from '@/modules/contact/components/ChannelCards/ChannelCards';
-import { ContactForm } from '@/modules/contact/components/ContactForm/ContactForm';
+import { LazyContactForm } from '@/modules/contact/components/ContactForm/LazyContactForm';
 import { listContactTopics } from '@/modules/contact/services/contact-topics.service';
 import { getSite } from '@/modules/core/services/site.service';
 
@@ -53,7 +53,7 @@ export async function ContactFormBlock({
         </div>
         <ChannelCards email={site.settings.contactEmail} socialLinks={site.socialLinks} />
       </div>
-      <ContactForm locale={context.locale} topics={topics} />
+      <LazyContactForm locale={context.locale} topics={topics} />
     </>
   );
 }

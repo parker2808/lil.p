@@ -45,14 +45,21 @@ describe('ContactForm', () => {
     expect(await screen.findByText('Please fix the highlighted fields.')).toBeInTheDocument();
     expect(submit).not.toHaveBeenCalled();
     expect(screen.getByLabelText('Topic')).toBeInTheDocument();
+    for (const name of ['name', 'email', 'message']) {
+      const control = document.getElementById(name);
+      expect(control).toHaveAttribute('aria-invalid', 'true');
+      expect(document.getElementById(`${name}-error`)).toHaveTextContent(/.+/);
+      expect(control).toHaveAttribute('aria-describedby', `${name}-error`);
+    }
+    expect(document.activeElement).toBe(document.getElementById('name'));
   });
 
   it('replaces the form after a successful submit', async () => {
     submit.mockResolvedValue({ ok: true });
     renderForm();
-    await userEvent.type(screen.getByLabelText('Name'), 'Ana');
-    await userEvent.type(screen.getByLabelText('Email'), ['visitor', 'example.com'].join('@'));
-    await userEvent.type(screen.getByLabelText('Message'), 'Hello from the form');
+    await userEvent.type(screen.getByLabelText(/Name/), 'Ana');
+    await userEvent.type(screen.getByLabelText(/Email/), ['visitor', 'example.com'].join('@'));
+    await userEvent.type(screen.getByLabelText(/Message/), 'Hello from the form');
     await userEvent.click(screen.getByRole('button', { name: 'Send message' }));
     expect(await screen.findByText('Message sent')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Send message' })).toBeNull();

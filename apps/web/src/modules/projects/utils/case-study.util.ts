@@ -52,11 +52,11 @@ export function projectNeighbors<T extends Pick<PublicProjectListItem, 'slug'>>(
   slug: string,
 ): { prev: T | null; next: T | null } {
   const index = items.findIndex((item) => item.slug === slug);
-  if (index < 0) {
+  if (index < 0 || items.length < 2) {
     return { prev: null, next: null };
   }
   return {
-    prev: index > 0 ? (items[index - 1] ?? null) : null,
-    next: index < items.length - 1 ? (items[index + 1] ?? null) : null,
+    prev: items[(index - 1 + items.length) % items.length] ?? null,
+    next: items[(index + 1) % items.length] ?? null,
   };
 }

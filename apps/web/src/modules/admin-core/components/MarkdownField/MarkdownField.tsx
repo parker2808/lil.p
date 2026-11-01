@@ -25,6 +25,7 @@ export function MarkdownField({
   onBlur,
   onBaseline,
   labels,
+  ariaLabel,
   previewLabels,
   readOnly,
   variant,
@@ -34,6 +35,7 @@ export function MarkdownField({
   onBlur?: () => void;
   onBaseline?: (markdown: string) => void;
   labels: MarkdownEditorLabels;
+  ariaLabel?: string;
   previewLabels: {
     copy: string;
     copied: string;
@@ -89,6 +91,7 @@ export function MarkdownField({
         editable={!readOnly}
         variant={variant}
         labels={labels}
+        ariaLabel={ariaLabel}
         renderPreview={renderPreview}
         onUploadImage={readOnly ? undefined : onUploadImage}
         onPickImage={readOnly ? undefined : onPickImage}

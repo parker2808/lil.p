@@ -14,6 +14,21 @@ const minPerformance = process.env.GITHUB_ACTIONS ? 0 : 70;
 test.describe('lighthouse mobile', () => {
   test.describe.configure({ timeout: 120_000 });
 
+  test('/vi total blocking time is at most 300 ms', async ({ baseURL }) => {
+    const scores = await runMobileLighthouse(new URL('/vi', baseURL).toString());
+    expect(scores.totalBlockingTime).toBeLessThanOrEqual(300);
+  });
+
+  test('/vi unused JavaScript is at most 36 KiB', async ({ baseURL }) => {
+    const scores = await runMobileLighthouse(new URL('/vi', baseURL).toString());
+    expect(scores.unusedJavaScriptBytes).toBeLessThanOrEqual(36 * 1024);
+  });
+
+  test('/vi/projects cumulative layout shift is at most 0.1', async ({ baseURL }) => {
+    const scores = await runMobileLighthouse(new URL('/vi/projects', baseURL).toString());
+    expect(scores.cumulativeLayoutShift).toBeLessThanOrEqual(0.1);
+  });
+
   for (const screen of pages) {
     test(`${screen.name} meets accessibility and performance floors`, async ({ baseURL }) => {
       const scores = await runMobileLighthouse(new URL(screen.path, baseURL).toString());

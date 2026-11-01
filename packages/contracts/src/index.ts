@@ -392,11 +392,17 @@ export type { Availability } from './site-settings/site-settings.enum';
 export { availabilitySchema } from './site-settings/site-settings.enum';
 export {
   adminSiteSettingsSchema,
+  HERO_STAT_LIMITS,
+  heroStatSchema,
+  heroStatsSchema,
+  publicHeroStatSchema,
   publicSiteSettingsSchema,
   siteSettingsUpdateSchema,
 } from './site-settings/site-settings.schema';
 export type {
   AdminSiteSettings,
+  HeroStat,
+  PublicHeroStat,
   PublicSiteSettings,
   SiteSettingsUpdateInput,
 } from './site-settings/site-settings.type';

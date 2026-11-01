@@ -48,7 +48,7 @@ export function SectionNav({
             href={`#${item.id}`}
             aria-current={current === item.id ? 'true' : undefined}
             className={cn(
-              'text-meta text-muted-foreground border-border block border-l-2 py-1.5 pl-3',
+              'tap text-meta text-muted-foreground border-border block border-l-2 py-1.5 pl-3',
               item.depth === 3 && 'pl-6',
               current === item.id && 'text-foreground border-primary font-medium',
             )}
@@ -64,7 +64,7 @@ export function SectionNav({
     <nav
       data-slot="section-nav"
       aria-label={label}
-      className={cn('lg:sticky lg:top-20', className)}
+      className={cn('redesign-section-nav', 'lg:sticky lg:top-20', className)}
     >
       <details className="lg:hidden">
         <summary className="text-eyebrow text-subtle-foreground font-mono uppercase">

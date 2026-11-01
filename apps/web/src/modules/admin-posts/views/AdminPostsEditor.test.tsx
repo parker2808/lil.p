@@ -19,6 +19,8 @@ HTMLElement.prototype.scrollIntoView = vi.fn();
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ replace: vi.fn() }),
+  usePathname: () => '/admin/posts/1',
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 vi.mock('@/modules/admin-core/components/MarkdownField/MarkdownField', () => ({

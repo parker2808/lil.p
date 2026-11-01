@@ -17,8 +17,8 @@ export function ContentHealthCardView({ health }: { health: AdminHealth }) {
   const t = useTranslations('admin.dashboard.health');
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card surface="admin">
+      <CardHeader surface="admin" className="pb-3">
         <CardTitle className="text-ui-title">{t('title')}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">

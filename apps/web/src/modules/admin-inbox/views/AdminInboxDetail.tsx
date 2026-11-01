@@ -1,14 +1,21 @@
 'use client';
 
+import { PageHeader } from '@portfolio/ui/components/PageHeader/PageHeader';
+import { formatDateTime } from '@portfolio/ui/components/AuditRow/relative-time.util';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { Button } from '@portfolio/ui/components/ui/button';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
+
+import { AdminLoadError } from '@/modules/admin-core/components/AdminLoadError/AdminLoadError';
+import { useAdminBack } from '@/modules/admin-core/hooks/use-admin-back.hook';
 
 import { useAdminMessage, useInboxMutations } from '../hooks/use-admin-inbox.hook';
 
 export function AdminInboxDetail({ id }: { id: number }) {
   const t = useTranslations('admin.inbox');
+  const locale = useLocale();
+  const back = useAdminBack('inbox');
   const { data, isError, isLoading, refetch } = useAdminMessage(id);
   const mutations = useInboxMutations();
 
@@ -17,24 +24,19 @@ export function AdminInboxDetail({ id }: { id: number }) {
   }
 
   if (isError || !data) {
-    return (
-      <div className="flex flex-col gap-3">
-        <p className="text-ui">{t('error')}</p>
-        <Button type="button" onClick={() => void refetch()}>
-          {t('retry')}
-        </Button>
-      </div>
-    );
+    return <AdminLoadError navKey="inbox" message={t('error')} onRetry={() => void refetch()} />;
   }
 
   return (
     <article className="flex max-w-3xl flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-ui-title font-semibold">{data.name}</h1>
-        <Badge>{t(`status.${data.status}`)}</Badge>
-      </div>
+      <PageHeader
+        title={data.name}
+        back={back}
+        linkComponent={Link}
+        actions={<Badge>{t(`status.${data.status}`)}</Badge>}
+      />
       <p className="text-ui-meta text-muted-foreground">
-        {data.topic?.labelEn ?? t('noTopic')} · {new Date(data.createdAt).toLocaleString()}
+        {data.topic?.labelEn ?? t('noTopic')} · {formatDateTime(data.createdAt, locale)}
       </p>
       <a href={`mailto:${data.email}`} className="text-ui">
         {t('reply')}
@@ -64,7 +66,7 @@ export function AdminInboxDetail({ id }: { id: number }) {
         >
           {t('markSpam')}
         </Button>
-        <Link href="/admin/inbox" className="text-ui">
+        <Link href={back.href} className="text-ui hidden sm:inline">
           {t('back')}
         </Link>
       </div>

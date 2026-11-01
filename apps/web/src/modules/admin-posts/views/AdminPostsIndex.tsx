@@ -11,7 +11,7 @@ import { z } from 'zod';
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { useListParams } from '@/modules/admin-core/hooks/use-list-params.hook';
 import { useBulkArchivePosts } from '@/modules/admin-insights/hooks/use-admin-audit.hook';
-import { adminTableLabels } from '@/modules/admin-core/utils/table-labels.util';
+import { adminListTableLabels } from '@/modules/admin-core/utils/table-labels.util';
 import { apiClient } from '@/modules/core/services/api-client.service';
 
 import { PostsTable } from '../components/PostsTable/PostsTable';
@@ -27,7 +27,7 @@ export function AdminPostsIndex() {
   const router = useRouter();
   const canWrite = useIsAdmin();
   const { params, setParams } = useListParams(adminPostListParamsSchema);
-  const { data, isError, refetch, isPending, isFetching } = useAdminPosts(params);
+  const { data, isError, refetch, isPending } = useAdminPosts(params);
   const list = data ?? { items: [], page: params.page, pageSize: params.pageSize, total: 0 };
   const archive = useArchiveAdminPost(params);
   const bulkArchive = useBulkArchivePosts();
@@ -83,6 +83,7 @@ export function AdminPostsIndex() {
         labels={{ add: t('addFilter'), remove: t('removeChip') }}
       />
       <PostsTable
+        label={t('title')}
         items={list.items}
         total={list.total}
         page={list.page}
@@ -91,9 +92,8 @@ export function AdminPostsIndex() {
         hasFilters={hasFilters}
         isError={isError}
         isLoading={isPending}
-        isFetching={isFetching}
         canWrite={canWrite}
-        labels={adminTableLabels(table, {
+        labels={adminListTableLabels(table, {
           empty: t('empty'),
           emptyAction: t('new'),
           noResults: t('noResults'),
@@ -101,9 +101,9 @@ export function AdminPostsIndex() {
           error: t('error'),
           selected: t('selected'),
           range: t('range'),
-          confirmDeleteTitle: t('confirmArchiveTitle'),
-          confirmDelete: t('confirmArchive'),
-          bulkDelete: t('archive'),
+          confirmArchiveTitle: t('confirmArchiveTitle'),
+          confirmArchive: t('confirmArchive'),
+          archive: t('archive'),
         })}
         columnLabels={{
           title: t('columns.title'),
@@ -112,7 +112,6 @@ export function AdminPostsIndex() {
           reading: t('columns.reading'),
           published: t('columns.published'),
           updated: t('columns.updated'),
-          actions: t('columns.actions'),
         }}
         statusLabels={{
           draft: t('status.DRAFT'),
@@ -127,8 +126,6 @@ export function AdminPostsIndex() {
           }
         }}
         onPageChange={(page) => setParams({ page })}
-        onOpen={(row) => router.push(`/admin/posts/${row.id}`)}
-        onEdit={(row) => router.push(`/admin/posts/${row.id}`)}
         onDelete={(row) => archive.mutate(row.id)}
         onBulkDelete={(rows) => bulkArchive.mutate(rows)}
         onCreate={() => router.push('/admin/posts/new')}

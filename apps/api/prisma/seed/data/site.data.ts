@@ -1,4 +1,4 @@
-import type { PrismaClient } from '../../../src/generated/prisma/client';
+import { Prisma, type PrismaClient } from '../../../src/generated/prisma/client';
 
 /**
  * Placeholder site + profile rows from the spec and mockups.
@@ -147,7 +147,7 @@ export async function seedSite(prisma: PrismaClient): Promise<void> {
   await prisma.siteSettings.upsert({
     where: { id: 1 },
     create: { id: 1, ...siteSettingsData },
-    update: siteSettingsData,
+    update: { ...siteSettingsData, heroStats: Prisma.DbNull },
   });
 
   await prisma.profile.upsert({

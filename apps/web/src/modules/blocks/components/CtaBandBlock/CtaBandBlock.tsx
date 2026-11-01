@@ -38,7 +38,7 @@ export async function CtaBandBlock({
             {props.showEmail ? <CopyEmailButton email={site.settings.contactEmail} /> : null}
             {props.showSocial
               ? social.map((link) => (
-                  <Button key={link.id} asChild variant="outline">
+                  <Button surface="public" key={link.id} asChild variant="outline">
                     <a href={link.url} rel="noreferrer">
                       {link.label}
                     </a>

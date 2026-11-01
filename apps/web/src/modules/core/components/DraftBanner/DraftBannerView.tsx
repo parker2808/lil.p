@@ -20,11 +20,17 @@ export function DraftBannerView({ signedIn }: { signedIn: boolean }) {
       <p className="text-ui">{t('banner')}</p>
       <div className="flex items-center gap-2">
         {signedIn ? null : (
-          <Link href={loginHref} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
+          <Link
+            href={loginHref}
+            className={cn(buttonVariants({ surface: 'public', size: 'sm', variant: 'outline' }))}
+          >
             {t('login')}
           </Link>
         )}
-        <a href={exitHref} className={cn(buttonVariants({ size: 'sm', variant: 'outline' }))}>
+        <a
+          href={exitHref}
+          className={cn(buttonVariants({ surface: 'public', size: 'sm', variant: 'outline' }))}
+        >
           {t('exit')}
         </a>
       </div>

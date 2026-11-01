@@ -3,3 +3,7 @@ import { AdminAboutExperienceEditor } from '@/modules/admin-about/views/AdminAbo
 export default function AdminNewExperiencePage() {
   return <AdminAboutExperienceEditor experienceId={null} />;
 }
+
+export function generateMetadata() {
+  return { title: 'New experience' };
+}

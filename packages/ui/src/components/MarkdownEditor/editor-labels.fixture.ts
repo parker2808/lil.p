@@ -38,6 +38,7 @@ export const editorLabels: MarkdownEditorLabels = {
   tableDeleteColumn: 'Delete column',
   tableDelete: 'Delete table',
   divider: 'Divider',
+  more: 'More',
   plainText: 'Plain text',
   slashEmpty: 'No matching blocks',
   shortcuts: {

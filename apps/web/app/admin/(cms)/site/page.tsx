@@ -9,3 +9,7 @@ export default function AdminSitePage() {
     </Suspense>
   );
 }
+
+export function generateMetadata() {
+  return { title: 'Site settings' };
+}

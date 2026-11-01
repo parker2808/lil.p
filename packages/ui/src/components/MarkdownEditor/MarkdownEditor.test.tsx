@@ -1,11 +1,13 @@
 import { markdownKitchenSink, markdownUnsafe } from '@portfolio/contracts';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Editor } from '@tiptap/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import { editorLabels } from './editor-labels.fixture';
 import { createMarkdownExtensions } from './extensions/create-markdown-extensions';
 import { MarkdownEditor } from './MarkdownEditor';
+import { MarkdownEditorGroup } from './MarkdownEditorGroup';
 
 function createHeadless(content: string) {
   return new Editor({
@@ -88,5 +90,118 @@ describe('MarkdownEditor', () => {
     });
     expect(container.querySelector('[role="toolbar"]')).toBeNull();
     expect(container.querySelector('[aria-readonly="true"]')).not.toBeNull();
+  });
+
+  it('keeps the toolbar on one scrolling row with block actions under More', async () => {
+    render(<MarkdownEditor value="Body" onChange={() => undefined} labels={editorLabels} />);
+    const toolbar = (await screen.findAllByRole('toolbar'))[0]!;
+    expect(toolbar).toHaveClass('overflow-x-auto');
+    expect(toolbar).not.toHaveClass('flex-wrap');
+
+    const more = within(toolbar).getByRole('button', { name: editorLabels.more });
+    expect(more).toHaveClass('sm:hidden');
+    expect(
+      within(toolbar).getByRole('button', { name: editorLabels.divider }).parentElement,
+    ).toHaveClass('hidden', 'sm:flex');
+
+    await userEvent.click(more);
+    const menu = await screen.findByRole('menu');
+    expect(
+      within(menu)
+        .getAllByRole('menuitem')
+        .map((item) => item.textContent),
+    ).toEqual([
+      editorLabels.quote,
+      editorLabels.note,
+      editorLabels.warning,
+      editorLabels.codeBlock,
+      editorLabels.image,
+      editorLabels.table,
+      editorLabels.divider,
+    ]);
+  });
+
+  it('shows no More menu in the compact toolbar', async () => {
+    render(
+      <MarkdownEditor
+        value="Body"
+        onChange={() => undefined}
+        labels={editorLabels}
+        variant="compact"
+      />,
+    );
+    const toolbar = (await screen.findAllByRole('toolbar'))[0]!;
+    expect(within(toolbar).queryByRole('button', { name: editorLabels.more })).toBeNull();
+  });
+});
+
+describe('MarkdownEditorGroup', () => {
+  function renderGroup(renderPreview = vi.fn((markdown: string) => <p>{markdown}</p>)) {
+    render(
+      <MarkdownEditorGroup labels={editorLabels}>
+        {['First body', 'Second body', 'Third body'].map((value) => (
+          <MarkdownEditor
+            key={value}
+            value={value}
+            onChange={() => undefined}
+            labels={editorLabels}
+            renderPreview={renderPreview}
+          />
+        ))}
+      </MarkdownEditorGroup>,
+    );
+    return renderPreview;
+  }
+
+  it('renders one Write/Preview tablist for every editor in the group', async () => {
+    renderGroup();
+    await waitFor(() => {
+      expect(document.querySelectorAll('.ProseMirror')).toHaveLength(3);
+    });
+
+    const tablists = screen.getAllByRole('tablist');
+    expect(tablists).toHaveLength(1);
+    expect(
+      within(tablists[0]!)
+        .getAllByRole('tab')
+        .map((tab) => tab.textContent),
+    ).toEqual([editorLabels.write, editorLabels.preview]);
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-slot="markdown-editor"]'),
+    );
+    expect(cards).toHaveLength(3);
+    for (const card of cards) {
+      expect(within(card).getAllByRole('toolbar').length).toBeGreaterThan(0);
+    }
+  });
+
+  it('switches every editor to preview at once', async () => {
+    const renderPreview = renderGroup();
+    await waitFor(() => {
+      expect(document.querySelectorAll('.ProseMirror')).toHaveLength(3);
+    });
+
+    await userEvent.click(screen.getByRole('tab', { name: editorLabels.preview }));
+
+    expect(screen.getByRole('tab', { name: editorLabels.preview })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    expect(document.querySelectorAll('.ProseMirror')).toHaveLength(0);
+    expect(screen.queryAllByRole('toolbar')).toHaveLength(0);
+    expect(await screen.findByText('Second body', {}, { timeout: 2000 })).toBeInTheDocument();
+    expect(renderPreview).toHaveBeenCalledTimes(3);
+
+    await userEvent.click(screen.getByRole('tab', { name: editorLabels.write }));
+    expect(document.querySelectorAll('.ProseMirror')).toHaveLength(3);
+  });
+
+  it('keeps standalone editors on their own tabs', async () => {
+    render(<MarkdownEditor value="Body" onChange={() => undefined} labels={editorLabels} />);
+    await waitFor(() => {
+      expect(document.querySelector('.ProseMirror')).not.toBeNull();
+    });
+    expect(screen.getAllByRole('tablist')).toHaveLength(1);
+    expect(screen.getByRole('tab', { name: editorLabels.markdown })).toBeInTheDocument();
   });
 });

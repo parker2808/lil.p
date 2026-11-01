@@ -11,6 +11,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@portfolio/ui/components/ui/sidebar';
+import { SheetClose } from '@portfolio/ui/components/ui/sheet';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -30,7 +31,9 @@ export function AdminSidebar() {
   return (
     <Sidebar collapsed={collapsed} className="hidden md:flex">
       <SidebarHeader>
-        <p className="text-ui-title truncate font-medium">{collapsed ? name.slice(0, 1) : name}</p>
+        <p className="text-ui-title truncate font-medium" title={name}>
+          {collapsed ? name.slice(0, 1) : name}
+        </p>
       </SidebarHeader>
       <SidebarContent>
         {groups.map((group, index) => (
@@ -84,7 +87,7 @@ export function AdminMobileNav() {
   const groups = navVisibleTo(role);
 
   return (
-    <nav className="flex flex-col gap-4">
+    <nav className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain pb-2">
       {groups.map((group, index) => (
         <div key={group.key} className="flex flex-col gap-1">
           <p className="text-ui-meta text-muted-foreground">
@@ -94,14 +97,15 @@ export function AdminMobileNav() {
             {t(`groups.${group.key}`)}
           </p>
           {group.items.map((item) => (
-            <Button
-              key={item.href}
-              variant={pathname === item.href ? 'secondary' : 'ghost'}
-              className="h-8 justify-start"
-              asChild
-            >
-              <Link href={item.href}>{t(item.key)}</Link>
-            </Button>
+            <SheetClose asChild key={item.href}>
+              <Button
+                variant={pathname === item.href ? 'secondary' : 'ghost'}
+                className="justify-start"
+                asChild
+              >
+                <Link href={item.href}>{t(item.key)}</Link>
+              </Button>
+            </SheetClose>
           ))}
         </div>
       ))}

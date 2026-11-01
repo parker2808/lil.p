@@ -7,7 +7,7 @@ import { Spinner } from './spinner';
 
 export const buttonVariants = cva(
   [
-    'relative inline-flex items-center justify-center gap-2 rounded-md font-medium',
+    'redesign-button relative inline-flex items-center justify-center gap-2 rounded-md font-medium',
     'text-ui whitespace-nowrap transition-colors',
     'disabled:pointer-events-none disabled:opacity-50',
     'pointer-coarse:min-h-11 pointer-coarse:min-w-11',
@@ -27,10 +27,15 @@ export const buttonVariants = cva(
         default: 'h-8 px-3',
         lg: 'text-body h-10 px-4',
       },
+      surface: {
+        default: '',
+        public: 'min-h-10 motion-safe:hover:-translate-y-0.5',
+      },
     },
     defaultVariants: {
       variant: 'default',
       size: 'default',
+      surface: 'default',
     },
   },
 );
@@ -39,6 +44,7 @@ export function Button({
   className,
   variant,
   size,
+  surface,
   loading = false,
   asChild = false,
   disabled,
@@ -49,7 +55,7 @@ export function Button({
     loading?: boolean;
     asChild?: boolean;
   }) {
-  const classes = cn(buttonVariants({ variant, size }), className);
+  const classes = cn(buttonVariants({ variant, size, surface }), className);
 
   if (asChild) {
     return (

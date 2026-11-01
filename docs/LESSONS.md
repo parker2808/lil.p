@@ -1,5 +1,58 @@
 # Lessons
 
+- 2026-11-01: The git stash is shared by every worktree, so a failed `git stash push` followed by `git stash pop` applied another branch's old stash; compare against base with `git diff > patch && git apply -R patch` instead of the stash.
+- 2026-11-01: `next build` bakes the API proxy target (port 4000) into the web build, so a local Playwright run with a custom `API_PORT` fails sign-in with a 500; use the default ports or rebuild with the same env.
+
+- 2026-11-01: A marquee pause button needs its own persistent state while hover, focus within, and document visibility add temporary pause reasons; resume only when all reasons clear.
+- 2026-11-01: Public route tap-target checks can expose controls inside rendered Markdown code blocks; include those buttons when sizing public targets.
+- 2026-11-01: The UI redesign stylesheet has a unit guard against `data-slot` selectors; use explicit component classes for new tap sizing rules.
+- 2026-11-01: A shared inline-flex tap utility changes the layout of links containing block labels; stack the children explicitly for previous/next links.
+- 2026-11-01: The projects header has its own bottom padding inside two padded block wrappers; reduce the adjacent wrapper gap and match the route skeleton's spacing to avoid a load-time shift.
+- 2026-11-01: A static public page can keep versioned CMS previews by awaiting `searchParams` only while draft mode is enabled; browser filters should avoid that server read.
+- 2026-11-01: A route loading skeleton must preserve the page's header, filter, switch, and card geometry; a generic grid skeleton can shift the projects page when server data arrives.
+- 2026-11-01: Next app icon files in `app/` provide the icon link across separate public and admin root layouts; admin pages need their own metadata titles to override the root's generic default.
+- 2026-11-01: Admin editor copy already had complete Vietnamese keys with English placeholder values; translate the shared editor and block labels too, and format experience ranges with UTC month/year to avoid raw ISO dates and timezone shifts.
+- 2026-11-01: The admin namespace had 972 English keys and no Vietnamese keys, so add the full key tree before translating a scoped group to keep every admin route renderable in Vietnamese.
+- 2026-11-01: The Vietnamese locale file has no admin namespace yet; admin locale plumbing must retain English messages for those keys while passing the selected locale to Intl formatting.
+- 2026-11-01: Before migrating a slot selector, search for its rendered slot; an unused selector can be removed instead of preserving dead styling.
+- 2026-11-01: Public button overrides in the shared redesign stylesheet also affect class-only links, so pass the public surface through `buttonVariants()` at those call sites as well as through `Button`.
+- 2026-11-01: A shared Radix Tabs toggle for several Tiptap editors can use one `TabsContent value={mode}`: the panel stays labelled by the active tab and the editors stay mounted when the mode changes.
 - 2026-10-31: An agent edited the main checkout on `main` instead of its worktree; always use a T3 worktree branch, and the pre-commit hook now blocks `main`.
 - 2026-10-31: A free model failed silently or hit quota; run work via `~/ai-tools/t3-run.sh` watchdog, which switches models and reports failures.
 - 2026-10-31: A big task skipped planning; write a plan and a spec in `docs/specs/` before coding.
+- 2026-11-01: Playwright device descriptors include a browser; `devices['iPhone SE']` forces WebKit. For the pinned Chromium project use explicit `viewport`/`hasTouch`/`isMobile` instead.
+- 2026-11-01: A Radix modal overlay blocks pointer events, so an e2e that re-opens an already-open dialog on its covered trigger hangs forever; close via Escape before reopening.
+- 2026-11-01: Admin sheets render `<AdminMobileNav>` (18 links): without `min-h-0 flex-1 overflow-y-auto` on the nav the sheet content overflows below the fold and taps below 667px hang on scrollIntoView; the admin document never scrolls (`.admin-main` is the scroller), so admin scroll checks must assert pane scrollTop.
+- 2026-11-01: Next can stream an admin `notFound()` page inside an async authenticated layout with HTTP 200; mark unknown admin sections as 404 in the proxy while the catch-all renders the shell page.
+- 2026-11-01: Published seed records can still contain unfinished fields across case studies, so guard public API text after schema parsing to keep those fields out of every route.
+- 2026-11-01: A canvas rendered before media checks still appears in mobile DOM even if the shader import is skipped; gate the canvas element along with the import.
+- 2026-11-01: A mobile-only shader guard does not prevent global client providers and desktop-only controls from hydrating on mobile; keep route-specific providers and controls out of the mobile bundle.
+- 2026-11-01: In a fresh T3 worktree, `/usr/local/bin/node` may be Node 18 ahead of the installed Node 22; put the Node 22 bin directory first on `PATH` before installing or checking this repo.
+- 2026-11-01: In a fresh worktree, build `@portfolio/contracts` before running the UI package typecheck alone; its generated type declarations are not present after install.
+- 2026-11-01: `pnpm --filter @portfolio/web test:e2e -- contact.spec.ts` ran the full Playwright suite; use `pnpm --filter @portfolio/web exec playwright test contact.spec.ts` to select one spec.
+- 2026-11-01: `IconButton` renders a Radix Tooltip and needs a `TooltipProvider` around its use; without one, admin routes fall into the Next error page.
+- 2026-11-01: A virtualized audit list can contain no focusable rows; give its scroll container `tabIndex={0}` so keyboard users can scroll it.
+- 2026-11-01: Tiptap's contenteditable element does not inherit a nearby field label; pass an accessible name through its editor attributes, including after options updates.
+- 2026-11-01: Embedded Tiptap node views need their own control names; the code block language select can be present only in seeded editor content.
+- 2026-11-01: A spec placed the Toaster in the shared `Providers`, but P0-5 had moved it to `AdminProviders` to keep it off public mobile pages; check later perf moves before following an older spec file location.
+- 2026-11-01: The editor save status was derived from an in-session save timestamp, so it was hidden on load and showed a hardcoded "1s ago"; derive status text from persisted data (`updatedAt`).
+- 2026-11-01: `packages/ui` has no `next` dependency, so shared components that must render Next links take a `linkComponent` prop (default `'a'`) and the web app passes `next/link`; a horizontal `overflow` wrapper also becomes the sticky-header scroll container, so give it its own max-height.
+- 2026-11-01: The e2e demo seed has only 4 projects and 5 posts, so a scroll or sticky-header e2e must shrink the window (or create rows) instead of assuming the list overflows.
+- 2026-11-01: Worktrees share the `lilp-db-test-1` MySQL on port 3307; Playwright global setup can fail with a seed deadlock when another worktree seeds at the same time, so rerun once before debugging.
+- 2026-11-01: `apps/web` Vitest does not auto-clean rendered components between tests, so a test file with several renders must call `afterEach(cleanup)` or later queries find duplicate elements.
+- 2026-11-01: API login is throttled to 5 per minute, so an e2e must not sign in repeatedly to create audit rows; shrink the window until the few existing rows overflow instead.
+- 2026-11-01: Radix Tabs call `onValueChange` on mousedown and again on focus; with a URL-driven value that updates asynchronously each click pushed two identical history entries, so skip a push when the URL is unchanged.
+- 2026-11-01: An e2e Back that loads a fresh document can be followed by a second Back before Next hydrates, so the popstate is lost; run chained same-document Back steps on a page you already interacted with.
+- 2026-11-01: `react/jsx-no-literals` allows only a few symbols (`→` but not `←`); render a lucide icon with `aria-hidden` instead of a text arrow, and list every new e2e spec in `playwright.config.ts` `testMatch` or it never runs.
+- 2026-11-01: jsdom has no `Range.getClientRects`, so a unit test that runs a Tiptap command through `focus()` throws an unhandled error; assert toolbar structure in Vitest and check the edit itself in Playwright.
+- 2026-11-01: Pixel `toHaveScreenshot` baselines are named per platform (darwin vs CI linux) and admin rows show relative times, so a CSS-to-variant refactor snapshots computed styles as JSON (no content-driven heights) with a platform-free `snapshotPathTemplate`, recorded on the base build before editing.
+- 2026-11-01: A decorative glyph sized in `vw` clips inside small card frames; size it with container query units on the frame, and note that confidential case studies render no cover, so an e2e must not require one on every detail page.
+- 2026-11-01: Admin detail queries do not retry 4xx errors (the shared query client retries only 5xx), so a missing-id error state appears at once and an e2e can assert it without waiting for backoff.
+- 2026-11-01: Playwright counts an `opacity: 0` element as visible and `evaluateHandle` awaits a returned promise, so a "visible within N ms" e2e stores its timer promise on `window` and checks computed opacity per animation frame; to throttle a client navigation, abort `next-router-prefetch` RSC requests and delay the remaining `rsc: 1` fetch.
+- 2026-11-01: Lighthouse `unused-javascript` ignores scripts wasting under 20 KiB, so splitting small chunks does not move it; Turbopack puts every client component a server page imports (the block registry) in one chunk group, so wrap rarely rendered islands that import `@portfolio/contracts` or zod in a `'use client'` `dynamic()` wrapper.
+- 2026-11-01: A `next/dynamic` `loading` component can call hooks, so it can render the same trigger button as the lazy component and avoid a flicker while the chunk loads.
+- 2026-11-01: A group-level `loading.tsx` also wraps that group's nested `new` and `[id]` routes, so adding a list skeleton to a group needs an editor `loading.tsx` on nested routes that lack one.
+- 2026-11-01: Pixel baselines must come from Linux Chromium, but `PW_TEST_CONNECT_WS_ENDPOINT` + `PW_TEST_CONNECT_EXPOSE_NETWORK=<loopback>` let a Docker `playwright run-server` browser render them against local servers; `{platform}` would still say darwin, so use a platform-free `toHaveScreenshot.pathTemplate`, and hide a full-bleed background canvas with `stylePath` because a `mask` box also covers the text above it.
+- 2026-11-01: Sourcing the root `.env` into the shell sets an empty `REVALIDATE_SECRET`, so Playwright's `??` test default is skipped and `/api/revalidate` answers 401; unset the `.env.example` variables before running e2e.
+- 2026-11-01: The worktree `.env` credentials do not match the shared `lilp-db-test-1` container; create a throwaway database and user from inside the container (`docker exec … $MYSQL_ROOT_PASSWORD`) for `migrate dev --create-only`, API e2e and Playwright.
+- 2026-11-01: Prisma 7 `migrate diff --from-migrations` reads the shadow database from the Prisma config, so pass a temporary `--config` with `shadowDatabaseUrl` (outside git) to check drift.

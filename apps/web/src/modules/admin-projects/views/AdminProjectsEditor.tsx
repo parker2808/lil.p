@@ -15,11 +15,15 @@ import { useMemo, useState } from 'react';
 import { z } from 'zod';
 
 import { listAdminExperience } from '@/modules/admin-about/services/experience.service';
+import { AdminLoadError } from '@/modules/admin-core/components/AdminLoadError/AdminLoadError';
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
 import { PublishActions } from '@/modules/admin-core/components/PublishActions/PublishActions';
 import { RoleGate } from '@/modules/admin-core/components/RoleGate/RoleGate';
+import { useAdminBack } from '@/modules/admin-core/hooks/use-admin-back.hook';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
+import { useSaveStatus } from '@/modules/admin-core/hooks/use-save-status.hook';
 import { useDirtyGuard } from '@/modules/admin-core/hooks/use-dirty-guard.hook';
+import { useListParams } from '@/modules/admin-core/hooks/use-list-params.hook';
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { editorLabelsFromMessages } from '@/modules/admin-core/utils/editor-labels.util';
 import { mapFieldErrors } from '@/modules/admin-core/utils/map-field-errors.util';
@@ -46,12 +50,22 @@ import {
   type ProjectFormValues,
 } from '../utils/project-form.util';
 
+const tabParamsSchema = z.object({
+  tab: z.enum(['content', 'card', 'metrics', 'seo']).catch('content'),
+});
+
 export function AdminProjectsEditor({ projectId }: { projectId: number | null }) {
   const t = useTranslations('admin.projects.editor');
   const existing = useAdminProject(projectId);
 
   if (projectId !== null && existing.isError) {
-    return <p className="text-destructive">{t('loadError')}</p>;
+    return (
+      <AdminLoadError
+        navKey="projects"
+        message={t('loadError')}
+        onRetry={() => void existing.refetch()}
+      />
+    );
   }
   if (projectId !== null && !existing.data) {
     return <p>{t('loading')}</p>;
@@ -70,6 +84,7 @@ function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
   const statusT = useTranslations('admin.projects.status');
   const editorT = useTranslations('admin.editor');
   const contentT = useTranslations('content');
+  const back = useAdminBack('projects');
   const router = useRouter();
   const readOnly = !useIsAdmin();
   const create = useCreateAdminProject();
@@ -77,7 +92,7 @@ function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
   const publish = usePublishAdminProject();
   const unpublish = useUnpublishAdminProject();
   const [locale, setLocale] = useState<'en' | 'vi'>('en');
-  const [tab, setTab] = useState('content');
+  const { params, setParams } = useListParams(tabParamsSchema);
   const [form, setForm] = useState(initial);
   const [baseline, setBaseline] = useState(() => JSON.stringify(toCreateInput(initial)));
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -129,6 +144,7 @@ function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
       return { updatedAt: result.updatedAt };
     },
   });
+  const saveStatus = useSaveStatus(autosave);
 
   useDirtyGuard(!readOnly && snapshot !== baseline);
 
@@ -183,8 +199,9 @@ function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
   return (
     <EditorShell
       title={form.titleEn || t('untitled')}
-      saveStatus={autosave.status === 'dirty' ? 'idle' : autosave.status}
-      savedText={autosave.savedAt ? editorT('saved', { seconds: 1 }) : undefined}
+      back={back}
+      saveStatus={saveStatus.state}
+      savedText={saveStatus.text}
       onLoadLatest={() => {
         setForm(initial);
         setBaseline(JSON.stringify(toCreateInput(initial)));
@@ -254,7 +271,7 @@ function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
         readOnly: editorT('readOnly'),
         properties: editorT('properties'),
         saving: editorT('saving'),
-        saved: editorT('saved', { seconds: 0 }),
+        saved: editorT('saved'),
         offline: editorT('offline'),
         conflict: editorT('conflict'),
         loadLatest: editorT('loadLatest'),
@@ -300,7 +317,12 @@ function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
         />
       }
     >
-      <Tabs value={tab} onValueChange={setTab}>
+      <Tabs
+        value={params.tab}
+        onValueChange={(value) =>
+          setParams({ tab: tabParamsSchema.shape.tab.parse(value) }, { history: 'push' })
+        }
+      >
         <TabsList>
           <TabsTrigger value="content">{t('tabs.content')}</TabsTrigger>
           <TabsTrigger value="card">{t('tabs.card')}</TabsTrigger>

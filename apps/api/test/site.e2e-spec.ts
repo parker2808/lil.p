@@ -39,6 +39,25 @@ describe('admin site shell', () => {
     expect(res.body.contactEmail).toBe('<email>');
   });
 
+  it('stores hero stats, localizes them publicly, and clears them to null', async () => {
+    const heroStats = [{ value: '5', suffix: '+', labelEn: 'Years', labelVi: 'Năm' }];
+    expect((await agent.get('/api/admin/site').expect(200)).body.heroStats).toBeNull();
+
+    await agent
+      .patch('/api/admin/site')
+      .send({ heroStats: [{ ...heroStats[0], value: '' }] })
+      .expect(400);
+    const saved = await agent.patch('/api/admin/site').send({ heroStats }).expect(200);
+    expect(saved.body.heroStats).toEqual(heroStats);
+
+    const vi = await agent.get('/api/public/site?locale=vi').expect(200);
+    expect(vi.body.settings.heroStats).toEqual([{ value: '5', suffix: '+', label: 'Năm' }]);
+
+    await agent.patch('/api/admin/site').send({ heroStats: null }).expect(200);
+    const en = await agent.get('/api/public/site?locale=en').expect(200);
+    expect(en.body.settings.heroStats).toBeNull();
+  });
+
   it('returns 400 fieldErrors for an invalid profile PATCH', async () => {
     const res = await agent.patch('/api/admin/profile').send({ displayName: '' }).expect(400);
     expect(res.body.code).toBe('VALIDATION_FAILED');

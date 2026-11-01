@@ -117,6 +117,7 @@ export function ProfileForm({
       <Field>
         <FieldLabel>{labels.bio}</FieldLabel>
         <MarkdownField
+          ariaLabel={labels.bio}
           value={String(values[bioKey] ?? '')}
           onChange={(markdown) => onChange(bioKey, markdown)}
           onBlur={onBlur}

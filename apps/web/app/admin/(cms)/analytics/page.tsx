@@ -35,3 +35,7 @@ export default async function AdminAnalyticsPage({
     </HydrationBoundary>
   );
 }
+
+export function generateMetadata() {
+  return { title: 'Analytics' };
+}

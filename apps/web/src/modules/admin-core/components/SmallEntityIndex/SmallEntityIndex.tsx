@@ -5,7 +5,9 @@ import { DataTable, type DataTableLabels } from '@portfolio/ui/components/DataTa
 import { HuePicker } from '@portfolio/ui/components/HuePicker/HuePicker';
 import { IconPicker } from '@portfolio/ui/components/IconPicker/IconPicker';
 import { Button } from '@portfolio/ui/components/ui/button';
+import { ConfirmDialog } from '@portfolio/ui/components/ui/confirm-dialog';
 import { Field, FieldError, FieldLabel } from '@portfolio/ui/components/ui/field';
+import { IconButton } from '@portfolio/ui/components/ui/icon-button';
 import { Input } from '@portfolio/ui/components/ui/input';
 import {
   Select,
@@ -22,8 +24,10 @@ import {
 } from '@portfolio/ui/components/ui/sheet';
 import { Switch } from '@portfolio/ui/components/ui/switch';
 import { Textarea } from '@portfolio/ui/components/ui/textarea';
+import { TooltipProvider } from '@portfolio/ui/components/ui/tooltip';
 import { type ColumnDef } from '@tanstack/react-table';
 import { useForm } from '@tanstack/react-form';
+import { ArrowDown, ArrowUp, Pencil, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { ZodType } from 'zod';
 
@@ -98,6 +102,7 @@ export function SmallEntityIndex<T extends SmallEntityRow>({
 }) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<T | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<T | null>(null);
   const [q, setQ] = useState('');
   const filtered = items.filter((item) =>
     titleOf(item).toLowerCase().includes(q.trim().toLowerCase()),
@@ -127,39 +132,49 @@ export function SmallEntityIndex<T extends SmallEntityRow>({
       enableHiding: false,
       cell: ({ row }) =>
         canWrite ? (
-          <div className="flex gap-1">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                setEditing(row.original);
-                setOpen(true);
-              }}
-            >
-              {labels.shortcuts.edit}
-            </Button>
-            {hasReorder && onMove ? (
-              <>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onMove(row.original.id, -1)}
-                >
-                  {labels.previous}
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onMove(row.original.id, 1)}
-                >
-                  {labels.next}
-                </Button>
-              </>
-            ) : null}
-          </div>
+          <TooltipProvider>
+            <div className="flex gap-1">
+              <IconButton
+                type="button"
+                variant="ghost"
+                label={`${labels.shortcuts.edit}: ${titleOf(row.original)}`}
+                onClick={() => {
+                  setEditing(row.original);
+                  setOpen(true);
+                }}
+              >
+                <Pencil aria-hidden className="size-4" />
+              </IconButton>
+              {hasReorder && onMove ? (
+                <>
+                  <IconButton
+                    type="button"
+                    variant="ghost"
+                    label={`${labels.previous}: ${titleOf(row.original)}`}
+                    onClick={() => onMove(row.original.id, -1)}
+                  >
+                    <ArrowUp aria-hidden className="size-4" />
+                  </IconButton>
+                  <IconButton
+                    type="button"
+                    variant="ghost"
+                    label={`${labels.next}: ${titleOf(row.original)}`}
+                    onClick={() => onMove(row.original.id, 1)}
+                  >
+                    <ArrowDown aria-hidden className="size-4" />
+                  </IconButton>
+                </>
+              ) : null}
+              <IconButton
+                type="button"
+                variant="ghost"
+                label={`${labels.bulkDelete}: ${titleOf(row.original)}`}
+                onClick={() => setPendingDelete(row.original)}
+              >
+                <Trash2 aria-hidden className="size-4" />
+              </IconButton>
+            </div>
+          </TooltipProvider>
         ) : null,
     });
     return [...columns, ...extra];
@@ -186,6 +201,7 @@ export function SmallEntityIndex<T extends SmallEntityRow>({
         value={q}
         onChange={(event) => setQ(event.target.value)}
         placeholder={labels.search}
+        aria-label={labels.search}
         className="w-56"
       />
       <DataTable
@@ -233,6 +249,18 @@ export function SmallEntityIndex<T extends SmallEntityRow>({
             <p className="text-ui font-medium">{titleOf(row)}</p>
           </button>
         )}
+      />
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        onOpenChange={(open) => !open && setPendingDelete(null)}
+        title={labels.confirmDeleteTitle}
+        description={labels.confirmDelete}
+        cancelLabel={labels.cancel}
+        confirmLabel={labels.bulkDelete}
+        onConfirm={() => {
+          if (pendingDelete) onDelete(pendingDelete.id);
+          setPendingDelete(null);
+        }}
       />
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent>

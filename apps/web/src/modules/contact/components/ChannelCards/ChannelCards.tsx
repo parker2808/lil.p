@@ -35,7 +35,7 @@ export function ChannelCardsView({
   return (
     <ul className="border-border divide-border divide-y rounded-lg border">
       <li className="flex items-center justify-between gap-3 px-4 py-3">
-        <a href={`mailto:${email}`} className="text-ui font-medium">
+        <a href={`mailto:${email}`} className="tap text-ui font-medium">
           {labels.email}
         </a>
         <CopyEmailButton email={email} />
@@ -43,7 +43,7 @@ export function ChannelCardsView({
       {github ? (
         <li className="flex items-center justify-between gap-3 px-4 py-3">
           <span className="text-ui font-medium">{labels.github}</span>
-          <a href={github.url} rel="noreferrer" className="text-ui">
+          <a href={github.url} rel="noreferrer" className="tap text-ui">
             {github.label}
           </a>
         </li>
@@ -51,7 +51,7 @@ export function ChannelCardsView({
       {linkedin ? (
         <li className="flex items-center justify-between gap-3 px-4 py-3">
           <span className="text-ui font-medium">{labels.linkedin}</span>
-          <a href={linkedin.url} rel="noreferrer" className="text-ui">
+          <a href={linkedin.url} rel="noreferrer" className="tap text-ui">
             {linkedin.label}
           </a>
         </li>

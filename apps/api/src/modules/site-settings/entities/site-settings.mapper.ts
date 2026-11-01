@@ -1,4 +1,11 @@
-import type { AdminSiteSettings, Locale, PublicSiteSettings } from '@portfolio/contracts';
+import {
+  type AdminSiteSettings,
+  type HeroStat,
+  heroStatsSchema,
+  type Locale,
+  type PublicHeroStat,
+  type PublicSiteSettings,
+} from '@portfolio/contracts';
 
 import { pickGroup } from '../../../i18n/pick-locale.util';
 import { toAdminMedia, toPublicImage } from '../../media/media.mapper';
@@ -12,6 +19,22 @@ const TRANSLATED = [
   'replyTimeNote',
   'availabilityNote',
 ] as const;
+
+/** Stored JSON that is missing, empty or no longer valid reads as `null` (use profile stats). */
+export function parseHeroStats(value: unknown): HeroStat[] | null {
+  const parsed = heroStatsSchema.safeParse(value);
+  return parsed.success && parsed.data.length > 0 ? parsed.data : null;
+}
+
+export function toPublicHeroStats(value: unknown, locale: Locale): PublicHeroStat[] | null {
+  return (
+    parseHeroStats(value)?.map((stat) => ({
+      value: stat.value,
+      suffix: stat.suffix || null,
+      label: locale === 'vi' ? stat.labelVi : stat.labelEn,
+    })) ?? null
+  );
+}
 
 export function toPublicSiteSettings(row: SiteSettingsRow, locale: Locale): PublicSiteSettings {
   const { values, lang } = pickGroup(row, TRANSLATED, locale);
@@ -32,6 +55,7 @@ export function toPublicSiteSettings(row: SiteSettingsRow, locale: Locale): Publ
     ambientEffects: row.ambientEffects,
     marqueeEnabled: row.marqueeEnabled,
     ogImage: toPublicImage(row.ogImage, locale),
+    heroStats: toPublicHeroStats(row.heroStats, locale),
     lang,
   };
 }
@@ -61,6 +85,7 @@ export function toAdminDto(row: SiteSettingsRow): AdminSiteSettings {
     marqueeEnabled: row.marqueeEnabled,
     ogImageId: row.ogImageId,
     ogImage: row.ogImage ? toAdminMedia(row.ogImage) : null,
+    heroStats: parseHeroStats(row.heroStats),
     updatedAt: row.updatedAt.toISOString(),
   };
 }

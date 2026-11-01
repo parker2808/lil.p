@@ -1,7 +1,7 @@
 import type { PublicBlock } from '@portfolio/contracts';
 import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
 
-import { NotesBrowser } from '@/modules/notes/components/NotesBrowser/NotesBrowser';
+import { LazyNotesBrowser } from '@/modules/notes/components/NotesBrowser/LazyNotesBrowser';
 import { listPostsPage } from '@/modules/notes/services/posts.service';
 import { listTags } from '@/modules/notes/services/tags.service';
 import { parseNotesSearch } from '@/modules/notes/utils/notes-query.util';
@@ -30,7 +30,7 @@ export async function NotesBrowserBlock({
   ]);
 
   return (
-    <NotesBrowser
+    <LazyNotesBrowser
       locale={context.locale}
       initial={page}
       tags={tags}

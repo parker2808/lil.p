@@ -90,7 +90,9 @@ export function MediaLibrary({
                       )}
                     </div>
                     <div className="flex items-start justify-between gap-1 p-2">
-                      <span className="text-ui-meta line-clamp-2">{item.originalName}</span>
+                      <span className="text-ui-meta line-clamp-2" title={item.originalName}>
+                        {item.originalName}
+                      </span>
                       {item.missingAlt ? (
                         <Badge variant="warning" className="shrink-0">
                           {labels.missingAlt}

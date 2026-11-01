@@ -8,7 +8,7 @@ import {
 } from '@portfolio/contracts';
 import { Alert } from '@portfolio/ui/components/ui/alert';
 import { Button } from '@portfolio/ui/components/ui/button';
-import { Field, FieldDescription, FieldError, FieldLabel } from '@portfolio/ui/components/ui/field';
+import { FormField } from '@portfolio/ui/components/ui/form-field';
 import { Input } from '@portfolio/ui/components/ui/input';
 import { Textarea } from '@portfolio/ui/components/ui/textarea';
 import { useForm } from '@tanstack/react-form';
@@ -57,11 +57,11 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
   const t = useTranslations('contact.form');
   const summaryRef = useRef<HTMLDivElement>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
   const [actionState, formAction, actionPending] = useActionState(submitContactForm, null);
   const [clientResult, setClientResult] = useState<ContactActionResult | null>(null);
   const [clientPending, setClientPending] = useState(false);
   const result: ContactActionResult | null = clientResult ?? actionState;
-  const formRef = useRef<HTMLFormElement>(null);
   const pending = clientPending || actionPending;
 
   const form = useForm({
@@ -86,10 +86,18 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
     form.setFieldValue('locale', posted.locale);
     const parsed = contactSchema.safeParse(posted);
     if (!parsed.success) {
+      const errors = parsed.error.flatten().fieldErrors;
+      setValidationErrors(errors);
       setSubmitted(true);
-      summaryRef.current?.focus();
+      const firstInvalid = (['name', 'email', 'message'] as const).find(
+        (name) => errors[name]?.length,
+      );
+      if (firstInvalid) {
+        formEl.querySelector<HTMLElement>(`[name="${firstInvalid}"]`)?.focus();
+      }
       return false;
     }
+    setValidationErrors({});
     setClientPending(true);
     void submitContactClient(parsed.data)
       .then((next) => {
@@ -106,10 +114,10 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
   }
 
   useEffect(() => {
-    if (submitted || (result && !result.ok)) {
+    if (result && !result.ok) {
       summaryRef.current?.focus();
     }
-  }, [result, submitted]);
+  }, [result]);
 
   if (result?.ok) {
     return (
@@ -125,7 +133,6 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
 
   return (
     <form
-      ref={formRef}
       action={formAction}
       className="bg-card-glass border-border shadow-1 relative flex flex-col gap-4 rounded-xl border p-6"
       noValidate
@@ -148,41 +155,53 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
       <div className="grid gap-4 sm:grid-cols-2">
         <form.Field name="name">
           {(field) => (
-            <Field>
-              <FieldLabel htmlFor="name">{t('name')}</FieldLabel>
+            <FormField
+              label={t('name')}
+              required
+              error={
+                validationErrors.name?.[0] ??
+                firstError(field.state.meta.errors) ??
+                fieldErrors.name?.[0]
+              }
+            >
               <Input
                 id="name"
                 name="name"
                 autoComplete="name"
                 value={field.state.value}
-                aria-invalid={Boolean(firstError(field.state.meta.errors) || fieldErrors.name)}
                 onBlur={field.handleBlur}
-                onChange={(event) => field.handleChange(event.target.value)}
+                onChange={(event) => {
+                  field.handleChange(event.target.value);
+                  setValidationErrors((errors) => ({ ...errors, name: [] }));
+                }}
               />
-              <FieldError>
-                {firstError(field.state.meta.errors) ?? fieldErrors.name?.[0] ?? null}
-              </FieldError>
-            </Field>
+            </FormField>
           )}
         </form.Field>
         <form.Field name="email">
           {(field) => (
-            <Field>
-              <FieldLabel htmlFor="email">{t('email')}</FieldLabel>
+            <FormField
+              label={t('email')}
+              required
+              error={
+                validationErrors.email?.[0] ??
+                firstError(field.state.meta.errors) ??
+                fieldErrors.email?.[0]
+              }
+            >
               <Input
                 id="email"
                 name="email"
                 type="email"
                 autoComplete="email"
                 value={field.state.value}
-                aria-invalid={Boolean(firstError(field.state.meta.errors) || fieldErrors.email)}
                 onBlur={field.handleBlur}
-                onChange={(event) => field.handleChange(event.target.value)}
+                onChange={(event) => {
+                  field.handleChange(event.target.value);
+                  setValidationErrors((errors) => ({ ...errors, email: [] }));
+                }}
               />
-              <FieldError>
-                {firstError(field.state.meta.errors) ?? fieldErrors.email?.[0] ?? null}
-              </FieldError>
-            </Field>
+            </FormField>
           )}
         </form.Field>
       </div>
@@ -190,8 +209,10 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
       {topics.length > 0 ? (
         <form.Field name="topic">
           {(field) => (
-            <Field>
-              <FieldLabel htmlFor="topic">{t('topic')}</FieldLabel>
+            <FormField
+              label={t('topic')}
+              error={firstError(field.state.meta.errors) ?? fieldErrors.topic?.[0]}
+            >
               <select
                 id="topic"
                 name="topic"
@@ -207,34 +228,34 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
                   </option>
                 ))}
               </select>
-              <FieldError>
-                {firstError(field.state.meta.errors) ?? fieldErrors.topic?.[0] ?? null}
-              </FieldError>
-            </Field>
+            </FormField>
           )}
         </form.Field>
       ) : null}
 
       <form.Field name="message">
         {(field) => (
-          <Field>
-            <FieldLabel htmlFor="message">{t('message')}</FieldLabel>
+          <FormField
+            label={t('message')}
+            required
+            maxLength={CONTACT_MESSAGE_MAX}
+            error={
+              validationErrors.message?.[0] ??
+              firstError(field.state.meta.errors) ??
+              fieldErrors.message?.[0]
+            }
+          >
             <Textarea
               id="message"
               name="message"
-              maxLength={CONTACT_MESSAGE_MAX}
               value={field.state.value}
-              aria-invalid={Boolean(firstError(field.state.meta.errors) || fieldErrors.message)}
               onBlur={field.handleBlur}
-              onChange={(event) => field.handleChange(event.target.value)}
+              onChange={(event) => {
+                field.handleChange(event.target.value);
+                setValidationErrors((errors) => ({ ...errors, message: [] }));
+              }}
             />
-            <FieldDescription>
-              {t('count', { count: field.state.value.length, max: CONTACT_MESSAGE_MAX })}
-            </FieldDescription>
-            <FieldError>
-              {firstError(field.state.meta.errors) ?? fieldErrors.message?.[0] ?? null}
-            </FieldError>
-          </Field>
+          </FormField>
         )}
       </form.Field>
 
@@ -254,16 +275,7 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
         )}
       </form.Field>
 
-      <Button
-        type="submit"
-        loading={pending}
-        onClick={() => {
-          if (!formRef.current) {
-            return;
-          }
-          sendFrom(formRef.current);
-        }}
-      >
+      <Button surface="public" type="submit" loading={pending}>
         {t('send')}
       </Button>
     </form>

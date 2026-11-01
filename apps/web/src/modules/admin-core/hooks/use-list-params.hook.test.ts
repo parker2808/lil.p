@@ -23,4 +23,39 @@ describe('useListParams', () => {
 
     expect(replace).toHaveBeenCalledWith('/admin/projects?sort=-updatedAt&q=ops&status=DRAFT');
   });
+
+  it('pushes a history entry instead of replacing when asked', () => {
+    replace.mockClear();
+    const pushState = vi.spyOn(window.history, 'pushState').mockImplementation(() => {});
+    const { result } = renderHook(() => useListParams(adminProjectListParamsSchema));
+
+    act(() => {
+      result.current.setParams({ q: 'ops' }, { history: 'push' });
+    });
+
+    expect(pushState).toHaveBeenCalledWith(
+      null,
+      '',
+      '/admin/projects?page=2&sort=sortOrder&q=ops&status=DRAFT',
+    );
+    expect(replace).not.toHaveBeenCalled();
+    pushState.mockRestore();
+  });
+
+  it('does not push a duplicate entry when the URL is unchanged', () => {
+    window.history.replaceState(
+      null,
+      '',
+      '/admin/projects?page=2&sort=sortOrder&q=ops&status=DRAFT',
+    );
+    const pushState = vi.spyOn(window.history, 'pushState').mockImplementation(() => {});
+    const { result } = renderHook(() => useListParams(adminProjectListParamsSchema));
+
+    act(() => {
+      result.current.setParams({ q: 'ops' }, { history: 'push' });
+    });
+
+    expect(pushState).not.toHaveBeenCalled();
+    pushState.mockRestore();
+  });
 });

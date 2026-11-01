@@ -2,6 +2,7 @@
 
 import { Field, FieldDescription, FieldError, FieldLabel } from '@portfolio/ui/components/ui/field';
 import { Input } from '@portfolio/ui/components/ui/input';
+import { MarkdownEditorGroup } from '@portfolio/ui/components/MarkdownEditor/MarkdownEditorGroup';
 import type { MarkdownEditorLabels } from '@portfolio/ui/components/MarkdownEditor/types';
 
 import { MarkdownField } from '@/modules/admin-core/components/MarkdownField/MarkdownField';
@@ -78,24 +79,27 @@ export function ProjectContentTab({
           onBlur={onBlur}
         />
       </Field>
-      {MARKDOWN_FIELDS.map((field) => {
-        const key = `${field.name}${locale === 'en' ? 'En' : 'Vi'}` as keyof ProjectFormValues;
-        return (
-          <Field key={key}>
-            <FieldLabel>{labels[field.name]}</FieldLabel>
-            {field.hint ? <FieldDescription>{labels.headingHint}</FieldDescription> : null}
-            <MarkdownField
-              value={String(values[key] ?? '')}
-              onChange={(markdown) => onChange(key, markdown)}
-              onBlur={onBlur}
-              onBaseline={(markdown) => onBaseline(String(key), markdown)}
-              labels={editorLabels}
-              previewLabels={previewLabels}
-              readOnly={readOnly}
-            />
-          </Field>
-        );
-      })}
+      <MarkdownEditorGroup labels={editorLabels}>
+        {MARKDOWN_FIELDS.map((field) => {
+          const key = `${field.name}${locale === 'en' ? 'En' : 'Vi'}` as keyof ProjectFormValues;
+          return (
+            <Field key={key}>
+              <FieldLabel>{labels[field.name]}</FieldLabel>
+              {field.hint ? <FieldDescription>{labels.headingHint}</FieldDescription> : null}
+              <MarkdownField
+                ariaLabel={labels[field.name]}
+                value={String(values[key] ?? '')}
+                onChange={(markdown) => onChange(key, markdown)}
+                onBlur={onBlur}
+                onBaseline={(markdown) => onBaseline(String(key), markdown)}
+                labels={editorLabels}
+                previewLabels={previewLabels}
+                readOnly={readOnly}
+              />
+            </Field>
+          );
+        })}
+      </MarkdownEditorGroup>
     </div>
   );
 }

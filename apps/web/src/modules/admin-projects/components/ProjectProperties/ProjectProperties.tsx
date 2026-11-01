@@ -98,7 +98,7 @@ export function ProjectProperties({
             onChange('status', value as NonNullable<ProjectFormValues['status']>)
           }
         >
-          <SelectTrigger>
+          <SelectTrigger aria-label={labels.status}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -182,7 +182,7 @@ export function ProjectProperties({
             onChange('experienceId', value === 'none' ? null : Number(value))
           }
         >
-          <SelectTrigger>
+          <SelectTrigger aria-label={labels.experience}>
             <SelectValue placeholder={labels.none} />
           </SelectTrigger>
           <SelectContent>
@@ -265,7 +265,9 @@ export function ProjectProperties({
         <ul className="flex flex-col gap-3">
           {(values.gallery ?? []).map((image, index) => (
             <li key={`${image.mediaId}-${index}`} className="flex flex-col gap-2">
-              <p className="text-ui-meta truncate">{image.media.originalName}</p>
+              <p className="text-ui-meta truncate" title={image.media.originalName}>
+                {image.media.originalName}
+              </p>
               <Input
                 value={image.captionEn ?? ''}
                 disabled={readOnly}

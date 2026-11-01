@@ -28,6 +28,13 @@
     "retry": "Retry",
     "notFound": "This page is missing"
   },
+  "notFound": {
+    "description": "The page you requested could not be found. Try one of these places instead.",
+    "linksLabel": "Explore the site",
+    "home": "Home",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
   "blocks": {
     "nda": "NDA",
     "projects": "projects",
@@ -96,6 +103,9 @@
     "notReleased": "Not released",
     "moreIn": "More in {name}",
     "more": "More case studies",
+    "ctaTitle": "Working on something similar?",
+    "ctaIntro": "Tell me about the problem and the constraints. I usually reply within a few days.",
+    "ctaAction": "Get in touch",
     "live": "Live site",
     "grid": "Grid",
     "index": "Index",
@@ -107,6 +117,8 @@
     "hint": "Search",
     "clear": "Clear",
     "noneFor": "No results for {name}",
+    "emptyTitle": "No notes yet",
+    "emptyCta": "Read case studies",
     "previous": "Previous",
     "next": "Next",
     "pagination": "Notes pages",
@@ -125,6 +137,11 @@
     "keyTakeaways": "Key takeaways"
   },
   "admin": {
+    "notFound": {
+      "title": "Admin page not found",
+      "description": "The admin page you requested could not be found.",
+      "dashboard": "Back to dashboard"
+    },
     "nav": {
       "groups": {
         "main": "Workspace",
@@ -157,9 +174,15 @@
       "menu": "Menu",
       "skip": "Skip to content",
       "toggleSidebar": "Collapse sidebar",
+      "expandSidebar": "Expand sidebar",
       "breadcrumb": "Breadcrumb",
+      "back": "Back to {section}",
+      "retry": "Retry",
       "logout": "Log out",
-      "changePassword": "Change password"
+      "changePassword": "Change password",
+      "language": "Language",
+      "localeEn": "EN",
+      "localeVi": "VI"
     },
     "palette": {
       "open": "Jump to",
@@ -204,6 +227,7 @@
       "saveError": "That user could not be saved.",
       "createTitle": "New user",
       "editTitle": "Edit user",
+      "edit": "Edit",
       "formHint": "Admins can manage roles and sign people out.",
       "confirmSignOutTitle": "Sign this person out everywhere?",
       "confirmSignOut": "Their next refresh will fail. They stay signed in for up to 15 minutes on an existing access token.",
@@ -299,6 +323,10 @@
       "system": "System",
       "entityType": "Entity",
       "user": "User",
+      "action": "Action",
+      "summary": "Summary",
+      "time": "When",
+      "loadMore": "Load more",
       "allEntities": "All entities",
       "allUsers": "All users",
       "clearFilters": "Clear filters",
@@ -321,6 +349,8 @@
       "tableCaption": "Page views by day",
       "topPages": "Top pages",
       "topReferrers": "Top referrers",
+      "path": "Path",
+      "referrer": "Referrer",
       "noPages": "No pages yet.",
       "noReferrers": "No referrers yet.",
       "error": "Views could not be loaded.",
@@ -382,6 +412,8 @@
       "help": "Shortcuts",
       "helpTitle": "Keyboard shortcuts",
       "cancel": "Cancel",
+      "select": "Select",
+      "selectAll": "Select all rows",
       "shortcuts": {
         "move": "Move the active row",
         "select": "Select the active row",
@@ -905,6 +937,22 @@
       "choose": "Choose file",
       "clear": "Remove",
       "emptyMedia": "No file selected",
+      "heroStats": {
+        "legend": "Hero stats",
+        "hint": "Up to 3 stats under the home hero. Leave empty to show profile stats.",
+        "row": "Stat {index}",
+        "value": "Value",
+        "suffix": "Suffix",
+        "labelEn": "Label (EN)",
+        "labelVi": "Label (VI)",
+        "add": "Add stat",
+        "remove": "Remove stat {index}",
+        "moveUp": "Move stat {index} up",
+        "moveDown": "Move stat {index} down",
+        "clear": "Clear (use profile stats)",
+        "required": "Required",
+        "tooLong": "At most {max} characters"
+      },
       "navLabel": "Label",
       "navHref": "Href",
       "navCustom": "Custom URL",
@@ -965,6 +1013,7 @@
       "altVi": "Alt text (Vietnamese)",
       "saveAlt": "Save alt",
       "delete": "Delete",
+      "confirmDelete": "Delete this media file?",
       "selectItem": "Select a file to inspect"
     },
     "topics": {
@@ -1032,12 +1081,14 @@
       "tableDeleteColumn": "Delete column",
       "tableDelete": "Delete table",
       "divider": "Divider",
+      "more": "More",
       "plainText": "Plain text",
       "slashEmpty": "No matching blocks",
       "readOnly": "Read only",
       "properties": "Properties",
       "saving": "Saving…",
-      "saved": "Saved {seconds}s ago",
+      "saved": "Saved",
+      "savedAt": "Saved {time}",
       "offline": "Offline, changes kept locally",
       "conflict": "Conflict: newer version",
       "loadLatest": "Load latest",
@@ -1071,8 +1122,13 @@
     "pages": {
       "title": "Pages",
       "loadError": "Pages could not be loaded.",
-      "meta": "{count} blocks · {date}",
-      "metaUnpublished": "Unpublished changes · {count} blocks · {date}",
+      "retry": "Retry",
+      "empty": "No pages yet.",
+      "page": "Page",
+      "blocks": "Blocks",
+      "status": "Status",
+      "updated": "Updated",
+      "published": "Published",
       "blockCount": "{count} blocks",
       "add": "Add block",
       "searchTypes": "Search block types",

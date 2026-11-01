@@ -35,6 +35,9 @@ export function pageMetadata({
       siteName: site.settings.siteName,
       locale: locale === 'vi' ? 'vi_VN' : 'en_US',
       type: 'website',
+      ...(path === '/about' || path === '/contact' || path === '/notes' || path === '/projects'
+        ? { images: [{ url: absoluteUrl(locale, '/opengraph-image'), width: 1200, height: 630 }] }
+        : {}),
     },
     twitter: {
       card: 'summary_large_image',

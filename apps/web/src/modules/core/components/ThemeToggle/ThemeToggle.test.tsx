@@ -34,9 +34,10 @@ describe('ThemeToggle', () => {
     const user = userEvent.setup();
     renderToggle();
 
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Theme' }));
 
-    expect(screen.getByRole('menuitemradio', { name: 'Light' })).toBeInTheDocument();
+    expect(await screen.findByRole('menuitemradio', { name: 'Light' })).toBeInTheDocument();
     expect(screen.getByRole('menuitemradio', { name: 'Dark' })).toBeInTheDocument();
     const system = screen.getByRole('menuitemradio', { name: 'System' });
     expect(system).toHaveAttribute('aria-pressed', 'true');

@@ -2,16 +2,7 @@
 
 import type { AdminBlock, BlockType, PageKey } from '@portfolio/contracts';
 import { BLOCK_REGISTRY } from '@portfolio/contracts';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@portfolio/ui/components/ui/alert-dialog';
+import { ConfirmDialog } from '@portfolio/ui/components/ui/confirm-dialog';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
 import { useTranslations } from 'next-intl';
@@ -19,7 +10,9 @@ import Link from 'next/link';
 import { useMemo, useRef, useState } from 'react';
 
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
+import { useAdminBack } from '@/modules/admin-core/hooks/use-admin-back.hook';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
+import { useSaveStatus } from '@/modules/admin-core/hooks/use-save-status.hook';
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 
 import { AddBlockDialog } from '../components/AddBlockDialog/AddBlockDialog';
@@ -36,6 +29,7 @@ import { publicPagePath } from '../utils/preview-frame.util';
 export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
   const t = useTranslations('admin.pages');
   const editorT = useTranslations('admin.editor');
+  const back = useAdminBack('pages');
   const isAdmin = useIsAdmin();
   const readOnly = !isAdmin;
   const page = useAdminPage(pageKey);
@@ -92,6 +86,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
       }
     },
   });
+  const saveStatus = useSaveStatus(autosave);
 
   function move(block: AdminBlock, direction: -1 | 1) {
     const ids = page.data.blocks.map((item) => item.id);
@@ -129,6 +124,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
   return (
     <>
       <EditorShell
+        back={back}
         title={
           <span className="flex items-center gap-2">
             {t(`names.${pageKey}`)}
@@ -140,8 +136,8 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
             </Link>
           </span>
         }
-        saveStatus={autosave.status === 'dirty' ? 'idle' : autosave.status}
-        savedText={autosave.savedAt ? editorT('saved', { seconds: 1 }) : undefined}
+        saveStatus={saveStatus.state}
+        savedText={saveStatus.text}
         onLoadLatest={() => {
           void page.refetch();
         }}
@@ -214,7 +210,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
           readOnly: editorT('readOnly'),
           properties: t('inspector'),
           saving: editorT('saving'),
-          saved: editorT('saved', { seconds: 1 }),
+          saved: editorT('saved'),
           offline: editorT('offline'),
           conflict: editorT('conflict'),
           loadLatest: editorT('loadLatest'),
@@ -256,30 +252,23 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
           onReorder={(ids) => mutations.reorder.mutate(ids, { onSuccess: bumpPreview })}
         />
       </EditorShell>
-      <AlertDialog open={deleteId !== null} onOpenChange={(open) => !open && setDeleteId(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('confirmDeleteTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('confirmDelete')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (deleteId !== null) {
-                  mutations.remove.mutate(deleteId, { onSuccess: bumpPreview });
-                  if (selectedId === deleteId) {
-                    setSelectedId(null);
-                  }
-                }
-                setDeleteId(null);
-              }}
-            >
-              {t('delete')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDialog
+        open={deleteId !== null}
+        onOpenChange={(open) => !open && setDeleteId(null)}
+        title={t('confirmDeleteTitle')}
+        description={t('confirmDelete')}
+        cancelLabel={t('cancel')}
+        confirmLabel={t('delete')}
+        onConfirm={() => {
+          if (deleteId !== null) {
+            mutations.remove.mutate(deleteId, { onSuccess: bumpPreview });
+            if (selectedId === deleteId) {
+              setSelectedId(null);
+            }
+          }
+          setDeleteId(null);
+        }}
+      />
     </>
   );
 }

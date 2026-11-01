@@ -1,10 +1,15 @@
 import { skillChipFixtures } from '@portfolio/contracts';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { TechMarquee } from './TechMarquee';
 
 const labels = { pause: 'Pause marquee', play: 'Play marquee' };
+
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+});
 
 function mockMatchMedia(reduced: boolean) {
   Object.defineProperty(window, 'matchMedia', {
@@ -42,5 +47,48 @@ describe('TechMarquee', () => {
     fireEvent.click(button);
     expect(button).toHaveAttribute('aria-pressed', 'true');
     expect(button).toHaveAccessibleName(labels.play);
+    fireEvent.click(button);
+    expect(button).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('pauses on hover and resumes when the pointer leaves', () => {
+    mockMatchMedia(false);
+    const { container } = render(<TechMarquee items={skillChipFixtures} labels={labels} />);
+    const marquee = container.querySelector('[data-slot="tech-marquee"]')!;
+    const track = container.querySelector('.marquee-track')!;
+
+    expect(track).not.toHaveClass('marquee-paused');
+    fireEvent.mouseEnter(marquee);
+    expect(track).toHaveClass('marquee-paused');
+    expect(track).toHaveAttribute('data-paused', 'true');
+    fireEvent.mouseLeave(marquee);
+    expect(track).not.toHaveClass('marquee-paused');
+  });
+
+  it('pauses while focus is within the marquee', () => {
+    mockMatchMedia(false);
+    const { container } = render(<TechMarquee items={skillChipFixtures} labels={labels} />);
+    const track = container.querySelector('.marquee-track')!;
+    const button = screen.getByRole('button', { name: labels.pause });
+
+    fireEvent.focus(button);
+    expect(track).toHaveClass('marquee-paused');
+    fireEvent.blur(button, { relatedTarget: document.body });
+    expect(track).not.toHaveClass('marquee-paused');
+  });
+
+  it('pauses while the tab is hidden and resumes when it is visible', () => {
+    mockMatchMedia(false);
+    let hidden = false;
+    vi.spyOn(document, 'hidden', 'get').mockImplementation(() => hidden);
+    const { container } = render(<TechMarquee items={skillChipFixtures} labels={labels} />);
+    const track = container.querySelector('.marquee-track')!;
+
+    hidden = true;
+    fireEvent(document, new Event('visibilitychange'));
+    expect(track).toHaveClass('marquee-paused');
+    hidden = false;
+    fireEvent(document, new Event('visibilitychange'));
+    expect(track).not.toHaveClass('marquee-paused');
   });
 });

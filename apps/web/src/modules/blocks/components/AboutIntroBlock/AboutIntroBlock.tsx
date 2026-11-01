@@ -11,6 +11,7 @@ import { getTranslations } from 'next-intl/server';
 
 import { Markdown } from '@/modules/content/components/Markdown/Markdown';
 import { getSite } from '@/modules/core/services/site.service';
+import { LOCATION_CAPTION } from '@/modules/core/constants/location-caption.constant';
 
 import type { BlockContext } from '../../types/entities/block-context.type';
 import { initials } from '../../utils/initials.util';
@@ -33,7 +34,7 @@ export async function AboutIntroBlock({
     .map((item) => item.trim())
     .filter(Boolean);
   const resumeUrl = site.profile.resume?.url;
-  const cityLine = [site.profile.city, site.profile.timezone].filter(Boolean).join(' · ');
+  const cityLine = LOCATION_CAPTION;
 
   return (
     <Reveal className="col-span-full grid items-start gap-8 lg:grid-cols-12" lang={block.lang}>
@@ -58,7 +59,7 @@ export async function AboutIntroBlock({
           <Badge variant="primary">{site.settings.availabilityNote}</Badge>
         ) : null}
         {resumeUrl ? (
-          <Button asChild variant="outline">
+          <Button surface="public" asChild variant="outline">
             <a href={resumeUrl}>{t('downloadCv')}</a>
           </Button>
         ) : null}

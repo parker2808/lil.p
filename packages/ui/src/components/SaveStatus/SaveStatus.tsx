@@ -52,7 +52,12 @@ export function SaveStatus({
       aria-live="polite"
       aria-atomic="true"
       aria-busy={state === 'saving'}
-      className={cn('text-ui-meta flex items-center gap-2', tone, className)}
+      className={cn(
+        'redesign-save-status',
+        'text-ui-meta flex items-center gap-2',
+        tone,
+        className,
+      )}
     >
       <span>{text}</span>
       {state === 'conflict' ? (

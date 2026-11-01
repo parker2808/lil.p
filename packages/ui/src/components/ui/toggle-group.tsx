@@ -11,7 +11,7 @@ export function ToggleGroup({
   return (
     <ToggleGroupPrimitive.Root
       data-slot="toggle-group"
-      className={cn('inline-flex rounded-md border', className)}
+      className={cn('inline-flex w-fit self-start rounded-md border', className)}
       {...props}
     />
   );
@@ -25,7 +25,7 @@ export function ToggleGroupItem({
     <ToggleGroupPrimitive.Item
       data-slot="toggle-group-item"
       className={cn(
-        'text-ui h-8 px-3',
+        'text-ui h-8 cursor-pointer px-3',
         'data-[state=on]:bg-primary data-[state=on]:text-primary-foreground',
         className,
       )}

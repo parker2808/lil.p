@@ -36,6 +36,7 @@ export type MarkdownEditorLabels = {
   tableDeleteColumn: string;
   tableDelete: string;
   divider: string;
+  more: string;
   plainText: string;
   slashEmpty: string;
   shortcuts: {
@@ -59,3 +60,5 @@ export type MarkdownEditorLabels = {
 export type MarkdownEditorVariant = 'full' | 'compact';
 
 export type MarkdownEditorMode = 'write' | 'split' | 'preview' | 'markdown';
+
+export type MarkdownEditorGroupMode = Extract<MarkdownEditorMode, 'write' | 'preview'>;

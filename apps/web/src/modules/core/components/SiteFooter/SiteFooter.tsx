@@ -23,7 +23,7 @@ export function SiteFooter({
           <Link
             key={item.id}
             href={item.href}
-            className="hover:text-foreground text-muted-foreground"
+            className="tap hover:text-foreground text-muted-foreground"
           >
             {item.label}
           </Link>
@@ -33,7 +33,7 @@ export function SiteFooter({
             key={link.id}
             href={link.url}
             rel="noreferrer"
-            className="hover:text-foreground text-muted-foreground"
+            className="tap hover:text-foreground text-muted-foreground"
           >
             {link.label}
           </a>

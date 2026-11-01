@@ -2,7 +2,7 @@ import type { AdminAuditLog } from '@portfolio/contracts';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { cn } from '@portfolio/ui/lib/utils';
 
-import { formatRelativeTime } from './relative-time.util';
+import { formatDateTime, formatRelativeTime } from './relative-time.util';
 
 const ACTION_VARIANT: Record<
   AdminAuditLog['action'],
@@ -16,10 +16,21 @@ const ACTION_VARIANT: Record<
   LOGIN: 'outline',
 };
 
+export function AuditActionBadge({
+  action,
+  label,
+}: {
+  action: AdminAuditLog['action'];
+  label: string;
+}) {
+  return <Badge variant={ACTION_VARIANT[action]}>{label}</Badge>;
+}
+
 export function AuditRow({
   item,
   labels,
   now,
+  locale = 'en',
   className,
 }: {
   item: AdminAuditLog;
@@ -28,15 +39,16 @@ export function AuditRow({
     system: string;
   };
   now?: number;
+  locale?: string;
   className?: string;
 }) {
-  const absolute = new Date(item.createdAt).toLocaleString();
+  const absolute = formatDateTime(item.createdAt, locale);
   return (
     <div
       data-slot="audit-row"
       className={cn('flex flex-wrap items-baseline gap-x-3 gap-y-1 py-2', className)}
     >
-      <Badge variant={ACTION_VARIANT[item.action]}>{labels.actions[item.action]}</Badge>
+      <AuditActionBadge action={item.action} label={labels.actions[item.action]} />
       <span className="text-ui min-w-0 flex-1">{item.summary}</span>
       <span className="text-ui-meta text-muted-foreground">{item.userName ?? labels.system}</span>
       <time
@@ -44,7 +56,7 @@ export function AuditRow({
         dateTime={item.createdAt}
         title={absolute}
       >
-        {formatRelativeTime(item.createdAt, now)}
+        {formatRelativeTime(item.createdAt, now, locale)}
       </time>
     </div>
   );

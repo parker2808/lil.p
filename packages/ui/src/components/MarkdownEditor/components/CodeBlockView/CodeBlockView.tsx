@@ -18,7 +18,8 @@ export function CodeBlockView({
   updateAttributes,
   editor,
   plainText,
-}: ReactNodeViewProps & { plainText: string }) {
+  languageLabel,
+}: ReactNodeViewProps & { plainText: string; languageLabel: string }) {
   const language = String(node.attrs.language ?? '') || PLAIN;
   const plainLabel = plainText;
 
@@ -36,7 +37,7 @@ export function CodeBlockView({
                 updateAttributes({ language: value === PLAIN ? '' : value })
               }
             >
-              <SelectTrigger className="h-7 w-36">
+              <SelectTrigger aria-label={languageLabel} className="h-7 w-36">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>

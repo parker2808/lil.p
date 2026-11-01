@@ -8,3 +8,7 @@ export default async function AdminProjectEditorPage({
   const { id } = await params;
   return <AdminProjectsEditor projectId={Number(id)} />;
 }
+
+export function generateMetadata() {
+  return { title: 'Edit project' };
+}

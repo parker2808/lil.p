@@ -15,6 +15,7 @@ import { z } from 'zod';
 
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { useListParams } from '@/modules/admin-core/hooks/use-list-params.hook';
+import { adminListTableLabels } from '@/modules/admin-core/utils/table-labels.util';
 import { useBulkArchiveProjects } from '@/modules/admin-insights/hooks/use-admin-audit.hook';
 import { apiClient } from '@/modules/core/services/api-client.service';
 
@@ -32,7 +33,7 @@ export function AdminProjectsIndex() {
   const router = useRouter();
   const canWrite = useIsAdmin();
   const { params, setParams } = useListParams(adminProjectListParamsSchema);
-  const { data, isError, refetch, isPending, isFetching } = useAdminProjects(params);
+  const { data, isError, refetch, isPending } = useAdminProjects(params);
   const list = data ?? { items: [], page: params.page, pageSize: params.pageSize, total: 0 };
   const archive = useArchiveAdminProject(params);
   const bulkArchive = useBulkArchiveProjects();
@@ -91,6 +92,7 @@ export function AdminProjectsIndex() {
         labels={{ add: t('addFilter'), remove: t('removeChip') }}
       />
       <ProjectsTable
+        label={t('title')}
         items={list.items}
         total={list.total}
         page={list.page}
@@ -99,47 +101,20 @@ export function AdminProjectsIndex() {
         hasFilters={hasFilters}
         isError={isError}
         isLoading={isPending}
-        isFetching={isFetching}
         canWrite={canWrite}
-        labels={{
+        labels={adminListTableLabels(table, {
           empty: t('empty'),
           emptyAction: t('new'),
           noResults: t('noResults'),
           clearFilters: t('clearFilters'),
           error: t('error'),
-          retry: table('retry'),
           selected: t('selected'),
-          previous: table('previous'),
-          next: table('next'),
           range: t('range'),
-          columns: table('columns'),
-          density: table('density'),
-          densityDefault: table('densityDefault'),
-          densityCompact: table('densityCompact'),
-          help: table('help'),
-          helpTitle: table('helpTitle'),
-          confirmDeleteTitle: t('confirmArchiveTitle'),
-          confirmDelete: t('confirmArchive'),
-          cancel: table('cancel'),
-          bulkDelete: t('archive'),
-          shortcuts: {
-            move: table('shortcuts.move'),
-            select: table('shortcuts.select'),
-            open: table('shortcuts.open'),
-            edit: table('shortcuts.edit'),
-            remove: table('shortcuts.remove'),
-            help: table('shortcuts.help'),
-            keys: {
-              j: table('keys.j'),
-              k: table('keys.k'),
-              x: table('keys.x'),
-              enter: table('keys.enter'),
-              e: table('keys.e'),
-              backspace: table('keys.backspace'),
-              help: table('keys.help'),
-            },
-          },
-        }}
+          confirmArchiveTitle: t('confirmArchiveTitle'),
+          confirmArchive: t('confirmArchive'),
+          archive: t('archive'),
+        })}
+        moveLabels={{ up: t('editor.moveUp'), down: t('editor.moveDown') }}
         columnLabels={{
           title: t('columns.title'),
           domain: t('columns.domain'),
@@ -160,8 +135,6 @@ export function AdminProjectsIndex() {
           }
         }}
         onPageChange={(page) => setParams({ page })}
-        onOpen={(row) => router.push(`/admin/projects/${row.id}`)}
-        onEdit={(row) => router.push(`/admin/projects/${row.id}`)}
         onDelete={(row) => archive.mutate(row.id)}
         onBulkDelete={(rows) => bulkArchive.mutate(rows)}
         onCreate={() => router.push('/admin/projects/new')}

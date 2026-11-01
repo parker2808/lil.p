@@ -19,7 +19,7 @@ export function CaseStudyHeader({
       <Breadcrumb aria-label={labels.back}>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <Link href="/projects" className="hover:text-foreground">
+            <Link href="/projects" className="tap tap-breadcrumb hover:text-foreground">
               {labels.back}
             </Link>
           </BreadcrumbItem>

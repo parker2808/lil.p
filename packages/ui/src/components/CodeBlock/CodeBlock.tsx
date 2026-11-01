@@ -40,14 +40,14 @@ export function CodeBlock({
         </Badge>
         <button
           type="button"
-          className="text-eyebrow text-muted-foreground hover:text-foreground ml-auto font-mono"
+          className="tap text-eyebrow text-muted-foreground hover:text-foreground ml-auto font-mono"
           onClick={() => setWrap((value) => !value)}
         >
           {labels.wrap}
         </button>
         <button
           type="button"
-          className="text-eyebrow text-muted-foreground hover:text-foreground font-mono"
+          className="tap text-eyebrow text-muted-foreground hover:text-foreground font-mono"
           onClick={() => void onCopy()}
         >
           {copied ? labels.copied : labels.copy}

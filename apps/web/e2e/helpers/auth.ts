@@ -9,7 +9,7 @@ export async function signIn(
 ): Promise<void> {
   await page.goto('/admin/login');
   await page.getByLabel('Email').fill(account.email);
-  await page.getByLabel('Password').fill(pin);
+  await page.getByRole('textbox', { name: 'Password' }).fill(pin);
   await page.getByRole('button', { name: 'Sign in' }).click();
   await page.waitForURL(/\/admin(?!\/login)/);
 }
