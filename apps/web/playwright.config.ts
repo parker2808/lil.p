@@ -45,6 +45,7 @@ export default defineConfig({
     'contact.spec.ts',
     'admin-publish.spec.ts',
     'admin-pages.spec.ts',
+    'admin-save-status.spec.ts',
     'a11y.spec.ts',
     'lighthouse.spec.ts',
     'ux-overlay.spec.ts',

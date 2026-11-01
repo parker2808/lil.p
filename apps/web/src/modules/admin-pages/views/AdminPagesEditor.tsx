@@ -11,6 +11,7 @@ import { useMemo, useRef, useState } from 'react';
 
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
+import { useSaveStatus } from '@/modules/admin-core/hooks/use-save-status.hook';
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 
 import { AddBlockDialog } from '../components/AddBlockDialog/AddBlockDialog';
@@ -83,6 +84,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
       }
     },
   });
+  const saveStatus = useSaveStatus(autosave);
 
   function move(block: AdminBlock, direction: -1 | 1) {
     const ids = page.data.blocks.map((item) => item.id);
@@ -131,8 +133,8 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
             </Link>
           </span>
         }
-        saveStatus={autosave.status === 'dirty' ? 'idle' : autosave.status}
-        savedText={autosave.savedAt ? editorT('saved', { seconds: 1 }) : undefined}
+        saveStatus={saveStatus.state}
+        savedText={saveStatus.text}
         onLoadLatest={() => {
           void page.refetch();
         }}
@@ -205,7 +207,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
           readOnly: editorT('readOnly'),
           properties: t('inspector'),
           saving: editorT('saving'),
-          saved: editorT('saved', { seconds: 1 }),
+          saved: editorT('saved'),
           offline: editorT('offline'),
           conflict: editorT('conflict'),
           loadLatest: editorT('loadLatest'),

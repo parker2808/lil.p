@@ -24,7 +24,6 @@ export function useAutosave({
   save: (input: { value: string; updatedAt: string | null }) => Promise<{ updatedAt: string }>;
 }) {
   const [saveState, setSaveState] = useState<Exclude<AutosaveStatus, 'idle' | 'dirty'>>('saved');
-  const [savedAt, setSavedAt] = useState<number | null>(null);
   const [currentUpdatedAt, setCurrentUpdatedAt] = useState(updatedAt);
   const latest = useRef({ value, baseline, currentUpdatedAt, enabled, storageKey, save });
 
@@ -61,7 +60,6 @@ export function useAutosave({
           updatedAt: overwrite ? null : state.currentUpdatedAt,
         });
         setCurrentUpdatedAt(result.updatedAt);
-        setSavedAt(Date.now());
         setSaveState('saved');
         window.localStorage.removeItem(state.storageKey);
       } catch (error) {
@@ -83,7 +81,7 @@ export function useAutosave({
       ? saveState
       : isDirty
         ? 'dirty'
-        : saveState === 'saved' && savedAt
+        : currentUpdatedAt
           ? 'saved'
           : 'idle';
 
@@ -117,7 +115,7 @@ export function useAutosave({
 
   return {
     status,
-    savedAt,
+    savedAt: currentUpdatedAt || null,
     updatedAt: currentUpdatedAt,
     flush,
     overwrite: () => flush(true),

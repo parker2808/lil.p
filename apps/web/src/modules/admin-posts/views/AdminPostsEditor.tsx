@@ -13,6 +13,7 @@ import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorS
 import { PublishActions } from '@/modules/admin-core/components/PublishActions/PublishActions';
 import { RoleGate } from '@/modules/admin-core/components/RoleGate/RoleGate';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
+import { useSaveStatus } from '@/modules/admin-core/hooks/use-save-status.hook';
 import { useDirtyGuard } from '@/modules/admin-core/hooks/use-dirty-guard.hook';
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { editorLabelsFromMessages } from '@/modules/admin-core/utils/editor-labels.util';
@@ -112,6 +113,7 @@ function PostEditorForm({ initial }: { initial: PostFormValues }) {
       return { updatedAt: result.updatedAt };
     },
   });
+  const saveStatus = useSaveStatus(autosave);
 
   useDirtyGuard(!readOnly && snapshot !== baseline);
 
@@ -174,8 +176,8 @@ function PostEditorForm({ initial }: { initial: PostFormValues }) {
   return (
     <EditorShell
       title={form.titleEn || t('untitled')}
-      saveStatus={autosave.status === 'dirty' ? 'idle' : autosave.status}
-      savedText={autosave.savedAt ? editorT('saved', { seconds: 1 }) : undefined}
+      saveStatus={saveStatus.state}
+      savedText={saveStatus.text}
       onLoadLatest={() => {
         setForm(initial);
         setBaseline(JSON.stringify(toPostCreateInput(initial)));
@@ -243,7 +245,7 @@ function PostEditorForm({ initial }: { initial: PostFormValues }) {
         readOnly: editorT('readOnly'),
         properties: editorT('properties'),
         saving: editorT('saving'),
-        saved: editorT('saved', { seconds: 0 }),
+        saved: editorT('saved'),
         offline: editorT('offline'),
         conflict: editorT('conflict'),
         loadLatest: editorT('loadLatest'),
