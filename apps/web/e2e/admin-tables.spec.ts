@@ -7,15 +7,23 @@ const LISTS: {
   path: string;
   table: string;
   id?: string;
+  /** Final list URL path after legacy redirects (defaults to path). */
+  listPath?: string;
+  /** Prefix of row detail links (defaults to path). */
+  rowBase?: string;
 }[] = [
   { path: '/admin/projects', table: 'Projects' },
   { path: '/admin/posts', table: 'Posts' },
-  { path: '/admin/experience', table: 'Experience' },
-  { path: '/admin/pages', table: 'Pages', id: '[a-z-]+' },
+  {
+    path: '/admin/experience',
+    table: 'Experience',
+    listPath: '/admin/pages/about',
+    rowBase: '/admin/pages/about/experience',
+  },
 ];
 
 test.describe('admin list tables', () => {
-  for (const { path, table, id = '\\d+' } of LISTS) {
+  for (const { path, table, id = '\\d+', listPath = path, rowBase = path } of LISTS) {
     test(`${path} rows are links that open in a new tab on middle-click`, async ({ page }) => {
       await signIn(page);
       await page.goto(path);
@@ -23,14 +31,14 @@ test.describe('admin list tables', () => {
       const link = page.getByRole('table', { name: table }).getByRole('link').first();
       await expect(link).toBeVisible();
       const href = await link.getAttribute('href');
-      expect(href).toMatch(new RegExp(`^${path}/${id}$`));
+      expect(href).toMatch(new RegExp(`^${rowBase}/${id}$`));
 
       const [popup] = await Promise.all([
         page.context().waitForEvent('page'),
         link.click({ button: 'middle' }),
       ]);
       await expect(popup).toHaveURL(new RegExp(`${href}$`));
-      expect(new URL(page.url()).pathname).toBe(path);
+      expect(new URL(page.url()).pathname).toBe(listPath);
       await popup.close();
     });
   }
