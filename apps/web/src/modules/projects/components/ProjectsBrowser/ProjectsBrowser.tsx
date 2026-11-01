@@ -25,24 +25,35 @@ type Labels = {
   pagination: string;
 };
 
-export function ProjectsBrowser({
-  projects,
-  domains,
-  skills,
-  pageSize,
-  showFeatured,
-  labels,
-}: {
+type ProjectsBrowserProps = {
   projects: PublicProjectListItem[];
   domains: PublicDomain[];
   skills: PublicSkillChip[];
   pageSize: number;
   showFeatured: boolean;
   labels: Labels;
-}) {
+};
+
+export function ProjectsBrowser(props: ProjectsBrowserProps) {
   const search = useSearchParams();
+  return <ProjectsBrowserView {...props} search={Object.fromEntries(search.entries())} />;
+}
+
+/**
+ * Renders the browser for a given query. The block uses it with an empty query as the
+ * Suspense fallback, so the static HTML matches the unfiltered client render (no CLS).
+ */
+export function ProjectsBrowserView({
+  projects,
+  domains,
+  skills,
+  pageSize,
+  showFeatured,
+  labels,
+  search,
+}: ProjectsBrowserProps & { search: Record<string, string> }) {
   const t = useTranslations('projects');
-  const query = parseProjectsSearch(Object.fromEntries(search.entries()));
+  const query = parseProjectsSearch(search);
   const filtered = projects.filter(
     (project) =>
       (!query.domain || project.domain?.slug === query.domain) &&
