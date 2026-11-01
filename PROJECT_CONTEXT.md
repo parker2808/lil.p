@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P5-1 T23a: public typography uses the six-step Sans scale and 65ch paragraph measure; Linux Chromium visual baselines were regenerated once for this change.
 - Vercel deploys: `scripts/vercel-ignore-build.sh` (`ignoreCommand` in `vercel.json`) builds only `main` and, when `HOTFIX_DEPLOYS_ENABLED=1`, `hotfix/*`. Hotfix deploys are paused (`0`) from 2026-11-01 while the Vercel deployment rate limit resets; flip it to `1` to re-enable.
 - P4-6 T24: `SiteSettings.heroStats Json?` (migration `20261101082635_site_settings_hero_stats`, additive `ADD COLUMN heroStats JSON NULL`) must be applied to TiDB by Parker at merge (`prisma migrate deploy`); the agent did not run it. Contracts `heroStatsSchema` allows 0-3 `{ value, suffix?, labelEn, labelVi }`; an empty list is stored as NULL and stored JSON that fails the schema reads as NULL. `HeroBlock` renders a `<dl class="hero-stats">` after the CTAs from `settings.heroStats`, else the first 3 non-zero profile stats; the demo seed resets `heroStats` to NULL, so the home hero now repeats the "By the numbers" StatBand values until Parker sets hero stats (decide whether to drop the home StatBand). The admin "Hero stats" fieldset (`HeroStatsFieldset`) validates on save; "Clear (use profile stats)" saves the whole form with `heroStats: null`. `public-home` visual baselines were re-rendered.
 - P4-5 T22: `e2e/visual.spec.ts` compares `toHaveScreenshot` pixels (full page, 1% diff tolerance) for 6 public routes (`/en` home, projects, `particula` case study, notes, about, contact) and 4 admin routes (login, profile, site settings, new post) at 375 and 1280px. The WebGL hero canvas is hidden by `e2e/visual.css` (the CSS poster and headline stay) and the tech marquee, `<time>` and "Saved HH:mm" are masked. Baselines in `e2e/__screenshots__/` are Linux Chromium only, so the spec skips on other platforms unless a remote browser is set; re-render them with `pnpm --filter @portfolio/web test:visual:update` (Docker `mcr.microsoft.com/playwright` amd64 browser driving the local servers). The admin routes avoid lists and the dashboard because the spec runs after mutating specs. Done criteria "CI green 3 consecutive runs" depends on the existing `/vi/projects` Lighthouse CLS failure (see P4-4).
@@ -103,6 +104,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P5-1 T23a: set public Sans type scale, body/display line heights, and paragraph measure; guard paragraph font and line length in E2E.
 - 2026-11-01: Vercel builds only `main` (and `hotfix/*` behind a toggle, currently off); other branches skip via `ignoreCommand`.
 - 2026-11-01: Weekly Graphify refresh of `graphify-out/GRAPH_REPORT.md` (code-only, no model calls).
 - 2026-11-01: P4-6 T24: hero stats stored in site settings (nullable JSON column, admin fieldset, profile stats fallback). Spec: `docs/specs/2026-11-01-hero-stats.md`.

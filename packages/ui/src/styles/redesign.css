@@ -67,6 +67,38 @@
 }
 .public-site {
   counter-reset: section;
+  --measure: 65ch;
+  line-height: 1.5;
+}
+.public-site p {
+  font-family: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  max-width: 65ch;
+}
+.public-site .font-mono {
+  font-size: 0.8125rem;
+}
+.public-site .text-ui {
+  font-size: 0.875rem;
+}
+.public-site .text-body,
+.public-site .text-prose {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.public-site .text-subheading {
+  font-size: 1.25rem;
+}
+.public-site .text-heading {
+  font-size: 1.75rem;
+  line-height: 1.1;
+}
+.public-site .text-title {
+  font-size: 2.5rem;
+  line-height: 1.1;
+}
+.public-site .text-display {
+  font-size: 4rem;
+  line-height: 1.1;
 }
 .tap {
   display: inline-flex;
@@ -230,7 +262,7 @@
 }
 .hero-stats dt {
   color: var(--muted-foreground);
-  font: 500 11px/1.4 var(--font-mono);
+  font: 500 12px/1.4 var(--font-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -508,7 +540,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font: 11px var(--font-mono);
+  font: 12px var(--font-mono);
   border-radius: 6px;
   background: var(--card);
   padding: 4px 8px;
@@ -668,7 +700,7 @@
     border-radius: 8px;
   }
   .reader-index li span {
-    font: 11px var(--font-mono);
+    font: 12px var(--font-mono);
     color: var(--subtle-foreground);
   }
   .reader-index [aria-current='page'] {
@@ -796,7 +828,7 @@
     grid-column: 1;
     grid-row: 2;
     align-self: start;
-    font: 11px/1.5 var(--font-mono);
+    font: 12px/1.5 var(--font-sans);
   }
 }
 .admin .redesign-stat-card {
