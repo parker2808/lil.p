@@ -52,6 +52,7 @@ export default defineConfig({
     'ux-404.spec.ts',
     'content-guard.spec.ts',
     'hero-shader.spec.ts',
+    'admin-login.spec.ts',
   ],
   fullyParallel: false,
   workers: 1,
