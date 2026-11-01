@@ -1,5 +1,34 @@
 import { cn } from '@portfolio/ui/lib/utils';
+import { cva, type VariantProps } from 'class-variance-authority';
 import type { ComponentProps } from 'react';
+
+export const tableHeadVariants = cva(
+  'text-muted-foreground border-border h-10 border-b px-3 font-medium',
+  {
+    variants: {
+      surface: {
+        plain: 'text-ui-meta',
+        muted: 'bg-muted text-[11px] leading-[1.4] tracking-[0.06em] uppercase',
+      },
+    },
+    defaultVariants: {
+      surface: 'plain',
+    },
+  },
+);
+
+export const tableCellVariants = cva('text-ui', {
+  variants: {
+    density: {
+      default: 'px-3',
+      comfortable: 'px-3 py-3',
+      flush: 'p-0',
+    },
+  },
+  defaultVariants: {
+    density: 'default',
+  },
+});
 
 export function Table({ className, ...props }: ComponentProps<'table'>) {
   return (
@@ -35,19 +64,30 @@ export function TableRow({ className, ...props }: ComponentProps<'tr'>) {
   );
 }
 
-export function TableHead({ className, ...props }: ComponentProps<'th'>) {
+export function TableHead({
+  className,
+  surface,
+  ...props
+}: ComponentProps<'th'> & VariantProps<typeof tableHeadVariants>) {
   return (
     <th
       data-slot="table-head"
-      className={cn(
-        'text-ui-meta text-muted-foreground border-border h-10 border-b px-3 font-medium',
-        className,
-      )}
+      className={cn(tableHeadVariants({ surface }), className)}
       {...props}
     />
   );
 }
 
-export function TableCell({ className, ...props }: ComponentProps<'td'>) {
-  return <td data-slot="table-cell" className={cn('text-ui px-3', className)} {...props} />;
+export function TableCell({
+  className,
+  density,
+  ...props
+}: ComponentProps<'td'> & VariantProps<typeof tableCellVariants>) {
+  return (
+    <td
+      data-slot="table-cell"
+      className={cn(tableCellVariants({ density }), className)}
+      {...props}
+    />
+  );
 }

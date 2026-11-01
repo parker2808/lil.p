@@ -92,7 +92,7 @@ export function AdminTable<TData>({
   function statusRow(state: string, content: ReactNode) {
     return (
       <TableRow data-state={state}>
-        <TableCell colSpan={columns.length} className="admin-table-status">
+        <TableCell colSpan={columns.length} density="comfortable" className="px-4 py-8">
           {content}
         </TableCell>
       </TableRow>
@@ -110,7 +110,7 @@ export function AdminTable<TData>({
       return Array.from({ length: 5 }, (_, index) => (
         <TableRow key={`skeleton-${index}`} data-state="loading">
           {columns.map((column) => (
-            <TableCell key={column.id}>
+            <TableCell key={column.id} density="comfortable">
               <Skeleton className="h-5 w-4/5" />
             </TableCell>
           ))}
@@ -129,7 +129,7 @@ export function AdminTable<TData>({
             const content = column.cell(row);
             if (!href || column.interactive) {
               return (
-                <TableCell key={column.id} className={column.className}>
+                <TableCell key={column.id} density="comfortable" className={column.className}>
                   {content}
                 </TableCell>
               );
@@ -137,7 +137,7 @@ export function AdminTable<TData>({
             const primary = linked === 0;
             linked += 1;
             return (
-              <TableCell key={column.id} className={column.className} data-linked="">
+              <TableCell key={column.id} density="flush" className={column.className}>
                 <LinkComponent
                   href={href}
                   className="admin-table-link"
@@ -179,6 +179,7 @@ export function AdminTable<TData>({
                 return (
                   <TableHead
                     key={column.id}
+                    surface="muted"
                     className={column.className}
                     aria-sort={
                       sorted === 'asc' ? 'ascending' : sorted === 'desc' ? 'descending' : undefined

@@ -340,7 +340,7 @@ export function DataTable<TData>({
           <TableHeader>
             {table.getHeaderGroups().map((group) => (
               <TableRow key={group.id}>
-                <TableHead className="w-10">
+                <TableHead surface="muted" className="w-10">
                   <Checkbox
                     checked={table.getIsAllPageRowsSelected()}
                     onCheckedChange={(value) => table.toggleAllPageRowsSelected(Boolean(value))}
@@ -350,6 +350,7 @@ export function DataTable<TData>({
                 {group.headers.map((header) => (
                   <TableHead
                     key={header.id}
+                    surface="muted"
                     className="relative"
                     style={{ width: header.getSize() }}
                     aria-sort={
@@ -386,11 +387,15 @@ export function DataTable<TData>({
             {isLoading
               ? Array.from({ length: 5 }, (_, index) => (
                   <TableRow key={`skeleton-${index}`}>
-                    <TableCell>
+                    <TableCell density="comfortable">
                       <Skeleton className="size-4" />
                     </TableCell>
                     {table.getVisibleLeafColumns().map((column) => (
-                      <TableCell key={column.id} style={{ width: column.getSize() }}>
+                      <TableCell
+                        key={column.id}
+                        density="comfortable"
+                        style={{ width: column.getSize() }}
+                      >
                         <Skeleton className="h-5 w-4/5" />
                       </TableCell>
                     ))}
@@ -404,7 +409,7 @@ export function DataTable<TData>({
                     onClick={() => setActiveIndex(index)}
                     onDoubleClick={() => onOpen?.(row.original)}
                   >
-                    <TableCell className="w-10">
+                    <TableCell density="comfortable" className="w-10">
                       <Checkbox
                         checked={row.getIsSelected()}
                         aria-label={`${labels.shortcuts.select}: ${rowId(row.original)}`}
@@ -423,7 +428,11 @@ export function DataTable<TData>({
                       />
                     </TableCell>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} style={{ width: cell.column.getSize() }}>
+                      <TableCell
+                        key={cell.id}
+                        density="comfortable"
+                        style={{ width: cell.column.getSize() }}
+                      >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}
