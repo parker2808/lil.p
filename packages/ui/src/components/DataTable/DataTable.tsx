@@ -1,18 +1,9 @@
 'use client';
 
 import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@portfolio/ui/components/ui/alert-dialog';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Checkbox } from '@portfolio/ui/components/ui/checkbox';
+import { ConfirmDialog } from '@portfolio/ui/components/ui/confirm-dialog';
 import { Dialog, DialogContent, DialogTitle } from '@portfolio/ui/components/ui/dialog';
 import {
   DropdownMenu,
@@ -478,36 +469,21 @@ export function DataTable<TData>({
         </Button>
       </div>
 
-      <AlertDialog
+      <ConfirmDialog
         open={pendingDelete !== null}
         onOpenChange={(open) => !open && setPendingDelete(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{labels.confirmDeleteTitle}</AlertDialogTitle>
-            <AlertDialogDescription>{labels.confirmDelete}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{labels.cancel}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (!pendingDelete) {
-                  return;
-                }
-                if (pendingDelete.length > 1) {
-                  onBulkDelete?.(pendingDelete);
-                } else if (pendingDelete[0]) {
-                  onDelete?.(pendingDelete[0]);
-                }
-                setPendingDelete(null);
-                setRowSelection({});
-              }}
-            >
-              {labels.bulkDelete}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        title={labels.confirmDeleteTitle}
+        description={labels.confirmDelete}
+        cancelLabel={labels.cancel}
+        confirmLabel={labels.bulkDelete}
+        onConfirm={() => {
+          if (!pendingDelete) return;
+          if (pendingDelete.length > 1) onBulkDelete?.(pendingDelete);
+          else if (pendingDelete[0]) onDelete?.(pendingDelete[0]);
+          setPendingDelete(null);
+          setRowSelection({});
+        }}
+      />
 
       <Dialog open={helpOpen} onOpenChange={setHelpOpen}>
         <DialogContent>

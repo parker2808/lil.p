@@ -5,16 +5,7 @@ import { DataTable, type DataTableLabels } from '@portfolio/ui/components/DataTa
 import { HuePicker } from '@portfolio/ui/components/HuePicker/HuePicker';
 import { IconPicker } from '@portfolio/ui/components/IconPicker/IconPicker';
 import { Button } from '@portfolio/ui/components/ui/button';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@portfolio/ui/components/ui/alert-dialog';
+import { ConfirmDialog } from '@portfolio/ui/components/ui/confirm-dialog';
 import { Field, FieldError, FieldLabel } from '@portfolio/ui/components/ui/field';
 import { IconButton } from '@portfolio/ui/components/ui/icon-button';
 import { Input } from '@portfolio/ui/components/ui/input';
@@ -259,28 +250,18 @@ export function SmallEntityIndex<T extends SmallEntityRow>({
           </button>
         )}
       />
-      <AlertDialog
+      <ConfirmDialog
         open={pendingDelete !== null}
         onOpenChange={(open) => !open && setPendingDelete(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{labels.confirmDeleteTitle}</AlertDialogTitle>
-            <AlertDialogDescription>{labels.confirmDelete}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{labels.cancel}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (pendingDelete) onDelete(pendingDelete.id);
-                setPendingDelete(null);
-              }}
-            >
-              {labels.bulkDelete}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        title={labels.confirmDeleteTitle}
+        description={labels.confirmDelete}
+        cancelLabel={labels.cancel}
+        confirmLabel={labels.bulkDelete}
+        onConfirm={() => {
+          if (pendingDelete) onDelete(pendingDelete.id);
+          setPendingDelete(null);
+        }}
+      />
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent>
           <SheetTitle>{editing ? labels.editTitle : labels.createTitle}</SheetTitle>

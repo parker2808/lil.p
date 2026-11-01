@@ -8,6 +8,7 @@ import { MediaLibrary } from '@portfolio/ui/components/MediaLibrary/MediaLibrary
 import { MediaUploader } from '@portfolio/ui/components/MediaUploader/MediaUploader';
 import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
 import { Button } from '@portfolio/ui/components/ui/button';
+import { ConfirmDialog } from '@portfolio/ui/components/ui/confirm-dialog';
 import { Field, FieldLabel } from '@portfolio/ui/components/ui/field';
 import { Input } from '@portfolio/ui/components/ui/input';
 import { Sheet, SheetContent, SheetTitle } from '@portfolio/ui/components/ui/sheet';
@@ -31,6 +32,7 @@ export function AdminMediaIndex() {
   const upload = useMediaUpload();
   const mutations = useAdminMediaMutations();
   const [editing, setEditing] = useState<AdminMedia | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
   const [altEn, setAltEn] = useState('');
   const [altVi, setAltVi] = useState('');
 
@@ -89,7 +91,8 @@ export function AdminMediaIndex() {
             size="sm"
             variant="destructive"
             onClick={() => {
-              mutations.remove.mutate(editing.id, { onSuccess: () => setEditing(null) });
+              setPendingDeleteId(editing.id);
+              if (!wide) setEditing(null);
             }}
           >
             {t('delete')}
@@ -172,6 +175,20 @@ export function AdminMediaIndex() {
           {details}
         </aside>
       ) : null}
+      <ConfirmDialog
+        open={pendingDeleteId !== null}
+        onOpenChange={(open) => !open && setPendingDeleteId(null)}
+        title={t('delete')}
+        description={t('confirmDelete')}
+        confirmLabel={t('delete')}
+        cancelLabel={t('cancel')}
+        onConfirm={() => {
+          if (pendingDeleteId !== null) {
+            mutations.remove.mutate(pendingDeleteId, { onSuccess: () => setEditing(null) });
+          }
+          setPendingDeleteId(null);
+        }}
+      />
       <Sheet open={!wide && Boolean(editing)} onOpenChange={(open) => !open && setEditing(null)}>
         <SheetContent>
           <SheetTitle>{editing?.originalName}</SheetTitle>

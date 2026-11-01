@@ -2,16 +2,7 @@
 
 import type { AdminBlock, BlockType, PageKey } from '@portfolio/contracts';
 import { BLOCK_REGISTRY } from '@portfolio/contracts';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@portfolio/ui/components/ui/alert-dialog';
+import { ConfirmDialog } from '@portfolio/ui/components/ui/confirm-dialog';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
 import { useTranslations } from 'next-intl';
@@ -256,30 +247,23 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
           onReorder={(ids) => mutations.reorder.mutate(ids, { onSuccess: bumpPreview })}
         />
       </EditorShell>
-      <AlertDialog open={deleteId !== null} onOpenChange={(open) => !open && setDeleteId(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('confirmDeleteTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('confirmDelete')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (deleteId !== null) {
-                  mutations.remove.mutate(deleteId, { onSuccess: bumpPreview });
-                  if (selectedId === deleteId) {
-                    setSelectedId(null);
-                  }
-                }
-                setDeleteId(null);
-              }}
-            >
-              {t('delete')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmDialog
+        open={deleteId !== null}
+        onOpenChange={(open) => !open && setDeleteId(null)}
+        title={t('confirmDeleteTitle')}
+        description={t('confirmDelete')}
+        cancelLabel={t('cancel')}
+        confirmLabel={t('delete')}
+        onConfirm={() => {
+          if (deleteId !== null) {
+            mutations.remove.mutate(deleteId, { onSuccess: bumpPreview });
+            if (selectedId === deleteId) {
+              setSelectedId(null);
+            }
+          }
+          setDeleteId(null);
+        }}
+      />
     </>
   );
 }
