@@ -159,7 +159,14 @@
       "dashboard": "Back to dashboard"
     },
     "nav": {
+      "more": "More",
+      "sections": "Sections",
+      "layout": "Layout",
       "groups": {
+        "overview": "Overview",
+        "pages": "Pages",
+        "inbox": "Inbox",
+        "settings": "Settings",
         "main": "Workspace",
         "content": "Content",
         "site": "Site",
@@ -167,6 +174,9 @@
         "access": "Access"
       },
       "dashboard": "Dashboard",
+      "home": "Home",
+      "about": "About",
+      "contact": "Contact",
       "inbox": "Inbox",
       "projects": "Projects",
       "posts": "Posts",
@@ -187,7 +197,7 @@
       "users": "Users"
     },
     "shell": {
-      "menu": "Menu",
+      "account": "Account",
       "skip": "Skip to content",
       "toggleSidebar": "Collapse sidebar",
       "expandSidebar": "Expand sidebar",
@@ -198,12 +208,18 @@
       "changePassword": "Change password",
       "language": "Language",
       "localeEn": "EN",
-      "localeVi": "VI"
+      "localeVi": "VI",
+      "switchLanguage": "Language: {locale}"
     },
     "palette": {
       "open": "Jump to",
-      "newProject": "New project",
-      "newPost": "New post"
+      "createProject": "Create project",
+      "writePost": "Write post",
+      "publish": "Publish current page",
+      "openSite": "Open public site",
+      "switchLanguage": "Switch language ({locale})",
+      "actions": "Actions",
+      "navigate": "Go to"
     },
     "password": {
       "title": "Change password",
@@ -271,12 +287,29 @@
         "label": "Period"
       },
       "cards": {
-        "projects": "Projects published",
-        "posts": "Posts published",
-        "drafts": "Drafts",
-        "publishedPeriod": "Published this period",
-        "views": "Page views",
+        "views": "Page views · {range}",
         "viewsSparkline": "Views over the period"
+      },
+      "todos": {
+        "unread": {
+          "title": "Unread messages",
+          "action": "Open inbox",
+          "emptyTitle": "Inbox zero",
+          "emptyDescription": "No unread messages."
+        },
+        "drafts": {
+          "title": "Unpublished drafts",
+          "action": "Review drafts",
+          "projects": "{count, plural, one {# project draft} other {# project drafts}}",
+          "posts": "{count, plural, one {# post draft} other {# post drafts}}",
+          "emptyTitle": "Everything is published",
+          "emptyDescription": "No project or post is waiting in draft."
+        },
+        "views": {
+          "action": "Open analytics",
+          "emptyTitle": "No page views yet",
+          "emptyDescription": "No visits in this period or the one before."
+        }
       },
       "delta": {
         "up": "+{value} vs previous {range}",
@@ -381,40 +414,32 @@
       "addFilter": "+ Filter",
       "removeChip": "×",
       "empty": "No messages yet.",
-      "emptyAction": "Open the public contact page",
       "noResults": "No matching messages.",
       "clearFilters": "Clear filters",
       "error": "Inbox could not be loaded.",
       "retry": "Retry",
       "loading": "Loading message",
-      "selected": "{count} selected",
       "range": "{from}–{to} of {total}",
-      "markRead": "Mark read",
       "markReplied": "Mark replied",
       "markSpam": "Mark spam",
-      "confirmSpamTitle": "Mark these messages as spam?",
-      "confirmSpam": "Spam stays hidden from the default inbox.",
       "updateError": "That message could not be updated.",
-      "reply": "Reply by email",
-      "back": "Back to inbox",
+      "reply": "Reply via email",
+      "archive": "Archive",
+      "archived": "Message archived",
+      "messages": "Messages",
+      "selectMessage": "Select a message to read it.",
       "noTopic": "No topic",
       "newMessage": "New message from {name}",
       "open": "Open",
       "bell": "{count} unread messages",
       "bellShort": "Inbox",
       "bellOverflow": "9+",
-      "columns": {
-        "name": "Name",
-        "topic": "Topic",
-        "status": "Status",
-        "created": "Received",
-        "actions": "Actions"
-      },
       "status": {
         "NEW": "New",
         "READ": "Read",
         "REPLIED": "Replied",
-        "SPAM": "Spam"
+        "SPAM": "Spam",
+        "ARCHIVED": "Archived"
       }
     },
     "table": {
@@ -425,11 +450,13 @@
       "density": "Density",
       "densityDefault": "Default",
       "densityCompact": "Compact",
+      "densityComfortable": "Comfortable",
       "help": "Shortcuts",
       "helpTitle": "Keyboard shortcuts",
       "cancel": "Cancel",
       "select": "Select",
       "selectAll": "Select all rows",
+      "clearSelection": "Clear selection",
       "shortcuts": {
         "move": "Move the active row",
         "select": "Select the active row",

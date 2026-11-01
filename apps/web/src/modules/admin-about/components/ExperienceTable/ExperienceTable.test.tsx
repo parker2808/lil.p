@@ -35,6 +35,10 @@ const labels = {
   select: 'Select',
   selectAll: 'Select all rows',
   selected: '{count} selected',
+  clearSelection: 'Clear selection',
+  density: 'Density',
+  densityCompact: 'Compact',
+  densityComfortable: 'Comfortable',
   range: '{from}–{to} of {total}',
   previous: 'Previous',
   next: 'Next',
@@ -88,7 +92,7 @@ describe('ExperienceTable', () => {
     renderTable();
     expect(screen.getByRole('link', { name: /Acme/ })).toHaveAttribute(
       'href',
-      '/admin/experience/4',
+      '/admin/pages/about/experience/4',
     );
     expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
   });

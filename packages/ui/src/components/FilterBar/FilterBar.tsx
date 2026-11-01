@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@portfolio/ui/components/ui/dropdown-menu';
 import { Input } from '@portfolio/ui/components/ui/input';
-import type { FormEvent } from 'react';
+import { type FormEvent, useState } from 'react';
 
 export type FilterChip = {
   id: string;
@@ -40,10 +40,22 @@ export function FilterBar({
   onAddFilter: (id: string) => void;
   labels: { add: string; remove: string };
 }) {
+  const [value, setValue] = useState(q);
+  const [syncedQ, setSyncedQ] = useState(q);
+  if (q !== syncedQ) {
+    setSyncedQ(q);
+    setValue(q);
+  }
+
+  function commit(next: string) {
+    if (next !== q) {
+      onQChange(next);
+    }
+  }
+
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    onQChange(String(data.get('q') ?? ''));
+    commit(value);
   }
 
   return (
@@ -52,10 +64,11 @@ export function FilterBar({
         <Input
           name="q"
           aria-label={placeholder}
-          defaultValue={q}
+          value={value}
           placeholder={placeholder}
           className="w-56"
-          onBlur={(event) => onQChange(event.target.value)}
+          onChange={(event) => setValue(event.target.value)}
+          onBlur={() => commit(value)}
         />
       </form>
       {chips.map((chip) => (

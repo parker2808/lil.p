@@ -19,6 +19,8 @@ import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { RoleGate } from '@/modules/admin-core/components/RoleGate/RoleGate';
+import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
+import { usePublishAction } from '@/modules/admin-core/stores/admin-ui.store';
 import { ApiError } from '@/modules/core/utils/api-error.util';
 
 import { useDiscardPage, usePublishPage } from '../../hooks/use-page-versions.hook';
@@ -33,6 +35,7 @@ export function PublishBar({
   onInvalid: (keys: string[]) => void;
 }) {
   const t = useTranslations('admin.pages.publish');
+  const isAdmin = useIsAdmin();
   const publish = usePublishPage(pageKey);
   const discard = useDiscardPage(pageKey);
   const [note, setNote] = useState('');
@@ -57,6 +60,8 @@ export function PublishBar({
       setError(t('failed'));
     }
   }
+
+  usePublishAction(() => void onPublish(), isAdmin && !publish.isPending);
 
   return (
     <div className="flex flex-wrap items-center gap-2">

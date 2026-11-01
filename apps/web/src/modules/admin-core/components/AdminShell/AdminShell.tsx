@@ -8,6 +8,7 @@ import { useAdminEvents } from '../../hooks/use-admin-events.hook';
 import { MeProvider } from '../../hooks/use-me.hook';
 import { usePublicCacheSync } from '../../hooks/use-public-cache-sync.hook';
 import { AdminUiProvider } from '../../stores/admin-ui.store';
+import { AdminBottomBar } from '../AdminBottomBar/AdminBottomBar';
 import { AdminSidebar } from '../AdminSidebar/AdminSidebar';
 import { AdminCommandPalette } from '../CommandPalette/CommandPalette';
 import { NotificationBell } from '../NotificationBell/NotificationBell';
@@ -59,6 +60,7 @@ export function AdminShell({
             >
               {children}
             </main>
+            <AdminBottomBar />
           </div>
         </div>
       </AdminUiProvider>

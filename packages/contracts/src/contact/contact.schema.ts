@@ -5,7 +5,10 @@ import { localeSchema } from '../common/locale.schema';
 
 export const CONTACT_MESSAGE_MAX = 2000;
 
-export const CONTACT_MESSAGE_STATUSES = ['NEW', 'READ', 'REPLIED', 'SPAM'] as const;
+export const CONTACT_MESSAGE_STATUSES = ['NEW', 'READ', 'REPLIED', 'SPAM', 'ARCHIVED'] as const;
+
+/** Statuses the inbox hides when no status filter is set. */
+export const CONTACT_MESSAGE_HIDDEN_STATUSES = ['SPAM', 'ARCHIVED'] as const;
 
 export const contactMessageStatusSchema = z.enum(CONTACT_MESSAGE_STATUSES);
 

@@ -22,6 +22,8 @@ export const tableCellVariants = cva('text-ui', {
     density: {
       default: 'px-3',
       comfortable: 'px-3 py-3',
+      /** Padding from the parent's `--cell-px` / `--cell-py` density tokens. */
+      token: 'px-(--cell-px) py-(--cell-py)',
       flush: 'p-0',
     },
   },

@@ -1,53 +1,44 @@
 import AxeBuilder from '@axe-core/playwright';
-import { expect, type Page, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
-import { E2E_USER } from './helpers/credentials';
-
-async function createMessage(page: Page) {
-  const response = await page.request.post('/api/public/contact', {
-    headers: { Origin: new URL(page.url()).origin },
-    data: {
-      name: 'Table Visitor',
-      email: E2E_USER.email,
-      message: 'Admin table test message',
-      locale: 'en',
-    },
-  });
-  expect(response.ok()).toBeTruthy();
-}
 
 const LISTS: {
   path: string;
   table: string;
   id?: string;
-  setup?: (page: Page) => Promise<void>;
+  /** Final list URL path after legacy redirects (defaults to path). */
+  listPath?: string;
+  /** Prefix of row detail links (defaults to path). */
+  rowBase?: string;
 }[] = [
   { path: '/admin/projects', table: 'Projects' },
   { path: '/admin/posts', table: 'Posts' },
-  { path: '/admin/experience', table: 'Experience' },
-  { path: '/admin/inbox', table: 'Inbox', setup: createMessage },
-  { path: '/admin/pages', table: 'Pages', id: '[a-z-]+' },
+  {
+    path: '/admin/experience',
+    table: 'Experience',
+    listPath: '/admin/pages/about',
+    rowBase: '/admin/pages/about/experience',
+  },
 ];
 
 test.describe('admin list tables', () => {
-  for (const { path, table, id = '\\d+', setup } of LISTS) {
+  for (const { path, table, id = '\\d+', listPath = path, rowBase = path } of LISTS) {
     test(`${path} rows are links that open in a new tab on middle-click`, async ({ page }) => {
       await signIn(page);
-      await setup?.(page);
       await page.goto(path);
 
       const link = page.getByRole('table', { name: table }).getByRole('link').first();
       await expect(link).toBeVisible();
       const href = await link.getAttribute('href');
-      expect(href).toMatch(new RegExp(`^${path}/${id}$`));
+      expect(href).toMatch(new RegExp(`^${rowBase}/${id}$`));
 
       const [popup] = await Promise.all([
         page.context().waitForEvent('page'),
         link.click({ button: 'middle' }),
       ]);
       await expect(popup).toHaveURL(new RegExp(`${href}$`));
-      expect(new URL(page.url()).pathname).toBe(path);
+      expect(new URL(page.url()).pathname).toBe(listPath);
       await popup.close();
     });
   }

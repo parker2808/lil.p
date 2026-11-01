@@ -170,7 +170,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
             />
             <Sheet>
               <SheetTrigger asChild>
-                <Button type="button" size="sm" variant="outline" className="2xl:hidden">
+                <Button type="button" size="sm" variant="outline" className="lg:hidden">
                   {t('preview.open')}
                 </Button>
               </SheetTrigger>

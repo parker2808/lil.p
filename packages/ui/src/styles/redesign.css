@@ -547,10 +547,59 @@ html:root {
 .admin-topbar {
   background: var(--card);
 }
+.admin-bottom-bar {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  background: var(--card);
+  padding-top: 4px;
+  padding-inline: max(8px, env(safe-area-inset-left)) max(8px, env(safe-area-inset-right));
+  padding-bottom: calc(4px + env(safe-area-inset-bottom));
+}
+.admin-bottom-bar[data-keyboard-open='true'] {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .admin-bottom-bar {
+    display: none;
+  }
+}
+.admin-bottom-bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 48px;
+  border-radius: 10px;
+  color: var(--muted-foreground);
+  font-size: 11px;
+  font-weight: 500;
+}
+.admin-bottom-bar-item[aria-current='page'] {
+  color: var(--primary);
+}
+.admin-bottom-bar-item:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+.admin-bottom-bar-badge {
+  position: absolute;
+  top: -6px;
+  left: 12px;
+  min-width: 18px;
+  justify-content: center;
+  padding: 0 4px;
+  font-size: 10px;
+  line-height: 16px;
+}
 .admin-main {
+  --admin-main-padding-top: 28px;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
-  padding: 28px clamp(16px, 3vw, 40px) 48px;
+  padding: var(--admin-main-padding-top) clamp(16px, 3vw, 40px) 48px;
 }
 .admin-main > * {
   max-width: 80rem;
@@ -644,9 +693,6 @@ html:root {
   }
 }
 @media (max-width: 767px) {
-  .admin .dashboard-stats-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
   .block-heading {
     grid-template-columns: 1fr;
     gap: 8px;
@@ -797,6 +843,24 @@ html:root {
 .redesign-data-table[data-fetching] tbody {
   opacity: 0.65;
 }
+.redesign-admin-table {
+  --row-h: 44px;
+  --cell-px: 12px;
+  --cell-py: 12px;
+}
+.redesign-admin-table[data-density='compact'] {
+  --row-h: 36px;
+  --cell-px: 8px;
+  --cell-py: 6px;
+}
+.redesign-admin-table tbody tr[data-row] {
+  height: var(--row-h);
+}
+.redesign-admin-table tbody tr[data-row]:focus-visible {
+  background: var(--muted);
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
 .admin-table-viewport {
   max-height: min(70vh, 48rem);
   overflow: auto;
@@ -821,9 +885,64 @@ html:root {
 }
 .admin-table-link {
   display: block;
-  padding: 12px;
+  padding: var(--cell-py) var(--cell-px);
   color: inherit;
   outline: none;
+}
+.admin-inbox-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: inherit;
+  outline: none;
+  transition: background-color 120ms ease;
+}
+.admin-inbox-row:hover {
+  background: var(--muted);
+}
+.admin-inbox-row:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+.admin-inbox-row[aria-current='page'] {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+.admin-inbox-list,
+.admin-inbox-message {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+/* One pane below lg: the list on /admin/inbox, the message on /admin/inbox/:id. */
+@media (max-width: 1023px) {
+  .admin-inbox[data-selected='true'] > .admin-inbox-list,
+  .admin-inbox[data-selected='false'] > .admin-inbox-message {
+    display: none;
+  }
+}
+@media (min-width: 1024px) {
+  .admin-inbox {
+    display: grid;
+    grid-template-columns: 22rem minmax(0, 1fr);
+    gap: 24px;
+    height: 100%;
+    min-height: 0;
+  }
+  .admin-inbox > .admin-inbox-list,
+  .admin-inbox > .admin-inbox-message {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
+  .admin-inbox > .admin-inbox-message {
+    border-left: 1px solid var(--border);
+    padding-left: 24px;
+  }
 }
 .admin-table-sort {
   display: inline-flex;
@@ -1004,6 +1123,15 @@ html:root {
 .admin .redesign-save-status {
   min-width: 10rem;
 }
+.admin .admin-editor-header {
+  position: sticky;
+  top: calc(-1 * var(--admin-main-padding-top, 0px));
+  z-index: 20;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--background) 88%, transparent);
+  padding-block: 8px;
+  backdrop-filter: blur(12px);
+}
 .admin .redesign-markdown-editor {
   border-radius: var(--radius-lg);
   background: var(--card);
@@ -1043,6 +1171,13 @@ html:root {
   font-weight: 600;
   letter-spacing: -0.03em;
   margin-top: 8px;
+}
+.admin .dashboard-metric {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
 }
 .headline-accent {
   font-style: italic;

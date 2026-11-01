@@ -159,7 +159,14 @@
       "dashboard": "Về bảng điều khiển"
     },
     "nav": {
+      "more": "Thêm",
+      "sections": "Các mục",
+      "layout": "Bố cục",
       "groups": {
+        "overview": "Tổng quan",
+        "pages": "Trang",
+        "inbox": "Hộp thư",
+        "settings": "Cài đặt",
         "main": "Không gian làm việc",
         "content": "Nội dung",
         "site": "Trang web",
@@ -167,6 +174,9 @@
         "access": "Quyền truy cập"
       },
       "dashboard": "Bảng điều khiển",
+      "home": "Trang chủ",
+      "about": "Giới thiệu",
+      "contact": "Liên hệ",
       "inbox": "Hộp thư",
       "projects": "Dự án",
       "posts": "Bài viết",
@@ -187,7 +197,7 @@
       "users": "Người dùng"
     },
     "shell": {
-      "menu": "Menu",
+      "account": "Tài khoản",
       "skip": "Đến nội dung",
       "toggleSidebar": "Thu gọn thanh bên",
       "expandSidebar": "Mở rộng thanh bên",
@@ -198,12 +208,18 @@
       "changePassword": "Đổi mật khẩu",
       "language": "Ngôn ngữ",
       "localeEn": "EN",
-      "localeVi": "VI"
+      "localeVi": "VI",
+      "switchLanguage": "Ngôn ngữ: {locale}"
     },
     "palette": {
       "open": "Chuyển đến",
-      "newProject": "Dự án mới",
-      "newPost": "Bài viết mới"
+      "createProject": "Tạo dự án",
+      "writePost": "Viết bài",
+      "publish": "Xuất bản trang hiện tại",
+      "openSite": "Mở trang công khai",
+      "switchLanguage": "Đổi ngôn ngữ ({locale})",
+      "actions": "Thao tác",
+      "navigate": "Đi tới"
     },
     "password": {
       "title": "Đổi mật khẩu",
@@ -271,12 +287,29 @@
         "label": "Khoảng thời gian"
       },
       "cards": {
-        "projects": "Dự án đã xuất bản",
-        "posts": "Bài viết đã xuất bản",
-        "drafts": "Bản nháp",
-        "publishedPeriod": "Đã xuất bản trong kỳ",
-        "views": "Lượt xem trang",
+        "views": "Lượt xem trang · {range}",
         "viewsSparkline": "Lượt xem trong kỳ"
+      },
+      "todos": {
+        "unread": {
+          "title": "Tin nhắn chưa đọc",
+          "action": "Mở hộp thư",
+          "emptyTitle": "Hộp thư trống",
+          "emptyDescription": "Không có tin nhắn chưa đọc."
+        },
+        "drafts": {
+          "title": "Bản nháp chưa xuất bản",
+          "action": "Xem bản nháp",
+          "projects": "{count} bản nháp dự án",
+          "posts": "{count} bản nháp bài viết",
+          "emptyTitle": "Mọi nội dung đã xuất bản",
+          "emptyDescription": "Không có dự án hay bài viết nào đang ở dạng nháp."
+        },
+        "views": {
+          "action": "Mở phân tích",
+          "emptyTitle": "Chưa có lượt xem",
+          "emptyDescription": "Không có lượt truy cập trong kỳ này và kỳ trước."
+        }
       },
       "delta": {
         "up": "+{value} so với {range} trước",
@@ -381,40 +414,32 @@
       "addFilter": "+ Bộ lọc",
       "removeChip": "×",
       "empty": "Chưa có tin nhắn.",
-      "emptyAction": "Mở trang liên hệ công khai",
       "noResults": "Không có tin nhắn phù hợp.",
       "clearFilters": "Xóa bộ lọc",
       "error": "Không tải được hộp thư.",
       "retry": "Thử lại",
       "loading": "Đang tải tin nhắn",
-      "selected": "Đã chọn {count}",
       "range": "{from}–{to} / {total}",
-      "markRead": "Đánh dấu đã đọc",
       "markReplied": "Đánh dấu đã trả lời",
       "markSpam": "Đánh dấu thư rác",
-      "confirmSpamTitle": "Đánh dấu các tin nhắn này là thư rác?",
-      "confirmSpam": "Thư rác sẽ ẩn khỏi hộp thư mặc định.",
       "updateError": "Không cập nhật được tin nhắn này.",
       "reply": "Trả lời qua email",
-      "back": "Về hộp thư",
+      "archive": "Lưu trữ",
+      "archived": "Đã lưu trữ tin nhắn",
+      "messages": "Tin nhắn",
+      "selectMessage": "Chọn một tin nhắn để đọc.",
       "noTopic": "Không có chủ đề",
       "newMessage": "Tin nhắn mới từ {name}",
       "open": "Mở",
       "bell": "{count} tin nhắn chưa đọc",
       "bellShort": "Hộp thư",
       "bellOverflow": "9+",
-      "columns": {
-        "name": "Tên",
-        "topic": "Chủ đề",
-        "status": "Trạng thái",
-        "created": "Đã nhận",
-        "actions": "Thao tác"
-      },
       "status": {
         "NEW": "Mới",
         "READ": "Đã đọc",
         "REPLIED": "Đã trả lời",
-        "SPAM": "Thư rác"
+        "SPAM": "Thư rác",
+        "ARCHIVED": "Đã lưu trữ"
       }
     },
     "table": {
@@ -425,11 +450,13 @@
       "density": "Mật độ",
       "densityDefault": "Mặc định",
       "densityCompact": "Gọn",
+      "densityComfortable": "Thoáng",
       "help": "Phím tắt",
       "helpTitle": "Phím tắt bàn phím",
       "cancel": "Hủy",
       "select": "Chọn",
       "selectAll": "Chọn tất cả hàng",
+      "clearSelection": "Bỏ chọn",
       "shortcuts": {
         "move": "Di chuyển hàng đang chọn",
         "select": "Chọn hàng hiện tại",

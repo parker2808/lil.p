@@ -14,8 +14,10 @@ import {
 } from '@portfolio/ui/components/ui/drawer';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 import { useIsAdmin } from '../../hooks/use-me.hook';
+import { useTopbarStatusSlot } from '../../hooks/use-topbar-status-slot.hook';
 
 export function EditorShell({
   layout = 'split',
@@ -62,6 +64,16 @@ export function EditorShell({
   children: ReactNode;
 }) {
   const readOnly = !useIsAdmin();
+  const topbarSlot = useTopbarStatusSlot();
+  const status = (
+    <SaveStatus
+      state={readOnly ? 'idle' : saveStatus}
+      savedText={savedText}
+      labels={labels}
+      onLoadLatest={onLoadLatest}
+      onOverwrite={onOverwrite}
+    />
+  );
 
   return (
     <div
@@ -70,19 +82,15 @@ export function EditorShell({
       className="flex min-h-0 flex-col gap-4 lg:h-full"
     >
       <PageHeader
+        className="admin-editor-header"
         title={title}
         back={back}
+        backPlacement="inline"
         linkComponent={Link}
         actions={
           <>
             {readOnly ? <Badge variant="warning">{labels.readOnly}</Badge> : null}
-            <SaveStatus
-              state={readOnly ? 'idle' : saveStatus}
-              savedText={savedText}
-              labels={labels}
-              onLoadLatest={onLoadLatest}
-              onOverwrite={onOverwrite}
-            />
+            {topbarSlot ? createPortal(status, topbarSlot) : status}
             {publish}
           </>
         }
@@ -107,18 +115,17 @@ export function EditorShell({
           </DrawerContent>
         </Drawer>
       </div>
-      <div className="grid gap-6 lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,1fr)_20rem] lg:overflow-hidden 2xl:grid-cols-[minmax(0,1fr)_20rem_minmax(16rem,20rem)]">
+      <div className="grid gap-6 lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,1fr)_20rem] lg:overflow-hidden xl:grid-cols-[minmax(0,1fr)_24rem]">
         <div className="min-w-0 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:[scrollbar-gutter:stable]">
           {children}
         </div>
-        <aside className="hidden lg:block lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:border-l lg:pl-5 lg:[scrollbar-gutter:stable]">
+        <aside
+          aria-label={labels.properties}
+          className="hidden lg:flex lg:min-h-0 lg:flex-col lg:gap-6 lg:overflow-y-auto lg:overscroll-contain lg:border-l lg:pl-5 lg:[scrollbar-gutter:stable]"
+        >
           <PropertyList>{properties}</PropertyList>
+          {preview ? <div className="border-t pt-5">{preview}</div> : null}
         </aside>
-        {preview ? (
-          <aside className="hidden 2xl:block 2xl:min-h-0 2xl:overflow-y-auto 2xl:overscroll-contain 2xl:border-l 2xl:pl-5 2xl:[scrollbar-gutter:stable]">
-            {preview}
-          </aside>
-        ) : null}
       </div>
     </div>
   );
