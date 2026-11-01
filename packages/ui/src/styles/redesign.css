@@ -630,6 +630,14 @@
     position: static;
   }
 }
+.projects-filters {
+  min-height: 72px;
+}
+@media (min-width: 768px) {
+  .projects-filters {
+    min-height: 34px;
+  }
+}
 .view-switch {
   display: flex;
   gap: 4px;

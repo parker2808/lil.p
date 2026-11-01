@@ -19,6 +19,11 @@ test.describe('lighthouse mobile', () => {
     expect(scores.totalBlockingTime).toBeLessThanOrEqual(300);
   });
 
+  test('/vi/projects cumulative layout shift is at most 0.1', async ({ baseURL }) => {
+    const scores = await runMobileLighthouse(new URL('/vi/projects', baseURL).toString());
+    expect(scores.cumulativeLayoutShift).toBeLessThanOrEqual(0.1);
+  });
+
   for (const screen of pages) {
     test(`${screen.name} meets accessibility and performance floors`, async ({ baseURL }) => {
       const scores = await runMobileLighthouse(new URL(screen.path, baseURL).toString());

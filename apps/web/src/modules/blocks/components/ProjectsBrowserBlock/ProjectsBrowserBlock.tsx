@@ -55,7 +55,7 @@ export async function ProjectsBrowserBlock({
 
   return (
     <>
-      <div className="col-span-full flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div className="projects-filters col-span-full flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <DomainFilter
           domains={domains}
           activeSlug={query.domain}
