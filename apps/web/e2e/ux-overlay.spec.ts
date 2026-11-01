@@ -58,6 +58,28 @@ async function expectAdminPaneScrolls(page: Page): Promise<void> {
 }
 
 test.describe('public header menu', () => {
+  test('fills the 375px viewport and marks the current 56px navigation row', async ({ page }) => {
+    await page.goto('/en/about');
+    await openMenu(page);
+
+    const sheet = page.locator('.mobile-menu-sheet');
+    await expect(sheet).toBeVisible();
+    const sheetBox = await sheet.boundingBox();
+    expect(sheetBox?.width).toBe(375);
+    expect(sheetBox?.height).toBe(667);
+    expect(sheetBox?.x).toBe(0);
+    expect(sheetBox?.y).toBe(0);
+
+    const links = sheet.locator('a[data-slot="nav-link"]');
+    expect(await links.count()).toBeGreaterThan(0);
+    await expect(links.filter({ hasText: 'About' })).toHaveAttribute('aria-current', 'page');
+    await expect(sheet.locator('a[data-slot="nav-link"][aria-current="page"]')).toHaveCount(1);
+    for (const link of await links.all()) {
+      const box = await link.boundingBox();
+      expect(box?.height).toBeGreaterThanOrEqual(56);
+    }
+  });
+
   test('tapping each nav link closes the menu and unlocks the body', async ({ page }) => {
     test.setTimeout(240_000);
     await page.goto('/en');
