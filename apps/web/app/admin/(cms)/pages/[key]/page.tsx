@@ -38,3 +38,7 @@ export default async function AdminPageEditorPage({
     </HydrationBoundary>
   );
 }
+
+export function generateMetadata() {
+  return { title: 'Edit page' };
+}

@@ -52,3 +52,7 @@ export default async function AdminExperiencePage({
     </HydrationBoundary>
   );
 }
+
+export function generateMetadata() {
+  return { title: 'Experience' };
+}

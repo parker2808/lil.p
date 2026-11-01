@@ -3,3 +3,7 @@ import { AdminProjectsEditor } from '@/modules/admin-projects/views/AdminProject
 export default function AdminNewProjectPage() {
   return <AdminProjectsEditor projectId={null} />;
 }
+
+export function generateMetadata() {
+  return { title: 'New project' };
+}

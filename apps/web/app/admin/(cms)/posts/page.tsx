@@ -50,3 +50,7 @@ export default async function AdminPostsPage({
     </HydrationBoundary>
   );
 }
+
+export function generateMetadata() {
+  return { title: 'Posts' };
+}

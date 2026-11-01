@@ -3,3 +3,7 @@ import { AdminPrinciplesIndex } from '@/modules/admin-about/views/AdminPrinciple
 export default function AdminPrinciplesPage() {
   return <AdminPrinciplesIndex />;
 }
+
+export function generateMetadata() {
+  return { title: 'Principles' };
+}

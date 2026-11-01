@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P1-23 T9 adds app and Apple icons, distinct admin route titles, and the existing home OG image to about/contact/notes/projects; metadata e2e checks cover public and admin routes.
 - P1-22 T8c translates Vietnamese admin editors, page blocks, about forms, profile, and site settings; experience ranges display locale-aware month/year, and admin page, post, user, and version timestamps display localized dates.
 - P1-21 T8b adds the complete Vietnamese admin key tree and translates dashboard, auth, shell, and list copy. Editor and detail copy remains in English for a later translation task. P1-20 T8a reads the admin locale from `NEXT_LOCALE`, exposes an EN/VI topbar switch, and shares Intl date/relative formatting for audit and inbox.
 - P1-19 T11c replaces the remaining `data-slot` stylesheet selectors with explicit component classes; one unused accent-headline selector was removed.
@@ -87,6 +88,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P1-23 T9: add app icons, admin page titles, and a shared OG image for public index routes.
 - 2026-11-01: P1-22 T8c: translate admin editors, about forms, page blocks, profile, and site settings; localize remaining visible ISO dates.
 - 2026-11-01: P1-21 T8b: translate Vietnamese admin dashboard, auth, shell, and list messages; cover key parity and visible route copy.
 - 2026-11-01: P1-20 T8a: wire the admin locale cookie, topbar switch, and shared Intl date/relative formatting.

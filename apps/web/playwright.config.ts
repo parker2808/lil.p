@@ -62,6 +62,7 @@ export default defineConfig({
     'admin-locale.spec.ts',
     'admin-vi-core.spec.ts',
     'admin-vi-editors.spec.ts',
+    'metadata.spec.ts',
   ],
   // Snapshots hold computed styles, not pixels, so one file serves every platform.
   snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}{ext}',

@@ -54,3 +54,7 @@ export default async function AdminHomePage({
     </HydrationBoundary>
   );
 }
+
+export function generateMetadata() {
+  return { title: 'Dashboard' };
+}

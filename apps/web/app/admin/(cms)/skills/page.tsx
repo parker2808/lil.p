@@ -3,3 +3,7 @@ import { AdminSkillsIndex } from '@/modules/admin-taxonomy/views/AdminSkillsInde
 export default function AdminSkillsPage() {
   return <AdminSkillsIndex />;
 }
+
+export function generateMetadata() {
+  return { title: 'Skills' };
+}

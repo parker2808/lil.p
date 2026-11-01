@@ -3,3 +3,7 @@ import { AdminDomainsIndex } from '@/modules/admin-taxonomy/views/AdminDomainsIn
 export default function AdminDomainsPage() {
   return <AdminDomainsIndex />;
 }
+
+export function generateMetadata() {
+  return { title: 'Domains' };
+}

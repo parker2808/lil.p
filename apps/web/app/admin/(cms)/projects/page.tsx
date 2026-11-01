@@ -50,3 +50,7 @@ export default async function AdminProjectsPage({
     </HydrationBoundary>
   );
 }
+
+export function generateMetadata() {
+  return { title: 'Projects' };
+}
