@@ -102,6 +102,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: Weekly Graphify refresh of `graphify-out/GRAPH_REPORT.md` (code-only, no model calls).
 - 2026-11-01: P4-6 T24: hero stats stored in site settings (nullable JSON column, admin fieldset, profile stats fallback). Spec: `docs/specs/2026-11-01-hero-stats.md`.
 - 2026-11-01: P4-5 T22: visual baseline screenshots for 6 public and 4 admin routes at 375/1280px in web E2E, with a Docker script to re-render Linux baselines.
 - 2026-11-01: P4-4 T21d: command palette, theme menu and the contact, notes and projects block islands load via `dynamic()`; `/vi` Lighthouse unused JS drops 40 KiB.
