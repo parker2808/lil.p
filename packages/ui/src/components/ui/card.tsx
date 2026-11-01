@@ -2,7 +2,7 @@ import { cn } from '@portfolio/ui/lib/utils';
 import { cva, type VariantProps } from 'class-variance-authority';
 import type { ComponentProps } from 'react';
 
-export const cardVariants = cva('bg-card text-card-foreground rounded-lg border', {
+export const cardVariants = cva('redesign-card bg-card text-card-foreground rounded-lg border', {
   variants: { surface: { default: '', admin: 'rounded-[14px] shadow-none' } },
   defaultVariants: { surface: 'default' },
 });

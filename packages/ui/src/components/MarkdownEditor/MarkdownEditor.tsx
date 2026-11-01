@@ -159,7 +159,11 @@ export function MarkdownEditor({
     <TooltipProvider delayDuration={200}>
       <div
         data-slot="markdown-editor"
-        className={cn('border-border bg-card overflow-hidden rounded-lg border', className)}
+        className={cn(
+          'redesign-markdown-editor',
+          'border-border bg-card overflow-hidden rounded-lg border',
+          className,
+        )}
       >
         <Tabs
           value={mode}

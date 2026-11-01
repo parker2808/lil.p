@@ -20,7 +20,11 @@ export function CoverPlaceholder({
     <div
       data-slot="cover-placeholder"
       aria-hidden
-      className={cn('bg-muted relative flex flex-col overflow-hidden', className)}
+      className={cn(
+        'redesign-cover-placeholder',
+        'bg-muted relative flex flex-col overflow-hidden',
+        className,
+      )}
       style={{
         aspectRatio: ratio,
         backgroundImage: `repeating-radial-gradient(ellipse at 85% 100%, transparent 0 12px, color-mix(in srgb, var(${hueVar}) 12%, transparent) 13px 14px), linear-gradient(135deg, color-mix(in srgb, var(${hueVar}) 22%, var(--background)), var(--card))`,

@@ -31,7 +31,11 @@ export function StatCard({
   return (
     <div
       data-slot="stat-card"
-      className={cn('bg-card text-card-foreground rounded-lg border p-4', className)}
+      className={cn(
+        'redesign-stat-card',
+        'bg-card text-card-foreground rounded-lg border p-4',
+        className,
+      )}
     >
       <p className="text-ui-meta text-muted-foreground">{label}</p>
       <p className="text-heading font-semibold tabular-nums">{value}</p>

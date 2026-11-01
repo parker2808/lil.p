@@ -41,7 +41,12 @@ export function CaseCard({
     <article
       data-slot="case-card"
       data-variant={variant}
-      className={cn(CARD_INTERACTIVE, featured ? 'p-4 lg:p-5' : 'flex flex-col', className)}
+      className={cn(
+        'redesign-case-card',
+        CARD_INTERACTIVE,
+        featured ? 'p-4 lg:p-5' : 'flex flex-col',
+        className,
+      )}
     >
       <ArrowUpRight aria-hidden className={CARD_ARROW} />
       <div className={cn(featured && 'grid items-center gap-6 lg:grid-cols-12')}>

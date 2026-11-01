@@ -21,7 +21,10 @@ export function ProcessFlow({
   const active = Math.floor((steps.length - 1) / 2);
 
   return (
-    <ol data-slot="process-flow" className={cn('flex flex-col', className)}>
+    <ol
+      data-slot="process-flow"
+      className={cn('redesign-process-flow', 'flex flex-col', className)}
+    >
       {steps.map((step, index) => {
         const highlighted = index === active;
         return (

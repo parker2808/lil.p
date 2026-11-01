@@ -16,6 +16,7 @@ export function NavLink({
       data-active={active || undefined}
       aria-current={active ? 'page' : undefined}
       className={cn(
+        'redesign-nav-link',
         'text-ui inline-flex h-8 items-center px-2 transition-colors',
         active ? 'text-foreground font-medium' : 'text-muted-foreground hover:text-foreground',
         className,

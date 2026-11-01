@@ -157,7 +157,12 @@ export function AdminTable<TData>({
   return (
     <div
       data-slot="admin-table"
-      className={cn('flex flex-col gap-3', visuallyHidden && 'sr-only', className)}
+      className={cn(
+        'redesign-admin-table',
+        'flex flex-col gap-3',
+        visuallyHidden && 'sr-only',
+        className,
+      )}
     >
       {search ? <AdminTableSearchField {...search} /> : null}
       <div

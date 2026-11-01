@@ -10,7 +10,7 @@ export function Reveal({
     <div
       data-slot="reveal"
       data-eager={eager || undefined}
-      className={cn(!eager && 'scroll-reveal', className)}
+      className={cn('redesign-reveal', !eager && 'scroll-reveal', className)}
       {...props}
     />
   );
