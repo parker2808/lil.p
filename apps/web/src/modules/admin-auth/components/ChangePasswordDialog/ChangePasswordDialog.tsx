@@ -3,7 +3,7 @@
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Dialog, DialogContent, DialogTitle } from '@portfolio/ui/components/ui/dialog';
 import { Field, FieldError, FieldLabel } from '@portfolio/ui/components/ui/field';
-import { Input } from '@portfolio/ui/components/ui/input';
+import { PasswordInput } from '@portfolio/ui/components/ui/password-input';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -45,9 +45,9 @@ export function ChangePasswordDialog({
         >
           <Field>
             <FieldLabel htmlFor="current-password">{t('current')}</FieldLabel>
-            <Input
+            <PasswordInput
               id="current-password"
-              type="password"
+              autoComplete="current-password"
               value={currentPassword}
               onChange={(event) => setCurrentPassword(event.target.value)}
               required
@@ -55,9 +55,9 @@ export function ChangePasswordDialog({
           </Field>
           <Field>
             <FieldLabel htmlFor="new-password">{t('next')}</FieldLabel>
-            <Input
+            <PasswordInput
               id="new-password"
-              type="password"
+              autoComplete="new-password"
               minLength={12}
               value={newPassword}
               onChange={(event) => setNewPassword(event.target.value)}

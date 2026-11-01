@@ -4,6 +4,7 @@ import { loginSchema } from '@portfolio/contracts';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Field, FieldError, FieldLabel } from '@portfolio/ui/components/ui/field';
 import { Input } from '@portfolio/ui/components/ui/input';
+import { PasswordInput } from '@portfolio/ui/components/ui/password-input';
 import { useForm } from '@tanstack/react-form';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -71,9 +72,8 @@ export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
         {(field) => (
           <Field>
             <FieldLabel htmlFor={field.name}>{t('password')}</FieldLabel>
-            <Input
+            <PasswordInput
               id={field.name}
-              type="password"
               autoComplete="current-password"
               value={field.state.value}
               onBlur={field.handleBlur}
