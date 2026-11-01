@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-01: The projects header has its own bottom padding inside two padded block wrappers; reduce the adjacent wrapper gap and match the route skeleton's spacing to avoid a load-time shift.
 - 2026-11-01: A static public page can keep versioned CMS previews by awaiting `searchParams` only while draft mode is enabled; browser filters should avoid that server read.
 - 2026-11-01: A route loading skeleton must preserve the page's header, filter, switch, and card geometry; a generic grid skeleton can shift the projects page when server data arrives.
 - 2026-11-01: Next app icon files in `app/` provide the icon link across separate public and admin root layouts; admin pages need their own metadata titles to override the root's generic default.
