@@ -31,17 +31,21 @@ test('every admin detail and new route shows a back link to its parent at 375px'
   expect(contact.ok()).toBeTruthy();
 
   const routes: Array<{ path: string; parent: string; section: string }> = [];
-  for (const section of ['projects', 'posts', 'experience'] as const) {
-    const parent = `/admin/${section}`;
-    routes.push({ path: `${parent}/new`, parent, section });
-    routes.push({ path: `${parent}/${await firstId(page, `/api${parent}`)}`, parent, section });
+  for (const [section, parent] of [
+    ['projects', '/admin/projects'],
+    ['posts', '/admin/posts'],
+    ['experience', '/admin/pages/about?tab=experience'],
+  ] as const) {
+    const base = `/admin/${section}`;
+    routes.push({ path: `${base}/new`, parent, section });
+    routes.push({ path: `${base}/${await firstId(page, `/api${base}`)}`, parent, section });
   }
   routes.push({
     path: `/admin/inbox/${await firstId(page, '/api/admin/messages')}`,
     parent: '/admin/inbox',
     section: 'inbox',
   });
-  routes.push({ path: '/admin/pages/home', parent: '/admin/pages', section: 'pages' });
+  routes.push({ path: '/admin/pages/home', parent: '/admin/pages/home', section: 'pages' });
 
   for (const { path, parent, section } of routes) {
     await page.goto(path);
@@ -54,5 +58,5 @@ test('every admin detail and new route shows a back link to its parent at 375px'
   }
 
   await page.getByRole('link', { name: 'Back to Pages' }).click();
-  await expect(page).toHaveURL(/\/admin\/pages$/);
+  await expect(page).toHaveURL(/\/admin\/pages\/home$/);
 });

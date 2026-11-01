@@ -44,6 +44,8 @@ export default async function AdminPageEditorPage({
   );
 }
 
-export function generateMetadata() {
-  return { title: 'Edit page' };
+export async function generateMetadata({ params }: { params: Promise<{ key: string }> }) {
+  const { key } = await params;
+  const name = key.charAt(0).toUpperCase() + key.slice(1);
+  return { title: `Edit ${name} page` };
 }
