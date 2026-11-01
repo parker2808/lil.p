@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P1-6 T4a applies FormField to login and contact; contact empty-submit errors and first-field focus are covered by unit and e2e tests.
 - P1-5 T3e FormField is stacked on P1-4: required marks, linked inline errors, and character counters are covered by UI unit tests.
 - P0-5 T25: mobile `/vi` no longer loads desktop search or global React Query and toast providers; real-device battery impact remains unmeasured.
 - P0-4 T12a hides unfinished public text at the web API boundary; source CMS fields still need editorial replacement.
@@ -71,6 +72,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P1-6 T4a: apply FormField to login and contact, and focus the first invalid contact field on empty submit.
 - 2026-11-01: P1-5 T3e: add FormField with required mark, linked inline error, and maxLength counter.
 - 2026-11-01: P0-4 T12a: hide TODO/TBD text from public routes, guard About experience and skills fields, and show the compact location caption.
 - 2026-11-01: P0-5 T25: render the static hero on mobile, touch, and reduced motion; load the desktop shader during idle time.
