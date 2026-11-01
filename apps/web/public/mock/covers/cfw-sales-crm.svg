@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Abstract project cover">
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#314a88"/><stop offset="1" stop-color="#101d2a"/></linearGradient><linearGradient id="accent" x2="1" y2="1"><stop stop-color="#b7a0d3"/><stop offset="1" stop-color="#f2eee2" stop-opacity=".55"/></linearGradient></defs>
+<path fill="url(#bg)" d="M0 0h1600v1000H0z"/>
+<path d="M-100 850 750-100M200 1100 1250-100M850 1100 1700 150" fill="none" stroke="#fff" stroke-width="2" opacity=".12"/>
+<path d="M650 840a490 490 0 0 1 980 0M820 840a320 320 0 0 1 640 0M990 840a150 150 0 0 1 300 0" fill="none" stroke="url(#accent)" stroke-width="85" opacity=".8"/>
+<circle cx="210" cy="790" r="105" fill="#b7a0d3" opacity=".22"/>
+</svg>

@@ -1,4 +1,5 @@
 import type { PrismaClient } from '../../../src/generated/prisma/client';
+import { applyOwnerCopy, withOwnerAboutBlocks } from '../data/owner-copy.data';
 import { pagesData, seedPages } from '../data/pages.data';
 import {
   loadPortfolioData,
@@ -21,11 +22,11 @@ import {
 
 /**
  * Production first boot (PLAN D13 + owner CV). Values come from
- * `data/portfolio-data.json`. Projects are PUBLISHED with `publishedAt`
+ * `data/portfolio-data.json` with the approved copy from `owner-copy.data.ts`. Projects are PUBLISHED with `publishedAt`
  * (stamped at seed time for PUBLISHED rows without a date). 0 posts.
  */
 export async function seedOwner(prisma: PrismaClient): Promise<void> {
-  const data = loadPortfolioData();
+  const data = applyOwnerCopy(loadPortfolioData());
 
   await prisma.pageView.deleteMany();
   await prisma.contactMessage.deleteMany();
@@ -59,9 +60,8 @@ export async function seedOwner(prisma: PrismaClient): Promise<void> {
   await prisma.socialLink.createMany({ data: mapSocialLinks(data) });
   await prisma.contactTopic.createMany({ data: mapContactTopics(data) });
 
-  const pages = overlayPageSectionTitles(
-    structuredClone(pagesData) as typeof pagesData,
-    data.pageSections,
+  const pages = withOwnerAboutBlocks(
+    overlayPageSectionTitles(structuredClone(pagesData) as typeof pagesData, data.pageSections),
   );
   await seedPages(prisma, pages);
 

@@ -1,6 +1,5 @@
 import type { PublicProjectListItem } from '@portfolio/contracts';
 import { CoverPlaceholder } from '@portfolio/ui/components/CoverPlaceholder/CoverPlaceholder';
-import { DiffStat } from '@portfolio/ui/components/DiffStat/DiffStat';
 import { Icon } from '@portfolio/ui/components/Icon/Icon';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { cn } from '@portfolio/ui/lib/utils';
@@ -14,8 +13,17 @@ import { BADGE_HUE } from '@portfolio/ui/utils/hue.util';
 import { defaultRenderLink, type RenderLink } from '@portfolio/ui/utils/render-link.util';
 import { ArrowUpRight } from 'lucide-react';
 
-const CHIP_LIMIT = 4;
-const PLUS = '+';
+const CHIP_LIMIT = 3;
+
+// ASSET(Parker): replace mock cover with real 16:10 screenshot (NDA-masked)
+const MOCK_COVERS = new Set([
+  'particula',
+  'cfw-back-office-field-config',
+  'cfw-sales-crm',
+  'msp-advanced',
+  'msp-app-expansion',
+  'migration-data-tool',
+]);
 
 export function CaseCard({
   project,
@@ -34,8 +42,10 @@ export function CaseCard({
 }) {
   const hue = project.domain?.hue ?? 'JADE';
   const chips = project.skills.slice(0, CHIP_LIMIT);
-  const extra = project.skills.length - CHIP_LIMIT;
   const featured = variant === 'featured';
+  const mockCover = MOCK_COVERS.has(project.slug) ? `/mock/covers/${project.slug}.svg` : null;
+  const year = project.endDate?.slice(0, 4) ?? project.startDate.slice(0, 4);
+  const result = project.result.trim();
 
   return (
     <article
@@ -72,11 +82,24 @@ export function CaseCard({
               backgroundSize: 'cover',
             }}
           />
+        ) : mockCover ? (
+          <img
+            src={mockCover}
+            alt=""
+            width={1600}
+            height={1000}
+            className={cn(
+              'w-full object-cover',
+              featured ? 'rounded-lg lg:col-span-7' : 'border-b',
+            )}
+            style={{ aspectRatio: '16 / 10' }}
+          />
         ) : (
           <CoverPlaceholder
             title={project.title}
             slug={project.slug}
             hue={hue}
+            iconKey={project.domain?.iconKey}
             className={cn(featured ? 'lg:col-span-7' : 'border-b')}
           />
         )}
@@ -93,16 +116,14 @@ export function CaseCard({
           <h3 className="pr-7">
             {renderLink({ href, className: CARD_TITLE_LINK, children: project.title })}
           </h3>
-          <p className="text-body text-muted-foreground clamp-marks line-clamp-3">
-            {project.tagline}
+          <p className="project-card-meta text-muted-foreground">
+            {project.role} <span aria-hidden>·</span>{' '}
+            <time dateTime={project.endDate ?? project.startDate}>{year}</time>
           </p>
-          {project.topMetric ? (
-            <DiffStat
-              before={project.topMetric.before}
-              after={project.topMetric.after}
-              value={project.topMetric.value}
-              label={project.topMetric.label}
-            />
+          {result && !/\b(?:TODO|TBD)\b/i.test(result) ? (
+            <p className="project-card-result text-body" data-testid="project-result">
+              {result}
+            </p>
           ) : null}
           {project.skills.length ? (
             <ul className="mt-auto flex flex-wrap gap-1.5 pt-2">
@@ -113,14 +134,6 @@ export function CaseCard({
                   </Badge>
                 </li>
               ))}
-              {extra > 0 ? (
-                <li>
-                  <Badge variant="outline" className="normal-case">
-                    {PLUS}
-                    {extra}
-                  </Badge>
-                </li>
-              ) : null}
             </ul>
           ) : null}
         </div>
