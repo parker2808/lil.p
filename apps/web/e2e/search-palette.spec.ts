@@ -37,7 +37,8 @@ test.describe('search entry points and palette actions', () => {
     expect(response?.status()).toBe(404);
 
     const links = page.getByRole('navigation', { name: 'Explore the site' }).getByRole('link');
-    expect(await links.count()).toBeGreaterThanOrEqual(3);
+    // The 404 body streams in after `goto` resolves, so poll instead of counting once.
+    await expect.poll(() => links.count()).toBeGreaterThanOrEqual(3);
 
     const field = page.getByRole('main').getByRole('button', {
       name: 'Search projects, notes and pages',
