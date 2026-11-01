@@ -3,8 +3,10 @@ import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
 import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 
-import { LazyProjectsBrowser } from '@/modules/projects/components/ProjectsBrowser/LazyProjectsBrowser';
-import { ProjectsBrowserView } from '@/modules/projects/components/ProjectsBrowser/ProjectsBrowser';
+import {
+  LazyProjectsBrowser,
+  LazyProjectsBrowserView,
+} from '@/modules/projects/components/ProjectsBrowser/LazyProjectsBrowser';
 import { listDomains } from '@/modules/projects/services/domains.service';
 import { listProjectsPage } from '@/modules/projects/services/projects.service';
 import { listSkillOptions } from '@/modules/projects/services/skills.service';
@@ -61,7 +63,7 @@ export async function ProjectsBrowserBlock({
 
   return (
     // The fallback is the unfiltered view, so static HTML and hydration share one layout.
-    <Suspense fallback={<ProjectsBrowserView {...browserProps} search={{}} />}>
+    <Suspense fallback={<LazyProjectsBrowserView {...browserProps} search={{}} />}>
       <LazyProjectsBrowser {...browserProps} />
     </Suspense>
   );
