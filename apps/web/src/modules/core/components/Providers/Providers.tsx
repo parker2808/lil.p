@@ -6,6 +6,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { type ReactNode, useEffect } from 'react';
 
 import { ApiWarmup } from '../ApiWarmup/ApiWarmup';
+import { NavigationProgress } from '../NavigationProgress/NavigationProgress';
 import { ThemeProvider } from './ThemeProvider';
 
 export function Providers({
@@ -39,6 +40,7 @@ export function Providers({
     <NextIntlClientProvider locale={locale} messages={messages} timeZone={APP_TIME_ZONE}>
       <ThemeProvider nonce={nonce}>
         <ApiWarmup />
+        <NavigationProgress />
         {children}
       </ThemeProvider>
     </NextIntlClientProvider>
