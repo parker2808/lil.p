@@ -56,7 +56,7 @@ export function AdminListTable<TData>({
   items: TData[];
   rowId: (row: TData) => string;
   rowLabel: (row: TData) => string;
-  rowHref: (row: TData) => string;
+  rowHref?: (row: TData) => string;
   total: number;
   page: number;
   pageSize: number;
@@ -68,14 +68,15 @@ export function AdminListTable<TData>({
   isError?: boolean;
   canWrite: boolean;
   labels: AdminListTableLabels;
-  onDelete: (row: TData) => void;
-  onBulkDelete: (rows: TData[]) => void;
-  onCreate: () => void;
+  onDelete?: (row: TData) => void;
+  onBulkDelete?: (rows: TData[]) => void;
+  onCreate?: () => void;
   onClearFilters: () => void;
   onRetry: () => void;
 }) {
   const [selectedIds, setSelectedIds] = useState<ReadonlySet<string>>(new Set());
   const [pendingDelete, setPendingDelete] = useState<TData[] | null>(null);
+  const selectable = canWrite && Boolean(onDelete);
 
   const selectedRows = items.filter((row) => selectedIds.has(rowId(row)));
   const allSelected = items.length > 0 && selectedRows.length === items.length;
@@ -123,7 +124,7 @@ export function AdminListTable<TData>({
             .replace('{to}', String(to))
             .replace('{total}', String(total))}
         </p>
-        {canWrite && selectedRows.length > 0 ? (
+        {selectable && selectedRows.length > 0 ? (
           <div className="flex items-center gap-2">
             <p className="text-ui">
               {labels.selected.replace('{count}', String(selectedRows.length))}
@@ -142,7 +143,7 @@ export function AdminListTable<TData>({
 
       <AdminTable
         label={label}
-        columns={canWrite ? [selectColumn, ...columns] : columns}
+        columns={selectable ? [selectColumn, ...columns] : columns}
         data={items}
         rowId={rowId}
         rowHref={rowHref}
@@ -161,7 +162,7 @@ export function AdminListTable<TData>({
               <Button type="button" variant="outline" size="sm" onClick={onClearFilters}>
                 {labels.clearFilters}
               </Button>
-            ) : canWrite ? (
+            ) : canWrite && onCreate ? (
               <Button type="button" size="sm" onClick={onCreate}>
                 {labels.emptyAction}
               </Button>
@@ -200,8 +201,8 @@ export function AdminListTable<TData>({
         confirmLabel={labels.archive}
         onConfirm={() => {
           if (!pendingDelete) return;
-          if (pendingDelete.length > 1) onBulkDelete(pendingDelete);
-          else if (pendingDelete[0]) onDelete(pendingDelete[0]);
+          if (pendingDelete.length > 1) onBulkDelete?.(pendingDelete);
+          else if (pendingDelete[0]) onDelete?.(pendingDelete[0]);
           setPendingDelete(null);
           setSelectedIds(new Set());
         }}

@@ -1,7 +1,7 @@
 import type { AdminContactMessage } from '@portfolio/contracts';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { InboxTable } from './InboxTable';
 
@@ -24,73 +24,66 @@ const labels = {
   noResults: 'no results',
   clearFilters: 'clear',
   error: 'error',
+  retry: 'Retry',
+  select: 'Select',
+  selectAll: 'Select all rows',
   selected: '{count} selected',
   range: '{from}–{to} of {total}',
-  confirmDeleteTitle: 'spam?',
-  confirmDelete: 'spam',
-  bulkDelete: 'Mark spam',
-  retry: 'Retry',
   previous: 'Previous',
   next: 'Next',
-  columns: 'Columns',
-  density: 'Density',
-  densityDefault: 'Default',
-  densityCompact: 'Compact',
-  help: 'Shortcuts',
-  helpTitle: 'Keyboard shortcuts',
+  confirmArchiveTitle: 'spam?',
+  confirmArchive: 'spam',
   cancel: 'Cancel',
-  shortcuts: {
-    move: 'move',
-    select: 'select',
-    open: 'open',
-    edit: 'edit',
-    remove: 'remove',
-    help: 'help',
-    keys: {
-      j: 'j',
-      k: 'k',
-      x: 'x',
-      enter: 'Enter',
-      e: 'e',
-      backspace: '⌫',
-      help: '?',
-    },
-  },
+  archive: 'Mark spam',
 };
 
-describe('InboxTable', () => {
-  it('marks a row read from the actions column', async () => {
-    const onMarkRead = vi.fn();
-    render(
-      <InboxTable
-        items={[item]}
-        total={1}
-        page={1}
-        pageSize={20}
-        sort="-createdAt"
-        hasFilters={false}
-        canWrite
-        labels={labels}
-        columnLabels={{
-          name: 'Name',
-          topic: 'Topic',
-          status: 'Status',
-          created: 'Received',
-          actions: 'Actions',
-        }}
-        statusLabels={{ NEW: 'New', READ: 'Read', REPLIED: 'Replied', SPAM: 'Spam' }}
-        actionLabels={{ read: 'Mark read', spam: 'Mark spam' }}
-        onSortChange={vi.fn()}
-        onPageChange={vi.fn()}
-        onOpen={vi.fn()}
-        onMarkRead={onMarkRead}
-        onMarkSpam={vi.fn()}
-        onClearFilters={vi.fn()}
-        onRetry={vi.fn()}
-      />,
-    );
+function renderTable() {
+  const onMarkRead = vi.fn();
+  render(
+    <InboxTable
+      label="Inbox"
+      items={[item]}
+      total={1}
+      page={1}
+      pageSize={20}
+      sort="-createdAt"
+      hasFilters={false}
+      canWrite
+      labels={labels}
+      columnLabels={{
+        name: 'Name',
+        topic: 'Topic',
+        status: 'Status',
+        created: 'Received',
+        actions: 'Actions',
+      }}
+      statusLabels={{ NEW: 'New', READ: 'Read', REPLIED: 'Replied', SPAM: 'Spam' }}
+      actionLabels={{ read: 'Mark read', spam: 'Mark spam' }}
+      onSortChange={vi.fn()}
+      onPageChange={vi.fn()}
+      onMarkRead={onMarkRead}
+      onMarkSpam={vi.fn()}
+      onClearFilters={vi.fn()}
+      onRetry={vi.fn()}
+    />,
+  );
+  return { onMarkRead };
+}
 
-    await userEvent.click(screen.getByRole('button', { name: 'Mark read' }));
+describe('InboxTable', () => {
+  afterEach(cleanup);
+
+  it('renders the message as a link to its detail page', () => {
+    renderTable();
+    expect(screen.getByRole('link', { name: 'Ana' })).toHaveAttribute('href', '/admin/inbox/9');
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+  });
+
+  it('marks a row read from the actions column', async () => {
+    const { onMarkRead } = renderTable();
+    const button = screen.getByRole('button', { name: 'Mark read' });
+    expect(button.closest('a')).toBeNull();
+    await userEvent.click(button);
     expect(onMarkRead).toHaveBeenCalledWith(item);
   });
 });

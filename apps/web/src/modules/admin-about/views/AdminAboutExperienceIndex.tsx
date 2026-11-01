@@ -8,7 +8,7 @@ import { useTranslations } from 'next-intl';
 
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { useListParams } from '@/modules/admin-core/hooks/use-list-params.hook';
-import { adminTableLabels } from '@/modules/admin-core/utils/table-labels.util';
+import { adminListTableLabels } from '@/modules/admin-core/utils/table-labels.util';
 
 import { ExperienceTable } from '../components/ExperienceTable/ExperienceTable';
 import {
@@ -25,7 +25,7 @@ export function AdminAboutExperienceIndex() {
   const router = useRouter();
   const canWrite = useIsAdmin();
   const { params, setParams } = useListParams(adminExperienceListParamsSchema);
-  const { data, isError, refetch, isPending, isFetching } = useAdminExperience(params);
+  const { data, isError, refetch, isPending } = useAdminExperience(params);
   const list = data ?? { items: [], page: params.page, pageSize: params.pageSize, total: 0 };
   const toggle = useToggleExperienceVisible(params);
   const remove = useRemoveAdminExperience(params);
@@ -68,6 +68,7 @@ export function AdminAboutExperienceIndex() {
         labels={{ add: t('addFilter'), remove: t('removeChip') }}
       />
       <ExperienceTable
+        label={t('title')}
         items={list.items}
         total={list.total}
         page={list.page}
@@ -76,9 +77,8 @@ export function AdminAboutExperienceIndex() {
         hasFilters={hasFilters}
         isError={isError}
         isLoading={isPending}
-        isFetching={isFetching}
         canWrite={canWrite}
-        labels={adminTableLabels(table, {
+        labels={adminListTableLabels(table, {
           empty: t('empty'),
           emptyAction: t('new'),
           noResults: t('noResults'),
@@ -86,9 +86,9 @@ export function AdminAboutExperienceIndex() {
           error: t('error'),
           selected: t('selected'),
           range: t('range'),
-          confirmDeleteTitle: t('confirmDeleteTitle'),
-          confirmDelete: t('confirmDelete'),
-          bulkDelete: t('delete'),
+          confirmArchiveTitle: t('confirmDeleteTitle'),
+          confirmArchive: t('confirmDelete'),
+          archive: t('delete'),
         })}
         columnLabels={{
           company: t('columns.company'),
@@ -105,8 +105,6 @@ export function AdminAboutExperienceIndex() {
           }
         }}
         onPageChange={(page) => setParams({ page })}
-        onOpen={(row) => router.push(`/admin/experience/${row.id}`)}
-        onEdit={(row) => router.push(`/admin/experience/${row.id}`)}
         onDelete={(row) => remove.mutate(row.id)}
         onBulkDelete={(rows) => {
           for (const row of rows) {

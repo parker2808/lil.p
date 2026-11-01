@@ -216,6 +216,7 @@
       "saveError": "That user could not be saved.",
       "createTitle": "New user",
       "editTitle": "Edit user",
+      "edit": "Edit",
       "formHint": "Admins can manage roles and sign people out.",
       "confirmSignOutTitle": "Sign this person out everywhere?",
       "confirmSignOut": "Their next refresh will fail. They stay signed in for up to 15 minutes on an existing access token.",
