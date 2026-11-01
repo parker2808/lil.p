@@ -51,6 +51,7 @@ export function FilterBar({
       <form onSubmit={onSubmit}>
         <Input
           name="q"
+          aria-label={placeholder}
           defaultValue={q}
           placeholder={placeholder}
           className="w-56"

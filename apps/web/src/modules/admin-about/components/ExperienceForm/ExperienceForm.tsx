@@ -109,7 +109,7 @@ export function ExperienceForm({
           disabled={readOnly}
           onValueChange={(value) => onChange('employmentType', value as EmploymentType)}
         >
-          <SelectTrigger>
+          <SelectTrigger aria-label={labels.employmentType}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -141,6 +141,7 @@ export function ExperienceForm({
       <Field>
         <FieldLabel>{labels.highlights}</FieldLabel>
         <MarkdownField
+          ariaLabel={labels.highlights}
           value={String(values[highlightsKey] ?? '')}
           onChange={(markdown) => onChange(highlightsKey, markdown)}
           onBlur={onBlur}

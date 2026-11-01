@@ -14,3 +14,6 @@
 - 2026-11-01: In a fresh worktree, build `@portfolio/contracts` before running the UI package typecheck alone; its generated type declarations are not present after install.
 - 2026-11-01: `pnpm --filter @portfolio/web test:e2e -- contact.spec.ts` ran the full Playwright suite; use `pnpm --filter @portfolio/web exec playwright test contact.spec.ts` to select one spec.
 - 2026-11-01: `IconButton` renders a Radix Tooltip and needs a `TooltipProvider` around its use; without one, admin routes fall into the Next error page.
+- 2026-11-01: A virtualized audit list can contain no focusable rows; give its scroll container `tabIndex={0}` so keyboard users can scroll it.
+- 2026-11-01: Tiptap's contenteditable element does not inherit a nearby field label; pass an accessible name through its editor attributes, including after options updates.
+- 2026-11-01: Embedded Tiptap node views need their own control names; the code block language select can be present only in seeded editor content.

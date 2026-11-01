@@ -24,6 +24,7 @@ export function MarkdownEditor({
   editable = true,
   variant = 'full',
   labels,
+  ariaLabel,
   renderPreview,
   onUploadImage,
   onPickImage,
@@ -36,6 +37,7 @@ export function MarkdownEditor({
   editable?: boolean;
   variant?: MarkdownEditorVariant;
   labels: MarkdownEditorLabels;
+  ariaLabel?: string;
   renderPreview?: (markdown: string) => ReactNode | Promise<ReactNode>;
   onUploadImage?: (file: File) => Promise<{ src: string; alt: string }>;
   onPickImage?: () => Promise<{ src: string; alt: string } | null>;
@@ -70,6 +72,7 @@ export function MarkdownEditor({
     editorProps: {
       attributes: {
         class: 'max-w-measure text-prose px-4 py-3 focus:outline-none',
+        ...(ariaLabel ? { 'aria-label': ariaLabel } : {}),
         ...(editable ? {} : { 'aria-readonly': 'true' }),
       },
     },
@@ -99,11 +102,12 @@ export function MarkdownEditor({
       editorProps: {
         attributes: {
           class: 'max-w-measure text-prose px-4 py-3 focus:outline-none',
+          ...(ariaLabel ? { 'aria-label': ariaLabel } : {}),
           ...(editable ? {} : { 'aria-readonly': 'true' }),
         },
       },
     });
-  }, [editable, editor]);
+  }, [ariaLabel, editable, editor]);
 
   useEffect(() => {
     if (!editor || value === lastEmitted.current) {

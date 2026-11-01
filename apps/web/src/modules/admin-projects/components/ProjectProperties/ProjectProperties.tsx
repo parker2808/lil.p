@@ -98,7 +98,7 @@ export function ProjectProperties({
             onChange('status', value as NonNullable<ProjectFormValues['status']>)
           }
         >
-          <SelectTrigger>
+          <SelectTrigger aria-label={labels.status}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -182,7 +182,7 @@ export function ProjectProperties({
             onChange('experienceId', value === 'none' ? null : Number(value))
           }
         >
-          <SelectTrigger>
+          <SelectTrigger aria-label={labels.experience}>
             <SelectValue placeholder={labels.none} />
           </SelectTrigger>
           <SelectContent>

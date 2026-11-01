@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P1-8 T4c labels shared admin search, site and editor controls including code language; the audit list is keyboard scrollable, with axe WCAG 2.2 AA coverage for admin indexes and editors.
 - P1-7 T4b applies accessible action buttons and named search inputs in the shared small-entity admin index; seven admin route axe checks cover the result.
 - P1-6 T4a applies FormField to login and contact; contact empty-submit errors and first-field focus are covered by unit and e2e tests.
 - P1-5 T3e FormField is stacked on P1-4: required marks, linked inline errors, and character counters are covered by UI unit tests.
@@ -73,6 +74,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P1-8 T4c: label remaining admin inputs and expand axe checks across admin indexes and editors.
 - 2026-11-01: P1-7 T4b: name inline-list admin actions and search fields, and add axe coverage for seven routes.
 - 2026-11-01: P1-6 T4a: apply FormField to login and contact, and focus the first invalid contact field on empty submit.
 - 2026-11-01: P1-5 T3e: add FormField with required mark, linked inline error, and maxLength counter.
