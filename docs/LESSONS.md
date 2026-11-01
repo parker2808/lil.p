@@ -1,6 +1,7 @@
 # Lessons
 
 - 2026-11-01: A Radix Sheet portal renders outside `.public-site` and `.site-header`, so mobile menu styles need an explicit sheet class instead of ancestor-scoped selectors.
+- 2026-11-01: A radius token change updates computed-style JSON snapshots as well as pixel screenshots; run the focused admin style E2E specs after changing the shared `--radius` value.
 - 2026-11-01: Playwright's default snapshot update keeps screenshots when they remain within the configured 1% diff tolerance; use `--update-snapshots=all` to commit every intended Linux baseline refresh.
 - 2026-11-01: `globals.css` imports `redesign.css` before declaring its root tokens, so redesign token overrides need the more specific `html:root` selector to win in the cascade.
 - 2026-11-01: Tailwind's `@theme inline` compiles type utility sizes to literal CSS, so changing scoped `--text-*` variables does not rescale them; public metadata also renders some `font-mono` labels as paragraphs, requiring a Sans paragraph rule.
