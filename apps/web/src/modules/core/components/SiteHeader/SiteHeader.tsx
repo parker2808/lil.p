@@ -2,7 +2,6 @@
 
 import type { PublicNavItem } from '@portfolio/contracts';
 import { Menu } from 'lucide-react';
-import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
 import { useEffect, useState } from 'react';
 
@@ -18,12 +17,9 @@ import {
 import { useCloseOnNavigate } from '@portfolio/ui/hooks/use-close-on-navigate.hook';
 import { cn } from '@portfolio/ui/lib/utils';
 
+import { CommandPalette } from '../CommandPalette/CommandPalette';
 import { LocaleSwitch } from '../LocaleSwitch/LocaleSwitch';
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
-
-const CommandPalette = dynamic(() =>
-  import('../CommandPalette/CommandPalette').then((module) => module.CommandPalette),
-);
 
 export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }) {
   const t = useTranslations('core');

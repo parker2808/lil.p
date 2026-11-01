@@ -3,7 +3,7 @@ import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
 import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 
-import { ProjectsBrowser } from '@/modules/projects/components/ProjectsBrowser/ProjectsBrowser';
+import { LazyProjectsBrowser } from '@/modules/projects/components/ProjectsBrowser/LazyProjectsBrowser';
 import { listDomains } from '@/modules/projects/services/domains.service';
 import { listProjectsPage } from '@/modules/projects/services/projects.service';
 import { listSkillOptions } from '@/modules/projects/services/skills.service';
@@ -40,7 +40,7 @@ export async function ProjectsBrowserBlock({
 
   return (
     <Suspense fallback={<ProjectsBrowserSkeleton />}>
-      <ProjectsBrowser
+      <LazyProjectsBrowser
         projects={projects}
         domains={domains}
         skills={skills}
