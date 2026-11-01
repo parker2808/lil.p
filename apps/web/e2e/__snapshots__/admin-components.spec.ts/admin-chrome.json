@@ -1,0 +1,87 @@
+{
+  "collapse": {
+    "height": "32px",
+    "font-size": "14px",
+    "font-weight": "500",
+    "color": "rgb(20, 32, 28)",
+    "background-color": "rgba(0, 0, 0, 0)",
+    "padding-left": "0px",
+    "padding-right": "0px",
+    "border-radius": "10px",
+    "border-left-width": "0px",
+    "border-left-color": "rgb(213, 224, 219)",
+    "width": "32px"
+  },
+  "inbox": {
+    "height": "28px",
+    "font-size": "14px",
+    "font-weight": "500",
+    "color": "rgb(20, 32, 28)",
+    "background-color": "rgba(0, 0, 0, 0)",
+    "padding-left": "10px",
+    "padding-right": "10px",
+    "border-radius": "10px",
+    "border-left-width": "0px",
+    "border-left-color": "rgb(213, 224, 219)"
+  },
+  "palette": {
+    "height": "28px",
+    "font-size": "14px",
+    "font-weight": "500",
+    "color": "rgb(20, 32, 28)",
+    "background-color": "rgb(244, 247, 246)",
+    "padding-left": "10px",
+    "padding-right": "10px",
+    "border-radius": "10px",
+    "border-left-width": "1px",
+    "border-left-color": "rgb(213, 224, 219)"
+  },
+  "account": {
+    "height": "28px",
+    "font-size": "14px",
+    "font-weight": "500",
+    "color": "rgb(20, 32, 28)",
+    "background-color": "rgba(0, 0, 0, 0)",
+    "padding-left": "10px",
+    "padding-right": "10px",
+    "border-radius": "10px",
+    "border-left-width": "0px",
+    "border-left-color": "rgb(213, 224, 219)"
+  },
+  "language": {
+    "height": "32px",
+    "font-size": "14px",
+    "font-weight": "400",
+    "color": "rgb(20, 32, 28)",
+    "background-color": "rgb(244, 247, 246)",
+    "padding-left": "8px",
+    "padding-right": "8px",
+    "border-radius": "10px",
+    "border-left-width": "1px",
+    "border-left-color": "rgb(164, 182, 173)"
+  },
+  "activeNav": {
+    "height": "32px",
+    "font-size": "14px",
+    "font-weight": "400",
+    "color": "rgb(17, 94, 89)",
+    "background-color": "rgb(204, 251, 241)",
+    "padding-left": "8px",
+    "padding-right": "8px",
+    "border-radius": "10px",
+    "border-left-width": "2px",
+    "border-left-color": "rgb(15, 118, 110)"
+  },
+  "idleNav": {
+    "height": "32px",
+    "font-size": "14px",
+    "font-weight": "400",
+    "color": "rgb(20, 32, 28)",
+    "background-color": "rgba(0, 0, 0, 0)",
+    "padding-left": "8px",
+    "padding-right": "8px",
+    "border-radius": "10px",
+    "border-left-width": "2px",
+    "border-left-color": "rgba(0, 0, 0, 0)"
+  }
+}

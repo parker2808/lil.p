@@ -169,6 +169,7 @@
       "menu": "Menu",
       "skip": "Skip to content",
       "toggleSidebar": "Collapse sidebar",
+      "expandSidebar": "Expand sidebar",
       "breadcrumb": "Breadcrumb",
       "back": "Back to {section}",
       "logout": "Log out",

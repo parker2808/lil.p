@@ -100,7 +100,7 @@ export function AdminMobileNav() {
             <SheetClose asChild key={item.href}>
               <Button
                 variant={pathname === item.href ? 'secondary' : 'ghost'}
-                className="h-8 justify-start"
+                className="justify-start"
                 asChild
               >
                 <Link href={item.href}>{t(item.key)}</Link>

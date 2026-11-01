@@ -2,6 +2,7 @@
 
 import { qk } from '@portfolio/contracts';
 import { Badge } from '@portfolio/ui/components/ui/badge';
+import { Button } from '@portfolio/ui/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
@@ -26,15 +27,16 @@ export function NotificationBell() {
   const count = unread.data?.unread ?? 0;
 
   return (
-    <Link
-      href="/admin/inbox"
-      className="hover:bg-accent relative inline-flex h-8 items-center gap-2 rounded-md px-2"
-    >
-      <span className="text-ui">{t('bellShort')}</span>
-      {count > 0 ? <Badge variant="primary">{count > 9 ? t('bellOverflow') : count}</Badge> : null}
-      <span className="sr-only" aria-live="polite">
-        {t('bell', { count })}
-      </span>
-    </Link>
+    <Button variant="ghost" size="sm" asChild>
+      <Link href="/admin/inbox">
+        {t('bellShort')}
+        {count > 0 ? (
+          <Badge variant="primary">{count > 9 ? t('bellOverflow') : count}</Badge>
+        ) : null}
+        <span className="sr-only" aria-live="polite">
+          {t('bell', { count })}
+        </span>
+      </Link>
+    </Button>
   );
 }

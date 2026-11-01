@@ -79,7 +79,7 @@ export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
         )}
       </form.Field>
       {formError ? <FieldError>{formError}</FieldError> : null}
-      <Button type="submit" className="h-10" loading={submitting}>
+      <Button type="submit" loading={submitting}>
         {t('submit')}
       </Button>
     </form>
