@@ -64,7 +64,7 @@ export function SectionNav({
     <nav
       data-slot="section-nav"
       aria-label={label}
-      className={cn('lg:sticky lg:top-20', className)}
+      className={cn('redesign-section-nav', 'lg:sticky lg:top-20', className)}
     >
       <details className="lg:hidden">
         <summary className="text-eyebrow text-subtle-foreground font-mono uppercase">

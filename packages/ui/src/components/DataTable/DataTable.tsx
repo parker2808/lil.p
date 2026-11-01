@@ -272,7 +272,7 @@ export function DataTable<TData>({
       data-density={density}
       aria-busy={isLoading || isFetching}
       data-fetching={isFetching || undefined}
-      className="outline-none"
+      className="redesign-data-table outline-none"
       onKeyDown={onKeyDown}
     >
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">

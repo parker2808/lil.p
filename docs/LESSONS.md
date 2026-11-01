@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-01: Before migrating a slot selector, search for its rendered slot; an unused selector can be removed instead of preserving dead styling.
 - 2026-11-01: Public button overrides in the shared redesign stylesheet also affect class-only links, so pass the public surface through `buttonVariants()` at those call sites as well as through `Button`.
 - 2026-10-31: An agent edited the main checkout on `main` instead of its worktree; always use a T3 worktree branch, and the pre-commit hook now blocks `main`.
 - 2026-10-31: A free model failed silently or hit quota; run work via `~/ai-tools/t3-run.sh` watchdog, which switches models and reports failures.

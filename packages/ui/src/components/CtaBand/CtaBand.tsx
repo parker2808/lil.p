@@ -24,6 +24,7 @@ export function CtaBand({
     <div
       data-slot="cta-band"
       className={cn(
+        'redesign-cta-band',
         'relative flex flex-col items-center gap-4 overflow-hidden px-6 py-16 text-center',
         className,
       )}

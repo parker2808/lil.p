@@ -7,7 +7,7 @@ import { Spinner } from './spinner';
 
 export const buttonVariants = cva(
   [
-    'relative inline-flex items-center justify-center gap-2 rounded-md font-medium',
+    'redesign-button relative inline-flex items-center justify-center gap-2 rounded-md font-medium',
     'text-ui whitespace-nowrap transition-colors',
     'disabled:pointer-events-none disabled:opacity-50',
     'pointer-coarse:min-h-11 pointer-coarse:min-w-11',

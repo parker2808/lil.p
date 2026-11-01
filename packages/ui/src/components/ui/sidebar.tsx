@@ -12,6 +12,7 @@ export function Sidebar({
       data-slot="sidebar"
       data-collapsed={collapsed ? 'true' : 'false'}
       className={cn(
+        'redesign-sidebar',
         'bg-sidebar text-sidebar-foreground border-sidebar-border flex h-full flex-col border-r',
         collapsed ? 'w-14' : 'w-60',
         className,
@@ -61,7 +62,11 @@ export function SidebarGroupLabel({ className, ...props }: ComponentProps<'p'>) 
   return (
     <p
       data-slot="sidebar-group-label"
-      className={cn('text-ui-meta text-muted-foreground px-2 py-1 font-medium', className)}
+      className={cn(
+        'redesign-sidebar-group-label',
+        'text-ui-meta text-muted-foreground px-2 py-1 font-medium',
+        className,
+      )}
       {...props}
     />
   );
@@ -89,6 +94,7 @@ export function SidebarMenuButton({
       data-slot="sidebar-menu-button"
       data-active={active ? 'true' : 'false'}
       className={cn(
+        'redesign-sidebar-menu-button',
         'text-ui flex h-8 items-center gap-2 rounded-md px-2',
         active
           ? 'bg-sidebar-accent text-sidebar-accent-foreground border-sidebar-primary border-l-2'

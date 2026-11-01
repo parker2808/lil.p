@@ -27,6 +27,7 @@ export function DomainCard({
       data-slot="domain-card"
       data-hue={domain.hue}
       className={cn(
+        'redesign-domain-card',
         CARD_INTERACTIVE,
         'border-t-2 border-t-transparent p-4',
         HUE_TOP[domain.hue],

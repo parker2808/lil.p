@@ -36,7 +36,12 @@ export function PostCard({
       data-slot="post-card"
       data-variant={variant}
       data-lang={post.lang}
-      className={cn(CARD_INTERACTIVE, featured ? 'flex flex-col' : 'block px-5 py-4', className)}
+      className={cn(
+        'redesign-post-card',
+        CARD_INTERACTIVE,
+        featured ? 'flex flex-col' : 'block px-5 py-4',
+        className,
+      )}
     >
       <ArrowUpRight aria-hidden className={CARD_ARROW} />
       {featured ? <CoverPlaceholder hue="VIOLET" className="border-b" /> : null}

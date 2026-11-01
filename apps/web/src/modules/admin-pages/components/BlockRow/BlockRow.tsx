@@ -81,10 +81,10 @@ export function BlockRow({
       data-selected={selected || undefined}
       className={
         highlighted
-          ? 'border-destructive bg-card flex items-center gap-2 rounded-md border p-2'
+          ? 'redesign-block-row border-destructive bg-card flex items-center gap-2 rounded-md border p-2'
           : selected
-            ? 'border-border bg-sidebar-accent flex items-center gap-2 rounded-md border p-2'
-            : 'border-border bg-card flex items-center gap-2 rounded-md border p-2'
+            ? 'redesign-block-row border-border bg-sidebar-accent flex items-center gap-2 rounded-md border p-2'
+            : 'redesign-block-row border-border bg-card flex items-center gap-2 rounded-md border p-2'
       }
     >
       {handle}
