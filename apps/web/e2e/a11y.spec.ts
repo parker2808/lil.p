@@ -13,6 +13,16 @@ const publicScreens = [
   { name: 'contact', path: '/en/contact' },
 ] as const;
 
+const inlineListRoutes = [
+  'skills',
+  'tags',
+  'education',
+  'principles',
+  'process',
+  'stats',
+  'domains',
+] as const;
+
 test.describe('axe', () => {
   for (const screen of publicScreens) {
     test(`${screen.name} has no serious or critical issues`, async ({ page }) => {
@@ -41,6 +51,18 @@ test.describe('axe', () => {
     await expect(page.getByRole('heading', { name: /home/i }).first()).toBeVisible();
     await expectNoSeriousAxeIssues(page);
   });
+
+  for (const route of inlineListRoutes) {
+    test(`admin ${route} has no serious or critical issues`, async ({ page }) => {
+      await signIn(page);
+      await page.goto(`/admin/${route}`);
+      await expect(page.locator('main#content h1').first()).toBeVisible();
+      await expect(
+        page.getByRole('button', { name: /^Edit the active row:/ }).first(),
+      ).toBeVisible();
+      await expectNoSeriousAxeIssues(page);
+    });
+  }
 });
 
 test.describe('reduced motion', () => {

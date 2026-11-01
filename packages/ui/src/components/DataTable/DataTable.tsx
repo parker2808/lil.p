@@ -416,6 +416,7 @@ export function DataTable<TData>({
                     <TableCell className="w-10">
                       <Checkbox
                         checked={row.getIsSelected()}
+                        aria-label={`${labels.shortcuts.select}: ${rowId(row.original)}`}
                         onCheckedChange={(value) => {
                           if (typeof window !== 'undefined' && lastSelected.current !== null) {
                             const event = window.event as MouseEvent | undefined;
