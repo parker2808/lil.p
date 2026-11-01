@@ -29,6 +29,14 @@ export async function runMobileLighthouse(url: string): Promise<LighthouseScores
       onlyCategories: ['performance', 'accessibility'],
     });
     const categories = result?.lhr.categories;
+    if (new URL(url).pathname === '/vi') {
+      const details = result?.lhr.audits['long-tasks']?.details;
+      console.log('Lighthouse /vi TBT', result?.lhr.audits['total-blocking-time']?.numericValue);
+      console.log(
+        'Lighthouse /vi long tasks',
+        JSON.stringify(details?.type === 'table' ? details.items : []),
+      );
+    }
     return {
       performance: Math.round((categories?.performance?.score ?? 0) * 100),
       accessibility: Math.round((categories?.accessibility?.score ?? 0) * 100),
