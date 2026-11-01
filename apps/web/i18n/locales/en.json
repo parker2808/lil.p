@@ -282,12 +282,29 @@
         "label": "Period"
       },
       "cards": {
-        "projects": "Projects published",
-        "posts": "Posts published",
-        "drafts": "Drafts",
-        "publishedPeriod": "Published this period",
-        "views": "Page views",
+        "views": "Page views · {range}",
         "viewsSparkline": "Views over the period"
+      },
+      "todos": {
+        "unread": {
+          "title": "Unread messages",
+          "action": "Open inbox",
+          "emptyTitle": "Inbox zero",
+          "emptyDescription": "No unread messages."
+        },
+        "drafts": {
+          "title": "Unpublished drafts",
+          "action": "Review drafts",
+          "projects": "{count, plural, one {# project draft} other {# project drafts}}",
+          "posts": "{count, plural, one {# post draft} other {# post drafts}}",
+          "emptyTitle": "Everything is published",
+          "emptyDescription": "No project or post is waiting in draft."
+        },
+        "views": {
+          "action": "Open analytics",
+          "emptyTitle": "No page views yet",
+          "emptyDescription": "No visits in this period or the one before."
+        }
       },
       "delta": {
         "up": "+{value} vs previous {range}",

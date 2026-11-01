@@ -7,12 +7,17 @@ import {
   type AdminPostListItem,
   qk,
 } from '@portfolio/contracts';
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 
 import { bulkAdminPosts, bulkAdminProjects, listAdminAudit } from '../services/admin-audit.service';
 
 export function useAdminAudit(params: AdminAuditListParams) {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: qk.admin.audit(params),
     queryFn: () => listAdminAudit(params),
   });

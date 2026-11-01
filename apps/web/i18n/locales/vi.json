@@ -282,12 +282,29 @@
         "label": "Khoảng thời gian"
       },
       "cards": {
-        "projects": "Dự án đã xuất bản",
-        "posts": "Bài viết đã xuất bản",
-        "drafts": "Bản nháp",
-        "publishedPeriod": "Đã xuất bản trong kỳ",
-        "views": "Lượt xem trang",
+        "views": "Lượt xem trang · {range}",
         "viewsSparkline": "Lượt xem trong kỳ"
+      },
+      "todos": {
+        "unread": {
+          "title": "Tin nhắn chưa đọc",
+          "action": "Mở hộp thư",
+          "emptyTitle": "Hộp thư trống",
+          "emptyDescription": "Không có tin nhắn chưa đọc."
+        },
+        "drafts": {
+          "title": "Bản nháp chưa xuất bản",
+          "action": "Xem bản nháp",
+          "projects": "{count} bản nháp dự án",
+          "posts": "{count} bản nháp bài viết",
+          "emptyTitle": "Mọi nội dung đã xuất bản",
+          "emptyDescription": "Không có dự án hay bài viết nào đang ở dạng nháp."
+        },
+        "views": {
+          "action": "Mở phân tích",
+          "emptyTitle": "Chưa có lượt xem",
+          "emptyDescription": "Không có lượt truy cập trong kỳ này và kỳ trước."
+        }
       },
       "delta": {
         "up": "+{value} so với {range} trước",

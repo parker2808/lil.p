@@ -11,12 +11,6 @@ import {
 
 import { apiClient } from '@/modules/core/services/api-client.service';
 
-export const LATEST_INBOX_PARAMS: AdminContactMessageListParams = {
-  page: 1,
-  pageSize: 5,
-  sort: '-createdAt',
-};
-
 function queryString(params: AdminContactMessageListParams): string {
   const search = new URLSearchParams();
   search.set('page', String(params.page));
