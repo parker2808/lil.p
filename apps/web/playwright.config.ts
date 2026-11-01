@@ -66,6 +66,7 @@ export default defineConfig({
     'projects-filters.spec.ts',
     'ux-targets.spec.ts',
     'admin-components.spec.ts',
+    'editor-mode-toggle.spec.ts',
   ],
   // Snapshots hold computed styles, not pixels, so one file serves every platform.
   snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}{ext}',

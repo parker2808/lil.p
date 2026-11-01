@@ -16,6 +16,7 @@
 - 2026-11-01: The Vietnamese locale file has no admin namespace yet; admin locale plumbing must retain English messages for those keys while passing the selected locale to Intl formatting.
 - 2026-11-01: Before migrating a slot selector, search for its rendered slot; an unused selector can be removed instead of preserving dead styling.
 - 2026-11-01: Public button overrides in the shared redesign stylesheet also affect class-only links, so pass the public surface through `buttonVariants()` at those call sites as well as through `Button`.
+- 2026-11-01: A shared Radix Tabs toggle for several Tiptap editors can use one `TabsContent value={mode}`: the panel stays labelled by the active tab and the editors stay mounted when the mode changes.
 - 2026-10-31: An agent edited the main checkout on `main` instead of its worktree; always use a T3 worktree branch, and the pre-commit hook now blocks `main`.
 - 2026-10-31: A free model failed silently or hit quota; run work via `~/ai-tools/t3-run.sh` watchdog, which switches models and reports failures.
 - 2026-10-31: A big task skipped planning; write a plan and a spec in `docs/specs/` before coding.
