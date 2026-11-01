@@ -32,7 +32,7 @@ test('Vietnamese dashboard, shell and lists have no known English copy', async (
     ['/admin/inbox', 'Hộp thư', /Filter messages|Latest messages|No messages yet/],
     ['/admin/users', 'Người dùng', /Filter users|New user|No users yet/],
     ['/admin/skills', 'Kỹ năng', /Filter skills|New skill|No skills yet/],
-    ['/admin/pages', 'Trang', /No pages yet|Pages could not be loaded/],
+    ['/admin/pages/home', /^Trang chủ/, /No pages yet|Pages could not be loaded/],
     ['/admin/media', 'Thư viện', /No files yet|Media|Missing alt/],
     ['/admin/analytics', 'Phân tích', /Top pages|Top referrers|No views yet/],
     ['/admin/audit', 'Nhật ký hoạt động', /Audit log|Load more|No activity yet/],
@@ -41,7 +41,9 @@ test('Vietnamese dashboard, shell and lists have no known English copy', async (
   for (const [route, heading, english] of routes) {
     await page.goto(route);
     await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
-    await expect(page.getByRole('heading', { name: heading, exact: true })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: heading, exact: typeof heading === 'string' }),
+    ).toBeVisible();
     await expect(page.locator('body')).not.toContainText(english);
     await expect(page.locator('body')).not.toContainText(/Site settings|Change password|Log out/);
   }
