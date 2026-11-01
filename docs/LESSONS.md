@@ -24,4 +24,6 @@
 - 2026-11-01: Worktrees share the `lilp-db-test-1` MySQL on port 3307; Playwright global setup can fail with a seed deadlock when another worktree seeds at the same time, so rerun once before debugging.
 - 2026-11-01: `apps/web` Vitest does not auto-clean rendered components between tests, so a test file with several renders must call `afterEach(cleanup)` or later queries find duplicate elements.
 - 2026-11-01: API login is throttled to 5 per minute, so an e2e must not sign in repeatedly to create audit rows; shrink the window until the few existing rows overflow instead.
+- 2026-11-01: Radix Tabs call `onValueChange` on mousedown and again on focus; with a URL-driven value that updates asynchronously each click pushed two identical history entries, so skip a push when the URL is unchanged.
+- 2026-11-01: An e2e Back that loads a fresh document can be followed by a second Back before Next hydrates, so the popstate is lost; run chained same-document Back steps on a page you already interacted with.
 - 2026-11-01: `react/jsx-no-literals` allows only a few symbols (`→` but not `←`); render a lucide icon with `aria-hidden` instead of a text arrow, and list every new e2e spec in `playwright.config.ts` `testMatch` or it never runs.

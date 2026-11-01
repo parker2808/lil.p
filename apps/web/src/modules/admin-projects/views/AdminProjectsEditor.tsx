@@ -22,6 +22,7 @@ import { useAdminBack } from '@/modules/admin-core/hooks/use-admin-back.hook';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
 import { useSaveStatus } from '@/modules/admin-core/hooks/use-save-status.hook';
 import { useDirtyGuard } from '@/modules/admin-core/hooks/use-dirty-guard.hook';
+import { useListParams } from '@/modules/admin-core/hooks/use-list-params.hook';
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { editorLabelsFromMessages } from '@/modules/admin-core/utils/editor-labels.util';
 import { mapFieldErrors } from '@/modules/admin-core/utils/map-field-errors.util';
@@ -47,6 +48,10 @@ import {
   toCreateInput,
   type ProjectFormValues,
 } from '../utils/project-form.util';
+
+const tabParamsSchema = z.object({
+  tab: z.enum(['content', 'card', 'metrics', 'seo']).catch('content'),
+});
 
 export function AdminProjectsEditor({ projectId }: { projectId: number | null }) {
   const t = useTranslations('admin.projects.editor');
@@ -80,7 +85,7 @@ function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
   const publish = usePublishAdminProject();
   const unpublish = useUnpublishAdminProject();
   const [locale, setLocale] = useState<'en' | 'vi'>('en');
-  const [tab, setTab] = useState('content');
+  const { params, setParams } = useListParams(tabParamsSchema);
   const [form, setForm] = useState(initial);
   const [baseline, setBaseline] = useState(() => JSON.stringify(toCreateInput(initial)));
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -305,7 +310,12 @@ function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
         />
       }
     >
-      <Tabs value={tab} onValueChange={setTab}>
+      <Tabs
+        value={params.tab}
+        onValueChange={(value) =>
+          setParams({ tab: tabParamsSchema.shape.tab.parse(value) }, { history: 'push' })
+        }
+      >
         <TabsList>
           <TabsTrigger value="content">{t('tabs.content')}</TabsTrigger>
           <TabsTrigger value="card">{t('tabs.card')}</TabsTrigger>
