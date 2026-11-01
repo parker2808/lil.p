@@ -4,11 +4,13 @@ import { type Locale, publicExperienceSchema, type PublicExperience } from '@por
 import { z } from 'zod';
 
 import { apiServer } from '@/modules/core/services/api-server.service';
+import { guardExperience } from '../utils/content-guard.util';
 
 export async function listExperience(locale: Locale): Promise<PublicExperience[]> {
-  return apiServer('/api/public/experience', {
+  const items = await apiServer('/api/public/experience', {
     locale,
     tags: ['experience'],
     schema: z.array(publicExperienceSchema),
   });
+  return guardExperience(items);
 }
