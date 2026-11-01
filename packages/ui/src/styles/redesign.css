@@ -214,6 +214,32 @@
 .hero-status p {
   color: var(--primary);
 }
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 40px;
+  margin: 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  max-width: 48rem;
+}
+.hero-stats > div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 4px;
+}
+.hero-stats dt {
+  color: var(--muted-foreground);
+  font: 500 11px/1.4 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hero-stats dd {
+  margin: 0;
+  color: var(--primary);
+  font: 700 var(--text-heading) / 1.1 var(--font-heading);
+  font-variant-numeric: tabular-nums;
+}
 .hero-stage {
   position: absolute;
   inset: 0;

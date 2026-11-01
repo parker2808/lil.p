@@ -13,9 +13,15 @@ import {
 } from '@portfolio/ui/components/ui/select';
 import { Switch } from '@portfolio/ui/components/ui/switch';
 import { Textarea } from '@portfolio/ui/components/ui/textarea';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { MediaField } from '@/modules/admin-media/components/MediaField/MediaField';
+
+import {
+  HeroStatsFieldset,
+  parseHeroStatRows,
+  toHeroStatRows,
+} from '../HeroStatsFieldset/HeroStatsFieldset';
 
 export function SettingsForm({
   initial,
@@ -57,6 +63,9 @@ export function SettingsForm({
   onSave: (values: AdminSiteSettings) => Promise<void>;
 }) {
   const [form, setForm] = useState(initial);
+  const [heroRows, setHeroRows] = useState(() => toHeroStatRows(initial.heroStats));
+  const [showHeroErrors, setShowHeroErrors] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   function patch<K extends keyof AdminSiteSettings>(name: K, value: AdminSiteSettings[K]) {
     setForm((current) => ({ ...current, [name]: value }));
@@ -64,12 +73,23 @@ export function SettingsForm({
 
   return (
     <form
+      ref={formRef}
+      noValidate
       className="flex max-w-xl flex-col gap-4"
       onSubmit={(event) => {
         event.preventDefault();
-        if (!readOnly) {
-          void onSave(form);
+        if (readOnly) {
+          return;
         }
+        const heroStats = parseHeroStatRows(heroRows);
+        if (!heroStats.success) {
+          setShowHeroErrors(true);
+          requestAnimationFrame(() =>
+            formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus(),
+          );
+          return;
+        }
+        void onSave({ ...form, heroStats: heroStats.data.length ? heroStats.data : null });
       }}
     >
       <Field>
@@ -271,6 +291,17 @@ export function SettingsForm({
         onChange={(media) => {
           patch('ogImageId', media?.id ?? null);
           patch('ogImage', media);
+        }}
+      />
+      <HeroStatsFieldset
+        rows={heroRows}
+        readOnly={readOnly}
+        showErrors={showHeroErrors}
+        onChange={setHeroRows}
+        onClear={() => {
+          setHeroRows([]);
+          setShowHeroErrors(false);
+          void onSave({ ...form, heroStats: null });
         }}
       />
       {readOnly ? null : (

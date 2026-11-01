@@ -96,6 +96,8 @@ model SiteSettings {
   analyticsEnabled   Boolean      @default(false)
   ambientEffects     Boolean      @default(true)
   marqueeEnabled     Boolean      @default(true)
+  /// Up to 3 `{ value, suffix?, labelEn, labelVi }` (contracts `heroStatsSchema`). NULL = use profile stats.
+  heroStats          Json?
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt
 

@@ -118,6 +118,7 @@ export function AdminSiteIndex() {
                   ambientEffects: values.ambientEffects,
                   marqueeEnabled: values.marqueeEnabled,
                   ogImageId: values.ogImageId ?? null,
+                  heroStats: values.heroStats ?? null,
                 });
               }}
             />

@@ -4,6 +4,23 @@ import { localeSchema } from '../common/locale.schema';
 import { adminMediaSchema, publicImageSchema } from '../media/media.schema';
 import { availabilitySchema } from './site-settings.enum';
 
+export const HERO_STAT_LIMITS = { items: 3, value: 12, suffix: 4, label: 40 } as const;
+
+export const heroStatSchema = z.object({
+  value: z.string().trim().min(1).max(HERO_STAT_LIMITS.value),
+  suffix: z.string().trim().max(HERO_STAT_LIMITS.suffix).optional(),
+  labelEn: z.string().trim().min(1).max(HERO_STAT_LIMITS.label),
+  labelVi: z.string().trim().min(1).max(HERO_STAT_LIMITS.label),
+});
+
+export const heroStatsSchema = z.array(heroStatSchema).max(HERO_STAT_LIMITS.items);
+
+export const publicHeroStatSchema = z.object({
+  value: z.string(),
+  suffix: z.string().nullable(),
+  label: z.string(),
+});
+
 export const siteSettingsUpdateSchema = z.object({
   siteName: z.string().min(1).optional(),
   domain: z.string().min(1).optional(),
@@ -26,6 +43,7 @@ export const siteSettingsUpdateSchema = z.object({
   ambientEffects: z.boolean().optional(),
   marqueeEnabled: z.boolean().optional(),
   ogImageId: z.number().int().nullable().optional(),
+  heroStats: heroStatsSchema.nullable().optional(),
 });
 
 export const adminSiteSettingsSchema = z.object({
@@ -52,6 +70,7 @@ export const adminSiteSettingsSchema = z.object({
   marqueeEnabled: z.boolean(),
   ogImageId: z.number().int().nullable().optional(),
   ogImage: adminMediaSchema.nullable().optional(),
+  heroStats: heroStatsSchema.nullable().optional(),
   updatedAt: z.string(),
 });
 
@@ -71,5 +90,6 @@ export const publicSiteSettingsSchema = z.object({
   ambientEffects: z.boolean(),
   marqueeEnabled: z.boolean(),
   ogImage: publicImageSchema.nullable().optional(),
+  heroStats: z.array(publicHeroStatSchema).nullable().optional(),
   lang: localeSchema,
 });
