@@ -639,6 +639,24 @@
 .redesign-data-table[data-fetching] tbody {
   opacity: 0.65;
 }
+.redesign-admin-table {
+  --row-h: 44px;
+  --cell-px: 12px;
+  --cell-py: 12px;
+}
+.redesign-admin-table[data-density='compact'] {
+  --row-h: 36px;
+  --cell-px: 8px;
+  --cell-py: 6px;
+}
+.redesign-admin-table tbody tr[data-row] {
+  height: var(--row-h);
+}
+.redesign-admin-table tbody tr[data-row]:focus-visible {
+  background: var(--muted);
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
 .admin-table-viewport {
   max-height: min(70vh, 48rem);
   overflow: auto;
@@ -664,7 +682,7 @@
 }
 .admin-table-link {
   display: block;
-  padding: 12px;
+  padding: var(--cell-py) var(--cell-px);
   color: inherit;
   outline: none;
 }

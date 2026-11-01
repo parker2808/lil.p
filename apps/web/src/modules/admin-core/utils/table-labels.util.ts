@@ -6,7 +6,16 @@ export function adminListTableLabels(
   table: (key: string) => string,
   copy: Omit<
     AdminListTableLabels,
-    'retry' | 'select' | 'selectAll' | 'previous' | 'next' | 'cancel'
+    | 'retry'
+    | 'select'
+    | 'selectAll'
+    | 'clearSelection'
+    | 'density'
+    | 'densityCompact'
+    | 'densityComfortable'
+    | 'previous'
+    | 'next'
+    | 'cancel'
   >,
 ): AdminListTableLabels {
   return {
@@ -14,6 +23,10 @@ export function adminListTableLabels(
     retry: table('retry'),
     select: table('select'),
     selectAll: table('selectAll'),
+    clearSelection: table('clearSelection'),
+    density: table('density'),
+    densityCompact: table('densityCompact'),
+    densityComfortable: table('densityComfortable'),
     previous: table('previous'),
     next: table('next'),
     cancel: table('cancel'),

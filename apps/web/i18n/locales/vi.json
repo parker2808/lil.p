@@ -434,11 +434,13 @@
       "density": "Mật độ",
       "densityDefault": "Mặc định",
       "densityCompact": "Gọn",
+      "densityComfortable": "Thoáng",
       "help": "Phím tắt",
       "helpTitle": "Phím tắt bàn phím",
       "cancel": "Hủy",
       "select": "Chọn",
       "selectAll": "Chọn tất cả hàng",
+      "clearSelection": "Bỏ chọn",
       "shortcuts": {
         "move": "Di chuyển hàng đang chọn",
         "select": "Chọn hàng hiện tại",

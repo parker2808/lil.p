@@ -186,6 +186,43 @@ describe('AdminTable', () => {
     expect(within(region).getByRole('table', { name: 'Projects' })).toBeInTheDocument();
   });
 
+  it('moves focus between rows with J and K when row navigation is on', () => {
+    renderTable({ rowHref: (row) => `/admin/projects/${row.id}`, rowNavigation: true });
+    const [first, second] = screen.getAllByRole('link');
+
+    fireEvent.keyDown(document.body, { key: 'j' });
+    expect(first).toHaveFocus();
+    fireEvent.keyDown(document.activeElement!, { key: 'j' });
+    expect(second).toHaveFocus();
+    fireEvent.keyDown(document.activeElement!, { key: 'j' });
+    expect(second).toHaveFocus();
+    fireEvent.keyDown(document.activeElement!, { key: 'k' });
+    expect(first).toHaveFocus();
+  });
+
+  it('focuses plain rows and ignores J/K while typing or with modifiers', () => {
+    renderTable({ rowNavigation: true, search: { label: 'Search projects', onSearch: vi.fn() } });
+    const rows = screen.getAllByRole('row').slice(1);
+
+    fireEvent.keyDown(screen.getByRole('searchbox'), { key: 'j' });
+    expect(document.body).toHaveFocus();
+    fireEvent.keyDown(document.body, { key: 'j', metaKey: true });
+    expect(document.body).toHaveFocus();
+
+    fireEvent.keyDown(document.body, { key: 'j' });
+    expect(rows[0]).toHaveFocus();
+  });
+
+  it('leaves J/K alone without row navigation and marks the density', () => {
+    const { container } = renderTable({ density: 'compact' });
+    fireEvent.keyDown(document.body, { key: 'j' });
+    expect(document.body).toHaveFocus();
+    expect(container.querySelector('[data-slot="admin-table"]')).toHaveAttribute(
+      'data-density',
+      'compact',
+    );
+  });
+
   it('renders a visually hidden table without a scroll viewport or tab stop', () => {
     const { container } = renderTable({ visuallyHidden: true });
     expect(container.querySelector('[data-slot="admin-table"]')).toHaveClass('sr-only');

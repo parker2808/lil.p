@@ -12,6 +12,7 @@ import {
   TableRow,
 } from '@portfolio/ui/components/ui/table';
 import { cn } from '@portfolio/ui/lib/utils';
+import { hasModifier, ignoresShortcuts } from '@portfolio/ui/utils/shortcut.util';
 import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react';
 import {
   type ChangeEvent,
@@ -24,6 +25,8 @@ import {
 } from 'react';
 
 export const ADMIN_TABLE_SEARCH_DEBOUNCE_MS = 300;
+
+export type AdminTableDensity = 'comfortable' | 'compact';
 
 export type AdminTableColumn<TData> = {
   id: string;
@@ -66,6 +69,8 @@ export function AdminTable<TData>({
   loading,
   error,
   visuallyHidden = false,
+  density = 'comfortable',
+  rowNavigation = false,
   className,
 }: {
   label: string;
@@ -84,10 +89,47 @@ export function AdminTable<TData>({
   error: ReactNode;
   /** Screen-reader-only table: no scroll viewport, so no invisible tab stop or unfocusable scroller. */
   visuallyHidden?: boolean;
+  density?: AdminTableDensity;
+  /** J/K move focus to the next/previous row from anywhere on the page; enable on one table per page. */
+  rowNavigation?: boolean;
   className?: string;
 }) {
   const sortId = sort?.replace(/^-/, '');
   const sortDesc = sort?.startsWith('-') ?? false;
+  const bodyRef = useRef<HTMLTableSectionElement>(null);
+
+  useEffect(() => {
+    if (!rowNavigation) {
+      return;
+    }
+    function onKeyDown(event: KeyboardEvent) {
+      const key = event.key.toLowerCase();
+      if (
+        (key !== 'j' && key !== 'k') ||
+        event.defaultPrevented ||
+        hasModifier(event) ||
+        ignoresShortcuts(event.target)
+      ) {
+        return;
+      }
+      const rows = Array.from(
+        bodyRef.current?.querySelectorAll<HTMLTableRowElement>('tr[data-row]') ?? [],
+      );
+      if (rows.length === 0) {
+        return;
+      }
+      event.preventDefault();
+      const current = rows.findIndex((row) => row.contains(document.activeElement));
+      const next =
+        current === -1
+          ? 0
+          : Math.min(rows.length - 1, Math.max(0, current + (key === 'j' ? 1 : -1)));
+      const row = rows[next]!;
+      (row.querySelector<HTMLElement>('.admin-table-link:not([tabindex="-1"])') ?? row).focus();
+    }
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [rowNavigation]);
 
   function statusRow(state: string, content: ReactNode) {
     return (
@@ -110,7 +152,7 @@ export function AdminTable<TData>({
       return Array.from({ length: 5 }, (_, index) => (
         <TableRow key={`skeleton-${index}`} data-state="loading">
           {columns.map((column) => (
-            <TableCell key={column.id} density="comfortable">
+            <TableCell key={column.id} density="token">
               <Skeleton className="h-5 w-4/5" />
             </TableCell>
           ))}
@@ -124,12 +166,17 @@ export function AdminTable<TData>({
       const href = rowHref?.(row);
       let linked = 0;
       return (
-        <TableRow key={rowId(row)} data-href={href}>
+        <TableRow
+          key={rowId(row)}
+          data-row=""
+          data-href={href}
+          tabIndex={rowNavigation ? -1 : undefined}
+        >
           {columns.map((column) => {
             const content = column.cell(row);
             if (!href || column.interactive) {
               return (
-                <TableCell key={column.id} density="comfortable" className={column.className}>
+                <TableCell key={column.id} density="token" className={column.className}>
                   {content}
                 </TableCell>
               );
@@ -157,6 +204,7 @@ export function AdminTable<TData>({
   return (
     <div
       data-slot="admin-table"
+      data-density={density}
       className={cn(
         'redesign-admin-table',
         'flex flex-col gap-3',
@@ -213,7 +261,7 @@ export function AdminTable<TData>({
               })}
             </TableRow>
           </TableHeader>
-          <TableBody>{renderBody()}</TableBody>
+          <TableBody ref={bodyRef}>{renderBody()}</TableBody>
         </Table>
       </div>
     </div>

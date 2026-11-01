@@ -434,11 +434,13 @@
       "density": "Density",
       "densityDefault": "Default",
       "densityCompact": "Compact",
+      "densityComfortable": "Comfortable",
       "help": "Shortcuts",
       "helpTitle": "Keyboard shortcuts",
       "cancel": "Cancel",
       "select": "Select",
       "selectAll": "Select all rows",
+      "clearSelection": "Clear selection",
       "shortcuts": {
         "move": "Move the active row",
         "select": "Select the active row",
