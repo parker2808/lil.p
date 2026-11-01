@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P6-3 T33c: `EditorShell` has one right column at `lg` (Properties, then the preview when given; 20rem, 24rem from `xl`) instead of a separate 2xl preview column, so the pages editor's "Preview" sheet button is now `lg:hidden`. The `PageHeader` (`backPlacement="inline"`: `← Section / title`, then save status, then `PublishActions` with an outline Preview link before Publish) is sticky (`.admin-editor-header`, offset by `--admin-main-padding-top` because sticky insets start at `main`'s content box). The inline back link shows at every width, so below `lg` it repeats the topbar back arrow. The Markdown editor toolbar's own `sticky` is inert inside `main` because its editor wrapper is `overflow-hidden` (unchanged). Visual baselines for admin editor routes were not re-rendered.
 - P6-2 T32: below `lg` the admin uses `AdminBottomBar` (Overview, Content, Inbox with unread badge, More sheet with the remaining groups) and a compact topbar (back link and title from `navItemFor`, editor save status portaled into the topbar slot, account menu with language items). The admin root layout sets `viewport-fit=cover` for the safe-area padding. The bar hides while `visualViewport` is at least 120px shorter than the window; this was checked with a stubbed `visualViewport`, not a real device keyboard. Still failing on the P6-1 base: axe `aria-valid-attr-value` on the Tags, Posts and About tab triggers, and `admin-back-link.spec.ts` still expects `/admin/experience` as the experience parent.
 - P6-1 T31: admin navigation now has five groups; About content uses URL tabs, Tags lives under Posts, and legacy section routes redirect. Existing e2e specs that assert the old `/admin/pages` index or experience editor URLs may need updating when the full E2E suite is next run.
 
@@ -104,6 +105,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-01: P6-3 T33c: split admin editor (content left, Properties and preview right at `lg`) under a sticky `← Section / title · save status · Preview · Publish` header.
 - 2026-11-01: P6-2 T32: admin mobile bottom bar with More sheet, compact touch topbar with save status, and 390px E2E coverage.
 - 2026-11-01: P6-1 T31: five-group admin sidebar, URL-backed About and Posts tabs, and legacy route redirects; nav unit and redirect E2E coverage.
 

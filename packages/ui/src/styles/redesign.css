@@ -398,9 +398,10 @@
   line-height: 16px;
 }
 .admin-main {
+  --admin-main-padding-top: 28px;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
-  padding: 28px clamp(16px, 3vw, 40px) 48px;
+  padding: var(--admin-main-padding-top) clamp(16px, 3vw, 40px) 48px;
 }
 .admin-main > * {
   max-width: 80rem;
@@ -816,6 +817,15 @@
 }
 .admin .redesign-save-status {
   min-width: 10rem;
+}
+.admin .admin-editor-header {
+  position: sticky;
+  top: calc(-1 * var(--admin-main-padding-top, 0px));
+  z-index: 20;
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--background) 88%, transparent);
+  padding-block: 8px;
+  backdrop-filter: blur(12px);
 }
 .admin .redesign-markdown-editor {
   border-radius: 14px;

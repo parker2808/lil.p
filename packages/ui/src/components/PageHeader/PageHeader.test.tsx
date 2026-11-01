@@ -27,6 +27,22 @@ describe('PageHeader', () => {
     expect(link).toHaveClass('sm:hidden');
   });
 
+  it('renders an inline back link before the title at every width', () => {
+    render(
+      <PageHeader
+        title="Case study"
+        back={{ href: '/admin/projects', label: 'Projects', ariaLabel: 'Back to Projects' }}
+        backPlacement="inline"
+      />,
+    );
+
+    const link = screen.getByRole('link', { name: 'Back to Projects' });
+    const heading = screen.getByRole('heading', { level: 1, name: 'Case study' });
+    expect(link).not.toHaveClass('sm:hidden');
+    expect(link.parentElement).toBe(heading.parentElement);
+    expect(link.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it('renders the back link through the provided link component', () => {
     function TestLink({ children, ...props }: PageHeaderLinkProps) {
       return (

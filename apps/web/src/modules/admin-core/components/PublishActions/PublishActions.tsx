@@ -1,7 +1,7 @@
 'use client';
 
 import { StatusPill, type ContentStatus } from '@portfolio/ui/components/StatusPill/StatusPill';
-import { Button } from '@portfolio/ui/components/ui/button';
+import { Button, buttonVariants } from '@portfolio/ui/components/ui/button';
 
 export function PublishActions({
   status,
@@ -33,6 +33,11 @@ export function PublishActions({
         status={status}
         labels={{ draft: labels.draft, published: labels.published, archived: labels.archived }}
       />
+      {previewHref ? (
+        <a href={previewHref} className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+          {labels.preview}
+        </a>
+      ) : null}
       {status === 'published' ? (
         <Button
           type="button"
@@ -48,14 +53,6 @@ export function PublishActions({
           {labels.publish}
         </Button>
       )}
-      {previewHref ? (
-        <a
-          href={previewHref}
-          className="text-ui text-primary hover:text-primary-hover underline underline-offset-4"
-        >
-          {labels.preview}
-        </a>
-      ) : null}
     </div>
   );
 }
