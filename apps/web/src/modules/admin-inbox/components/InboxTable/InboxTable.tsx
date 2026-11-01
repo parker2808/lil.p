@@ -1,11 +1,14 @@
 'use client';
 
 import type { AdminContactMessage, ContactMessageStatus } from '@portfolio/contracts';
-import { DataTable, type DataTableLabels } from '@portfolio/ui/components/DataTable/DataTable';
+import { type AdminTableColumn } from '@portfolio/ui/components/AdminTable/AdminTable';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { Button } from '@portfolio/ui/components/ui/button';
-import { type ColumnDef } from '@tanstack/react-table';
-import { useMemo } from 'react';
+
+import {
+  AdminListTable,
+  type AdminListTableLabels,
+} from '@/modules/admin-core/components/AdminListTable/AdminListTable';
 
 const STATUS_VARIANT = {
   NEW: 'primary',
@@ -15,6 +18,7 @@ const STATUS_VARIANT = {
 } as const;
 
 export function InboxTable({
+  label,
   items,
   total,
   page,
@@ -23,7 +27,6 @@ export function InboxTable({
   hasFilters,
   isError,
   isLoading,
-  isFetching,
   canWrite,
   labels,
   columnLabels,
@@ -31,12 +34,12 @@ export function InboxTable({
   actionLabels,
   onSortChange,
   onPageChange,
-  onOpen,
   onMarkRead,
   onMarkSpam,
   onClearFilters,
   onRetry,
 }: {
+  label: string;
   items: AdminContactMessage[];
   total: number;
   page: number;
@@ -45,99 +48,80 @@ export function InboxTable({
   hasFilters: boolean;
   isError?: boolean;
   isLoading?: boolean;
-  isFetching?: boolean;
   canWrite: boolean;
-  labels: DataTableLabels;
+  labels: AdminListTableLabels;
   columnLabels: { name: string; topic: string; status: string; created: string; actions: string };
   statusLabels: Record<ContactMessageStatus, string>;
   actionLabels: { read: string; spam: string };
   onSortChange: (sort: string) => void;
   onPageChange: (page: number) => void;
-  onOpen: (row: AdminContactMessage) => void;
   onMarkRead: (row: AdminContactMessage) => void;
   onMarkSpam: (row: AdminContactMessage) => void;
   onClearFilters: () => void;
   onRetry: () => void;
 }) {
-  const columns = useMemo<ColumnDef<AdminContactMessage>[]>(
-    () => [
-      {
-        id: 'name',
-        accessorKey: 'name',
-        header: columnLabels.name,
-        cell: ({ row }) => row.original.name,
-      },
-      {
-        id: 'topic',
-        header: columnLabels.topic,
-        enableSorting: false,
-        cell: ({ row }) => row.original.topic?.labelEn ?? '',
-      },
-      {
-        id: 'status',
-        accessorKey: 'status',
-        enableSorting: false,
-        header: columnLabels.status,
-        cell: ({ row }) => (
-          <Badge variant={STATUS_VARIANT[row.original.status]}>
-            {statusLabels[row.original.status]}
-          </Badge>
-        ),
-      },
-      {
-        id: 'createdAt',
-        accessorKey: 'createdAt',
-        header: columnLabels.created,
-        cell: ({ row }) => new Date(row.original.createdAt).toLocaleString(),
-      },
-      {
-        id: 'actions',
-        header: columnLabels.actions,
-        enableSorting: false,
-        cell: ({ row }) =>
-          canWrite ? (
-            <div className="flex flex-wrap gap-2">
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                onClick={() => onMarkRead(row.original)}
-              >
-                {actionLabels.read}
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                onClick={() => onMarkSpam(row.original)}
-              >
-                {actionLabels.spam}
-              </Button>
-            </div>
-          ) : null,
-      },
-    ],
-    [actionLabels, canWrite, columnLabels, onMarkRead, onMarkSpam, statusLabels],
-  );
+  const columns: AdminTableColumn<AdminContactMessage>[] = [
+    {
+      id: 'name',
+      header: columnLabels.name,
+      cell: (row) => row.name,
+    },
+    {
+      id: 'topic',
+      header: columnLabels.topic,
+      cell: (row) => row.topic?.labelEn ?? '',
+    },
+    {
+      id: 'status',
+      header: columnLabels.status,
+      cell: (row) => <Badge variant={STATUS_VARIANT[row.status]}>{statusLabels[row.status]}</Badge>,
+    },
+    {
+      id: 'createdAt',
+      header: columnLabels.created,
+      sortable: true,
+      cell: (row) => new Date(row.createdAt).toLocaleString(),
+    },
+    ...(canWrite
+      ? [
+          {
+            id: 'actions',
+            header: columnLabels.actions,
+            interactive: true,
+            cell: (row: AdminContactMessage) => (
+              <div className="flex flex-wrap gap-2">
+                <Button type="button" size="sm" variant="outline" onClick={() => onMarkRead(row)}>
+                  {actionLabels.read}
+                </Button>
+                <Button type="button" size="sm" variant="ghost" onClick={() => onMarkSpam(row)}>
+                  {actionLabels.spam}
+                </Button>
+              </div>
+            ),
+          },
+        ]
+      : []),
+  ];
 
   return (
-    <DataTable
+    <AdminListTable
+      label={label}
       columns={columns}
-      data={items}
+      items={items}
+      rowId={(row) => String(row.id)}
+      rowLabel={(row) => row.name}
+      rowHref={(row) => `/admin/inbox/${row.id}`}
       total={total}
       page={page}
       pageSize={pageSize}
       sort={sort}
-      hasFilters={hasFilters}
-      isError={isError}
-      isLoading={isLoading}
-      isFetching={isFetching}
-      canWrite={canWrite}
-      labels={labels}
-      rowId={(row) => String(row.id)}
       onSortChange={onSortChange}
       onPageChange={onPageChange}
-      onOpen={onOpen}
+      hasFilters={hasFilters}
+      isLoading={isLoading}
+      isError={isError}
+      canWrite={canWrite}
+      labels={labels}
       onClearFilters={onClearFilters}
       onRetry={onRetry}
     />

@@ -21,7 +21,7 @@ import { useState } from 'react';
 
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { useListParams } from '@/modules/admin-core/hooks/use-list-params.hook';
-import { adminTableLabels } from '@/modules/admin-core/utils/table-labels.util';
+import { adminListTableLabels } from '@/modules/admin-core/utils/table-labels.util';
 
 import { UserForm } from '../components/UserForm/UserForm';
 import { UsersTable } from '../components/UsersTable/UsersTable';
@@ -32,7 +32,7 @@ export function AdminUsersIndex() {
   const table = useTranslations('admin.table');
   const canWrite = useIsAdmin();
   const { params, setParams } = useListParams(adminUserListParamsSchema);
-  const { data, isError, refetch, isPending, isFetching } = useAdminUsers(params);
+  const { data, isError, refetch, isPending } = useAdminUsers(params);
   const mutations = useUserMutations();
   const list = data ?? { items: [], page: params.page, pageSize: params.pageSize, total: 0 };
   const [formOpen, setFormOpen] = useState(false);
@@ -69,6 +69,7 @@ export function AdminUsersIndex() {
         labels={{ add: t('addFilter'), remove: t('removeChip') }}
       />
       <UsersTable
+        label={t('title')}
         items={list.items}
         total={list.total}
         page={list.page}
@@ -77,9 +78,8 @@ export function AdminUsersIndex() {
         hasFilters={Boolean(params.q)}
         isError={isError}
         isLoading={isPending}
-        isFetching={isFetching}
         canWrite={canWrite}
-        labels={adminTableLabels(table, {
+        labels={adminListTableLabels(table, {
           empty: t('empty'),
           emptyAction: t('new'),
           noResults: t('noResults'),
@@ -87,9 +87,9 @@ export function AdminUsersIndex() {
           error: t('error'),
           selected: t('selected'),
           range: t('range'),
-          confirmDeleteTitle: t('confirmDeleteTitle'),
-          confirmDelete: t('confirmDelete'),
-          bulkDelete: t('delete'),
+          confirmArchiveTitle: t('confirmDeleteTitle'),
+          confirmArchive: t('confirmDelete'),
+          archive: t('delete'),
         })}
         columnLabels={{
           name: t('name'),
@@ -98,6 +98,7 @@ export function AdminUsersIndex() {
           active: t('active'),
           lastLogin: t('lastLogin'),
           actions: t('actions'),
+          edit: t('edit'),
           signOut: t('signOut'),
           setPassword: t('setPassword'),
         }}

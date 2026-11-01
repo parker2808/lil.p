@@ -1,6 +1,7 @@
 import type { AdminExperience } from '@portfolio/contracts';
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { ExperienceTable } from './ExperienceTable';
 
@@ -31,75 +32,82 @@ const labels = {
   clearFilters: 'Clear',
   error: 'Error',
   retry: 'Retry',
+  select: 'Select',
+  selectAll: 'Select all rows',
   selected: '{count} selected',
+  range: '{from}–{to} of {total}',
   previous: 'Previous',
   next: 'Next',
-  range: '{from}–{to} of {total}',
-  columns: 'Columns',
-  density: 'Density',
-  densityDefault: 'Default',
-  densityCompact: 'Compact',
-  help: 'Help',
-  helpTitle: 'Shortcuts',
-  confirmDeleteTitle: 'Delete?',
-  confirmDelete: 'Gone',
+  confirmArchiveTitle: 'Delete?',
+  confirmArchive: 'Gone',
   cancel: 'Cancel',
-  bulkDelete: 'Delete',
-  shortcuts: {
-    move: 'Move',
-    select: 'Select',
-    open: 'Open',
-    edit: 'Edit',
-    remove: 'Remove',
-    help: 'Help',
-    keys: {
-      j: 'j',
-      k: 'k',
-      x: 'x',
-      enter: 'Enter',
-      e: 'e',
-      backspace: '⌫',
-      help: '?',
-    },
-  },
+  archive: 'Delete',
 };
 
-describe('ExperienceTable', () => {
-  it('renders the visibility switch for a role', () => {
-    render(
-      <ExperienceTable
-        items={[item]}
-        total={1}
-        page={1}
-        pageSize={20}
-        sort="-startDate"
-        hasFilters={false}
-        canWrite
-        labels={labels}
-        columnLabels={{
-          company: 'Company',
-          role: 'Role',
-          dates: 'Dates',
-          visible: 'Visible',
-          actions: 'Actions',
-        }}
-        formatDates={(start, end) => `${start}—${end ?? 'now'}`}
-        onSortChange={vi.fn()}
-        onPageChange={vi.fn()}
-        onOpen={vi.fn()}
-        onEdit={vi.fn()}
-        onDelete={vi.fn()}
-        onBulkDelete={vi.fn()}
-        onCreate={vi.fn()}
-        onClearFilters={vi.fn()}
-        onRetry={vi.fn()}
-        onPrefetch={vi.fn()}
-        onMove={vi.fn()}
-        onToggleVisible={vi.fn()}
-      />,
-    );
+function renderTable() {
+  const onToggleVisible = vi.fn();
+  const onDelete = vi.fn();
+  render(
+    <ExperienceTable
+      label="Experience"
+      items={[item]}
+      total={1}
+      page={1}
+      pageSize={20}
+      sort="-startDate"
+      hasFilters={false}
+      canWrite
+      labels={labels}
+      columnLabels={{
+        company: 'Company',
+        role: 'Role',
+        dates: 'Dates',
+        visible: 'Visible',
+        actions: 'Actions',
+      }}
+      formatDates={(start, end) => `${start}—${end ?? 'now'}`}
+      onSortChange={vi.fn()}
+      onPageChange={vi.fn()}
+      onDelete={onDelete}
+      onBulkDelete={vi.fn()}
+      onCreate={vi.fn()}
+      onClearFilters={vi.fn()}
+      onRetry={vi.fn()}
+      onPrefetch={vi.fn()}
+      onMove={vi.fn()}
+      onToggleVisible={onToggleVisible}
+    />,
+  );
+  return { onToggleVisible, onDelete };
+}
 
-    expect(screen.getAllByRole('switch', { name: 'Visible' })[0]).toBeChecked();
-    expect(screen.getAllByText('Acme')[0]).toBeInTheDocument();
+describe('ExperienceTable', () => {
+  afterEach(cleanup);
+
+  it('renders the role as a link to its editor', () => {
+    renderTable();
+    expect(screen.getByRole('link', { name: /Acme/ })).toHaveAttribute(
+      'href',
+      '/admin/experience/4',
+    );
+    expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
+  });
+
+  it('toggles visibility outside the row link', async () => {
+    const { onToggleVisible } = renderTable();
+    const toggle = screen.getByRole('switch', { name: 'Visible' });
+    expect(toggle).toBeChecked();
+    expect(toggle.closest('a')).toBeNull();
+    await userEvent.click(toggle);
+    expect(onToggleVisible).toHaveBeenCalledWith(item);
+  });
+
+  it('deletes a selected role only after confirmation', async () => {
+    const { onDelete } = renderTable();
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Select Acme' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    expect(onDelete).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: 'Delete' }));
+    expect(onDelete).toHaveBeenCalledWith(item);
   });
 });

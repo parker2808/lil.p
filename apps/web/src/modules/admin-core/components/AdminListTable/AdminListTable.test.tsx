@@ -93,4 +93,30 @@ describe('AdminListTable', () => {
     renderTable({ canWrite: false });
     expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
   });
+
+  it('renders plain rows without selection when no href or delete is given', () => {
+    render(
+      <AdminListTable<Row>
+        label="Things"
+        columns={[{ id: 'title', header: 'Title', cell: (row) => row.title }]}
+        items={rows}
+        rowId={(row) => String(row.id)}
+        rowLabel={(row) => row.title}
+        total={2}
+        page={1}
+        pageSize={20}
+        sort="-updatedAt"
+        onSortChange={vi.fn()}
+        onPageChange={vi.fn()}
+        hasFilters={false}
+        canWrite
+        labels={labels}
+        onClearFilters={vi.fn()}
+        onRetry={vi.fn()}
+      />,
+    );
+    expect(screen.getByText('Alpha')).toBeInTheDocument();
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
+  });
 });
