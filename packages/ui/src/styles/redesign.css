@@ -336,11 +336,6 @@
 .admin [data-slot='table-cell'] {
   padding-block: 12px;
 }
-@media (min-width: 1024px) {
-  .admin-main:has([data-layout='split']) {
-    overflow-y: hidden;
-  }
-}
 .login-art {
   display: flex;
   flex-direction: column;
