@@ -56,6 +56,7 @@ export default defineConfig({
     'admin-login.spec.ts',
     'segmented-control.spec.ts',
     'admin-tables.spec.ts',
+    'admin-back-link.spec.ts',
   ],
   fullyParallel: false,
   workers: 1,

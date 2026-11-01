@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useMemo, useRef, useState } from 'react';
 
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
+import { useAdminBack } from '@/modules/admin-core/hooks/use-admin-back.hook';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
 import { useSaveStatus } from '@/modules/admin-core/hooks/use-save-status.hook';
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
@@ -28,6 +29,7 @@ import { publicPagePath } from '../utils/preview-frame.util';
 export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
   const t = useTranslations('admin.pages');
   const editorT = useTranslations('admin.editor');
+  const back = useAdminBack('pages');
   const isAdmin = useIsAdmin();
   const readOnly = !isAdmin;
   const page = useAdminPage(pageKey);
@@ -122,6 +124,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
   return (
     <>
       <EditorShell
+        back={back}
         title={
           <span className="flex items-center gap-2">
             {t(`names.${pageKey}`)}

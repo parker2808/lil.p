@@ -1,6 +1,7 @@
 'use client';
 
 import { LocaleTabs } from '@portfolio/ui/components/LocaleTabs/LocaleTabs';
+import { PageHeader, type PageHeaderBack } from '@portfolio/ui/components/PageHeader/PageHeader';
 import { PropertyList } from '@portfolio/ui/components/PropertyList/PropertyList';
 import { SaveStatus, type SaveStatusState } from '@portfolio/ui/components/SaveStatus/SaveStatus';
 import { Badge } from '@portfolio/ui/components/ui/badge';
@@ -11,6 +12,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@portfolio/ui/components/ui/drawer';
+import Link from 'next/link';
 import type { ReactNode } from 'react';
 
 import { useIsAdmin } from '../../hooks/use-me.hook';
@@ -18,6 +20,7 @@ import { useIsAdmin } from '../../hooks/use-me.hook';
 export function EditorShell({
   layout = 'split',
   title,
+  back,
   saveStatus,
   savedText,
   onLoadLatest,
@@ -33,6 +36,7 @@ export function EditorShell({
 }: {
   layout?: 'split';
   title: ReactNode;
+  back?: PageHeaderBack;
   saveStatus: SaveStatusState;
   savedText?: string;
   onLoadLatest?: () => void;
@@ -65,20 +69,24 @@ export function EditorShell({
       data-layout={layout}
       className="flex min-h-0 flex-col gap-4 lg:h-full"
     >
-      <header className="flex flex-wrap items-center gap-3">
-        <div className="min-w-0 flex-1">
-          <h1 className="text-heading truncate font-semibold">{title}</h1>
-        </div>
-        {readOnly ? <Badge variant="warning">{labels.readOnly}</Badge> : null}
-        <SaveStatus
-          state={readOnly ? 'idle' : saveStatus}
-          savedText={savedText}
-          labels={labels}
-          onLoadLatest={onLoadLatest}
-          onOverwrite={onOverwrite}
-        />
-        {publish}
-      </header>
+      <PageHeader
+        title={title}
+        back={back}
+        linkComponent={Link}
+        actions={
+          <>
+            {readOnly ? <Badge variant="warning">{labels.readOnly}</Badge> : null}
+            <SaveStatus
+              state={readOnly ? 'idle' : saveStatus}
+              savedText={savedText}
+              labels={labels}
+              onLoadLatest={onLoadLatest}
+              onOverwrite={onOverwrite}
+            />
+            {publish}
+          </>
+        }
+      />
       <div className="flex items-center justify-between gap-3">
         <LocaleTabs
           value={locale}

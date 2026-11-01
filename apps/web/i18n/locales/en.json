@@ -170,6 +170,7 @@
       "skip": "Skip to content",
       "toggleSidebar": "Collapse sidebar",
       "breadcrumb": "Breadcrumb",
+      "back": "Back to {section}",
       "logout": "Log out",
       "changePassword": "Change password"
     },
