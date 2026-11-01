@@ -12,7 +12,7 @@ test('admin detail routes with a missing id offer retry and a link back to the l
   for (const [section, parent, label] of [
     ['projects', '/admin/projects', 'Projects'],
     ['posts', '/admin/posts', 'Posts'],
-    ['experience', '/admin/experience', 'Experience'],
+    ['experience', '/admin/pages/about?tab=experience', 'Experience'],
     ['inbox', '/admin/inbox', 'Inbox'],
   ] as const) {
     await page.goto(`/admin/${section}/${MISSING_ID}`);
