@@ -18,7 +18,6 @@ import {
 import { useCloseOnNavigate } from '@portfolio/ui/hooks/use-close-on-navigate.hook';
 import { cn } from '@portfolio/ui/lib/utils';
 
-import { RoutePending } from '../RoutePending/RoutePending';
 import { LocaleSwitch } from '../LocaleSwitch/LocaleSwitch';
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
 
@@ -80,7 +79,6 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
               className="tap text-ui text-muted-foreground hover:text-foreground inline-flex items-center px-2 transition-colors"
             >
               {item.label}
-              <RoutePending />
             </Link>
           ))}
         </nav>
@@ -113,7 +111,6 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
                       className="tap text-ui text-muted-foreground hover:text-foreground inline-flex items-center px-2 transition-colors"
                     >
                       {item.label}
-                      <RoutePending />
                     </Link>
                   </SheetClose>
                 ))}

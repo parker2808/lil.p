@@ -526,29 +526,20 @@
   z-index: 700;
   pointer-events: none;
   background: var(--primary);
-  transform: scaleX(0.75);
   transform-origin: left;
-  opacity: 0;
-  animation:
-    route-show 0.001s 0.12s forwards,
-    route-travel 1.3s 0.12s ease-in-out infinite alternate;
+  animation: route-progress 8s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
 }
-@keyframes route-show {
-  to {
-    opacity: 1;
-  }
-}
-@keyframes route-travel {
+@keyframes route-progress {
   from {
-    transform: scaleX(0.12);
+    transform: scaleX(0.1);
   }
   to {
-    transform: scaleX(0.88);
+    transform: scaleX(0.9);
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .route-pending {
-    opacity: 1;
+    transform: scaleX(0.6);
   }
 }
 .hero-status header {
