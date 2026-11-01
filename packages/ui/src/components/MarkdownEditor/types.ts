@@ -59,3 +59,5 @@ export type MarkdownEditorLabels = {
 export type MarkdownEditorVariant = 'full' | 'compact';
 
 export type MarkdownEditorMode = 'write' | 'split' | 'preview' | 'markdown';
+
+export type MarkdownEditorGroupMode = Extract<MarkdownEditorMode, 'write' | 'preview'>;

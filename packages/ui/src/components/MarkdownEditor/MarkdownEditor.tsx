@@ -14,6 +14,7 @@ import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { EditorToolbar } from './components/EditorToolbar/EditorToolbar';
 import { createMarkdownExtensions } from './extensions/create-markdown-extensions';
+import { useMarkdownEditorGroupMode } from './MarkdownEditorGroup';
 import type { MarkdownEditorLabels, MarkdownEditorMode, MarkdownEditorVariant } from './types';
 
 export function MarkdownEditor({
@@ -43,7 +44,9 @@ export function MarkdownEditor({
   onPickImage?: () => Promise<{ src: string; alt: string } | null>;
   className?: string;
 }) {
-  const [mode, setMode] = useState<MarkdownEditorMode>('write');
+  const groupMode = useMarkdownEditorGroupMode();
+  const [ownMode, setMode] = useState<MarkdownEditorMode>('write');
+  const mode = groupMode ?? ownMode;
   const [preview, setPreview] = useState<ReactNode>(null);
   const lastEmitted = useRef(value);
   const changeTimer = useRef<number | undefined>(undefined);
@@ -155,6 +158,27 @@ export function MarkdownEditor({
     onBlur?.();
   }
 
+  const toolbar =
+    editor && editable ? (
+      <EditorToolbar
+        editor={editor}
+        labels={labels}
+        variant={variant}
+        pendingAlt={pendingAlt}
+        onPendingAltChange={setPendingAlt}
+        onPickImage={onPickImage}
+      />
+    ) : null;
+  const writeSurface = (
+    <>
+      {toolbar}
+      <Prose>
+        <EditorContent editor={editor} onBlur={flush} />
+      </Prose>
+    </>
+  );
+  const previewSurface = <Prose className="p-4">{preview}</Prose>;
+
   return (
     <TooltipProvider delayDuration={200}>
       <div
@@ -165,71 +189,54 @@ export function MarkdownEditor({
           className,
         )}
       >
-        <Tabs
-          value={mode}
-          onValueChange={(next) => {
-            flush();
-            setMode(next as MarkdownEditorMode);
-          }}
-        >
-          <div className="border-border flex items-center justify-between border-b px-2 py-1">
-            <TabsList>
-              <TabsTrigger value="write">{labels.write}</TabsTrigger>
-              <TabsTrigger value="split" className="hidden xl:inline-flex">
-                {labels.split}
-              </TabsTrigger>
-              <TabsTrigger value="preview">{labels.preview}</TabsTrigger>
-              <TabsTrigger value="markdown">{labels.markdown}</TabsTrigger>
-            </TabsList>
-            <p className="text-ui-meta text-muted-foreground px-2">{wordLabel}</p>
-          </div>
-          <TabsContent value="write">
-            {editor && editable ? (
-              <EditorToolbar
-                editor={editor}
-                labels={labels}
-                variant={variant}
-                pendingAlt={pendingAlt}
-                onPendingAltChange={setPendingAlt}
-                onPickImage={onPickImage}
-              />
-            ) : null}
-            <Prose>
-              <EditorContent editor={editor} onBlur={flush} />
-            </Prose>
-          </TabsContent>
-          <TabsContent value="split" className="hidden xl:block">
-            <ResizablePanelGroup direction="horizontal">
-              <ResizablePanel defaultSize={50} minSize={30}>
-                {editor && editable ? (
-                  <EditorToolbar
-                    editor={editor}
-                    labels={labels}
-                    variant={variant}
-                    pendingAlt={pendingAlt}
-                    onPendingAltChange={setPendingAlt}
-                    onPickImage={onPickImage}
-                  />
-                ) : null}
-                <Prose>
-                  <EditorContent editor={editor} onBlur={flush} />
-                </Prose>
-              </ResizablePanel>
-              <ResizableHandle />
-              <ResizablePanel defaultSize={50} minSize={30}>
-                <Prose className="p-4">{preview}</Prose>
-              </ResizablePanel>
-            </ResizablePanelGroup>
-          </TabsContent>
-          <TabsContent value="preview">
-            <Prose className="p-4">{preview}</Prose>
-          </TabsContent>
-          <TabsContent value="markdown">
-            <pre className="text-meta max-h-[32rem] overflow-auto p-4 font-mono whitespace-pre-wrap">
-              {markdown}
-            </pre>
-          </TabsContent>
-        </Tabs>
+        {groupMode === 'preview' ? previewSurface : null}
+        {groupMode === 'write' ? (
+          <>
+            {writeSurface}
+            <p className="border-border text-ui-meta text-muted-foreground border-t px-4 py-1 text-right">
+              {wordLabel}
+            </p>
+          </>
+        ) : null}
+        {groupMode ? null : (
+          <Tabs
+            value={mode}
+            onValueChange={(next) => {
+              flush();
+              setMode(next as MarkdownEditorMode);
+            }}
+          >
+            <div className="border-border flex items-center justify-between border-b px-2 py-1">
+              <TabsList>
+                <TabsTrigger value="write">{labels.write}</TabsTrigger>
+                <TabsTrigger value="split" className="hidden xl:inline-flex">
+                  {labels.split}
+                </TabsTrigger>
+                <TabsTrigger value="preview">{labels.preview}</TabsTrigger>
+                <TabsTrigger value="markdown">{labels.markdown}</TabsTrigger>
+              </TabsList>
+              <p className="text-ui-meta text-muted-foreground px-2">{wordLabel}</p>
+            </div>
+            <TabsContent value="write">{writeSurface}</TabsContent>
+            <TabsContent value="split" className="hidden xl:block">
+              <ResizablePanelGroup direction="horizontal">
+                <ResizablePanel defaultSize={50} minSize={30}>
+                  {writeSurface}
+                </ResizablePanel>
+                <ResizableHandle />
+                <ResizablePanel defaultSize={50} minSize={30}>
+                  {previewSurface}
+                </ResizablePanel>
+              </ResizablePanelGroup>
+            </TabsContent>
+            <TabsContent value="preview">{previewSurface}</TabsContent>
+            <TabsContent value="markdown">
+              <pre className="text-meta max-h-[32rem] overflow-auto p-4 font-mono whitespace-pre-wrap">
+                {markdown}
+              </pre>
+            </TabsContent>
+          </Tabs>
+        )}
       </div>
     </TooltipProvider>
   );
