@@ -36,6 +36,7 @@ export type MarkdownEditorLabels = {
   tableDeleteColumn: string;
   tableDelete: string;
   divider: string;
+  more: string;
   plainText: string;
   slashEmpty: string;
   shortcuts: {

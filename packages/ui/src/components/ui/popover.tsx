@@ -12,6 +12,10 @@ export function PopoverTrigger(props: ComponentProps<typeof PopoverPrimitive.Tri
   return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
 }
 
+export function PopoverAnchor(props: ComponentProps<typeof PopoverPrimitive.Anchor>) {
+  return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />;
+}
+
 export function PopoverContent({
   className,
   align = 'end',

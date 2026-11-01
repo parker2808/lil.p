@@ -14,7 +14,7 @@ function editorColumn(page: Page): Locator {
 
 for (const viewport of [
   { width: 375, height: 667 },
-  { width: 768, height: 1024 },
+  { width: 768, height: 800 },
 ]) {
   test(`main is the only editor scroller at ${viewport.width}x${viewport.height}`, async ({
     page,
