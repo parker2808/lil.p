@@ -56,3 +56,4 @@
 - 2026-11-01: Sourcing the root `.env` into the shell sets an empty `REVALIDATE_SECRET`, so Playwright's `??` test default is skipped and `/api/revalidate` answers 401; unset the `.env.example` variables before running e2e.
 - 2026-11-01: The worktree `.env` credentials do not match the shared `lilp-db-test-1` container; create a throwaway database and user from inside the container (`docker exec … $MYSQL_ROOT_PASSWORD`) for `migrate dev --create-only`, API e2e and Playwright.
 - 2026-11-01: Prisma 7 `migrate diff --from-migrations` reads the shadow database from the Prisma config, so pass a temporary `--config` with `shadowDatabaseUrl` (outside git) to check drift.
+- 2026-11-01: An admin route can render with a missing next-intl message while its navigation E2E still passes; inspect server logs for missing keys after browser tests.

@@ -74,6 +74,7 @@ export default defineConfig({
     'split-js.spec.ts',
     'hero-stats.spec.ts',
     'visual.spec.ts',
+    'admin-ia.spec.ts',
   ],
   // Snapshots hold computed styles, not pixels, so one file serves every platform.
   snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}{ext}',

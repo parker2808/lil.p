@@ -126,7 +126,7 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
       }
       try {
         const created = await create.mutateAsync(parsed.data);
-        router.replace(`/admin/experience/${created.id}`);
+        router.replace(`/admin/pages/about/experience/${created.id}`);
       } catch (error) {
         if (error instanceof ApiError) {
           setFieldErrors(mapFieldErrors(error));

@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P6-1 T31: admin navigation now has five groups; About content uses URL tabs, Tags lives under Posts, and legacy section routes redirect. Existing e2e specs that assert the old `/admin/pages` index or experience editor URLs may need updating when the full E2E suite is next run.
+
 - Vercel deploys: `git.deploymentEnabled` in `vercel.json` (`"**": false`, `"main": true`) stops Vercel from creating deployments or PR checks for any branch except `main`. `scripts/vercel-ignore-build.sh` (`ignoreCommand`) is a second guard. Hotfix deploys are paused from 2026-11-01 while the rate limit resets; to re-enable add `"hotfix/**": true` to `git.deploymentEnabled` and set `HOTFIX_DEPLOYS_ENABLED=1` in the script.
 - P4-6 T24: `SiteSettings.heroStats Json?` (migration `20261101082635_site_settings_hero_stats`, additive `ADD COLUMN heroStats JSON NULL`) must be applied to TiDB by Parker at merge (`prisma migrate deploy`); the agent did not run it. Contracts `heroStatsSchema` allows 0-3 `{ value, suffix?, labelEn, labelVi }`; an empty list is stored as NULL and stored JSON that fails the schema reads as NULL. `HeroBlock` renders a `<dl class="hero-stats">` after the CTAs from `settings.heroStats`, else the first 3 non-zero profile stats; the demo seed resets `heroStats` to NULL, so the home hero now repeats the "By the numbers" StatBand values until Parker sets hero stats (decide whether to drop the home StatBand). The admin "Hero stats" fieldset (`HeroStatsFieldset`) validates on save; "Clear (use profile stats)" saves the whole form with `heroStats: null`. `public-home` visual baselines were re-rendered.
 - P4-5 T22: `e2e/visual.spec.ts` compares `toHaveScreenshot` pixels (full page, 1% diff tolerance) for 6 public routes (`/en` home, projects, `particula` case study, notes, about, contact) and 4 admin routes (login, profile, site settings, new post) at 375 and 1280px. The WebGL hero canvas is hidden by `e2e/visual.css` (the CSS poster and headline stay) and the tech marquee, `<time>` and "Saved HH:mm" are masked. Baselines in `e2e/__screenshots__/` are Linux Chromium only, so the spec skips on other platforms unless a remote browser is set; re-render them with `pnpm --filter @portfolio/web test:visual:update` (Docker `mcr.microsoft.com/playwright` amd64 browser driving the local servers). The admin routes avoid lists and the dashboard because the spec runs after mutating specs. Done criteria "CI green 3 consecutive runs" depends on the existing `/vi/projects` Lighthouse CLS failure (see P4-4).
@@ -100,6 +102,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-01: P6-1 T31: five-group admin sidebar, URL-backed About and Posts tabs, and legacy route redirects; nav unit and redirect E2E coverage.
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 

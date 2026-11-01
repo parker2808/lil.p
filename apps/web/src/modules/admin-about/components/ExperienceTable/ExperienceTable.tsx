@@ -133,7 +133,7 @@ export function ExperienceTable({
       items={items}
       rowId={(row) => String(row.id)}
       rowLabel={(row) => row.company}
-      rowHref={(row) => `/admin/experience/${row.id}`}
+      rowHref={(row) => `/admin/pages/about/experience/${row.id}`}
       total={total}
       page={page}
       pageSize={pageSize}

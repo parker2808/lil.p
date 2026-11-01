@@ -143,7 +143,12 @@
       "dashboard": "Về bảng điều khiển"
     },
     "nav": {
+      "layout": "Bố cục",
       "groups": {
+        "overview": "Tổng quan",
+        "pages": "Trang",
+        "inbox": "Hộp thư",
+        "settings": "Cài đặt",
         "main": "Không gian làm việc",
         "content": "Nội dung",
         "site": "Trang web",
@@ -151,6 +156,9 @@
         "access": "Quyền truy cập"
       },
       "dashboard": "Bảng điều khiển",
+      "home": "Trang chủ",
+      "about": "Giới thiệu",
+      "contact": "Liên hệ",
       "inbox": "Hộp thư",
       "projects": "Dự án",
       "posts": "Bài viết",

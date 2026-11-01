@@ -28,6 +28,8 @@ export function useListParams<T extends z.ZodType<Record<string, unknown>>>(
     (patch: Partial<z.output<T>>, options?: SetParamsOptions) => {
       const next = schema.parse({ ...params, ...patch });
       const query = new URLSearchParams();
+      const parentTab = search.get('tab');
+      if (parentTab) query.set('tab', parentTab);
       for (const [key, value] of Object.entries(next)) {
         if (value === undefined || value === '' || value === null) {
           continue;
@@ -50,7 +52,7 @@ export function useListParams<T extends z.ZodType<Record<string, unknown>>>(
       }
       router.replace(url);
     },
-    [params, pathname, router, schema],
+    [params, pathname, router, schema, search],
   );
 
   return { params, setParams };

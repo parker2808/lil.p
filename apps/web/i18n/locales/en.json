@@ -143,7 +143,12 @@
       "dashboard": "Back to dashboard"
     },
     "nav": {
+      "layout": "Layout",
       "groups": {
+        "overview": "Overview",
+        "pages": "Pages",
+        "inbox": "Inbox",
+        "settings": "Settings",
         "main": "Workspace",
         "content": "Content",
         "site": "Site",
@@ -151,6 +156,9 @@
         "access": "Access"
       },
       "dashboard": "Dashboard",
+      "home": "Home",
+      "about": "About",
+      "contact": "Contact",
       "inbox": "Inbox",
       "projects": "Projects",
       "posts": "Posts",
