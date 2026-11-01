@@ -9,6 +9,7 @@ import { z } from 'zod';
 
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
+import { useSaveStatus } from '@/modules/admin-core/hooks/use-save-status.hook';
 import { useDirtyGuard } from '@/modules/admin-core/hooks/use-dirty-guard.hook';
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { editorLabelsFromMessages } from '@/modules/admin-core/utils/editor-labels.util';
@@ -96,6 +97,7 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
       return { updatedAt: result.updatedAt };
     },
   });
+  const saveStatus = useSaveStatus(autosave);
 
   useDirtyGuard(!readOnly && snapshot !== baseline);
 
@@ -137,8 +139,8 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
   return (
     <EditorShell
       title={form.company || t('untitled')}
-      saveStatus={autosave.status === 'dirty' ? 'idle' : autosave.status}
-      savedText={autosave.savedAt ? editorT('saved', { seconds: 1 }) : undefined}
+      saveStatus={saveStatus.state}
+      savedText={saveStatus.text}
       onLoadLatest={() => {
         setForm(initial);
         setBaseline(JSON.stringify(toExperienceCreateInput(initial)));
@@ -154,7 +156,7 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
         readOnly: editorT('readOnly'),
         properties: editorT('properties'),
         saving: editorT('saving'),
-        saved: editorT('saved', { seconds: 0 }),
+        saved: editorT('saved'),
         offline: editorT('offline'),
         conflict: editorT('conflict'),
         loadLatest: editorT('loadLatest'),

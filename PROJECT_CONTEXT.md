@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P1-10 T7b: editor headers show "Saved HH:mm" from the record's `updatedAt` on load (`useSaveStatus`), keep it while edits are pending, then saving/offline/conflict. Out of scope: `useAutosave` keeps its first `updatedAt`, so the pages editor (no block selected at mount) shows no status and sends a stale concurrency token for selected blocks until a save.
 - P1-9 T7a adds `ConfirmDialog` and `toastUndo(msg, onUndo)` (5s); admin toasts sit bottom-right for 4s in `AdminProviders` (kept off public pages per P0-5). A unit guard fails if an admin delete/archive mutation skips ConfirmDialog or toastUndo.
 - P1-8 T4c labels shared admin search, site and editor controls including code language; the audit list is keyboard scrollable, with axe WCAG 2.2 AA coverage for admin indexes and editors.
 - P1-7 T4b applies accessible action buttons and named search inputs in the shared small-entity admin index; seven admin route axe checks cover the result.
@@ -75,6 +76,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P1-10 T7b: always show the editor save status with the last saved time from page load.
 - 2026-11-01: P1-9 T7a: add ConfirmDialog and the undo toast preset, and route admin delete/archive actions through them.
 - 2026-11-01: P1-8 T4c: label remaining admin inputs and expand axe checks across admin indexes and editors.
 - 2026-11-01: P1-7 T4b: name inline-list admin actions and search fields, and add axe coverage for seven routes.
