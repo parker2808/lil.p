@@ -1,10 +1,11 @@
 import type { AdminAuditLog } from '@portfolio/contracts';
-import { render } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import type { ComponentProps } from 'react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import en from '../../../../i18n/locales/en.json';
-import { AuditVirtualList } from './AdminInsightsAudit';
+import { AuditTable } from './AdminInsightsAudit';
 
 function item(id: number): AdminAuditLog {
   return {
@@ -19,47 +20,51 @@ function item(id: number): AdminAuditLog {
   };
 }
 
-const clientHeightDesc = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientHeight');
-const clientWidthDesc = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientWidth');
-
-function stubScrollerSize() {
-  Object.defineProperty(HTMLElement.prototype, 'clientHeight', {
-    configurable: true,
-    get() {
-      return 384;
-    },
-  });
-  Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
-    configurable: true,
-    get() {
-      return 800;
-    },
-  });
+function renderTable(props: Partial<ComponentProps<typeof AuditTable>> = {}) {
+  const handlers = { onLoadMore: vi.fn(), onRetry: vi.fn() };
+  render(
+    <NextIntlClientProvider locale="en" messages={en}>
+      <AuditTable items={[item(1), item(2)]} {...handlers} {...props} />
+    </NextIntlClientProvider>,
+  );
+  return handlers;
 }
 
-function restoreScrollerSize() {
-  if (clientHeightDesc) {
-    Object.defineProperty(HTMLElement.prototype, 'clientHeight', clientHeightDesc);
-  }
-  if (clientWidthDesc) {
-    Object.defineProperty(HTMLElement.prototype, 'clientWidth', clientWidthDesc);
-  }
-}
+afterEach(cleanup);
 
-describe('AuditVirtualList', () => {
-  beforeEach(stubScrollerSize);
-  afterEach(restoreScrollerSize);
+describe('AuditTable', () => {
+  it('renders audit entries in the shared admin table', () => {
+    renderTable();
+    const table = screen.getByRole('table', { name: 'Audit log' });
+    expect(table.closest('[data-slot="admin-table"]')).not.toBeNull();
+    expect(
+      within(table)
+        .getAllByRole('columnheader')
+        .map((cell) => cell.textContent),
+    ).toEqual(['Action', 'Summary', 'User', 'When']);
+    expect(within(table).getByText('Updated project 2')).toBeInTheDocument();
+    expect(within(table).queryAllByRole('link')).toHaveLength(0);
+  });
 
-  it('virtualizes 5000 rows instead of mounting every row', () => {
-    const items = Array.from({ length: 5000 }, (_, index) => item(index + 1));
-    const { container } = render(
-      <NextIntlClientProvider locale="en" messages={en}>
-        <AuditVirtualList items={items} empty="No activity yet." />
-      </NextIntlClientProvider>,
-    );
-    const list = container.querySelector('[data-slot="audit-list"] > ul');
-    expect(list).toHaveStyle({ height: `${5000 * 64}px` });
-    expect(container.querySelectorAll('[data-slot="audit-row"]').length).toBeLessThan(5000);
-    expect(container.querySelectorAll('[data-slot="audit-row"]').length).toBeGreaterThan(0);
+  it('keeps the scroll region keyboard focusable although rows have no links', () => {
+    renderTable();
+    expect(screen.getByRole('region', { name: 'Audit log' })).toHaveAttribute('tabindex', '0');
+  });
+
+  it('loads the next page from a button', () => {
+    const { onLoadMore } = renderTable({ hasNextPage: true });
+    fireEvent.click(screen.getByRole('button', { name: 'Load more' }));
+    expect(onLoadMore).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows the empty and error states inside the table', () => {
+    renderTable({ items: [] });
+    expect(screen.getByText('No activity yet.')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Load more' })).not.toBeInTheDocument();
+    cleanup();
+
+    const { onRetry } = renderTable({ isError: true });
+    fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
+    expect(onRetry).toHaveBeenCalledTimes(1);
   });
 });

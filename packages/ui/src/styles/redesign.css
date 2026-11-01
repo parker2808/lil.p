@@ -551,6 +551,10 @@
   border-radius: 14px;
   background: var(--card);
 }
+.admin-table-viewport:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
 [data-slot='admin-table'] tbody tr[data-href] {
   cursor: pointer;
   transition: background-color 120ms ease;

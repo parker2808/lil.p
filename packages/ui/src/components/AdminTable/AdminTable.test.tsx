@@ -177,4 +177,21 @@ describe('AdminTable', () => {
     expect(screen.queryByText('Sample case')).not.toBeInTheDocument();
     expect(screen.queryByText('No projects yet.')).not.toBeInTheDocument();
   });
+
+  it('makes the scroll viewport a focusable region named by the label', () => {
+    renderTable();
+    const region = screen.getByRole('region', { name: 'Projects' });
+    expect(region).toHaveClass('admin-table-viewport');
+    expect(region).toHaveAttribute('tabindex', '0');
+    expect(within(region).getByRole('table', { name: 'Projects' })).toBeInTheDocument();
+  });
+
+  it('renders a visually hidden table without a scroll viewport or tab stop', () => {
+    const { container } = renderTable({ visuallyHidden: true });
+    expect(container.querySelector('[data-slot="admin-table"]')).toHaveClass('sr-only');
+    expect(screen.queryByRole('region')).not.toBeInTheDocument();
+    expect(container.querySelector('.admin-table-viewport')).toBeNull();
+    expect(container.querySelector('[tabindex]')).toBeNull();
+    expect(screen.getByRole('table', { name: 'Projects' })).toBeInTheDocument();
+  });
 });

@@ -65,6 +65,7 @@ export function AdminTable<TData>({
   empty,
   loading,
   error,
+  visuallyHidden = false,
   className,
 }: {
   label: string;
@@ -81,6 +82,8 @@ export function AdminTable<TData>({
   empty: ReactNode;
   loading?: ReactNode;
   error: ReactNode;
+  /** Screen-reader-only table: no scroll viewport, so no invisible tab stop or unfocusable scroller. */
+  visuallyHidden?: boolean;
   className?: string;
 }) {
   const sortId = sort?.replace(/^-/, '');
@@ -152,9 +155,21 @@ export function AdminTable<TData>({
   }
 
   return (
-    <div data-slot="admin-table" className={cn('flex flex-col gap-3', className)}>
+    <div
+      data-slot="admin-table"
+      className={cn('flex flex-col gap-3', visuallyHidden && 'sr-only', className)}
+    >
       {search ? <AdminTableSearchField {...search} /> : null}
-      <div className="admin-table-viewport">
+      <div
+        {...(visuallyHidden
+          ? {}
+          : {
+              className: 'admin-table-viewport',
+              role: 'region',
+              'aria-label': label,
+              tabIndex: 0,
+            })}
+      >
         <Table aria-label={label} aria-busy={isLoading || undefined}>
           <TableHeader>
             <TableRow>

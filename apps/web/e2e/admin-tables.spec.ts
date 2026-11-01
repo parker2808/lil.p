@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, type Page, test } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
@@ -16,15 +17,21 @@ async function createMessage(page: Page) {
   expect(response.ok()).toBeTruthy();
 }
 
-const LISTS: { path: string; table: string; setup?: (page: Page) => Promise<void> }[] = [
+const LISTS: {
+  path: string;
+  table: string;
+  id?: string;
+  setup?: (page: Page) => Promise<void>;
+}[] = [
   { path: '/admin/projects', table: 'Projects' },
   { path: '/admin/posts', table: 'Posts' },
   { path: '/admin/experience', table: 'Experience' },
   { path: '/admin/inbox', table: 'Inbox', setup: createMessage },
+  { path: '/admin/pages', table: 'Pages', id: '[a-z-]+' },
 ];
 
 test.describe('admin list tables', () => {
-  for (const { path, table, setup } of LISTS) {
+  for (const { path, table, id = '\\d+', setup } of LISTS) {
     test(`${path} rows are links that open in a new tab on middle-click`, async ({ page }) => {
       await signIn(page);
       await setup?.(page);
@@ -33,7 +40,7 @@ test.describe('admin list tables', () => {
       const link = page.getByRole('table', { name: table }).getByRole('link').first();
       await expect(link).toBeVisible();
       const href = await link.getAttribute('href');
-      expect(href).toMatch(new RegExp(`^${path}/\\d+$`));
+      expect(href).toMatch(new RegExp(`^${path}/${id}$`));
 
       const [popup] = await Promise.all([
         page.context().waitForEvent('page'),
@@ -82,5 +89,29 @@ test.describe('admin list tables', () => {
     const headerTop = (await header.boundingBox())!.y;
     expect(Math.abs(headerTop - viewportTop)).toBeLessThanOrEqual(2);
     await expect(header).toBeInViewport();
+  });
+
+  test('audit table scroll region is keyboard focusable', async ({ page }) => {
+    await signIn(page);
+    await page.setViewportSize({ width: 1280, height: 100 });
+    await page.goto('/admin/audit');
+
+    const region = page.getByRole('region', { name: 'Audit log' });
+    await expect(region.getByRole('table', { name: 'Audit log' })).toBeVisible();
+    await expect(region.locator('tbody tr:not([data-state])').first()).toBeAttached();
+    const overflow = await region.evaluate(
+      (element) => element.scrollHeight - element.clientHeight,
+    );
+    expect(overflow).toBeGreaterThan(0);
+
+    const results = await new AxeBuilder({ page })
+      .withRules(['scrollable-region-focusable'])
+      .analyze();
+    expect(results.violations).toEqual([]);
+
+    await region.focus();
+    await expect(region).toBeFocused();
+    await page.keyboard.press('End');
+    await expect.poll(() => region.evaluate((element) => element.scrollTop)).toBeGreaterThan(0);
   });
 });

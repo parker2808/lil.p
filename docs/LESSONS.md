@@ -23,3 +23,4 @@
 - 2026-11-01: The e2e demo seed has only 4 projects and 5 posts, so a scroll or sticky-header e2e must shrink the window (or create rows) instead of assuming the list overflows.
 - 2026-11-01: Worktrees share the `lilp-db-test-1` MySQL on port 3307; Playwright global setup can fail with a seed deadlock when another worktree seeds at the same time, so rerun once before debugging.
 - 2026-11-01: `apps/web` Vitest does not auto-clean rendered components between tests, so a test file with several renders must call `afterEach(cleanup)` or later queries find duplicate elements.
+- 2026-11-01: API login is throttled to 5 per minute, so an e2e must not sign in repeatedly to create audit rows; shrink the window until the few existing rows overflow instead.
