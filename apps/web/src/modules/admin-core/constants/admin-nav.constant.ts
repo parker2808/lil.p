@@ -48,6 +48,12 @@ export const ADMIN_NAV: AdminNavGroup[] = [
   },
 ];
 
+export function navItemFor(pathname: string): AdminNavItem | undefined {
+  return ADMIN_NAV.flatMap((group) => group.items)
+    .filter((item) => pathname === item.href || pathname.startsWith(`${item.href}/`))
+    .sort((a, b) => b.href.length - a.href.length)[0];
+}
+
 export function navVisibleTo(role: Role): AdminNavGroup[] {
   return ADMIN_NAV.map((group) => ({
     ...group,

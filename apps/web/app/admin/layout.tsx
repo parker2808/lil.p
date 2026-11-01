@@ -1,3 +1,4 @@
+import type { Viewport } from 'next';
 import type { ReactNode } from 'react';
 import { cookies } from 'next/headers';
 
@@ -10,6 +11,12 @@ import vi from '../../i18n/locales/vi.json';
 import '../globals.css';
 
 export const dynamic = 'force-dynamic';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
 
 export const metadata = {
   title: {

@@ -14,8 +14,10 @@ import {
 } from '@portfolio/ui/components/ui/drawer';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 
 import { useIsAdmin } from '../../hooks/use-me.hook';
+import { useTopbarStatusSlot } from '../../hooks/use-topbar-status-slot.hook';
 
 export function EditorShell({
   layout = 'split',
@@ -62,6 +64,16 @@ export function EditorShell({
   children: ReactNode;
 }) {
   const readOnly = !useIsAdmin();
+  const topbarSlot = useTopbarStatusSlot();
+  const status = (
+    <SaveStatus
+      state={readOnly ? 'idle' : saveStatus}
+      savedText={savedText}
+      labels={labels}
+      onLoadLatest={onLoadLatest}
+      onOverwrite={onOverwrite}
+    />
+  );
 
   return (
     <div
@@ -76,13 +88,7 @@ export function EditorShell({
         actions={
           <>
             {readOnly ? <Badge variant="warning">{labels.readOnly}</Badge> : null}
-            <SaveStatus
-              state={readOnly ? 'idle' : saveStatus}
-              savedText={savedText}
-              labels={labels}
-              onLoadLatest={onLoadLatest}
-              onOverwrite={onOverwrite}
-            />
+            {topbarSlot ? createPortal(status, topbarSlot) : status}
             {publish}
           </>
         }

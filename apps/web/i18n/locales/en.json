@@ -159,6 +159,8 @@
       "dashboard": "Back to dashboard"
     },
     "nav": {
+      "more": "More",
+      "sections": "Sections",
       "layout": "Layout",
       "groups": {
         "overview": "Overview",
@@ -195,7 +197,7 @@
       "users": "Users"
     },
     "shell": {
-      "menu": "Menu",
+      "account": "Account",
       "skip": "Skip to content",
       "toggleSidebar": "Collapse sidebar",
       "expandSidebar": "Expand sidebar",
@@ -206,7 +208,8 @@
       "changePassword": "Change password",
       "language": "Language",
       "localeEn": "EN",
-      "localeVi": "VI"
+      "localeVi": "VI",
+      "switchLanguage": "Language: {locale}"
     },
     "palette": {
       "open": "Jump to",

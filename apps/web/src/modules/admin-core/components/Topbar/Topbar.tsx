@@ -13,49 +13,59 @@ import {
 } from '@portfolio/ui/components/ui/dropdown-menu';
 import { IconButton } from '@portfolio/ui/components/ui/icon-button';
 import { inputClassName } from '@portfolio/ui/components/ui/input';
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
 import { TooltipProvider } from '@portfolio/ui/components/ui/tooltip';
-import { useCloseOnNavigate } from '@portfolio/ui/hooks/use-close-on-navigate.hook';
 import { cn } from '@portfolio/ui/lib/utils';
-import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { ArrowLeft, Ellipsis, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { ChangePasswordDialog } from '@/modules/admin-auth/components/ChangePasswordDialog/ChangePasswordDialog';
 
+import { navItemFor } from '../../constants/admin-nav.constant';
 import { logout } from '../../services/auth.service';
 import { useMe } from '../../hooks/use-me.hook';
+import { TOPBAR_STATUS_ID } from '../../hooks/use-topbar-status-slot.hook';
 import { useAdminUi } from '../../stores/admin-ui.store';
-import { AdminMobileNav } from '../AdminSidebar/AdminSidebar';
+
+function switchLocale(locale: string) {
+  document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; samesite=lax`;
+  window.location.reload();
+}
 
 export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actions?: ReactNode }) {
   const t = useTranslations('admin.shell');
+  const tNav = useTranslations('admin.nav');
   const locale = useLocale();
   const me = useMe();
   const { collapsed, toggleCollapsed } = useAdminUi();
   const router = useRouter();
   const pathname = usePathname();
-  const menu = useCloseOnNavigate(pathname);
+  const section = navItemFor(pathname);
   const initial = me.name.slice(0, 1);
   const [passwordOpen, setPasswordOpen] = useState(false);
 
   return (
     <header className="admin-topbar border-border flex h-12 shrink-0 items-center gap-3 border-b px-4">
-      <Sheet open={menu.open} onOpenChange={menu.onOpenChange}>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="sm" className="md:hidden" aria-label={t('menu')}>
-            {t('menu')}
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="bg-sidebar w-60">
-          <SheetTitle>{me.name}</SheetTitle>
-          <AdminMobileNav />
-        </SheetContent>
-      </Sheet>
+      {section ? (
+        <div className="flex min-w-0 items-center gap-2 lg:hidden">
+          {section.href !== pathname ? (
+            <Link
+              href={section.href}
+              className="tap justify-center"
+              aria-label={t('back', { section: tNav(section.key) })}
+            >
+              <ArrowLeft className="size-4" aria-hidden />
+            </Link>
+          ) : null}
+          <span className="text-ui-title truncate font-medium">{tNav(section.key)}</span>
+        </div>
+      ) : null}
+      <div id={TOPBAR_STATUS_ID} className="ml-auto flex items-center lg:hidden" />
       <TooltipProvider>
         <IconButton
           variant="ghost"
-          className="hidden md:inline-flex"
+          className="hidden lg:inline-flex"
           label={collapsed ? t('expandSidebar') : t('toggleSidebar')}
           aria-expanded={!collapsed}
           onClick={toggleCollapsed}
@@ -67,25 +77,22 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
           )}
         </IconButton>
       </TooltipProvider>
-      <Breadcrumb className="hidden sm:block" aria-label={t('breadcrumb')}>
+      <Breadcrumb className="hidden lg:block" aria-label={t('breadcrumb')}>
         <BreadcrumbList>
           {crumbs.map((crumb) => (
             <BreadcrumbItem key={crumb.label}>{crumb.label}</BreadcrumbItem>
           ))}
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="ml-auto flex items-center gap-2">
-        {actions}
-        <label className="text-ui-meta text-muted-foreground flex items-center gap-1">
+      <div className="flex items-center gap-2 lg:ml-auto">
+        <div className="hidden items-center gap-2 lg:flex">{actions}</div>
+        <label className="text-ui-meta text-muted-foreground hidden items-center gap-1 lg:flex">
           {t('language')}
           <select
             aria-label={t('language')}
             className={cn(inputClassName, 'text-foreground w-auto px-2')}
             value={locale}
-            onChange={(event) => {
-              document.cookie = `NEXT_LOCALE=${event.target.value}; path=/; max-age=31536000; samesite=lax`;
-              window.location.reload();
-            }}
+            onChange={(event) => switchLocale(event.target.value)}
           >
             <option value="en">{t('localeEn')}</option>
             <option value="vi">{t('localeVi')}</option>
@@ -94,16 +101,28 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm">
-              <Avatar className="size-6">
+              <Ellipsis className="size-5 lg:hidden" aria-hidden />
+              <span className="sr-only lg:hidden">{t('account')}</span>
+              <Avatar className="hidden size-6 lg:flex">
                 <AvatarFallback className="text-ui">{initial}</AvatarFallback>
               </Avatar>
-              <span className="text-ui hidden sm:inline">{me.name}</span>
-              <Badge variant="outline" className="hidden sm:inline-flex">
+              <span className="text-ui hidden lg:inline">{me.name}</span>
+              <Badge variant="outline" className="hidden lg:inline-flex">
                 {me.role}
               </Badge>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            {(['en', 'vi'] as const).map((value) => (
+              <DropdownMenuItem
+                key={value}
+                className="lg:hidden"
+                disabled={value === locale}
+                onSelect={() => switchLocale(value)}
+              >
+                {t('switchLanguage', { locale: t(value === 'en' ? 'localeEn' : 'localeVi') })}
+              </DropdownMenuItem>
+            ))}
             <DropdownMenuItem onSelect={() => setPasswordOpen(true)}>
               {t('changePassword')}
             </DropdownMenuItem>

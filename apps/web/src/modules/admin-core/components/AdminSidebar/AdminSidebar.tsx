@@ -29,7 +29,7 @@ export function AdminSidebar() {
   const groups = navVisibleTo(role);
 
   return (
-    <Sidebar collapsed={collapsed} className="hidden md:flex">
+    <Sidebar collapsed={collapsed} className="hidden lg:flex">
       <SidebarHeader>
         <p className="text-ui-title truncate font-medium" title={name}>
           {collapsed ? name.slice(0, 1) : name}
@@ -80,11 +80,11 @@ export function AdminSidebar() {
   );
 }
 
-export function AdminMobileNav() {
+export function AdminMobileNav({ omit = [] }: { omit?: string[] }) {
   const t = useTranslations('admin.nav');
   const { role } = useMe();
   const pathname = usePathname();
-  const groups = navVisibleTo(role);
+  const groups = navVisibleTo(role).filter((group) => !omit.includes(group.key));
 
   return (
     <nav className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto overscroll-contain pb-2">

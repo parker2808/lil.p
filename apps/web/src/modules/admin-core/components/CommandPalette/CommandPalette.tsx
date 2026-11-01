@@ -69,7 +69,12 @@ export function AdminCommandPalette() {
   return (
     <Dialog open={paletteOpen} onOpenChange={setPaletteOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" aria-label={`${t('palette.open')} ${META}${KEY}`}>
+        <Button
+          variant="outline"
+          size="sm"
+          className="pointer-coarse:hidden"
+          aria-label={`${t('palette.open')} ${META}${KEY}`}
+        >
           <span className="hidden lg:inline">{t('palette.open')}</span>
           <Kbd>{META}</Kbd>
           <Kbd>{KEY}</Kbd>
