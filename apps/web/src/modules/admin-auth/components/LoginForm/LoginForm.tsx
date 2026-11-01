@@ -2,7 +2,8 @@
 
 import { loginSchema } from '@portfolio/contracts';
 import { Button } from '@portfolio/ui/components/ui/button';
-import { Field, FieldError, FieldLabel } from '@portfolio/ui/components/ui/field';
+import { FieldError } from '@portfolio/ui/components/ui/field';
+import { FormField } from '@portfolio/ui/components/ui/form-field';
 import { Input } from '@portfolio/ui/components/ui/input';
 import { PasswordInput } from '@portfolio/ui/components/ui/password-input';
 import { useForm } from '@tanstack/react-form';
@@ -52,8 +53,7 @@ export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
     >
       <form.Field name="email">
         {(field) => (
-          <Field>
-            <FieldLabel htmlFor={field.name}>{t('email')}</FieldLabel>
+          <FormField label={t('email')} required error={field.state.meta.errors[0]?.message}>
             <Input
               id={field.name}
               type="email"
@@ -62,16 +62,12 @@ export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
               onBlur={field.handleBlur}
               onChange={(event) => field.handleChange(event.target.value)}
             />
-            <FieldError>
-              {field.state.meta.errors[0] ? String(field.state.meta.errors[0]) : null}
-            </FieldError>
-          </Field>
+          </FormField>
         )}
       </form.Field>
       <form.Field name="password">
         {(field) => (
-          <Field>
-            <FieldLabel htmlFor={field.name}>{t('password')}</FieldLabel>
+          <FormField label={t('password')} required error={field.state.meta.errors[0]?.message}>
             <PasswordInput
               id={field.name}
               autoComplete="current-password"
@@ -79,10 +75,7 @@ export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
               onBlur={field.handleBlur}
               onChange={(event) => field.handleChange(event.target.value)}
             />
-            <FieldError>
-              {field.state.meta.errors[0] ? String(field.state.meta.errors[0]) : null}
-            </FieldError>
-          </Field>
+          </FormField>
         )}
       </form.Field>
       {formError ? <FieldError>{formError}</FieldError> : null}
