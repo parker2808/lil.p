@@ -4,7 +4,10 @@
 # HOTFIX_DEPLOYS_ENABLED is 1; every other branch is skipped so stacked feature PRs
 # do not burn the Vercel deployment quota.
 #
-# Toggle: set HOTFIX_DEPLOYS_ENABLED=1 to re-enable hotfix/* preview deploys.
+# Toggle: set HOTFIX_DEPLOYS_ENABLED=1 AND add "hotfix/**": true to
+# git.deploymentEnabled in vercel.json to re-enable hotfix/* preview deploys.
+# vercel.json git.deploymentEnabled stops Vercel from creating deployments
+# (and PR checks) for non-main branches; this script is a second guard.
 # Disabled on 2026-11-01 while the Vercel deployment rate limit resets.
 HOTFIX_DEPLOYS_ENABLED=0
 
