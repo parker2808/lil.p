@@ -3,6 +3,7 @@
 import type { PublicDomain, PublicProjectListItem, PublicSkillChip } from '@portfolio/contracts';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 import { renderAppLink } from '@/modules/blocks/utils/render-app-link.util';
 
@@ -37,6 +38,19 @@ type ProjectsBrowserProps = {
 export function ProjectsBrowser(props: ProjectsBrowserProps) {
   const search = useSearchParams();
   return <ProjectsBrowserView {...props} search={Object.fromEntries(search.entries())} />;
+}
+
+/**
+ * Client island for the projects block. `useSearchParams` suspends during static rendering,
+ * so the fallback is the unfiltered view from this same chunk: the static HTML matches the
+ * unfiltered client render (no CLS) and no extra lazy boundary suspends inside the fallback.
+ */
+export function ProjectsBrowserIsland(props: ProjectsBrowserProps) {
+  return (
+    <Suspense fallback={<ProjectsBrowserView {...props} search={{}} />}>
+      <ProjectsBrowser {...props} />
+    </Suspense>
+  );
 }
 
 /**
