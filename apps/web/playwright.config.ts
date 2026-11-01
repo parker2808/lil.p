@@ -55,6 +55,7 @@ export default defineConfig({
     'hero-shader.spec.ts',
     'admin-login.spec.ts',
     'segmented-control.spec.ts',
+    'admin-tables.spec.ts',
   ],
   fullyParallel: false,
   workers: 1,

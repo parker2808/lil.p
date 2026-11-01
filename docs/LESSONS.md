@@ -20,3 +20,5 @@
 - 2026-11-01: A spec placed the Toaster in the shared `Providers`, but P0-5 had moved it to `AdminProviders` to keep it off public mobile pages; check later perf moves before following an older spec file location.
 - 2026-11-01: The editor save status was derived from an in-session save timestamp, so it was hidden on load and showed a hardcoded "1s ago"; derive status text from persisted data (`updatedAt`).
 - 2026-11-01: `packages/ui` has no `next` dependency, so shared components that must render Next links take a `linkComponent` prop (default `'a'`) and the web app passes `next/link`; a horizontal `overflow` wrapper also becomes the sticky-header scroll container, so give it its own max-height.
+- 2026-11-01: The e2e demo seed has only 4 projects and 5 posts, so a scroll or sticky-header e2e must shrink the window (or create rows) instead of assuming the list overflows.
+- 2026-11-01: Worktrees share the `lilp-db-test-1` MySQL on port 3307; Playwright global setup can fail with a seed deadlock when another worktree seeds at the same time, so rerun once before debugging.

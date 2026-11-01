@@ -1,13 +1,16 @@
 'use client';
 
 import type { AdminProjectListItem, Hue } from '@portfolio/contracts';
-import { DataTable, type DataTableLabels } from '@portfolio/ui/components/DataTable/DataTable';
 import { StatusPill } from '@portfolio/ui/components/StatusPill/StatusPill';
+import { type AdminTableColumn } from '@portfolio/ui/components/AdminTable/AdminTable';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { BADGE_HUE } from '@portfolio/ui/utils/hue.util';
-import { type ColumnDef } from '@tanstack/react-table';
-import { useMemo } from 'react';
+
+import {
+  AdminListTable,
+  type AdminListTableLabels,
+} from '@/modules/admin-core/components/AdminListTable/AdminListTable';
 
 const STATUS_KEY = {
   DRAFT: 'draft',
@@ -16,6 +19,7 @@ const STATUS_KEY = {
 } as const;
 
 export function ProjectsTable({
+  label,
   items,
   total,
   page,
@@ -24,15 +28,13 @@ export function ProjectsTable({
   hasFilters,
   isError,
   isLoading,
-  isFetching,
   canWrite,
   labels,
   columnLabels,
   statusLabels,
+  moveLabels,
   onSortChange,
   onPageChange,
-  onOpen,
-  onEdit,
   onDelete,
   onBulkDelete,
   onCreate,
@@ -41,6 +43,7 @@ export function ProjectsTable({
   onPrefetch,
   onMove,
 }: {
+  label: string;
   items: AdminProjectListItem[];
   total: number;
   page: number;
@@ -49,9 +52,8 @@ export function ProjectsTable({
   hasFilters: boolean;
   isError?: boolean;
   isLoading?: boolean;
-  isFetching?: boolean;
   canWrite: boolean;
-  labels: DataTableLabels;
+  labels: AdminListTableLabels;
   columnLabels: {
     title: string;
     domain: string;
@@ -61,10 +63,9 @@ export function ProjectsTable({
     actions: string;
   };
   statusLabels: { draft: string; published: string; archived: string };
+  moveLabels: { up: string; down: string };
   onSortChange: (sort: string) => void;
   onPageChange: (page: number) => void;
-  onOpen: (row: AdminProjectListItem) => void;
-  onEdit: (row: AdminProjectListItem) => void;
   onDelete: (row: AdminProjectListItem) => void;
   onBulkDelete: (rows: AdminProjectListItem[]) => void;
   onCreate: () => void;
@@ -73,129 +74,93 @@ export function ProjectsTable({
   onPrefetch: (id: number) => void;
   onMove: (id: number, direction: -1 | 1) => void;
 }) {
-  const columns = useMemo<ColumnDef<AdminProjectListItem>[]>(
-    () => [
-      {
-        id: 'titleEn',
-        accessorKey: 'titleEn',
-        header: columnLabels.title,
-        cell: ({ row }) => (
-          <div
-            onMouseEnter={() => onPrefetch(row.original.id)}
-            onFocus={() => onPrefetch(row.original.id)}
-          >
-            <p className="text-ui font-medium">{row.original.titleEn}</p>
-            <p className="text-ui-meta text-muted-foreground font-mono">{row.original.slug}</p>
-          </div>
+  const columns: AdminTableColumn<AdminProjectListItem>[] = [
+    {
+      id: 'titleEn',
+      header: columnLabels.title,
+      cell: (row) => (
+        <div onMouseEnter={() => onPrefetch(row.id)} onFocus={() => onPrefetch(row.id)}>
+          <p className="text-ui font-medium">{row.titleEn}</p>
+          <p className="text-ui-meta text-muted-foreground font-mono">{row.slug}</p>
+        </div>
+      ),
+    },
+    {
+      id: 'domain',
+      header: columnLabels.domain,
+      cell: (row) =>
+        row.domain ? (
+          <Badge hue={BADGE_HUE[row.domain.hue as Hue]} className="normal-case">
+            {row.domain.nameEn}
+          </Badge>
+        ) : (
+          <span className="text-muted-foreground">—</span>
         ),
-      },
-      {
-        id: 'domain',
-        header: columnLabels.domain,
-        enableSorting: false,
-        cell: ({ row }) =>
-          row.original.domain ? (
-            <Badge hue={BADGE_HUE[row.original.domain.hue as Hue]} className="normal-case">
-              {row.original.domain.nameEn}
-            </Badge>
-          ) : (
-            <span className="text-muted-foreground">—</span>
-          ),
-      },
-      {
-        id: 'keyFactsCount',
-        accessorKey: 'keyFactsCount',
-        header: columnLabels.keyFacts,
-        cell: ({ row }) => (
-          <span className="tabular-nums">{String(row.original.keyFactsCount)}</span>
-        ),
-      },
-      {
-        id: 'status',
-        accessorKey: 'status',
-        header: columnLabels.status,
-        cell: ({ row }) => (
-          <StatusPill status={STATUS_KEY[row.original.status]} labels={statusLabels} />
-        ),
-      },
-      {
-        id: 'updatedAt',
-        accessorKey: 'updatedAt',
-        header: columnLabels.updated,
-        cell: ({ row }) => (
-          <span className="text-ui-meta text-muted-foreground tabular-nums">
-            {formatRelative(row.original.updatedAt)}
-          </span>
-        ),
-      },
-      {
-        id: 'actions',
-        header: columnLabels.actions,
-        enableSorting: false,
-        enableHiding: false,
-        cell: ({ row }) =>
-          canWrite ? (
-            <div className="flex gap-1">
-              <Button type="button" variant="ghost" size="sm" onClick={() => onEdit(row.original)}>
-                {labels.shortcuts.edit}
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => onMove(row.original.id, -1)}
-              >
-                {labels.previous}
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => onMove(row.original.id, 1)}
-              >
-                {labels.next}
-              </Button>
-            </div>
-          ) : null,
-      },
-    ],
-    [canWrite, columnLabels, labels, onEdit, onMove, onPrefetch, statusLabels],
-  );
+    },
+    {
+      id: 'keyFactsCount',
+      header: columnLabels.keyFacts,
+      cell: (row) => <span className="tabular-nums">{String(row.keyFactsCount)}</span>,
+    },
+    {
+      id: 'status',
+      header: columnLabels.status,
+      cell: (row) => <StatusPill status={STATUS_KEY[row.status]} labels={statusLabels} />,
+    },
+    {
+      id: 'updatedAt',
+      header: columnLabels.updated,
+      sortable: true,
+      cell: (row) => (
+        <span className="text-ui-meta text-muted-foreground tabular-nums">
+          {formatRelative(row.updatedAt)}
+        </span>
+      ),
+    },
+  ];
+
+  if (canWrite) {
+    columns.push({
+      id: 'actions',
+      header: columnLabels.actions,
+      interactive: true,
+      cell: (row) => (
+        <div className="flex gap-1">
+          <Button type="button" variant="ghost" size="sm" onClick={() => onMove(row.id, -1)}>
+            {moveLabels.up}
+          </Button>
+          <Button type="button" variant="ghost" size="sm" onClick={() => onMove(row.id, 1)}>
+            {moveLabels.down}
+          </Button>
+        </div>
+      ),
+    });
+  }
 
   return (
-    <DataTable
+    <AdminListTable
+      label={label}
       columns={columns}
-      data={items}
+      items={items}
       rowId={(row) => String(row.id)}
+      rowLabel={(row) => row.titleEn}
+      rowHref={(row) => `/admin/projects/${row.id}`}
       total={total}
       page={page}
       pageSize={pageSize}
       sort={sort}
-      hasFilters={hasFilters}
-      isError={isError}
-      isLoading={isLoading}
-      isFetching={isFetching}
-      canWrite={canWrite}
-      labels={labels}
       onSortChange={onSortChange}
       onPageChange={onPageChange}
-      onOpen={onOpen}
-      onEdit={onEdit}
+      hasFilters={hasFilters}
+      isLoading={isLoading}
+      isError={isError}
+      canWrite={canWrite}
+      labels={labels}
       onDelete={onDelete}
       onBulkDelete={onBulkDelete}
       onCreate={onCreate}
       onClearFilters={onClearFilters}
       onRetry={onRetry}
-      renderCard={(row) => (
-        <button
-          type="button"
-          className="bg-card w-full rounded-lg border p-3 text-left"
-          onClick={() => onOpen(row)}
-        >
-          <p className="text-ui font-medium">{row.titleEn}</p>
-          <p className="text-ui-meta text-muted-foreground">{row.slug}</p>
-        </button>
-      )}
     />
   );
 }
