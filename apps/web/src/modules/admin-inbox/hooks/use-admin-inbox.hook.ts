@@ -1,8 +1,10 @@
 'use client';
 
 import {
+  type AdminContactMessage,
   type AdminContactMessageListPage,
   type AdminContactMessageListParams,
+  CONTACT_MESSAGE_HIDDEN_STATUSES,
   type ContactMessageStatus,
   qk,
 } from '@portfolio/contracts';
@@ -17,6 +19,16 @@ import {
   listAdminMessages,
   updateAdminMessage,
 } from '../services/admin-inbox.service';
+
+/** Mirrors the API list filter: no status filter hides spam and archived messages. */
+function isListedStatus(
+  status: ContactMessageStatus,
+  filter: ContactMessageStatus | undefined,
+): boolean {
+  return filter
+    ? status === filter
+    : !(CONTACT_MESSAGE_HIDDEN_STATUSES as readonly string[]).includes(status);
+}
 
 export function useAdminMessages(params: AdminContactMessageListParams) {
   return useQuery({
@@ -40,28 +52,44 @@ export function useInboxMutations() {
   return {
     setStatus: useMutation({
       meta: { publicCache: 'skip' },
+      // Serial, so an Undo cannot reach the API before the archive it reverts.
+      scope: { id: 'admin-message-status' },
       mutationFn: ({ id, status }: { id: number; status: ContactMessageStatus }) =>
         updateAdminMessage(id, { status }),
       onMutate: async ({ id, status }) => {
         await queryClient.cancelQueries({ queryKey: qk.admin.all('messages') });
-        const lists = snapshotQueries<AdminContactMessageListPage>(
-          queryClient,
-          qk.admin.all('messages'),
-        );
+        const lists = snapshotQueries<AdminContactMessageListPage>(queryClient, [
+          ...qk.admin.all('messages'),
+          'list',
+        ]);
+        const detailKey = qk.admin.detail('messages', id);
+        const detail = queryClient.getQueryData<AdminContactMessage>(detailKey);
         for (const [key, page] of lists) {
           if (!page) {
             continue;
           }
+          const params = key[3] as AdminContactMessageListParams | undefined;
+          const removed =
+            !isListedStatus(status, params?.status) && page.items.some((item) => item.id === id);
           queryClient.setQueryData(key, {
             ...page,
-            items: page.items.map((item) => (item.id === id ? { ...item, status } : item)),
+            items: removed
+              ? page.items.filter((item) => item.id !== id)
+              : page.items.map((item) => (item.id === id ? { ...item, status } : item)),
+            total: removed ? page.total - 1 : page.total,
           });
         }
-        return { lists };
+        if (detail) {
+          queryClient.setQueryData(detailKey, { ...detail, status });
+        }
+        return { lists, detail };
       },
-      onError: (_error, _vars, context) => {
+      onError: (_error, vars, context) => {
         if (context?.lists) {
           restoreQueries(queryClient, context.lists);
+        }
+        if (context?.detail) {
+          queryClient.setQueryData(qk.admin.detail('messages', vars.id), context.detail);
         }
         toast.error(t('updateError'));
       },

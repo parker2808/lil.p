@@ -668,6 +668,61 @@
   color: inherit;
   outline: none;
 }
+.admin-inbox-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: inherit;
+  outline: none;
+  transition: background-color 120ms ease;
+}
+.admin-inbox-row:hover {
+  background: var(--muted);
+}
+.admin-inbox-row:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+.admin-inbox-row[aria-current='page'] {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+.admin-inbox-list,
+.admin-inbox-message {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+/* One pane below lg: the list on /admin/inbox, the message on /admin/inbox/:id. */
+@media (max-width: 1023px) {
+  .admin-inbox[data-selected='true'] > .admin-inbox-list,
+  .admin-inbox[data-selected='false'] > .admin-inbox-message {
+    display: none;
+  }
+}
+@media (min-width: 1024px) {
+  .admin-inbox {
+    display: grid;
+    grid-template-columns: 22rem minmax(0, 1fr);
+    gap: 24px;
+    height: 100%;
+    min-height: 0;
+  }
+  .admin-inbox > .admin-inbox-list,
+  .admin-inbox > .admin-inbox-message {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
+  .admin-inbox > .admin-inbox-message {
+    border-left: 1px solid var(--border);
+    padding-left: 24px;
+  }
+}
 .admin-table-sort {
   display: inline-flex;
   align-items: center;

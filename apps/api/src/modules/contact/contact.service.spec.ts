@@ -72,6 +72,19 @@ describe('ContactService', () => {
     expect(JSON.stringify(events.emit.mock.calls)).not.toContain('Hello from the form');
   });
 
+  it('hides spam and archived messages unless a status filter is set', async () => {
+    prisma.$transaction.mockResolvedValue([[], 0]);
+    const params = { page: 1, pageSize: 20, sort: '-createdAt' } as const;
+
+    await service.list(params);
+    await service.list({ ...params, status: 'ARCHIVED' });
+
+    expect(prisma.contactMessage.count.mock.calls.map(([args]) => args.where)).toEqual([
+      { status: { notIn: ['SPAM', 'ARCHIVED'] } },
+      { status: 'ARCHIVED' },
+    ]);
+  });
+
   it('rejects an unknown topic', async () => {
     prisma.contactTopic.findFirst.mockResolvedValue(null);
     await expect(

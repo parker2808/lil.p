@@ -190,6 +190,7 @@ enum ContactMessageStatus {
   READ
   REPLIED
   SPAM
+  ARCHIVED
 
   @@map("contact_message_status")
 }
