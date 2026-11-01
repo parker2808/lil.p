@@ -5,6 +5,8 @@ import { type AdminTableColumn } from '@portfolio/ui/components/AdminTable/Admin
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Switch } from '@portfolio/ui/components/ui/switch';
+import { formatDateTime } from '@portfolio/ui/components/AuditRow/relative-time.util';
+import { useLocale } from 'next-intl';
 
 import {
   AdminListTable,
@@ -66,6 +68,7 @@ export function UsersTable({
   onSignOut: (row: AdminUser) => void;
   onSetPassword: (row: AdminUser) => void;
 }) {
+  const locale = useLocale();
   const columns: AdminTableColumn<AdminUser>[] = [
     {
       id: 'name',
@@ -102,7 +105,7 @@ export function UsersTable({
       sortable: true,
       cell: (row) => (
         <span className="text-ui-meta text-muted-foreground tabular-nums">
-          {row.lastLoginAt ? row.lastLoginAt.slice(0, 10) : '—'}
+          {row.lastLoginAt ? formatDateTime(row.lastLoginAt, locale) : '—'}
         </span>
       ),
     },

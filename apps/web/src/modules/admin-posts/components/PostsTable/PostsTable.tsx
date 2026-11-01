@@ -4,6 +4,8 @@ import type { AdminPostListItem } from '@portfolio/contracts';
 import { StatusPill } from '@portfolio/ui/components/StatusPill/StatusPill';
 import { type AdminTableColumn } from '@portfolio/ui/components/AdminTable/AdminTable';
 import { Badge } from '@portfolio/ui/components/ui/badge';
+import { formatDateTime } from '@portfolio/ui/components/AuditRow/relative-time.util';
+import { useLocale } from 'next-intl';
 
 import {
   AdminListTable,
@@ -70,6 +72,7 @@ export function PostsTable({
   onRetry: () => void;
   onPrefetch: (id: number) => void;
 }) {
+  const locale = useLocale();
   const columns: AdminTableColumn<AdminPostListItem>[] = [
     {
       id: 'titleEn',
@@ -113,7 +116,7 @@ export function PostsTable({
       sortable: true,
       cell: (row) => (
         <span className="text-ui-meta text-muted-foreground tabular-nums">
-          {row.publishedAt ? row.publishedAt.slice(0, 10) : '—'}
+          {row.publishedAt ? formatDateTime(row.publishedAt, locale) : '—'}
         </span>
       ),
     },

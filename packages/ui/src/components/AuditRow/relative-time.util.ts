@@ -26,3 +26,14 @@ export function formatDateTime(iso: string, locale = 'en'): string {
     timeZone: 'Asia/Ho_Chi_Minh',
   }).format(new Date(iso));
 }
+
+export function formatMonthYear(iso: string, locale = 'en'): string {
+  const parts = new Intl.DateTimeFormat(locale, {
+    month: '2-digit',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).formatToParts(new Date(iso));
+  const month = parts.find((part) => part.type === 'month')?.value;
+  const year = parts.find((part) => part.type === 'year')?.value;
+  return `${month}/${year}`;
+}

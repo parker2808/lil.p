@@ -2,6 +2,7 @@
 
 import type { PageKey } from '@portfolio/contracts';
 import { Button } from '@portfolio/ui/components/ui/button';
+import { formatDateTime } from '@portfolio/ui/components/AuditRow/relative-time.util';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +14,7 @@ import {
   AlertDialogTitle,
 } from '@portfolio/ui/components/ui/alert-dialog';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { RoleGate } from '@/modules/admin-core/components/RoleGate/RoleGate';
@@ -28,6 +29,7 @@ export function VersionHistory({
   onPreviewVersion: (version: number | null) => void;
 }) {
   const t = useTranslations('admin.pages.versions');
+  const locale = useLocale();
   const versions = usePageVersions(pageKey);
   const restore = useRestorePage(pageKey);
   const [restoreVersion, setRestoreVersion] = useState<number | null>(null);
@@ -48,7 +50,7 @@ export function VersionHistory({
               <p className="text-ui font-medium">{t('item', { version: row.version })}</p>
               <p className="text-ui-meta text-muted-foreground">
                 {t('meta', {
-                  date: row.createdAt.slice(0, 10),
+                  date: formatDateTime(row.createdAt, locale),
                   author: row.authorName ?? t('unknownAuthor'),
                   note: row.note ?? t('noNote'),
                   count: row.blockCount,

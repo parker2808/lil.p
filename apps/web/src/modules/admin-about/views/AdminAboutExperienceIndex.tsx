@@ -3,8 +3,9 @@
 import { adminExperienceListParamsSchema } from '@portfolio/contracts';
 import { FilterBar } from '@portfolio/ui/components/FilterBar/FilterBar';
 import { Button } from '@portfolio/ui/components/ui/button';
+import { formatMonthYear } from '@portfolio/ui/components/AuditRow/relative-time.util';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { useListParams } from '@/modules/admin-core/hooks/use-list-params.hook';
@@ -21,6 +22,7 @@ import {
 
 export function AdminAboutExperienceIndex() {
   const t = useTranslations('admin.experience');
+  const locale = useLocale();
   const table = useTranslations('admin.table');
   const router = useRouter();
   const canWrite = useIsAdmin();
@@ -97,7 +99,12 @@ export function AdminAboutExperienceIndex() {
           visible: t('columns.visible'),
           actions: t('columns.actions'),
         }}
-        formatDates={(start, end) => t('datesValue', { start, end: end ?? t('now') })}
+        formatDates={(start, end) =>
+          t('datesValue', {
+            start: formatMonthYear(start, locale),
+            end: end ? formatMonthYear(end, locale) : t('now'),
+          })
+        }
         onSortChange={(sort) => {
           const parsed = adminExperienceListParamsSchema.shape.sort.safeParse(sort);
           if (parsed.success) {
