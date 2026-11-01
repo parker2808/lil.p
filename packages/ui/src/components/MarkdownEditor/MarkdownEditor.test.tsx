@@ -91,6 +91,48 @@ describe('MarkdownEditor', () => {
     expect(container.querySelector('[role="toolbar"]')).toBeNull();
     expect(container.querySelector('[aria-readonly="true"]')).not.toBeNull();
   });
+
+  it('keeps the toolbar on one scrolling row with block actions under More', async () => {
+    render(<MarkdownEditor value="Body" onChange={() => undefined} labels={editorLabels} />);
+    const toolbar = (await screen.findAllByRole('toolbar'))[0]!;
+    expect(toolbar).toHaveClass('overflow-x-auto');
+    expect(toolbar).not.toHaveClass('flex-wrap');
+
+    const more = within(toolbar).getByRole('button', { name: editorLabels.more });
+    expect(more).toHaveClass('sm:hidden');
+    expect(
+      within(toolbar).getByRole('button', { name: editorLabels.divider }).parentElement,
+    ).toHaveClass('hidden', 'sm:flex');
+
+    await userEvent.click(more);
+    const menu = await screen.findByRole('menu');
+    expect(
+      within(menu)
+        .getAllByRole('menuitem')
+        .map((item) => item.textContent),
+    ).toEqual([
+      editorLabels.quote,
+      editorLabels.note,
+      editorLabels.warning,
+      editorLabels.codeBlock,
+      editorLabels.image,
+      editorLabels.table,
+      editorLabels.divider,
+    ]);
+  });
+
+  it('shows no More menu in the compact toolbar', async () => {
+    render(
+      <MarkdownEditor
+        value="Body"
+        onChange={() => undefined}
+        labels={editorLabels}
+        variant="compact"
+      />,
+    );
+    const toolbar = (await screen.findAllByRole('toolbar'))[0]!;
+    expect(within(toolbar).queryByRole('button', { name: editorLabels.more })).toBeNull();
+  });
 });
 
 describe('MarkdownEditorGroup', () => {

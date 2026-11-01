@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P3-3 T33b: the full `EditorToolbar` is one non-wrapping row (`overflow-x-auto`, ≤48px at 375px; `e2e/editor-mobile-toolbar.spec.ts`). Below `sm` the block actions (quote, callouts, code block, image, table, divider) move into a "More" dropdown (`more` editor label); the image URL/alt popover now anchors to the toolbar so both paths open it. Arrow keys skip hidden buttons. `admin-scroll.spec.ts` uses 768x800 instead of 768x1024 because the shorter one-row toolbar left `/admin/posts/new` with nothing to scroll.
 - P3-2 T33a: `MarkdownEditorGroup` (packages/ui) renders one Write/Preview tablist and shares its mode through context; a `MarkdownEditor` inside it drops its own Write/Split/Preview/Markdown tabs and shows its word count in a footer. The project Content tab wraps its six markdown fields, so `/admin/projects/:id` has 2 tablists instead of 7 (`e2e/editor-mode-toggle.spec.ts`). Out of scope: standalone editors (posts, profile, experience) keep their four tabs, and the page builder `LocalizedWidget` EN/VI pair still shows two editor tablists.
 - P3-1 T18: admin chrome uses shared primitives at compact density: the topbar sidebar collapse is an `IconButton` (PanelLeft icon, tooltip, "Collapse/Expand sidebar" label, `aria-expanded`), the inbox bell is a `Button` link, topbar/palette buttons use `size="sm"` (28px) with no height overrides, the login submit uses the default 32px size, native selects reuse the exported `inputClassName`, and sidebar rows are 32px with their border in `SidebarMenuButton` (the `.admin .redesign-sidebar-menu-button` rules are gone). `e2e/admin-components.spec.ts` records computed-style JSON snapshots; Parker still has to approve them. Out of scope: the `AdminTable` sort header button keeps its text-only `.admin-table-sort` style.
 - P2-5: TechMarquee pauses on hover, focus within, hidden tabs, and manual request; unit tests cover pause state and the button. The existing reduced-motion static row remains.
@@ -94,6 +95,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P3-3 T33b: one-row, horizontally scrolling editor toolbar with a "More" overflow menu on mobile.
 - 2026-11-01: P3-2 T33a: one Write/Preview toggle drives all six project markdown editors (2 tablists instead of 7).
 - 2026-11-01: P3-1 T18: sync admin chrome with shared Button/IconButton/Input/Badge at compact density; the sidebar collapse is an IconButton.
 - 2026-11-01: P2-5: pause the tech marquee on hover, focus within, hidden tabs, and manual request.

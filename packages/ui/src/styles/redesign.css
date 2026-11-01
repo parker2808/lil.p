@@ -736,6 +736,15 @@
   border-radius: 14px;
   background: var(--card);
 }
+.admin .redesign-editor-toolbar {
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+@media (min-width: 640px) {
+  .admin .redesign-editor-toolbar {
+    scrollbar-width: thin;
+  }
+}
 @media (min-width: 1024px) {
   .public-site .redesign-process-flow {
     flex-direction: row;
