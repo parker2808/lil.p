@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server';
 import { Suspense } from 'react';
 
 import { LazyProjectsBrowser } from '@/modules/projects/components/ProjectsBrowser/LazyProjectsBrowser';
+import { ProjectsBrowserView } from '@/modules/projects/components/ProjectsBrowser/ProjectsBrowser';
 import { listDomains } from '@/modules/projects/services/domains.service';
 import { listProjectsPage } from '@/modules/projects/services/projects.service';
 import { listSkillOptions } from '@/modules/projects/services/skills.service';
@@ -38,27 +39,30 @@ export async function ProjectsBrowserBlock({
   );
   const projects = [firstPage.items, ...additionalPages.map((page) => page.items)].flat();
 
+  const browserProps = {
+    projects,
+    domains,
+    skills,
+    pageSize,
+    showFeatured: props.showFeatured !== false,
+    labels: {
+      all: t('all'),
+      tech: t('tech'),
+      any: t('any'),
+      empty: states('empty'),
+      search: t('search'),
+      nda: blocks('nda'),
+      clearFilters: t('clearFilters'),
+      previous: t('previous'),
+      next: t('next'),
+      pagination: t('pagination'),
+    },
+  };
+
   return (
-    <Suspense fallback={<ProjectsBrowserSkeleton />}>
-      <LazyProjectsBrowser
-        projects={projects}
-        domains={domains}
-        skills={skills}
-        pageSize={pageSize}
-        showFeatured={props.showFeatured !== false}
-        labels={{
-          all: t('all'),
-          tech: t('tech'),
-          any: t('any'),
-          empty: states('empty'),
-          search: t('search'),
-          nda: blocks('nda'),
-          clearFilters: t('clearFilters'),
-          previous: t('previous'),
-          next: t('next'),
-          pagination: t('pagination'),
-        }}
-      />
+    // The fallback is the unfiltered view, so static HTML and hydration share one layout.
+    <Suspense fallback={<ProjectsBrowserView {...browserProps} search={{}} />}>
+      <LazyProjectsBrowser {...browserProps} />
     </Suspense>
   );
 }
