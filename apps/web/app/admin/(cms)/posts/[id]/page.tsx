@@ -4,3 +4,7 @@ export default async function AdminPostEditorPage({ params }: { params: Promise<
   const { id } = await params;
   return <AdminPostsEditor postId={Number(id)} />;
 }
+
+export function generateMetadata() {
+  return { title: 'Edit post' };
+}

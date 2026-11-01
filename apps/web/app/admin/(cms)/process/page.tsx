@@ -3,3 +3,7 @@ import { AdminProcessStepsIndex } from '@/modules/admin-about/views/AdminProcess
 export default function AdminProcessPage() {
   return <AdminProcessStepsIndex />;
 }
+
+export function generateMetadata() {
+  return { title: 'Process' };
+}

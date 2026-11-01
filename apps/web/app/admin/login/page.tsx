@@ -11,3 +11,7 @@ export default function AdminLoginPage() {
     </Suspense>
   );
 }
+
+export function generateMetadata() {
+  return { title: 'Sign in' };
+}

@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-01: Next app icon files in `app/` provide the icon link across separate public and admin root layouts; admin pages need their own metadata titles to override the root's generic default.
 - 2026-11-01: Admin editor copy already had complete Vietnamese keys with English placeholder values; translate the shared editor and block labels too, and format experience ranges with UTC month/year to avoid raw ISO dates and timezone shifts.
 - 2026-11-01: The admin namespace had 972 English keys and no Vietnamese keys, so add the full key tree before translating a scoped group to keep every admin route renderable in Vietnamese.
 - 2026-11-01: The Vietnamese locale file has no admin namespace yet; admin locale plumbing must retain English messages for those keys while passing the selected locale to Intl formatting.

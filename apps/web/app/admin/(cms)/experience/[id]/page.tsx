@@ -8,3 +8,7 @@ export default async function AdminExperienceEditorPage({
   const { id } = await params;
   return <AdminAboutExperienceEditor experienceId={Number(id)} />;
 }
+
+export function generateMetadata() {
+  return { title: 'Edit experience' };
+}

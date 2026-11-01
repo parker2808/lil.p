@@ -38,3 +38,7 @@ export default async function AdminInboxDetailPage({
     </HydrationBoundary>
   );
 }
+
+export function generateMetadata() {
+  return { title: 'Message' };
+}

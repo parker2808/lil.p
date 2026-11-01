@@ -5,3 +5,7 @@ export const dynamic = 'force-dynamic';
 export default function AdminMediaPage() {
   return <AdminMediaIndex />;
 }
+
+export function generateMetadata() {
+  return { title: 'Media' };
+}

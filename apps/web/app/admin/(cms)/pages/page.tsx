@@ -24,3 +24,7 @@ export default async function AdminPagesPage() {
     </HydrationBoundary>
   );
 }
+
+export function generateMetadata() {
+  return { title: 'Pages' };
+}

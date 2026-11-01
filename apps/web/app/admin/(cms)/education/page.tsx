@@ -3,3 +3,7 @@ import { AdminEducationIndex } from '@/modules/admin-about/views/AdminEducationI
 export default function AdminEducationPage() {
   return <AdminEducationIndex />;
 }
+
+export function generateMetadata() {
+  return { title: 'Education' };
+}

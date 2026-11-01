@@ -50,3 +50,7 @@ export default async function AdminUsersPage({
     </HydrationBoundary>
   );
 }
+
+export function generateMetadata() {
+  return { title: 'Users' };
+}
