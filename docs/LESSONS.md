@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-01: The admin namespace had 972 English keys and no Vietnamese keys, so add the full key tree before translating a scoped group to keep every admin route renderable in Vietnamese.
 - 2026-11-01: The Vietnamese locale file has no admin namespace yet; admin locale plumbing must retain English messages for those keys while passing the selected locale to Intl formatting.
 - 2026-11-01: Before migrating a slot selector, search for its rendered slot; an unused selector can be removed instead of preserving dead styling.
 - 2026-11-01: Public button overrides in the shared redesign stylesheet also affect class-only links, so pass the public surface through `buttonVariants()` at those call sites as well as through `Button`.

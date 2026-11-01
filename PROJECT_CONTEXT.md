@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
-- P1-20 T8a reads the admin locale from `NEXT_LOCALE`, exposes an EN/VI topbar switch, and shares Intl date/relative formatting for audit and inbox. Vietnamese admin UI copy is not in `vi.json` yet; the admin namespace falls back to English.
+- P1-21 T8b adds the complete Vietnamese admin key tree and translates dashboard, auth, shell, and list copy. Editor and detail copy remains in English for a later translation task. P1-20 T8a reads the admin locale from `NEXT_LOCALE`, exposes an EN/VI topbar switch, and shares Intl date/relative formatting for audit and inbox.
 - P1-19 T11c replaces the remaining `data-slot` stylesheet selectors with explicit component classes; one unused accent-headline selector was removed.
 - P1-18 T11b moves the public button size/hover and admin dashboard card/header overrides into explicit UI variants. Badge and tab styles already live in their primitives; the redesign stylesheet now has no `!important` declarations.
 - P1-17 T11a moves the admin table overrides out of `redesign.css` into cva variants on the `ui/table` primitives: `TableHead surface` (`plain` default, `muted` = uppercase 11px muted header) and `TableCell density` (`default`, `comfortable` = 12px block padding, `flush` = no padding for link cells). `AdminTable` and `DataTable` pass them explicitly; the AdminTable status row uses `px-4 py-8` classes. `redesign.css` had no `[data-slot=input]` rules, so `Input` is unchanged. `e2e/admin-table-styles.spec.ts` snapshots computed table and input styles on projects, users, audit and tags (JSON under `e2e/__snapshots__/`, platform-free `snapshotPathTemplate`); approve an intended change with `--update-snapshots`.
@@ -86,6 +86,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P1-21 T8b: translate Vietnamese admin dashboard, auth, shell, and list messages; cover key parity and visible route copy.
 - 2026-11-01: P1-20 T8a: wire the admin locale cookie, topbar switch, and shared Intl date/relative formatting.
 - 2026-11-01: P1-19 T11c: move remaining redesign slot selectors to explicit component classes.
 - 2026-11-01: P1-18 T11b: use explicit public button and admin card variants; remove six `!important` declarations from `redesign.css`.
