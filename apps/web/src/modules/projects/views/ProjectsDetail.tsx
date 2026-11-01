@@ -35,12 +35,13 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
     notFound();
   }
 
-  const [ordered, related, t, blocks, content] = await Promise.all([
+  const [ordered, related, t, blocks, content, core] = await Promise.all([
     listProjects(locale, { pageSize: 100, sort: 'sortOrder' }),
     listRelatedProjects(locale, project.slug, project.domain?.slug),
     getTranslations('projects'),
     getTranslations('blocks'),
     getTranslations('content'),
+    getTranslations('core'),
   ]);
 
   const { prev, next } = projectNeighbors(ordered, project.slug);
@@ -90,13 +91,11 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
           />
           <CaseStudyMeta
             items={[
-              { label: t('client'), value: project.client },
               { label: t('role'), value: project.role },
-              ...(project.teamSize != null
-                ? [{ label: t('team'), value: String(project.teamSize) }]
-                : []),
-              { label: t('period'), value: period },
-              ...(stack ? [{ label: t('stack'), value: stack }] : []),
+              { label: t('timeline'), value: period },
+              { label: t('team'), value: project.teamSize?.toString() },
+              { label: t('stack'), value: stack },
+              { label: t('outcome'), value: project.result },
             ]}
           />
         </div>
@@ -133,15 +132,20 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
           />
         )}
         <div className="grid items-start gap-10 lg:grid-cols-12">
-          <aside className="lg:order-2 lg:col-span-4">
+          <aside className="case-study-aside lg:col-span-3">
             <CaseStudyToc
               items={toc}
               skills={project.skills}
               liveUrl={project.isConfidential ? null : project.liveUrl}
-              labels={{ onThisPage: content('onThisPage'), live: t('live') }}
+              labels={{
+                onThisPage: content('onThisPage'),
+                contents: t('contents'),
+                close: core('close'),
+                live: t('live'),
+              }}
             />
           </aside>
-          <div className="flex flex-col gap-12 lg:order-1 lg:col-span-8">
+          <div className="case-study-body flex flex-col gap-12 lg:col-span-9">
             <KeyFacts facts={project.keyFacts} hue={hue} />
             <OutcomeStats metrics={project.metrics} />
             <CaseStudySections

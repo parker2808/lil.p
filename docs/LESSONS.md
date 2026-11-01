@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-01: The e2e demo seed has 4 case studies and the `baseline` seed has the real 10, but `apps/web/.next/cache/fetch-cache` survives `next build`, so delete it before pointing Playwright at a different database or the old API data is served.
+- 2026-11-01: `CaseStudySections` imports the server-only `Markdown` renderer, so a Vitest file that tests its pure `caseStudyToc` helper must `vi.mock` the Markdown module first.
 - 2026-11-01: Project list rows already select localized role and outcome fields, so cards can derive a clean result line without a schema migration; keep mock cover paths mapped by slug and let real media win.
 - 2026-11-01: A Radix Sheet portal renders outside `.public-site` and `.site-header`, so mobile menu styles need an explicit sheet class instead of ancestor-scoped selectors.
 - 2026-11-01: Demo skills reuse sort orders across categories and are created concurrently, so an ID tie-break can reorder badges and change full-page visual height; sort badges in the visual fixture before capturing screenshots.
