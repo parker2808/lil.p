@@ -27,6 +27,7 @@ export function CoverPlaceholder({
       )}
       style={{
         aspectRatio: ratio,
+        ['--cover-hue' as string]: `var(${hueVar})`,
         backgroundImage: `repeating-radial-gradient(ellipse at 85% 100%, transparent 0 12px, color-mix(in srgb, var(${hueVar}) 12%, transparent) 13px 14px), linear-gradient(135deg, color-mix(in srgb, var(${hueVar}) 22%, var(--background)), var(--card))`,
       }}
     >

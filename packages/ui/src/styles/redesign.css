@@ -458,21 +458,30 @@
     scroll-behavior: auto;
   }
 }
+/* The monogram scales with its own frame (cards, index rows, case-study header), never the viewport. */
+.redesign-cover-placeholder {
+  container-type: inline-size;
+}
 .cover-glyph {
   position: absolute;
-  bottom: -0.12em;
-  right: 0.05em;
-  font-size: clamp(5rem, 18vw, 14rem);
+  bottom: 0.04em;
+  right: 0.12em;
+  font-size: min(14rem, 24cqi);
   font-weight: 300;
   font-style: italic;
   letter-spacing: -0.07em;
-  line-height: 1;
+  line-height: normal;
+  color: var(--cover-hue, currentColor);
   opacity: 0.6;
 }
 .cover-slug {
   position: absolute;
   top: 16px;
   left: 16px;
+  max-width: calc(100% - 32px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font: 11px var(--font-mono);
   border-radius: 6px;
   background: var(--card);
