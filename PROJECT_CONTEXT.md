@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P5-2 T23b: radius, spacing, and motion tokens are scoped through `redesign.css`; the public case cards and admin panels use the new radius scale, and the Linux Chromium visual baselines were regenerated.
 - P5-1 T23a: public typography uses the six-step Sans scale and 65ch paragraph measure; Linux Chromium visual baselines were regenerated once for this change.
 - Vercel deploys: `scripts/vercel-ignore-build.sh` (`ignoreCommand` in `vercel.json`) builds only `main` and, when `HOTFIX_DEPLOYS_ENABLED=1`, `hotfix/*`. Hotfix deploys are paused (`0`) from 2026-11-01 while the Vercel deployment rate limit resets; flip it to `1` to re-enable.
 - P4-6 T24: `SiteSettings.heroStats Json?` (migration `20261101082635_site_settings_hero_stats`, additive `ADD COLUMN heroStats JSON NULL`) must be applied to TiDB by Parker at merge (`prisma migrate deploy`); the agent did not run it. Contracts `heroStatsSchema` allows 0-3 `{ value, suffix?, labelEn, labelVi }`; an empty list is stored as NULL and stored JSON that fails the schema reads as NULL. `HeroBlock` renders a `<dl class="hero-stats">` after the CTAs from `settings.heroStats`, else the first 3 non-zero profile stats; the demo seed resets `heroStats` to NULL, so the home hero now repeats the "By the numbers" StatBand values until Parker sets hero stats (decide whether to drop the home StatBand). The admin "Hero stats" fieldset (`HeroStatsFieldset`) validates on save; "Clear (use profile stats)" saves the whole form with `heroStats: null`. `public-home` visual baselines were re-rendered.
@@ -104,6 +105,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P5-2 T23b: add the radius, spacing, and motion scales with reduced-motion overrides and use them in the redesign stylesheet.
 - 2026-11-01: P5-1 T23a: set public Sans type scale, body/display line heights, and paragraph measure; guard paragraph font and line length in E2E.
 - 2026-11-01: Vercel builds only `main` (and `hotfix/*` behind a toggle, currently off); other branches skip via `ignoreCommand`.
 - 2026-11-01: Weekly Graphify refresh of `graphify-out/GRAPH_REPORT.md` (code-only, no model calls).
