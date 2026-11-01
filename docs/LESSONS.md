@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-01: Project list rows already select localized role and outcome fields, so cards can derive a clean result line without a schema migration; keep mock cover paths mapped by slug and let real media win.
 - 2026-11-01: A Radix Sheet portal renders outside `.public-site` and `.site-header`, so mobile menu styles need an explicit sheet class instead of ancestor-scoped selectors.
 - 2026-11-01: Demo skills reuse sort orders across categories and are created concurrently, so an ID tie-break can reorder badges and change full-page visual height; sort badges in the visual fixture before capturing screenshots.
 - 2026-11-01: When stacked branches independently merge the same main commit, merge the updated base into the child and keep both task entries when resolving shared context files.

@@ -64,6 +64,7 @@ export default defineConfig({
     'admin-vi-editors.spec.ts',
     'metadata.spec.ts',
     'projects-filters.spec.ts',
+    'project-cards.spec.ts',
     'ux-targets.spec.ts',
     'admin-components.spec.ts',
     'editor-mode-toggle.spec.ts',
