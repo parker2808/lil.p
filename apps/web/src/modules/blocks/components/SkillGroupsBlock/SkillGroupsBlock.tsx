@@ -29,10 +29,7 @@ export async function SkillGroupsBlock({
   return (
     <Reveal className="col-span-full flex flex-col gap-8" lang={block.lang}>
       <BlockHeading heading={props.heading} />
-      <SkillGroup
-        groups={groups}
-        labels={{ daily: t('daily'), shipped: t('shipped'), growing: t('growing') }}
-      />
+      <SkillGroup groups={groups} labels={{ other: t('otherSkills') }} />
     </Reveal>
   );
 }
