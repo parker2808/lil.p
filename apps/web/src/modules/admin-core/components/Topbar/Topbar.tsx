@@ -27,11 +27,7 @@ import { logout } from '../../services/auth.service';
 import { useMe } from '../../hooks/use-me.hook';
 import { TOPBAR_STATUS_ID } from '../../hooks/use-topbar-status-slot.hook';
 import { useAdminUi } from '../../stores/admin-ui.store';
-
-function switchLocale(locale: string) {
-  document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; samesite=lax`;
-  window.location.reload();
-}
+import { switchAdminLocale as switchLocale } from '../../utils/admin-locale.util';
 
 export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actions?: ReactNode }) {
   const t = useTranslations('admin.shell');

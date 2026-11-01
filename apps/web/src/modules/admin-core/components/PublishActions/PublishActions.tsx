@@ -3,6 +3,8 @@
 import { StatusPill, type ContentStatus } from '@portfolio/ui/components/StatusPill/StatusPill';
 import { Button, buttonVariants } from '@portfolio/ui/components/ui/button';
 
+import { usePublishAction } from '../../stores/admin-ui.store';
+
 export function PublishActions({
   status,
   previewHref,
@@ -27,6 +29,7 @@ export function PublishActions({
   onPublish: () => void;
   onUnpublish: () => void;
 }) {
+  usePublishAction(onPublish, status !== 'published' && !disabled && !busy);
   return (
     <div className="flex flex-wrap items-center gap-2">
       <StatusPill
