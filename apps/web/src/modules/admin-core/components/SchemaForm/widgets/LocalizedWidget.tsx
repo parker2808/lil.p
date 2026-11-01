@@ -35,6 +35,7 @@ export function LocalizedWidget({
       {field.kind === 'markdown' ? (
         <div className="grid gap-3">
           <MarkdownField
+            ariaLabel={`${label} (English)`}
             value={value.en ?? ''}
             onChange={(markdown) => onChange('en', markdown)}
             labels={editorLabels}
@@ -43,6 +44,7 @@ export function LocalizedWidget({
             variant="compact"
           />
           <MarkdownField
+            ariaLabel={`${label} (Vietnamese)`}
             value={value.vi ?? ''}
             onChange={(markdown) => onChange('vi', markdown)}
             labels={editorLabels}

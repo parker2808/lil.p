@@ -85,6 +85,7 @@ export function ProjectContentTab({
             <FieldLabel>{labels[field.name]}</FieldLabel>
             {field.hint ? <FieldDescription>{labels.headingHint}</FieldDescription> : null}
             <MarkdownField
+              ariaLabel={labels[field.name]}
               value={String(values[key] ?? '')}
               onChange={(markdown) => onChange(key, markdown)}
               onBlur={onBlur}

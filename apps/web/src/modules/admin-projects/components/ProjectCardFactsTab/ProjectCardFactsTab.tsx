@@ -93,7 +93,7 @@ export function ProjectCardFactsTab({
             disabled={readOnly}
             onValueChange={(value) => onChange('domainId', value === 'none' ? null : Number(value))}
           >
-            <SelectTrigger>
+            <SelectTrigger aria-label={labels.domain}>
               <SelectValue placeholder={labels.none} />
             </SelectTrigger>
             <SelectContent>

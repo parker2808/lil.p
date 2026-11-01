@@ -113,7 +113,11 @@ export function createMarkdownExtensions(options: {
     CodeBlockLowlight.extend({
       addNodeView() {
         return ReactNodeViewRenderer((props) =>
-          createElement(CodeBlockView, { ...props, plainText: labels.plainText }),
+          createElement(CodeBlockView, {
+            ...props,
+            plainText: labels.plainText,
+            languageLabel: labels.codeBlock,
+          }),
         );
       },
     }).configure({

@@ -166,7 +166,7 @@ export function AuditVirtualList({
   }
 
   return (
-    <div ref={parentRef} data-slot="audit-list" className="h-96 overflow-auto">
+    <div ref={parentRef} data-slot="audit-list" tabIndex={0} className="h-96 overflow-auto">
       <ul className="relative w-full" style={{ height: virtualizer.getTotalSize() }}>
         {virtualItems.map((row) => {
           const item = items[row.index];

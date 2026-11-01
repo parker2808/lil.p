@@ -190,13 +190,13 @@ export function SettingsForm({
         />
       </Field>
       <Field>
-        <FieldLabel>{labels.availability}</FieldLabel>
+        <FieldLabel htmlFor="availability">{labels.availability}</FieldLabel>
         <Select
           value={form.availability}
           disabled={readOnly}
           onValueChange={(value) => patch('availability', value as Availability)}
         >
-          <SelectTrigger>
+          <SelectTrigger id="availability">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

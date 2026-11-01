@@ -81,6 +81,7 @@ export function PostContentTab({
       <Field>
         <FieldLabel>{labels.body}</FieldLabel>
         <MarkdownField
+          ariaLabel={labels.body}
           value={String(values[bodyKey] ?? '')}
           onChange={(markdown) => onChange(bodyKey, markdown)}
           onBlur={onBlur}
