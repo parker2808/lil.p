@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-01: `portfolio-data.json` and `pagesData` both feed the frozen `20261027150000_portfolio_content` migration and a spec compares the regenerated SQL, so owner copy changes go in the `owner-copy.data.ts` overlay that only `seedOwner` applies.
+- 2026-11-01: The shared test MySQL uses `caching_sha2_password` and its auth cache is flushed when other worktrees run `FLUSH PRIVILEGES`, so the API pool fails with code 45028; run one TCP `mysql -h127.0.0.1` login as `app` inside the container right before Playwright.
 - 2026-11-01: The e2e demo seed has 4 case studies and the `baseline` seed has the real 10, but `apps/web/.next/cache/fetch-cache` survives `next build`, so delete it before pointing Playwright at a different database or the old API data is served.
 - 2026-11-01: `CaseStudySections` imports the server-only `Markdown` renderer, so a Vitest file that tests its pure `caseStudyToc` helper must `vi.mock` the Markdown module first.
 - 2026-11-01: Project list rows already select localized role and outcome fields, so cards can derive a clean result line without a schema migration; keep mock cover paths mapped by slug and let real media win.

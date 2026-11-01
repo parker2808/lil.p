@@ -43,12 +43,9 @@
     "minutes": "min",
     "pause": "Pause",
     "play": "Play",
-    "daily": "Daily",
-    "shipped": "Shipped",
-    "growing": "Growing",
+    "otherSkills": "Other",
     "diagram": "Migration from the featured case",
     "now": "now",
-    "highlights": "Highlights",
     "fallback": "EN",
     "downloadCv": "Download CV"
   },

@@ -70,6 +70,7 @@ export default defineConfig({
     'editor-mode-toggle.spec.ts',
     'editor-mobile-toolbar.spec.ts',
     'case-study-end.spec.ts',
+    'about-page.spec.ts',
     'case-study-layout.spec.ts',
     'admin-detail-error.spec.ts',
     'navigation-progress.spec.ts',
