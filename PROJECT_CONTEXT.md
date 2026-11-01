@@ -111,6 +111,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-02: `search-palette.spec.ts` polls the 404 page's link count, because the not-found body streams in after `page.goto` resolves (main CI was red on it).
 - 2026-11-01: P6-1 T31: five-group admin sidebar, URL-backed About and Posts tabs, and legacy route redirects; nav unit and redirect E2E coverage.
 - 2026-11-02: P5-8 T30b: 404 search field and mobile header search button open the ⌘K palette, which now groups Go to / Case studies / Actions; the "view in English" banner is a dismissible toast; `search-palette.spec.ts` e2e.
 - 2026-11-01: P5-7 T30a: three-column public footer (CTA, sitemap, socials with ⌘K hint) with a localized last-updated date and VI/EN switch; footer e2e at 375/1280px with axe.
