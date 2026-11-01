@@ -9,6 +9,7 @@ import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { z } from 'zod';
 
+import { AdminLoadError } from '@/modules/admin-core/components/AdminLoadError/AdminLoadError';
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
 import { PublishActions } from '@/modules/admin-core/components/PublishActions/PublishActions';
 import { RoleGate } from '@/modules/admin-core/components/RoleGate/RoleGate';
@@ -50,7 +51,13 @@ export function AdminPostsEditor({ postId }: { postId: number | null }) {
   const existing = useAdminPost(postId);
 
   if (postId !== null && existing.isError) {
-    return <p className="text-destructive">{t('loadError')}</p>;
+    return (
+      <AdminLoadError
+        navKey="posts"
+        message={t('loadError')}
+        onRetry={() => void existing.refetch()}
+      />
+    );
   }
   if (postId !== null && !existing.data) {
     return <p>{t('loading')}</p>;

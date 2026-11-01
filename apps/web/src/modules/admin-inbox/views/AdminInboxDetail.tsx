@@ -7,6 +7,7 @@ import { Button } from '@portfolio/ui/components/ui/button';
 import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 
+import { AdminLoadError } from '@/modules/admin-core/components/AdminLoadError/AdminLoadError';
 import { useAdminBack } from '@/modules/admin-core/hooks/use-admin-back.hook';
 
 import { useAdminMessage, useInboxMutations } from '../hooks/use-admin-inbox.hook';
@@ -23,14 +24,7 @@ export function AdminInboxDetail({ id }: { id: number }) {
   }
 
   if (isError || !data) {
-    return (
-      <div className="flex flex-col gap-3">
-        <p className="text-ui">{t('error')}</p>
-        <Button type="button" onClick={() => void refetch()}>
-          {t('retry')}
-        </Button>
-      </div>
-    );
+    return <AdminLoadError navKey="inbox" message={t('error')} onRetry={() => void refetch()} />;
   }
 
   return (

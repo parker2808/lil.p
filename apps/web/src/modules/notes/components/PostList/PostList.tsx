@@ -1,7 +1,7 @@
 import type { PublicPostListItem, PublicPostListPage } from '@portfolio/contracts';
+import { EmptyState } from '@portfolio/ui/components/EmptyState/EmptyState';
 import { PostCard } from '@portfolio/ui/components/PostCard/PostCard';
 import { buttonVariants } from '@portfolio/ui/components/ui/button';
-import { Empty } from '@portfolio/ui/components/ui/empty';
 import {
   Pagination,
   PaginationItem,
@@ -9,6 +9,7 @@ import {
   paginationLinkClassName,
 } from '@portfolio/ui/components/ui/pagination';
 import type { RenderLink } from '@portfolio/ui/utils/render-link.util';
+import { ArrowRight } from 'lucide-react';
 
 import { groupPostsByYear, notesHref } from '../../utils/notes-query.util';
 
@@ -38,6 +39,8 @@ export function PostList({
   labels: {
     minutes: string;
     clear: string;
+    emptyTitle: string;
+    emptyCta: string;
     previous: string;
     next: string;
     pagination: string;
@@ -56,7 +59,10 @@ export function PostList({
         {labels.results.replace('{count}', String(page.total))}
       </p>
       {items.length < 1 && !featured ? (
-        <Empty
+        <EmptyState
+          glyph="¶"
+          title={filtered ? emptyMessage : labels.emptyTitle}
+          description={filtered ? undefined : emptyMessage}
           action={
             filtered
               ? renderLink({
@@ -64,11 +70,18 @@ export function PostList({
                   className: buttonVariants({ surface: 'public', variant: 'outline', size: 'sm' }),
                   children: labels.clear,
                 })
-              : undefined
+              : renderLink({
+                  href: '/projects',
+                  className: buttonVariants({ surface: 'public', variant: 'outline', size: 'sm' }),
+                  children: (
+                    <>
+                      {labels.emptyCta}
+                      <ArrowRight aria-hidden className="size-4" />
+                    </>
+                  ),
+                })
           }
-        >
-          {emptyMessage}
-        </Empty>
+        />
       ) : (
         <>
           {featured ? (

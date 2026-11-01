@@ -15,6 +15,7 @@ import { useMemo, useState } from 'react';
 import { z } from 'zod';
 
 import { listAdminExperience } from '@/modules/admin-about/services/experience.service';
+import { AdminLoadError } from '@/modules/admin-core/components/AdminLoadError/AdminLoadError';
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
 import { PublishActions } from '@/modules/admin-core/components/PublishActions/PublishActions';
 import { RoleGate } from '@/modules/admin-core/components/RoleGate/RoleGate';
@@ -58,7 +59,13 @@ export function AdminProjectsEditor({ projectId }: { projectId: number | null })
   const existing = useAdminProject(projectId);
 
   if (projectId !== null && existing.isError) {
-    return <p className="text-destructive">{t('loadError')}</p>;
+    return (
+      <AdminLoadError
+        navKey="projects"
+        message={t('loadError')}
+        onRetry={() => void existing.refetch()}
+      />
+    );
   }
   if (projectId !== null && !existing.data) {
     return <p>{t('loading')}</p>;

@@ -47,3 +47,4 @@
 - 2026-11-01: jsdom has no `Range.getClientRects`, so a unit test that runs a Tiptap command through `focus()` throws an unhandled error; assert toolbar structure in Vitest and check the edit itself in Playwright.
 - 2026-11-01: Pixel `toHaveScreenshot` baselines are named per platform (darwin vs CI linux) and admin rows show relative times, so a CSS-to-variant refactor snapshots computed styles as JSON (no content-driven heights) with a platform-free `snapshotPathTemplate`, recorded on the base build before editing.
 - 2026-11-01: A decorative glyph sized in `vw` clips inside small card frames; size it with container query units on the frame, and note that confidential case studies render no cover, so an e2e must not require one on every detail page.
+- 2026-11-01: Admin detail queries do not retry 4xx errors (the shared query client retries only 5xx), so a missing-id error state appears at once and an e2e can assert it without waiting for backoff.

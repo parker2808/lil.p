@@ -69,6 +69,7 @@ export default defineConfig({
     'editor-mode-toggle.spec.ts',
     'editor-mobile-toolbar.spec.ts',
     'case-study-end.spec.ts',
+    'admin-detail-error.spec.ts',
   ],
   // Snapshots hold computed styles, not pixels, so one file serves every platform.
   snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}{ext}',

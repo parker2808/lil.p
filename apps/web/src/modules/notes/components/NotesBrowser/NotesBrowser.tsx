@@ -78,6 +78,8 @@ function NotesBrowserContent({
         labels={{
           minutes: blocks('minutes'),
           clear: t('clear'),
+          emptyTitle: t('emptyTitle'),
+          emptyCta: t('emptyCta'),
           previous: t('previous'),
           next: t('next'),
           pagination: t('pagination'),
