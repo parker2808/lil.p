@@ -1,6 +1,10 @@
 'use client';
 
 import { STATS_RANGES, type StatsRange } from '@portfolio/contracts';
+import {
+  SegmentedControl,
+  SegmentedControlItem,
+} from '@portfolio/ui/components/ui/segmented-control';
 import { ToggleGroup, ToggleGroupItem } from '@portfolio/ui/components/ui/toggle-group';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -18,22 +22,24 @@ export function RangeToggle({
   const router = useRouter();
 
   return (
-    <ToggleGroup
-      type="single"
-      value={range}
-      aria-label={t('label')}
-      onValueChange={(next) => {
-        if (!next || next === range) {
-          return;
-        }
-        router.replace(hrefFor(next as StatsRange));
-      }}
-    >
-      {STATS_RANGES.map((value) => (
-        <ToggleGroupItem key={value} value={value}>
-          {t(value)}
-        </ToggleGroupItem>
-      ))}
-    </ToggleGroup>
+    <SegmentedControl asChild variant="equal">
+      <ToggleGroup
+        type="single"
+        value={range}
+        aria-label={t('label')}
+        onValueChange={(next) => {
+          if (!next || next === range) {
+            return;
+          }
+          router.replace(hrefFor(next as StatsRange));
+        }}
+      >
+        {STATS_RANGES.map((value) => (
+          <SegmentedControlItem asChild key={value}>
+            <ToggleGroupItem value={value}>{t(value)}</ToggleGroupItem>
+          </SegmentedControlItem>
+        ))}
+      </ToggleGroup>
+    </SegmentedControl>
   );
 }

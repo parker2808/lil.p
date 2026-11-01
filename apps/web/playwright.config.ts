@@ -53,6 +53,7 @@ export default defineConfig({
     'content-guard.spec.ts',
     'hero-shader.spec.ts',
     'admin-login.spec.ts',
+    'segmented-control.spec.ts',
   ],
   fullyParallel: false,
   workers: 1,
