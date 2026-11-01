@@ -1,16 +1,31 @@
 'use client';
 import type { ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
-import { z } from 'zod';
-
-import { useListParams } from '@/modules/admin-core/hooks/use-list-params.hook';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 const VIEWS = ['grid', 'index'] as const;
-const viewParamsSchema = z.looseObject({ view: z.enum(VIEWS).catch('grid') });
+type View = (typeof VIEWS)[number];
+
+// Parsed by hand instead of with zod: this island ships on public pages, and zod would add
+// about 30 KiB of unused JS to the home page.
+function parseView(value: string | null): View {
+  return VIEWS.find((view) => view === value) ?? 'grid';
+}
 
 export function ProjectsView({ children }: { children: ReactNode }) {
-  const { params, setParams } = useListParams(viewParamsSchema);
-  const view = params.view;
+  const search = useSearchParams();
+  const pathname = usePathname();
+  const view = parseView(search.get('view'));
+
+  function setView(next: View) {
+    const query = new URLSearchParams(search.toString());
+    query.set('view', next);
+    const url = `${pathname}?${query.toString()}`;
+    if (url !== `${window.location.pathname}${window.location.search}`) {
+      // Push without a server round trip, so Back restores the previous view.
+      window.history.pushState(null, '', url);
+    }
+  }
   const t = useTranslations('projects');
   return (
     <div className="projects-view col-span-full" data-view={view}>
@@ -20,7 +35,7 @@ export function ProjectsView({ children }: { children: ReactNode }) {
             key={value}
             type="button"
             aria-pressed={view === value}
-            onClick={() => setParams({ view: value }, { history: 'push' })}
+            onClick={() => setView(value)}
           >
             {t(value)}
           </button>
