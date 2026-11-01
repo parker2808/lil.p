@@ -2,8 +2,10 @@
 
 import type { AdminContactMessage, ContactMessageStatus } from '@portfolio/contracts';
 import { type AdminTableColumn } from '@portfolio/ui/components/AdminTable/AdminTable';
+import { formatDateTime } from '@portfolio/ui/components/AuditRow/relative-time.util';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { Button } from '@portfolio/ui/components/ui/button';
+import { useLocale } from 'next-intl';
 
 import {
   AdminListTable,
@@ -60,6 +62,7 @@ export function InboxTable({
   onClearFilters: () => void;
   onRetry: () => void;
 }) {
+  const locale = useLocale();
   const columns: AdminTableColumn<AdminContactMessage>[] = [
     {
       id: 'name',
@@ -80,7 +83,7 @@ export function InboxTable({
       id: 'createdAt',
       header: columnLabels.created,
       sortable: true,
-      cell: (row) => new Date(row.createdAt).toLocaleString(),
+      cell: (row) => formatDateTime(row.createdAt, locale),
     },
     ...(canWrite
       ? [

@@ -2,8 +2,9 @@
 
 import type { AdminContactMessage } from '@portfolio/contracts';
 import { Badge } from '@portfolio/ui/components/ui/badge';
+import { formatDateTime } from '@portfolio/ui/components/AuditRow/relative-time.util';
 import { Card, CardContent, CardHeader, CardTitle } from '@portfolio/ui/components/ui/card';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 import { useAdminMessages } from '@/modules/admin-inbox/hooks/use-admin-inbox.hook';
@@ -19,6 +20,7 @@ export function InboxCard() {
 
 export function InboxCardView({ items }: { items: AdminContactMessage[] }) {
   const t = useTranslations('admin.inbox');
+  const locale = useLocale();
 
   return (
     <Card surface="admin">
@@ -44,7 +46,7 @@ export function InboxCardView({ items }: { items: AdminContactMessage[] }) {
                     {t(`status.${item.status}`)}
                   </Badge>
                   <span className="text-ui-meta text-muted-foreground">
-                    {new Date(item.createdAt).toLocaleString()}
+                    {formatDateTime(item.createdAt, locale)}
                   </span>
                 </Link>
               </li>

@@ -9,15 +9,17 @@ import { QueryProvider } from './QueryProvider';
 
 export function AdminProviders({
   children,
+  locale = 'en',
   messages,
   nonce,
 }: {
   children: ReactNode;
+  locale?: 'en' | 'vi';
   messages: AbstractIntlMessages;
   nonce?: string;
 }) {
   return (
-    <Providers locale="en" messages={messages} nonce={nonce}>
+    <Providers locale={locale} messages={messages} nonce={nonce}>
       <QueryProvider>
         {children}
         <Toaster position="bottom-right" duration={4000} />

@@ -59,6 +59,7 @@ export default defineConfig({
     'admin-back-link.spec.ts',
     'url-view-state.spec.ts',
     'admin-table-styles.spec.ts',
+    'admin-locale.spec.ts',
   ],
   // Snapshots hold computed styles, not pixels, so one file serves every platform.
   snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}{ext}',

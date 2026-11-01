@@ -13,7 +13,7 @@ import {
 } from '@portfolio/ui/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
 import { useCloseOnNavigate } from '@portfolio/ui/hooks/use-close-on-navigate.hook';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { ChangePasswordDialog } from '@/modules/admin-auth/components/ChangePasswordDialog/ChangePasswordDialog';
@@ -25,6 +25,7 @@ import { AdminMobileNav } from '../AdminSidebar/AdminSidebar';
 
 export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actions?: ReactNode }) {
   const t = useTranslations('admin.shell');
+  const locale = useLocale();
   const me = useMe();
   const { toggleCollapsed } = useAdminUi();
   const router = useRouter();
@@ -64,6 +65,21 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
       </Breadcrumb>
       <div className="ml-auto flex items-center gap-2">
         {actions}
+        <label className="text-ui-meta text-muted-foreground flex items-center gap-1">
+          {t('language')}
+          <select
+            aria-label={t('language')}
+            className="bg-background text-foreground rounded-md border px-1 py-1"
+            value={locale}
+            onChange={(event) => {
+              document.cookie = `NEXT_LOCALE=${event.target.value}; path=/; max-age=31536000; samesite=lax`;
+              window.location.reload();
+            }}
+          >
+            <option value="en">{t('localeEn')}</option>
+            <option value="vi">{t('localeVi')}</option>
+          </select>
+        </label>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm" className="h-8 gap-2">

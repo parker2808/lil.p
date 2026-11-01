@@ -1,6 +1,7 @@
 import type { AdminContactMessage } from '@portfolio/contracts';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { NextIntlClientProvider } from 'next-intl';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { InboxTable } from './InboxTable';
@@ -40,32 +41,34 @@ const labels = {
 function renderTable() {
   const onMarkRead = vi.fn();
   render(
-    <InboxTable
-      label="Inbox"
-      items={[item]}
-      total={1}
-      page={1}
-      pageSize={20}
-      sort="-createdAt"
-      hasFilters={false}
-      canWrite
-      labels={labels}
-      columnLabels={{
-        name: 'Name',
-        topic: 'Topic',
-        status: 'Status',
-        created: 'Received',
-        actions: 'Actions',
-      }}
-      statusLabels={{ NEW: 'New', READ: 'Read', REPLIED: 'Replied', SPAM: 'Spam' }}
-      actionLabels={{ read: 'Mark read', spam: 'Mark spam' }}
-      onSortChange={vi.fn()}
-      onPageChange={vi.fn()}
-      onMarkRead={onMarkRead}
-      onMarkSpam={vi.fn()}
-      onClearFilters={vi.fn()}
-      onRetry={vi.fn()}
-    />,
+    <NextIntlClientProvider locale="en">
+      <InboxTable
+        label="Inbox"
+        items={[item]}
+        total={1}
+        page={1}
+        pageSize={20}
+        sort="-createdAt"
+        hasFilters={false}
+        canWrite
+        labels={labels}
+        columnLabels={{
+          name: 'Name',
+          topic: 'Topic',
+          status: 'Status',
+          created: 'Received',
+          actions: 'Actions',
+        }}
+        statusLabels={{ NEW: 'New', READ: 'Read', REPLIED: 'Replied', SPAM: 'Spam' }}
+        actionLabels={{ read: 'Mark read', spam: 'Mark spam' }}
+        onSortChange={vi.fn()}
+        onPageChange={vi.fn()}
+        onMarkRead={onMarkRead}
+        onMarkSpam={vi.fn()}
+        onClearFilters={vi.fn()}
+        onRetry={vi.fn()}
+      />
+    </NextIntlClientProvider>,
   );
   return { onMarkRead };
 }
