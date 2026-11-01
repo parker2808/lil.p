@@ -61,7 +61,7 @@ export function PostList({
             filtered
               ? renderLink({
                   href: '/notes',
-                  className: buttonVariants({ variant: 'outline', size: 'sm' }),
+                  className: buttonVariants({ surface: 'public', variant: 'outline', size: 'sm' }),
                   children: labels.clear,
                 })
               : undefined

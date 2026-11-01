@@ -275,7 +275,7 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
         )}
       </form.Field>
 
-      <Button type="submit" loading={pending}>
+      <Button surface="public" type="submit" loading={pending}>
         {t('send')}
       </Button>
     </form>

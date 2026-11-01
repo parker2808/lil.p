@@ -53,7 +53,7 @@ export function ProjectsGrid({
           filtered
             ? renderLink({
                 href: '/projects',
-                className: buttonVariants({ variant: 'outline', size: 'sm' }),
+                className: buttonVariants({ surface: 'public', variant: 'outline', size: 'sm' }),
                 children: labels.clearFilters,
               })
             : undefined
