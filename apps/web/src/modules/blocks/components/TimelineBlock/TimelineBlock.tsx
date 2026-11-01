@@ -33,7 +33,7 @@ export async function TimelineBlock({
         <Timeline
           items={items}
           pageLocale={context.locale}
-          labels={{ now: t('now'), highlights: t('highlights'), fallback: t('fallback') }}
+          labels={{ now: t('now'), fallback: t('fallback') }}
         />
       )}
     </Reveal>

@@ -47,7 +47,7 @@ describe('CaseCard', () => {
     expect(image).toHaveAttribute('height', '900');
   });
 
-  it('shows the NDA pill and chip overflow', () => {
+  it('shows role, year, a result and at most three stack chips', () => {
     const { rerender } = render(
       <CaseCard
         project={confidentialProjectFixture}
@@ -59,11 +59,44 @@ describe('CaseCard', () => {
 
     rerender(
       <CaseCard
-        project={overflowProjectFixture}
+        project={{ ...overflowProjectFixture, result: '' }}
         href="/projects/sample-overflow"
         labels={{ nda: 'NDA' }}
       />,
     );
-    expect(screen.getByText('+1')).toBeInTheDocument();
+    expect(screen.getByText('Frontend Engineer')).toBeInTheDocument();
+    expect(screen.getByText('2024')).toBeInTheDocument();
+    expect(screen.queryByTestId('project-result')).not.toBeInTheDocument();
+    expect(screen.getAllByRole('listitem')).toHaveLength(3);
+  });
+
+  it('uses a mock cover for a mapped slug and keeps a real cover first', () => {
+    const { container, rerender } = render(
+      <CaseCard
+        project={{ ...projectFixture, slug: 'particula' }}
+        href="/projects/particula"
+        labels={{ nda: 'NDA' }}
+      />,
+    );
+    expect(container.querySelector('img')).toHaveAttribute('src', '/mock/covers/particula.svg');
+    expect(screen.getByTestId('project-result')).toHaveTextContent('Weekly delivery continued.');
+    rerender(
+      <CaseCard
+        project={{
+          ...projectFixture,
+          slug: 'particula',
+          cover: {
+            url: 'https://media.test/real',
+            srcset: '',
+            alt: 'Real cover',
+            width: 1600,
+            height: 1000,
+          },
+        }}
+        href="/projects/particula"
+        labels={{ nda: 'NDA' }}
+      />,
+    );
+    expect(screen.getByRole('img')).toHaveAttribute('src', 'https://media.test/real');
   });
 });

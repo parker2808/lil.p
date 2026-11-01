@@ -11,14 +11,14 @@ import {
 const VI = 'VI';
 const EN = 'EN';
 
-export function LocaleSwitch() {
+export function LocaleSwitch({ label }: { label?: string }) {
   const locale = useLocale();
   const pathname = usePathname();
   const t = useTranslations('core');
 
   return (
     <SegmentedControl asChild>
-      <nav aria-label={t('locale')}>
+      <nav aria-label={label ?? t('locale')}>
         <SegmentedControlItem asChild>
           <Link
             href={pathname}
