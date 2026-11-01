@@ -44,6 +44,16 @@ async function settle(page: Page): Promise<void> {
       Array.from(document.images, (image) => image.decode().catch(() => undefined)),
     );
     await document.fonts.ready;
+    // Demo skills share sort orders and are seeded concurrently, so their ID tie-break varies.
+    for (const list of document.querySelectorAll<HTMLUListElement>(
+      '[data-slot="skill-group"] ul',
+    )) {
+      list.replaceChildren(
+        ...Array.from(list.children).sort((a, b) =>
+          (a.textContent ?? '').localeCompare(b.textContent ?? '', 'en'),
+        ),
+      );
+    }
   });
   await page.mouse.move(0, 0);
 }

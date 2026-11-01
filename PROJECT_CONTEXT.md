@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
-- P5-2 T23b: radius, spacing, and motion tokens are scoped through `redesign.css`; the public case cards and admin panels use the new radius scale, and both Linux Chromium screenshots and admin computed-style snapshots were updated.
+- P5-2 T23b: radius, spacing, and motion tokens are scoped through `redesign.css`; public case cards and admin panels use the new radius scale. Linux Chromium screenshots and admin computed-style snapshots were updated; the visual test sorts skill badges before capture because the demo seed assigns duplicate sort orders with nondeterministic IDs.
 - P5-1 T23a: public typography uses the six-step Sans scale and 65ch paragraph measure; Linux Chromium visual baselines were regenerated once for this change.
 - Vercel deploys: `git.deploymentEnabled` in `vercel.json` (`"**": false`, `"main": true`) stops Vercel from creating deployments or PR checks for any branch except `main`. `scripts/vercel-ignore-build.sh` (`ignoreCommand`) is a second guard. Hotfix deploys are paused from 2026-11-01 while the rate limit resets; to re-enable add `"hotfix/**": true` to `git.deploymentEnabled` and set `HOTFIX_DEPLOYS_ENABLED=1` in the script.
 - P4-6 T24: `SiteSettings.heroStats Json?` (migration `20261101082635_site_settings_hero_stats`, additive `ADD COLUMN heroStats JSON NULL`) must be applied to TiDB by Parker at merge (`prisma migrate deploy`); the agent did not run it. Contracts `heroStatsSchema` allows 0-3 `{ value, suffix?, labelEn, labelVi }`; an empty list is stored as NULL and stored JSON that fails the schema reads as NULL. `HeroBlock` renders a `<dl class="hero-stats">` after the CTAs from `settings.heroStats`, else the first 3 non-zero profile stats; the demo seed resets `heroStats` to NULL, so the home hero now repeats the "By the numbers" StatBand values until Parker sets hero stats (decide whether to drop the home StatBand). The admin "Hero stats" fieldset (`HeroStatsFieldset`) validates on save; "Clear (use profile stats)" saves the whole form with `heroStats: null`. `public-home` visual baselines were re-rendered.
@@ -105,7 +105,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
-- 2026-11-01: P5-2 T23b: add the radius, spacing, and motion scales with reduced-motion overrides; refresh screenshot and computed-style baselines.
+- 2026-11-01: P5-2 T23b: add the radius, spacing, and motion scales with reduced-motion overrides; refresh screenshot and computed-style baselines and stabilize skill order in visual capture.
 - 2026-11-01: P5-1 T23a: set public Sans type scale, body/display line heights, and paragraph measure; guard paragraph font and line length in E2E.
 - 2026-11-01: Vercel Git deployments disabled for all branches except `main` via `git.deploymentEnabled`, so PRs no longer get a Vercel check.
 - 2026-11-01: Vercel builds only `main` (and `hotfix/*` behind a toggle, currently off); other branches skip via `ignoreCommand`.
