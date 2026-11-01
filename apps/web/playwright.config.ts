@@ -58,7 +58,10 @@ export default defineConfig({
     'admin-tables.spec.ts',
     'admin-back-link.spec.ts',
     'url-view-state.spec.ts',
+    'admin-table-styles.spec.ts',
   ],
+  // Snapshots hold computed styles, not pixels, so one file serves every platform.
+  snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}{ext}',
   fullyParallel: false,
   workers: 1,
   forbidOnly: Boolean(process.env.CI),

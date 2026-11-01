@@ -327,15 +327,6 @@
   background: var(--card);
   overflow: hidden;
 }
-.admin [data-slot='table-head'] {
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-size: 11px;
-  background: var(--muted);
-}
-.admin [data-slot='table-cell'] {
-  padding-block: 12px;
-}
 .login-art {
   display: flex;
   flex-direction: column;
@@ -567,9 +558,6 @@
   outline: 2px solid var(--ring);
   outline-offset: -2px;
 }
-[data-slot='admin-table'] [data-slot='table-cell'][data-linked] {
-  padding: 0;
-}
 .admin-table-link {
   display: block;
   padding: 12px;
@@ -585,9 +573,6 @@
 }
 .admin-table-sort:hover {
   color: var(--foreground);
-}
-[data-slot='admin-table'] [data-slot='table-cell'].admin-table-status {
-  padding: 32px 16px;
 }
 .notes-reader {
   display: grid;

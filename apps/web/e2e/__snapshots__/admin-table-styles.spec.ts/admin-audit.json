@@ -1,0 +1,35 @@
+{
+  "head": {
+    "font-size": "11px",
+    "line-height": "15.4px",
+    "font-weight": "500",
+    "letter-spacing": "0.66px",
+    "text-transform": "uppercase",
+    "color": "rgb(90, 107, 100)",
+    "background-color": "rgb(232, 240, 236)",
+    "padding-top": "0px",
+    "padding-right": "12px",
+    "padding-bottom": "0px",
+    "padding-left": "12px",
+    "border-bottom-color": "rgb(213, 224, 219)",
+    "border-radius": "0px",
+    "height": "40px"
+  },
+  "cell": {
+    "font-size": "14px",
+    "line-height": "21px",
+    "font-weight": "400",
+    "letter-spacing": "normal",
+    "text-transform": "none",
+    "color": "rgb(20, 32, 28)",
+    "background-color": "rgba(0, 0, 0, 0)",
+    "padding-top": "12px",
+    "padding-right": "12px",
+    "padding-bottom": "12px",
+    "padding-left": "12px",
+    "border-bottom-color": "rgb(213, 224, 219)",
+    "border-radius": "0px"
+  },
+  "linkedCell": null,
+  "input": null
+}
