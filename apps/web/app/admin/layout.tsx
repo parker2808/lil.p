@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { Providers } from '@/modules/core/components/Providers/Providers';
+import { AdminProviders } from '@/modules/core/components/Providers/AdminProviders';
 import { fontClassName } from '@/modules/core/utils/fonts.util';
 import { requestNonce } from '@/modules/core/utils/request-nonce.util';
 
@@ -21,9 +21,9 @@ export default async function AdminRootLayout({ children }: { children: ReactNod
   return (
     <html lang="en" className={fontClassName} suppressHydrationWarning>
       <body className="admin bg-background text-ui text-foreground min-h-dvh font-sans antialiased">
-        <Providers locale="en" messages={en} nonce={nonce}>
+        <AdminProviders messages={en} nonce={nonce}>
           {children}
-        </Providers>
+        </AdminProviders>
       </body>
     </html>
   );

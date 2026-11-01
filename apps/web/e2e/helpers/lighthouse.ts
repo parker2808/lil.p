@@ -5,6 +5,7 @@ import lighthouse from 'lighthouse';
 export type LighthouseScores = {
   performance: number;
   accessibility: number;
+  totalBlockingTime: number;
 };
 
 export async function runMobileLighthouse(url: string): Promise<LighthouseScores> {
@@ -28,9 +29,18 @@ export async function runMobileLighthouse(url: string): Promise<LighthouseScores
       onlyCategories: ['performance', 'accessibility'],
     });
     const categories = result?.lhr.categories;
+    if (new URL(url).pathname === '/vi') {
+      const details = result?.lhr.audits['long-tasks']?.details;
+      console.log('Lighthouse /vi TBT', result?.lhr.audits['total-blocking-time']?.numericValue);
+      console.log(
+        'Lighthouse /vi long tasks',
+        JSON.stringify(details?.type === 'table' ? details.items : []),
+      );
+    }
     return {
       performance: Math.round((categories?.performance?.score ?? 0) * 100),
       accessibility: Math.round((categories?.accessibility?.score ?? 0) * 100),
+      totalBlockingTime: result?.lhr.audits['total-blocking-time']?.numericValue ?? Infinity,
     };
   } finally {
     await chrome.kill();

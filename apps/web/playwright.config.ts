@@ -51,6 +51,7 @@ export default defineConfig({
     'admin-scroll.spec.ts',
     'ux-404.spec.ts',
     'content-guard.spec.ts',
+    'hero-shader.spec.ts',
   ],
   fullyParallel: false,
   workers: 1,

@@ -17,6 +17,7 @@ import { Kbd } from '@portfolio/ui/components/ui/kbd';
 import { useTheme } from 'next-themes';
 
 import { useNotesSearch } from '@/modules/notes/hooks/use-notes-search.hook';
+import { QueryProvider } from '../Providers/QueryProvider';
 
 const META = '⌘';
 const KEY = 'K';
@@ -24,6 +25,14 @@ const EN = 'EN';
 const VI = 'VI';
 
 export function CommandPalette({ nav }: { nav: PublicNavItem[] }) {
+  return (
+    <QueryProvider>
+      <CommandPaletteContent nav={nav} />
+    </QueryProvider>
+  );
+}
+
+function CommandPaletteContent({ nav }: { nav: PublicNavItem[] }) {
   const t = useTranslations('core');
   const notes = useTranslations('notes');
   const locale = useLocale();

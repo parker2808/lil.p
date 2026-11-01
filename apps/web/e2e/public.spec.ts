@@ -28,6 +28,24 @@ test.describe('public smoke', () => {
     await expect(page).toHaveURL(/\/en\/projects\/?$/);
   });
 
+  test('loads the command palette on desktop only', async ({ browser, page }) => {
+    await page.goto('/en');
+    await page.getByRole('button', { name: /Search and jump/ }).click();
+    await expect(page.getByRole('dialog', { name: 'Search and jump' })).toBeVisible();
+
+    const mobile = await browser.newPage({
+      viewport: { width: 390, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+    });
+    try {
+      await mobile.goto('/en');
+      await expect(mobile.locator('button[aria-label*="Search and jump"]')).toHaveCount(0);
+    } finally {
+      await mobile.close();
+    }
+  });
+
   test('opens a published project and a published note', async ({ page }) => {
     await page.goto('/en/projects/particula');
     await expect(page.getByRole('heading', { name: 'Particula v2' })).toBeVisible();
