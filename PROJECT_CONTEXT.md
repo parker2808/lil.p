@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P1-18 T11b moves the public button size/hover and admin dashboard card/header overrides into explicit UI variants. Badge and tab styles already live in their primitives; the redesign stylesheet now has no `!important` declarations.
 - P1-17 T11a moves the admin table overrides out of `redesign.css` into cva variants on the `ui/table` primitives: `TableHead surface` (`plain` default, `muted` = uppercase 11px muted header) and `TableCell density` (`default`, `comfortable` = 12px block padding, `flush` = no padding for link cells). `AdminTable` and `DataTable` pass them explicitly; the AdminTable status row uses `px-4 py-8` classes. `redesign.css` had no `[data-slot=input]` rules, so `Input` is unchanged. `e2e/admin-table-styles.spec.ts` snapshots computed table and input styles on projects, users, audit and tags (JSON under `e2e/__snapshots__/`, platform-free `snapshotPathTemplate`); approve an intended change with `--update-snapshots`.
 - P1-16 T5b keeps the projects and posts editor tabs (`?tab=`) and the public `/projects` grid/index switch (`?view=`) in the URL through `useListParams`. `setParams(patch, { history: 'push' })` adds a history entry with `window.history.pushState` (no server round trip; Next syncs `useSearchParams`), so Back restores the previous tab; list filters still use `router.replace`. The public `ProjectsView` imports the hook from `admin-core` (it has no admin dependencies). Out of scope: the site settings tabs keep their own `router.replace` URL tab, and the page builder `BlockInspector` tabs stay local state.
 - P1-15 T5a adds `PageHeader` in `packages/ui` (h1 title, actions, optional back link through `linkComponent`). The back link is `sm:hidden`, the mobile counterpart of the topbar breadcrumb (`hidden sm:block`, unchanged). `EditorShell` renders it and takes `back`; the projects, posts, experience and pages editors and the inbox detail pass `useAdminBack(navKey)` (href and label from `ADMIN_NAV`). The inbox detail's bottom "Back to inbox" link is now `sm` and up only. Out of scope: loading and error states (including `[id]/loading.tsx` skeletons) show no back link; index pages and the site profile editor do not use `PageHeader` yet.
@@ -83,6 +84,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P1-18 T11b: use explicit public button and admin card variants; remove six `!important` declarations from `redesign.css`.
 - 2026-11-01: P1-17 T11a: move admin table header and cell CSS overrides to `TableHead surface` and `TableCell density` variants; computed styles unchanged.
 - 2026-11-01: P1-16 T5b: keep editor tabs and the `/projects` grid/index view in the URL; reload keeps them and Back restores the previous one.
 - 2026-11-01: P1-15 T5a: add `PageHeader` with a mobile back link to the parent list on every admin detail and new route.

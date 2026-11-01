@@ -30,7 +30,7 @@ export async function CvDownloadBlock({
       lang={block.lang}
     >
       <BlockHeading heading={props.heading} />
-      <Button asChild>
+      <Button surface="public" asChild>
         <a href={resumeUrl}>{t('downloadCv')}</a>
       </Button>
     </Reveal>

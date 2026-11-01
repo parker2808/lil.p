@@ -33,8 +33,8 @@ export function ActivityCardView({ items }: { items: AdminAuditLog[] }) {
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between gap-3 pb-3">
+    <Card surface="admin">
+      <CardHeader surface="admin" className="flex flex-row items-center justify-between gap-3 pb-3">
         <CardTitle className="text-ui-title">{t('latest')}</CardTitle>
         <Link href="/admin/audit" className="text-ui">
           {t('viewAll')}

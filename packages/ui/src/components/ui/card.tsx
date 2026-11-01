@@ -1,21 +1,34 @@
 import { cn } from '@portfolio/ui/lib/utils';
+import { cva, type VariantProps } from 'class-variance-authority';
 import type { ComponentProps } from 'react';
 
-export function Card({ className, ...props }: ComponentProps<'div'>) {
-  return (
-    <div
-      data-slot="card"
-      className={cn('bg-card text-card-foreground rounded-lg border', className)}
-      {...props}
-    />
-  );
+export const cardVariants = cva('bg-card text-card-foreground rounded-lg border', {
+  variants: { surface: { default: '', admin: 'rounded-[14px] shadow-none' } },
+  defaultVariants: { surface: 'default' },
+});
+
+export function Card({
+  className,
+  surface,
+  ...props
+}: ComponentProps<'div'> & VariantProps<typeof cardVariants>) {
+  return <div data-slot="card" className={cn(cardVariants({ surface }), className)} {...props} />;
 }
 
-export function CardHeader({ className, ...props }: ComponentProps<'div'>) {
+export const cardHeaderVariants = cva('flex flex-col gap-1.5 p-6', {
+  variants: { surface: { default: '', admin: 'border-border border-b py-3.5' } },
+  defaultVariants: { surface: 'default' },
+});
+
+export function CardHeader({
+  className,
+  surface,
+  ...props
+}: ComponentProps<'div'> & VariantProps<typeof cardHeaderVariants>) {
   return (
     <div
       data-slot="card-header"
-      className={cn('flex flex-col gap-1.5 p-6', className)}
+      className={cn(cardHeaderVariants({ surface }), className)}
       {...props}
     />
   );

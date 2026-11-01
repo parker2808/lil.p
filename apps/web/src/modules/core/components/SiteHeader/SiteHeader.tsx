@@ -92,7 +92,7 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
         <div className="ml-auto md:hidden">
           <Sheet open={menu.open} onOpenChange={menu.onOpenChange}>
             <SheetTrigger asChild>
-              <Button variant="outline" size="sm" aria-label={t('menu')}>
+              <Button surface="public" variant="outline" size="sm" aria-label={t('menu')}>
                 <Menu className="size-4" aria-hidden />
               </Button>
             </SheetTrigger>

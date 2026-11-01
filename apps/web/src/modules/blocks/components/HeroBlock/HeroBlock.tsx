@@ -59,14 +59,17 @@ export async function HeroBlock({ block, context }: { block: PublicBlock; contex
         ) : null}
         <div className="flex flex-wrap gap-3">
           {props.primaryCta?.href && props.primaryCta.label ? (
-            <Link href={props.primaryCta.href} className={cn(buttonVariants({ size: 'lg' }))}>
+            <Link
+              href={props.primaryCta.href}
+              className={cn(buttonVariants({ surface: 'public', size: 'lg' }))}
+            >
               {props.primaryCta.label}
             </Link>
           ) : null}
           {props.secondaryCta?.href && props.secondaryCta.label ? (
             <Link
               href={props.secondaryCta.href}
-              className={cn(buttonVariants({ size: 'lg', variant: 'outline' }))}
+              className={cn(buttonVariants({ surface: 'public', size: 'lg', variant: 'outline' }))}
             >
               {props.secondaryCta.label}
             </Link>

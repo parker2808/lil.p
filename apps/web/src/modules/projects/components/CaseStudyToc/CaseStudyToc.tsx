@@ -36,7 +36,7 @@ export function CaseStudyToc({
     ) : null;
 
   const live = liveUrl ? (
-    <Button variant="outline" size="sm" className="mt-6" asChild>
+    <Button surface="public" variant="outline" size="sm" className="mt-6" asChild>
       <a href={liveUrl} rel="noreferrer">
         {labels.live}
       </a>

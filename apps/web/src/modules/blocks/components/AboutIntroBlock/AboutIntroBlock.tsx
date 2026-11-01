@@ -59,7 +59,7 @@ export async function AboutIntroBlock({
           <Badge variant="primary">{site.settings.availabilityNote}</Badge>
         ) : null}
         {resumeUrl ? (
-          <Button asChild variant="outline">
+          <Button surface="public" asChild variant="outline">
             <a href={resumeUrl}>{t('downloadCv')}</a>
           </Button>
         ) : null}
