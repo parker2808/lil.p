@@ -4,13 +4,15 @@ import type { AdminPageListItem } from '@portfolio/contracts';
 import { AdminTable, type AdminTableColumn } from '@portfolio/ui/components/AdminTable/AdminTable';
 import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
 import { Badge } from '@portfolio/ui/components/ui/badge';
-import { useTranslations } from 'next-intl';
+import { formatDateTime } from '@portfolio/ui/components/AuditRow/relative-time.util';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 import { useAdminPages } from '../hooks/use-admin-page.hook';
 
 export function AdminPagesIndex() {
   const t = useTranslations('admin.pages');
+  const locale = useLocale();
   const pages = useAdminPages();
 
   const columns: AdminTableColumn<AdminPageListItem>[] = [
@@ -39,7 +41,7 @@ export function AdminPagesIndex() {
       header: t('updated'),
       cell: (page) => (
         <span className="text-ui-meta text-muted-foreground tabular-nums">
-          {page.updatedAt.slice(0, 10)}
+          {formatDateTime(page.updatedAt, locale)}
         </span>
       ),
     },

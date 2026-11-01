@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatDateTime, formatRelativeTime } from './relative-time.util';
+import { formatDateTime, formatMonthYear, formatRelativeTime } from './relative-time.util';
 
 describe('formatRelativeTime', () => {
   it('uses minutes for recent timestamps', () => {
@@ -23,5 +23,10 @@ describe('formatRelativeTime', () => {
     const iso = '2026-10-26T12:05:00.000Z';
     expect(formatDateTime(iso, 'en')).toMatch(/Oct 26, 2026/);
     expect(formatDateTime(iso, 'vi')).toMatch(/26 thg 10, 2026/);
+  });
+
+  it('formats an experience month without an ISO date or timezone shift', () => {
+    expect(formatMonthYear('2026-07-01T00:00:00.000Z', 'vi')).toBe('07/2026');
+    expect(formatMonthYear('2026-07-01T00:00:00.000Z', 'en')).toBe('07/2026');
   });
 });
