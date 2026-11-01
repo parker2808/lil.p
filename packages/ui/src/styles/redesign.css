@@ -839,8 +839,9 @@ html:root {
   line-height: var(--text-eyebrow--line-height);
   letter-spacing: var(--text-eyebrow--letter-spacing);
 }
-/* Clears the 64px sticky site header when a TOC link jumps to a heading. */
-.case-study-body :is(h2, h3)[id] {
+/* Clears the 64px sticky site header when an in-page link jumps to a heading or block. */
+.case-study-body :is(h2, h3)[id],
+.public-site .public-block[id] {
   scroll-margin-top: calc(64px + var(--space-6));
 }
 .case-study-toc-sheet {
