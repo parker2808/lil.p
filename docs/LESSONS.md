@@ -19,3 +19,4 @@
 - 2026-11-01: Embedded Tiptap node views need their own control names; the code block language select can be present only in seeded editor content.
 - 2026-11-01: A spec placed the Toaster in the shared `Providers`, but P0-5 had moved it to `AdminProviders` to keep it off public mobile pages; check later perf moves before following an older spec file location.
 - 2026-11-01: The editor save status was derived from an in-session save timestamp, so it was hidden on load and showed a hardcoded "1s ago"; derive status text from persisted data (`updatedAt`).
+- 2026-11-01: `packages/ui` has no `next` dependency, so shared components that must render Next links take a `linkComponent` prop (default `'a'`) and the web app passes `next/link`; a horizontal `overflow` wrapper also becomes the sticky-header scroll container, so give it its own max-height.

@@ -544,6 +544,47 @@
 [data-slot='data-table'][data-fetching] tbody {
   opacity: 0.65;
 }
+.admin-table-viewport {
+  max-height: min(70vh, 48rem);
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--card);
+}
+[data-slot='admin-table'] tbody tr[data-href] {
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}
+[data-slot='admin-table'] tbody tr[data-href]:hover {
+  background: var(--muted);
+}
+[data-slot='admin-table'] tbody tr:has(.admin-table-link:focus-visible) {
+  background: var(--muted);
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+[data-slot='admin-table'] [data-slot='table-cell'][data-linked] {
+  padding: 0;
+}
+.admin-table-link {
+  display: block;
+  padding: 12px;
+  color: inherit;
+  outline: none;
+}
+.admin-table-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-transform: inherit;
+  letter-spacing: inherit;
+}
+.admin-table-sort:hover {
+  color: var(--foreground);
+}
+[data-slot='admin-table'] [data-slot='table-cell'].admin-table-status {
+  padding: 32px 16px;
+}
 .notes-reader {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
