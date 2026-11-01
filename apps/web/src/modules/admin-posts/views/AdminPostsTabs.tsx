@@ -1,6 +1,6 @@
 'use client';
 
-import { Tabs, TabsList, TabsTrigger } from '@portfolio/ui/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@portfolio/ui/components/ui/tabs';
 import { useTranslations } from 'next-intl';
 import { usePathname, useSearchParams } from 'next/navigation';
 
@@ -27,8 +27,10 @@ export function AdminPostsTabs() {
           <TabsTrigger value="posts">{t('posts')}</TabsTrigger>
           <TabsTrigger value="tags">{t('tags')}</TabsTrigger>
         </TabsList>
+        <TabsContent value={active}>
+          {active === 'tags' ? <AdminTagsIndex /> : <AdminPostsIndex />}
+        </TabsContent>
       </Tabs>
-      {active === 'tags' ? <AdminTagsIndex /> : <AdminPostsIndex />}
     </div>
   );
 }
