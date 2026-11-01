@@ -66,6 +66,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: Weekly Graphify refresh of `graphify-out/GRAPH_REPORT.md` (code-only, no model calls).
 - 2026-11-01: Big docs split into short indexes + verbatim pieces in `docs/archive/` and `docs/design/archive/`; `pnpm check:all` prints only failing checks.
 - 2026-11-01: Token savings: `.cursorignore` for generated, binary and duplicate files; AGENTS.md small tasks skip Graphify and avoid reading large files.
 - 2026-11-01: Trimmed this changelog to the latest 5 entries; full history moved to `docs/CHANGELOG_ARCHIVE.md`.
