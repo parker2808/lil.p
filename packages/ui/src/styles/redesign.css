@@ -244,6 +244,60 @@ html:root {
 .site-footer {
   background: var(--card);
 }
+.footer-grid {
+  display: grid;
+  gap: var(--space-8);
+  padding-block: var(--space-12) var(--space-8);
+}
+@media (min-width: 768px) {
+  .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: var(--space-12);
+  }
+}
+.footer-cta {
+  display: grid;
+  justify-items: start;
+  align-content: start;
+  gap: var(--space-4);
+}
+.footer-cta-title {
+  font: 700 var(--text-heading) / 1.1 var(--font-heading);
+  letter-spacing: -0.02em;
+}
+.footer-column {
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+}
+.footer-column ul {
+  display: grid;
+  gap: var(--space-1);
+}
+.footer-heading {
+  font: 500 0.75rem / 1.4 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+.footer-hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-6);
+  padding-block: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+.footer-bottom > :last-child {
+  margin-left: auto;
+}
 .site-footer a,
 .public-site .tap-breadcrumb {
   display: inline-flex;

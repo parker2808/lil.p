@@ -33,8 +33,9 @@ export async function SiteShell({ locale, children }: { locale: Locale; children
       </main>
       <SiteFooter
         name={site.profile.displayName}
-        nav={site.nav.footer}
+        nav={site.nav}
         social={site.socialLinks}
+        updatedAt={new Date()}
         buildSha={process.env.NEXT_PUBLIC_BUILD_SHA}
       />
     </div>

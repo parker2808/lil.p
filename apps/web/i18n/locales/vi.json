@@ -18,6 +18,15 @@
     "switchLocale": "Xem bằng tiếng Anh",
     "loading": "Đang tải"
   },
+  "footer": {
+    "ctaTitle": "Cùng làm việc nhé?",
+    "ctaAction": "Liên hệ với tôi",
+    "sitemap": "Sơ đồ trang",
+    "social": "Kết nối",
+    "searchHint": "Nhấn <kbd>⌘K</kbd> để tìm và chuyển trang",
+    "lastUpdated": "Cập nhật lần cuối <time>{date}</time>",
+    "locale": "Đổi ngôn ngữ"
+  },
   "draft": {
     "banner": "Bạn đang xem bản nháp. Khách vẫn thấy bản đã xuất bản.",
     "exit": "Thoát xem trước",
