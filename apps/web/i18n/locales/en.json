@@ -394,6 +394,8 @@
       "help": "Shortcuts",
       "helpTitle": "Keyboard shortcuts",
       "cancel": "Cancel",
+      "select": "Select",
+      "selectAll": "Select all rows",
       "shortcuts": {
         "move": "Move the active row",
         "select": "Select the active row",

@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P1-12 T6b moves the projects and posts lists to `AdminTable` through the web `AdminListTable` wrapper (`next/link` rows, row selection with confirmed archive, prev/next pagination). Dropped with the old `DataTable` there: j/k/x/e keyboard shortcuts and help dialog, column visibility, density, mobile cards, the fetching bar and the separate Edit button (the row link replaces it). Sorting is offered only on columns the API accepts (projects `updatedAt`; posts `publishedAt`, `updatedAt`).
 - P1-11 T6a adds `AdminTable` in `packages/ui` (columns, `rowHref` rows as real links via `linkComponent`, 300ms debounced labelled search, sticky header in its own scroll viewport, hover, sort, empty/loading/error slots). No admin index uses it yet; adopting it (passing `next/link`) is left to later T6 tasks.
 - P1-10 T7b: editor headers show "Saved HH:mm" from the record's `updatedAt` on load (`useSaveStatus`), keep it while edits are pending, then saving/offline/conflict. Out of scope: `useAutosave` keeps its first `updatedAt`, so the pages editor (no block selected at mount) shows no status and sends a stale concurrency token for selected blocks until a save.
 - P1-9 T7a adds `ConfirmDialog` and `toastUndo(msg, onUndo)` (5s); admin toasts sit bottom-right for 4s in `AdminProviders` (kept off public pages per P0-5). A unit guard fails if an admin delete/archive mutation skips ConfirmDialog or toastUndo.
@@ -77,6 +78,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P1-12 T6b: migrate the admin projects and posts lists to `AdminTable` with link rows and a sticky header.
 - 2026-11-01: P1-11 T6a: add the shared `AdminTable` core with link rows, debounced search, sort and state slots.
 - 2026-11-01: P1-10 T7b: always show the editor save status with the last saved time from page load.
 - 2026-11-01: P1-9 T7a: add ConfirmDialog and the undo toast preset, and route admin delete/archive actions through them.
