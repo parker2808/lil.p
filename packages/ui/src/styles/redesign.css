@@ -633,6 +633,12 @@
 .projects-filters {
   min-height: 72px;
 }
+.public-site .public-block:has(+ .public-block > .projects-filters) {
+  padding-bottom: 0;
+}
+.public-site .public-block:has(> .projects-filters) {
+  padding-top: 0;
+}
 @media (min-width: 768px) {
   .projects-filters {
     min-height: 34px;
