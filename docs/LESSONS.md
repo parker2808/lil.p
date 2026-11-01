@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-02: A Radix Dialog with no `DialogTrigger` focuses nothing on close (its default refocuses the trigger ref), so a palette opened from several controls stores `document.activeElement` on open and refocuses it in `onCloseAutoFocus`; `IconButton` also brings Radix Tooltip and the popper, which the public layout bundle avoids.
 - 2026-11-01: A second `LocaleSwitch` (footer) duplicates the header's "Language" nav landmark, which `ux-404.spec.ts` fails because it asserts zero axe violations of any impact; give the copy its own label and scope page-wide "VI"/"EN" link selectors to a landmark ("Việc" also substring-matches "VI").
 - 2026-11-01: `portfolio-data.json` and `pagesData` both feed the frozen `20261027150000_portfolio_content` migration and a spec compares the regenerated SQL, so owner copy changes go in the `owner-copy.data.ts` overlay that only `seedOwner` applies.
 - 2026-11-01: The shared test MySQL uses `caching_sha2_password` and its auth cache is flushed when other worktrees run `FLUSH PRIVILEGES`, so the API pool fails with code 45028; run one TCP `mysql -h127.0.0.1` login as `app` inside the container right before Playwright.
