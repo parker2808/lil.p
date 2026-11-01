@@ -72,6 +72,7 @@ export default defineConfig({
     'admin-detail-error.spec.ts',
     'navigation-progress.spec.ts',
     'split-js.spec.ts',
+    'visual.spec.ts',
   ],
   // Snapshots hold computed styles, not pixels, so one file serves every platform.
   snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}{ext}',
@@ -80,7 +81,14 @@ export default defineConfig({
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.GITHUB_ACTIONS ? 1 : 0,
   timeout: 60_000,
-  expect: { timeout: 15_000 },
+  expect: {
+    timeout: 15_000,
+    // Pixel baselines come from Linux Chromium only (see `e2e/visual-update.sh`).
+    toHaveScreenshot: {
+      pathTemplate: '{testDir}/__screenshots__/{testFileName}/{arg}{ext}',
+      maxDiffPixelRatio: 0.01,
+    },
+  },
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
   globalSetup: './e2e/global-setup.ts',
   use: {
