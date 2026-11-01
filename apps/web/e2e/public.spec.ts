@@ -10,7 +10,7 @@ test.describe('public smoke', () => {
     expect(body.nav.header.map((item) => item.label)).toContain('Work');
     await expect(page.getByRole('link', { name: 'Work' }).first()).toBeVisible();
 
-    await page.getByRole('link', { name: 'VI', exact: true }).click();
+    await page.getByRole('banner').getByRole('link', { name: 'VI', exact: true }).click();
     await expect(page).toHaveURL(/\/vi\/?$/);
     await expect(page.getByRole('heading', { name: /không làm chúng gãy/i })).toBeVisible();
   });

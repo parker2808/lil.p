@@ -48,6 +48,8 @@ export function ProjectCardFactsTab({
     slug: values.slug || 'preview',
     title: locale === 'en' ? values.titleEn : values.titleVi || values.titleEn,
     tagline: locale === 'en' ? values.taglineEn : values.taglineVi || values.taglineEn,
+    role: locale === 'en' ? values.roleEn : values.roleVi || values.roleEn,
+    result: locale === 'en' ? values.outcomeEn : values.outcomeVi || values.outcomeEn,
     client: values.client,
     isFeatured: Boolean(values.isFeatured),
     isConfidential: Boolean(values.isConfidential),

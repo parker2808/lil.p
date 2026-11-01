@@ -9,7 +9,7 @@ const meta = {
   args: {
     items: experienceFixtures,
     pageLocale: 'en',
-    labels: { now: 'now', highlights: 'Highlights', fallback: 'EN' },
+    labels: { now: 'now', fallback: 'EN' },
   },
 } satisfies Meta<typeof Timeline>;
 
