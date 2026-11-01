@@ -4,7 +4,7 @@ import type { AdminAuditLog } from '@portfolio/contracts';
 import { ActivityFeed } from '@portfolio/ui/components/ActivityFeed/ActivityFeed';
 import { AuditRow } from '@portfolio/ui/components/AuditRow/AuditRow';
 import { Card, CardContent, CardHeader, CardTitle } from '@portfolio/ui/components/ui/card';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 import { useAdminAudit } from '@/modules/admin-insights/hooks/use-admin-audit.hook';
@@ -20,6 +20,7 @@ export function ActivityCard() {
 
 export function ActivityCardView({ items }: { items: AdminAuditLog[] }) {
   const t = useTranslations('admin.audit');
+  const locale = useLocale();
   const labels = {
     actions: {
       CREATE: t('actions.CREATE'),
@@ -47,7 +48,7 @@ export function ActivityCardView({ items }: { items: AdminAuditLog[] }) {
           <ActivityFeed empty={t('empty')}>
             {items.map((item) => (
               <li key={item.id}>
-                <AuditRow item={item} labels={labels} />
+                <AuditRow item={item} labels={labels} locale={locale} />
               </li>
             ))}
           </ActivityFeed>

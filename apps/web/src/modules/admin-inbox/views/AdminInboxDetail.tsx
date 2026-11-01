@@ -1,9 +1,10 @@
 'use client';
 
 import { PageHeader } from '@portfolio/ui/components/PageHeader/PageHeader';
+import { formatDateTime } from '@portfolio/ui/components/AuditRow/relative-time.util';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { Button } from '@portfolio/ui/components/ui/button';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 
 import { useAdminBack } from '@/modules/admin-core/hooks/use-admin-back.hook';
@@ -12,6 +13,7 @@ import { useAdminMessage, useInboxMutations } from '../hooks/use-admin-inbox.hoo
 
 export function AdminInboxDetail({ id }: { id: number }) {
   const t = useTranslations('admin.inbox');
+  const locale = useLocale();
   const back = useAdminBack('inbox');
   const { data, isError, isLoading, refetch } = useAdminMessage(id);
   const mutations = useInboxMutations();
@@ -40,7 +42,7 @@ export function AdminInboxDetail({ id }: { id: number }) {
         actions={<Badge>{t(`status.${data.status}`)}</Badge>}
       />
       <p className="text-ui-meta text-muted-foreground">
-        {data.topic?.labelEn ?? t('noTopic')} · {new Date(data.createdAt).toLocaleString()}
+        {data.topic?.labelEn ?? t('noTopic')} · {formatDateTime(data.createdAt, locale)}
       </p>
       <a href={`mailto:${data.email}`} className="text-ui">
         {t('reply')}

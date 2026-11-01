@@ -18,3 +18,11 @@ export function formatRelativeTime(iso: string, now = Date.now(), locale = 'en')
   }
   return rtf.format(0, 'second');
 }
+
+export function formatDateTime(iso: string, locale = 'en'): string {
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'Asia/Ho_Chi_Minh',
+  }).format(new Date(iso));
+}

@@ -172,7 +172,10 @@
       "breadcrumb": "Breadcrumb",
       "back": "Back to {section}",
       "logout": "Log out",
-      "changePassword": "Change password"
+      "changePassword": "Change password",
+      "language": "Language",
+      "localeEn": "EN",
+      "localeVi": "VI"
     },
     "palette": {
       "open": "Jump to",

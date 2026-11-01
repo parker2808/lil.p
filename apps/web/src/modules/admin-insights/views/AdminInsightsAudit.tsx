@@ -9,11 +9,14 @@ import {
 } from '@portfolio/contracts';
 import { AdminTable, type AdminTableColumn } from '@portfolio/ui/components/AdminTable/AdminTable';
 import { AuditActionBadge } from '@portfolio/ui/components/AuditRow/AuditRow';
-import { formatRelativeTime } from '@portfolio/ui/components/AuditRow/relative-time.util';
+import {
+  formatDateTime,
+  formatRelativeTime,
+} from '@portfolio/ui/components/AuditRow/relative-time.util';
 import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
 
 import { apiClient } from '@/modules/core/services/api-client.service';
@@ -118,6 +121,7 @@ export function AuditTable({
   onRetry: () => void;
 }) {
   const t = useTranslations('admin.audit');
+  const locale = useLocale();
   const columns: AdminTableColumn<AdminAuditLog>[] = [
     {
       id: 'action',
@@ -133,9 +137,9 @@ export function AuditTable({
         <time
           className="text-muted-foreground whitespace-nowrap"
           dateTime={item.createdAt}
-          title={new Date(item.createdAt).toLocaleString()}
+          title={formatDateTime(item.createdAt, locale)}
         >
-          {formatRelativeTime(item.createdAt)}
+          {formatRelativeTime(item.createdAt, Date.now(), locale)}
         </time>
       ),
     },

@@ -2,7 +2,7 @@ import type { AdminAuditLog } from '@portfolio/contracts';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { cn } from '@portfolio/ui/lib/utils';
 
-import { formatRelativeTime } from './relative-time.util';
+import { formatDateTime, formatRelativeTime } from './relative-time.util';
 
 const ACTION_VARIANT: Record<
   AdminAuditLog['action'],
@@ -30,6 +30,7 @@ export function AuditRow({
   item,
   labels,
   now,
+  locale = 'en',
   className,
 }: {
   item: AdminAuditLog;
@@ -38,9 +39,10 @@ export function AuditRow({
     system: string;
   };
   now?: number;
+  locale?: string;
   className?: string;
 }) {
-  const absolute = new Date(item.createdAt).toLocaleString();
+  const absolute = formatDateTime(item.createdAt, locale);
   return (
     <div
       data-slot="audit-row"
@@ -54,7 +56,7 @@ export function AuditRow({
         dateTime={item.createdAt}
         title={absolute}
       >
-        {formatRelativeTime(item.createdAt, now)}
+        {formatRelativeTime(item.createdAt, now, locale)}
       </time>
     </div>
   );
