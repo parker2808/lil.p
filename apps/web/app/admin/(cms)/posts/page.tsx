@@ -1,7 +1,7 @@
 import { adminPostListPageSchema, adminPostListParamsSchema, qk } from '@portfolio/contracts';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
-import { AdminPostsIndex } from '@/modules/admin-posts/views/AdminPostsIndex';
+import { AdminPostsTabs } from '@/modules/admin-posts/views/AdminPostsTabs';
 import { apiServer } from '@/modules/core/services/api-server.service';
 import { getQueryClient } from '@/modules/core/utils/query-client.util';
 
@@ -46,7 +46,7 @@ export default async function AdminPostsPage({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <AdminPostsIndex />
+      <AdminPostsTabs />
     </HydrationBoundary>
   );
 }

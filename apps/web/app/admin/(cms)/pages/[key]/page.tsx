@@ -3,6 +3,7 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
+import { AdminAboutTabs } from '@/modules/admin-pages/views/AdminAboutTabs';
 import { AdminPagesEditor } from '@/modules/admin-pages/views/AdminPagesEditor';
 import { apiServer } from '@/modules/core/services/api-server.service';
 import { getQueryClient } from '@/modules/core/utils/query-client.util';
@@ -33,12 +34,18 @@ export default async function AdminPageEditorPage({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Suspense>
-        <AdminPagesEditor pageKey={parsed.data} />
+        {parsed.data === 'about' ? (
+          <AdminAboutTabs layout={<AdminPagesEditor pageKey={parsed.data} />} />
+        ) : (
+          <AdminPagesEditor pageKey={parsed.data} />
+        )}
       </Suspense>
     </HydrationBoundary>
   );
 }
 
-export function generateMetadata() {
-  return { title: 'Edit page' };
+export async function generateMetadata({ params }: { params: Promise<{ key: string }> }) {
+  const { key } = await params;
+  const name = key.charAt(0).toUpperCase() + key.slice(1);
+  return { title: `Edit ${name} page` };
 }

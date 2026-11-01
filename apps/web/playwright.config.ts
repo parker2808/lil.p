@@ -79,6 +79,7 @@ export default defineConfig({
     'footer.spec.ts',
     'search-palette.spec.ts',
     'visual.spec.ts',
+    'admin-ia.spec.ts',
   ],
   // Snapshots hold computed styles, not pixels, so one file serves every platform.
   snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}{ext}',
