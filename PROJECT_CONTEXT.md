@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P5-3 T26: the public mobile menu fills the viewport, marks the current 56px navigation row, and keeps language, theme, CV, and contact actions at the bottom.
+- P5-2 T23b: radius, spacing, and motion tokens are scoped through `redesign.css`; the public case cards and admin panels use the new radius scale, and both Linux Chromium screenshots and admin computed-style snapshots were updated.
 - P5-2 T23b: radius, spacing, and motion tokens are scoped through `redesign.css`; public case cards and admin panels use the new radius scale. Linux Chromium screenshots and admin computed-style snapshots were updated; the visual test sorts skill badges before capture because the demo seed assigns duplicate sort orders with nondeterministic IDs.
 - P5-1 T23a: public typography uses the six-step Sans scale and 65ch paragraph measure; Linux Chromium visual baselines were regenerated once for this change.
 - Vercel deploys: `git.deploymentEnabled` in `vercel.json` (`"**": false`, `"main": true`) stops Vercel from creating deployments or PR checks for any branch except `main`. `scripts/vercel-ignore-build.sh` (`ignoreCommand`) is a second guard. Hotfix deploys are paused from 2026-11-01 while the rate limit resets; to re-enable add `"hotfix/**": true` to `git.deploymentEnabled` and set `HOTFIX_DEPLOYS_ENABLED=1` in the script.
@@ -103,7 +105,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
-Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
+- 2026-11-01: P5-3 T26: full-screen public mobile menu with segmented language/theme controls and a 375px navigation e2e check.
+  Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
 - 2026-11-01: P5-2 T23b: add the radius, spacing, and motion scales with reduced-motion overrides; refresh screenshot and computed-style baselines and stabilize skill order in visual capture.
 - 2026-11-01: P5-1 T23a: set public Sans type scale, body/display line heights, and paragraph measure; guard paragraph font and line length in E2E.

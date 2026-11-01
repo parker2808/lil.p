@@ -23,7 +23,11 @@ export async function SiteShell({ locale, children }: { locale: Locale; children
       {draft.isEnabled ? <PreviewBridge /> : null}
       <DraftBanner />
       <LocaleSuggestBanner />
-      <SiteHeader name={site.profile.displayName} nav={site.nav.header} />
+      <SiteHeader
+        name={site.profile.displayName}
+        nav={site.nav.header}
+        resumeUrl={site.profile.resume?.url}
+      />
       <main id="content" tabIndex={-1} className="flex-1 outline-none">
         {children}
       </main>
