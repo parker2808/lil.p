@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-01: A static public page can keep versioned CMS previews by awaiting `searchParams` only while draft mode is enabled; browser filters should avoid that server read.
 - 2026-11-01: A route loading skeleton must preserve the page's header, filter, switch, and card geometry; a generic grid skeleton can shift the projects page when server data arrives.
 - 2026-11-01: Next app icon files in `app/` provide the icon link across separate public and admin root layouts; admin pages need their own metadata titles to override the root's generic default.
 - 2026-11-01: Admin editor copy already had complete Vietnamese keys with English placeholder values; translate the shared editor and block labels too, and format experience ranges with UTC month/year to avoid raw ISO dates and timezone shifts.

@@ -16,7 +16,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - DB: MySQL 8.4 (Docker) locally, TiDB Cloud Serverless in production.
 - Editor: Tiptap (core + free extensions only), Markdown storage, shadcn toolbar.
 - Hosting: Vercel (web, functions in `sin1` via root `vercel.json`), Render free (API), TiDB Cloud Serverless (DB), Cloudinary (images). cron-job.org pings `/api/health` every 10 min.
-- Rendering: public `/[locale]` pages static/ISR (1 h, shared `public` cache tag expired by admin saves); `/notes` + `/projects` index render per request on cached data; `/admin` dynamic. Public CSP has no nonce (`'unsafe-inline'` scripts); `/admin` and draft-mode requests get nonce + `'strict-dynamic'`.
+- Rendering: public `/[locale]` pages static/ISR (1 h, shared `public` cache tag expired by admin saves); `/notes` index renders per request on cached data, while `/projects` filters its ISR data in the browser; `/admin` is dynamic. Public CSP has no nonce (`'unsafe-inline'` scripts); `/admin` and draft-mode requests get nonce + `'strict-dynamic'`.
 
 ## 3. Design (confirmed)
 
@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P2-2: `/projects` is ISR with browser URL filters and the existing `projects` publish tag; confirm the second `/vi/projects` request is `x-vercel-cache: HIT` on the stacked PR preview deployment.
 - P2-1 T13a: `/projects` keeps the browser filters' mobile and desktop height reserved and uses a route loading skeleton shaped like the page header, filters, view switch, and cards; Lighthouse checks mobile `/vi/projects` CLS at 0.1 or less.
 - P1-23 T9 adds app and Apple icons, distinct admin route titles, and the existing home OG image to about/contact/notes/projects; metadata e2e checks cover public and admin routes.
 - P1-22 T8c translates Vietnamese admin editors, page blocks, about forms, profile, and site settings; experience ranges display locale-aware month/year, and admin page, post, user, and version timestamps display localized dates.
@@ -89,6 +90,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P2-2: make `/projects` ISR with client-side URL filters, preserving draft version previews and testing filter reloads.
 - 2026-11-01: P2-1 T13a: align `/projects` loading geometry with its server-rendered list and guard mobile CLS in Lighthouse.
 - 2026-11-01: P1-23 T9: add app icons, admin page titles, and a shared OG image for public index routes.
 - 2026-11-01: P1-22 T8c: translate admin editors, about forms, page blocks, profile, and site settings; localize remaining visible ISO dates.

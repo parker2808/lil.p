@@ -45,6 +45,22 @@ describe('POST /api/revalidate', () => {
     expect(revalidateTag).toHaveBeenCalledWith('post:a', { expire: 0 });
   });
 
+  it('expires the projects tag used by the static projects page', async () => {
+    vi.stubEnv('REVALIDATE_SECRET', 'expected-secret-value');
+    const response = await POST(
+      new Request('http://localhost/api/revalidate', {
+        method: 'POST',
+        headers: {
+          'x-revalidate-secret': 'expected-secret-value',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ tags: ['projects'] }),
+      }),
+    );
+    expect(response.status).toBe(200);
+    expect(revalidateTag).toHaveBeenCalledWith('projects', { expire: 0 });
+  });
+
   it('revalidates paths when they are provided', async () => {
     vi.stubEnv('REVALIDATE_SECRET', 'expected-secret-value');
     const response = await POST(
