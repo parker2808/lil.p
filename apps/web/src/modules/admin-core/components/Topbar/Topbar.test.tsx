@@ -56,7 +56,7 @@ describe('Topbar', () => {
   it('uses compact shared controls without height overrides', () => {
     renderTopbar();
 
-    expect(screen.getByRole('button', { name: 'Menu' })).toHaveClass('h-7');
+    expect(screen.getByRole('button', { name: /^Account/ })).toHaveClass('h-7');
     const language = screen.getByRole('combobox', { name: 'Language' });
     expect(language).toHaveClass('border-input', 'h-8', 'rounded-md');
   });

@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P6-2 T32: below `lg` the admin uses `AdminBottomBar` (Overview, Content, Inbox with unread badge, More sheet with the remaining groups) and a compact topbar (back link and title from `navItemFor`, editor save status portaled into the topbar slot, account menu with language items). The admin root layout sets `viewport-fit=cover` for the safe-area padding. The bar hides while `visualViewport` is at least 120px shorter than the window; this was checked with a stubbed `visualViewport`, not a real device keyboard. Still failing on the P6-1 base: axe `aria-valid-attr-value` on the Tags, Posts and About tab triggers, and `admin-back-link.spec.ts` still expects `/admin/experience` as the experience parent.
 - P6-1 T31: admin navigation now has five groups; About content uses URL tabs, Tags lives under Posts, and legacy section routes redirect. Existing e2e specs that assert the old `/admin/pages` index or experience editor URLs may need updating when the full E2E suite is next run.
 
 - Vercel deploys: `git.deploymentEnabled` in `vercel.json` (`"**": false`, `"main": true`) stops Vercel from creating deployments or PR checks for any branch except `main`. `scripts/vercel-ignore-build.sh` (`ignoreCommand`) is a second guard. Hotfix deploys are paused from 2026-11-01 while the rate limit resets; to re-enable add `"hotfix/**": true` to `git.deploymentEnabled` and set `HOTFIX_DEPLOYS_ENABLED=1` in the script.
@@ -103,6 +104,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-01: P6-2 T32: admin mobile bottom bar with More sheet, compact touch topbar with save status, and 390px E2E coverage.
 - 2026-11-01: P6-1 T31: five-group admin sidebar, URL-backed About and Posts tabs, and legacy route redirects; nav unit and redirect E2E coverage.
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).

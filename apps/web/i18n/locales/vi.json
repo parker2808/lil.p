@@ -143,6 +143,8 @@
       "dashboard": "Về bảng điều khiển"
     },
     "nav": {
+      "more": "Thêm",
+      "sections": "Các mục",
       "layout": "Bố cục",
       "groups": {
         "overview": "Tổng quan",
@@ -179,7 +181,7 @@
       "users": "Người dùng"
     },
     "shell": {
-      "menu": "Menu",
+      "account": "Tài khoản",
       "skip": "Đến nội dung",
       "toggleSidebar": "Thu gọn thanh bên",
       "expandSidebar": "Mở rộng thanh bên",
@@ -190,7 +192,8 @@
       "changePassword": "Đổi mật khẩu",
       "language": "Ngôn ngữ",
       "localeEn": "EN",
-      "localeVi": "VI"
+      "localeVi": "VI",
+      "switchLanguage": "Ngôn ngữ: {locale}"
     },
     "palette": {
       "open": "Chuyển đến",

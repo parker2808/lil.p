@@ -16,6 +16,14 @@ async function openMenu(page: Page): Promise<void> {
   await expect(dialog(page)).toBeVisible();
 }
 
+async function openAdminMore(page: Page): Promise<void> {
+  await page
+    .getByRole('navigation', { name: 'Sections' })
+    .getByRole('button', { name: 'More' })
+    .tap();
+  await expect(dialog(page)).toBeVisible();
+}
+
 async function expectBodyUnlocked(page: Page): Promise<void> {
   await expect
     .poll(
@@ -95,11 +103,11 @@ test.describe('public header menu', () => {
   });
 });
 
-test.describe('admin topbar menu', () => {
+test.describe('admin more sheet', () => {
   test('tapping each nav link closes the menu and unlocks the body', async ({ page }) => {
     test.setTimeout(300_000);
     await signIn(page);
-    await openMenu(page);
+    await openAdminMore(page);
     const hrefs = await page
       .locator('[data-slot="sheet-content"] a[href^="/admin"]')
       .evaluateAll((links) =>
@@ -111,7 +119,7 @@ test.describe('admin topbar menu', () => {
     await expect(dialog(page)).toHaveCount(0);
 
     for (const href of hrefs) {
-      await openMenu(page);
+      await openAdminMore(page);
       await page.locator(`[data-slot="sheet-content"] a[href="${href}"]`).tap();
 
       await expect(dialog(page)).toHaveCount(0);
@@ -123,7 +131,7 @@ test.describe('admin topbar menu', () => {
 
   test('Escape closes the menu', async ({ page }) => {
     await signIn(page);
-    await openMenu(page);
+    await openAdminMore(page);
     await page.keyboard.press('Escape');
     await expect(dialog(page)).toHaveCount(0);
     await expectBodyUnlocked(page);
