@@ -18,6 +18,15 @@
     "switchLocale": "View in Vietnamese",
     "loading": "Loading"
   },
+  "footer": {
+    "ctaTitle": "Let's work together?",
+    "ctaAction": "Get in touch",
+    "sitemap": "Sitemap",
+    "social": "Elsewhere",
+    "searchHint": "Press <kbd>⌘K</kbd> to search and jump",
+    "lastUpdated": "Last updated <time>{date}</time>",
+    "locale": "Switch language"
+  },
   "draft": {
     "banner": "You are previewing drafts. Visitors still see the published site.",
     "exit": "Exit preview",

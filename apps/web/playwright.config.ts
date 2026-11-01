@@ -76,6 +76,7 @@ export default defineConfig({
     'navigation-progress.spec.ts',
     'split-js.spec.ts',
     'hero-stats.spec.ts',
+    'footer.spec.ts',
     'visual.spec.ts',
   ],
   // Snapshots hold computed styles, not pixels, so one file serves every platform.

@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-01: A second `LocaleSwitch` (footer) duplicates the header's "Language" nav landmark, which `ux-404.spec.ts` fails because it asserts zero axe violations of any impact; give the copy its own label and scope page-wide "VI"/"EN" link selectors to a landmark ("Việc" also substring-matches "VI").
 - 2026-11-01: `portfolio-data.json` and `pagesData` both feed the frozen `20261027150000_portfolio_content` migration and a spec compares the regenerated SQL, so owner copy changes go in the `owner-copy.data.ts` overlay that only `seedOwner` applies.
 - 2026-11-01: The shared test MySQL uses `caching_sha2_password` and its auth cache is flushed when other worktrees run `FLUSH PRIVILEGES`, so the API pool fails with code 45028; run one TCP `mysql -h127.0.0.1` login as `app` inside the container right before Playwright.
 - 2026-11-01: The e2e demo seed has 4 case studies and the `baseline` seed has the real 10, but `apps/web/.next/cache/fetch-cache` survives `next build`, so delete it before pointing Playwright at a different database or the old API data is served.
