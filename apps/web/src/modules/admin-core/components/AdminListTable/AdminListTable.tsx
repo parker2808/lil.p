@@ -5,8 +5,15 @@ import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Checkbox } from '@portfolio/ui/components/ui/checkbox';
 import { ConfirmDialog } from '@portfolio/ui/components/ui/confirm-dialog';
+import {
+  SegmentedControl,
+  SegmentedControlItem,
+} from '@portfolio/ui/components/ui/segmented-control';
+import { ToggleGroup, ToggleGroupItem } from '@portfolio/ui/components/ui/toggle-group';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useId, useState } from 'react';
+
+import { useTableDensity } from '../../hooks/use-table-density.hook';
 
 export type AdminListTableLabels = {
   empty: string;
@@ -18,6 +25,10 @@ export type AdminListTableLabels = {
   select: string;
   selectAll: string;
   selected: string;
+  clearSelection: string;
+  density: string;
+  densityCompact: string;
+  densityComfortable: string;
   range: string;
   previous: string;
   next: string;
@@ -76,6 +87,8 @@ export function AdminListTable<TData>({
 }) {
   const [selectedIds, setSelectedIds] = useState<ReadonlySet<string>>(new Set());
   const [pendingDelete, setPendingDelete] = useState<TData[] | null>(null);
+  const [density, setDensity] = useTableDensity();
+  const selectedId = useId();
   const selectable = canWrite && Boolean(onDelete);
 
   const selectedRows = items.filter((row) => selectedIds.has(rowId(row)));
@@ -124,21 +137,48 @@ export function AdminListTable<TData>({
             .replace('{to}', String(to))
             .replace('{total}', String(total))}
         </p>
-        {selectable && selectedRows.length > 0 ? (
-          <div className="flex items-center gap-2">
-            <p className="text-ui">
-              {labels.selected.replace('{count}', String(selectedRows.length))}
-            </p>
-            <Button
-              type="button"
-              variant="destructive"
-              size="sm"
-              onClick={() => setPendingDelete(selectedRows)}
+        <div className="flex flex-wrap items-center gap-2">
+          {selectable && selectedRows.length > 0 ? (
+            <div role="group" aria-labelledby={selectedId} className="flex items-center gap-2">
+              <p id={selectedId} className="text-ui">
+                {labels.selected.replace('{count}', String(selectedRows.length))}
+              </p>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedIds(new Set())}
+              >
+                {labels.clearSelection}
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                size="sm"
+                onClick={() => setPendingDelete(selectedRows)}
+              >
+                {labels.archive}
+              </Button>
+            </div>
+          ) : null}
+          <SegmentedControl asChild variant="equal">
+            <ToggleGroup
+              type="single"
+              value={density}
+              aria-label={labels.density}
+              onValueChange={(next) => {
+                if (next === 'compact' || next === 'comfortable') setDensity(next);
+              }}
             >
-              {labels.archive}
-            </Button>
-          </div>
-        ) : null}
+              <SegmentedControlItem asChild>
+                <ToggleGroupItem value="comfortable">{labels.densityComfortable}</ToggleGroupItem>
+              </SegmentedControlItem>
+              <SegmentedControlItem asChild>
+                <ToggleGroupItem value="compact">{labels.densityCompact}</ToggleGroupItem>
+              </SegmentedControlItem>
+            </ToggleGroup>
+          </SegmentedControl>
+        </div>
       </div>
 
       <AdminTable
@@ -148,6 +188,8 @@ export function AdminListTable<TData>({
         rowId={rowId}
         rowHref={rowHref}
         linkComponent={Link}
+        density={density}
+        rowNavigation
         sort={sort}
         onSortChange={onSortChange}
         isLoading={isLoading}

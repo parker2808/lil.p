@@ -1,6 +1,7 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { TABLE_DENSITY_STORAGE_KEY } from '../../hooks/use-table-density.hook';
 import { AdminListTable, type AdminListTableLabels } from './AdminListTable';
 
 type Row = { id: number; title: string };
@@ -20,6 +21,10 @@ const labels: AdminListTableLabels = {
   select: 'Select',
   selectAll: 'Select all rows',
   selected: '{count} selected',
+  clearSelection: 'Clear selection',
+  density: 'Density',
+  densityCompact: 'Compact',
+  densityComfortable: 'Comfortable',
   range: '{from}–{to} of {total}',
   previous: 'Previous',
   next: 'Next',
@@ -60,7 +65,10 @@ function renderTable(overrides: { canWrite?: boolean } = {}) {
 }
 
 describe('AdminListTable', () => {
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanup();
+    window.localStorage.clear();
+  });
 
   it('renders each row as a real link with its href', () => {
     renderTable();
@@ -87,6 +95,32 @@ describe('AdminListTable', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Archive' }));
     fireEvent.click(screen.getByRole('button', { name: 'Archive' }));
     expect(onBulkDelete).toHaveBeenCalledWith(rows);
+  });
+
+  it('clears the selection from the bulk action bar', () => {
+    renderTable();
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Select all rows' }));
+    const bar = screen.getByRole('group', { name: '2 selected' });
+    fireEvent.click(within(bar).getByRole('button', { name: 'Clear selection' }));
+    expect(screen.queryByRole('group', { name: '2 selected' })).not.toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: 'Select Alpha' })).not.toBeChecked();
+  });
+
+  it('switches to compact density and stores the choice locally', () => {
+    renderTable();
+    const table = document.querySelector('[data-slot="admin-table"]');
+    expect(table).toHaveAttribute('data-density', 'comfortable');
+
+    fireEvent.click(screen.getByRole('radio', { name: 'Compact' }));
+    expect(table).toHaveAttribute('data-density', 'compact');
+    expect(window.localStorage.getItem(TABLE_DENSITY_STORAGE_KEY)).toBe('compact');
+
+    cleanup();
+    renderTable();
+    expect(document.querySelector('[data-slot="admin-table"]')).toHaveAttribute(
+      'data-density',
+      'compact',
+    );
   });
 
   it('hides selection for read-only viewers', () => {

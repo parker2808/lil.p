@@ -1,19 +1,8 @@
+import { hasModifier, ignoresShortcuts } from '@portfolio/ui/utils/shortcut.util';
+
 export type KeySequence = readonly [string, string];
 
 export const SEQUENCE_TIMEOUT_MS = 1000;
-
-export function ignoresShortcuts(target: EventTarget | null): boolean {
-  if (!(target instanceof HTMLElement)) {
-    return false;
-  }
-  return (
-    target.isContentEditable ||
-    target.tagName === 'INPUT' ||
-    target.tagName === 'TEXTAREA' ||
-    target.tagName === 'SELECT' ||
-    target.closest('[role="dialog"], [role="alertdialog"]') !== null
-  );
-}
 
 export function createSequenceListener<T extends string>(
   sequences: () => ReadonlyArray<{ id: T; keys: KeySequence }>,
@@ -23,13 +12,7 @@ export function createSequenceListener<T extends string>(
   let first: string | null = null;
   let firstAt = 0;
   return (event) => {
-    if (
-      event.metaKey ||
-      event.ctrlKey ||
-      event.altKey ||
-      event.repeat ||
-      ignoresShortcuts(event.target)
-    ) {
+    if (hasModifier(event) || event.repeat || ignoresShortcuts(event.target)) {
       return;
     }
     const key = event.key.toLowerCase();
