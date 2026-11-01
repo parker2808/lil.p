@@ -10,6 +10,8 @@ import { MeProvider } from '@/modules/admin-core/hooks/use-me.hook';
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ replace: vi.fn() }),
+  usePathname: () => '/admin/projects/1',
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 vi.mock('@/modules/admin-core/components/MarkdownField/MarkdownField', () => ({
