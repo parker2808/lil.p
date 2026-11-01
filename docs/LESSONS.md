@@ -1,6 +1,7 @@
 # Lessons
 
 - 2026-11-01: A Radix Sheet portal renders outside `.public-site` and `.site-header`, so mobile menu styles need an explicit sheet class instead of ancestor-scoped selectors.
+- 2026-11-01: Demo skills reuse sort orders across categories and are created concurrently, so an ID tie-break can reorder badges and change full-page visual height; sort badges in the visual fixture before capturing screenshots.
 - 2026-11-01: When stacked branches independently merge the same main commit, merge the updated base into the child and keep both task entries when resolving shared context files.
 - 2026-11-01: A radius token change updates computed-style JSON snapshots as well as pixel screenshots; run the focused admin style E2E specs after changing the shared `--radius` value.
 - 2026-11-01: Playwright's default snapshot update keeps screenshots when they remain within the configured 1% diff tolerance; use `--update-snapshots=all` to commit every intended Linux baseline refresh.
