@@ -165,7 +165,7 @@ Nothing else is run by hand on a normal deploy.
 
 ### Which branches Vercel deploys
 
-Only `main` (production) and `hotfix/*` branches deploy on Vercel; every other branch, including stacked feature PRs, skips the build. Name a branch `hotfix/<topic>` when you need a Vercel preview for a fix. The rule lives in `scripts/vercel-ignore-build.sh`, wired as `ignoreCommand` in `vercel.json`.
+Only `main` (production) and `hotfix/*` branches deploy on Vercel; every other branch, including stacked feature PRs, skips the build. Name a branch `hotfix/<topic>` when you need a Vercel preview for a fix. The rule lives in `scripts/vercel-ignore-build.sh`, wired as `ignoreCommand` in `vercel.json`. `hotfix/*` deploys are currently off (`HOTFIX_DEPLOYS_ENABLED=0` in that script, so only `main` deploys); set it to `1` to turn them back on.
 
 ### Rules for production
 
