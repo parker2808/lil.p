@@ -8,6 +8,10 @@ import { flushSync } from 'react-dom';
 
 import { cn } from '@portfolio/ui/lib/utils';
 import {
+  SegmentedControl,
+  SegmentedControlItem,
+} from '@portfolio/ui/components/ui/segmented-control';
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuRadioGroup,
@@ -65,14 +69,23 @@ export function ThemeToggle() {
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuRadioGroup value={current} onValueChange={changeTheme}>
-          {OPTIONS.map(({ value, label, icon: Icon }) => (
-            <DropdownMenuRadioItem key={value} value={value} aria-pressed={current === value}>
-              <Icon className="size-4" aria-hidden />
-              {label}
-            </DropdownMenuRadioItem>
-          ))}
-        </DropdownMenuRadioGroup>
+        <SegmentedControl asChild variant="equal">
+          <DropdownMenuRadioGroup value={current} onValueChange={changeTheme}>
+            {OPTIONS.map(({ value, label, icon: Icon }) => (
+              <SegmentedControlItem asChild key={value}>
+                <DropdownMenuRadioItem
+                  value={value}
+                  data-state={current === value ? 'on' : 'off'}
+                  aria-pressed={current === value}
+                  className="gap-1 rounded-none px-2"
+                >
+                  <Icon className="size-4" aria-hidden />
+                  {label}
+                </DropdownMenuRadioItem>
+              </SegmentedControlItem>
+            ))}
+          </DropdownMenuRadioGroup>
+        </SegmentedControl>
       </DropdownMenuContent>
     </DropdownMenu>
   );
