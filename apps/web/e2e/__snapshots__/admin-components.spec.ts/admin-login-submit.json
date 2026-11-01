@@ -1,0 +1,12 @@
+{
+  "height": "32px",
+  "font-size": "14px",
+  "font-weight": "500",
+  "color": "rgb(255, 255, 255)",
+  "background-color": "rgb(15, 118, 110)",
+  "padding-left": "12px",
+  "padding-right": "12px",
+  "border-radius": "10px",
+  "border-left-width": "0px",
+  "border-left-color": "rgb(213, 224, 219)"
+}

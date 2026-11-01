@@ -341,13 +341,6 @@
   letter-spacing: 0.08em;
   font-size: 11px;
 }
-.admin .redesign-sidebar-menu-button {
-  min-height: 38px;
-  border-left: 2px solid transparent;
-}
-.admin .redesign-sidebar-menu-button[data-active='true'] {
-  border-left-color: var(--primary);
-}
 .admin .redesign-data-table {
   border: 1px solid var(--border);
   border-radius: 14px;

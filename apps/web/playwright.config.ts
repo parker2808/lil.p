@@ -65,6 +65,7 @@ export default defineConfig({
     'metadata.spec.ts',
     'projects-filters.spec.ts',
     'ux-targets.spec.ts',
+    'admin-components.spec.ts',
   ],
   // Snapshots hold computed styles, not pixels, so one file serves every platform.
   snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}{ext}',

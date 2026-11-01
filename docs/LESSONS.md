@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-01: The git stash is shared by every worktree, so a failed `git stash push` followed by `git stash pop` applied another branch's old stash; compare against base with `git diff > patch && git apply -R patch` instead of the stash.
+- 2026-11-01: `next build` bakes the API proxy target (port 4000) into the web build, so a local Playwright run with a custom `API_PORT` fails sign-in with a 500; use the default ports or rebuild with the same env.
+
 - 2026-11-01: A marquee pause button needs its own persistent state while hover, focus within, and document visibility add temporary pause reasons; resume only when all reasons clear.
 - 2026-11-01: Public route tap-target checks can expose controls inside rendered Markdown code blocks; include those buttons when sizing public targets.
 - 2026-11-01: The UI redesign stylesheet has a unit guard against `data-slot` selectors; use explicit component classes for new tap sizing rules.

@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { Badge } from './badge';
 import { Button } from './button';
 import { Card, CardHeader } from './card';
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from './sidebar';
 import { Tabs, TabsList, TabsTrigger } from './tabs';
 
 describe('redesign variants', () => {
@@ -46,6 +47,35 @@ describe('redesign variants', () => {
 
     expect(screen.getByText('Published')).toHaveClass('bg-success-subtle');
     expect(screen.getByRole('tab', { name: 'One' })).toHaveClass('data-[state=active]:bg-card');
+  });
+
+  it('keeps the compact sidebar menu button styles in its primitive', () => {
+    render(
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <SidebarMenuButton href="#a" active>
+            Active
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+        <SidebarMenuItem>
+          <SidebarMenuButton href="#b">Idle</SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>,
+    );
+
+    expect(screen.getByRole('link', { name: 'Active' })).toHaveClass(
+      'h-8',
+      'border-l-2',
+      'border-sidebar-primary',
+    );
+    expect(screen.getByRole('link', { name: 'Idle' })).toHaveClass(
+      'h-8',
+      'border-l-2',
+      'border-transparent',
+    );
+    expect(readFileSync('src/styles/redesign.css', 'utf8')).not.toContain(
+      'redesign-sidebar-menu-button',
+    );
   });
 
   it('has no important declarations in the active redesign stylesheet', () => {

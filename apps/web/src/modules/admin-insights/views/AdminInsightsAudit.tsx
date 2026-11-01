@@ -15,6 +15,8 @@ import {
 } from '@portfolio/ui/components/AuditRow/relative-time.util';
 import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
 import { Button } from '@portfolio/ui/components/ui/button';
+import { inputClassName } from '@portfolio/ui/components/ui/input';
+import { cn } from '@portfolio/ui/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -49,7 +51,7 @@ export function AdminInsightsAudit() {
         <label className="text-ui flex flex-col gap-1">
           {t('entityType')}
           <select
-            className="border-input bg-background h-9 rounded-md border px-2"
+            className={cn(inputClassName, 'w-auto px-2')}
             value={entityType}
             onChange={(event) => setEntityType(event.target.value)}
           >
@@ -64,7 +66,7 @@ export function AdminInsightsAudit() {
         <label className="text-ui flex flex-col gap-1">
           {t('user')}
           <select
-            className="border-input bg-background h-9 rounded-md border px-2"
+            className={cn(inputClassName, 'w-auto px-2')}
             value={userId}
             onChange={(event) => setUserId(event.target.value)}
           >

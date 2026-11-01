@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P3-1 T18: admin chrome uses shared primitives at compact density: the topbar sidebar collapse is an `IconButton` (PanelLeft icon, tooltip, "Collapse/Expand sidebar" label, `aria-expanded`), the inbox bell is a `Button` link, topbar/palette buttons use `size="sm"` (28px) with no height overrides, the login submit uses the default 32px size, native selects reuse the exported `inputClassName`, and sidebar rows are 32px with their border in `SidebarMenuButton` (the `.admin .redesign-sidebar-menu-button` rules are gone). `e2e/admin-components.spec.ts` records computed-style JSON snapshots; Parker still has to approve them. Out of scope: the `AdminTable` sort header button keeps its text-only `.admin-table-sort` style.
 - P2-5: TechMarquee pauses on hover, focus within, hidden tabs, and manual request; unit tests cover pause state and the button. The existing reduced-motion static row remains.
 - P2-4 T16: public link targets and admin mobile stats grid are adjusted; the new 375px e2e checks visible public links and buttons in both locales. Coarse-pointer 44px targets and truncation tooltips still need device-level review.
 - P2-2: `/projects` is ISR with browser URL filters and the existing `projects` publish tag; confirm the second `/vi/projects` request is `x-vercel-cache: HIT` on the stacked PR preview deployment.
@@ -92,6 +93,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P3-1 T18: sync admin chrome with shared Button/IconButton/Input/Badge at compact density; the sidebar collapse is an IconButton.
 - 2026-11-01: P2-5: pause the tech marquee on hover, focus within, hidden tabs, and manual request.
 - 2026-11-01: P2-4 T16: add tap target sizing, mobile dashboard column, truncated-name titles, selection/scrollbar colors, and public-route target e2e coverage.
 - 2026-11-01: P2-2: make `/projects` ISR with client-side URL filters, preserving draft version previews and testing filter reloads.
