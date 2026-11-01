@@ -4,6 +4,9 @@
 - 2026-11-01: `CaseStudySections` imports the server-only `Markdown` renderer, so a Vitest file that tests its pure `caseStudyToc` helper must `vi.mock` the Markdown module first.
 - 2026-11-01: Project list rows already select localized role and outcome fields, so cards can derive a clean result line without a schema migration; keep mock cover paths mapped by slug and let real media win.
 - 2026-11-01: A Radix Sheet portal renders outside `.public-site` and `.site-header`, so mobile menu styles need an explicit sheet class instead of ancestor-scoped selectors.
+- 2026-11-01: Demo skills reuse sort orders across categories and are created concurrently, so an ID tie-break can reorder badges and change full-page visual height; sort badges in the visual fixture before capturing screenshots.
+- 2026-11-01: When stacked branches independently merge the same main commit, merge the updated base into the child and keep both task entries when resolving shared context files.
+- 2026-11-01: A radius token change updates computed-style JSON snapshots as well as pixel screenshots; run the focused admin style E2E specs after changing the shared `--radius` value.
 - 2026-11-01: Playwright's default snapshot update keeps screenshots when they remain within the configured 1% diff tolerance; use `--update-snapshots=all` to commit every intended Linux baseline refresh.
 - 2026-11-01: `globals.css` imports `redesign.css` before declaring its root tokens, so redesign token overrides need the more specific `html:root` selector to win in the cascade.
 - 2026-11-01: Tailwind's `@theme inline` compiles type utility sizes to literal CSS, so changing scoped `--text-*` variables does not rescale them; public metadata also renders some `font-mono` labels as paragraphs, requiring a Sans paragraph rule.
