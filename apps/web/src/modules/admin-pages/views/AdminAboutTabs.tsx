@@ -1,6 +1,6 @@
 'use client';
 
-import { Tabs, TabsList, TabsTrigger } from '@portfolio/ui/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@portfolio/ui/components/ui/tabs';
 import { useTranslations } from 'next-intl';
 import { usePathname, useSearchParams } from 'next/navigation';
 import type { ReactNode } from 'react';
@@ -61,8 +61,8 @@ export function AdminAboutTabs({ layout }: { layout: ReactNode }) {
             </TabsTrigger>
           ))}
         </TabsList>
+        <TabsContent value={active}>{content[active]}</TabsContent>
       </Tabs>
-      {content[active]}
     </div>
   );
 }
