@@ -1,12 +1,17 @@
 'use client';
 
 import type { PublicNavItem } from '@portfolio/contracts';
-import { Menu } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
 import { Link, usePathname } from '@i18n/navigation';
 import { Button } from '@portfolio/ui/components/ui/button';
+import {
+  SegmentedControl,
+  SegmentedControlItem,
+} from '@portfolio/ui/components/ui/segmented-control';
 import {
   Sheet,
   SheetClose,
@@ -17,12 +22,26 @@ import {
 import { useCloseOnNavigate } from '@portfolio/ui/hooks/use-close-on-navigate.hook';
 import { cn } from '@portfolio/ui/lib/utils';
 
-import { CommandPalette } from '../CommandPalette/CommandPalette';
+import { CommandPalette, type PaletteCaseStudy } from '../CommandPalette/CommandPalette';
 import { LocaleSwitch } from '../LocaleSwitch/LocaleSwitch';
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
 
-export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }) {
+export function SiteHeader({
+  name,
+  nav,
+  caseStudies,
+  email,
+  resumeUrl,
+}: {
+  name: string;
+  nav: PublicNavItem[];
+  caseStudies: PaletteCaseStudy[];
+  email?: string;
+  resumeUrl?: string;
+}) {
   const t = useTranslations('core');
+  const tBlocks = useTranslations('blocks');
+  const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const menu = useCloseOnNavigate(pathname);
   const [scrolled, setScrolled] = useState(false);
@@ -42,6 +61,16 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const palette = (
+    <CommandPalette
+      nav={nav}
+      caseStudies={caseStudies}
+      email={email}
+      resumeUrl={resumeUrl}
+      compact={!desktop}
+    />
+  );
 
   return (
     <header
@@ -79,20 +108,28 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
           ))}
         </nav>
         <div className="ml-auto hidden items-center gap-2 md:flex">
-          {desktop ? <CommandPalette nav={nav} /> : null}
+          {desktop ? palette : null}
           <LocaleSwitch />
           <ThemeToggle />
         </div>
-        <div className="ml-auto md:hidden">
+        <div className="ml-auto flex items-center gap-2 md:hidden">
+          {desktop ? null : palette}
           <Sheet open={menu.open} onOpenChange={menu.onOpenChange}>
             <SheetTrigger asChild>
               <Button surface="public" variant="outline" size="sm" aria-label={t('menu')}>
                 <Menu className="size-4" aria-hidden />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right">
-              <SheetTitle>{t('menu')}</SheetTitle>
-              <nav className="flex flex-col gap-2">
+            <SheetContent side="right" className="mobile-menu-sheet">
+              <div className="mobile-menu-heading">
+                <SheetTitle>{t('menu')}</SheetTitle>
+                <SheetClose asChild>
+                  <Button surface="public" variant="outline" size="sm" aria-label={t('close')}>
+                    <X className="size-4" aria-hidden />
+                  </Button>
+                </SheetClose>
+              </div>
+              <nav className="mobile-menu-nav" aria-label={t('menu')}>
                 {nav.map((item) => (
                   <SheetClose asChild key={item.id}>
                     <Link
@@ -104,15 +141,53 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
                           : undefined
                       }
                       data-slot="nav-link"
-                      className="tap text-ui text-muted-foreground hover:text-foreground inline-flex items-center px-2 transition-colors"
+                      className="mobile-menu-link text-muted-foreground hover:text-foreground"
                     >
                       {item.label}
                     </Link>
                   </SheetClose>
                 ))}
               </nav>
-              <LocaleSwitch />
-              <ThemeToggle />
+              <div className="mobile-menu-bottom">
+                <div className="mobile-menu-setting">
+                  <span>{t('locale')}</span>
+                  <LocaleSwitch />
+                </div>
+                <div className="mobile-menu-setting">
+                  <span>{t('theme')}</span>
+                  <SegmentedControl aria-label={t('theme')} variant="equal">
+                    {(
+                      [
+                        ['light', t('themeLight')],
+                        ['dark', t('themeDark')],
+                        ['system', t('themeAuto')],
+                      ] as const
+                    ).map(([value, label]) => (
+                      <SegmentedControlItem
+                        key={value}
+                        type="button"
+                        data-state={theme === value ? 'on' : 'off'}
+                        aria-pressed={theme === value}
+                        onClick={() => setTheme(value)}
+                      >
+                        {label}
+                      </SegmentedControlItem>
+                    ))}
+                  </SegmentedControl>
+                </div>
+                <div className="mobile-menu-actions">
+                  {resumeUrl ? (
+                    <Button surface="public" variant="outline" asChild>
+                      <a href={resumeUrl}>{tBlocks('downloadCv')}</a>
+                    </Button>
+                  ) : null}
+                  <SheetClose asChild>
+                    <Button surface="public" asChild>
+                      <Link href="/contact">{t('contact')}</Link>
+                    </Button>
+                  </SheetClose>
+                </div>
+              </div>
             </SheetContent>
           </Sheet>
         </div>
