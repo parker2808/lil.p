@@ -1,5 +1,10 @@
 # Lessons
 
+- 2026-11-01: Demo skills reuse sort orders across categories and are created concurrently, so an ID tie-break can reorder badges and change full-page visual height; sort badges in the visual fixture before capturing screenshots.
+- 2026-11-01: When stacked branches independently merge the same main commit, merge the updated base into the child and keep both task entries when resolving shared context files.
+- 2026-11-01: A radius token change updates computed-style JSON snapshots as well as pixel screenshots; run the focused admin style E2E specs after changing the shared `--radius` value.
+- 2026-11-01: Playwright's default snapshot update keeps screenshots when they remain within the configured 1% diff tolerance; use `--update-snapshots=all` to commit every intended Linux baseline refresh.
+- 2026-11-01: `globals.css` imports `redesign.css` before declaring its root tokens, so redesign token overrides need the more specific `html:root` selector to win in the cascade.
 - 2026-11-01: Tailwind's `@theme inline` compiles type utility sizes to literal CSS, so changing scoped `--text-*` variables does not rescale them; public metadata also renders some `font-mono` labels as paragraphs, requiring a Sans paragraph rule.
 - 2026-11-01: The git stash is shared by every worktree, so a failed `git stash push` followed by `git stash pop` applied another branch's old stash; compare against base with `git diff > patch && git apply -R patch` instead of the stash.
 - 2026-11-01: `next build` bakes the API proxy target (port 4000) into the web build, so a local Playwright run with a custom `API_PORT` fails sign-in with a 500; use the default ports or rebuild with the same env.
