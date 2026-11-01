@@ -71,6 +71,7 @@ export default defineConfig({
     'case-study-end.spec.ts',
     'admin-detail-error.spec.ts',
     'navigation-progress.spec.ts',
+    'split-js.spec.ts',
   ],
   // Snapshots hold computed styles, not pixels, so one file serves every platform.
   snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}{ext}',
