@@ -31,7 +31,9 @@ export function AdminSidebar() {
   return (
     <Sidebar collapsed={collapsed} className="hidden md:flex">
       <SidebarHeader>
-        <p className="text-ui-title truncate font-medium">{collapsed ? name.slice(0, 1) : name}</p>
+        <p className="text-ui-title truncate font-medium" title={name}>
+          {collapsed ? name.slice(0, 1) : name}
+        </p>
       </SidebarHeader>
       <SidebarContent>
         {groups.map((group, index) => (

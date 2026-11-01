@@ -77,7 +77,7 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
                   : undefined
               }
               data-slot="nav-link"
-              className="text-ui text-muted-foreground hover:text-foreground inline-flex h-8 items-center px-2 transition-colors"
+              className="tap text-ui text-muted-foreground hover:text-foreground inline-flex items-center px-2 transition-colors"
             >
               {item.label}
               <RoutePending />
@@ -110,7 +110,7 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
                           : undefined
                       }
                       data-slot="nav-link"
-                      className="text-ui text-muted-foreground hover:text-foreground inline-flex h-8 items-center px-2 transition-colors"
+                      className="tap text-ui text-muted-foreground hover:text-foreground inline-flex items-center px-2 transition-colors"
                     >
                       {item.label}
                       <RoutePending />

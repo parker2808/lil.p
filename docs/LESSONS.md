@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-01: Public route tap-target checks can expose controls inside rendered Markdown code blocks; include those buttons when sizing public targets.
+- 2026-11-01: The UI redesign stylesheet has a unit guard against `data-slot` selectors; use explicit component classes for new tap sizing rules.
+- 2026-11-01: A shared inline-flex tap utility changes the layout of links containing block labels; stack the children explicitly for previous/next links.
 - 2026-11-01: The projects header has its own bottom padding inside two padded block wrappers; reduce the adjacent wrapper gap and match the route skeleton's spacing to avoid a load-time shift.
 - 2026-11-01: A static public page can keep versioned CMS previews by awaiting `searchParams` only while draft mode is enabled; browser filters should avoid that server read.
 - 2026-11-01: A route loading skeleton must preserve the page's header, filter, switch, and card geometry; a generic grid skeleton can shift the projects page when server data arrives.

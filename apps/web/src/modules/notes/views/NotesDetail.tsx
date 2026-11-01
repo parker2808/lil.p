@@ -52,7 +52,7 @@ export async function NotesDetail({ locale, slug }: { locale: Locale; slug: stri
       />
       <ContentProgress scrollTargetId="reader-content" />
       <nav className="reader-index" aria-label={t('title')}>
-        <Link href="/notes" className="font-mono text-xs uppercase">
+        <Link href="/notes" className="tap font-mono text-xs uppercase">
           {t('title')}
         </Link>
         <ol>

@@ -110,7 +110,11 @@ function TopList({
           {
             id: 'label',
             header: labelHeader,
-            cell: (item) => <span className="block max-w-xs truncate">{item.label}</span>,
+            cell: (item) => (
+              <span className="block max-w-xs truncate" title={item.label}>
+                {item.label}
+              </span>
+            ),
           },
           {
             id: 'views',

@@ -98,7 +98,9 @@ export function MediaUploader({
           {items.map((item) => (
             <li key={item.id} className="flex flex-col gap-1">
               <div className="flex items-center justify-between gap-2">
-                <p className="text-ui-meta truncate">{item.name}</p>
+                <p className="text-ui-meta truncate" title={item.name}>
+                  {item.name}
+                </p>
                 {item.status === 'uploading' ? (
                   <Button type="button" size="sm" variant="ghost" onClick={() => onCancel(item.id)}>
                     {labels.cancel}
