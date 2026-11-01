@@ -117,6 +117,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-02: Add `docs/DEPLOY_AND_CI_RERUN.md`, the runbook for deploying `main` to Vercel after the rate limit resets, re-running CI and Vercel checks, re-enabling `hotfix/*` deploys, verification and rollback.
 - 2026-11-02: P6-7 T36b: admin list tables get J/K row navigation, a stored compact/comfortable density toggle (`--row-h`, `--cell-px` tokens), Clear selection in the bulk bar, and tolerant URL filter parsing.
 - 2026-11-02: P6-6 T36a: admin ⌘K palette actions (create project, write post, publish current page, open public site, switch language) with working `C P`, `W P`, `G I` shortcuts.
 - 2026-11-02: P6-5 T35: email-style admin inbox (list | message at `lg`, list → detail route on mobile), mark read on open, archive with Undo (new `ARCHIVED` status), "Reply via email".
