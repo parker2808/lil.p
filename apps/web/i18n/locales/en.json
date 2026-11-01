@@ -213,8 +213,13 @@
     },
     "palette": {
       "open": "Jump to",
-      "newProject": "New project",
-      "newPost": "New post"
+      "createProject": "Create project",
+      "writePost": "Write post",
+      "publish": "Publish current page",
+      "openSite": "Open public site",
+      "switchLanguage": "Switch language ({locale})",
+      "actions": "Actions",
+      "navigate": "Go to"
     },
     "password": {
       "title": "Change password",

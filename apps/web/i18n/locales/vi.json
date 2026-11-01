@@ -213,8 +213,13 @@
     },
     "palette": {
       "open": "Chuyển đến",
-      "newProject": "Dự án mới",
-      "newPost": "Bài viết mới"
+      "createProject": "Tạo dự án",
+      "writePost": "Viết bài",
+      "publish": "Xuất bản trang hiện tại",
+      "openSite": "Mở trang công khai",
+      "switchLanguage": "Đổi ngôn ngữ ({locale})",
+      "actions": "Thao tác",
+      "navigate": "Đi tới"
     },
     "password": {
       "title": "Đổi mật khẩu",
