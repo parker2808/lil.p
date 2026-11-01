@@ -4,7 +4,7 @@ import type { PublicSkillChip } from '@portfolio/contracts';
 import { usePrefersReducedMotion } from '@portfolio/ui/hooks/use-prefers-reduced-motion.hook';
 import { cn } from '@portfolio/ui/lib/utils';
 import { Pause, Play } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function TechMarquee({
   items,
@@ -19,7 +19,18 @@ export function TechMarquee({
 }) {
   const reduced = usePrefersReducedMotion();
   const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [tabHidden, setTabHidden] = useState(false);
   const staticRow = !enabled || items.length < 6 || reduced;
+  const trackPaused = paused || hovered || focused || tabHidden;
+
+  useEffect(() => {
+    const syncVisibility = () => setTabHidden(document.hidden);
+    syncVisibility();
+    document.addEventListener('visibilitychange', syncVisibility);
+    return () => document.removeEventListener('visibilitychange', syncVisibility);
+  }, []);
 
   if (items.length < 1) {
     return null;
@@ -47,14 +58,26 @@ export function TechMarquee({
   }
 
   return (
-    <div data-slot="tech-marquee" className={cn('flex items-center gap-3', className)}>
+    <div
+      data-slot="tech-marquee"
+      className={cn('flex items-center gap-3', className)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      onFocus={() => setFocused(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false);
+      }}
+    >
       <div
         className="min-w-0 flex-1 overflow-hidden"
         style={{
           maskImage: 'linear-gradient(90deg, transparent, black 6%, black 94%, transparent)',
         }}
       >
-        <div className="marquee-track flex w-max gap-2" data-paused={paused || undefined}>
+        <div
+          className={cn('marquee-track flex w-max gap-2', trackPaused && 'marquee-paused')}
+          data-paused={trackPaused || undefined}
+        >
           <div className="flex gap-2">{chips}</div>
           <div className="flex gap-2" aria-hidden>
             {chips}

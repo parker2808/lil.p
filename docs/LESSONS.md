@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-01: A marquee pause button needs its own persistent state while hover, focus within, and document visibility add temporary pause reasons; resume only when all reasons clear.
 - 2026-11-01: Public route tap-target checks can expose controls inside rendered Markdown code blocks; include those buttons when sizing public targets.
 - 2026-11-01: The UI redesign stylesheet has a unit guard against `data-slot` selectors; use explicit component classes for new tap sizing rules.
 - 2026-11-01: A shared inline-flex tap utility changes the layout of links containing block labels; stack the children explicitly for previous/next links.
