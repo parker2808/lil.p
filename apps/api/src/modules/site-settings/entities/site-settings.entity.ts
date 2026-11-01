@@ -25,6 +25,7 @@ export const siteSettingsSelect = {
   marqueeEnabled: true,
   ogImageId: true,
   ogImage: true,
+  heroStats: true,
   updatedAt: true,
 } satisfies Prisma.SiteSettingsSelect;
 

@@ -7,7 +7,7 @@ import type {
 } from '@portfolio/contracts';
 
 import { NotSeededException } from '../../common/errors/not-seeded.exception';
-import type { Prisma } from '../../generated/prisma/client';
+import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { PublishingService } from '../publishing/publishing.service';
@@ -33,7 +33,11 @@ export class SiteSettingsService {
 
   async update(input: SiteSettingsUpdateInput): Promise<AdminSiteSettings> {
     await this.requireRow();
-    const data: Prisma.SiteSettingsUncheckedUpdateInput = { ...input };
+    const { heroStats, ...rest } = input;
+    const data: Prisma.SiteSettingsUncheckedUpdateInput = { ...rest };
+    if (heroStats !== undefined) {
+      data.heroStats = heroStats?.length ? heroStats : Prisma.DbNull;
+    }
     const row = await this.prisma.siteSettings.update({
       where: { id: 1 },
       data,
