@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { z } from 'zod';
 
+import { AdminLoadError } from '@/modules/admin-core/components/AdminLoadError/AdminLoadError';
 import { EditorShell } from '@/modules/admin-core/components/EditorShell/EditorShell';
 import { useAdminBack } from '@/modules/admin-core/hooks/use-admin-back.hook';
 import { useAutosave } from '@/modules/admin-core/hooks/use-autosave.hook';
@@ -36,7 +37,13 @@ export function AdminAboutExperienceEditor({ experienceId }: { experienceId: num
   const existing = useAdminExperienceRow(experienceId);
 
   if (experienceId !== null && existing.isError) {
-    return <p className="text-destructive">{t('loadError')}</p>;
+    return (
+      <AdminLoadError
+        navKey="experience"
+        message={t('loadError')}
+        onRetry={() => void existing.refetch()}
+      />
+    );
   }
   if (experienceId !== null && !existing.data) {
     return <p>{t('loading')}</p>;

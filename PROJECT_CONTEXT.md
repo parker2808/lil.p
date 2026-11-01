@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- P4-1 T21a: `EmptyState` (packages/ui: hatched dashed panel, optional `¶`-style glyph, title, description, action) and `ErrorState` now takes an optional `back` link (`PageHeaderBack` + `linkComponent`) next to Retry. The admin projects, posts, experience and inbox detail views render `AdminLoadError` (admin-core: Retry + "Back to {section}" from `useAdminBack`) when the record fails to load, e.g. a missing id (`e2e/admin-detail-error.spec.ts`). `/notes` with no published notes shows "No notes yet" and a "Read case studies" link to `/projects`; a filtered empty list keeps "Clear". A non-integer inbox id still 404s. Out of scope: `ProjectsGrid` and other callers still use the plain `ui/empty` primitive.
 - P3-4 T20: the `CoverPlaceholder` monogram is sized from its own frame (`container-type: inline-size`, `min(14rem, 24cqi)`) and colored with the domain hue (`--cover-hue`); the slug chip truncates inside the frame. Case-study prev/next wraps around (first ↔ last) and a contact `CtaBand` ("Get in touch" → `/contact`) closes every case study. `e2e/case-study-end.spec.ts` checks up to 6 case studies, but the demo seed has only 4. Real cover photos still need Parker's input.
 - P3-3 T33b: the full `EditorToolbar` is one non-wrapping row (`overflow-x-auto`, ≤48px at 375px; `e2e/editor-mobile-toolbar.spec.ts`). Below `sm` the block actions (quote, callouts, code block, image, table, divider) move into a "More" dropdown (`more` editor label); the image URL/alt popover now anchors to the toolbar so both paths open it. Arrow keys skip hidden buttons. `admin-scroll.spec.ts` uses 768x800 instead of 768x1024 because the shorter one-row toolbar left `/admin/posts/new` with nothing to scroll.
 - P3-2 T33a: `MarkdownEditorGroup` (packages/ui) renders one Write/Preview tablist and shares its mode through context; a `MarkdownEditor` inside it drops its own Write/Split/Preview/Markdown tabs and shows its word count in a footer. The project Content tab wraps its six markdown fields, so `/admin/projects/:id` has 2 tablists instead of 7 (`e2e/editor-mode-toggle.spec.ts`). Out of scope: standalone editors (posts, profile, experience) keep their four tabs, and the page builder `LocalizedWidget` EN/VI pair still shows two editor tablists.
@@ -96,6 +97,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 Older and full entries: `docs/CHANGELOG_ARCHIVE.md` (read only when needed).
 
+- 2026-11-01: P4-1 T21a: shared `EmptyState` and a back link on `ErrorState`; admin detail routes with a bad id offer Retry and back-to-list; empty `/notes` links to case studies.
 - 2026-11-01: P3-4 T20: cover fallback monogram stays inside its frame in the domain color; case studies end with wrapping prev/next and a contact CTA.
 - 2026-11-01: P3-3 T33b: one-row, horizontally scrolling editor toolbar with a "More" overflow menu on mobile.
 - 2026-11-01: P3-2 T33a: one Write/Preview toggle drives all six project markdown editors (2 tablists instead of 7).

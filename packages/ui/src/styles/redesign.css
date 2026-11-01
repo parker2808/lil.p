@@ -487,6 +487,17 @@
   background: var(--card);
   padding: 4px 8px;
 }
+.redesign-empty-state {
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 10px,
+    color-mix(in oklab, var(--border) 35%, transparent) 10px 11px
+  );
+}
+.redesign-empty-state-glyph {
+  font: italic 300 4rem/1 var(--font-sans);
+  color: var(--primary);
+}
 .public-block:empty,
 .public-band:not(:has([data-block-type]:not(:empty))) {
   display: none;
