@@ -7,7 +7,14 @@ import { useEffect, useState } from 'react';
 
 import { Link, usePathname } from '@i18n/navigation';
 import { Button } from '@portfolio/ui/components/ui/button';
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from '@portfolio/ui/components/ui/sheet';
+import { useCloseOnNavigate } from '@portfolio/ui/hooks/use-close-on-navigate.hook';
 import { cn } from '@portfolio/ui/lib/utils';
 
 import { RoutePending } from '../RoutePending/RoutePending';
@@ -18,6 +25,7 @@ import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
 export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }) {
   const t = useTranslations('core');
   const pathname = usePathname();
+  const menu = useCloseOnNavigate(pathname);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -69,7 +77,7 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
           <ThemeToggle />
         </div>
         <div className="ml-auto md:hidden">
-          <Sheet>
+          <Sheet open={menu.open} onOpenChange={menu.onOpenChange}>
             <SheetTrigger asChild>
               <Button variant="outline" size="sm" aria-label={t('menu')}>
                 <Menu className="size-4" aria-hidden />
@@ -79,21 +87,22 @@ export function SiteHeader({ name, nav }: { name: string; nav: PublicNavItem[] }
               <SheetTitle>{t('menu')}</SheetTitle>
               <nav className="flex flex-col gap-2">
                 {nav.map((item) => (
-                  <Link
-                    key={item.id}
-                    href={item.href}
-                    aria-current={
-                      pathname === item.href ||
-                      (item.href !== '/' && pathname.startsWith(`${item.href}/`))
-                        ? 'page'
-                        : undefined
-                    }
-                    data-slot="nav-link"
-                    className="text-ui text-muted-foreground hover:text-foreground inline-flex h-8 items-center px-2 transition-colors"
-                  >
-                    {item.label}
-                    <RoutePending />
-                  </Link>
+                  <SheetClose asChild key={item.id}>
+                    <Link
+                      href={item.href}
+                      aria-current={
+                        pathname === item.href ||
+                        (item.href !== '/' && pathname.startsWith(`${item.href}/`))
+                          ? 'page'
+                          : undefined
+                      }
+                      data-slot="nav-link"
+                      className="text-ui text-muted-foreground hover:text-foreground inline-flex h-8 items-center px-2 transition-colors"
+                    >
+                      {item.label}
+                      <RoutePending />
+                    </Link>
+                  </SheetClose>
                 ))}
               </nav>
               <LocaleSwitch />

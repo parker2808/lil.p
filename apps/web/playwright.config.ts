@@ -47,6 +47,7 @@ export default defineConfig({
     'admin-pages.spec.ts',
     'a11y.spec.ts',
     'lighthouse.spec.ts',
+    'ux-overlay.spec.ts',
   ],
   fullyParallel: false,
   workers: 1,
