@@ -40,7 +40,10 @@ async function caseStudyPaths(page: Page): Promise<string[]> {
   const hrefs = await links.evaluateAll((anchors) =>
     anchors.map((anchor) => new URL((anchor as HTMLAnchorElement).href).pathname),
   );
-  return [...new Set(hrefs)].slice(0, MAX_CASE_STUDIES);
+  // Skip records other specs create and unpublish in parallel (e.g. `e2e-draft-case-*`):
+  // the cached public list can still link them for a moment after they become drafts.
+  const seeded = hrefs.filter((href) => !/\/projects\/e2e-/.test(href));
+  return [...new Set(seeded)].slice(0, MAX_CASE_STUDIES);
 }
 
 test('every case study ends with previous/next links and a contact CTA', async ({ page }) => {
