@@ -28,6 +28,13 @@
     "retry": "Thử lại",
     "notFound": "Không tìm thấy trang này"
   },
+  "notFound": {
+    "description": "Không tìm thấy trang bạn yêu cầu. Hãy thử một trong những trang dưới đây.",
+    "linksLabel": "Khám phá trang web",
+    "home": "Trang chủ",
+    "projects": "Dự án",
+    "contact": "Liên hệ"
+  },
   "blocks": {
     "nda": "NDA",
     "projects": "dự án",
