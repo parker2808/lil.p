@@ -977,6 +977,7 @@
       "altVi": "Alt text (Vietnamese)",
       "saveAlt": "Save alt",
       "delete": "Delete",
+      "confirmDelete": "Delete this media file?",
       "selectItem": "Select a file to inspect"
     },
     "topics": {

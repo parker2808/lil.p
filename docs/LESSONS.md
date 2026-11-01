@@ -17,3 +17,4 @@
 - 2026-11-01: A virtualized audit list can contain no focusable rows; give its scroll container `tabIndex={0}` so keyboard users can scroll it.
 - 2026-11-01: Tiptap's contenteditable element does not inherit a nearby field label; pass an accessible name through its editor attributes, including after options updates.
 - 2026-11-01: Embedded Tiptap node views need their own control names; the code block language select can be present only in seeded editor content.
+- 2026-11-01: A spec placed the Toaster in the shared `Providers`, but P0-5 had moved it to `AdminProviders` to keep it off public mobile pages; check later perf moves before following an older spec file location.

@@ -20,7 +20,7 @@ export function AdminProviders({
     <Providers locale="en" messages={messages} nonce={nonce}>
       <QueryProvider>
         {children}
-        <Toaster />
+        <Toaster position="bottom-right" duration={4000} />
       </QueryProvider>
     </Providers>
   );
