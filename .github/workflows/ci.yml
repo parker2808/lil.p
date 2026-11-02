@@ -9,6 +9,7 @@ on:
       - 'graphify-out/**'
       - 'tasks/**'
   pull_request:
+    types: [opened, synchronize, reopened, labeled]
     paths-ignore:
       - '**/*.md'
       - 'docs/**'
@@ -17,7 +18,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
@@ -77,6 +78,7 @@ jobs:
         run: pnpm --filter @portfolio/ui build-storybook
 
   api-e2e:
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     services:
@@ -126,6 +128,7 @@ jobs:
   build-e2e:
     # Builds contracts, api and web once for every web-e2e shard.
     name: web-e2e build
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
@@ -171,6 +174,7 @@ jobs:
     # Starts right away (no `needs`): MySQL, pnpm install and browser deps run
     # while build-e2e builds, then the shard waits for the e2e-build artifact.
     name: web-e2e shard ${{ matrix.shard }}/4
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -265,25 +269,34 @@ jobs:
           retention-days: 1
 
   web-e2e:
-    # Stable check name: green only when the build and every shard passed. Also merges the reports.
+    # Stable check name: green only when the build and every shard passed, or e2e was
+    # skipped (PR without the ready-e2e label). Also merges the reports.
     needs: [build-e2e, web-e2e-shard]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: E2E skipped (PR without the ready-e2e label)
+        if: needs.web-e2e-shard.result == 'skipped'
+        run: echo "web-e2e skipped; add the ready-e2e label to run it."
       - uses: actions/download-artifact@v4
+        if: needs.web-e2e-shard.result != 'skipped'
         with:
           pattern: blob-report-*
           path: all-blob-reports
           merge-multiple: true
       - name: Merge shard reports
-        if: always() && needs.build-e2e.outputs.playwright != ''
+        if: always() && needs.web-e2e-shard.result != 'skipped' && needs.build-e2e.outputs.playwright != ''
         run: npx -y playwright@${{ needs.build-e2e.outputs.playwright }} merge-reports --reporter html ./all-blob-reports
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && needs.web-e2e-shard.result != 'skipped'
         with:
           name: playwright-report
           path: playwright-report
           retention-days: 7
       - name: Require the build and every shard to pass
-        run: test "${{ needs.build-e2e.result }}" = success && test "${{ needs.web-e2e-shard.result }}" = success
+        run: |
+          build="${{ needs.build-e2e.result }}"
+          shards="${{ needs.web-e2e-shard.result }}"
+          echo "web-e2e build: $build, shards: $shards"
+          { test "$build" = success && test "$shards" = success; } || { test "$build" = skipped && test "$shards" = skipped; }

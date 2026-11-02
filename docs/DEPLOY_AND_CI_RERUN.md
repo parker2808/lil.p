@@ -126,3 +126,15 @@ If production breaks, open a `hotfix/*` PR; only those branches get preview depl
   fix on TiDB needs Parker's approval and is done by Parker.
 - After a rollback, auto-promotion of new `main` deploys may be paused; promote
   the fixed deployment from the dashboard (**Promote to Production**).
+
+## 8. When e2e runs (trigger policy)
+
+- `lint-typecheck`, `unit`, `build` and `ci-ok` run on every PR push and every push to `main`.
+- `api-e2e` and the `web-e2e shard i/3` jobs run only on:
+  - a push to `main`,
+  - a PR that has the `ready-e2e` label (on `labeled` and on every `synchronize` after that),
+  - a manual `workflow_dispatch` (`gh workflow run ci.yml --ref <branch>`).
+- Without the label, `api-e2e` and the shards show as skipped, and the `web-e2e` job still reports success, so no check hangs. Add `ready-e2e` before asking for a merge: `gh pr edit <n> --add-label ready-e2e`.
+- Runs are grouped per PR (`ci-<PR number>`), and a newer PR run cancels the older one. Pushes to `main` are never cancelled.
+- Docs-only changes (`**/*.md`, `docs/**`, `graphify-out/**`, `tasks/**`) skip CI; only `ci-ok` runs.
+- Branch protection is not enabled on `main` today. If it is added, require `ci-ok`, `lint-typecheck`, `unit`, `build` and `web-e2e` (skipped `api-e2e` also counts as passing).

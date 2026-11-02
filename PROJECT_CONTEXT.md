@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- CI S4: `api-e2e` and web-e2e shards run only on push to `main`, PRs labeled `ready-e2e`, or `workflow_dispatch`; without the label they are skipped and `web-e2e` still passes. Concurrency is per PR number. Policy in `docs/DEPLOY_AND_CI_RERUN.md` §8.
 - CI speed-up S3: web-e2e runs as 3 shards (`web-e2e shard i/3`), each with its own MySQL and seed; files per shard come from `apps/web/e2e/shards.ts` (`E2E_SHARD`), not `--shard`, because the visual and Lighthouse specs must share shard 1. Shards write blob reports; the `web-e2e` job merges them into the `playwright-report` artifact and fails if any shard failed. A new e2e spec must be added to `SPECS` in `shards.ts`. Locally, without `E2E_SHARD`, every spec runs as before.
 - CI speed-up S2: `lint-typecheck-unit` is split into parallel `lint-typecheck`, `unit` (`pnpm -r --parallel test`) and `build` (+ Storybook) jobs. `apps/web/.next/cache` is cached by lockfile and source hash; `~/.cache/ms-playwright` by Playwright version, and a hit runs only `playwright install-deps`.
 - CI speed-up S1: `ci.yml` skips docs-only changes (`**/*.md`, `docs/**`, `graphify-out/**`, `tasks/**`) through `paths-ignore`; the always-passing `ci-ok` workflow is the check to require if branch protection is added (none today). Storybook builds only when `packages/ui/**` or the lockfile changes on PRs (always on `main`). Test MySQL runs on tmpfs with a 2s health interval.
@@ -120,6 +121,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-02: CI S4: e2e only on `main`, `ready-e2e`-labeled PRs or manual dispatch; per-PR concurrency.
 - 2026-11-02: CI S3: web-e2e in 3 shards with per-shard MySQL and merged blob reports; visual and Lighthouse pinned to shard 1.
 - 2026-11-02: CI S2: parallel lint/unit/build jobs, Next.js build cache, Playwright browser cache.
 - 2026-11-02: CI S1: docs-only paths skip CI, `ci-ok` always-green job, Storybook only on UI changes, MySQL on tmpfs.
