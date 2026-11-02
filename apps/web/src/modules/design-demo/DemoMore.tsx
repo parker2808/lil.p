@@ -1,6 +1,8 @@
 import type { Locale } from '@portfolio/contracts';
 import { ArrowLeft, ArrowRight, CornerDownRight, Sparkles } from 'lucide-react';
 
+import { DemoContactForm } from './DemoContactForm';
+
 const copy = {
   en: {
     notes: [
@@ -26,8 +28,8 @@ const copy = {
       'Tell me about the problem, the possibility, or the thing you cannot stop thinking about.',
       'Your name',
       'Your message',
-      'Send a note',
-      'The contact form is unavailable in this local visual demo.',
+      'Preview response',
+      'This local demo does not send or save messages.',
       'Explore my work',
     ],
     missing: [
@@ -77,8 +79,8 @@ const copy = {
       'Kể tôi nghe về vấn đề, khả năng hoặc ý tưởng khiến bạn không ngừng nghĩ đến.',
       'Tên của bạn',
       'Lời nhắn',
-      'Gửi lời nhắn',
-      'Biểu mẫu liên hệ chưa khả dụng trong bản thử nghiệm trực quan này.',
+      'Xem phản hồi',
+      'Bản thử nghiệm này không gửi hoặc lưu lời nhắn.',
       'Xem dự án',
     ],
     missing: [
@@ -270,30 +272,10 @@ export function DemoContact({ locale }: { locale: Locale }) {
             {t[7]} <ArrowRight size={16} aria-hidden />
           </a>
         </div>
-        <div className="demo-contact-form">
-          <label>
-            {t[3]}
-            <input
-              type="text"
-              placeholder={locale === 'en' ? 'Your name' : 'Tên của bạn'}
-              disabled
-            />
-          </label>
-          <label>
-            {t[4]}
-            <textarea
-              rows={5}
-              placeholder={
-                locale === 'en' ? 'What are you working on?' : 'Bạn đang thực hiện điều gì?'
-              }
-              disabled
-            />
-          </label>
-          <p>{t[6]}</p>
-          <button className="demo-button demo-button-primary" type="button" disabled>
-            {t[5]} <ArrowRight size={17} aria-hidden />
-          </button>
-        </div>
+        <DemoContactForm
+          locale={locale}
+          labels={{ name: t[3], message: t[4], submit: t[5], note: t[6] }}
+        />
       </div>
     </div>
   );
@@ -309,6 +291,31 @@ export function DemoMissing({ locale }: { locale: Locale }) {
       <p>{t[2]}</p>
       <a className="demo-button demo-button-primary" href={`/${locale}`}>
         {t[3]} <ArrowRight size={17} aria-hidden />
+      </a>
+    </div>
+  );
+}
+
+export function DemoEmpty({ locale }: { locale: Locale }) {
+  return (
+    <div className="demo-container demo-empty">
+      <span className="demo-empty-symbol" aria-hidden="true">
+        <Sparkles size={42} strokeWidth={1.5} />
+      </span>
+      <p className="demo-eyebrow">{locale === 'en' ? 'NOTHING HERE YET' : 'CHƯA CÓ NỘI DUNG'}</p>
+      <h1>
+        {locale === 'en'
+          ? 'A little space for what comes next.'
+          : 'Một khoảng trống cho điều sắp tới.'}
+      </h1>
+      <p>
+        {locale === 'en'
+          ? 'This collection is still taking shape. Explore the projects while new notes find their place.'
+          : 'Bộ sưu tập vẫn đang hình thành. Hãy khám phá các dự án trong khi ghi chú mới tìm đúng vị trí.'}
+      </p>
+      <a className="demo-button demo-button-primary" href={`/${locale}/projects`}>
+        {locale === 'en' ? 'Explore projects' : 'Khám phá dự án'}{' '}
+        <ArrowRight size={17} aria-hidden />
       </a>
     </div>
   );

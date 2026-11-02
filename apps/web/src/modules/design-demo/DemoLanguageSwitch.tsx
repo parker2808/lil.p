@@ -11,7 +11,7 @@ export function DemoLanguageSwitch({ locale }: { locale: 'en' | 'vi' }) {
     <a
       className="demo-language"
       href={href}
-      aria-label={locale === 'en' ? 'Switch to Vietnamese' : 'Switch to English'}
+      aria-label={locale === 'en' ? 'VI — Switch to Vietnamese' : 'EN — Switch to English'}
     >
       {other.toUpperCase()} <MoveUpRight size={12} aria-hidden />
     </a>

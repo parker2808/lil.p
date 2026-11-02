@@ -16,7 +16,10 @@ const routes = [
   ['note-detail', 'notes/interfaces-as-conversations'],
   ['about', 'about'],
   ['contact', 'contact'],
+  ['contact-validation', 'contact'],
+  ['contact-success', 'contact'],
   ['craft', 'craft'],
+  ['empty', 'demo-state/empty'],
   ['not-found', 'a-page-that-does-not-exist'],
   ['error', 'demo-state/error'],
   ...['home', 'projects', 'detail', 'craft', 'notes', 'note', 'about', 'contact'].map((v) => [
@@ -40,7 +43,18 @@ for (const locale of ['en', 'vi'])
       const response = await page.goto(`${baseUrl}/${locale}${path ? `/${path}` : ''}`, {
         waitUntil: 'domcontentloaded',
       });
+      if (name === 'contact-validation')
+        await page.locator('.demo-contact-form button[type="submit"]').click();
+      if (name === 'contact-success') {
+        await page.locator('#demo-contact-name').fill('Demo visitor');
+        await page
+          .locator('#demo-contact-message')
+          .fill('A sample idea for the local interface preview.');
+        await page.locator('.demo-contact-form button[type="submit"]').click();
+      }
       await page.evaluate(() => document.fonts.ready);
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => resolve())));
       const result = await page.evaluate(() => ({
         title: document.title,
         h1: document.querySelector('h1')?.textContent,

@@ -83,3 +83,4 @@
 - 2026-11-02: An Undo toast fires a second mutation while the first may still be in flight; give both the same TanStack mutation `scope` so they run in order.
 - 2026-11-02: A palette action that triggers an editor handler (Publish) needs the editor to register it through a ref-backed hook (latest closure, register only on enable changes), and the hook must no-op without the admin shell provider because editor unit tests render without it.
 - 2026-11-02: `useListParams` parsed the URL with `schema.parse`, so a stale or hand-edited filter value (`?status=NOPE`) threw during render; parse with `safeParse` and drop only the invalid keys, and keep an uncontrolled search box in sync with the URL or Clear filters leaves stale text that blur writes back.
+- 2026-11-02: Playwright form interaction can scroll a page before a full-page screenshot and paint a sticky header midway through the image; scroll to the top and wait a frame after interactions before capture.

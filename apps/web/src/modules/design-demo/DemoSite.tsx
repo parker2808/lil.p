@@ -20,7 +20,7 @@ export function DemoShell({ locale, children }: { locale: Locale; children: Reac
         </a>
         <header className="demo-header">
           <div className="demo-container demo-header-inner">
-            <a className="demo-brand" href={`/${locale}`} aria-label="lil.p home">
+            <a className="demo-brand" href={`/${locale}`} aria-label="lil.parker home">
               <BrandMark className="demo-brand-logo" />
               <span>lil.parker</span>
             </a>
@@ -50,16 +50,9 @@ export function DemoShell({ locale, children }: { locale: Locale; children: Reac
 
 function Monogram() {
   return (
-    <svg className="demo-monogram" viewBox="0 0 320 320" fill="none" aria-hidden="true">
-      <circle cx="160" cy="160" r="145" className="demo-monogram-ring" />
-      <path
-        className="demo-monogram-path"
-        d="M92 75v145c0 15 9 24 23 24h25M160 75v169M160 151c0-25 16-41 40-41 26 0 43 18 43 47v31c0 27-17 45-43 45-24 0-40-16-40-41M258 239h2"
-        stroke="currentColor"
-        strokeWidth="11"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <svg className="demo-monogram" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <circle cx="32" cy="32" r="29" className="demo-monogram-ring" />
+      <use className="demo-monogram-path" href="/icon.svg#logo-glyph" />
     </svg>
   );
 }
