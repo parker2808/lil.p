@@ -59,6 +59,14 @@ export function proxy(request: NextRequest) {
   const connectSrc = apiOrigin ? [apiOrigin] : [];
   const { pathname } = request.nextUrl;
 
+  // Isolated, data-free visual fixture. Keep it outside auth and locale routing.
+  if (pathname.startsWith('/design-demo-admin')) {
+    return applySecurityHeaders(
+      NextResponse.next(),
+      buildContentSecurityPolicy(undefined, connectSrc),
+    );
+  }
+
   const isAdmin = pathname.startsWith('/admin');
   // Public pages are static/ISR and shared across visitors, so they get the
   // nonce-less policy (see csp.util.ts). /admin and draft-mode requests (the

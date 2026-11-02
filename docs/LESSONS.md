@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-02: A top-level Next demo route must bypass the locale middleware explicitly in `proxy.ts`; otherwise `/design-demo-admin` redirects to `/en/design-demo-admin` and falls into the public site route. For tall Playwright mobile PNGs, place the fixed bottom bar at the document end in the capture style so it does not appear halfway through the image.
+
 - 2026-11-02: A Radix Dialog with no `DialogTrigger` focuses nothing on close (its default refocuses the trigger ref), so a palette opened from several controls stores `document.activeElement` on open and refocuses it in `onCloseAutoFocus`; `IconButton` also brings Radix Tooltip and the popper, which the public layout bundle avoids.
 - 2026-11-01: A second `LocaleSwitch` (footer) duplicates the header's "Language" nav landmark, which `ux-404.spec.ts` fails because it asserts zero axe violations of any impact; give the copy its own label and scope page-wide "VI"/"EN" link selectors to a landmark ("Việc" also substring-matches "VI").
 - 2026-11-01: `portfolio-data.json` and `pagesData` both feed the frozen `20261027150000_portfolio_content` migration and a spec compares the regenerated SQL, so owner copy changes go in the `owner-copy.data.ts` overlay that only `seedOwner` applies.
