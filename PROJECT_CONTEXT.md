@@ -149,6 +149,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - 2026-11-01: P5-2 T23b: add the radius, spacing, and motion scales with reduced-motion overrides; refresh screenshot and computed-style baselines and stabilize skill order in visual capture.
 - 2026-11-01: P5-1 T23a: set public Sans type scale, body/display line heights, and paragraph measure; guard paragraph font and line length in E2E.
 - 2026-11-01: Vercel Git deployments disabled for all branches except `main` via `git.deploymentEnabled`, so PRs no longer get a Vercel check.
+- 2026-11-02: Vercel ignore step fixed: `apps/web/scripts/vercel-ignore-build.sh` forwards to `scripts/vercel-ignore-build.sh`, since the ignore command was failing with ENOENT and every `main` production deploy errored.
 - 2026-11-01: Vercel builds only `main` (and `hotfix/*` behind a toggle, currently off); other branches skip via `ignoreCommand`.
 - 2026-11-01: Weekly Graphify refresh of `graphify-out/GRAPH_REPORT.md` (code-only, no model calls).
 - 2026-11-01: P4-6 T24: hero stats stored in site settings (nullable JSON column, admin fieldset, profile stats fallback). Spec: `docs/specs/2026-11-01-hero-stats.md`.
