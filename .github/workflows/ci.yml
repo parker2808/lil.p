@@ -154,18 +154,18 @@ jobs:
         env:
           NODE_ENV: test
       - run: pnpm --filter @portfolio/web build
+      # tar keeps the symlinks Turbopack writes to .next/node_modules (upload-artifact drops them).
+      - name: Pack build output
+        run: >-
+          tar -I 'zstd -1 -T0' -cf e2e-build.tar.zst
+          --exclude=apps/web/.next/cache --exclude=apps/web/.next/standalone
+          packages/contracts/dist apps/api/dist apps/web/.next
       - uses: actions/upload-artifact@v4
         with:
           name: e2e-build
-          include-hidden-files: true
-          compression-level: 1
+          path: e2e-build.tar.zst
+          compression-level: 0
           retention-days: 1
-          path: |
-            packages/contracts/dist
-            apps/api/dist
-            apps/web/.next
-            !apps/web/.next/cache
-            !apps/web/.next/standalone
 
   web-e2e-shard:
     # Starts right away (no `needs`): MySQL, pnpm install and browser deps run
@@ -230,6 +230,7 @@ jobs:
         with:
           name: e2e-build
           path: .
+      - run: tar -I zstd -xf e2e-build.tar.zst
       - name: Database env and wait for MySQL
         run: |
           user=app
