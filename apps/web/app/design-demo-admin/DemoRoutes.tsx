@@ -27,7 +27,7 @@ import {
   Upload,
   Users,
 } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { useId, useState, type ReactNode } from 'react';
 
 export const demoRoutes = {
   analytics: {
@@ -564,6 +564,19 @@ function TableView({
   go: (route: DemoRouteId) => void;
 }) {
   const rows = tableRows[route] ?? [];
+  const [query, setQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState(false);
+  const [compact, setCompact] = useState(false);
+  const filteredRows = rows.filter(
+    (row) =>
+      row.name.toLowerCase().includes(query.toLowerCase()) &&
+      (!statusFilter || row.status === rows[0]?.status),
+  );
+  const openRow = () => {
+    if (route === 'projects') go('projects-edit');
+    if (route === 'posts') go('posts-edit');
+    if (route === 'experience') go('experience-edit');
+  };
   const addRoute =
     route === 'projects'
       ? 'projects-new'
@@ -586,11 +599,7 @@ function TableView({
                   ? 'New post'
                   : 'Add experience'}
             </button>
-          ) : (
-            <ActionButton quiet>
-              <Filter size={16} /> Filters
-            </ActionButton>
-          )
+          ) : null
         }
       />
       <div className="route-stat-line">
@@ -599,16 +608,30 @@ function TableView({
         </span>
         <span className="route-status-dot" /> Everything is up to date
       </div>
-      <section className="panel route-table-panel">
+      <section className={`panel route-table-panel ${compact ? 'is-compact' : ''}`}>
         <div className="route-table-tools">
           <div className="search-box">
             <Search size={17} />
-            <span>{`Search ${demoRoutes[route].title.toLowerCase()}...`}</span>
+            <input
+              aria-label={`Search ${demoRoutes[route].title}`}
+              placeholder={`Search ${demoRoutes[route].title.toLowerCase()}...`}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
           </div>
-          <button className="outline-button">
-            <Filter size={16} /> Filters
+          <button
+            className="outline-button"
+            aria-pressed={statusFilter}
+            onClick={() => setStatusFilter(!statusFilter)}
+          >
+            <Filter size={16} /> {statusFilter ? 'Clear filter' : 'Filters'}
           </button>
-          <button className="outline-button compact-tool">
+          <button
+            className="outline-button compact-tool"
+            aria-label="Compact rows"
+            aria-pressed={compact}
+            onClick={() => setCompact(!compact)}
+          >
             <LayoutGrid size={16} />
           </button>
         </div>
@@ -635,14 +658,14 @@ function TableView({
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, i) => (
+              {filteredRows.map((row, i) => (
                 <tr
                   key={row.name}
-                  onClick={() => {
-                    if (route === 'projects') go('projects-edit');
-                    if (route === 'posts') go('posts-edit');
-                    if (route === 'experience') go('experience-edit');
+                  onClick={openRow}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') openRow();
                   }}
+                  tabIndex={['projects', 'posts', 'experience'].includes(route) ? 0 : undefined}
                 >
                   <td>
                     <span className="fake-checkbox" />
@@ -676,12 +699,32 @@ function TableView({
                   </td>
                 </tr>
               ))}
+              {!filteredRows.length && (
+                <tr>
+                  <td colSpan={6}>
+                    <div className="demo-table-empty">
+                      <Search size={22} />
+                      <strong>No matching entries</strong>
+                      <span>Try another search or clear the filter.</span>
+                      <button
+                        className="outline-button"
+                        onClick={() => {
+                          setQuery('');
+                          setStatusFilter(false);
+                        }}
+                      >
+                        Clear search and filters
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
         <div className="table-footer">
           <span>
-            Showing {rows.length} of {rows.length} results
+            Showing {filteredRows.length} of {rows.length} results
           </span>
           <span>1 / 1</span>
         </div>
@@ -756,9 +799,10 @@ function FormField({
   wide?: boolean;
   textarea?: boolean;
 }) {
+  const id = useId();
   return (
     <div className={`route-field ${wide ? 'wide' : ''}`}>
-      <label>{label}</label>
+      <label htmlFor={textarea ? undefined : id}>{label}</label>
       {textarea ? (
         <div className="route-textarea">
           <div className="markdown-toolbar">
@@ -773,7 +817,7 @@ function FormField({
           <p>{value}</p>
         </div>
       ) : (
-        <input value={value} readOnly />
+        <input id={id} value={value} readOnly />
       )}
       <small>Saved automatically</small>
     </div>
@@ -1096,7 +1140,13 @@ function MediaView() {
   );
 }
 
-function StateView({ route }: { route: 'not-found' | 'error' }) {
+function StateView({
+  route,
+  go,
+}: {
+  route: 'not-found' | 'error';
+  go: (route: 'dashboard') => void;
+}) {
   const missing = route === 'not-found';
   return (
     <div className="view state-view">
@@ -1104,7 +1154,7 @@ function StateView({ route }: { route: 'not-found' | 'error' }) {
       <span className="small-kicker">{missing ? '404 / PAGE NOT FOUND' : 'A SMALL DETOUR'}</span>
       <h1>{demoRoutes[route].title}</h1>
       <p>{demoRoutes[route].subtitle} Take a breath, then head back to your workspace.</p>
-      <button className="primary-button">
+      <button className="primary-button" onClick={() => go('dashboard')}>
         <ArrowLeft size={16} /> Back to overview
       </button>
     </div>
@@ -1151,7 +1201,7 @@ export function DemoRouteView({
   go,
 }: {
   route: DemoRouteId;
-  go: (route: DemoRouteId | 'pages-home' | 'pages-about') => void;
+  go: (route: DemoRouteId | 'pages-home' | 'pages-about' | 'dashboard') => void;
 }) {
   const kind = demoRoutes[route].kind;
   if (route === 'analytics' || route === 'stats') return <AnalyticsView route={route} />;
@@ -1187,6 +1237,6 @@ export function DemoRouteView({
   if (route === 'profile' || route === 'site') return <SettingsView route={route} />;
   if (route === 'media') return <MediaView />;
   if (kind === 'not-found' || kind === 'error')
-    return <StateView route={route as 'not-found' | 'error'} />;
+    return <StateView route={route as 'not-found' | 'error'} go={go} />;
   return null;
 }

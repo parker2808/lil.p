@@ -554,10 +554,22 @@
 }
 .state-view {
   display: flex;
+  flex-direction: column;
   min-height: 60vh;
   align-items: center;
   justify-content: center;
+  gap: 12px;
+  padding: 32px 16px;
   text-align: center;
+}
+.state-view h1 {
+  max-width: 22ch;
+  margin: 0;
+}
+.state-view p {
+  max-width: 45ch;
+  margin: 0;
+  line-height: 1.6;
 }
 .state-view > div {
   max-width: 480px;
@@ -567,7 +579,7 @@
   height: 92px;
   display: grid;
   place-items: center;
-  margin: 0 auto 25px;
+  margin: 0 auto 8px;
   border-radius: 28px;
   background: radial-gradient(circle at 65% 30%, #f9cb8b, transparent 35%), var(--brand-green-soft);
   color: var(--brand-green);
@@ -992,4 +1004,154 @@
 .demo-root .inbox-tabs button:not(.active),
 .demo-root .inbox-tabs button:not(.active) span {
   color: var(--brand-muted);
+}
+
+/* Action states used by the isolated fixture. */
+.demo-empty-state {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 60px 24px;
+  text-align: center;
+  color: var(--brand-green);
+}
+.inbox-shell.demo-archived {
+  grid-template-columns: 1fr;
+}
+.inbox-shell.demo-archived .message-detail {
+  display: none;
+}
+.state-view .primary-button {
+  max-width: 100%;
+  white-space: normal;
+}
+.route-table-tools .search-box input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--brand-ink);
+  font: inherit;
+}
+.route-table-tools .search-box input:focus-visible {
+  outline: 2px solid var(--brand-green);
+  outline-offset: 2px;
+}
+.route-table-panel.is-compact tbody td {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.route-table-panel tbody tr:focus-visible {
+  outline: 2px solid var(--brand-green);
+  outline-offset: -3px;
+}
+.demo-table-empty {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 32px 12px;
+  color: var(--brand-muted);
+  text-align: center;
+}
+.demo-table-empty strong {
+  color: var(--brand-ink);
+  font-size: 16px;
+}
+@media (max-width: 700px) {
+  .route-table-wrap tbody tr:has(.demo-table-empty) td:first-child {
+    display: block !important;
+    grid-column: 1 / -1;
+  }
+}
+.demo-empty-state h2,
+.demo-confirm-dialog h2 {
+  margin: 0;
+  color: var(--brand-ink);
+  font-size: 22px;
+  line-height: 1.25;
+}
+.demo-empty-state p,
+.demo-confirm-dialog p {
+  max-width: 36ch;
+  margin: 0;
+  color: var(--brand-muted);
+  line-height: 1.6;
+}
+.demo-success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--brand-green);
+  border-radius: 10px;
+  background: var(--brand-green-soft);
+  color: var(--brand-green);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.demo-field-error {
+  display: block;
+  margin-top: 5px;
+  color: #a33621;
+  font-size: 12px;
+}
+.login-card input[aria-invalid='true'] {
+  border-color: #a33621;
+}
+.demo-continue {
+  width: 100%;
+  margin: 0 0 16px;
+}
+.demo-dialog-backdrop {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #13272088;
+}
+.demo-confirm-dialog {
+  width: min(100%, 420px);
+  padding: 28px;
+  display: grid;
+  gap: 14px;
+  box-shadow: 0 24px 70px #10261f38;
+}
+.demo-confirm-dialog > div {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+}
+@media (max-width: 700px) {
+  .demo-root button,
+  .demo-root input,
+  .demo-root select {
+    min-height: 44px;
+  }
+  .demo-root button {
+    min-width: 44px;
+  }
+  .demo-root a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .demo-confirm-dialog > div {
+    flex-direction: column-reverse;
+  }
+  .demo-confirm-dialog button,
+  .demo-empty-state button,
+  .demo-continue,
+  .message-actions-main .mobile-back,
+  .password-wrap button {
+    min-height: 44px;
+  }
+  .password-wrap button {
+    top: 0;
+    right: 0;
+    min-width: 44px;
+  }
 }

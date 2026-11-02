@@ -118,6 +118,23 @@ for (const width of [1440, 390]) {
       `${origin}/design-demo-admin?screen=${route}&state=loading`,
     );
   }
+  for (const [route, state] of [
+    ['login', 'validation'],
+    ['login', 'success'],
+    ['inbox', 'empty'],
+  ]) {
+    await capture(
+      `${route}-${state}-${width}.png`,
+      `${origin}/design-demo-admin?screen=${route}&state=${state}`,
+    );
+  }
+  await page.goto(`${origin}/design-demo-admin?screen=inbox-detail`, { waitUntil: 'load' });
+  await page.getByRole('button', { name: 'Archive', exact: true }).click();
+  await page.screenshot({
+    path: `${output}/inbox-archive-confirm-${width}.png`,
+    animations: 'disabled',
+  });
+  count++;
   if (width === 390) {
     await page.goto(`${origin}/design-demo-admin?screen=login`, { waitUntil: 'load' });
     await page.getByRole('button', { name: /Sign in/ }).click();
@@ -129,6 +146,14 @@ for (const width of [1440, 390]) {
 }
 await browser.close();
 fs.writeFileSync(
+  `${output}/png-list.txt`,
+  `${fs
+    .readdirSync(output)
+    .filter((file) => file.endsWith('.png'))
+    .sort()
+    .join('\n')}\n`,
+);
+fs.writeFileSync(
   `${output}/capture-manifest.json`,
   JSON.stringify(
     {
@@ -138,6 +163,7 @@ fs.writeFileSync(
       loading,
       widths: [1440, 390],
       pngCount: count,
+      uxStates: ['login-validation', 'login-success', 'inbox-empty', 'inbox-archive-confirm'],
       failures,
     },
     null,

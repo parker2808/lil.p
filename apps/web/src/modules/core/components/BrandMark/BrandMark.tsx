@@ -10,7 +10,7 @@ export function BrandMark({
   className?: string;
 }) {
   return (
-    <span className={`brand-mark ${className}`} aria-label="parker">
+    <span className={`brand-mark ${className}`} role="img" aria-label="parker">
       <Image src="/icon.svg" alt="" width={32} height={32} unoptimized aria-hidden />
       {compact ? null : <span className="brand-mark-word">parker</span>}
     </span>

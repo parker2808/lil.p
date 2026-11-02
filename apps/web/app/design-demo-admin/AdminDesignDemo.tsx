@@ -463,9 +463,26 @@ const messages = [
   },
 ];
 
-function InboxView({ initialDetail = false }: { initialDetail?: boolean }) {
+function InboxView({
+  initialDetail = false,
+  initialEmpty = false,
+}: {
+  initialDetail?: boolean;
+  initialEmpty?: boolean;
+}) {
   const [selected, setSelected] = useState(0);
   const [showDetail, setShowDetail] = useState(initialDetail);
+  const [archived, setArchived] = useState(initialEmpty);
+  const [confirmArchive, setConfirmArchive] = useState(false);
+  const [notice, setNotice] = useState('');
+  useEffect(() => {
+    if (!confirmArchive) return;
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setConfirmArchive(false);
+    };
+    window.addEventListener('keydown', onEscape);
+    return () => window.removeEventListener('keydown', onEscape);
+  }, [confirmArchive]);
   return (
     <div className="view inbox-view">
       <SectionHeading
@@ -474,7 +491,9 @@ function InboxView({ initialDetail = false }: { initialDetail?: boolean }) {
         subtitle="Conversations worth keeping close."
         action={<span className="new-pill">3 new</span>}
       />
-      <div className={`inbox-shell panel ${showDetail ? 'detail-open' : ''}`}>
+      <div
+        className={`inbox-shell panel ${showDetail ? 'detail-open' : ''} ${archived ? 'demo-archived' : ''}`}
+      >
         <div className="message-list">
           <div className="inbox-list-toolbar">
             <div className="search-box">
@@ -494,27 +513,47 @@ function InboxView({ initialDetail = false }: { initialDetail?: boolean }) {
             </button>
             <button>Archived</button>
           </div>
-          {messages.map((message, i) => (
-            <button
-              className={`message-item ${selected === i ? 'selected' : ''}`}
-              key={message.initials}
-              onClick={() => {
-                setSelected(i);
-                setShowDetail(true);
-              }}
-            >
-              <span className={`avatar ${message.color}`}>{message.initials}</span>
-              <span className="message-copy">
-                <span className="message-line">
-                  <strong>{message.name}</strong>
-                  <time>{message.time}</time>
+          {archived ? (
+            <div className="demo-empty-state" role="status">
+              <Archive size={24} />
+              <h2>Inbox is clear</h2>
+              <p>
+                {notice ||
+                  'Archived messages are safely tucked away. New conversations will appear here.'}
+              </p>
+              <button
+                className="outline-button"
+                onClick={() => {
+                  setArchived(false);
+                  setNotice('');
+                }}
+              >
+                Restore demo messages
+              </button>
+            </div>
+          ) : (
+            messages.map((message, i) => (
+              <button
+                className={`message-item ${selected === i ? 'selected' : ''}`}
+                key={message.initials}
+                onClick={() => {
+                  setSelected(i);
+                  setShowDetail(true);
+                }}
+              >
+                <span className={`avatar ${message.color}`}>{message.initials}</span>
+                <span className="message-copy">
+                  <span className="message-line">
+                    <strong>{message.name}</strong>
+                    <time>{message.time}</time>
+                  </span>
+                  <strong className="message-topic">{message.topic}</strong>
+                  <small>{message.snippet}</small>
                 </span>
-                <strong className="message-topic">{message.topic}</strong>
-                <small>{message.snippet}</small>
-              </span>
-              {message.unread && <span className="unread-dot" />}
-            </button>
-          ))}
+                {message.unread && <span className="unread-dot" />}
+              </button>
+            ))
+          )}
         </div>
         <div className="message-detail">
           <div className="message-actions">
@@ -525,7 +564,7 @@ function InboxView({ initialDetail = false }: { initialDetail?: boolean }) {
               <span>Message {selected + 1} of 4</span>
             </span>
             <div>
-              <IconButton label="Archive">
+              <IconButton label="Archive" onClick={() => setConfirmArchive(true)}>
                 <Archive size={17} />
               </IconButton>
               <IconButton label="More actions">
@@ -534,6 +573,12 @@ function InboxView({ initialDetail = false }: { initialDetail?: boolean }) {
             </div>
           </div>
           <div className="message-body">
+            {notice && (
+              <div className="demo-success" role="status">
+                <Check size={18} />
+                {notice}
+              </div>
+            )}
             <span className="small-kicker">NEW MESSAGE</span>
             <h2>{messages[selected]?.topic}</h2>
             <div className="sender-line">
@@ -567,6 +612,38 @@ function InboxView({ initialDetail = false }: { initialDetail?: boolean }) {
           </div>
         </div>
       </div>
+      {confirmArchive && (
+        <div className="demo-dialog-backdrop" onClick={() => setConfirmArchive(false)}>
+          <div
+            className="demo-confirm-dialog panel"
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="archive-title"
+            aria-describedby="archive-desc"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <span className="small-kicker">ARCHIVE MESSAGE</span>
+            <h2 id="archive-title">Archive this message?</h2>
+            <p id="archive-desc">You can restore it later. This action only changes the demo.</p>
+            <div>
+              <button autoFocus className="outline-button" onClick={() => setConfirmArchive(false)}>
+                Cancel
+              </button>
+              <button
+                className="primary-button"
+                onClick={() => {
+                  setConfirmArchive(false);
+                  setNotice('Message archived. You can restore it from Archived.');
+                  setArchived(true);
+                  setShowDetail(false);
+                }}
+              >
+                Archive message
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -658,13 +735,13 @@ function EditorView({ pageTitle = 'About page' }: { pageTitle?: string }) {
             <label>
               Eyebrow <span>EN</span>
             </label>
-            <input value="A LITTLE ABOUT ME" readOnly />
+            <input value="A LITTLE ABOUT ME" readOnly aria-label="Eyebrow" />
           </div>
           <div className="field">
             <label>
               Heading <span>EN</span>
             </label>
-            <input value="Curious by design." readOnly />
+            <input value="Curious by design." readOnly aria-label="Heading" />
           </div>
           <div className="field">
             <label>
@@ -689,7 +766,7 @@ function EditorView({ pageTitle = 'About page' }: { pageTitle?: string }) {
           </div>
           <div className="field">
             <label>Anchor</label>
-            <input value="about" readOnly />
+            <input value="about" readOnly aria-label="Anchor" />
           </div>
         </section>
         <section className="panel preview-panel">
@@ -726,9 +803,22 @@ function EditorView({ pageTitle = 'About page' }: { pageTitle?: string }) {
   );
 }
 
-function LoginView() {
+function LoginView({ initialState, go }: { initialState?: string; go: (screen: Screen) => void }) {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState(initialState === 'validation' ? '' : 'demo');
+  const [password, setPassword] = useState(initialState === 'validation' ? '' : 'demopassword');
+  const [submitted, setSubmitted] = useState(initialState === 'validation');
+  const [success, setSuccess] = useState(initialState === 'success');
+  const submit = () => {
+    setSubmitted(true);
+    if (!username.trim() || !password.trim()) return;
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setSuccess(true);
+    }, 900);
+  };
   return (
     <div className="login-scene">
       <div className="login-aside">
@@ -754,7 +844,14 @@ function LoginView() {
         <div className="login-top">
           Need a hand? <CircleHelp size={17} />
         </div>
-        <div className="login-card">
+        <form
+          className="login-card"
+          noValidate
+          onSubmit={(event) => {
+            event.preventDefault();
+            submit();
+          }}
+        >
           <div className="login-mobile-brand">
             <BrandMark /> <small>ADMIN</small>
           </div>
@@ -764,30 +861,60 @@ function LoginView() {
           <span className="small-kicker">WELCOME BACK</span>
           <h2>Sign in to your space</h2>
           <p>Pick up right where you left off.</p>
-          <label>Username</label>
-          <input value="demo" readOnly aria-label="Demo username" />
-          <label>Password</label>
+          {success && (
+            <div className="demo-success" role="status">
+              <Check size={18} />
+              Demo sign in complete. Open your dashboard to continue.
+            </div>
+          )}
+          {success && (
+            <button
+              type="button"
+              className="outline-button demo-continue"
+              onClick={() => go('dashboard')}
+            >
+              Open dashboard <ArrowRight size={16} />
+            </button>
+          )}
+          <label htmlFor="demo-username">Username</label>
+          <input
+            id="demo-username"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            autoComplete="username"
+            aria-invalid={submitted && !username.trim()}
+            aria-describedby={submitted && !username.trim() ? 'demo-username-error' : undefined}
+          />
+          {submitted && !username.trim() && (
+            <small id="demo-username-error" className="demo-field-error">
+              Enter a username to continue.
+            </small>
+          )}
+          <label htmlFor="demo-password">Password</label>
           <div className="password-wrap">
             <input
+              id="demo-password"
               type={visible ? 'text' : 'password'}
-              value="demopassword"
-              readOnly
-              aria-label="Demo password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              autoComplete="current-password"
+              aria-invalid={submitted && !password.trim()}
+              aria-describedby={submitted && !password.trim() ? 'demo-password-error' : undefined}
             />
             <button
+              type="button"
               aria-label={visible ? 'Hide password' : 'Show password'}
               onClick={() => setVisible(!visible)}
             >
               {visible ? <EyeOff size={17} /> : <Eye size={17} />}
             </button>
           </div>
-          <button
-            className="primary-button sign-in"
-            onClick={() => {
-              setLoading(true);
-              setTimeout(() => setLoading(false), 1500);
-            }}
-          >
+          {submitted && !password.trim() && (
+            <small id="demo-password-error" className="demo-field-error">
+              Enter a password to continue.
+            </small>
+          )}
+          <button type="submit" className="primary-button sign-in" disabled={loading}>
             {loading ? (
               <>
                 <span className="tiny-spinner light" /> Signing in...
@@ -799,7 +926,7 @@ function LoginView() {
             )}
           </button>
           <small className="demo-note">Visual demo · Sign in is simulated</small>
-        </div>
+        </form>
         <div className="login-bottom">
           Made for thoughtful work <span>✳</span>
         </div>
@@ -810,6 +937,7 @@ function LoginView() {
 
 function Palette({ go, close }: { go: (screen: Screen) => void; close: () => void }) {
   const [query, setQuery] = useState('');
+  const [selected, setSelected] = useState(0);
   const commands = [
     { label: 'Create a new project', hint: 'C P', icon: Plus, screen: 'list-loading' as Screen },
     { label: 'Write a post', hint: 'W P', icon: FileText, screen: 'editor' as Screen },
@@ -831,7 +959,24 @@ function Palette({ go, close }: { go: (screen: Screen) => void; close: () => voi
             autoFocus
             placeholder="What would you like to do?"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setSelected(0);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'ArrowDown' && commands.length) {
+                event.preventDefault();
+                setSelected((selected + 1) % commands.length);
+              }
+              if (event.key === 'ArrowUp' && commands.length) {
+                event.preventDefault();
+                setSelected((selected - 1 + commands.length) % commands.length);
+              }
+              if (event.key === 'Enter' && commands[selected]) {
+                event.preventDefault();
+                go(commands[selected].screen);
+              }
+            }}
           />
           <kbd>ESC</kbd>
         </div>
@@ -840,7 +985,7 @@ function Palette({ go, close }: { go: (screen: Screen) => void; close: () => voi
           {commands.slice(0, 2).map((item, i) => (
             <button
               key={item.label}
-              className={i === 0 ? 'selected' : ''}
+              className={i === selected ? 'selected' : ''}
               onClick={() => go(item.screen)}
             >
               <span className="command-icon">
@@ -851,8 +996,12 @@ function Palette({ go, close }: { go: (screen: Screen) => void; close: () => voi
             </button>
           ))}
           <span className="small-kicker nav-kicker">GO TO</span>
-          {commands.slice(2).map((item) => (
-            <button key={item.label} onClick={() => go(item.screen)}>
+          {commands.slice(2).map((item, i) => (
+            <button
+              key={item.label}
+              className={i + 2 === selected ? 'selected' : ''}
+              onClick={() => go(item.screen)}
+            >
               <span className="command-icon">
                 <item.icon size={17} />
               </span>
@@ -946,7 +1095,7 @@ export function AdminDesignDemo({
   if (screen === 'login')
     return (
       <div className="demo-root" ref={rootRef}>
-        <LoginView />
+        <LoginView initialState={initialState} go={go} />
         <button
           className="login-language-switch"
           onClick={switchLocale}
@@ -1015,7 +1164,7 @@ export function AdminDesignDemo({
             ))}
           </nav>
           <div className="sidebar-bottom">
-            <button className="nav-item" onClick={() => go('login')}>
+            <button className="nav-item" aria-label="Help & feedback" onClick={() => go('login')}>
               <CircleHelp size={19} />
               <span>Help & feedback</span>
             </button>
@@ -1093,7 +1242,10 @@ export function AdminDesignDemo({
             ) : active === 'list-loading' ? (
               <ListLoading />
             ) : active === 'inbox' || active === 'inbox-detail' ? (
-              <InboxView initialDetail={active === 'inbox-detail'} />
+              <InboxView
+                initialDetail={active === 'inbox-detail'}
+                initialEmpty={initialState === 'empty'}
+              />
             ) : active === 'editor' || active === 'pages-home' || active === 'pages-about' ? (
               <EditorView pageTitle={active === 'pages-home' ? 'Home page' : 'About page'} />
             ) : active in demoRoutes ? (
