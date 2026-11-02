@@ -3,7 +3,17 @@ name: CI
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'graphify-out/**'
+      - 'tasks/**'
   pull_request:
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
+      - 'graphify-out/**'
+      - 'tasks/**'
   workflow_dispatch:
 
 concurrency:
@@ -11,7 +21,23 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      ui: ${{ steps.filter.outputs.ui }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            ui:
+              - 'packages/ui/**'
+              - 'pnpm-lock.yaml'
+
   lint-typecheck-unit:
+    needs: changes
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -24,7 +50,9 @@ jobs:
       - run: pnpm check:content
       - run: pnpm check:deps
       - run: pnpm build
-      - run: pnpm --filter @portfolio/ui build-storybook
+      - name: Build Storybook (only when packages/ui changes)
+        if: needs.changes.outputs.ui == 'true' || github.event_name != 'pull_request'
+        run: pnpm --filter @portfolio/ui build-storybook
 
   api-e2e:
     runs-on: ubuntu-latest
@@ -40,10 +68,11 @@ jobs:
         ports:
           - 3307:3306
         options: >-
+          --tmpfs /var/lib/mysql
           --health-cmd="mysqladmin ping -h 127.0.0.1"
-          --health-interval=10s
+          --health-interval=2s
           --health-timeout=5s
-          --health-retries=12
+          --health-retries=60
     env:
       NODE_ENV: test
       API_PORT: 4001
@@ -86,10 +115,11 @@ jobs:
         ports:
           - 3307:3306
         options: >-
+          --tmpfs /var/lib/mysql
           --health-cmd="mysqladmin ping -h 127.0.0.1"
-          --health-interval=10s
+          --health-interval=2s
           --health-timeout=5s
-          --health-retries=12
+          --health-retries=60
     env:
       NODE_ENV: test
       API_PORT: 4000
