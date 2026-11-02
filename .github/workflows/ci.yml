@@ -36,19 +36,40 @@ jobs:
               - 'packages/ui/**'
               - 'pnpm-lock.yaml'
 
-  lint-typecheck-unit:
-    needs: changes
+  lint-typecheck:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
-      - run: pnpm test
       - run: pnpm check:content
       - run: pnpm check:deps
+
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm -r --parallel --if-present test
+
+  build:
+    needs: changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: apps/web/.next/cache
+          key: next-${{ runner.os }}-build-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('apps/web/**/*.ts', 'apps/web/**/*.tsx', 'apps/web/**/*.css', 'packages/**/*.ts', 'packages/**/*.tsx', 'packages/**/*.css') }}
+          restore-keys: |
+            next-${{ runner.os }}-build-${{ hashFiles('pnpm-lock.yaml') }}-
       - run: pnpm build
       - name: Build Storybook (only when packages/ui changes)
         if: needs.changes.outputs.ui == 'true' || github.event_name != 'pull_request'
@@ -133,6 +154,13 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm --filter @portfolio/contracts build
       - run: pnpm --filter @portfolio/api build
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: apps/web/.next/cache
+          key: next-${{ runner.os }}-e2e-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('apps/web/**/*.ts', 'apps/web/**/*.tsx', 'apps/web/**/*.css', 'packages/**/*.ts', 'packages/**/*.tsx', 'packages/**/*.css') }}
+          restore-keys: |
+            next-${{ runner.os }}-e2e-${{ hashFiles('pnpm-lock.yaml') }}-
       - run: pnpm --filter @portfolio/web build
         env:
           NODE_ENV: production
@@ -149,7 +177,21 @@ jobs:
           export DATABASE_URL="$url"
           pnpm exec prisma migrate deploy
         working-directory: apps/api
-      - run: pnpm --filter @portfolio/web exec playwright install --with-deps chromium
+      - name: Playwright version
+        id: pw
+        run: echo "version=$(pnpm --filter @portfolio/web exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}-chromium
+      - name: Install Playwright browser
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter @portfolio/web exec playwright install --with-deps chromium
+      - name: Install Playwright system deps (browser cache hit)
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter @portfolio/web exec playwright install-deps chromium
       - run: pnpm --filter @portfolio/web test:e2e
       - uses: actions/upload-artifact@v4
         if: always()
