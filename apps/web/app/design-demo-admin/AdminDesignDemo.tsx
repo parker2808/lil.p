@@ -17,6 +17,7 @@ import {
   Eye,
   EyeOff,
   FileText,
+  Globe2,
   GripVertical,
   Home,
   Inbox,
@@ -34,7 +35,18 @@ import {
   X,
 } from 'lucide-react';
 import type { ComponentType, ReactNode } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import { BrandMark } from '@/modules/core/components/BrandMark/BrandMark';
+
+import {
+  DemoLoading,
+  DemoRouteView,
+  demoRouteIds,
+  demoRoutes,
+  type DemoRouteId,
+} from './DemoRoutes';
+import { applyDemoLocale, type DemoLocale } from './demo-i18n';
 
 type IconType = ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
 type Screen =
@@ -46,7 +58,11 @@ type Screen =
   | 'editor'
   | 'login'
   | 'palette'
-  | 'mobile-nav';
+  | 'mobile-nav'
+  | 'pages-home'
+  | 'pages-about'
+  | 'inbox-detail'
+  | DemoRouteId;
 
 const scenes: Screen[] = [
   'shell-expanded',
@@ -58,6 +74,10 @@ const scenes: Screen[] = [
   'login',
   'palette',
   'mobile-nav',
+  'pages-home',
+  'pages-about',
+  'inbox-detail',
+  ...demoRouteIds,
 ];
 const groups: {
   label: string;
@@ -68,22 +88,38 @@ const groups: {
     items: [
       { label: 'Overview', icon: LayoutDashboard, scene: 'dashboard' },
       { label: 'Inbox', icon: Inbox, scene: 'inbox', badge: '3' },
+      { label: 'Analytics', icon: Activity, scene: 'analytics' },
+      { label: 'Audit log', icon: Activity, scene: 'audit' },
     ],
   },
   {
     label: 'CREATE',
     items: [
-      { label: 'Pages', icon: Blocks, scene: 'editor' },
-      { label: 'Projects', icon: FileText, scene: 'list-loading' },
-      { label: 'Posts', icon: FileText, scene: 'list-loading' },
-      { label: 'Media', icon: Upload, scene: 'list-loading' },
+      { label: 'Pages', icon: Blocks, scene: 'pages' },
+      { label: 'Projects', icon: FileText, scene: 'projects' },
+      { label: 'Posts', icon: FileText, scene: 'posts' },
+      { label: 'Tags', icon: FileText, scene: 'tags' },
+      { label: 'Media', icon: Upload, scene: 'media' },
     ],
   },
   {
-    label: 'IMPROVE',
+    label: 'ABOUT',
     items: [
-      { label: 'Analytics', icon: Activity, scene: 'dashboard' },
-      { label: 'Site settings', icon: Settings2, scene: 'editor' },
+      { label: 'Experience', icon: FileText, scene: 'experience' },
+      { label: 'Education', icon: FileText, scene: 'education' },
+      { label: 'Skills', icon: Sparkles, scene: 'skills' },
+      { label: 'Principles', icon: Sparkles, scene: 'principles' },
+      { label: 'Process', icon: Activity, scene: 'process' },
+      { label: 'Stats', icon: Activity, scene: 'stats' },
+    ],
+  },
+  {
+    label: 'SETTINGS',
+    items: [
+      { label: 'Profile', icon: Settings2, scene: 'profile' },
+      { label: 'Site settings', icon: Settings2, scene: 'site' },
+      { label: 'Domains', icon: Blocks, scene: 'domains' },
+      { label: 'Users', icon: FileText, scene: 'users' },
     ],
   },
 ];
@@ -427,9 +463,9 @@ const messages = [
   },
 ];
 
-function InboxView() {
+function InboxView({ initialDetail = false }: { initialDetail?: boolean }) {
   const [selected, setSelected] = useState(0);
-  const [showDetail, setShowDetail] = useState(false);
+  const [showDetail, setShowDetail] = useState(initialDetail);
   return (
     <div className="view inbox-view">
       <SectionHeading
@@ -482,11 +518,11 @@ function InboxView() {
         </div>
         <div className="message-detail">
           <div className="message-actions">
-            <span>
+            <span className="message-actions-main">
               <button className="mobile-back" onClick={() => setShowDetail(false)}>
                 <ArrowLeft size={17} /> Inbox
               </button>
-              Message {selected + 1} of 4
+              <span>Message {selected + 1} of 4</span>
             </span>
             <div>
               <IconButton label="Archive">
@@ -535,7 +571,7 @@ function InboxView() {
   );
 }
 
-function EditorView() {
+function EditorView({ pageTitle = 'About page' }: { pageTitle?: string }) {
   const [block, setBlock] = useState(1);
   const rows = [
     { icon: 'H', name: 'Hero introduction', type: 'HEADING', key: 'intro' },
@@ -547,10 +583,12 @@ function EditorView() {
     <div className="view editor-view">
       <div className="editor-heading">
         <div>
-          <div className="eyebrow">PAGES / ABOUT</div>
+          <div className="eyebrow">
+            {pageTitle === 'Home page' ? 'PAGES / HOME' : 'PAGES / ABOUT'}
+          </div>
           <div className="editor-title">
             <ArrowLeft size={20} />
-            <h1>About page</h1>
+            <h1>{pageTitle}</h1>
             <span className="draft-pill">Draft changes</span>
           </div>
           <p>Build your story, one block at a time.</p>
@@ -695,7 +733,7 @@ function LoginView() {
     <div className="login-scene">
       <div className="login-aside">
         <div className="login-brand">
-          lil<span>.</span>p <span className="brand-admin">ADMIN</span>
+          <BrandMark /> <span className="brand-admin">ADMIN</span>
         </div>
         <div className="login-quote">
           <div className="quote-glyph">✳</div>
@@ -709,7 +747,7 @@ function LoginView() {
           <p>Your content, your space, your next idea.</p>
         </div>
         <div className="login-footer">
-          A LITTLE SPACE TO CREATE <span>© 2026 LIL.P</span>
+          A LITTLE SPACE TO CREATE <span>© 2026 PARKER</span>
         </div>
       </div>
       <div className="login-main">
@@ -718,7 +756,7 @@ function LoginView() {
         </div>
         <div className="login-card">
           <div className="login-mobile-brand">
-            lil<span>.</span>p <small>ADMIN</small>
+            <BrandMark /> <small>ADMIN</small>
           </div>
           <div className="login-mark">
             <Sparkles size={23} />
@@ -840,18 +878,48 @@ function Palette({ go, close }: { go: (screen: Screen) => void; close: () => voi
   );
 }
 
-export function AdminDesignDemo({ initialScreen }: { initialScreen: string }) {
+function screenTitle(screen: Screen): string {
+  if (screen in demoRoutes) return demoRoutes[screen as DemoRouteId].title;
+  if (screen === 'inbox' || screen === 'inbox-detail') return 'Inbox';
+  if (screen === 'editor' || screen === 'pages-about') return 'About page';
+  if (screen === 'pages-home') return 'Home page';
+  if (screen === 'list-loading') return 'Projects';
+  return 'Overview';
+}
+
+export function AdminDesignDemo({
+  initialScreen,
+  initialState,
+  initialLocale,
+}: {
+  initialScreen: string;
+  initialState?: string;
+  initialLocale?: string;
+}) {
   const [screen, setScreen] = useState<Screen>(
     scenes.includes(initialScreen as Screen) ? (initialScreen as Screen) : 'dashboard',
   );
+  const [locale, setLocale] = useState<DemoLocale>(initialLocale === 'vi' ? 'vi' : 'en');
+  const [loadingState, setLoadingState] = useState(initialState === 'loading');
+  const rootRef = useRef<HTMLDivElement>(null);
   const [collapsed, setCollapsed] = useState(initialScreen === 'shell-collapsed');
   const [palette, setPalette] = useState(initialScreen === 'palette');
   const [mobileMore, setMobileMore] = useState(initialScreen === 'mobile-nav');
   const go = (next: Screen) => {
     setScreen(next);
+    setLoadingState(false);
     setPalette(next === 'palette');
     setMobileMore(next === 'mobile-nav');
-    window.history.replaceState({}, '', `?screen=${next}`);
+    window.history.replaceState({}, '', `?screen=${next}&lang=${locale}`);
+  };
+  const switchLocale = () => {
+    const next = locale === 'en' ? 'vi' : 'en';
+    setLocale(next);
+    window.history.replaceState(
+      {},
+      '',
+      `?screen=${screen}&lang=${next}${loadingState ? '&state=loading' : ''}`,
+    );
   };
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -867,10 +935,25 @@ export function AdminDesignDemo({ initialScreen }: { initialScreen: string }) {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    applyDemoLocale(root, locale);
+    const observer = new MutationObserver(() => applyDemoLocale(root, locale));
+    observer.observe(root, { subtree: true, childList: true, characterData: true });
+    return () => observer.disconnect();
+  }, [locale, screen, palette, mobileMore, loadingState]);
   if (screen === 'login')
     return (
-      <div className="demo-root">
+      <div className="demo-root" ref={rootRef}>
         <LoginView />
+        <button
+          className="login-language-switch"
+          onClick={switchLocale}
+          aria-label="Switch language"
+        >
+          {locale === 'en' ? 'EN / VI' : 'VI / EN'}
+        </button>
         <div className="demo-switcher">
           <button onClick={() => go('dashboard')}>
             View dashboard <ArrowRight size={14} />
@@ -888,14 +971,13 @@ export function AdminDesignDemo({ initialScreen }: { initialScreen: string }) {
   return (
     <div
       className={`demo-root ${collapsed ? 'is-collapsed' : ''} ${screen === 'mobile-nav' ? 'scene-mobile-nav' : ''}`}
+      ref={rootRef}
     >
       <div className="app-shell">
         <aside className="sidebar">
           <div className="sidebar-brand">
-            <span className="brand-symbol">✳</span>
-            <span className="brand-name">
-              lil<span>.</span>p <small>ADMIN</small>
-            </span>
+            <BrandMark compact={collapsed} />
+            {collapsed ? null : <span className="brand-admin">ADMIN</span>}
             <IconButton
               label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
               onClick={() => setCollapsed(!collapsed)}
@@ -921,7 +1003,7 @@ export function AdminDesignDemo({ initialScreen }: { initialScreen: string }) {
                   <button
                     key={item.label}
                     title={item.label}
-                    className={`nav-item ${active === item.scene && item.label !== 'Analytics' && item.label !== 'Site settings' ? 'active' : ''}`}
+                    className={`nav-item ${active === item.scene || (item.scene === 'pages' && ['editor', 'pages-home', 'pages-about'].includes(active)) || (item.scene === 'inbox' && active === 'inbox-detail') ? 'active' : ''}`}
                     onClick={() => go(item.scene)}
                   >
                     <item.icon size={19} strokeWidth={1.9} />
@@ -958,28 +1040,16 @@ export function AdminDesignDemo({ initialScreen }: { initialScreen: string }) {
                 <Menu size={20} />
               </IconButton>
               <span className="breadcrumbs">
-                Workspace <ChevronRight size={15} />{' '}
-                <strong>
-                  {active === 'dashboard'
-                    ? 'Overview'
-                    : active === 'list-loading'
-                      ? 'Projects'
-                      : active === 'inbox'
-                        ? 'Inbox'
-                        : 'Pages'}
-                </strong>
+                Workspace <ChevronRight size={15} /> <strong>{screenTitle(active)}</strong>
               </span>
-              <span className="mobile-title">
-                {active === 'dashboard'
-                  ? 'Overview'
-                  : active === 'list-loading'
-                    ? 'Projects'
-                    : active === 'inbox'
-                      ? 'Inbox'
-                      : 'About page'}
-              </span>
+              <span className="mobile-title">{screenTitle(active)}</span>
             </div>
             <div className="topbar-right">
+              <button className="lang-toggle" onClick={switchLocale} aria-label="Switch language">
+                <Globe2 size={15} />
+                <span>{locale.toUpperCase()}</span>
+                <ChevronDown size={12} />
+              </button>
               <button className="command-trigger" onClick={() => setPalette(true)}>
                 <Search size={17} />
                 <span>Search or jump to...</span>
@@ -994,18 +1064,41 @@ export function AdminDesignDemo({ initialScreen }: { initialScreen: string }) {
             </div>
           </header>
           <main className="main-content">
-            {active === 'dashboard' ? (
+            {loadingState ? (
+              <DemoLoading
+                title={screenTitle(active)}
+                kind={
+                  [
+                    'editor',
+                    'pages-home',
+                    'pages-about',
+                    'projects-new',
+                    'projects-edit',
+                    'posts-new',
+                    'posts-edit',
+                    'experience-new',
+                    'experience-edit',
+                    'pages-about-experience-new',
+                    'pages-about-experience-edit',
+                  ].includes(active)
+                    ? 'editor'
+                    : 'table'
+                }
+              />
+            ) : active === 'dashboard' ? (
               <Dashboard
                 go={go}
                 shell={screen === 'shell-expanded' || screen === 'shell-collapsed'}
               />
             ) : active === 'list-loading' ? (
               <ListLoading />
-            ) : active === 'inbox' ? (
-              <InboxView />
-            ) : (
-              <EditorView />
-            )}
+            ) : active === 'inbox' || active === 'inbox-detail' ? (
+              <InboxView initialDetail={active === 'inbox-detail'} />
+            ) : active === 'editor' || active === 'pages-home' || active === 'pages-about' ? (
+              <EditorView pageTitle={active === 'pages-home' ? 'Home page' : 'About page'} />
+            ) : active in demoRoutes ? (
+              <DemoRouteView route={active as DemoRouteId} go={(next) => go(next)} />
+            ) : null}
           </main>
           <nav className="bottom-nav" aria-label="Mobile navigation">
             <button
@@ -1016,13 +1109,30 @@ export function AdminDesignDemo({ initialScreen }: { initialScreen: string }) {
               Overview
             </button>
             <button
-              className={active === 'list-loading' || active === 'editor' ? 'active' : ''}
-              onClick={() => go('list-loading')}
+              className={
+                [
+                  'list-loading',
+                  'editor',
+                  'pages',
+                  'pages-home',
+                  'pages-about',
+                  'projects',
+                  'posts',
+                  'media',
+                  'tags',
+                ].includes(active)
+                  ? 'active'
+                  : ''
+              }
+              onClick={() => go('pages')}
             >
               <Blocks size={20} />
               Content
             </button>
-            <button className={active === 'inbox' ? 'active' : ''} onClick={() => go('inbox')}>
+            <button
+              className={active === 'inbox' || active === 'inbox-detail' ? 'active' : ''}
+              onClick={() => go('inbox')}
+            >
               <span className="bottom-icon">
                 <Inbox size={20} />
                 <i />
@@ -1050,31 +1160,31 @@ export function AdminDesignDemo({ initialScreen }: { initialScreen: string }) {
               </IconButton>
             </div>
             <div className="sheet-grid">
-              <button onClick={() => go('editor')}>
+              <button onClick={() => go('pages')}>
                 <span>
                   <Blocks size={20} />
                 </span>
                 Pages <ChevronRight size={16} />
               </button>
-              <button onClick={() => go('list-loading')}>
+              <button onClick={() => go('projects')}>
                 <span>
                   <FileText size={20} />
                 </span>
                 Projects <ChevronRight size={16} />
               </button>
-              <button onClick={() => go('list-loading')}>
+              <button onClick={() => go('posts')}>
                 <span>
                   <FileText size={20} />
                 </span>
                 Posts <ChevronRight size={16} />
               </button>
-              <button onClick={() => go('dashboard')}>
+              <button onClick={() => go('analytics')}>
                 <span>
                   <Activity size={20} />
                 </span>
                 Analytics <ChevronRight size={16} />
               </button>
-              <button onClick={() => go('editor')}>
+              <button onClick={() => go('site')}>
                 <span>
                   <Settings2 size={20} />
                 </span>

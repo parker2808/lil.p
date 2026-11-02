@@ -61,10 +61,16 @@ export function proxy(request: NextRequest) {
 
   // Isolated, data-free visual fixture. Keep it outside auth and locale routing.
   if (pathname.startsWith('/design-demo-admin')) {
-    return applySecurityHeaders(
-      NextResponse.next(),
-      buildContentSecurityPolicy(undefined, connectSrc),
-    );
+    const csp = buildContentSecurityPolicy(undefined, connectSrc);
+    // Next's development overlay uses eval; permit it only for this fixture in dev.
+    const demoCsp =
+      process.env.NODE_ENV === 'development'
+        ? csp.replace(
+            "script-src 'self' 'unsafe-inline'",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+          )
+        : csp;
+    return applySecurityHeaders(NextResponse.next(), demoCsp);
   }
 
   const isAdmin = pathname.startsWith('/admin');
