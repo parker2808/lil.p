@@ -9,6 +9,7 @@ import {
   testJwtRefresh,
   testRevalidateSecret,
 } from './e2e/helpers/secrets';
+import { specsForShard } from './e2e/shards';
 
 const apiPort = process.env.API_PORT ?? '4000';
 const webPort = process.env.WEB_PORT ?? '3000';
@@ -39,54 +40,7 @@ Object.assign(process.env, sharedEnv);
 
 export default defineConfig({
   testDir: './e2e',
-  testMatch: [
-    'public.spec.ts',
-    'redesign.spec.ts',
-    'contact.spec.ts',
-    'admin-publish.spec.ts',
-    'admin-pages.spec.ts',
-    'admin-save-status.spec.ts',
-    'a11y.spec.ts',
-    'lighthouse.spec.ts',
-    'ux-overlay.spec.ts',
-    'admin-scroll.spec.ts',
-    'ux-404.spec.ts',
-    'content-guard.spec.ts',
-    'hero-shader.spec.ts',
-    'admin-login.spec.ts',
-    'segmented-control.spec.ts',
-    'admin-tables.spec.ts',
-    'admin-back-link.spec.ts',
-    'url-view-state.spec.ts',
-    'admin-table-styles.spec.ts',
-    'admin-locale.spec.ts',
-    'admin-vi-core.spec.ts',
-    'admin-vi-editors.spec.ts',
-    'metadata.spec.ts',
-    'projects-filters.spec.ts',
-    'project-cards.spec.ts',
-    'ux-targets.spec.ts',
-    'admin-components.spec.ts',
-    'editor-mode-toggle.spec.ts',
-    'editor-mobile-toolbar.spec.ts',
-    'case-study-end.spec.ts',
-    'about-page.spec.ts',
-    'case-study-layout.spec.ts',
-    'admin-detail-error.spec.ts',
-    'navigation-progress.spec.ts',
-    'split-js.spec.ts',
-    'hero-stats.spec.ts',
-    'footer.spec.ts',
-    'search-palette.spec.ts',
-    'visual.spec.ts',
-    'admin-ia.spec.ts',
-    'admin-bottom-bar.spec.ts',
-    'editor-split.spec.ts',
-    'admin-dashboard.spec.ts',
-    'admin-inbox.spec.ts',
-    'admin-palette.spec.ts',
-    'admin-table-filters.spec.ts',
-  ],
+  testMatch: specsForShard(process.env.E2E_SHARD),
   // Snapshots hold computed styles, not pixels, so one file serves every platform.
   snapshotPathTemplate: '{testDir}/__snapshots__/{testFileName}/{arg}{ext}',
   fullyParallel: false,
@@ -102,7 +56,11 @@ export default defineConfig({
       maxDiffPixelRatio: 0.01,
     },
   },
-  reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : 'list',
+  reporter: process.env.CI
+    ? process.env.E2E_SHARD
+      ? [['github'], ['blob', { fileName: `report-${process.env.E2E_SHARD}.zip` }]]
+      : [['github'], ['html', { open: 'never' }]]
+    : 'list',
   globalSetup: './e2e/global-setup.ts',
   use: {
     baseURL: webOrigin,
