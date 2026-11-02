@@ -58,7 +58,7 @@ export default defineConfig({
   },
   reporter: process.env.CI
     ? process.env.E2E_SHARD
-      ? [['github'], ['blob']]
+      ? [['github'], ['blob', { fileName: `report-${process.env.E2E_SHARD}.zip` }]]
       : [['github'], ['html', { open: 'never' }]]
     : 'list',
   globalSetup: './e2e/global-setup.ts',
