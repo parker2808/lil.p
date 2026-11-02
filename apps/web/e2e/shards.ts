@@ -59,11 +59,24 @@ const PINNED: Record<string, number> = {
   'lighthouse.spec.ts': 1,
 };
 
-/** Rough CI seconds per file; unknown files count as 5. Tune from shard timings. */
+/** CI seconds per file, measured on run 41382787431; unknown files count as 4. */
 const WEIGHT: Record<string, number> = {
-  'lighthouse.spec.ts': 40,
-  'visual.spec.ts': 25,
-  'a11y.spec.ts': 20,
+  'a11y.spec.ts': 63,
+  'lighthouse.spec.ts': 58,
+  'visual.spec.ts': 27,
+  'redesign.spec.ts': 10,
+  'footer.spec.ts': 9,
+  'navigation-progress.spec.ts': 8,
+  'editor-split.spec.ts': 8,
+  'split-js.spec.ts': 8,
+  'ux-overlay.spec.ts': 6,
+  'metadata.spec.ts': 6,
+  'admin-scroll.spec.ts': 6,
+  'admin-vi-editors.spec.ts': 6,
+  'admin-tables.spec.ts': 6,
+  'admin-vi-core.spec.ts': 6,
+  'admin-inbox.spec.ts': 6,
+  'ux-targets.spec.ts': 5,
 };
 
 function assign(): Map<string, number> {
@@ -71,15 +84,15 @@ function assign(): Map<string, number> {
   const out = new Map<string, number>();
   for (const [file, shard] of Object.entries(PINNED)) {
     out.set(file, shard);
-    load[shard - 1] = (load[shard - 1] ?? 0) + (WEIGHT[file] ?? 5);
+    load[shard - 1] = (load[shard - 1] ?? 0) + (WEIGHT[file] ?? 4);
   }
   const rest = SPECS.filter((f) => !out.has(f)).sort(
-    (a, b) => (WEIGHT[b] ?? 5) - (WEIGHT[a] ?? 5) || SPECS.indexOf(a) - SPECS.indexOf(b),
+    (a, b) => (WEIGHT[b] ?? 4) - (WEIGHT[a] ?? 4) || SPECS.indexOf(a) - SPECS.indexOf(b),
   );
   for (const file of rest) {
     const shard = load.indexOf(Math.min(...load)) + 1;
     out.set(file, shard);
-    load[shard - 1] = (load[shard - 1] ?? 0) + (WEIGHT[file] ?? 5);
+    load[shard - 1] = (load[shard - 1] ?? 0) + (WEIGHT[file] ?? 4);
   }
   return out;
 }
