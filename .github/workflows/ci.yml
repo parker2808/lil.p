@@ -191,11 +191,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Start MySQL (tmpfs, in background)
+        # The image pull runs in the background too; "wait for MySQL" below blocks until ready.
         run: |
-          docker run -d --name mysql -p 3307:3306 --tmpfs /var/lib/mysql \
+          nohup docker run -d --name mysql -p 3307:3306 --tmpfs /var/lib/mysql \
             -e MYSQL_ROOT_PASSWORD=test -e MYSQL_DATABASE=portfolio_test \
             -e MYSQL_USER=app -e MYSQL_PASSWORD=test \
-            mysql:8.4 --skip-log-bin --innodb-flush-log-at-trx-commit=0
+            mysql:8.4 --skip-log-bin --innodb-flush-log-at-trx-commit=0 > /tmp/mysql-start.log 2>&1 &
       - uses: ./.github/actions/setup
       - name: Playwright version
         id: pw
@@ -213,7 +214,7 @@ jobs:
           else
             cmd="install --with-deps chromium"
           fi
-          (cd apps/web && pnpm exec playwright $cmd > /tmp/pw-install.log 2>&1; echo $? > /tmp/pw-install.done) &
+          (cd apps/web && pnpm exec playwright $cmd > /tmp/pw-install.log 2>&1; echo $? > /tmp/pw-install.done) > /dev/null 2>&1 &
       - name: Wait for the e2e-build artifact
         env:
           GH_TOKEN: ${{ github.token }}
@@ -242,11 +243,11 @@ jobs:
           url="${scheme}://${user}:${pass}@${host}:${port}/${db}"
           echo "DATABASE_URL=${url}" >> "$GITHUB_ENV"
           echo "DATABASE_URL_TEST=${url}" >> "$GITHUB_ENV"
-          for i in $(seq 1 90); do
+          for i in $(seq 1 120); do
             docker exec mysql mysqladmin ping -h 127.0.0.1 -uapp -ptest --silent 2>/dev/null && exit 0
             sleep 1
           done
-          docker logs mysql
+          cat /tmp/mysql-start.log; docker logs mysql
           exit 1
       - name: Wait for Playwright install
         run: |
