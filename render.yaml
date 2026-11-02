@@ -11,6 +11,19 @@ services:
     dockerfilePath: ./apps/api/Dockerfile
     dockerContext: .
     healthCheckPath: /api/health
+    # Deploy only when the API image can change. The API depends on
+    # @portfolio/contracts only (`pnpm --filter @portfolio/api... ls`); web-only
+    # and packages/ui changes do not trigger a Render deploy.
+    buildFilter:
+      paths:
+        - apps/api/**
+        - packages/contracts/**
+        - package.json
+        - pnpm-lock.yaml
+        - pnpm-workspace.yaml
+        - tsconfig.base.json
+        - .dockerignore
+        - render.yaml
     envVars:
       - key: NODE_ENV
         value: production

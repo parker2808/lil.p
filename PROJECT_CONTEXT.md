@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- Render S5: `render.yaml` has a `buildFilter` (`apps/api/**`, `packages/contracts/**`, root `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `tsconfig.base.json`, `.dockerignore`, `render.yaml`; the Dockerfile is `apps/api/Dockerfile`). It applies only if the service is synced from the Blueprint; otherwise set the same Build Filters, or Auto-Deploy "After CI checks pass", in the Render dashboard (Parker).
 - CI S4: `api-e2e` and web-e2e shards run only on push to `main`, PRs labeled `ready-e2e`, or `workflow_dispatch`; without the label they are skipped and `web-e2e` still passes. Concurrency is per PR number. Policy in `docs/DEPLOY_AND_CI_RERUN.md` §8.
 - CI speed-up S3: web-e2e runs as 3 shards (`web-e2e shard i/3`), each with its own MySQL and seed; files per shard come from `apps/web/e2e/shards.ts` (`E2E_SHARD`), not `--shard`, because the visual and Lighthouse specs must share shard 1. Shards write blob reports; the `web-e2e` job merges them into the `playwright-report` artifact and fails if any shard failed. A new e2e spec must be added to `SPECS` in `shards.ts`. Locally, without `E2E_SHARD`, every spec runs as before.
 - CI speed-up S2: `lint-typecheck-unit` is split into parallel `lint-typecheck`, `unit` (`pnpm -r --parallel test`) and `build` (+ Storybook) jobs. `apps/web/.next/cache` is cached by lockfile and source hash; `~/.cache/ms-playwright` by Playwright version, and a hit runs only `playwright install-deps`.
@@ -121,6 +122,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-02: Render S5: Blueprint `buildFilter` so web-only merges do not deploy the API.
 - 2026-11-02: CI S4: e2e only on `main`, `ready-e2e`-labeled PRs or manual dispatch; per-PR concurrency.
 - 2026-11-02: CI S3: web-e2e in 3 shards with per-shard MySQL and merged blob reports; visual and Lighthouse pinned to shard 1.
 - 2026-11-02: CI S2: parallel lint/unit/build jobs, Next.js build cache, Playwright browser cache.
