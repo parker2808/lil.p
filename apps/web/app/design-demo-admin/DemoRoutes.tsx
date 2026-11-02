@@ -28,6 +28,12 @@ import {
   Users,
 } from 'lucide-react';
 import { useId, useState, type ReactNode } from 'react';
+import {
+  createDemoPage,
+  slugFromTitle,
+  validateDemoPage,
+  type DemoCreatedPage,
+} from './page-create.stub';
 
 export const demoRoutes = {
   analytics: {
@@ -733,57 +739,225 @@ function TableView({
   );
 }
 
-function PagesView({ go }: { go: (route: 'pages-home' | 'pages-about') => void }) {
+function PagesView({
+  go,
+  onCreate,
+  onOpenCreated,
+  createdPages,
+  initialOpen = false,
+  initialEmpty = false,
+}: {
+  go: (route: 'pages-home' | 'pages-about') => void;
+  onCreate: (page: DemoCreatedPage) => void;
+  onOpenCreated: (page: DemoCreatedPage) => void;
+  createdPages: DemoCreatedPage[];
+  initialOpen?: boolean;
+  initialEmpty?: boolean;
+}) {
+  const [open, setOpen] = useState(initialOpen);
+  const [title, setTitle] = useState('');
+  const [key, setKey] = useState('');
+  const [keyEdited, setKeyEdited] = useState(false);
+  const [locale, setLocale] = useState<'en' | 'vi'>('en');
+  const [template, setTemplate] = useState<'starter' | 'empty'>('starter');
+  const [error, setError] = useState<string | null>(null);
+  const submit = () => {
+    const page = { title, key, locale, template };
+    const issue = validateDemoPage(page, [
+      'home',
+      'about',
+      'contact',
+      ...createdPages.map((item) => item.key),
+    ]);
+    if (issue) {
+      setError(issue);
+      return;
+    }
+    onCreate(createDemoPage(page));
+  };
   return (
     <div className="view route-view">
       <RouteHeading
         route="pages"
         action={
-          <ActionButton quiet>
-            <Globe2 size={16} /> View live site <ArrowUpRight size={15} />
-          </ActionButton>
+          <div className="editor-actions">
+            <ActionButton quiet>
+              <Globe2 size={16} /> View live site <ArrowUpRight size={15} />
+            </ActionButton>
+            <button className="primary-button" onClick={() => setOpen(true)}>
+              <Plus size={17} /> Add page
+            </button>
+          </div>
         }
       />
-      <div className="page-grid">
-        {[
-          {
-            title: 'Home',
-            note: 'The first impression',
-            icon: Sparkles,
-            scene: 'pages-home' as const,
-            blocks: '08',
-          },
-          {
-            title: 'About',
-            note: 'Your story and values',
-            icon: BookOpen,
-            scene: 'pages-about' as const,
-            blocks: '12',
-          },
-          {
-            title: 'Contact',
-            note: 'A way to start a conversation',
-            icon: Globe2,
-            scene: 'pages-about' as const,
-            blocks: '04',
-          },
-        ].map((item) => (
-          <button className="panel page-card" key={item.title} onClick={() => go(item.scene)}>
-            <span className="page-card-icon">
-              <item.icon size={21} />
-            </span>
-            <span className="route-badge">Published</span>
-            <h2>{item.title}</h2>
-            <p>{item.note}</p>
-            <div>
-              <span>{item.blocks} blocks</span>
-              <span>
-                Edit page <ArrowRight size={15} />
+      {!initialEmpty && (
+        <div className="page-grid">
+          {[
+            {
+              title: 'Home',
+              note: 'The first impression',
+              icon: Sparkles,
+              scene: 'pages-home' as const,
+              blocks: '08',
+            },
+            {
+              title: 'About',
+              note: 'Your story and values',
+              icon: BookOpen,
+              scene: 'pages-about' as const,
+              blocks: '12',
+            },
+            {
+              title: 'Contact',
+              note: 'A way to start a conversation',
+              icon: Globe2,
+              scene: 'pages-about' as const,
+              blocks: '04',
+            },
+          ].map((item) => (
+            <button className="panel page-card" key={item.title} onClick={() => go(item.scene)}>
+              <span className="page-card-icon">
+                <item.icon size={21} />
               </span>
-            </div>
-          </button>
-        ))}
+              <span className="route-badge">Published</span>
+              <h2>{item.title}</h2>
+              <p>{item.note}</p>
+              <div>
+                <span>{item.blocks} blocks</span>
+                <span>
+                  Edit page <ArrowRight size={15} />
+                </span>
+              </div>
+            </button>
+          ))}
+          {createdPages.map((item) => (
+            <button className="panel page-card" key={item.key} onClick={() => onOpenCreated(item)}>
+              <span className="page-card-icon">
+                <FileText size={21} />
+              </span>
+              <span className="route-badge draft">Draft</span>
+              <h2>{item.title}</h2>
+              <p>
+                /{item.key} · {item.locale.toUpperCase()}
+              </p>
+              <div>
+                <span>{item.template === 'empty' ? '00' : '04'} blocks</span>
+                <span>
+                  Edit page <ArrowRight size={15} />
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="page-create-cta panel">
+        <div>
+          <span className="small-kicker">YOUR NEXT IDEA</span>
+          <h2>Make room for another story.</h2>
+          <p>Start with a simple page, then shape it block by block.</p>
+        </div>
+        <button className="outline-button" onClick={() => setOpen(true)}>
+          <Plus size={16} /> Add page
+        </button>
       </div>
+      {open && (
+        <div
+          className="page-dialog-backdrop"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setOpen(false);
+          }}
+        >
+          <div
+            className="page-dialog panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="create-page-title"
+          >
+            <div className="page-dialog-head">
+              <div>
+                <span className="small-kicker">PAGES / NEW</span>
+                <h2 id="create-page-title">Add page</h2>
+              </div>
+              <button
+                className="dialog-icon-button"
+                aria-label="Close"
+                onClick={() => setOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+            <p>Give this page a name and choose how to begin.</p>
+            <label htmlFor="new-page-title">Page title</label>
+            <input
+              id="new-page-title"
+              autoFocus
+              value={title}
+              onChange={(event) => {
+                const value = event.target.value;
+                setTitle(value);
+                if (!keyEdited) setKey(slugFromTitle(value));
+                setError(null);
+              }}
+              placeholder="e.g. Ideas"
+            />
+            <label htmlFor="new-page-slug">Slug</label>
+            <div className="slug-input">
+              <span>/</span>
+              <input
+                id="new-page-slug"
+                value={key}
+                onChange={(event) => {
+                  setKeyEdited(true);
+                  setKey(event.target.value);
+                  setError(null);
+                }}
+                placeholder="ideas"
+              />
+            </div>
+            <small>Lowercase letters, numbers, and hyphens only.</small>
+            <div className="page-dialog-options">
+              <div>
+                <label htmlFor="new-page-locale">Language</label>
+                <select
+                  id="new-page-locale"
+                  value={locale}
+                  onChange={(event) => setLocale(event.target.value as 'en' | 'vi')}
+                >
+                  <option value="en">English</option>
+                  <option value="vi">Tiếng Việt</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="new-page-template">Start with</label>
+                <select
+                  id="new-page-template"
+                  value={template}
+                  onChange={(event) => setTemplate(event.target.value as 'starter' | 'empty')}
+                >
+                  <option value="starter">Starter template</option>
+                  <option value="empty">Empty blocks</option>
+                </select>
+              </div>
+            </div>
+            {error && (
+              <p className="page-dialog-error" role="alert">
+                {error}
+              </p>
+            )}
+            <div className="page-dialog-actions">
+              <button className="outline-button" onClick={() => setOpen(false)}>
+                Cancel
+              </button>
+              <button className="primary-button" onClick={submit}>
+                Create page <ArrowRight size={16} />
+              </button>
+            </div>
+            <small className="demo-disclaimer">
+              Demo only · This page is kept in this browser session.
+            </small>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -943,28 +1117,51 @@ function EditorForm({
   );
 }
 
+function CollectionRow({
+  item,
+  index,
+}: {
+  item: { title: string; note: string; tag: string };
+  index: number;
+}) {
+  return (
+    <div className="collection-row">
+      <button className="collection-icon-button" aria-label={`Reorder ${item.title}`}>
+        <GripVertical size={17} />
+      </button>
+      <span className="collection-number">{String(index + 1).padStart(2, '0')}</span>
+      <div className="collection-copy">
+        <strong>{item.title}</strong>
+        <small>{item.note}</small>
+      </div>
+      <span className="route-badge collection-pill">{item.tag}</span>
+      <button className="collection-icon-button" aria-label={`More options for ${item.title}`}>
+        <MoreHorizontal size={18} />
+      </button>
+    </div>
+  );
+}
+
 function CollectionView({
   route,
 }: {
   route: 'education' | 'skills' | 'tags' | 'principles' | 'process';
 }) {
   const rows = collectionRows[route] ?? [];
+  const addLabel = {
+    education: 'Add education',
+    skills: 'Add skill',
+    tags: 'Add tag',
+    principles: 'Add principle',
+    process: 'Add step',
+  }[route];
   return (
     <div className="view route-view">
       <RouteHeading
         route={route}
         action={
           <ActionButton>
-            <Plus size={17} /> Add{' '}
-            {route === 'education'
-              ? 'education'
-              : route === 'skills'
-                ? 'skill'
-                : route === 'tags'
-                  ? 'tag'
-                  : route === 'principles'
-                    ? 'principle'
-                    : 'step'}
+            <Plus size={17} /> {addLabel}
           </ActionButton>
         }
       />
@@ -978,19 +1175,9 @@ function CollectionView({
                 <span className="muted-count">{rows.length.toString().padStart(2, '0')}</span>
               </h2>
             </div>
-            <GripVertical size={18} />
           </div>
           {rows.map((item, i) => (
-            <div className="collection-row" key={item.title}>
-              <GripVertical size={16} />
-              <span className="collection-number">0{i + 1}</span>
-              <span>
-                <strong>{item.title}</strong>
-                <small>{item.note}</small>
-              </span>
-              <span className="route-badge">{item.tag}</span>
-              <MoreHorizontal size={17} />
-            </div>
+            <CollectionRow item={item} index={i} key={item.title} />
           ))}
         </section>
         <aside className="panel collection-tip">
@@ -1199,9 +1386,17 @@ export function DemoLoading({ title, kind = 'table' }: { title: string; kind?: s
 export function DemoRouteView({
   route,
   go,
+  onCreatePage,
+  onOpenCreatedPage,
+  createdPages = [],
+  initialState,
 }: {
   route: DemoRouteId;
   go: (route: DemoRouteId | 'pages-home' | 'pages-about' | 'dashboard') => void;
+  onCreatePage?: (page: DemoCreatedPage) => void;
+  onOpenCreatedPage?: (page: DemoCreatedPage) => void;
+  createdPages?: DemoCreatedPage[];
+  initialState?: string;
 }) {
   const kind = demoRoutes[route].kind;
   if (route === 'analytics' || route === 'stats') return <AnalyticsView route={route} />;
@@ -1214,7 +1409,17 @@ export function DemoRouteView({
     route === 'audit'
   )
     return <TableView route={route} go={go} />;
-  if (route === 'pages') return <PagesView go={go} />;
+  if (route === 'pages')
+    return (
+      <PagesView
+        go={go}
+        onCreate={onCreatePage ?? (() => {})}
+        onOpenCreated={onOpenCreatedPage ?? (() => {})}
+        createdPages={createdPages}
+        initialOpen={initialState === 'create'}
+        initialEmpty={initialState === 'empty'}
+      />
+    );
   if (
     route === 'projects-new' ||
     route === 'projects-edit' ||

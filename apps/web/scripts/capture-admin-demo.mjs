@@ -20,6 +20,7 @@ const routes = [
   'pages',
   'pages-home',
   'pages-about',
+  'pages-created',
   'pages-about-experience-new',
   'pages-about-experience-edit',
   'experience',
@@ -111,6 +112,14 @@ for (const width of [1440, 390]) {
       const name = `${route}${locale === 'vi' ? '-vi' : ''}-${width}.png`;
       await capture(name, `${origin}/design-demo-admin?screen=${route}&lang=${locale}`);
     }
+    await capture(
+      `pages-create${locale === 'vi' ? '-vi' : ''}-${width}.png`,
+      `${origin}/design-demo-admin?screen=pages&state=create&lang=${locale}`,
+    );
+    await capture(
+      `pages-empty${locale === 'vi' ? '-vi' : ''}-${width}.png`,
+      `${origin}/design-demo-admin?screen=pages&state=empty&lang=${locale}`,
+    );
   }
   for (const route of loading) {
     await capture(
@@ -163,7 +172,14 @@ fs.writeFileSync(
       loading,
       widths: [1440, 390],
       pngCount: count,
-      uxStates: ['login-validation', 'login-success', 'inbox-empty', 'inbox-archive-confirm'],
+      uxStates: [
+        'login-validation',
+        'login-success',
+        'inbox-empty',
+        'inbox-archive-confirm',
+        'pages-create',
+        'pages-empty',
+      ],
       failures,
     },
     null,

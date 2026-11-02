@@ -85,3 +85,4 @@
 - 2026-11-02: Next development's overlay needs `unsafe-eval` in the page CSP; allow it only on the isolated design fixture in development, while production captures use the strict production policy.
 - 2026-11-02: A visual fixture can pass build checks while read-only mock inputs lack accessible names; run an axe and mobile target audit across every route/state before the final capture, then pair illustrative actions with visible feedback.
 - 2026-11-02: A screen can pass axe, overflow, and touch-target checks while its flex children are laid out in the wrong direction; inspect full-size captures for hierarchy before accepting the contact sheet.
+- 2026-11-03: Collection rows need an explicit grid and a min-width:0 text column; a selector expecting a div can silently miss a span wrapper, leaving titles, descriptions, and status pills colliding despite passing type and accessibility checks.

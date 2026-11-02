@@ -3,6 +3,30 @@ export type DemoLocale = 'en' | 'vi';
 // The fixture keeps one English source of truth for its fictional copy. This map
 // localizes rendered UI without changing production next-intl messages.
 const vi: Record<string, string> = {
+  'Add page': 'Thêm trang',
+  'YOUR NEXT IDEA': 'Ý TƯỞNG TIẾP THEO',
+  'Make room for another story.': 'Thêm không gian cho câu chuyện mới.',
+  'Start with a simple page, then shape it block by block.':
+    'Bắt đầu với một trang đơn giản, rồi xây dựng từng khối.',
+  'PAGES / NEW': 'TRANG / MỚI',
+  'Give this page a name and choose how to begin.': 'Đặt tên trang và chọn cách bắt đầu.',
+  'Page title': 'Tiêu đề trang',
+  'Lowercase letters, numbers, and hyphens only.': 'Chỉ dùng chữ thường, số và dấu gạch nối.',
+  Language: 'Ngôn ngữ',
+  'Start with': 'Bắt đầu bằng',
+  'Starter template': 'Mẫu khởi đầu',
+  'Empty blocks': 'Trang trống',
+  'Create page': 'Tạo trang',
+  'Demo only · This page is kept in this browser session.':
+    'Chỉ là bản demo · Trang được giữ trong phiên trình duyệt này.',
+  'Enter a page title.': 'Hãy nhập tiêu đề trang.',
+  'Use lowercase letters, numbers, and hyphens for the slug.':
+    'Đường dẫn chỉ dùng chữ thường, số và dấu gạch nối.',
+  'This slug is already in use.': 'Đường dẫn này đã được dùng.',
+  'No blocks yet': 'Chưa có khối nào',
+  'Add a block to start shaping this page.': 'Thêm một khối để bắt đầu xây dựng trang.',
+  'Choose a block': 'Chọn một khối',
+  'New page': 'Trang mới',
   Overview: 'Tổng quan',
   Inbox: 'Hộp thư',
   Projects: 'Dự án',

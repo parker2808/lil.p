@@ -20,6 +20,8 @@ for (const width of [1440, 390]) {
     ['login', 'validation'],
     ['login', 'success'],
     ['inbox', 'empty'],
+    ['pages', 'create'],
+    ['pages', 'empty'],
   ])
     for (const locale of ['en', 'vi']) {
       const url = `http://localhost:3101/design-demo-admin?screen=${route}&lang=${locale}${state ? `&state=${state}` : ''}`;

@@ -47,6 +47,7 @@ import {
   type DemoRouteId,
 } from './DemoRoutes';
 import { applyDemoLocale, type DemoLocale } from './demo-i18n';
+import type { DemoCreatedPage } from './page-create.stub';
 
 type IconType = ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
 type Screen =
@@ -61,6 +62,7 @@ type Screen =
   | 'mobile-nav'
   | 'pages-home'
   | 'pages-about'
+  | 'pages-created'
   | 'inbox-detail'
   | DemoRouteId;
 
@@ -76,6 +78,7 @@ const scenes: Screen[] = [
   'mobile-nav',
   'pages-home',
   'pages-about',
+  'pages-created',
   'inbox-detail',
   ...demoRouteIds,
 ];
@@ -648,20 +651,34 @@ function InboxView({
   );
 }
 
-function EditorView({ pageTitle = 'About page' }: { pageTitle?: string }) {
+function EditorView({
+  pageTitle = 'About page',
+  empty = false,
+  pageKey,
+}: {
+  pageTitle?: string;
+  empty?: boolean;
+  pageKey?: string;
+}) {
   const [block, setBlock] = useState(1);
-  const rows = [
-    { icon: 'H', name: 'Hero introduction', type: 'HEADING', key: 'intro' },
-    { icon: 'T', name: 'About me', type: 'RICH TEXT', key: 'about' },
-    { icon: '◫', name: 'Selected work', type: 'PROJECT GRID', key: 'work' },
-    { icon: '✦', name: 'What I believe', type: 'QUOTE', key: 'values' },
-  ];
+  const rows = empty
+    ? []
+    : [
+        { icon: 'H', name: 'Hero introduction', type: 'HEADING', key: 'intro' },
+        { icon: 'T', name: 'About me', type: 'RICH TEXT', key: 'about' },
+        { icon: '◫', name: 'Selected work', type: 'PROJECT GRID', key: 'work' },
+        { icon: '✦', name: 'What I believe', type: 'QUOTE', key: 'values' },
+      ];
   return (
     <div className="view editor-view">
       <div className="editor-heading">
         <div>
           <div className="eyebrow">
-            {pageTitle === 'Home page' ? 'PAGES / HOME' : 'PAGES / ABOUT'}
+            {pageKey
+              ? `PAGES / ${pageKey.toUpperCase()}`
+              : pageTitle === 'Home page'
+                ? 'PAGES / HOME'
+                : 'PAGES / ABOUT'}
           </div>
           <div className="editor-title">
             <ArrowLeft size={20} />
@@ -688,7 +705,7 @@ function EditorView({ pageTitle = 'About page' }: { pageTitle?: string }) {
             <div>
               <span className="small-kicker">PAGE STRUCTURE</span>
               <h2>
-                Blocks <span>04</span>
+                Blocks <span>{String(rows.length).padStart(2, '0')}</span>
               </h2>
             </div>
             <IconButton label="Add block">
@@ -696,6 +713,13 @@ function EditorView({ pageTitle = 'About page' }: { pageTitle?: string }) {
             </IconButton>
           </div>
           <div className="block-rows">
+            {empty && (
+              <div className="empty-blocks">
+                <Blocks size={24} />
+                <strong>No blocks yet</strong>
+                <p>Add a block to start shaping this page.</p>
+              </div>
+            )}
             {rows.map((row, i) => (
               <button
                 key={row.name}
@@ -722,7 +746,7 @@ function EditorView({ pageTitle = 'About page' }: { pageTitle?: string }) {
           <div className="editor-panel-title">
             <div>
               <span className="small-kicker">BLOCK INSPECTOR</span>
-              <h2>{rows[block]?.name}</h2>
+              <h2>{rows[block]?.name ?? 'Choose a block'}</h2>
             </div>
             <MoreHorizontal size={18} />
           </div>
@@ -1031,6 +1055,7 @@ function screenTitle(screen: Screen): string {
   if (screen in demoRoutes) return demoRoutes[screen as DemoRouteId].title;
   if (screen === 'inbox' || screen === 'inbox-detail') return 'Inbox';
   if (screen === 'editor' || screen === 'pages-about') return 'About page';
+  if (screen === 'pages-created') return 'New page';
   if (screen === 'pages-home') return 'Home page';
   if (screen === 'list-loading') return 'Projects';
   return 'Overview';
@@ -1054,6 +1079,12 @@ export function AdminDesignDemo({
   const [collapsed, setCollapsed] = useState(initialScreen === 'shell-collapsed');
   const [palette, setPalette] = useState(initialScreen === 'palette');
   const [mobileMore, setMobileMore] = useState(initialScreen === 'mobile-nav');
+  const [createdPages, setCreatedPages] = useState<DemoCreatedPage[]>([]);
+  const [createdPage, setCreatedPage] = useState<DemoCreatedPage | null>(
+    initialScreen === 'pages-created'
+      ? { title: 'Ideas', key: 'ideas', locale: 'en', template: 'starter' }
+      : null,
+  );
   const go = (next: Screen) => {
     setScreen(next);
     setLoadingState(false);
@@ -1246,10 +1277,37 @@ export function AdminDesignDemo({
                 initialDetail={active === 'inbox-detail'}
                 initialEmpty={initialState === 'empty'}
               />
-            ) : active === 'editor' || active === 'pages-home' || active === 'pages-about' ? (
-              <EditorView pageTitle={active === 'pages-home' ? 'Home page' : 'About page'} />
+            ) : active === 'editor' ||
+              active === 'pages-home' ||
+              active === 'pages-about' ||
+              active === 'pages-created' ? (
+              <EditorView
+                pageTitle={
+                  active === 'pages-created'
+                    ? createdPage?.title
+                    : active === 'pages-home'
+                      ? 'Home page'
+                      : 'About page'
+                }
+                pageKey={active === 'pages-created' ? createdPage?.key : undefined}
+                empty={active === 'pages-created' && createdPage?.template === 'empty'}
+              />
             ) : active in demoRoutes ? (
-              <DemoRouteView route={active as DemoRouteId} go={(next) => go(next)} />
+              <DemoRouteView
+                route={active as DemoRouteId}
+                go={(next) => go(next)}
+                initialState={initialState}
+                createdPages={createdPages}
+                onCreatePage={(page) => {
+                  setCreatedPage(page);
+                  setCreatedPages((pages) => [...pages, page]);
+                  go('pages-created');
+                }}
+                onOpenCreatedPage={(page) => {
+                  setCreatedPage(page);
+                  go('pages-created');
+                }}
+              />
             ) : null}
           </main>
           <nav className="bottom-nav" aria-label="Mobile navigation">
