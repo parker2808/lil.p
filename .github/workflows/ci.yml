@@ -54,6 +54,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+      - run: pnpm --filter @portfolio/contracts build
       - run: pnpm -r --parallel --if-present test
 
   build:
