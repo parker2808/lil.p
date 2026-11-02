@@ -1,6 +1,8 @@
 import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
+import { DemoLoading } from '@/modules/design-demo/DemoLoading';
 
 export default function Loading() {
+  if (process.env.DESIGN_DEMO === '1') return <DemoLoading variant="projects" />;
   return (
     <div aria-busy="true" data-slot="projects-skeleton">
       <div className="site-container public-block grid gap-6">

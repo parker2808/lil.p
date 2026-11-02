@@ -40,7 +40,12 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={fontClassName} suppressHydrationWarning>
       <body className="bg-background text-body text-foreground min-h-dvh font-sans antialiased">
-        <Providers locale={locale} messages={messages} nonce={nonce}>
+        <Providers
+          locale={locale}
+          messages={messages}
+          nonce={nonce}
+          demo={process.env.DESIGN_DEMO === '1'}
+        >
           {children}
         </Providers>
       </body>

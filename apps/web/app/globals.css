@@ -1,3 +1,6 @@
 @import '@portfolio/ui/styles/globals.css';
+@view-transition {
+  navigation: auto;
+}
 @source '../src';
 @source '../../../packages/ui/src';

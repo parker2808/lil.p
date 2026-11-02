@@ -14,11 +14,13 @@ export function Providers({
   locale,
   messages,
   nonce,
+  demo = false,
 }: {
   children: ReactNode;
   locale: string;
   messages: AbstractIntlMessages;
   nonce?: string;
+  demo?: boolean;
 }) {
   useEffect(() => {
     const connection = (
@@ -39,7 +41,7 @@ export function Providers({
   return (
     <NextIntlClientProvider locale={locale} messages={messages} timeZone={APP_TIME_ZONE}>
       <ThemeProvider nonce={nonce}>
-        <ApiWarmup />
+        {demo ? null : <ApiWarmup />}
         <NavigationProgress />
         {children}
       </ThemeProvider>
