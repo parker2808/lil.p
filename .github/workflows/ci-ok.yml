@@ -1,0 +1,15 @@
+name: ci-ok
+
+# Always runs, including docs-only changes that CI skips through paths-ignore,
+# so a required check can point at `ci-ok` without ever hanging.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  ci-ok:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: echo "ci-ok"
