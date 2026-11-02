@@ -1,6 +1,6 @@
 'use client';
 
-import { createPageSchema, qk, type CreatePageInput } from '@portfolio/contracts';
+import { createPageSchema, isReservedPublicPageSlug, qk } from '@portfolio/contracts';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { inputClassName } from '@portfolio/ui/components/ui/input';
 import { Dialog, DialogContent, DialogTitle } from '@portfolio/ui/components/ui/dialog';
@@ -19,6 +19,7 @@ export function slugFromPageTitle(value: string): string {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
+    .replace(/đ/g, 'd')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
@@ -41,32 +42,51 @@ export function CreatePageDialog({
   const [keyEdited, setKeyEdited] = useState(false);
   const [locale, setLocale] = useState<'en' | 'vi'>(currentLocale === 'vi' ? 'vi' : 'en');
   const [template, setTemplate] = useState<'starter' | 'empty'>('starter');
-  const [error, setError] = useState('');
+  const [titleError, setTitleError] = useState('');
+  const [keyError, setKeyError] = useState('');
+  const [formError, setFormError] = useState('');
   const [pending, setPending] = useState(false);
+
+  function titleMessage(value: string): string {
+    return createPageSchema.shape.title.safeParse(value).success ? '' : t('titleRequired');
+  }
+
+  function keyMessage(value: string): string {
+    if (!createPageSchema.shape.key.safeParse(value).success) return t('invalidSlug');
+    if (isReservedPublicPageSlug(value) || existingKeys.includes(value)) {
+      return t('duplicateSlug');
+    }
+    return '';
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const parsed = createPageSchema.safeParse({ title, key, locale, template });
-    if (!parsed.success) {
-      setError(!title.trim() ? t('titleRequired') : t('invalidSlug'));
+    const nextTitleError = titleMessage(title);
+    const nextKeyError = keyMessage(key);
+    setTitleError(nextTitleError);
+    setKeyError(nextKeyError);
+    if (nextTitleError || nextKeyError) {
       return;
     }
-    if (existingKeys.includes(key)) {
-      setError(t('duplicateSlug'));
+    const parsed = createPageSchema.safeParse({ title, key, locale, template });
+    if (!parsed.success) {
+      setFormError(t('failed'));
       return;
     }
     setPending(true);
-    setError('');
+    setFormError('');
     try {
-      const page = await createAdminPage(parsed.data as CreatePageInput);
+      const page = await createAdminPage(parsed.data);
       queryClient.setQueryData(qk.admin.pages.detail(page.key), page);
       void queryClient.invalidateQueries({ queryKey: qk.admin.pages.list });
       onOpenChange(false);
       router.push(`/admin/pages/${page.key}`);
     } catch (caught) {
-      setError(
-        caught instanceof ApiError && caught.status === 409 ? t('duplicateSlug') : t('failed'),
-      );
+      if (caught instanceof ApiError && caught.status === 409) {
+        setKeyError(t('duplicateSlug'));
+      } else {
+        setFormError(t('failed'));
+      }
     } finally {
       setPending(false);
     }
@@ -89,12 +109,25 @@ export function CreatePageDialog({
               onChange={(event) => {
                 const next = event.target.value;
                 setTitle(next);
-                if (!keyEdited) setKey(slugFromPageTitle(next));
-                setError('');
+                setTitleError(titleMessage(next));
+                if (!keyEdited) {
+                  const nextKey = slugFromPageTitle(next);
+                  setKey(nextKey);
+                  setKeyError(next.trim() ? keyMessage(nextKey) : '');
+                }
+                setFormError('');
               }}
+              onBlur={() => setTitleError(titleMessage(title))}
               maxLength={120}
+              aria-invalid={titleError ? true : undefined}
+              aria-describedby={titleError ? 'create-page-title-error' : undefined}
               className="border-input bg-background h-11 rounded-md border px-3"
             />
+            {titleError ? (
+              <p id="create-page-title-error" role="alert" className="text-ui text-destructive">
+                {titleError}
+              </p>
+            ) : null}
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="create-page-key" className="text-ui font-medium">
@@ -106,16 +139,25 @@ export function CreatePageDialog({
               onChange={(event) => {
                 setKeyEdited(true);
                 setKey(event.target.value);
-                setError('');
+                setKeyError(keyMessage(event.target.value));
+                setFormError('');
               }}
+              onBlur={() => setKeyError(keyMessage(key))}
               maxLength={64}
-              aria-invalid={Boolean(error)}
-              aria-describedby="create-page-key-hint"
+              aria-invalid={keyError ? true : undefined}
+              aria-describedby={
+                keyError ? 'create-page-key-hint create-page-key-error' : 'create-page-key-hint'
+              }
               className="border-input bg-background h-11 rounded-md border px-3"
             />
             <p id="create-page-key-hint" className="text-ui-meta text-muted-foreground">
               {t('slugHint')}
             </p>
+            {keyError ? (
+              <p id="create-page-key-error" role="alert" className="text-ui text-destructive">
+                {keyError}
+              </p>
+            ) : null}
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-2">
@@ -147,9 +189,9 @@ export function CreatePageDialog({
               </select>
             </div>
           </div>
-          {error ? (
+          {formError ? (
             <p role="alert" className="text-ui text-destructive">
-              {error}
+              {formError}
             </p>
           ) : null}
           <div className="flex justify-end gap-2">

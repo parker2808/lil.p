@@ -94,6 +94,16 @@ describe('PagesService', () => {
     ).rejects.toMatchObject({ status: 409 });
     expect(race.audit.record).not.toHaveBeenCalled();
   });
+  it.each(['home', 'about', 'projects', 'notes', 'contact', 'craft'])(
+    'returns 409 before querying the database for reserved route %s',
+    async (key) => {
+      const h = createHarness(false);
+      await expect(
+        h.service.createPage({ title: 'Page', key, locale: 'en', template: 'empty' }),
+      ).rejects.toMatchObject({ status: 409 });
+      expect(h.prisma.page.findUnique).not.toHaveBeenCalled();
+    },
+  );
   it('serves the published snapshot and drops unknown snapshot blocks', async () => {
     const prisma = {
       page: {

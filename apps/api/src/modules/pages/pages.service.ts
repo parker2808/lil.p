@@ -15,6 +15,7 @@ import {
   type BlockUpdateInput,
   corePageKeySchema,
   type CreatePageInput,
+  isReservedPublicPageSlug,
   type Locale,
   type PageKey,
   type PageUpdateInput,
@@ -140,7 +141,7 @@ export class PagesService {
   }
 
   async createPage(input: CreatePageInput): Promise<AdminPage> {
-    if (corePageKeySchema.safeParse(input.key).success) {
+    if (corePageKeySchema.safeParse(input.key).success || isReservedPublicPageSlug(input.key)) {
       throw new ConflictException({
         code: 'PAGE_KEY_TAKEN',
         message: 'Page slug is already in use',

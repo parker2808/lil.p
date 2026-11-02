@@ -68,7 +68,11 @@ export {
 } from './constants/markdown.constant';
 export { qk } from './constants/query-keys.constant';
 export type { PublicRoute } from './constants/routes.constant';
-export { PUBLIC_ROUTES } from './constants/routes.constant';
+export {
+  isReservedPublicPageSlug,
+  PUBLIC_ROUTES,
+  RESERVED_PUBLIC_PAGE_SLUGS,
+} from './constants/routes.constant';
 export {
   adminContactMessageListPageSchema,
   adminContactMessageListParamsSchema,

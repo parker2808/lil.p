@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-03: Focused API and web tests import the built contracts package, so rebuild `@portfolio/contracts` after changing shared exports before interpreting cross-package test failures.
+
 - 2026-11-02: A top-level Next demo route must bypass the locale middleware explicitly in `proxy.ts`; otherwise `/design-demo-admin` redirects to `/en/design-demo-admin` and falls into the public site route. For tall Playwright mobile PNGs, place the fixed bottom bar at the document end in the capture style so it does not appear halfway through the image.
 
 - 2026-11-02: A Radix Dialog with no `DialogTrigger` focuses nothing on close (its default refocuses the trigger ref), so a palette opened from several controls stores `document.activeElement` on open and refocuses it in `onCloseAutoFocus`; `IconButton` also brings Radix Tooltip and the popper, which the public layout bundle avoids.
