@@ -1,8 +1,8 @@
-// CI runs web-e2e in {3} shards, each with its own MySQL. Playwright's built-in
+// CI runs web-e2e in {4} shards, each with its own MySQL. Playwright's built-in
 // `--shard` cannot pin files together, so files are assigned here instead:
 // the pixel (visual) and Lighthouse specs always share shard 1, and the rest
 // are balanced by measured CI duration. Order inside a shard follows SPECS.
-export const SHARD_COUNT = 3;
+export const SHARD_COUNT = 4;
 
 export const SPECS = [
   'public.spec.ts',

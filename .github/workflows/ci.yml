@@ -123,30 +123,63 @@ jobs:
       - run: pnpm --filter @portfolio/contracts build
       - run: pnpm --filter @portfolio/api test:e2e
 
+  build-e2e:
+    # Builds contracts, api and web once for every web-e2e shard.
+    name: web-e2e build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      playwright: ${{ steps.pw.outputs.version }}
+    env:
+      NODE_ENV: production
+      API_URL: http://127.0.0.1:4000
+      WEB_ORIGIN: http://127.0.0.1:3000
+      WEB_INTERNAL_URL: http://127.0.0.1:3000
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Playwright version
+        id: pw
+        run: echo "version=$(node -p "require('./apps/web/node_modules/@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: apps/web/.next/cache
+          key: next-${{ runner.os }}-e2e-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('apps/web/**/*.ts', 'apps/web/**/*.tsx', 'apps/web/**/*.css', 'packages/**/*.ts', 'packages/**/*.tsx', 'packages/**/*.css') }}
+          restore-keys: |
+            next-${{ runner.os }}-e2e-${{ hashFiles('pnpm-lock.yaml') }}-
+      - run: pnpm --filter @portfolio/contracts build
+      - run: pnpm --filter @portfolio/api build
+        env:
+          NODE_ENV: test
+      - run: pnpm --filter @portfolio/web build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: e2e-build
+          include-hidden-files: true
+          compression-level: 1
+          retention-days: 1
+          path: |
+            packages/contracts/dist
+            apps/api/dist
+            apps/web/.next
+            !apps/web/.next/cache
+            !apps/web/.next/standalone
+
   web-e2e-shard:
-    name: web-e2e shard ${{ matrix.shard }}/3
+    # Starts right away (no `needs`): MySQL, pnpm install and browser deps run
+    # while build-e2e builds, then the shard waits for the e2e-build artifact.
+    name: web-e2e shard ${{ matrix.shard }}/4
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3]
-    services:
-      mysql:
-        image: mysql:8.4
-        env:
-          MYSQL_ROOT_PASSWORD: test
-          MYSQL_DATABASE: portfolio_test
-          MYSQL_USER: app
-          MYSQL_PASSWORD: test
-        ports:
-          - 3307:3306
-        options: >-
-          --tmpfs /var/lib/mysql
-          --health-cmd="mysqladmin ping -h 127.0.0.1"
-          --health-interval=2s
-          --health-timeout=5s
-          --health-retries=60
+        shard: [1, 2, 3, 4]
     env:
       NODE_ENV: test
       API_PORT: 4000
@@ -157,20 +190,48 @@ jobs:
       NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
     steps:
       - uses: actions/checkout@v4
+      - name: Start MySQL (tmpfs, in background)
+        run: |
+          docker run -d --name mysql -p 3307:3306 --tmpfs /var/lib/mysql \
+            -e MYSQL_ROOT_PASSWORD=test -e MYSQL_DATABASE=portfolio_test \
+            -e MYSQL_USER=app -e MYSQL_PASSWORD=test \
+            mysql:8.4 --skip-log-bin --innodb-flush-log-at-trx-commit=0
       - uses: ./.github/actions/setup
-      - run: pnpm --filter @portfolio/contracts build
-      - run: pnpm --filter @portfolio/api build
-      - name: Cache Next.js build
+      - name: Playwright version
+        id: pw
+        run: echo "version=$(node -p "require('./apps/web/node_modules/@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Cache Playwright browsers
+        id: pw-cache
         uses: actions/cache@v4
         with:
-          path: apps/web/.next/cache
-          key: next-${{ runner.os }}-e2e-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('apps/web/**/*.ts', 'apps/web/**/*.tsx', 'apps/web/**/*.css', 'packages/**/*.ts', 'packages/**/*.tsx', 'packages/**/*.css') }}
-          restore-keys: |
-            next-${{ runner.os }}-e2e-${{ hashFiles('pnpm-lock.yaml') }}-
-      - run: pnpm --filter @portfolio/web build
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}-chromium
+      - name: Install Playwright browser and deps (in background)
+        run: |
+          if [ "${{ steps.pw-cache.outputs.cache-hit }}" = true ]; then
+            cmd="install-deps chromium"
+          else
+            cmd="install --with-deps chromium"
+          fi
+          (cd apps/web && pnpm exec playwright $cmd > /tmp/pw-install.log 2>&1; echo $? > /tmp/pw-install.done) &
+      - name: Wait for the e2e-build artifact
         env:
-          NODE_ENV: production
-      - run: |
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 150); do
+            n=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" \
+              --jq '[.artifacts[] | select(.name == "e2e-build")] | length')
+            [ "$n" = 1 ] && exit 0
+            sleep 2
+          done
+          echo "e2e-build artifact did not appear (did the web-e2e build job fail?)"
+          exit 1
+      - uses: actions/download-artifact@v4
+        with:
+          name: e2e-build
+          path: .
+      - name: Database env and wait for MySQL
+        run: |
           user=app
           pass=test
           scheme=mysql
@@ -180,24 +241,17 @@ jobs:
           url="${scheme}://${user}:${pass}@${host}:${port}/${db}"
           echo "DATABASE_URL=${url}" >> "$GITHUB_ENV"
           echo "DATABASE_URL_TEST=${url}" >> "$GITHUB_ENV"
-          export DATABASE_URL="$url"
-          pnpm exec prisma migrate deploy
-        working-directory: apps/api
-      - name: Playwright version
-        id: pw
-        run: echo "version=$(pnpm --filter @portfolio/web exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
-      - name: Cache Playwright browsers
-        id: pw-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}-chromium
-      - name: Install Playwright browser
-        if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: pnpm --filter @portfolio/web exec playwright install --with-deps chromium
-      - name: Install Playwright system deps (browser cache hit)
-        if: steps.pw-cache.outputs.cache-hit == 'true'
-        run: pnpm --filter @portfolio/web exec playwright install-deps chromium
+          for i in $(seq 1 90); do
+            docker exec mysql mysqladmin ping -h 127.0.0.1 -uapp -ptest --silent 2>/dev/null && exit 0
+            sleep 1
+          done
+          docker logs mysql
+          exit 1
+      - name: Wait for Playwright install
+        run: |
+          while [ ! -f /tmp/pw-install.done ]; do sleep 1; done
+          cat /tmp/pw-install.log | tail -5
+          test "$(cat /tmp/pw-install.done)" = 0
       - run: pnpm --filter @portfolio/web test:e2e
         env:
           E2E_SHARD: ${{ matrix.shard }}
@@ -209,27 +263,25 @@ jobs:
           retention-days: 1
 
   web-e2e:
-    # Stable check name: green only when every shard passed. Also merges the reports.
-    needs: web-e2e-shard
+    # Stable check name: green only when the build and every shard passed. Also merges the reports.
+    needs: [build-e2e, web-e2e-shard]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup
       - uses: actions/download-artifact@v4
         with:
           pattern: blob-report-*
-          path: apps/web/all-blob-reports
+          path: all-blob-reports
           merge-multiple: true
       - name: Merge shard reports
-        if: always()
-        run: pnpm --filter @portfolio/web exec playwright merge-reports --reporter html ./all-blob-reports
+        if: always() && needs.build-e2e.outputs.playwright != ''
+        run: npx -y playwright@${{ needs.build-e2e.outputs.playwright }} merge-reports --reporter html ./all-blob-reports
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report
-          path: apps/web/playwright-report
+          path: playwright-report
           retention-days: 7
-      - name: Require every shard to pass
-        run: test "${{ needs.web-e2e-shard.result }}" = success
+      - name: Require the build and every shard to pass
+        run: test "${{ needs.build-e2e.result }}" = success && test "${{ needs.web-e2e-shard.result }}" = success
