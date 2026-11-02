@@ -24,14 +24,19 @@ export function DemoShell({ locale, children }: { locale: Locale; children: Reac
               <BrandMark className="demo-brand-logo" />
               <span>lil.parker</span>
             </a>
-            <nav aria-label={locale === 'en' ? 'Main navigation' : 'Điều hướng chính'}>
-              <a href={`/${locale}`}>{t.nav[0]}</a>
-              <a href={`/${locale}/projects`}>{t.nav[1]}</a>
-              <a href={`/${locale}/craft`}>{t.nav[2]}</a>
-              <a href={`/${locale}/notes`}>{locale === 'en' ? 'Notes' : 'Ghi chú'}</a>
-              <a href={`/${locale}/about`}>{locale === 'en' ? 'About' : 'Giới thiệu'}</a>
-              <a href={`/${locale}/contact`}>{locale === 'en' ? 'Contact' : 'Liên hệ'}</a>
-            </nav>
+            <div className="demo-nav-wrap">
+              <nav aria-label={locale === 'en' ? 'Main navigation' : 'Điều hướng chính'}>
+                <a href={`/${locale}`}>{t.nav[0]}</a>
+                <a href={`/${locale}/projects`}>{t.nav[1]}</a>
+                <a href={`/${locale}/craft`}>{t.nav[2]}</a>
+                <a href={`/${locale}/notes`}>{locale === 'en' ? 'Notes' : 'Ghi chú'}</a>
+                <a href={`/${locale}/about`}>{locale === 'en' ? 'About' : 'Giới thiệu'}</a>
+                <a href={`/${locale}/contact`}>{locale === 'en' ? 'Contact' : 'Liên hệ'}</a>
+              </nav>
+              <span className="demo-nav-cue" aria-hidden="true">
+                {locale === 'en' ? 'Swipe for more →' : 'Vuốt để xem thêm →'}
+              </span>
+            </div>
             <DemoLanguageSwitch locale={locale} />
           </div>
         </header>

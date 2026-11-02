@@ -86,3 +86,4 @@
 - 2026-11-02: Playwright form interaction can scroll a page before a full-page screenshot and paint a sticky header midway through the image; scroll to the top and wait a frame after interactions before capture.
 - 2026-11-03: A selector using `:is(img, .class)` takes the specificity of its class arm even for an image, so a featured image radius override needs an equally specific selector.
 - 2026-11-03: Responsive cards hidden with `display: none` still match DOM geometry queries and yield zero-size rectangles; exclude them before asserting padding or concentric radii.
+- 2026-11-03: A six-link mobile nav needs readable fixed-size labels and an explicit scroll cue; squeezing links to fit the viewport makes the labels too small even when their targets meet 44px.
