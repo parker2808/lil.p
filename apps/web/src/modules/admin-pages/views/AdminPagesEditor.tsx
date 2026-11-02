@@ -1,7 +1,12 @@
 'use client';
 
-import type { AdminBlock, BlockType, PageKey } from '@portfolio/contracts';
-import { BLOCK_REGISTRY } from '@portfolio/contracts';
+import {
+  BLOCK_REGISTRY,
+  corePageKeySchema,
+  type AdminBlock,
+  type BlockType,
+  type PageKey,
+} from '@portfolio/contracts';
 import { ConfirmDialog } from '@portfolio/ui/components/ui/confirm-dialog';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
@@ -36,7 +41,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
   const mutations = useBlockMutations(pageKey, { reorderFailed: t('reorderFailed') });
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
-  const [locale, setLocale] = useState<'en' | 'vi'>('en');
+  const [locale, setLocale] = useState<'en' | 'vi'>(page.data.locale ?? 'en');
   const [draftProps, setDraftProps] = useState<Record<string, unknown> | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [invalidKeys, setInvalidKeys] = useState<string[]>([]);
@@ -127,7 +132,8 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
         back={back}
         title={
           <span className="flex items-center gap-2">
-            {t(`names.${pageKey}`)}
+            {page.data.title ??
+              (corePageKeySchema.safeParse(pageKey).success ? t(`names.${pageKey}`) : pageKey)}
             <Link
               href={publicHref}
               className="text-ui text-primary underline-offset-4 hover:underline"

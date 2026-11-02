@@ -28,12 +28,23 @@ import {
   Users,
 } from 'lucide-react';
 import { useId, useState, type ReactNode } from 'react';
-import {
-  createDemoPage,
-  slugFromTitle,
-  validateDemoPage,
-  type DemoCreatedPage,
-} from './page-create.stub';
+import { createPageSchema } from '@portfolio/contracts';
+
+export type DemoCreatedPage = {
+  title: string;
+  key: string;
+  locale: 'en' | 'vi';
+  template: 'starter' | 'empty';
+};
+
+function slugFromTitle(title: string): string {
+  return title
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
 
 export const demoRoutes = {
   analytics: {
@@ -746,6 +757,7 @@ function PagesView({
   createdPages,
   initialOpen = false,
   initialEmpty = false,
+  initialLocale = 'en',
 }: {
   go: (route: 'pages-home' | 'pages-about') => void;
   onCreate: (page: DemoCreatedPage) => void;
@@ -753,27 +765,29 @@ function PagesView({
   createdPages: DemoCreatedPage[];
   initialOpen?: boolean;
   initialEmpty?: boolean;
+  initialLocale?: 'en' | 'vi';
 }) {
   const [open, setOpen] = useState(initialOpen);
   const [title, setTitle] = useState('');
   const [key, setKey] = useState('');
   const [keyEdited, setKeyEdited] = useState(false);
-  const [locale, setLocale] = useState<'en' | 'vi'>('en');
+  const [locale, setLocale] = useState<'en' | 'vi'>(initialLocale);
   const [template, setTemplate] = useState<'starter' | 'empty'>('starter');
   const [error, setError] = useState<string | null>(null);
   const submit = () => {
     const page = { title, key, locale, template };
-    const issue = validateDemoPage(page, [
-      'home',
-      'about',
-      'contact',
-      ...createdPages.map((item) => item.key),
-    ]);
+    const issue = !title.trim()
+      ? 'Enter a page title.'
+      : !createPageSchema.safeParse(page).success
+        ? 'Use lowercase letters, numbers, and hyphens for the slug.'
+        : ['home', 'about', 'contact', ...createdPages.map((item) => item.key)].includes(key)
+          ? 'This slug is already in use.'
+          : null;
     if (issue) {
       setError(issue);
       return;
     }
-    onCreate(createDemoPage(page));
+    onCreate({ ...page, title: title.trim() });
   };
   return (
     <div className="view route-view">
@@ -1390,6 +1404,7 @@ export function DemoRouteView({
   onOpenCreatedPage,
   createdPages = [],
   initialState,
+  locale,
 }: {
   route: DemoRouteId;
   go: (route: DemoRouteId | 'pages-home' | 'pages-about' | 'dashboard') => void;
@@ -1397,6 +1412,7 @@ export function DemoRouteView({
   onOpenCreatedPage?: (page: DemoCreatedPage) => void;
   createdPages?: DemoCreatedPage[];
   initialState?: string;
+  locale?: 'en' | 'vi';
 }) {
   const kind = demoRoutes[route].kind;
   if (route === 'analytics' || route === 'stats') return <AnalyticsView route={route} />;
@@ -1418,6 +1434,7 @@ export function DemoRouteView({
         createdPages={createdPages}
         initialOpen={initialState === 'create'}
         initialEmpty={initialState === 'empty'}
+        initialLocale={locale}
       />
     );
   if (

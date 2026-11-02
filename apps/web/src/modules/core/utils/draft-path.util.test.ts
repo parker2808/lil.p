@@ -6,6 +6,7 @@ describe('safeDraftPath', () => {
   it('accepts public locale routes', () => {
     expect(safeDraftPath('/en/projects/sample-case')).toBe('/en/projects/sample-case');
     expect(safeDraftPath('/vi/notes/a-note')).toBe('/vi/notes/a-note');
+    expect(safeDraftPath('/vi/my-ideas')).toBe('/vi/my-ideas');
   });
 
   it('rejects open redirects and admin paths', () => {

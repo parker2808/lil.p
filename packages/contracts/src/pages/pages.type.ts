@@ -6,6 +6,7 @@ import type {
   adminPageVersionListItemSchema,
   adminPageVersionSchema,
   createBlockSchema,
+  createPageSchema,
   invalidPreviewBlockSchema,
   pageSnapshotBlockSchema,
   pageSnapshotSchema,
@@ -27,6 +28,7 @@ export type AdminPageListItem = z.infer<typeof adminPageListItemSchema>;
 export type AdminPage = z.infer<typeof adminPageSchema>;
 export type PageUpdateInput = z.infer<typeof updatePageSchema>;
 export type BlockCreateInput = z.infer<typeof createBlockSchema>;
+export type CreatePageInput = z.infer<typeof createPageSchema>;
 export type BlockUpdateInput = z.infer<typeof updateBlockSchema>;
 export type PublishPageInput = z.infer<typeof publishPageSchema>;
 export type AdminPageVersionListItem = z.infer<typeof adminPageVersionListItemSchema>;

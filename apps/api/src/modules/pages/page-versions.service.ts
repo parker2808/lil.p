@@ -8,13 +8,15 @@ import {
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   BLOCK_REGISTRY,
+  type CorePageKey,
+  corePageKeySchema,
   type Locale,
-  PAGE_KEY_TO_PRISMA,
   type PageKey,
   type PageSnapshot,
   parseBlock,
   type PublicPagePreview,
   type PublishPageInput,
+  toPrismaPageKey,
 } from '@portfolio/contracts';
 
 import type { Prisma } from '../../generated/prisma/client';
@@ -27,7 +29,7 @@ import {
   requiredFieldErrors,
 } from '../publishing/publish-rules.util';
 import { PublishingService } from '../publishing/publishing.service';
-import { pageTags } from '../publishing/tags.util';
+import { pageTags, SITE_TAGS } from '../publishing/tags.util';
 import type { PageWithAllBlocks } from './entities/page.entity';
 import { pageWithAllBlocksInclude } from './entities/page.entity';
 import { toAdminPage } from './entities/page.mapper';
@@ -146,7 +148,7 @@ export class PageVersionsService {
       return toAdminPage(await this.requirePage(tx, key));
     });
     this.events?.emit('content.published', { entity: 'page', key });
-    void this.publishing?.revalidate(pageTags(key));
+    void this.publishing?.revalidate([...pageTags(key), ...SITE_TAGS]);
     return result;
   }
 
@@ -305,7 +307,11 @@ export class PageVersionsService {
     }
 
     for (const definition of Object.values(BLOCK_REGISTRY)) {
-      if (definition.role !== 'required' || !definition.pages.includes(key)) {
+      if (
+        definition.role !== 'required' ||
+        !corePageKeySchema.safeParse(key).success ||
+        !definition.pages.includes(key as CorePageKey)
+      ) {
         continue;
       }
       const present = ordered.some((block) => block.type === definition.type && block.isVisible);
@@ -449,7 +455,7 @@ export class PageVersionsService {
 
   private async requirePage(client: PrismaService | Tx, key: PageKey) {
     const row = await client.page.findUnique({
-      where: { key: PAGE_KEY_TO_PRISMA[key] },
+      where: { key: toPrismaPageKey(key) },
       include: {
         ...pageWithAllBlocksInclude,
         publishedVersion: true,

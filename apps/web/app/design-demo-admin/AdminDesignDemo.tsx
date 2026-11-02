@@ -47,7 +47,7 @@ import {
   type DemoRouteId,
 } from './DemoRoutes';
 import { applyDemoLocale, type DemoLocale } from './demo-i18n';
-import type { DemoCreatedPage } from './page-create.stub';
+import type { DemoCreatedPage } from './DemoRoutes';
 
 type IconType = ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
 type Screen =
@@ -1297,6 +1297,7 @@ export function AdminDesignDemo({
                 route={active as DemoRouteId}
                 go={(next) => go(next)}
                 initialState={initialState}
+                locale={locale}
                 createdPages={createdPages}
                 onCreatePage={(page) => {
                   setCreatedPage(page);

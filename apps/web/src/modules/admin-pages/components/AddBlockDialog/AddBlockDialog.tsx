@@ -1,6 +1,12 @@
 'use client';
 
-import { BLOCK_REGISTRY, type BlockType, type PageKey } from '@portfolio/contracts';
+import {
+  BLOCK_REGISTRY,
+  type BlockType,
+  type CorePageKey,
+  type PageKey,
+  corePageKeySchema,
+} from '@portfolio/contracts';
 import { Icon } from '@portfolio/ui/components/Icon/Icon';
 import { Button } from '@portfolio/ui/components/ui/button';
 import {
@@ -34,8 +40,11 @@ export function AddBlockDialog({
 }) {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
+  const core = corePageKeySchema.safeParse(pageKey);
   const types = (Object.keys(BLOCK_REGISTRY) as BlockType[]).filter((type) =>
-    BLOCK_REGISTRY[type].pages.includes(pageKey),
+    core.success
+      ? BLOCK_REGISTRY[type].pages.includes(pageKey as CorePageKey)
+      : ['page-header', 'prose', 'cta-band'].includes(type),
   );
 
   if (readOnly) {

@@ -9,6 +9,91 @@ const heroProps = {
 };
 
 describe('PagesService', () => {
+  function createHarness(existing: boolean, race = false) {
+    const row = {
+      id: 12,
+      key: 'IDEAS',
+      title: 'Ideas',
+      locale: 'vi',
+      seoTitleEn: null,
+      seoTitleVi: 'Ideas',
+      seoDescriptionEn: null,
+      seoDescriptionVi: null,
+      updatedAt: new Date(),
+      publishedAt: null,
+      publishedVersion: null,
+      blocks: [],
+    };
+    const tx = {
+      page: {
+        create: vi.fn().mockImplementation(async () => {
+          if (race) throw { code: 'P2002' };
+          return { id: row.id };
+        }),
+        findUnique: vi.fn().mockResolvedValue(row),
+      },
+      pageBlock: { createMany: vi.fn().mockResolvedValue({ count: 2 }) },
+    };
+    const prisma = {
+      page: { findUnique: vi.fn().mockResolvedValue(existing ? { id: 1 } : null) },
+      $transaction: vi
+        .fn()
+        .mockImplementation((work: (db: typeof tx) => Promise<unknown>) => work(tx)),
+    };
+    const audit = { record: vi.fn().mockResolvedValue(undefined) };
+    const publishing = { revalidate: vi.fn().mockResolvedValue(undefined) };
+    return {
+      service: new PagesService(prisma as never, audit as never, publishing as never),
+      prisma,
+      tx,
+      audit,
+      publishing,
+    };
+  }
+
+  it('creates a draft and starter blocks with an audit record, then revalidates', async () => {
+    const h = createHarness(false);
+    const page = await h.service.createPage({
+      title: 'Ideas',
+      key: 'ideas',
+      locale: 'vi',
+      template: 'starter',
+    });
+    expect(page).toMatchObject({ key: 'ideas', title: 'Ideas', locale: 'vi', blocks: [] });
+    expect(h.tx.page.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ key: 'IDEAS', locale: 'vi', seoTitleVi: 'Ideas' }),
+    });
+    expect(h.tx.pageBlock.createMany).toHaveBeenCalledWith({
+      data: expect.arrayContaining([
+        expect.objectContaining({ type: 'page-header' }),
+        expect.objectContaining({ type: 'prose' }),
+      ]),
+    });
+    expect(h.audit.record).toHaveBeenCalledWith(
+      h.tx,
+      expect.objectContaining({ action: 'CREATE', entityType: 'page', entityId: 'ideas' }),
+    );
+    expect(h.publishing.revalidate).toHaveBeenCalledWith(['page:ideas']);
+  });
+
+  it('creates an empty draft without blocks', async () => {
+    const h = createHarness(false);
+    await h.service.createPage({ title: 'Ideas', key: 'ideas', locale: 'vi', template: 'empty' });
+    expect(h.tx.pageBlock.createMany).not.toHaveBeenCalled();
+  });
+
+  it('returns 409 for an existing key and a concurrent unique-index collision', async () => {
+    const h = createHarness(true);
+    await expect(
+      h.service.createPage({ title: 'Ideas', key: 'ideas', locale: 'en', template: 'empty' }),
+    ).rejects.toMatchObject({ status: 409 });
+    expect(h.prisma.$transaction).not.toHaveBeenCalled();
+    const race = createHarness(false, true);
+    await expect(
+      race.service.createPage({ title: 'Ideas', key: 'ideas', locale: 'en', template: 'empty' }),
+    ).rejects.toMatchObject({ status: 409 });
+    expect(race.audit.record).not.toHaveBeenCalled();
+  });
   it('serves the published snapshot and drops unknown snapshot blocks', async () => {
     const prisma = {
       page: {

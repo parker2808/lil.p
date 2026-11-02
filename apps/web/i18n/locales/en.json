@@ -1163,6 +1163,26 @@
       }
     },
     "pages": {
+      "create": {
+        "title": "Add page",
+        "hint": "Give this page a name and choose how to begin.",
+        "pageTitle": "Page title",
+        "slug": "Slug",
+        "slugHint": "Use lowercase letters, numbers, and hyphens.",
+        "locale": "Language",
+        "english": "English",
+        "vietnamese": "Vietnamese",
+        "startWith": "Start with",
+        "starter": "Starter template",
+        "empty": "Empty blocks",
+        "cancel": "Cancel",
+        "submit": "Create page",
+        "creating": "Creating…",
+        "titleRequired": "Enter a page title.",
+        "invalidSlug": "Use a valid slug and keep the title under 120 characters.",
+        "duplicateSlug": "This slug is already in use.",
+        "failed": "The page could not be created. Try again."
+      },
       "title": "Pages",
       "loadError": "Pages could not be loaded.",
       "retry": "Retry",

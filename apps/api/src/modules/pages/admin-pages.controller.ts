@@ -19,6 +19,8 @@ import {
   type BlockCreateInput,
   type BlockUpdateInput,
   createBlockSchema,
+  type CreatePageInput,
+  createPageSchema,
   type PageUpdateInput,
   type PublishPageInput,
   publishPageSchema,
@@ -52,6 +54,12 @@ export class AdminPagesController {
   @Roles('admin', 'user')
   get(@Param('key') key: string): Promise<AdminPage> {
     return this.pages.getAdmin(key);
+  }
+
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  create(@Body(new ZodValidationPipe(createPageSchema)) body: CreatePageInput): Promise<AdminPage> {
+    return this.pages.createPage(body);
   }
 
   @Patch(':key')

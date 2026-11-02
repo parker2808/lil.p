@@ -10,13 +10,16 @@ import {
   type AdminBlock,
   type AdminPage,
   type AdminPageListItem,
+  BLOCK_REGISTRY,
   type BlockCreateInput,
   type BlockUpdateInput,
+  corePageKeySchema,
+  type CreatePageInput,
   type Locale,
-  PAGE_KEY_TO_PRISMA,
   type PageKey,
   type PageUpdateInput,
   type PublicPage,
+  toPrismaPageKey,
 } from '@portfolio/contracts';
 import type { z } from 'zod';
 
@@ -26,6 +29,8 @@ import { assertFresh } from '../../common/utils/stale.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
+import { PublishingService } from '../publishing/publishing.service';
+import { pageTags } from '../publishing/tags.util';
 import { pageWithAllBlocksInclude } from './entities/page.entity';
 import { toAdminBlock, toAdminPage, toAdminPageListItem } from './entities/page.mapper';
 import { readPageSnapshot, snapshotToPublicPage } from './page-snapshot.util';
@@ -86,11 +91,12 @@ export class PagesService {
   constructor(
     private readonly prisma: PrismaService,
     @Optional() private readonly audit?: AuditService,
+    @Optional() private readonly publishing?: PublishingService,
   ) {}
 
   async getPublic(key: PageKey, locale: Locale, requestId = 'unknown'): Promise<PublicPage> {
     const row = await this.prisma.page.findUnique({
-      where: { key: PAGE_KEY_TO_PRISMA[key] },
+      where: { key: toPrismaPageKey(key) },
       include: { publishedVersion: true },
     });
     if (!row) {
@@ -99,6 +105,9 @@ export class PagesService {
 
     const snapshot = row.publishedVersion ? readPageSnapshot(row.publishedVersion.snapshot) : null;
     if (!snapshot) {
+      if (!corePageKeySchema.safeParse(key).success) {
+        throw new NotFoundException({ code: 'NOT_FOUND', message: `Page ${key} was not found` });
+      }
       return {
         key,
         seo: { title: null, description: null, lang: locale },
@@ -128,6 +137,94 @@ export class PagesService {
 
   async getAdmin(rawKey: string): Promise<AdminPage> {
     return toAdminPage(await this.requirePage(this.prisma, parsePageKey(rawKey)));
+  }
+
+  async createPage(input: CreatePageInput): Promise<AdminPage> {
+    if (corePageKeySchema.safeParse(input.key).success) {
+      throw new ConflictException({
+        code: 'PAGE_KEY_TAKEN',
+        message: 'Page slug is already in use',
+      });
+    }
+    const dbKey = toPrismaPageKey(input.key);
+    const existing = await this.prisma.page.findUnique({
+      where: { key: dbKey },
+      select: { id: true },
+    });
+    if (existing) {
+      throw new ConflictException({
+        code: 'PAGE_KEY_TAKEN',
+        message: 'Page slug is already in use',
+      });
+    }
+    try {
+      const result = await this.prisma.$transaction(async (tx) => {
+        const page = await tx.page.create({
+          data: {
+            key: dbKey,
+            title: input.title,
+            locale: input.locale,
+            seoTitleEn: input.title,
+            seoTitleVi: input.title,
+          },
+        });
+        if (input.template === 'starter') {
+          const header = BLOCK_REGISTRY['page-header'];
+          const prose = BLOCK_REGISTRY.prose;
+          const localizedTitle = {
+            en: input.title,
+            vi: input.title,
+          };
+          await tx.pageBlock.createMany({
+            data: [
+              {
+                pageId: page.id,
+                type: header.type,
+                key: header.type,
+                schemaVersion: header.version,
+                props: {
+                  ...header.defaults,
+                  eyebrow: { en: '', vi: '' },
+                  title: localizedTitle,
+                } as Prisma.InputJsonValue,
+                layout: header.layouts[0] ?? 'ONE',
+                surface: 'PLAIN',
+                sortOrder: 0,
+                isVisible: true,
+              },
+              {
+                pageId: page.id,
+                type: prose.type,
+                key: prose.type,
+                schemaVersion: prose.version,
+                props: prose.defaults as Prisma.InputJsonValue,
+                layout: prose.layouts[0] ?? 'ONE',
+                surface: 'PLAIN',
+                sortOrder: 1,
+                isVisible: true,
+              },
+            ],
+          });
+        }
+        await this.audit?.record(tx, {
+          action: 'CREATE',
+          entityType: 'page',
+          entityId: input.key,
+          summary: `Created page ${input.key}`,
+        });
+        return toAdminPage(await this.requirePage(tx, input.key));
+      });
+      void this.publishing?.revalidate(pageTags(input.key));
+      return result;
+    } catch (error) {
+      if (error && typeof error === 'object' && 'code' in error && error.code === 'P2002') {
+        throw new ConflictException({
+          code: 'PAGE_KEY_TAKEN',
+          message: 'Page slug is already in use',
+        });
+      }
+      throw error;
+    }
   }
 
   async reorderBlocks(rawKey: string, ids: number[]): Promise<AdminPage> {
@@ -378,7 +475,7 @@ export class PagesService {
 
   private async requirePage(client: PrismaService | Tx, key: PageKey) {
     const row = await client.page.findUnique({
-      where: { key: PAGE_KEY_TO_PRISMA[key] },
+      where: { key: toPrismaPageKey(key) },
       include: pageWithAllBlocksInclude,
     });
     if (!row) {

@@ -11,6 +11,8 @@ const vi: Record<string, string> = {
   'PAGES / NEW': 'TRANG / MỚI',
   'Give this page a name and choose how to begin.': 'Đặt tên trang và chọn cách bắt đầu.',
   'Page title': 'Tiêu đề trang',
+  'e.g. Ideas': 'vd. Ý tưởng',
+  ideas: 'y-tuong',
   'Lowercase letters, numbers, and hyphens only.': 'Chỉ dùng chữ thường, số và dấu gạch nối.',
   Language: 'Ngôn ngữ',
   'Start with': 'Bắt đầu bằng',
