@@ -10,7 +10,7 @@ export const revalidate = 3600;
 
 export const generateMetadata =
   process.env.DESIGN_DEMO === '1'
-    ? async () => ({ title: 'Projects — lil.p design demo' })
+    ? async () => ({ title: 'Projects — lil.parker design demo' })
     : buildProjectsMetadata;
 
 export default async function Page({

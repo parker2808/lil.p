@@ -6,6 +6,13 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
+  /* Shared lil.parker brand colors; text and control colors meet WCAG AA on their paired surfaces. */
+  --brand-orange: #a63b13;
+  --brand-orange-surface: #fff0e6;
+  --brand-green: #17634a;
+  --brand-green-surface: #e5f2e9;
+  --brand-night: #13221f;
+  --brand-starlight: #f6eee2;
   --radius: 10px;
 
   --background: #f6f3ec;
@@ -98,6 +105,12 @@
 }
 
 .dark {
+  --brand-orange: #ffad79;
+  --brand-orange-surface: #472719;
+  --brand-green: #9ad7ad;
+  --brand-green-surface: #1a3b30;
+  --brand-night: #101a1a;
+  --brand-starlight: #f6eee2;
   --background: #111318;
   --foreground: #eee9df;
   --card: #181b22;

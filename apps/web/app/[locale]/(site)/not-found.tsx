@@ -2,11 +2,13 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 import { PaletteSearchField } from '@/modules/core/components/CommandPalette/PaletteSearchField';
+import { DemoMissing } from '@/modules/design-demo/DemoMore';
 
 export default async function NotFound() {
   const t = await getTranslations('states');
   const nav = await getTranslations('notFound');
   const locale = await getLocale();
+  if (process.env.DESIGN_DEMO === '1') return <DemoMissing locale={locale as 'en' | 'vi'} />;
   return (
     <div className="mx-auto flex max-w-prose flex-col gap-4 px-6 py-16">
       <h1 className="font-heading text-heading font-semibold">{t('notFound')}</h1>

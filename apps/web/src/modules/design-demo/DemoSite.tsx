@@ -1,8 +1,10 @@
 import type { Locale } from '@portfolio/contracts';
 import type { ReactNode } from 'react';
 import { ArrowDownRight, ArrowRight, Asterisk } from 'lucide-react';
+import { BrandMark } from '@portfolio/ui/components/BrandMark/BrandMark';
 
 import { DemoLanguageSwitch } from './DemoLanguageSwitch';
+import { DemoModeProvider } from './DemoMode';
 import { DemoSpotlightCard } from './DemoSpotlightCard';
 import { demoCopy, demoProjects } from './data';
 
@@ -11,33 +13,38 @@ import './demo.css';
 export function DemoShell({ locale, children }: { locale: Locale; children: ReactNode }) {
   const t = demoCopy[locale];
   return (
-    <div className="design-demo min-h-dvh">
-      <a className="demo-skip" href="#content">
-        {locale === 'en' ? 'Skip to content' : 'Đến nội dung'}
-      </a>
-      <header className="demo-header">
-        <div className="demo-container demo-header-inner">
-          <a className="demo-brand" href={`/${locale}`} aria-label="lil.p home">
-            <span className="demo-brand-mark">lp.</span>
-            <span>lil.p</span>
-          </a>
-          <nav aria-label={locale === 'en' ? 'Main navigation' : 'Điều hướng chính'}>
-            <a href={`/${locale}`}>{t.nav[0]}</a>
-            <a href={`/${locale}/projects`}>{t.nav[1]}</a>
-            <a href={`/${locale}/craft`}>{t.nav[2]}</a>
-          </nav>
-          <DemoLanguageSwitch locale={locale} />
-        </div>
-      </header>
-      <main id="content">{children}</main>
-      <footer className="demo-footer">
-        <div className="demo-container">
-          <span className="demo-brand-mark">lp.</span>
-          <span>{t.footer}</span>
-          <span>© 2026 lil.p</span>
-        </div>
-      </footer>
-    </div>
+    <DemoModeProvider>
+      <div className="design-demo min-h-dvh">
+        <a className="demo-skip" href="#content">
+          {locale === 'en' ? 'Skip to content' : 'Đến nội dung'}
+        </a>
+        <header className="demo-header">
+          <div className="demo-container demo-header-inner">
+            <a className="demo-brand" href={`/${locale}`} aria-label="lil.p home">
+              <BrandMark className="demo-brand-logo" />
+              <span>lil.parker</span>
+            </a>
+            <nav aria-label={locale === 'en' ? 'Main navigation' : 'Điều hướng chính'}>
+              <a href={`/${locale}`}>{t.nav[0]}</a>
+              <a href={`/${locale}/projects`}>{t.nav[1]}</a>
+              <a href={`/${locale}/craft`}>{t.nav[2]}</a>
+              <a href={`/${locale}/notes`}>{locale === 'en' ? 'Notes' : 'Ghi chú'}</a>
+              <a href={`/${locale}/about`}>{locale === 'en' ? 'About' : 'Giới thiệu'}</a>
+              <a href={`/${locale}/contact`}>{locale === 'en' ? 'Contact' : 'Liên hệ'}</a>
+            </nav>
+            <DemoLanguageSwitch locale={locale} />
+          </div>
+        </header>
+        <main id="content">{children}</main>
+        <footer className="demo-footer">
+          <div className="demo-container">
+            <BrandMark className="demo-brand-logo" />
+            <span>{t.footer}</span>
+            <span>© 2026 lil.parker</span>
+          </div>
+        </footer>
+      </div>
+    </DemoModeProvider>
   );
 }
 
@@ -84,7 +91,8 @@ export function DemoHome({ locale }: { locale: Locale }) {
             <div className="demo-hero-footnote">
               <span>01 / 03</span>
               <span>
-                SCROLL TO EXPLORE <ArrowDownRight size={15} aria-hidden />
+                {locale === 'en' ? 'SCROLL TO EXPLORE' : 'CUỘN ĐỂ KHÁM PHÁ'}{' '}
+                <ArrowDownRight size={15} aria-hidden />
               </span>
             </div>
           </div>
@@ -92,14 +100,18 @@ export function DemoHome({ locale }: { locale: Locale }) {
             <div className="demo-art-grid" aria-hidden />
             <div className="demo-art-orbit" aria-hidden />
             <Monogram />
-            <span className="demo-art-caption">FORM FOLLOWS FEELING · 2026</span>
+            <span className="demo-art-caption">
+              {locale === 'en' ? 'FORM FOLLOWS FEELING' : 'HÌNH THỨC THEO CẢM NHẬN'} · 2026
+            </span>
           </div>
         </div>
       </section>
       <section className="demo-section demo-container">
         <div className="demo-section-heading">
           <div>
-            <p className="demo-eyebrow">01 / SELECTED WORK</p>
+            <p className="demo-eyebrow">
+              01 / {locale === 'en' ? 'SELECTED WORK' : 'DỰ ÁN NỔI BẬT'}
+            </p>
             <h2>{t.selected}</h2>
             <p>{t.selectedIntro}</p>
           </div>
@@ -120,7 +132,9 @@ export function DemoHome({ locale }: { locale: Locale }) {
             <Asterisk size={58} strokeWidth={1} aria-hidden />
           </div>
           <div>
-            <p className="demo-eyebrow">02 / THE APPROACH</p>
+            <p className="demo-eyebrow">
+              02 / {locale === 'en' ? 'THE APPROACH' : 'CÁCH TIẾP CẬN'}
+            </p>
             <h2>{t.approach}</h2>
             <p>{t.approachIntro}</p>
           </div>
@@ -180,7 +194,9 @@ export function DemoDetail({ locale, slug }: { locale: Locale; slug: string }) {
         ← {t.back}
       </a>
       <div className="demo-detail-header">
-        <p className="demo-eyebrow">CASE STUDY / 0{project.id}</p>
+        <p className="demo-eyebrow">
+          {locale === 'en' ? 'CASE STUDY' : 'CÂU CHUYỆN DỰ ÁN'} / 0{project.id}
+        </p>
         <h1 style={{ viewTransitionName: `title-${slug}` }}>{project.title}</h1>
         <p>{project.tagline}</p>
       </div>
@@ -255,13 +271,13 @@ export function DemoDetail({ locale, slug }: { locale: Locale; slug: string }) {
             </p>
             <div className="demo-process">
               <span>
-                01 <strong>DISCOVER</strong>
+                01 <strong>{locale === 'en' ? 'DISCOVER' : 'KHÁM PHÁ'}</strong>
               </span>
               <span>
-                02 <strong>STRUCTURE</strong>
+                02 <strong>{locale === 'en' ? 'STRUCTURE' : 'CẤU TRÚC'}</strong>
               </span>
               <span>
-                03 <strong>REFINE</strong>
+                03 <strong>{locale === 'en' ? 'REFINE' : 'TINH CHỈNH'}</strong>
               </span>
             </div>
           </section>
@@ -307,7 +323,7 @@ export function DemoCraft({ locale }: { locale: Locale }) {
             <span className="demo-orbit-path demo-orbit-path-two" />
           </div>
           <div className="demo-experiment-caption">
-            <span>01 / MOTION</span>
+            <span>01 / {locale === 'en' ? 'MOTION' : 'CHUYỂN ĐỘNG'}</span>
             <h2>{t.one}</h2>
             <p>{t.oneText}</p>
           </div>
@@ -318,7 +334,7 @@ export function DemoCraft({ locale }: { locale: Locale }) {
             <span className="demo-signal-cross">+</span>
           </div>
           <div className="demo-experiment-caption">
-            <span>02 / COLOR</span>
+            <span>02 / {locale === 'en' ? 'COLOR' : 'MÀU SẮC'}</span>
             <h2>{t.two}</h2>
             <p>{t.twoText}</p>
           </div>
@@ -326,15 +342,15 @@ export function DemoCraft({ locale }: { locale: Locale }) {
         <article className="demo-experiment demo-experiment-type">
           <div className="demo-experiment-stage">
             <div>
-              Make
+              {locale === 'en' ? 'Make' : 'Dành'}
               <br />
-              <em>space</em>
+              <em>{locale === 'en' ? 'space' : 'chỗ'}</em>
               <br />
-              for ideas.
+              {locale === 'en' ? 'for ideas.' : 'cho ý tưởng.'}
             </div>
           </div>
           <div className="demo-experiment-caption">
-            <span>03 / TYPE</span>
+            <span>03 / {locale === 'en' ? 'TYPE' : 'CHỮ'}</span>
             <h2>{t.three}</h2>
             <p>{t.threeText}</p>
           </div>
@@ -346,7 +362,7 @@ export function DemoCraft({ locale }: { locale: Locale }) {
             </div>
           </div>
           <div className="demo-experiment-caption">
-            <span>04 / RESPONSE</span>
+            <span>04 / {locale === 'en' ? 'RESPONSE' : 'PHẢN HỒI'}</span>
             <h2>{t.four}</h2>
             <p>{t.fourText}</p>
           </div>

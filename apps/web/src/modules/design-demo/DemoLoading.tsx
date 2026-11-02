@@ -1,6 +1,10 @@
 import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
 
-export function DemoLoading({ variant }: { variant: 'home' | 'projects' | 'detail' | 'craft' }) {
+export function DemoLoading({
+  variant,
+}: {
+  variant: 'home' | 'projects' | 'detail' | 'craft' | 'notes' | 'note' | 'about' | 'contact';
+}) {
   const cards = variant === 'craft' ? 4 : variant === 'home' ? 3 : 4;
   return (
     <div className="demo-container demo-loading" aria-busy="true">
@@ -9,7 +13,7 @@ export function DemoLoading({ variant }: { variant: 'home' | 'projects' | 'detai
         <Skeleton className="h-20 w-3/4" />
         <Skeleton className="h-5 w-1/2" />
       </div>
-      {variant === 'detail' ? (
+      {variant === 'detail' || variant === 'note' ? (
         <>
           <Skeleton className="aspect-[21/9] w-full rounded-[22px]" />
           <div className="demo-loading-story">
@@ -17,6 +21,21 @@ export function DemoLoading({ variant }: { variant: 'home' | 'projects' | 'detai
             <Skeleton className="h-96 w-3/4" />
           </div>
         </>
+      ) : variant === 'notes' ? (
+        <div className="demo-loading-notes">
+          {Array.from({ length: 3 }, (_, index) => (
+            <div key={index}>
+              <Skeleton className="h-3 w-40" />
+              <Skeleton className="h-12 w-3/4" />
+              <Skeleton className="h-5 w-1/2" />
+            </div>
+          ))}
+        </div>
+      ) : variant === 'about' || variant === 'contact' ? (
+        <div className="demo-loading-story">
+          <Skeleton className="h-96 w-1/2 rounded-[18px]" />
+          <Skeleton className="h-96 w-1/2 rounded-[18px]" />
+        </div>
       ) : (
         <div className="demo-loading-cards">
           {Array.from({ length: cards }, (_, index) => (

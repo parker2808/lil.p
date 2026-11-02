@@ -3,6 +3,9 @@
 import { useTranslations } from 'next-intl';
 
 import { Button } from '@portfolio/ui/components/ui/button';
+import { DemoError } from '@/modules/design-demo/DemoMore';
+import { useDemoMode } from '@/modules/design-demo/DemoMode';
+import { useLocale } from 'next-intl';
 
 export default function SiteError({
   error,
@@ -12,6 +15,9 @@ export default function SiteError({
   reset: () => void;
 }) {
   const t = useTranslations('states');
+  const locale = useLocale();
+  const demoMode = useDemoMode();
+  if (demoMode) return <DemoError locale={locale as 'en' | 'vi'} reset={reset} />;
   const requestId =
     'requestId' in error && typeof error.requestId === 'string' ? error.requestId : error.digest;
 

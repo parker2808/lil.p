@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 
 import { DemoCraft } from '@/modules/design-demo/DemoSite';
 
-export const metadata = { title: 'Craft — lil.p design demo' };
+export const metadata = { title: 'Craft — lil.parker design demo' };
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

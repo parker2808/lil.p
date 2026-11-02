@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-02: Next app icon routing does not include a symlinked `app/icon.svg` in the build; keep the real SVG at that route and have shared logo components reference its served URL, then render the Apple PNG from that source.
+- 2026-11-02: A public CSP with `unsafe-inline` but no development-only `unsafe-eval` blocks Next development tooling and surfaces the dev issue badge; enable `unsafe-eval` only under `NODE_ENV=development` while verifying screenshots with `next build` and `next start`.
+
 - 2026-11-02: Cross-document View Transitions need `@view-transition { navigation: auto; }` in the root stylesheet loaded before `pagereveal`; a component-imported stylesheet activated `pageswap` but missed the incoming transition.
 - 2026-11-02: A Radix Dialog with no `DialogTrigger` focuses nothing on close (its default refocuses the trigger ref), so a palette opened from several controls stores `document.activeElement` on open and refocuses it in `onCloseAutoFocus`; `IconButton` also brings Radix Tooltip and the popper, which the public layout bundle avoids.
 - 2026-11-01: A second `LocaleSwitch` (footer) duplicates the header's "Language" nav landmark, which `ux-404.spec.ts` fails because it asserts zero axe violations of any impact; give the copy its own label and scope page-wide "VI"/"EN" link selectors to a landmark ("Việc" also substring-matches "VI").
