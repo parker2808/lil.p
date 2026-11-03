@@ -90,3 +90,5 @@
 - 2026-11-03: The page publish API already returns `PAGE_BODY_REQUIRED` with field path `body`; the editor must map that code locally by UI locale instead of displaying the API's English `message`, and a standalone experience editor needs its own create destination rather than the legacy About URL.
 - 2026-11-03: Playwright starts its API health check before global setup, so a fresh disposable MySQL test container needs its schema applied before the browser runner starts; a production Next rewrite also needs the API port used at build time.
 - 2026-11-03: `docs/CHANGELOG_ARCHIVE.md` is historical and directs new changelog entries to `PROJECT_CONTEXT.md` §9; keep the live PR entry there and link it from the README when documenting behavior.
+
+- 2026-11-03: A source-presence check is insufficient for a real-content seed; derive publishable dates and summaries from the approved source, and remove legacy metrics that lack evidence.

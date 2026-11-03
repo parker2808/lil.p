@@ -10,20 +10,11 @@ import {
 } from '@portfolio/ui/utils/card-chrome.util';
 import { cloudinaryPreview } from '@portfolio/ui/utils/cloudinary-preview.util';
 import { BADGE_HUE } from '@portfolio/ui/utils/hue.util';
+import { projectCoverAsset } from '@portfolio/ui/utils/project-cover-asset.util';
 import { defaultRenderLink, type RenderLink } from '@portfolio/ui/utils/render-link.util';
 import { ArrowUpRight } from 'lucide-react';
 
 const CHIP_LIMIT = 3;
-
-// ASSET(Parker): replace mock cover with real 16:10 screenshot (NDA-masked)
-const MOCK_COVERS = new Set([
-  'particula',
-  'cfw-back-office-field-config',
-  'cfw-sales-crm',
-  'msp-advanced',
-  'msp-app-expansion',
-  'migration-data-tool',
-]);
 
 export function CaseCard({
   project,
@@ -43,7 +34,7 @@ export function CaseCard({
   const hue = project.domain?.hue ?? 'JADE';
   const chips = project.skills.slice(0, CHIP_LIMIT);
   const featured = variant === 'featured';
-  const mockCover = MOCK_COVERS.has(project.slug) ? `/mock/covers/${project.slug}.svg` : null;
+  const repoCover = projectCoverAsset(project.slug);
   const year = project.endDate?.slice(0, 4) ?? project.startDate.slice(0, 4);
   const result = project.result.trim();
 
@@ -82,10 +73,10 @@ export function CaseCard({
               backgroundSize: 'cover',
             }}
           />
-        ) : mockCover ? (
+        ) : repoCover ? (
           <img
-            src={mockCover}
-            alt=""
+            src={repoCover.src}
+            alt={repoCover.kind === 'screenshot' ? 'Interview kit home screen' : ''}
             width={1600}
             height={1000}
             className={cn(

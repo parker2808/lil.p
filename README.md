@@ -41,6 +41,8 @@ Admins can create a draft with `POST /api/admin/pages`. The JSON body requires `
 
 The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires private source evidence for every factual claim and project cover. Keep source paths, source text, and contact details out of git and logs. The staged migration check is `env -u DATABASE_URL bash apps/api/prisma/seed/migration-gate.sh`; it creates a random, tmpfs-only MySQL container, compares the five built-in page rows across the old and current migrations, checks page constraints and Prisma schema drift, then removes the container. It refuses to run when `DATABASE_URL` is already set.
 
+The `real` seed profile requires `LILP_PRIVATE_SOURCE_PATH` at runtime. It validates nine owner project records, adds one verified public repository project, and publishes exactly ten projects. Run it only on a newly created disposable local database for verification; the guarded migration gate runs it twice and confirms no duplicate or changed rows. Ten repo covers are mapped by project slug: one public README screenshot and nine clearly illustrative covers. A CMS media cover takes priority when present.
+
 ## Environments
 
 There are three ways to run this repo. Each has its own setup — do not mix the steps.

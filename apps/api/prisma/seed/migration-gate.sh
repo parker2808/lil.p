@@ -79,3 +79,17 @@ if query "INSERT INTO page (\`key\`) VALUES ('HOME')" >/dev/null 2>&1; then echo
 assert_target
 (cd apps/api && pnpm exec prisma migrate diff --config "$config_file" --from-config-datasource --to-schema prisma/schema.prisma --exit-code > "$tmp_dir/schema-diff.log") || { echo 'Prisma schema drift detected'; exit 1; }
 echo 'Migration gate passed: five rows unchanged; unique/default/nullability/duplicate checks passed; Prisma diff empty.'
+[[ -n "${LILP_PRIVATE_SOURCE_PATH:-}" && -f "$LILP_PRIVATE_SOURCE_PATH" ]] || { echo 'Private source is required for the disposable seed check'; exit 1; }
+seed_snapshot() {
+  query "SELECT 'project', id, slug, status, HEX(CAST(updatedAt AS BINARY)) FROM project UNION ALL SELECT 'experience', id, company, roleEn, HEX(CAST(updatedAt AS BINARY)) FROM experience UNION ALL SELECT 'stat', id, labelEn, CAST(isVisible AS CHAR), HEX(CAST(updatedAt AS BINARY)) FROM profile_stat ORDER BY 1, 2"
+  query 'SELECT COUNT(*) FROM project WHERE status = "PUBLISHED"'
+}
+assert_target
+(cd apps/api && SEED_PROFILE=real pnpm exec tsx prisma/seed/seed.ts > "$tmp_dir/seed-first.log")
+[[ "$(query 'SELECT COUNT(*) FROM project WHERE status = "PUBLISHED"')" == 10 ]] || { echo 'Real seed did not publish ten projects'; exit 1; }
+seed_snapshot > "$tmp_dir/seed-before.tsv"
+assert_target
+(cd apps/api && SEED_PROFILE=real pnpm exec tsx prisma/seed/seed.ts > "$tmp_dir/seed-second.log")
+seed_snapshot > "$tmp_dir/seed-after.tsv"
+cmp -s "$tmp_dir/seed-before.tsv" "$tmp_dir/seed-after.tsv" || { echo 'Real seed changed rows on its second run'; exit 1; }
+echo 'Real seed gate passed: ten published projects; second run unchanged.'
