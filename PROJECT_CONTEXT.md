@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
-- Public design demo (`design/demo-redesign-2026-11-02`, draft PR #156): the redesigned public site renders only when `DESIGN_DEMO=1`, from mock data in `apps/web/src/modules/design-demo` (plus `/[locale]/demo-state/[state]` previews); without the flag every public route is unchanged. Rounds 1-3 specs are in `docs/specs/2026-11-0{2,3}-public-design-demo*.md`; `scripts/audit-design-demo.mjs` and `capture-design-demo.mjs` audit and capture EN/VI routes at 1440 and 390 px. Not to merge: it is the visual reference for the R3 stacked PRs, which port the design onto real data. No backend, database or deploy changes.
+- Public design demo (`design/demo-redesign-2026-11-02`, draft PR #156): the redesigned public site renders only when `DESIGN_DEMO=1`, from mock data in `apps/web/src/modules/design-demo` (plus `/[locale]/demo-state/[state]` previews); without the flag every public route is unchanged. Rounds 1-3 specs are in `docs/specs/2026-11-0{2,3}-public-design-demo*.md`; `scripts/audit-design-demo.mjs` and `capture-design-demo.mjs` audit and capture EN/VI routes at 1440 and 390 px. Remaining handoff: port the approved layout and interactions to CMS-backed public routes in the R3 stacked PRs, then review real content and loading/error states before merge. This demo branch remains a visual reference and must not be merged. No backend, database or deploy changes.
 - Render S5: `render.yaml` has a `buildFilter` (`apps/api/**`, `packages/contracts/**`, root `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `tsconfig.base.json`, `.dockerignore`, `render.yaml`; the Dockerfile is `apps/api/Dockerfile`). It applies only if the service is synced from the Blueprint; otherwise set the same Build Filters, or Auto-Deploy "After CI checks pass", in the Render dashboard (Parker).
 - CI S4: `api-e2e` and web-e2e shards run only on push to `main`, PRs labeled `ready-e2e`, or `workflow_dispatch`; without the label they are skipped and `web-e2e` still passes. Concurrency is per PR number. Policy in `docs/DEPLOY_AND_CI_RERUN.md` §8.
 - CI speed-up S3: web-e2e runs as 3 shards (`web-e2e shard i/3`), each with its own MySQL and seed; files per shard come from `apps/web/e2e/shards.ts` (`E2E_SHARD`), not `--shard`, because the visual and Lighthouse specs must share shard 1. Shards write blob reports; the `web-e2e` job merges them into the `playwright-report` artifact and fails if any shard failed. A new e2e spec must be added to `SPECS` in `shards.ts`. Locally, without `E2E_SHARD`, every spec runs as before.
@@ -123,7 +123,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
-- 2026-11-03: Public design demo (draft PR #156) behind `DESIGN_DEMO=1`: redesigned EN/VI public routes on mock data, media-card and mobile-nav fixes, geometry audit and PNG capture scripts.
+- 2026-11-03: Public design demo (draft PR #156) behind `DESIGN_DEMO=1`: redesigned EN/VI public routes on mock data, media-card and mobile-nav fixes, geometry audit and PNG capture scripts; documented the production-build preview, state routes, screenshot command, and CMS-backed handoff.
 - 2026-11-02: Render S5: Blueprint `buildFilter` so web-only merges do not deploy the API.
 - 2026-11-02: CI S4: e2e only on `main`, `ready-e2e`-labeled PRs or manual dispatch; per-PR concurrency.
 - 2026-11-02: CI S3: web-e2e in 3 shards with per-shard MySQL and merged blob reports; visual and Lighthouse pinned to shard 1.

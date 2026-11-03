@@ -88,3 +88,4 @@
 - 2026-11-03: Responsive cards hidden with `display: none` still match DOM geometry queries and yield zero-size rectangles; exclude them before asserting padding or concentric radii.
 - 2026-11-03: A six-link mobile nav needs readable fixed-size labels and an explicit scroll cue; squeezing links to fit the viewport makes the labels too small even when their targets meet 44px.
 - 2026-11-03: `context-check` runs on draft PRs too, so a demo or spike branch that touches code must still update `PROJECT_CONTEXT.md` §7/§9 in its own commits; write that into every T3 brief instead of adding `skip-context`.
+- 2026-11-03: A demo flag alone does not make a visual branch reproducible; document the build-time flag, preview state routes, screenshot command, and output location together.

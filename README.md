@@ -26,7 +26,22 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 
 ### Design demo (draft, not for production)
 
-On `design/demo-redesign-2026-11-02` only: start the web app with `DESIGN_DEMO=1` to render the redesigned public site from mock data. Without the flag the site is unchanged.
+On `design/demo-redesign-2026-11-02` only, `DESIGN_DEMO=1` renders the redesigned public site from local mock data. Set the flag for both the production build and the server; it does not need the API or database:
+
+```bash
+DESIGN_DEMO=1 pnpm --filter @portfolio/web build
+DESIGN_DEMO=1 pnpm --filter @portfolio/web start --port 4177
+```
+
+Open `http://localhost:4177/en` or `/vi`. The demo covers the public home, projects, project detail, notes, note detail, about, contact, and craft routes. Preview loading, empty, and error screens at routes such as `/en/demo-state/home`, `/vi/demo-state/empty`, and `/en/demo-state/error`.
+
+With the server running, capture full-page PNGs for both locales at 1440px and 390px from another terminal:
+
+```bash
+pnpm --filter @portfolio/web exec node scripts/capture-design-demo.mjs
+```
+
+The capture script writes to `~/Desktop/lilp-design-demo-20261102/` by default and replaces existing PNGs there. Set `DEMO_BASE_URL` or `DEMO_SCREENSHOT_DIR` to change the server or output directory. Without `DESIGN_DEMO=1`, the existing public site renders and the demo state routes are unavailable. This branch is a visual reference only; its mock content is not a production content source.
 
 ## Environments
 
