@@ -468,7 +468,11 @@ function RouteHeading({ route, action }: { route: DemoRouteId; action?: ReactNod
 }
 
 function ActionButton({ children, quiet = false }: { children: ReactNode; quiet?: boolean }) {
-  return <button className={quiet ? 'outline-button' : 'primary-button'}>{children}</button>;
+  return (
+    <span className={`${quiet ? 'outline-button' : 'primary-button'} demo-static-action`}>
+      {children}
+    </span>
+  );
 }
 
 function MiniKpis({ values }: { values: [string, string, string][] }) {
@@ -1315,10 +1319,8 @@ function MediaView() {
       <div className="media-grid">
         {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((item, i) => (
           <div className={`panel media-card media-${i}`} key={item}>
-            <div className="media-art">
-              <span>{i % 3 === 0 ? '✳' : i % 3 === 1 ? '◒' : '✦'}</span>
-            </div>
-            <div>
+            <div className="media-art" aria-hidden="true" />
+            <div className="media-card-info">
               <strong>
                 {
                   [
@@ -1333,7 +1335,12 @@ function MediaView() {
                   ][i]
                 }
               </strong>
-              <small>Image · {i + 1}.2 MB</small>
+              <div className="media-card-meta">
+                <small>Image · {i + 1}.2 MB</small>
+                <span className="media-card-glyph" aria-hidden="true">
+                  {i % 3 === 0 ? '✳' : i % 3 === 1 ? '◒' : '✦'}
+                </span>
+              </div>
             </div>
           </div>
         ))}

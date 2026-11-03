@@ -150,6 +150,15 @@
   background: var(--brand-orange-hover);
   border-color: var(--brand-orange-hover);
 }
+.demo-static-action,
+.demo-static-action:hover {
+  cursor: default;
+  user-select: none;
+}
+.demo-static-action.primary-button:hover {
+  background: var(--brand-orange);
+  border-color: var(--brand-orange);
+}
 .nav-item.active,
 .inbox-tabs button.active {
   color: var(--brand-orange);
@@ -585,15 +594,34 @@
   border-radius: 10px;
   overflow: hidden;
 }
-.media-art span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
 .media-card > div:last-child {
   padding: 0 4px 4px;
   min-width: 0;
+}
+.media-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 3px;
+}
+.media-card-meta small {
+  min-width: 0;
+  margin-top: 0;
+}
+.media-card-glyph {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--brand-border);
+  border-radius: 8px;
+  background: var(--brand-orange-soft);
+  color: var(--brand-orange);
+  font-size: 13px;
+  line-height: 1;
 }
 .media-grid strong,
 .media-grid small {
@@ -983,6 +1011,52 @@
   .state-view .section-heading {
     display: block;
   }
+}
+
+.dark .demo-root .topbar,
+.dark .demo-root .sidebar,
+.dark .demo-root .bottom-nav,
+.dark .demo-root .panel,
+.dark .demo-root .outline-button,
+.dark .demo-root .search-box,
+.dark .demo-root .command-trigger,
+.dark .demo-root input,
+.dark .demo-root textarea,
+.dark .demo-root select {
+  background: var(--brand-surface);
+  border-color: var(--brand-border);
+  color: var(--brand-ink);
+}
+.dark .demo-root .primary-button {
+  color: #1b241d;
+}
+.dark .demo-root .breadcrumbs strong,
+.dark .demo-root .mobile-title,
+.dark .demo-root .media-grid strong,
+.dark .demo-root .media-grid small {
+  color: var(--brand-ink);
+}
+.dark .demo-root .bottom-nav button {
+  color: var(--brand-muted);
+}
+.dark .demo-root .bottom-nav button.active {
+  color: var(--brand-orange);
+}
+.dark .demo-root .sidebar-workspace {
+  background: var(--brand-surface);
+  border-color: var(--brand-border);
+}
+.dark .demo-root .sidebar-workspace small,
+.dark .demo-root .nav-item {
+  color: var(--brand-muted);
+}
+.dark .demo-root .nav-item.active {
+  background: var(--brand-orange-soft);
+  color: var(--brand-orange);
+}
+.dark .demo-root .nav-item:hover:not(.active) {
+  background: var(--brand-green-soft);
+  color: var(--brand-ink);
 }
 @media (prefers-reduced-motion: reduce) {
   .demo-root *,
