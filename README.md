@@ -19,6 +19,10 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 
 The EN/VI home, projects, notes, about, and contact routes share the round 3 public shell and index styling. They continue to read CMS content through the public API; project and note filters stay in the URL across reloads, and the contact form keeps its server submission. `/[locale]/craft` is a localized, static interaction study linked from the public header. Its presentation and the index styles are scoped to public routes, so project and note details and admin screens keep their own layouts. See the [R3-05 spec](./docs/specs/2026-11-03-r3-05-public-shell-indexes.md) for the route, accessibility, and capture checks.
 
+### Brand assets
+
+The public header and footer and the admin login and shell use the shared `lil.parker` `BrandMark` from `packages/ui`. Its icon has one vector source: `packages/ui/src/components/BrandMark/brand-icon.svg`. To refresh the web app's `icon.svg` and `apple-icon.png` after changing that source, run `bash scripts/generate-brand-icons.sh` from the repo root (requires ImageMagick's `magick` command) and commit both generated files. Light and dark orange/green brand colors are defined in `packages/ui/src/styles/globals.css` and scoped to the redesigned surfaces in `packages/ui/src/styles/redesign.css`.
+
 ### Caching and rendering
 
 - Public pages under `/[locale]` are static and use ISR. Home, about, contact, project and note detail pages, RSS, OG images and the sitemap are prerendered at build when the API answers, otherwise on first visit.
