@@ -49,11 +49,7 @@ export function AdminAboutExperienceIndex() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-ui-title font-semibold">{t('title')}</h1>
         {canWrite ? (
-          <Button
-            type="button"
-            size="sm"
-            onClick={() => router.push('/admin/pages/about/experience/new')}
-          >
+          <Button type="button" size="sm" onClick={() => router.push('/admin/experience/new')}>
             {t('new')}
           </Button>
         ) : null}
@@ -122,7 +118,7 @@ export function AdminAboutExperienceIndex() {
             remove.mutate(row.id);
           }
         }}
-        onCreate={() => router.push('/admin/pages/about/experience/new')}
+        onCreate={() => router.push('/admin/experience/new')}
         onClearFilters={() => setParams({ q: undefined, visible: undefined, page: 1 })}
         onRetry={() => {
           void refetch();

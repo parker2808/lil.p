@@ -63,6 +63,7 @@ export function AdminInboxDetail({ id }: { id: number }) {
       <PageHeader
         title={data.name}
         back={back}
+        backPlacement="inline"
         linkComponent={Link}
         actions={<Badge>{t(`status.${data.status}`)}</Badge>}
       />

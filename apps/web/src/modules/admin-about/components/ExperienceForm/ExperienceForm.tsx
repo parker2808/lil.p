@@ -2,7 +2,7 @@
 
 import type { AdminSkill, EmploymentType } from '@portfolio/contracts';
 import { Badge } from '@portfolio/ui/components/ui/badge';
-import { Field, FieldLabel } from '@portfolio/ui/components/ui/field';
+import { Field, FieldError, FieldLabel } from '@portfolio/ui/components/ui/field';
 import { Input } from '@portfolio/ui/components/ui/input';
 import {
   Select,
@@ -80,9 +80,11 @@ export function ExperienceForm({
           value={values.company}
           disabled={readOnly}
           aria-invalid={Boolean(errors.company)}
+          aria-describedby={errors.company ? 'company-error' : undefined}
           onChange={(event) => onChange('company', event.target.value)}
           onBlur={onBlur}
         />
+        <FieldError id="company-error">{errors.company}</FieldError>
       </Field>
       <Field>
         <FieldLabel htmlFor="companyUrl">{labels.companyUrl}</FieldLabel>
@@ -99,8 +101,11 @@ export function ExperienceForm({
           id="location"
           value={values.location}
           disabled={readOnly}
+          aria-invalid={Boolean(errors.location)}
+          aria-describedby={errors.location ? 'location-error' : undefined}
           onChange={(event) => onChange('location', event.target.value)}
         />
+        <FieldError id="location-error">{errors.location}</FieldError>
       </Field>
       <Field>
         <FieldLabel>{labels.employmentType}</FieldLabel>
@@ -125,8 +130,11 @@ export function ExperienceForm({
           id={roleKey}
           value={values[roleKey]}
           disabled={readOnly}
+          aria-invalid={Boolean(errors[roleKey])}
+          aria-describedby={errors[roleKey] ? `${roleKey}-error` : undefined}
           onChange={(event) => onChange(roleKey, event.target.value)}
         />
+        <FieldError id={`${roleKey}-error`}>{errors[roleKey]}</FieldError>
       </Field>
       <Field>
         <FieldLabel htmlFor={summaryKey}>{labels.summary}</FieldLabel>
@@ -159,8 +167,11 @@ export function ExperienceForm({
           type="month"
           value={values.startDate.slice(0, 7)}
           disabled={readOnly}
+          aria-invalid={Boolean(errors.startDate)}
+          aria-describedby={errors.startDate ? 'startDate-error' : undefined}
           onChange={(event) => onChange('startDate', event.target.value)}
         />
+        <FieldError id="startDate-error">{errors.startDate}</FieldError>
       </Field>
       <Field>
         <FieldLabel htmlFor="endDate">{labels.endDate}</FieldLabel>

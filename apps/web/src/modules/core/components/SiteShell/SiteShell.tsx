@@ -9,6 +9,7 @@ import { DraftBanner } from '../DraftBanner/DraftBanner';
 import { PageViewBeacon } from '../PageViewBeacon/PageViewBeacon';
 import { LocaleSuggestBanner } from '../LocaleSuggestBanner/LocaleSuggestBanner';
 import { PreviewBridge } from '../PreviewBridge/PreviewBridge';
+import { PublicToaster } from '../Providers/PublicToaster';
 import { SiteFooter } from '../SiteFooter/SiteFooter';
 import { SiteHeader } from '../SiteHeader/SiteHeader';
 import { SkipLink } from '../SkipLink/SkipLink';
@@ -28,7 +29,6 @@ export async function SiteShell({ locale, children }: { locale: Locale; children
       <DraftBanner />
       <LocaleSuggestBanner />
       <SiteHeader
-        name={site.profile.displayName}
         nav={site.nav.header}
         caseStudies={projects.map(({ slug, title }) => ({ slug, title }))}
         email={site.settings.contactEmail || undefined}
@@ -38,12 +38,12 @@ export async function SiteShell({ locale, children }: { locale: Locale; children
         {children}
       </main>
       <SiteFooter
-        name={site.profile.displayName}
         nav={site.nav}
         social={site.socialLinks}
         updatedAt={new Date()}
         buildSha={process.env.NEXT_PUBLIC_BUILD_SHA}
       />
+      <PublicToaster />
     </div>
   );
 }

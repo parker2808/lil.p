@@ -7,14 +7,17 @@ import { PrismaClient } from '../../src/generated/prisma/client';
 import { seedAdmin } from './data/admin.data';
 import { seedBaseline } from './profiles/baseline.seed';
 import { seedDemo } from './profiles/demo.seed';
+import { seedReal } from './profiles/real.seed';
 
 config({ path: resolve(process.cwd(), '../../.env') });
 config({ path: resolve(process.cwd(), '.env') });
 
 const profile =
-  process.env.SEED_PROFILE === 'baseline' || process.env.SEED_PROFILE === 'owner'
-    ? 'baseline'
-    : 'demo';
+  process.env.SEED_PROFILE === 'real'
+    ? 'real'
+    : process.env.SEED_PROFILE === 'baseline' || process.env.SEED_PROFILE === 'owner'
+      ? 'baseline'
+      : 'demo';
 
 async function main(): Promise<void> {
   const url = process.env.DATABASE_URL;
@@ -25,7 +28,9 @@ async function main(): Promise<void> {
   const prisma = new PrismaClient({ adapter: new PrismaMariaDb(url) });
 
   try {
-    if (profile === 'baseline') {
+    if (profile === 'real') {
+      await seedReal(prisma);
+    } else if (profile === 'baseline') {
       await seedBaseline(prisma);
     } else {
       await seedDemo(prisma);

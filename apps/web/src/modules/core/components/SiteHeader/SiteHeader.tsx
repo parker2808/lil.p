@@ -7,6 +7,7 @@ import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
 import { Link, usePathname } from '@i18n/navigation';
+import { BrandMark } from '@portfolio/ui/components/BrandMark/BrandMark';
 import { Button } from '@portfolio/ui/components/ui/button';
 import {
   SegmentedControl,
@@ -27,13 +28,11 @@ import { LocaleSwitch } from '../LocaleSwitch/LocaleSwitch';
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
 
 export function SiteHeader({
-  name,
   nav,
   caseStudies,
   email,
   resumeUrl,
 }: {
-  name: string;
   nav: PublicNavItem[];
   caseStudies: PaletteCaseStudy[];
   email?: string;
@@ -84,10 +83,7 @@ export function SiteHeader({
           href="/"
           className="font-heading text-ui inline-flex items-center gap-3 font-semibold"
         >
-          <span className="site-monogram" aria-hidden>
-            {name.slice(0, 1)}
-          </span>
-          {name}
+          <BrandMark />
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
           {nav.map((item) => (
@@ -106,6 +102,16 @@ export function SiteHeader({
               {item.label}
             </Link>
           ))}
+          {!nav.some((item) => item.href === '/craft') ? (
+            <Link
+              href="/craft"
+              aria-current={pathname === '/craft' ? 'page' : undefined}
+              data-slot="nav-link"
+              className="tap text-ui text-muted-foreground hover:text-foreground inline-flex items-center px-2 transition-colors"
+            >
+              {t('craft')}
+            </Link>
+          ) : null}
         </nav>
         <div className="ml-auto hidden items-center gap-2 md:flex">
           {desktop ? palette : null}
@@ -147,6 +153,18 @@ export function SiteHeader({
                     </Link>
                   </SheetClose>
                 ))}
+                {!nav.some((item) => item.href === '/craft') ? (
+                  <SheetClose asChild>
+                    <Link
+                      href="/craft"
+                      aria-current={pathname === '/craft' ? 'page' : undefined}
+                      data-slot="nav-link"
+                      className="mobile-menu-link text-muted-foreground hover:text-foreground"
+                    >
+                      {t('craft')}
+                    </Link>
+                  </SheetClose>
+                ) : null}
               </nav>
               <div className="mobile-menu-bottom">
                 <div className="mobile-menu-setting">

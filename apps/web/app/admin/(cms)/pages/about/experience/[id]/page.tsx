@@ -1,4 +1,4 @@
-import { AdminAboutExperienceEditor } from '@/modules/admin-about/views/AdminAboutExperienceEditor';
+import { redirect } from 'next/navigation';
 
 export default async function AdminExperienceEditorPage({
   params,
@@ -6,7 +6,7 @@ export default async function AdminExperienceEditorPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <AdminAboutExperienceEditor experienceId={Number(id)} />;
+  redirect(`/admin/experience/${id}`);
 }
 
 export function generateMetadata() {

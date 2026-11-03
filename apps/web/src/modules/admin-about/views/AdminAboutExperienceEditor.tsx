@@ -1,6 +1,8 @@
 'use client';
 
 import { type AdminSkill, adminSkillSchema, experienceCreateSchema } from '@portfolio/contracts';
+import { Button } from '@portfolio/ui/components/ui/button';
+import { ConfirmDialog } from '@portfolio/ui/components/ui/confirm-dialog';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
@@ -15,14 +17,13 @@ import { useSaveStatus } from '@/modules/admin-core/hooks/use-save-status.hook';
 import { useDirtyGuard } from '@/modules/admin-core/hooks/use-dirty-guard.hook';
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import { editorLabelsFromMessages } from '@/modules/admin-core/utils/editor-labels.util';
-import { mapFieldErrors } from '@/modules/admin-core/utils/map-field-errors.util';
 import { apiClient } from '@/modules/core/services/api-client.service';
-import { ApiError } from '@/modules/core/utils/api-error.util';
 
 import { ExperienceForm } from '../components/ExperienceForm/ExperienceForm';
 import {
   useAdminExperienceRow,
   useCreateAdminExperience,
+  useDeleteAdminExperience,
   useSaveAdminExperience,
 } from '../hooks/use-admin-experience-editor.hook';
 import {
@@ -66,10 +67,13 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
   const readOnly = !useIsAdmin();
   const create = useCreateAdminExperience();
   const save = useSaveAdminExperience();
+  const remove = useDeleteAdminExperience();
   const [locale, setLocale] = useState<'en' | 'vi'>('en');
   const [form, setForm] = useState(initial);
   const [baseline, setBaseline] = useState(() => JSON.stringify(toExperienceCreateInput(initial)));
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const snapshot = JSON.stringify(toExperienceCreateInput(form));
   const editorLabels = editorLabelsFromMessages((key) => editorT(key, { count: '{count}' }));
@@ -112,25 +116,34 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
 
   function patch<K extends keyof ExperienceFormValues>(name: K, value: ExperienceFormValues[K]) {
     setForm((current) => ({ ...current, [name]: value }));
+    setFieldErrors((current) => ({ ...current, [name]: '' }));
+    setActionError(null);
   }
 
   async function persist() {
     if (readOnly) {
       return;
     }
+    setActionError(null);
     if (form.id == null) {
       const parsed = experienceCreateSchema.safeParse(toExperienceCreateInput(form));
       if (!parsed.success) {
-        setFieldErrors({ company: t('companyRequired') });
+        const errors: Record<string, string> = {};
+        for (const issue of parsed.error.issues) {
+          const field = String(issue.path[0] ?? '');
+          if (field === 'company') errors.company = t('companyRequired');
+          if (field === 'location') errors.location = t('locationRequired');
+          if (field === 'roleEn') errors.roleEn = t('roleRequired');
+          if (field === 'startDate') errors.startDate = t('startDateRequired');
+        }
+        setFieldErrors(errors);
         return;
       }
       try {
         const created = await create.mutateAsync(parsed.data);
-        router.replace(`/admin/pages/about/experience/${created.id}`);
-      } catch (error) {
-        if (error instanceof ApiError) {
-          setFieldErrors(mapFieldErrors(error));
-        }
+        router.replace(`/admin/experience/${created.id}`);
+      } catch {
+        setActionError(t('saveFailed'));
       }
       return;
     }
@@ -149,6 +162,54 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
     <EditorShell
       title={form.company || t('untitled')}
       back={back}
+      publish={
+        readOnly ? null : (
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              type="button"
+              size="sm"
+              className="min-h-11"
+              onClick={() => void persist()}
+              disabled={create.isPending || save.isPending}
+            >
+              {t('save')}
+            </Button>
+            {form.id == null ? null : (
+              <Button
+                type="button"
+                size="sm"
+                variant="destructive"
+                className="min-h-11"
+                onClick={() => setConfirmDelete(true)}
+                disabled={remove.isPending}
+              >
+                {t('delete')}
+              </Button>
+            )}
+            {actionError ? (
+              <p role="alert" className="text-ui-meta text-destructive">
+                {actionError}
+              </p>
+            ) : null}
+            <ConfirmDialog
+              open={confirmDelete}
+              onOpenChange={setConfirmDelete}
+              title={t('confirmDeleteTitle')}
+              description={t('confirmDelete')}
+              cancelLabel={t('cancel')}
+              confirmLabel={t('delete')}
+              onConfirm={() => {
+                if (form.id == null) return;
+                void remove.mutateAsync(form.id).then(
+                  () => router.replace('/admin/experience'),
+                  () => setActionError(t('deleteFailed')),
+                );
+                setConfirmDelete(false);
+              }}
+            />
+          </div>
+        )
+      }
       saveStatus={saveStatus.state}
       savedText={saveStatus.text}
       onLoadLatest={() => {
@@ -201,7 +262,9 @@ function ExperienceEditorForm({ initial }: { initial: ExperienceFormValues }) {
         editorLabels={editorLabels}
         previewLabels={previewLabels}
         onChange={patch}
-        onBlur={() => void persist()}
+        onBlur={() => {
+          if (form.id != null) void persist();
+        }}
         onBaseline={(field, markdown) => {
           setForm((current) => ({ ...current, [field]: markdown }));
         }}

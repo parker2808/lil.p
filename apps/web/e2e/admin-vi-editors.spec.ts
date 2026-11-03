@@ -8,6 +8,7 @@ test('Vietnamese editors, page builder and site settings use translated controls
   test.setTimeout(120_000);
   await signIn(page);
   await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
 
   const routes = [
     [
@@ -44,8 +45,9 @@ test('Vietnamese about forms and experience dates have no English or ISO date co
   test.setTimeout(120_000);
   await signIn(page);
   await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
 
-  await page.goto('/admin/experience');
+  await page.goto('/admin/pages/about?tab=experience');
   await expect(page.getByRole('heading', { name: 'Kinh nghiệm' })).toBeVisible();
   const dates = page.locator('tbody tr td').filter({ hasText: /\d{2}\/\d{4}/ });
   await expect(dates.first()).toBeVisible();

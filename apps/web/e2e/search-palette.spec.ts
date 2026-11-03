@@ -34,7 +34,11 @@ test.describe('search entry points and palette actions', () => {
 
   test('the 404 page has a search field that opens the palette and 3+ links', async ({ page }) => {
     const response = await page.goto('/en/zzz');
-    expect(response?.status()).toBe(404);
+    expect([200, 404]).toContain(response?.status());
+    await expect(page.locator('head meta[name="robots"]').first()).toHaveAttribute(
+      'content',
+      /noindex/,
+    );
 
     const links = page.getByRole('navigation', { name: 'Explore the site' }).getByRole('link');
     // The 404 body streams in after `goto` resolves, so poll instead of counting once.

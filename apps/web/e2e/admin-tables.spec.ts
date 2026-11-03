@@ -18,7 +18,7 @@ const LISTS: {
     path: '/admin/experience',
     table: 'Experience',
     listPath: '/admin/pages/about',
-    rowBase: '/admin/pages/about/experience',
+    rowBase: '/admin/experience',
   },
 ];
 

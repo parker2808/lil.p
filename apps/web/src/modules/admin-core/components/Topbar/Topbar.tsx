@@ -1,6 +1,7 @@
 'use client';
 
 import { type ReactNode, useState } from 'react';
+import { BrandMark } from '@portfolio/ui/components/BrandMark/BrandMark';
 import { Avatar, AvatarFallback } from '@portfolio/ui/components/ui/avatar';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList } from '@portfolio/ui/components/ui/breadcrumb';
@@ -15,8 +16,9 @@ import { IconButton } from '@portfolio/ui/components/ui/icon-button';
 import { inputClassName } from '@portfolio/ui/components/ui/input';
 import { TooltipProvider } from '@portfolio/ui/components/ui/tooltip';
 import { cn } from '@portfolio/ui/lib/utils';
-import { ArrowLeft, Ellipsis, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { ArrowLeft, Ellipsis, PanelLeftClose, PanelLeftOpen, SunMoon } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
+import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
@@ -40,9 +42,14 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
   const section = navItemFor(pathname);
   const initial = me.name.slice(0, 1);
   const [passwordOpen, setPasswordOpen] = useState(false);
+  const { resolvedTheme, setTheme } = useTheme();
+  const toggleTheme = () => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
 
   return (
     <header className="admin-topbar border-border flex h-12 shrink-0 items-center gap-3 border-b px-4">
+      <Link href="/admin" aria-label="lil.parker" className="admin-brand-link lg:hidden">
+        <BrandMark compact />
+      </Link>
       {section ? (
         <div className="flex min-w-0 items-center gap-2 lg:hidden">
           {section.href !== pathname ? (
@@ -82,6 +89,16 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
       </Breadcrumb>
       <div className="flex items-center gap-2 lg:ml-auto">
         <div className="hidden items-center gap-2 lg:flex">{actions}</div>
+        <TooltipProvider>
+          <IconButton
+            variant="ghost"
+            className="hidden lg:inline-flex"
+            label={t('toggleTheme')}
+            onClick={toggleTheme}
+          >
+            <SunMoon aria-hidden className="size-4" />
+          </IconButton>
+        </TooltipProvider>
         <label className="text-ui-meta text-muted-foreground hidden items-center gap-1 lg:flex">
           {t('language')}
           <select
@@ -96,7 +113,7 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
         </label>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" className="min-h-11 min-w-11 lg:min-h-0 lg:min-w-0">
               <Ellipsis className="size-5 lg:hidden" aria-hidden />
               <span className="sr-only lg:hidden">{t('account')}</span>
               <Avatar className="hidden size-6 lg:flex">
@@ -109,20 +126,27 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem className="min-h-11 lg:hidden" onSelect={toggleTheme}>
+              {t('toggleTheme')}
+            </DropdownMenuItem>
             {(['en', 'vi'] as const).map((value) => (
               <DropdownMenuItem
                 key={value}
-                className="lg:hidden"
+                className="min-h-11 lg:hidden"
                 disabled={value === locale}
                 onSelect={() => switchLocale(value)}
               >
                 {t('switchLanguage', { locale: t(value === 'en' ? 'localeEn' : 'localeVi') })}
               </DropdownMenuItem>
             ))}
-            <DropdownMenuItem onSelect={() => setPasswordOpen(true)}>
+            <DropdownMenuItem
+              className="min-h-11 lg:min-h-0"
+              onSelect={() => setPasswordOpen(true)}
+            >
               {t('changePassword')}
             </DropdownMenuItem>
             <DropdownMenuItem
+              className="min-h-11 lg:min-h-0"
               onSelect={async () => {
                 await logout();
                 router.replace('/admin/login');

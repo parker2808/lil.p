@@ -133,7 +133,9 @@ test.describe('admin more sheet', () => {
     const hrefs = await page
       .locator('[data-slot="sheet-content"] a[href^="/admin"]')
       .evaluateAll((links) =>
-        links.map((link) => (link as HTMLAnchorElement).getAttribute('href')),
+        links
+          .map((link) => (link as HTMLAnchorElement).getAttribute('href'))
+          .filter((href): href is string => href !== null),
       );
     expect(hrefs.length).toBeGreaterThan(0);
 
@@ -145,7 +147,15 @@ test.describe('admin more sheet', () => {
       await page.locator(`[data-slot="sheet-content"] a[href="${href}"]`).tap();
 
       await expect(dialog(page)).toHaveCount(0);
-      await expect(page).toHaveURL(new RegExp(`${href}/?(?:$|\\?)`));
+      if (href === '/admin/tags') {
+        await expect(page).toHaveURL(/\/admin\/posts\?tab=tags$/);
+      } else if (
+        /^\/admin\/(experience|education|skills|principles|process|stats|domains)$/.test(href)
+      ) {
+        await expect(page).toHaveURL(`/admin/pages/about?tab=${href.split('/').pop()}`);
+      } else {
+        await expect(page).toHaveURL(new RegExp(`${href}/?(?:$|\\?)`));
+      }
       await expectBodyUnlocked(page);
     }
     await expectAdminPaneScrolls(page);

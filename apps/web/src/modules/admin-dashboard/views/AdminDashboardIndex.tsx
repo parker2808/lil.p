@@ -19,7 +19,13 @@ import { ActivityCard } from '../components/ActivityCard/ActivityCard';
 import { ContentHealthCard } from '../components/ContentHealthCard/ContentHealthCard';
 import { RangeToggle } from '../components/RangeToggle/RangeToggle';
 
-export function AdminDashboardIndex({ range }: { range: StatsRange }) {
+export function AdminDashboardIndex({
+  range,
+  renderedAt,
+}: {
+  range: StatsRange;
+  renderedAt?: number;
+}) {
   const t = useTranslations('admin.dashboard');
   const labels = (section: 'stats' | 'health' | 'inbox' | 'activity') => ({
     error: t(`${section}.error`),
@@ -28,15 +34,21 @@ export function AdminDashboardIndex({ range }: { range: StatsRange }) {
   });
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="admin-dashboard flex flex-col gap-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-ui-title font-semibold">{t('title')}</h1>
+        <div className="flex flex-col gap-1">
+          <p className="text-ui-meta text-primary font-mono tracking-widest uppercase">
+            {t('eyebrow')}
+          </p>
+          <h1 className="text-ui-title font-semibold">{t('title')}</h1>
+          <p className="text-ui text-muted-foreground">{t('intro')}</p>
+        </div>
         <RangeToggle range={range} />
       </div>
       <div data-slot="dashboard-grid" className="grid grid-cols-1 gap-3 lg:grid-cols-12">
         <RoleGate allow={['admin']}>
           <DashboardCell
-            className="lg:col-span-4"
+            className="dashboard-priority lg:col-span-4"
             labels={labels('inbox')}
             queryKey={qk.admin.stats(range)}
           >
@@ -44,14 +56,14 @@ export function AdminDashboardIndex({ range }: { range: StatsRange }) {
           </DashboardCell>
         </RoleGate>
         <DashboardCell
-          className="lg:col-span-4"
+          className="dashboard-priority lg:col-span-4"
           labels={labels('stats')}
           queryKey={qk.admin.stats(range)}
         >
           <DraftsCard range={range} />
         </DashboardCell>
         <DashboardCell
-          className="lg:col-span-4"
+          className="dashboard-performance lg:col-span-4"
           labels={labels('stats')}
           queryKey={qk.admin.stats(range)}
         >
@@ -63,7 +75,7 @@ export function AdminDashboardIndex({ range }: { range: StatsRange }) {
             labels={labels('activity')}
             queryKey={qk.admin.audit(LATEST_AUDIT_PARAMS)}
           >
-            <ActivityCard />
+            <ActivityCard renderedAt={renderedAt} />
           </DashboardCell>
         </RoleGate>
         <DashboardCell

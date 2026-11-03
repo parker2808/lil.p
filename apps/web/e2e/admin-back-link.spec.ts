@@ -34,7 +34,7 @@ test('every admin detail and new route shows a back link to its parent at 375px'
   for (const [section, parent] of [
     ['projects', '/admin/projects'],
     ['posts', '/admin/posts'],
-    ['experience', '/admin/pages/about?tab=experience'],
+    ['experience', '/admin/experience'],
   ] as const) {
     const base = `/admin/${section}`;
     routes.push({ path: `${base}/new`, parent, section });
@@ -45,7 +45,7 @@ test('every admin detail and new route shows a back link to its parent at 375px'
     parent: '/admin/inbox',
     section: 'inbox',
   });
-  routes.push({ path: '/admin/pages/home', parent: '/admin/pages/home', section: 'pages' });
+  routes.push({ path: '/admin/pages/home', parent: '/admin/pages', section: 'pages' });
 
   for (const { path, parent, section } of routes) {
     await page.goto(path);
@@ -58,5 +58,5 @@ test('every admin detail and new route shows a back link to its parent at 375px'
   }
 
   await page.getByRole('link', { name: 'Back to Pages' }).click();
-  await expect(page).toHaveURL(/\/admin\/pages\/home$/);
+  await expect(page).toHaveURL(/\/admin\/pages$/);
 });

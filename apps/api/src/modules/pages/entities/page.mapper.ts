@@ -2,9 +2,9 @@ import {
   type AdminBlock,
   type AdminPage,
   type AdminPageListItem,
+  fromPrismaPageKey,
   type Locale,
   parseBlock,
-  PRISMA_PAGE_KEY_TO_PUBLIC,
   type PublicBlock,
   type PublicPage,
   resolveBlockLocale,
@@ -48,7 +48,7 @@ export function toPublicPage(
   }
 
   return {
-    key: PRISMA_PAGE_KEY_TO_PUBLIC[row.key],
+    key: fromPrismaPageKey(row.key),
     seo: {
       title: values.seoTitle,
       description: values.seoDescription,
@@ -91,7 +91,9 @@ export function toAdminPage(
   },
 ): AdminPage {
   return {
-    key: PRISMA_PAGE_KEY_TO_PUBLIC[row.key],
+    key: fromPrismaPageKey(row.key),
+    title: row.title,
+    locale: row.locale as Locale,
     seoTitleEn: row.seoTitleEn,
     seoTitleVi: row.seoTitleVi,
     seoDescriptionEn: row.seoDescriptionEn,
@@ -106,13 +108,17 @@ export function toAdminPage(
 
 export function toAdminPageListItem(row: {
   key: PageWithAllBlocks['key'];
+  title: string | null;
+  locale: string;
   updatedAt: Date;
   publishedAt?: Date | null;
   publishedVersion?: { version: number } | null;
   _count: { blocks: number };
 }): AdminPageListItem {
   return {
-    key: PRISMA_PAGE_KEY_TO_PUBLIC[row.key],
+    key: fromPrismaPageKey(row.key),
+    title: row.title,
+    locale: row.locale as Locale,
     blockCount: row._count.blocks,
     updatedAt: row.updatedAt.toISOString(),
     publishedVersion: row.publishedVersion?.version ?? null,

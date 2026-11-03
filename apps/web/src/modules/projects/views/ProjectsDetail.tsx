@@ -2,6 +2,7 @@ import { cloudinaryPreview } from '@portfolio/ui/utils/cloudinary-preview.util';
 import type { Locale } from '@portfolio/contracts';
 import { ContentProgress } from '@portfolio/ui/components/ContentProgress/ContentProgress';
 import { CoverPlaceholder } from '@portfolio/ui/components/CoverPlaceholder/CoverPlaceholder';
+import { projectCoverAsset } from '@portfolio/ui/utils/project-cover-asset.util';
 import { CtaBand } from '@portfolio/ui/components/CtaBand/CtaBand';
 import { FactChips } from '@portfolio/ui/components/FactChips/FactChips';
 import { KeyFacts } from '@portfolio/ui/components/KeyFacts/KeyFacts';
@@ -61,9 +62,10 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
   const stack = project.skills.map((skill) => skill.name).join(' · ');
   const hue = project.domain?.hue ?? 'JADE';
   const crumbs = crumbLabel[locale];
+  const repoCover = projectCoverAsset(project.slug);
 
   return (
-    <article>
+    <article className="public-project-detail">
       <JsonLd data={creativeWorkJsonLd(project, locale)} />
       <JsonLd
         data={breadcrumbListJsonLd([
@@ -101,7 +103,7 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
         </div>
       </header>
       <div className="mx-auto flex max-w-[var(--container)] flex-col gap-16 px-6 pb-16">
-        {project.isConfidential ? null : project.cover ? (
+        {project.cover && !project.isConfidential ? (
           // Public cover uses API srcset + locale alt (T51); next/image cannot attach srcset.
           // eslint-disable-next-line @next/next/no-img-element -- srcset from media DTO
           <img
@@ -121,6 +123,15 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
                 : undefined,
               backgroundSize: 'cover',
             }}
+          />
+        ) : repoCover ? (
+          // eslint-disable-next-line @next/next/no-img-element -- repository asset has a fixed public path
+          <img
+            src={repoCover.src}
+            alt={repoCover.kind === 'screenshot' ? 'Interview kit home screen' : ''}
+            width={1600}
+            height={1000}
+            className="w-full rounded-xl object-cover"
           />
         ) : (
           <CoverPlaceholder

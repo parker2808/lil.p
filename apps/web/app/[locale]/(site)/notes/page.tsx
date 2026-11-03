@@ -21,5 +21,9 @@ export default async function Page({
   const { locale } = await params;
   const query = await searchParams;
   setRequestLocale(locale);
-  return <NotesIndex locale={locale as Locale} searchParams={query} />;
+  return (
+    <div className="public-index public-notes">
+      <NotesIndex locale={locale as Locale} searchParams={query} />
+    </div>
+  );
 }

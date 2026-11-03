@@ -12,8 +12,11 @@
     "themeAuto": "Auto",
     "locale": "Language",
     "contact": "Contact",
+    "craft": "Craft",
     "copyEmail": "Copy email",
     "copied": "Copied",
+    "copyFailed": "Couldn't copy email. Use the email link instead.",
+    "emailLink": "Email me",
     "suggestLocale": "This page is also available in Vietnamese",
     "switchLocale": "View in Vietnamese",
     "loading": "Loading",
@@ -43,6 +46,7 @@
     "loading": "Loading",
     "empty": "Nothing here yet",
     "error": "Something went wrong",
+    "errorDescription": "The page could not load. Try again or return to the beginning.",
     "retry": "Retry",
     "notFound": "This page is missing"
   },
@@ -209,7 +213,8 @@
       "language": "Language",
       "localeEn": "EN",
       "localeVi": "VI",
-      "switchLanguage": "Language: {locale}"
+      "switchLanguage": "Language: {locale}",
+      "toggleTheme": "Toggle theme"
     },
     "palette": {
       "open": "Jump to",
@@ -276,10 +281,14 @@
       "checking": "Checking session",
       "workspace": "P / CMS",
       "artTitle": "A quiet place to shape what comes next.",
-      "artNote": "Content · Craft · Publish"
+      "artNote": "Content · Craft · Publish",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
     },
     "dashboard": {
       "title": "Dashboard",
+      "eyebrow": "Workspace",
+      "intro": "A clear view of what needs your attention.",
       "range": {
         "7d": "7d",
         "30d": "30d",
@@ -672,6 +681,16 @@
         "loadError": "This role could not be loaded.",
         "company": "Company",
         "companyRequired": "Company is required.",
+        "locationRequired": "Location is required.",
+        "roleRequired": "English role is required.",
+        "startDateRequired": "Start date is required.",
+        "saveFailed": "The role could not be saved. Try again.",
+        "save": "Save role",
+        "delete": "Delete role",
+        "cancel": "Cancel",
+        "confirmDeleteTitle": "Delete this role?",
+        "confirmDelete": "This role will be removed from the timeline.",
+        "deleteFailed": "The role could not be deleted. Try again.",
         "companyUrl": "Company URL",
         "location": "Location",
         "employmentType": "Employment type",
@@ -1164,6 +1183,26 @@
     },
     "pages": {
       "title": "Pages",
+      "create": {
+        "title": "Add page",
+        "hint": "Give this page a name and choose how to begin.",
+        "pageTitle": "Page title",
+        "slug": "Slug",
+        "slugHint": "Use lowercase letters, numbers, and hyphens.",
+        "locale": "Language",
+        "english": "English",
+        "vietnamese": "Vietnamese",
+        "startWith": "Start with",
+        "starter": "Starter template",
+        "empty": "Empty blocks",
+        "cancel": "Cancel",
+        "submit": "Create page",
+        "creating": "Creating…",
+        "titleRequired": "Enter a page title of up to 120 characters.",
+        "invalidSlug": "Use 1–64 lowercase letters, numbers, or hyphens.",
+        "duplicateSlug": "This slug is already in use.",
+        "failed": "The page could not be created. Try again."
+      },
       "loadError": "Pages could not be loaded.",
       "retry": "Retry",
       "empty": "No pages yet.",
@@ -1196,7 +1235,8 @@
         "discardHint": "The draft is replaced with the live published version.",
         "cancel": "Cancel",
         "failed": "The page could not be published.",
-        "invalidBlocks": "Fix the highlighted blocks before publishing."
+        "invalidBlocks": "Fix the highlighted blocks before publishing.",
+        "bodyRequired": "Add visible body copy in this page's language before publishing. Go to the body editor."
       },
       "versions": {
         "open": "History",

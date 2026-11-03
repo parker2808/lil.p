@@ -31,9 +31,19 @@ export function AdminInboxLayout({ children }: { children: ReactNode }) {
   return (
     <div className="admin-inbox" data-selected={selectedId ? 'true' : 'false'}>
       <section className="admin-inbox-list" aria-labelledby={headingId}>
-        <Heading id={headingId} className="text-ui-title font-semibold">
-          {t('title')}
-        </Heading>
+        <div className="flex min-h-11 items-center gap-2">
+          <Heading id={headingId} className="text-ui-title font-semibold">
+            {t('title')}
+          </Heading>
+          {!isPending && !isError ? (
+            <span
+              className="bg-muted text-muted-foreground rounded-full px-2 py-0.5 font-mono text-xs tabular-nums"
+              aria-label={`${list.total} ${t('messages')}`}
+            >
+              {list.total}
+            </span>
+          ) : null}
+        </div>
         <FilterBar
           q={params.q ?? ''}
           onQChange={(q) => setParams({ q: q || undefined, page: 1 })}

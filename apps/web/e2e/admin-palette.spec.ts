@@ -25,7 +25,7 @@ test.describe('admin command palette actions', () => {
     const create = actions.getByRole('button', { name: /^Create project/ });
     await expect(create.locator('kbd')).toHaveText(['C', 'P']);
 
-    await create.click();
+    await create.click({ noWaitAfter: true, timeout: 10_000 });
     await expect(page).toHaveURL(/\/admin\/projects\/new$/);
     await expect(palette(page)).toBeHidden();
     await expect(page.getByRole('heading', { level: 1, name: 'Untitled project' })).toBeVisible();

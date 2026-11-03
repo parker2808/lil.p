@@ -2,6 +2,8 @@
 
 Portfolio monorepo: Next.js public site + admin (`apps/web`), NestJS API (`apps/api`), design system (`packages/ui`), and shared zod contracts (`packages/contracts`).
 
+The Round 3 integration branch contains the verified PR #169 head and all eleven earlier Round 3 branch tips. It is a review PR to `main`; the stacked PRs remain open. See the [integration handoff](./docs/specs/2026-11-03-r3-stack-integration.md) and [Round 3 audit](./docs/specs/2026-11-03-r3-12-real-flow-audit.md) for scope and checks.
+
 Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./docs/PLAN.md).
 
 ## Stack
@@ -15,14 +17,50 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 | Hosting   | Vercel for web (functions pinned to `sin1` Singapore in `vercel.json`, next to the API and DB), Render free for the API (Singapore), Cloudinary for media. All free tiers |
 | Keep-warm | A cron-job.org job pings `GET /api/health` (`SELECT 1`) every 10 minutes so the Render free instance does not spin down; `ApiWarmup` also pings it on page load           |
 
+### Public site
+
+The EN/VI home, projects, notes, about, and contact routes share the round 3 public shell and index styling. They continue to read CMS content through the public API; project and note filters stay in the URL across reloads, and the contact form keeps its server submission. `/[locale]/craft` is a localized, static interaction study linked from the public header. Its presentation and the index styles are scoped to public routes, so project and note details and admin screens keep their own layouts. See the [R3-05 spec](./docs/specs/2026-11-03-r3-05-public-shell-indexes.md) for the route, accessibility, and capture checks.
+
+The contact page, public CTA, and search palette use the contact email configured in site settings. Copy email reports success or failure in the selected language and keeps a direct email link available. See the [R3-06 spec](./docs/specs/2026-11-03-r3-06-copy-email.md).
+
+Project and note detail pages keep their CMS content and draft preview paths. Their loading states now follow the final route layout, and localized error and missing-page screens provide recovery actions. See the [R3-07 spec](./docs/specs/2026-11-03-r3-07-public-details-states.md).
+
+### Brand assets
+
+The public header and footer and the admin login and shell use the shared `lil.parker` `BrandMark` from `packages/ui`. Its icon has one vector source: `packages/ui/src/components/BrandMark/brand-icon.svg`. To refresh the web app's `icon.svg` and `apple-icon.png` after changing that source, run `bash scripts/generate-brand-icons.sh` from the repo root (requires ImageMagick's `magick` command) and commit both generated files. Light and dark orange/green brand colors are defined in `packages/ui/src/styles/globals.css` and scoped to the redesigned surfaces in `packages/ui/src/styles/redesign.css`.
+
 ### Caching and rendering
 
 - Public pages under `/[locale]` are static and use ISR. Home, about, contact, project and note detail pages, RSS, OG images and the sitemap are prerendered at build when the API answers, otherwise on first visit.
 - Public API reads (`apiServer` without `withAuth`) never read cookies or headers. They use `fetch` with `next: { revalidate: 3600, tags }`, and every one carries the shared `public` tag.
 - Admin saves expire the cache right away. Successful admin mutations that change live content call the `revalidatePublicContent` server action (admins only, `updateTag('public')`); draft-only and non-public ones opt out with `meta.publicCache`. The API still posts per-entity tags to `/api/revalidate` for the content it publishes.
 - `/notes` and `/projects` filter and paginate by query string, so they render per request, but their API reads still come from the data cache. `/admin` is always dynamic.
+- The live admin shell uses role-filtered navigation and a server role check on `/admin/audit`. Its dashboard shows only cards the signed-in role can use; the topbar exposes an EN/VI selector and a theme control, with both actions in the mobile account menu. See [R3-08](./docs/specs/2026-11-03-r3-08-admin-shell-insights.md) for the route and state checks.
+- Admin collection lists retain their API-backed filters and actions. Education uses compact mobile cards with reorder controls; media tiles use a responsive, padded preview grid; inbox detail keeps an inline back link and the list shows its message count. The [R3-09 spec](./docs/specs/2026-11-03-r3-09-admin-collections.md) records the collection capture and browser checks.
+- Admin page publishing maps the API's `PAGE_BODY_REQUIRED`/`body` error to a linked message in the admin UI language, independent of the page language. Standalone experience editing uses `/admin/experience/new` and `/admin/experience/[id]`, with explicit save, validation, and deletion confirmation; the older About URLs redirect there. See the [R3-10 spec](./docs/specs/2026-11-03-r3-10-admin-editors-settings.md) and the verification entry in [PROJECT_CONTEXT.md §9](./PROJECT_CONTEXT.md#9-changelog).
 - If the API is down at build time, the build still succeeds: nothing is prerendered and ISR fills the pages on first visit.
 - CSP: `/admin` and draft-mode requests (the site-wide `__prerender_bypass` cookie) get a per-request nonce with `'strict-dynamic'`. Public pages share cached HTML, so they use `script-src 'self' 'unsafe-inline'` with every other directive unchanged (see `csp.util.ts`).
+- Development public routes allow React's diagnostic `eval()` under CSP; production and nonce-protected routes do not.
+
+### Custom page creation API
+
+Admins can create a draft with `POST /api/admin/pages`. The JSON body requires `title` (1–120 characters after trimming), `key` (a lowercase, one-segment slug of 1–64 characters), `locale` (`en` or `vi`), and `template` (`starter` or `empty`). A successful request returns `201` with the editable admin page; `GET /api/admin/pages/:key` reads it back. Built-in page keys and public route names are reserved, and a taken key returns `409` with `PAGE_KEY_TAKEN`.
+
+In the admin, open `/admin/pages` and use **Add page** in the header or empty state. The dialog suggests an editable slug from the title, validates each field, and keeps the form open if creation fails. After a successful create it opens the new editor. The Pages editor back link returns to the index. See the [R3-04 UI spec](./docs/specs/2026-11-03-r3-04-page-create-ui.md).
+
+`starter` adds a localized page heading and blank prose; `empty` starts without blocks. Both stay drafts until published. Custom pages need a visible first H1 and substantive visible prose in the page locale before publishing; missing prose returns `PAGE_BODY_REQUIRED` on the `body` field. Published custom pages render at `/en/{key}` and `/vi/{key}`, appear in the sitemap, and use the same CMS block rendering and cache invalidation as built-in pages. Drafts stay private but are available through authorized preview and saved versions. See the [R3-02](./docs/specs/2026-11-03-r3-02-page-create-api.md) and [R3-03](./docs/specs/2026-11-03-r3-03-custom-public-pages.md) specs for coverage.
+
+### Real content seed verification
+
+The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires private source evidence for every factual claim and project cover. Keep source paths, source text, and contact details out of git and logs. The staged migration check is `env -u DATABASE_URL bash apps/api/prisma/seed/migration-gate.sh`; it creates a random, tmpfs-only MySQL container, compares the five built-in page rows across the old and current migrations, checks page constraints and Prisma schema drift, then removes the container. It refuses to run when `DATABASE_URL` is already set.
+
+The `real` seed profile requires `LILP_PRIVATE_SOURCE_PATH` at runtime. It validates nine owner project records, adds one verified public repository project, and publishes exactly ten projects. Run it only on a newly created disposable local database for verification; the guarded migration gate runs it twice and confirms no duplicate or changed rows. Ten repo covers are mapped by project slug: one public README screenshot and nine clearly illustrative covers. A CMS media cover takes priority when present.
+
+### Round 3 integrated audit
+
+The [R3-12 spec](./docs/specs/2026-11-03-r3-12-real-flow-audit.md) covers the integrated page-creation, public-route and seed stack. Run `env -u DATABASE_URL -u DATABASE_URL_TEST bash scripts/r3-12-e2e-gate.sh` for the full `pnpm check:all --e2e` suite on a random no-volume local MySQL container. Set `API_PORT` and `WEB_PORT` when the default local ports are occupied; the gate builds and tests against those ports and keeps the browser on `localhost` for draft cookies. Set `R3_VISUAL_UPDATE=1` to refresh Linux Chromium screenshots through the same disposable database gate. For the staged schema-only migration check, run `env -u DATABASE_URL LILP_MIGRATION_ONLY=1 bash apps/api/prisma/seed/migration-gate.sh`; it still checks five old rows, constraints and Prisma drift, then destroys the container. `python3 scripts/audit-r3-captures.py` validates Desktop screenshot manifests and their PNGs; `--finalize` writes consolidated manifests and archives unreferenced PNGs outside the capture folders.
+
+The PR #169 CI repair passes all nine local `check:all --e2e` gates on disposable MySQL, 17 focused browser tests, and 14 Linux visual tests. Set `R3_E2E_STATES=1` for the focused `public-details-states.spec.ts` run to refresh controlled loading and error captures. The final manifests contain 264 public and 608 admin route/state tuples, with no missing, stale or orphan PNGs.
 
 ## Environments
 

@@ -1,5 +1,36 @@
 # Lessons
 
+- 2026-11-03: A stacked integration PR can branch from the verified top PR tip when every lower branch tip is already an ancestor; this preserves the full stack without modifying or merging the original PRs.
+- 2026-11-03: Production Playwright draft previews must use `localhost` in both the web build and browser origin; a `127.0.0.1` origin loses Next's secure draft cookie after navigation.
+- 2026-11-03: Integrated visual changes require new Linux Chromium baselines; inspect expected and actual images before updating snapshots, and use the app's theme control so capture state matches its provider.
+- 2026-11-03: A modal makes background topbar controls inaccessible to role locators, but a capture fixture can invoke the existing theme button handler through its DOM element while preserving the modal state.
+- 2026-11-03: A browser form test should verify the field still holds its value and click the actual submit control; a programmatic DOM click can hide an input or hydration race.
+- 2026-11-03: The content checker reads tracked PNG bytes as text, so a compressed image can accidentally resemble an email; lossless recompression can clear that false positive while a decoded pixel comparison proves the baseline is unchanged.
+- 2026-11-03: A streamed Next.js 404 can retain HTTP 200 after the shell commits; assert the visible 404 state and `robots=noindex`, and expose streamed content under `@media (scripting: none)` so it remains readable without JavaScript.
+- 2026-11-03: Tailwind's generated layers can override a late unlayered no-script reveal rule; keep that rule in `@layer base` and verify it in a production browser with JavaScript disabled.
+- 2026-11-03: A command palette can scroll behind the viewport even while its trigger and input pass focus checks; assert the active option remains in view after keyboard navigation.
+
+- 2026-11-03: A stacked custom-page API must reserve one-segment fixture routes added by later public branches, and production Playwright needs a migrated disposable database before its API health check starts.
+
+- 2026-11-03: MySQL sorts an ENUM by declaration order but its replacement VARCHAR by text order; compare staged migration rows with `ORDER BY CAST(key AS CHAR)` so a type change does not masquerade as changed content.
+
+- 2026-11-03: A real route file can be unreachable when `next.config.ts` redirects its path first; verify resolved URLs before treating list-page captures as coverage for that component.
+- 2026-11-03: A Next catch-all page must await the shared async block renderer inside its try/catch to turn an API 404 into `notFound()`; returning its promise as JSX leaves the rejection outside that catch.
+- 2026-11-03: Next sets draft-mode's bypass cookie with `Secure`; Chromium does not send it back over `http://127.0.0.1`, so local production Playwright preview checks must use `http://localhost` with the same disposable backend.
+- 2026-11-03: A production Next fetch cache survives server restarts and can serve a previous API's page into an in-memory mock capture run; clear `.next/cache/fetch-cache` before switching API state.
+- 2026-11-03: The shared public primary button's orange backgrounds need different label colors across themes; use a darker scoped retry background with a white label and test both themes.
+- 2026-11-03: A thrown production route can omit the server-generated document title even when its error boundary renders; set a localized title in the client error boundary and verify it with axe.
+- 2026-11-03: Decorative status numerals still need readable contrast when axe evaluates rendered text; mix the brand color with foreground instead of transparency in both themes.
+- 2026-11-03: Reading test query parameters inside a statically generated detail page caused Next `DYNAMIC_SERVER_USAGE`; keep the live ISR page unchanged and render controlled loading/error fixtures on environment gated routes instead.
+- 2026-11-03: The public note URL is `/notes/:slug` but its Nest read endpoint is `/api/public/posts/:slug`; production browser assertions must compare against the actual API resource.
+- 2026-11-03: Next draft mode cookies are host scoped; a test that opens `127.0.0.1` while `/api/draft` redirects to `localhost` gets a public 404 despite a successful login, so use one web hostname throughout preview flows.
+- 2026-11-03: Public pages had copy buttons without a public Toaster, so `toast.success` alone produced no visible feedback; mount the Toaster in the public shell and share the clipboard fallback across contact, CTA and palette.
+- 2026-11-03: Public button variants can render at 40px high despite a larger surrounding row; measure the control itself at 390px and set an explicit 44px minimum for copy actions.
+- 2026-11-03: The shared `.tap` rule follows Tailwind utilities in the generated CSS and overrides `min-w-11` at desktop pointer settings; remove `.tap` from a control that needs a fixed 44px target or use a stronger scoped rule.
+- 2026-11-03: Sonner defaults to a light toast even on a dark public page; feed it `resolvedTheme` and reload after changing the stored theme in captures so the provider state and page class agree.
+- 2026-11-03: Playwright global setup runs `prisma migrate deploy`; for brand-route captures, point it only at a fresh guarded no-volume MySQL container and remove that container afterward.
+- 2026-11-03: The shared Playwright `signIn` helper finds English field names; reset `NEXT_LOCALE` to `en` before calling it after Vietnamese login captures, then switch locales for authenticated assertions.
+- 2026-11-03: The existing block schemas require a nonempty English string even for Vietnamese-first drafts, so a visually blank starter prose needs whitespace in its English field; publish must validate trimmed visible copy in the page locale independently of the starter block's presence.
 - 2026-11-02: A Radix Dialog with no `DialogTrigger` focuses nothing on close (its default refocuses the trigger ref), so a palette opened from several controls stores `document.activeElement` on open and refocuses it in `onCloseAutoFocus`; `IconButton` also brings Radix Tooltip and the popper, which the public layout bundle avoids.
 - 2026-11-01: A second `LocaleSwitch` (footer) duplicates the header's "Language" nav landmark, which `ux-404.spec.ts` fails because it asserts zero axe violations of any impact; give the copy its own label and scope page-wide "VI"/"EN" link selectors to a landmark ("Việc" also substring-matches "VI").
 - 2026-11-01: `portfolio-data.json` and `pagesData` both feed the frozen `20261027150000_portfolio_content` migration and a spec compares the regenerated SQL, so owner copy changes go in the `owner-copy.data.ts` overlay that only `seedOwner` applies.
@@ -79,3 +110,15 @@
 - 2026-11-02: An Undo toast fires a second mutation while the first may still be in flight; give both the same TanStack mutation `scope` so they run in order.
 - 2026-11-02: A palette action that triggers an editor handler (Publish) needs the editor to register it through a ref-backed hook (latest closure, register only on enable changes), and the hook must no-op without the admin shell provider because editor unit tests render without it.
 - 2026-11-02: `useListParams` parsed the URL with `schema.parse`, so a stale or hand-edited filter value (`?status=NOPE`) threw during render; parse with `safeParse` and drop only the invalid keys, and keep an uncontrolled search box in sync with the URL or Clear filters leaves stale text that blur writes back.
+- 2026-11-03: A server-prefetched audit feed rendered second-level relative times with `Date.now()` in both SSR and hydration, which produced React 418 at the second boundary; pass the server render timestamp through the client card so its first text matches.
+- 2026-11-03: The demo admin's Next “1 Issue” badge came from missing keys inside its custom `LocalizedElement` JSX wrapper, while real admin development routes had no overlay; a separate shared CSP policy blocks React's `eval()` debugging helper in development.
+- 2026-11-03: The page publish API already returns `PAGE_BODY_REQUIRED` with field path `body`; the editor must map that code locally by UI locale instead of displaying the API's English `message`, and a standalone experience editor needs its own create destination rather than the legacy About URL.
+- 2026-11-03: Playwright starts its API health check before global setup, so a fresh disposable MySQL test container needs its schema applied before the browser runner starts; a production Next rewrite also needs the API port used at build time.
+- 2026-11-03: `docs/CHANGELOG_ARCHIVE.md` is historical and directs new changelog entries to `PROJECT_CONTEXT.md` §9; keep the live PR entry there and link it from the README when documenting behavior.
+
+- 2026-11-03: A source-presence check is insufficient for a real-content seed; derive publishable dates and summaries from the approved source, and remove legacy metrics that lack evidence.
+- 2026-11-03: A real route can have a complete page component but remain unreachable because `next.config.ts` redirects it; test the production URL before relying on the component, and ensure the new editor uses custom page titles rather than translating only built-in keys.
+- 2026-11-03: Next development React diagnostics call `eval()` on public routes, so a nonce-free development CSP needs `unsafe-eval` while production and nonce policies must keep it excluded; the blocked call appears as a console error even without visible overlay text.
+- 2026-11-03: A screenshot matrix leaves Playwright at its last mobile viewport, so restore desktop width before testing desktop-only header links; assert mobile control boxes directly because one inherited 40px button escaped earlier route checks.
+- 2026-11-03: Record behavior and route changes in the root README in the same PR; this repo keeps current changelog entries in `PROJECT_CONTEXT.md` §9 and reserves `docs/CHANGELOG_ARCHIVE.md` for older history.
+- 2026-11-03: When stacked branches both refresh the tracked Graphify report, regenerate it after merging the base instead of combining generated report lines by hand.

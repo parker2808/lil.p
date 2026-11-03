@@ -1,6 +1,6 @@
 import type { Me } from '@portfolio/contracts';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { NextIntlClientProvider } from 'next-intl';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -50,6 +50,7 @@ const create = vi.mocked(createAdminExperience);
 const update = vi.mocked(updateAdminExperience);
 
 const user: Me = { id: 2, email: '<email>', name: 'Reviewer', role: 'user' };
+const admin: Me = { ...user, role: 'admin' };
 
 describe('AdminAboutExperienceEditor', () => {
   afterEach(() => {
@@ -72,5 +73,23 @@ describe('AdminAboutExperienceEditor', () => {
     expect(screen.getByLabelText('Highlights')).toBeDisabled();
     expect(create).not.toHaveBeenCalled();
     expect(update).not.toHaveBeenCalled();
+  });
+
+  it('shows linked field validation before creating a standalone role', () => {
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    render(
+      <NextIntlClientProvider locale="en" messages={en}>
+        <QueryClientProvider client={client}>
+          <MeProvider me={admin}>
+            <AdminAboutExperienceEditor experienceId={null} />
+          </MeProvider>
+        </QueryClientProvider>
+      </NextIntlClientProvider>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Save role' }));
+    expect(screen.getByText('Company is required.')).toBeVisible();
+    expect(screen.getByText('Location is required.')).toBeVisible();
+    expect(screen.getByText('English role is required.')).toBeVisible();
+    expect(create).not.toHaveBeenCalled();
   });
 });

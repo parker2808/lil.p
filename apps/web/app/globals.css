@@ -1,3 +1,53 @@
 @import '@portfolio/ui/styles/globals.css';
 @source '../src';
 @source '../../../packages/ui/src';
+
+/* Next streams resolved server content into hidden siblings; expose it when scripts cannot run. */
+@layer base {
+  @media (scripting: none) {
+    html body div[hidden][id^='S:'] {
+      display: contents !important;
+    }
+  }
+}
+
+.admin .admin-dashboard .dashboard-priority [data-slot='dashboard-card'] {
+  border-color: color-mix(in srgb, var(--brand-orange) 20%, var(--border));
+  background: color-mix(in srgb, var(--brand-orange) 7%, var(--card));
+}
+
+.admin .admin-dashboard .dashboard-priority .dashboard-metric {
+  color: var(--brand-orange);
+}
+
+.admin .admin-dashboard .dashboard-performance [data-slot='dashboard-card'] {
+  border-color: color-mix(in srgb, var(--brand-green) 20%, var(--border));
+  background: color-mix(in srgb, var(--brand-green) 5%, var(--card));
+}
+
+.admin .admin-dashboard [data-slot='dashboard-card'] {
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--foreground) 3%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .admin .admin-dashboard [data-slot='dashboard-card'] {
+    transition:
+      border-color 160ms ease,
+      box-shadow 160ms ease;
+  }
+}
+
+.public-state-code {
+  color: color-mix(in srgb, var(--brand-green) 65%, var(--foreground));
+  font: 600 clamp(8rem, 24vw, 17rem) / 1 var(--font-mono);
+  letter-spacing: -0.09em;
+}
+
+.public-error-retry {
+  background: #a63220;
+  color: #fff;
+}
+
+.public-error-retry:hover {
+  background: #8e291a;
+}

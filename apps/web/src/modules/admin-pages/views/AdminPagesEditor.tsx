@@ -36,7 +36,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
   const mutations = useBlockMutations(pageKey, { reorderFailed: t('reorderFailed') });
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
-  const [locale, setLocale] = useState<'en' | 'vi'>('en');
+  const [locale, setLocale] = useState<'en' | 'vi'>(page.data.locale ?? 'en');
   const [draftProps, setDraftProps] = useState<Record<string, unknown> | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [invalidKeys, setInvalidKeys] = useState<string[]>([]);
@@ -109,7 +109,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
     mutations.reorder.mutate(ids, { onSuccess: bumpPreview });
   }
 
-  const publicHref = publicPagePath(pageKey, 'en');
+  const publicHref = publicPagePath(pageKey, page.data.locale ?? 'en');
   const preview = (
     <PagePreview
       pageKey={pageKey}
@@ -127,7 +127,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
         back={back}
         title={
           <span className="flex items-center gap-2">
-            {t(`names.${pageKey}`)}
+            {t.has(`names.${pageKey}`) ? t(`names.${pageKey}`) : page.data.title || pageKey}
             <Link
               href={publicHref}
               className="text-ui text-primary underline-offset-4 hover:underline"
@@ -145,8 +145,17 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
           void autosave.overwrite();
         }}
         publish={
-          <div className="flex flex-wrap items-center gap-2">
-            <PublishBar pageKey={pageKey} page={page.data} onInvalid={setInvalidKeys} />
+          <div className="flex w-full flex-wrap items-center gap-2 2xl:w-auto">
+            <PublishBar
+              pageKey={pageKey}
+              page={page.data}
+              onInvalid={setInvalidKeys}
+              onBodyRequired={() => {
+                setLocale(page.data.locale ?? 'en');
+                setSelectedId(page.data.blocks.find((block) => block.type === 'prose')?.id ?? null);
+                requestAnimationFrame(() => document.getElementById('page-body-editor')?.focus());
+              }}
+            />
             <VersionHistory pageKey={pageKey} onPreviewVersion={setPreviewVersion} />
             <PageSettingsSheet
               page={page.data}
@@ -219,38 +228,40 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
           localeVi: editorT('localeVi'),
         }}
       >
-        <BlockList
-          blocks={page.data.blocks}
-          selectedId={selectedId}
-          invalidKeys={invalidKeys}
-          readOnly={readOnly}
-          labels={{
-            handle: t('dragHandle'),
-            instructions: t('dragInstructions'),
-            pickedUp: t('pickedUp', { id: '{id}' }),
-            movedOver: t('movedOver', { id: '{id}', over: '{over}' }),
-            dropped: t('dropped', { id: '{id}', over: '{over}' }),
-            cancelled: t('cancelled', { id: '{id}' }),
-            menu: t('rowMenu'),
-            moveUp: t('moveUp'),
-            moveDown: t('moveDown'),
-            duplicate: t('duplicate'),
-            delete: t('delete'),
-            visible: t('visible'),
-            unknown: t('unknown'),
-          }}
-          onSelect={setSelectedId}
-          onToggle={(block, isVisible) =>
-            mutations.toggle.mutate(
-              { id: block.id, isVisible, updatedAt: block.updatedAt },
-              { onSuccess: bumpPreview },
-            )
-          }
-          onMove={move}
-          onDuplicate={(id) => mutations.duplicate.mutate(id, { onSuccess: bumpPreview })}
-          onDelete={setDeleteId}
-          onReorder={(ids) => mutations.reorder.mutate(ids, { onSuccess: bumpPreview })}
-        />
+        <div id="page-body-editor" tabIndex={-1}>
+          <BlockList
+            blocks={page.data.blocks}
+            selectedId={selectedId}
+            invalidKeys={invalidKeys}
+            readOnly={readOnly}
+            labels={{
+              handle: t('dragHandle'),
+              instructions: t('dragInstructions'),
+              pickedUp: t('pickedUp', { id: '{id}' }),
+              movedOver: t('movedOver', { id: '{id}', over: '{over}' }),
+              dropped: t('dropped', { id: '{id}', over: '{over}' }),
+              cancelled: t('cancelled', { id: '{id}' }),
+              menu: t('rowMenu'),
+              moveUp: t('moveUp'),
+              moveDown: t('moveDown'),
+              duplicate: t('duplicate'),
+              delete: t('delete'),
+              visible: t('visible'),
+              unknown: t('unknown'),
+            }}
+            onSelect={setSelectedId}
+            onToggle={(block, isVisible) =>
+              mutations.toggle.mutate(
+                { id: block.id, isVisible, updatedAt: block.updatedAt },
+                { onSuccess: bumpPreview },
+              )
+            }
+            onMove={move}
+            onDuplicate={(id) => mutations.duplicate.mutate(id, { onSuccess: bumpPreview })}
+            onDelete={setDeleteId}
+            onReorder={(ids) => mutations.reorder.mutate(ids, { onSuccess: bumpPreview })}
+          />
+        </div>
       </EditorShell>
       <ConfirmDialog
         open={deleteId !== null}

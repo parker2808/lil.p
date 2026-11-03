@@ -53,6 +53,8 @@ export const pageSnapshotSchema = z.object({
 
 export const adminPageListItemSchema = z.object({
   key: pageKeySchema,
+  title: z.string().nullable().optional(),
+  locale: localeSchema.optional(),
   blockCount: z.number().int(),
   updatedAt: z.string(),
   publishedVersion: z.number().int().nullable(),
@@ -62,6 +64,8 @@ export const adminPageListItemSchema = z.object({
 
 export const adminPageSchema = z.object({
   key: pageKeySchema,
+  title: z.string().nullable().optional(),
+  locale: localeSchema.optional(),
   seoTitleEn: z.string().nullable(),
   seoTitleVi: z.string().nullable(),
   seoDescriptionEn: z.string().nullable(),
@@ -95,6 +99,13 @@ export const updatePageSchema = z.object({
   seoDescriptionEn: z.string().nullable().optional(),
   seoDescriptionVi: z.string().nullable().optional(),
   updatedAt: z.string().optional(),
+});
+
+export const createPageSchema = z.object({
+  title: z.string().trim().min(1).max(120),
+  key: pageKeySchema,
+  locale: localeSchema,
+  template: z.enum(['starter', 'empty']),
 });
 
 export const createBlockSchema = z.object({

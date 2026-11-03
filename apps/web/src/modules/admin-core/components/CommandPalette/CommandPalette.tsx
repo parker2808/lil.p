@@ -147,7 +147,7 @@ export function AdminCommandPalette() {
           <Kbd>{KEY}</Kbd>
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="max-h-[min(85dvh,42rem)] overflow-y-auto">
         <DialogTitle>{t('palette.open')}</DialogTitle>
         <Input
           type="search"

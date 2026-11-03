@@ -92,7 +92,7 @@ describe('ExperienceTable', () => {
     renderTable();
     expect(screen.getByRole('link', { name: /Acme/ })).toHaveAttribute(
       'href',
-      '/admin/pages/about/experience/4',
+      '/admin/experience/4',
     );
     expect(screen.queryByRole('button', { name: /edit/i })).not.toBeInTheDocument();
   });

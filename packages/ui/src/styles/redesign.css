@@ -1,4 +1,4 @@
-/* Ink & Signal. Semantic tokens are shared; the CMS deliberately uses KB teal. */
+/* Ink & Signal. Shared brand tokens are scoped by the public and admin surfaces. */
 html:root {
   --radius: 12px;
   --radius-xs: 4px;
@@ -26,6 +26,8 @@ html:root {
   --ease-out: cubic-bezier(0.4, 0, 1, 1);
 }
 .admin {
+  --brand-orange: #a63b13;
+  --brand-green: #17634a;
   --background: #f4f7f6;
   --foreground: #14201c;
   --card: #fff;
@@ -37,27 +39,29 @@ html:root {
   --subtle-foreground: #617169;
   --border: #d5e0db;
   --input: #a4b6ad;
-  --primary: #0f766e;
+  --primary: #17634a;
   --primary-foreground: #fff;
-  --primary-hover: #115e59;
-  --primary-subtle: #ccfbf1;
-  --primary-subtle-foreground: #115e59;
+  --primary-hover: #12523d;
+  --primary-subtle: var(--brand-green-surface);
+  --primary-subtle-foreground: var(--brand-green);
   --secondary: #e8f0ec;
   --secondary-foreground: #14201c;
-  --accent: #ccfbf1;
-  --accent-foreground: #115e59;
-  --ring: #0f766e;
+  --accent: var(--brand-green-surface);
+  --accent-foreground: var(--brand-green);
+  --ring: #17634a;
   --sidebar: #f4f7f6;
   --sidebar-foreground: #14201c;
   --sidebar-border: #d5e0db;
-  --sidebar-accent: #ccfbf1;
-  --sidebar-accent-foreground: #115e59;
-  --sidebar-primary: #0f766e;
+  --sidebar-accent: var(--brand-green-surface);
+  --sidebar-accent-foreground: var(--brand-green);
+  --sidebar-primary: var(--brand-green);
   --band: #e8f0ec;
   --text-heading: 1.625rem;
   --text-title: 2rem;
 }
 .dark .admin {
+  --brand-orange: #ffad79;
+  --brand-green: #9ad7ad;
   --background: #0f1614;
   --foreground: #e7f0ec;
   --card: #1a2421;
@@ -69,22 +73,22 @@ html:root {
   --subtle-foreground: #879a92;
   --border: #2a3833;
   --input: #657f73;
-  --primary: #2dd4bf;
+  --primary: #9ad7ad;
   --primary-foreground: #0f1614;
-  --primary-hover: #5eead4;
-  --primary-subtle: #134e4a;
-  --primary-subtle-foreground: #5eead4;
+  --primary-hover: #b9e6c5;
+  --primary-subtle: var(--brand-green-surface);
+  --primary-subtle-foreground: var(--brand-green);
   --secondary: #131c19;
   --secondary-foreground: #e7f0ec;
-  --accent: #134e4a;
-  --accent-foreground: #5eead4;
-  --ring: #2dd4bf;
+  --accent: var(--brand-green-surface);
+  --accent-foreground: var(--brand-green);
+  --ring: #9ad7ad;
   --sidebar: #0f1614;
   --sidebar-foreground: #e7f0ec;
   --sidebar-border: #2a3833;
-  --sidebar-accent: #134e4a;
-  --sidebar-accent-foreground: #5eead4;
-  --sidebar-primary: #2dd4bf;
+  --sidebar-accent: var(--brand-green-surface);
+  --sidebar-accent-foreground: var(--brand-green);
+  --sidebar-primary: var(--brand-green);
   --band: #131c19;
 }
 .site-container {
@@ -162,15 +166,30 @@ html:root {
 .public-site .site-header nav {
   margin-left: auto;
 }
-.site-monogram {
-  display: grid;
-  place-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: var(--radius-sm);
-  color: var(--background);
-  background: var(--foreground);
-  rotate: -6deg;
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--foreground);
+  font-family: var(--font-heading);
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  white-space: nowrap;
+}
+.brand-mark img {
+  display: block;
+  flex: none;
+  border-radius: 8px;
+}
+.brand-mark-word {
+  line-height: 1;
+}
+.site-header a:focus-visible,
+.site-footer a:focus-visible,
+.admin-brand-link:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+  border-radius: var(--radius);
 }
 .site-header .redesign-nav-link {
   font-family: var(--font-mono);
@@ -263,6 +282,23 @@ html:root {
   letter-spacing: -0.065em;
   padding-bottom: 24px;
   overflow-wrap: anywhere;
+}
+.footer-wordmark .brand-mark img {
+  width: clamp(3rem, 8vw, 6rem);
+  height: auto;
+}
+.footer-wordmark .brand-mark-word {
+  font-size: clamp(3.5rem, 12vw, 11rem);
+}
+.admin-brand-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  max-width: 100%;
+}
+.admin-brand-link .brand-mark-word {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .site-footer {
   background: var(--card);
@@ -436,13 +472,13 @@ html:root {
   background:
     radial-gradient(
       ellipse at 80% 45%,
-      color-mix(in srgb, #e5482d 22%, transparent),
+      color-mix(in srgb, var(--brand-orange) 22%, transparent),
       transparent 55%
     ),
     repeating-radial-gradient(
       ellipse at 80% 55%,
       transparent 0 24px,
-      color-mix(in srgb, var(--primary) 6%, transparent) 25px 26px
+      color-mix(in srgb, var(--brand-green) 6%, transparent) 25px 26px
     );
   mask-image: linear-gradient(90deg, transparent, #000 60%);
 }
@@ -628,11 +664,17 @@ html:root {
   gap: 40px;
   min-height: 280px;
   padding: clamp(24px, 5vw, 72px);
-  color: #e7f5f1;
+  color: var(--brand-starlight);
   background:
-    radial-gradient(ellipse at 80% 20%, #0f766e80, transparent 60%),
-    repeating-linear-gradient(0deg, transparent 0 31px, #2dd4bf14 31px 32px),
-    repeating-linear-gradient(90deg, transparent 0 31px, #2dd4bf14 31px 32px), #0f1c18;
+    radial-gradient(circle at 82% 22%, rgb(255 171 117 / 0.18), transparent 38%),
+    radial-gradient(circle at 15% 75%, rgb(154 215 173 / 0.15), transparent 42%),
+    radial-gradient(circle at 78% 68%, rgb(255 255 255 / 0.35) 1px, transparent 2px),
+    var(--brand-night);
+  background-size:
+    auto,
+    auto,
+    46px 46px,
+    auto;
 }
 .login-art p {
   font-size: clamp(2.75rem, 5vw, 5rem);
@@ -641,8 +683,7 @@ html:root {
   max-width: 12ch;
 }
 .login-mark {
-  font: 500 14px var(--font-mono);
-  color: #5eead4;
+  color: var(--brand-starlight);
 }
 .redesign-skeleton {
   position: relative;
@@ -1294,9 +1335,14 @@ html[data-save-data] .public-site [data-block-type='case-grid'] > .redesign-reve
 .admin-shell {
   background:
     radial-gradient(
-      ellipse at 20% 0,
-      color-mix(in srgb, var(--primary-subtle) 35%, var(--background)),
-      transparent 55%
+      ellipse at 15% 0,
+      color-mix(in srgb, var(--brand-green) 9%, transparent),
+      transparent 45%
+    ),
+    radial-gradient(
+      ellipse at 90% 85%,
+      color-mix(in srgb, var(--brand-orange) 5%, transparent),
+      transparent 50%
     ),
     var(--background);
 }

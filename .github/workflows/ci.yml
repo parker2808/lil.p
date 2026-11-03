@@ -136,9 +136,9 @@ jobs:
     env:
       NODE_ENV: production
       API_URL: http://127.0.0.1:4000
-      WEB_ORIGIN: http://127.0.0.1:3000
-      WEB_INTERNAL_URL: http://127.0.0.1:3000
-      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+      WEB_ORIGIN: http://localhost:3000
+      WEB_INTERNAL_URL: http://localhost:3000
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
@@ -189,9 +189,9 @@ jobs:
       API_PORT: 4000
       API_HOST: 127.0.0.1
       API_URL: http://127.0.0.1:4000
-      WEB_ORIGIN: http://127.0.0.1:3000
-      WEB_INTERNAL_URL: http://127.0.0.1:3000
-      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+      WEB_ORIGIN: http://localhost:3000
+      WEB_INTERNAL_URL: http://localhost:3000
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
     steps:
       - uses: actions/checkout@v4
       - name: Start MySQL (tmpfs, in background)
