@@ -6,8 +6,8 @@ import {
   type AdminViews,
   type ContentStatus,
   type ContentStatusCounts,
+  fromPrismaPageKey,
   parseBlock,
-  PRISMA_PAGE_KEY_TO_PUBLIC,
   type StatsRange,
 } from '@portfolio/contracts';
 
@@ -349,7 +349,7 @@ export class DashboardService {
     }> = [];
 
     for (const page of pages) {
-      const title = PRISMA_PAGE_KEY_TO_PUBLIC[page.key];
+      const title = fromPrismaPageKey(page.key);
       const href = `/admin/pages/${title}`;
       if (!page.publishedVersionId) {
         issues.push({
@@ -496,8 +496,8 @@ export class DashboardService {
         kind: 'PAGE_BROKEN_REFS',
         entity: 'page',
         id: page.id,
-        title: PRISMA_PAGE_KEY_TO_PUBLIC[page.key],
-        href: `/admin/pages/${PRISMA_PAGE_KEY_TO_PUBLIC[page.key]}`,
+        title: fromPrismaPageKey(page.key),
+        href: `/admin/pages/${fromPrismaPageKey(page.key)}`,
         fields,
       });
     }

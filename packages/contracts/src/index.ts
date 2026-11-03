@@ -232,15 +232,27 @@ export type {
   NavItemUpdateInput,
   PublicNavItem,
 } from './navigation/navigation.type';
-export type { BlockSurface, LayoutPreset, PageKey, PrismaPageKey } from './pages/pages.enum';
+export type {
+  BlockSurface,
+  CorePageKey,
+  LayoutPreset,
+  PageKey,
+  PrismaPageKey,
+} from './pages/pages.enum';
 export {
   blockSurfaceSchema,
+  corePageKeySchema,
+  fromPrismaPageKey,
+  isReservedPublicPageSlug,
   layoutPresetSchema,
   PAGE_KEY_TO_PRISMA,
   PAGE_PUBLIC_PATHS,
   pageKeySchema,
   PRISMA_PAGE_KEY_TO_PUBLIC,
   prismaPageKeySchema,
+  publicPagePathForKey,
+  RESERVED_PUBLIC_PAGE_SLUGS,
+  toPrismaPageKey,
 } from './pages/pages.enum';
 export {
   adminPageListItemSchema,
@@ -248,6 +260,7 @@ export {
   adminPageVersionListItemSchema,
   adminPageVersionSchema,
   createBlockSchema,
+  createPageSchema,
   invalidPreviewBlockSchema,
   pageSnapshotBlockSchema,
   pageSnapshotSchema,
@@ -265,6 +278,7 @@ export type {
   AdminPageVersionListItem,
   BlockCreateInput,
   BlockUpdateInput,
+  CreatePageInput,
   InvalidPreviewBlock,
   PageSnapshot,
   PageSnapshotBlock,

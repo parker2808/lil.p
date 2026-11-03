@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import {
+  fromPrismaPageKey,
   type Locale,
-  PAGE_PUBLIC_PATHS,
-  PRISMA_PAGE_KEY_TO_PUBLIC,
-  type PrismaPageKey,
+  publicPagePathForKey,
   type PublicSite,
   type PublicSitemap,
 } from '@portfolio/contracts';
@@ -56,9 +55,9 @@ export class PublicSiteService {
 
     const entries = [
       ...pages.map((page) => {
-        const key = PRISMA_PAGE_KEY_TO_PUBLIC[page.key as PrismaPageKey];
+        const key = fromPrismaPageKey(page.key);
         return {
-          path: PAGE_PUBLIC_PATHS[key],
+          path: publicPagePathForKey(key),
           updatedAt: (page.publishedAt ?? page.updatedAt).toISOString(),
         };
       }),

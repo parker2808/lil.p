@@ -42,16 +42,6 @@ enum SocialKind {
   @@map("social_kind")
 }
 
-enum PageKey {
-  HOME
-  ABOUT
-  PROJECTS
-  NOTES
-  CONTACT
-
-  @@map("page_key")
-}
-
 enum LayoutPreset {
   ONE
   TWO
@@ -216,7 +206,9 @@ model ContactMessage {
 /// One row per public route page (HOME … CONTACT).
 model Page {
   id                 Int          @id @default(autoincrement())
-  key                PageKey      @unique
+  key                String       @unique @db.VarChar(64)
+  title              String?      @db.VarChar(120)
+  locale             String       @default("en") @db.VarChar(2)
   seoTitleEn         String?
   seoTitleVi         String?
   seoDescriptionEn   String?      @db.Text

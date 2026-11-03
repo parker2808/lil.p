@@ -1,4 +1,4 @@
-import { type Locale, type PageKey, PAGE_PUBLIC_PATHS } from '@portfolio/contracts';
+import { type Locale, type PageKey, publicPagePathForKey } from '@portfolio/contracts';
 import type { Metadata } from 'next';
 
 import { getPage } from '@/modules/blocks/services/pages.service';
@@ -15,7 +15,7 @@ export async function buildPageMetadata(
     const { locale } = await params;
     const typed = locale as Locale;
     const [site, page] = await Promise.all([getSite(typed), getPage(key, typed)]);
-    return pageMetadata({ site, page, locale: typed, path: PAGE_PUBLIC_PATHS[key] });
+    return pageMetadata({ site, page, locale: typed, path: publicPagePathForKey(key) });
   } catch {
     return fallbackMetadata();
   }
