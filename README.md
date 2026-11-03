@@ -28,6 +28,8 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 
 On `design/demo-admin-2026-11-02` only: `/design-demo-admin` serves an isolated admin redesign on mock data. That branch also adds `POST /admin/pages` for custom pages and the migration `20261103010000_custom_pages`; apply it locally with `pnpm db:migrate` only.
 
+The local publish-flow screenshot runner is `apps/web/scripts/capture-r3h-publish-flow.mjs`. It uses the process-local mock API and verifies translated block labels before saving EN/VI light/dark PNGs at 1440px and 390px.
+
 ## Environments
 
 There are three ways to run this repo. Each has its own setup — do not mix the steps.
