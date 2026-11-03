@@ -65,6 +65,11 @@ describe('SchemaForm', () => {
     expect(screen.getByText('Server said no')).toBeInTheDocument();
   });
 
+  it('shows a Vietnamese prose publish error by its localized field path', () => {
+    renderForm('prose', { fieldErrors: { 'body.vi': 'Nhập nội dung thật trước khi xuất bản' } });
+    expect(screen.getByText('Nhập nội dung thật trước khi xuất bản')).toBeInTheDocument();
+  });
+
   it('disables every input when readOnly', () => {
     renderForm('hero', { readOnly: true });
     for (const input of screen.getAllByRole('textbox')) {

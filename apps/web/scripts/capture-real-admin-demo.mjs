@@ -42,6 +42,113 @@ const routes = [
 ];
 
 fs.mkdirSync(output, { recursive: true });
+if (process.env.DEMO_PAGES_R3C === '1') {
+  const browser = await chromium.launch({ headless: true });
+  const results = [];
+  for (const width of [1440, 390]) {
+    for (const locale of ['en', 'vi']) {
+      const context = await browser.newContext({
+        viewport: { width, height: width === 390 ? 844 : 900 },
+        reducedMotion: 'reduce',
+      });
+      await context.addCookies([
+        { name: 'NEXT_LOCALE', value: locale, url: origin },
+        { name: 'access_token', value: 'local-demo', url: origin },
+      ]);
+      const page = await context.newPage();
+      const exceptions = [];
+      page.on('pageerror', (error) => exceptions.push(error.message));
+      await page.goto(`${origin}/admin/pages`, { waitUntil: 'load' });
+      await page
+        .getByRole('button', { name: /Add page|Thêm trang/ })
+        .first()
+        .click();
+      const title = page.locator('#create-page-title');
+      const slug = page.locator('#create-page-key');
+      const submit = page.locator('form button[type="submit"]');
+      async function capture(name) {
+        await page.evaluate(() => document.fonts.ready);
+        const file = `real-pages-${name}${locale === 'vi' ? '-vi' : ''}-${width}.png`;
+        const state = await page.evaluate(() => ({
+          lang: document.documentElement.lang,
+          overflow: document.documentElement.scrollWidth > innerWidth + 1,
+          url: location.pathname,
+        }));
+        await page.screenshot({ path: path.join(output, file), animations: 'disabled' });
+        results.push({ file, ...state, exceptions: [...exceptions] });
+      }
+      await capture('create');
+      await submit.click();
+      await title.getAttribute('aria-invalid').then((value) => {
+        if (value !== 'true') throw new Error('Title validation did not appear');
+      });
+      await capture('create-validation');
+      const malformed = await fetch('http://127.0.0.1:4000/api/admin/pages', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ title: '', key: 'Bad Slug', locale, template: 'starter' }),
+      });
+      const validation = await malformed.json();
+      if (
+        malformed.status !== 400 ||
+        validation.code !== 'VALIDATION_FAILED' ||
+        !validation.fieldErrors?.key
+      ) {
+        throw new Error('Mock API did not return the documented 400 validation shape');
+      }
+      const collision = `collision-${locale}-${width}`;
+      await title.fill(locale === 'vi' ? 'Trang trùng' : 'Collision page');
+      await slug.fill(collision);
+      const duplicateSeed = await fetch('http://127.0.0.1:4000/api/admin/pages', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          title: 'Existing mock page',
+          key: collision,
+          locale,
+          template: 'empty',
+        }),
+      });
+      if (duplicateSeed.status !== 201)
+        throw new Error(`Mock seed failed: ${duplicateSeed.status}`);
+      await submit.click();
+      await page.locator('#create-page-key-error').waitFor();
+      if ((await slug.getAttribute('aria-invalid')) !== 'true')
+        throw new Error('409 slug error missing');
+      await capture('create-conflict');
+      const unique = `new-page-${locale}-${width}`;
+      await title.fill(locale === 'vi' ? 'Trang mới' : 'New page');
+      await slug.fill(unique);
+      await submit.click();
+      await page.waitForURL(`**/admin/pages/${unique}`);
+      await page.locator('h1').first().waitFor();
+      await capture('created-editor');
+      await context.close();
+    }
+  }
+  await browser.close();
+  const failures = results.filter(
+    (item) =>
+      item.exceptions.length ||
+      item.overflow ||
+      item.lang !== (item.file.includes('-vi-') ? 'vi' : 'en'),
+  );
+  fs.writeFileSync(
+    path.join(output, 'real-pages-r3c-review.json'),
+    JSON.stringify({ results, failures }, null, 2),
+  );
+  fs.writeFileSync(
+    path.join(output, 'png-list.txt'),
+    `${fs
+      .readdirSync(output)
+      .filter((file) => file.endsWith('.png'))
+      .sort()
+      .join('\n')}\n`,
+  );
+  console.log(`Captured ${results.length} focused Pages PNGs; ${failures.length} findings`);
+  for (const failure of failures) console.log(JSON.stringify(failure));
+  process.exit(failures.length ? 1 : 0);
+}
 const browser = await chromium.launch({ headless: true });
 const results = [];
 for (const width of [1440, 390]) {

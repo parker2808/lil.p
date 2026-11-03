@@ -152,7 +152,18 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
         }}
         publish={
           <div className="flex flex-wrap items-center gap-2">
-            <PublishBar pageKey={pageKey} page={page.data} onInvalid={setInvalidKeys} />
+            <PublishBar
+              pageKey={pageKey}
+              page={page.data}
+              onInvalid={setInvalidKeys}
+              onFieldErrors={(errors) =>
+                setFieldErrors(
+                  Object.fromEntries(
+                    Object.entries(errors).map(([path, messages]) => [path, messages[0] ?? '']),
+                  ),
+                )
+              }
+            />
             <VersionHistory pageKey={pageKey} onPreviewVersion={setPreviewVersion} />
             <PageSettingsSheet
               page={page.data}
@@ -194,7 +205,14 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
               key={selected.id}
               block={selected}
               readOnly={readOnly}
-              fieldErrors={fieldErrors}
+              fieldErrors={{
+                ...fieldErrors,
+                ...Object.fromEntries(
+                  Object.entries(fieldErrors)
+                    .filter(([path]) => path.startsWith(`block:${selected.key}.`))
+                    .map(([path, message]) => [path.split('.').slice(1).join('.'), message]),
+                ),
+              }}
               onUpdate={async (body) => {
                 const next = await mutations.update.mutateAsync({ id: selected.id, body });
                 bumpPreview();

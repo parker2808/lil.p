@@ -93,6 +93,10 @@ describe('PagesService', () => {
             type: 'page-header',
             props: { title: { en: en ?? '', vi: vi ?? '' } },
           }),
+          expect.objectContaining({
+            type: 'prose',
+            props: { body: { en: '', vi: '' } },
+          }),
         ]),
       });
     },

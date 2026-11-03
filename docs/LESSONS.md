@@ -91,3 +91,4 @@
 - 2026-11-03: Adding arbitrary CMS pages reaches beyond the create endpoint: the page-key enum, public route, preview path allow-list, block permissions, sitemap, and editor title must all accept the same validated slug while preserving the built-in page mappings.
 - 2026-11-03: A screenshot mock API that answers the health probe makes Next prerender public pages against incomplete fixtures; keep the probe unavailable while building and verify real admin route captures separately from the isolated design fixture.
 - 2026-11-03: Expanding admin navigation can make the command palette taller than the viewport; cap the dialog height and scroll its contents so the search field remains reachable at desktop and mobile sizes.
+- 2026-11-03: Starter CMS prose must be a valid empty draft with locale-specific publish validation; a previewable block can still be intentionally unpublishable until its selected-language copy is entered.

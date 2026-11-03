@@ -406,6 +406,18 @@ export class PageVersionsService {
           : { seoTitleEn: page.seoTitleEn, seoDescriptionEn: page.seoDescriptionEn },
       ),
     );
+    for (const block of snapshotBlocks) {
+      if (!block.isVisible || block.type !== 'prose') continue;
+      const body = (block.props as { body?: { en?: string; vi?: string } }).body;
+      const copy = page.locale === 'vi' ? body?.vi : body?.en;
+      if (!copy?.trim()) {
+        fieldErrors[`block:${block.key}.body.${page.locale}`] = [
+          page.locale === 'vi'
+            ? 'Nhập nội dung thật trước khi xuất bản'
+            : 'Enter real copy before publishing',
+        ];
+      }
+    }
     if (Object.keys(fieldErrors).length > 0) {
       throw new BadRequestException({
         code: 'VALIDATION_FAILED',

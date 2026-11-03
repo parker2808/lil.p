@@ -58,6 +58,100 @@ const pages = pageKeys.map((key) => ({
   publishedAt: key === 'craft' ? null : now,
   hasUnpublishedChanges: key === 'craft',
 }));
+const createdPages = new Map();
+let nextBlockId = 100;
+
+function createPage(body) {
+  const fields = {};
+  if (typeof body?.title !== 'string' || !body.title.trim() || body.title.length > 120) {
+    fields.title = ['Title is required'];
+  }
+  if (
+    typeof body?.key !== 'string' ||
+    !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(body.key) ||
+    body.key.length > 64
+  ) {
+    fields.key = ['Invalid page slug'];
+  }
+  if (!['en', 'vi'].includes(body?.locale)) fields.locale = ['Invalid locale'];
+  if (!['starter', 'empty'].includes(body?.template)) fields.template = ['Invalid template'];
+  if (Object.keys(fields).length) {
+    return {
+      status: 400,
+      body: { code: 'VALIDATION_FAILED', message: 'Validation failed', fieldErrors: fields },
+    };
+  }
+  if (
+    ['home', 'about', 'projects', 'notes', 'contact', 'craft'].includes(body.key) ||
+    pages.some((item) => item.key === body.key) ||
+    createdPages.has(body.key)
+  ) {
+    return {
+      status: 409,
+      body: { code: 'PAGE_KEY_TAKEN', message: 'Page slug is already in use' },
+    };
+  }
+  const title = body.title.trim();
+  const localizedTitle = {
+    en: body.locale === 'en' ? title : '',
+    vi: body.locale === 'vi' ? title : '',
+  };
+  const blocks =
+    body.template === 'starter'
+      ? [
+          {
+            id: nextBlockId++,
+            type: 'page-header',
+            key: 'page-header',
+            layout: 'ONE',
+            surface: 'PLAIN',
+            schemaVersion: 1,
+            props: { title: localizedTitle },
+            isVisible: true,
+            sortOrder: 0,
+            updatedAt: now,
+          },
+          {
+            id: nextBlockId++,
+            type: 'prose',
+            key: 'prose',
+            layout: 'ONE',
+            surface: 'PLAIN',
+            schemaVersion: 1,
+            props: { body: { en: '', vi: '' } },
+            isVisible: true,
+            sortOrder: 1,
+            updatedAt: now,
+          },
+        ]
+      : [];
+  const detail = {
+    key: body.key,
+    title,
+    locale: body.locale,
+    seoTitleEn: body.locale === 'en' ? title : null,
+    seoTitleVi: body.locale === 'vi' ? title : null,
+    seoDescriptionEn: null,
+    seoDescriptionVi: null,
+    updatedAt: now,
+    publishedVersion: null,
+    publishedAt: null,
+    hasUnpublishedChanges: true,
+    blocks,
+  };
+  createdPages.set(body.key, detail);
+  pages.push({
+    key: body.key,
+    title,
+    locale: body.locale,
+    blockCount: blocks.length,
+    updatedAt: now,
+    publishedVersion: null,
+    publishedAt: null,
+    hasUnpublishedChanges: true,
+  });
+  return { status: 201, body: detail };
+}
 const project = {
   id: 1,
   slug: 'demo-project',
@@ -269,6 +363,7 @@ function fixture(pathname) {
   if (pathname === '/api/admin/messages/unread-count') return { unread: 0 };
   if (pathname.startsWith('/api/admin/pages/')) {
     const key = pathname.split('/')[4];
+    if (createdPages.has(key)) return createdPages.get(key);
     return {
       ...pages.find((item) => item.key === key),
       key,
@@ -294,18 +389,39 @@ function fixture(pathname) {
   return null;
 }
 
-const server = http.createServer((request, response) => {
+const server = http.createServer(async (request, response) => {
   const url = new URL(request.url, 'http://127.0.0.1:4000');
   if (url.pathname === '/api/auth/me' && !request.headers.cookie?.includes('access_token=')) {
     response.writeHead(401, { 'content-type': 'application/json; charset=utf-8' });
     response.end(JSON.stringify({ message: 'Local demo session required' }));
     return;
   }
-  const body = fixture(url.pathname);
-  response.writeHead(body === null ? 404 : 200, {
+  let result;
+  if (url.pathname === '/api/admin/pages' && request.method === 'POST') {
+    let raw = '';
+    for await (const chunk of request) raw += chunk;
+    try {
+      result = createPage(JSON.parse(raw));
+    } catch {
+      result = {
+        status: 400,
+        body: {
+          code: 'VALIDATION_FAILED',
+          message: 'Validation failed',
+          fieldErrors: { body: ['Invalid JSON'] },
+        },
+      };
+    }
+  } else if (request.method === 'GET') {
+    const body = fixture(url.pathname);
+    result = { status: body === null ? 404 : 200, body: body ?? { message: 'Not found' } };
+  } else {
+    result = { status: 404, body: { message: 'Not found' } };
+  }
+  response.writeHead(result.status, {
     'content-type': 'application/json; charset=utf-8',
     'cache-control': 'no-store',
   });
-  response.end(JSON.stringify(body ?? { message: 'Not found' }));
+  response.end(JSON.stringify(result.body));
 });
 server.listen(4000, '127.0.0.1', () => console.log('Local admin demo API ready on 127.0.0.1:4000'));

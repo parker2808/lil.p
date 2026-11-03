@@ -90,6 +90,78 @@ describe('PageVersionsService', () => {
     expect(prisma.pageVersion.create).not.toHaveBeenCalled();
   });
 
+  it.each([
+    ['en', 'Ideas', 'Real English copy', 'en'],
+    ['vi', 'Ý tưởng', 'Nội dung tiếng Việt thật', 'vi'],
+  ] as const)(
+    'previews empty %s starter prose and blocks publish until real copy is entered',
+    async (locale, title, copy, language) => {
+      const header = {
+        ...hero,
+        type: 'page-header',
+        key: 'page-header',
+        layout: 'ONE',
+        props: { title: { en: locale === 'en' ? title : '', vi: locale === 'vi' ? title : '' } },
+      };
+      const prose = {
+        ...hero,
+        id: 2,
+        type: 'prose',
+        key: 'prose',
+        layout: 'ONE',
+        sortOrder: 1,
+        props: { body: { en: '', vi: '' } },
+      };
+      const row = pageRow({
+        key: 'IDEAS',
+        locale,
+        title,
+        seoTitleEn: locale === 'en' ? title : null,
+        seoTitleVi: locale === 'vi' ? title : null,
+        blocks: [header, prose],
+      });
+      prisma.page.findUnique.mockResolvedValue(row);
+      const preview = await service.getPreview('ideas', locale);
+      expect(preview.invalidBlocks).toEqual([]);
+      expect(preview.blocks[1]).toMatchObject({
+        type: 'prose',
+        lang: language,
+        props: { body: '' },
+      });
+      await expect(service.publish('ideas', {}, 1)).rejects.toMatchObject({
+        response: {
+          code: 'VALIDATION_FAILED',
+          fieldErrors: {
+            [`block:prose.body.${locale}`]: [
+              locale === 'vi'
+                ? 'Nhập nội dung thật trước khi xuất bản'
+                : 'Enter real copy before publishing',
+            ],
+          },
+        },
+      });
+      expect(prisma.pageVersion.create).not.toHaveBeenCalled();
+      prose.props.body[locale] = copy;
+      prisma.pageVersion.aggregate.mockResolvedValue({ _max: { version: null } });
+      prisma.pageVersion.create.mockResolvedValue({ id: 41 });
+      prisma.page.update.mockResolvedValue({});
+      await service.publish('ideas', {}, 1);
+      expect(prisma.pageVersion.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          snapshot: expect.objectContaining({
+            blocks: expect.arrayContaining([
+              expect.objectContaining({
+                props: {
+                  body: { en: locale === 'en' ? copy : '', vi: locale === 'vi' ? copy : '' },
+                },
+              }),
+            ]),
+          }),
+        }),
+      });
+    },
+  );
+
   it('rejects publish when English SEO is missing', async () => {
     prisma.page.findUnique.mockResolvedValue(pageRow({ seoTitleEn: '' }));
     await expect(service.publish('home', {}, 1)).rejects.toBeInstanceOf(BadRequestException);

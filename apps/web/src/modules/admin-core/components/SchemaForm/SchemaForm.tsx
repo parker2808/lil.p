@@ -154,7 +154,9 @@ function SchemaFieldControl({
     fieldErrors[field.path] ??
     fieldErrors[`props.${field.path}`] ??
     fieldErrors[`${field.path}.en`] ??
-    fieldErrors[`props.${field.path}.en`];
+    fieldErrors[`props.${field.path}.en`] ??
+    fieldErrors[`${field.path}.vi`] ??
+    fieldErrors[`props.${field.path}.vi`];
   const message = serverError ?? firstIssueMessage(issue);
 
   if (

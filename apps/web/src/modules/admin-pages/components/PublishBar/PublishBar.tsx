@@ -29,10 +29,12 @@ export function PublishBar({
   pageKey,
   page,
   onInvalid,
+  onFieldErrors,
 }: {
   pageKey: PageKey;
   page: AdminPage;
   onInvalid: (keys: string[]) => void;
+  onFieldErrors: (errors: Record<string, string[]>) => void;
 }) {
   const t = useTranslations('admin.pages.publish');
   const isAdmin = useIsAdmin();
@@ -48,12 +50,14 @@ export function PublishBar({
       await publish.mutateAsync(note.trim() || undefined);
       setNote('');
       onInvalid([]);
+      onFieldErrors({});
     } catch (caught) {
       if (caught instanceof ApiError) {
         const keys = Object.keys(caught.fieldErrors ?? {})
           .map((path) => path.replace(/^block:/, '').split('.')[0])
           .filter((key): key is string => Boolean(key));
         onInvalid(keys);
+        onFieldErrors(caught.fieldErrors ?? {});
         setError(caught.code === 'INVALID_BLOCKS' ? t('invalidBlocks') : caught.message);
         return;
       }
