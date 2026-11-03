@@ -21,6 +21,10 @@ The EN/VI home, projects, notes, about, and contact routes share the round 3 pub
 
 The contact page, public CTA, and search palette use the contact email configured in site settings. Copy email reports success or failure in the selected language and keeps a direct email link available. See the [R3-06 spec](./docs/specs/2026-11-03-r3-06-copy-email.md).
 
+### Brand assets
+
+The public header and footer and the admin login and shell use the shared `lil.parker` `BrandMark` from `packages/ui`. Its icon has one vector source: `packages/ui/src/components/BrandMark/brand-icon.svg`. To refresh the web app's `icon.svg` and `apple-icon.png` after changing that source, run `bash scripts/generate-brand-icons.sh` from the repo root (requires ImageMagick's `magick` command) and commit both generated files. Light and dark orange/green brand colors are defined in `packages/ui/src/styles/globals.css` and scoped to the redesigned surfaces in `packages/ui/src/styles/redesign.css`.
+
 ### Caching and rendering
 
 - Public pages under `/[locale]` are static and use ISR. Home, about, contact, project and note detail pages, RSS, OG images and the sitemap are prerendered at build when the API answers, otherwise on first visit.
