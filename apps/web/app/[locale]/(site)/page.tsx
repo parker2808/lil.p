@@ -20,5 +20,9 @@ export default async function Page({
   setRequestLocale(locale);
   // Only draft previews read `?v=`; awaiting searchParams otherwise would make the page dynamic.
   const query = (await draftMode()).isEnabled ? await searchParams : undefined;
-  return <HomeIndex locale={locale as Locale} searchParams={query} />;
+  return (
+    <div className="public-index public-home">
+      <HomeIndex locale={locale as Locale} searchParams={query} />
+    </div>
+  );
 }

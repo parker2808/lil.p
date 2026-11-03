@@ -1,8 +1,17 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { buildContentSecurityPolicy } from './csp.util';
 
 describe('buildContentSecurityPolicy', () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  it('allows React development diagnostics only on the nonced-free development policy', () => {
+    vi.stubEnv('NODE_ENV', 'development');
+    expect(buildContentSecurityPolicy(undefined)).toContain("'unsafe-eval'");
+    expect(buildContentSecurityPolicy('abc123')).not.toContain("'unsafe-eval'");
+    vi.stubEnv('NODE_ENV', 'production');
+    expect(buildContentSecurityPolicy(undefined)).not.toContain("'unsafe-eval'");
+  });
   it('embeds the nonce and keeps frame-ancestors self', () => {
     const csp = buildContentSecurityPolicy('abc123');
     expect(csp).toContain("'nonce-abc123'");

@@ -27,7 +27,9 @@ export function buildContentSecurityPolicy(
     "default-src 'self'",
     nonce
       ? `script-src 'self' 'nonce-${nonce}' 'strict-dynamic'`
-      : "script-src 'self' 'unsafe-inline'",
+      : process.env.NODE_ENV === 'development'
+        ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+        : "script-src 'self' 'unsafe-inline'",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https://res.cloudinary.com",
     "font-src 'self'",
