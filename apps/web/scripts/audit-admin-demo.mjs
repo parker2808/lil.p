@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 const output = path.join(os.homedir(), 'Desktop/lilp-admin-demo-20261102');
+const origin = process.env.DEMO_ORIGIN ?? 'http://localhost:3101';
 const { routes, loading } = JSON.parse(fs.readFileSync(path.join(output, 'capture-manifest.json')));
 const browser = await chromium.launch({ headless: true });
 const results = [];
@@ -24,7 +25,7 @@ for (const width of [1440, 390]) {
     ['pages', 'empty'],
   ])
     for (const locale of ['en', 'vi']) {
-      const url = `http://localhost:3101/design-demo-admin?screen=${route}&lang=${locale}${state ? `&state=${state}` : ''}`;
+      const url = `${origin}/design-demo-admin?screen=${route}&lang=${locale}${state ? `&state=${state}` : ''}`;
       await page.goto(url, { waitUntil: 'load' });
       await page.locator('.demo-root').waitFor();
       const axe = await new AxeBuilder({ page })
@@ -63,11 +64,68 @@ for (const width of [1440, 390]) {
         state,
         locale,
         width,
+        htmlLang: await page.locator('html').getAttribute('lang'),
         violations: axe.violations.map(({ id, nodes }) => `${id}:${nodes.length}`),
         ...layout,
         ...keyboard,
       });
     }
+  for (const locale of ['en', 'vi']) {
+    async function reviewInteractive(route, state) {
+      const axe = await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+        .analyze();
+      const layout = await page.evaluate(() => {
+        const smallTargets = [...document.querySelectorAll('button, a, input, select')]
+          .filter((el) => {
+            const style = getComputedStyle(el);
+            const box = el.getBoundingClientRect();
+            return (
+              style.visibility !== 'hidden' &&
+              style.display !== 'none' &&
+              box.width > 0 &&
+              box.height > 0
+            );
+          })
+          .map((el) => ({
+            label:
+              el.getAttribute('aria-label') || el.textContent?.trim().slice(0, 40) || el.tagName,
+            box: el.getBoundingClientRect(),
+          }))
+          .filter(({ box }) => box.width < 44 || box.height < 44)
+          .map(({ label, box }) => `${label} (${Math.round(box.width)}×${Math.round(box.height)})`);
+        return { overflow: document.documentElement.scrollWidth > innerWidth + 1, smallTargets };
+      });
+      await page.keyboard.press('Tab');
+      const keyboard = await page.evaluate(() => ({
+        focused: document.activeElement !== document.body,
+        focusVisible: document.activeElement?.matches(':focus-visible') ?? false,
+        reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+      }));
+      results.push({
+        route,
+        state,
+        locale,
+        width,
+        htmlLang: await page.locator('html').getAttribute('lang'),
+        violations: axe.violations.map(({ id, nodes }) => `${id}:${nodes.length}`),
+        ...layout,
+        ...keyboard,
+      });
+    }
+    await page.goto(`${origin}/design-demo-admin?screen=inbox-detail&lang=${locale}`, {
+      waitUntil: 'load',
+    });
+    await page
+      .getByRole('button', { name: locale === 'vi' ? 'Lưu trữ' : 'Archive', exact: true })
+      .click();
+    await reviewInteractive('inbox', 'archive-confirm');
+    await page.goto(`${origin}/design-demo-admin?screen=login&lang=${locale}`, {
+      waitUntil: 'load',
+    });
+    await page.getByRole('button', { name: locale === 'vi' ? /Đăng nhập/ : /Sign in/ }).click();
+    await reviewInteractive('login', 'loading');
+  }
   await context.close();
 }
 await browser.close();
@@ -76,6 +134,7 @@ const failures = results.filter(
   (item) =>
     item.violations.length ||
     item.overflow ||
+    item.htmlLang !== item.locale ||
     (item.width === 390 && item.smallTargets.length) ||
     !item.focused ||
     !item.focusVisible ||

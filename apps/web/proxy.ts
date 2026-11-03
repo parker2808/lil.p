@@ -70,7 +70,12 @@ export function proxy(request: NextRequest) {
             "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
           )
         : csp;
-    return applySecurityHeaders(NextResponse.next(), demoCsp);
+    const demoHeaders = new Headers(request.headers);
+    demoHeaders.set(
+      'x-demo-locale',
+      request.nextUrl.searchParams.get('lang') === 'vi' ? 'vi' : 'en',
+    );
+    return applySecurityHeaders(NextResponse.next({ request: { headers: demoHeaders } }), demoCsp);
   }
 
   const isAdmin = pathname.startsWith('/admin');

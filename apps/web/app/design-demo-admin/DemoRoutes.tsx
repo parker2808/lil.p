@@ -1,3 +1,4 @@
+/** @jsxImportSource ./demo-jsx */
 'use client';
 
 /* eslint-disable react/jsx-no-literals -- Fictional content in the isolated visual fixture. */

@@ -76,6 +76,28 @@ describe('PagesService', () => {
     expect(h.publishing.revalidate).toHaveBeenCalledWith(['page:ideas']);
   });
 
+  it.each([
+    ['en', 'Ideas', 'Ideas', null],
+    ['vi', 'Ý tưởng', null, 'Ý tưởng'],
+  ] as const)(
+    'stores a %s starter title only in its selected locale',
+    async (locale, title, en, vi) => {
+      const h = createHarness(false);
+      await h.service.createPage({ title, key: 'ideas', locale, template: 'starter' });
+      expect(h.tx.page.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({ locale, seoTitleEn: en, seoTitleVi: vi }),
+      });
+      expect(h.tx.pageBlock.createMany).toHaveBeenCalledWith({
+        data: expect.arrayContaining([
+          expect.objectContaining({
+            type: 'page-header',
+            props: { title: { en: en ?? '', vi: vi ?? '' } },
+          }),
+        ]),
+      });
+    },
+  );
+
   it('creates an empty draft without blocks', async () => {
     const h = createHarness(false);
     await h.service.createPage({ title: 'Ideas', key: 'ideas', locale: 'vi', template: 'empty' });

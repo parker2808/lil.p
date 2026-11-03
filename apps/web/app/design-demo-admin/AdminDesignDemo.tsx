@@ -1,3 +1,4 @@
+/** @jsxImportSource ./demo-jsx */
 'use client';
 
 /* eslint-disable react/jsx-no-literals, react/no-unescaped-entities -- Isolated visual fixture with fixed English mock copy. */
@@ -35,7 +36,7 @@ import {
   X,
 } from 'lucide-react';
 import type { ComponentType, ReactNode } from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { BrandMark } from '@/modules/core/components/BrandMark/BrandMark';
 
@@ -46,7 +47,7 @@ import {
   demoRoutes,
   type DemoRouteId,
 } from './DemoRoutes';
-import { applyDemoLocale, type DemoLocale } from './demo-i18n';
+import type { DemoLocale } from './demo-i18n';
 import type { DemoCreatedPage } from './DemoRoutes';
 
 type IconType = ComponentType<{ size?: number; strokeWidth?: number; className?: string }>;
@@ -1073,9 +1074,8 @@ export function AdminDesignDemo({
   const [screen, setScreen] = useState<Screen>(
     scenes.includes(initialScreen as Screen) ? (initialScreen as Screen) : 'dashboard',
   );
-  const [locale, setLocale] = useState<DemoLocale>(initialLocale === 'vi' ? 'vi' : 'en');
+  const locale: DemoLocale = initialLocale === 'vi' ? 'vi' : 'en';
   const [loadingState, setLoadingState] = useState(initialState === 'loading');
-  const rootRef = useRef<HTMLDivElement>(null);
   const [collapsed, setCollapsed] = useState(initialScreen === 'shell-collapsed');
   const [palette, setPalette] = useState(initialScreen === 'palette');
   const [mobileMore, setMobileMore] = useState(initialScreen === 'mobile-nav');
@@ -1094,12 +1094,9 @@ export function AdminDesignDemo({
   };
   const switchLocale = () => {
     const next = locale === 'en' ? 'vi' : 'en';
-    setLocale(next);
-    window.history.replaceState(
-      {},
-      '',
-      `?screen=${screen}&lang=${next}${loadingState ? '&state=loading' : ''}`,
-    );
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', next);
+    window.location.assign(url.toString());
   };
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -1115,17 +1112,9 @@ export function AdminDesignDemo({
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, []);
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
-    applyDemoLocale(root, locale);
-    const observer = new MutationObserver(() => applyDemoLocale(root, locale));
-    observer.observe(root, { subtree: true, childList: true, characterData: true });
-    return () => observer.disconnect();
-  }, [locale, screen, palette, mobileMore, loadingState]);
   if (screen === 'login')
     return (
-      <div className="demo-root" ref={rootRef}>
+      <div className="demo-root">
         <LoginView initialState={initialState} go={go} />
         <button
           className="login-language-switch"
@@ -1151,7 +1140,6 @@ export function AdminDesignDemo({
   return (
     <div
       className={`demo-root ${collapsed ? 'is-collapsed' : ''} ${screen === 'mobile-nav' ? 'scene-mobile-nav' : ''}`}
-      ref={rootRef}
     >
       <div className="app-shell">
         <aside className="sidebar">

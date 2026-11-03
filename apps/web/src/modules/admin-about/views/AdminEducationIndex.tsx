@@ -1,6 +1,14 @@
 'use client';
 
-import { educationCreateSchema } from '@portfolio/contracts';
+import { type AdminEducation, educationCreateSchema } from '@portfolio/contracts';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@portfolio/ui/components/ui/dropdown-menu';
+import { GripVertical, MoreHorizontal } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import type { ColumnDef } from '@tanstack/react-table';
 import { useMemo } from 'react';
 
@@ -18,8 +26,13 @@ import {
 
 import { educationApi } from '../services/education.service';
 
+function dateRange(row: AdminEducation): string {
+  return `${row.startDate.slice(0, 4)}–${row.endDate.slice(0, 4)}`;
+}
+
 export function AdminEducationIndex() {
   const canWrite = useIsAdmin();
+  const locale = useLocale();
   const { t, labels, pickerLabels } = useEntityChrome('education');
   const columns = useMemo<
     ColumnDef<{
@@ -77,6 +90,66 @@ export function AdminEducationIndex() {
       titleOf={(row) => row.school}
       hasReorder
       hasVisible
+      renderCard={(row: AdminEducation, index, actions) => (
+        <div className="bg-card border-border grid min-w-0 grid-cols-[44px_22px_minmax(0,1fr)_44px] grid-rows-[auto_auto] items-start gap-x-1.5 gap-y-2 rounded-xl border p-3">
+          <button
+            type="button"
+            className="text-muted-foreground flex size-11 items-center justify-center rounded-[10px] disabled:opacity-40"
+            aria-label={`${labels.previous}: ${row.school}`}
+            onClick={() => actions.move(-1)}
+            disabled={!canWrite || index === 0}
+          >
+            <GripVertical size={17} aria-hidden />
+          </button>
+          <span className="text-primary flex min-h-11 items-center font-mono text-xs tabular-nums">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <div className="flex min-w-0 flex-col gap-1.5 py-1">
+            <strong className="text-ui line-clamp-2 leading-snug">{row.school}</strong>
+            <span className="text-ui-meta text-muted-foreground line-clamp-2 leading-snug">
+              {locale === 'vi' ? row.degreeVi || row.degreeEn : row.degreeEn}
+              {' · '}
+              {locale === 'vi' ? row.majorVi || row.majorEn : row.majorEn}
+            </span>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className="text-muted-foreground flex size-11 items-center justify-center rounded-[10px]"
+                aria-label={`${labels.shortcuts.edit}: ${row.school}`}
+              >
+                <MoreHorizontal size={18} aria-hidden />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onSelect={actions.edit}>{labels.shortcuts.edit}</DropdownMenuItem>
+              {canWrite ? (
+                <>
+                  <DropdownMenuItem onSelect={() => actions.move(-1)} disabled={index === 0}>
+                    {labels.previous}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => actions.move(1)}
+                    disabled={index === list.data!.length - 1}
+                  >
+                    {labels.next}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={actions.toggleVisible}>
+                    {labels.visible}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem variant="destructive" onSelect={actions.delete}>
+                    {labels.bulkDelete}
+                  </DropdownMenuItem>
+                </>
+              ) : null}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <span className="bg-muted text-muted-foreground col-start-3 row-start-2 w-fit max-w-full truncate rounded-full px-2.5 py-1 font-mono text-xs whitespace-nowrap">
+            {dateRange(row)}
+          </span>
+        </div>
+      )}
       labels={labels}
       pickerLabels={pickerLabels}
       onCreate={(body) => create.mutateAsync(body)}

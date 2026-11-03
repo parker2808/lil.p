@@ -12,14 +12,62 @@ import {
   SidebarMenuItem,
 } from '@portfolio/ui/components/ui/sidebar';
 import { SheetClose } from '@portfolio/ui/components/ui/sheet';
+import {
+  Activity,
+  BarChart3,
+  BookOpen,
+  BriefcaseBusiness,
+  FileText,
+  FolderKanban,
+  Globe2,
+  GraduationCap,
+  Image,
+  Inbox,
+  LayoutDashboard,
+  ListChecks,
+  NotebookPen,
+  ScrollText,
+  Settings2,
+  Shapes,
+  Tags,
+  UserRound,
+  Users,
+  type LucideIcon,
+} from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { navVisibleTo } from '../../constants/admin-nav.constant';
+import { BrandMark } from '@/modules/core/components/BrandMark/BrandMark';
 import { useMe } from '../../hooks/use-me.hook';
 import { useAdminUi } from '../../stores/admin-ui.store';
 import { RoleGate } from '../RoleGate/RoleGate';
+
+const NAV_ICONS: Record<string, LucideIcon> = {
+  dashboard: LayoutDashboard,
+  projects: FolderKanban,
+  posts: NotebookPen,
+  pages: FileText,
+  media: Image,
+  tags: Tags,
+  home: LayoutDashboard,
+  about: UserRound,
+  contact: Inbox,
+  experience: BriefcaseBusiness,
+  education: GraduationCap,
+  skills: Shapes,
+  principles: BookOpen,
+  process: ListChecks,
+  stats: Activity,
+  inbox: Inbox,
+  site: Settings2,
+  profile: UserRound,
+  domains: Globe2,
+  users: Users,
+  audit: ScrollText,
+  analytics: BarChart3,
+};
 
 export function AdminSidebar() {
   const t = useTranslations('admin.nav');
@@ -30,10 +78,11 @@ export function AdminSidebar() {
 
   return (
     <Sidebar collapsed={collapsed} className="hidden lg:flex">
-      <SidebarHeader>
-        <p className="text-ui-title truncate font-medium" title={name}>
-          {collapsed ? name.slice(0, 1) : name}
-        </p>
+      <SidebarHeader className="gap-2">
+        <BrandMark compact={collapsed} />
+        {collapsed ? null : (
+          <span className="text-ui-meta text-muted-foreground truncate font-mono">{name}</span>
+        )}
       </SidebarHeader>
       <SidebarContent>
         {groups.map((group, index) => (
@@ -48,6 +97,7 @@ export function AdminSidebar() {
             )}
             <SidebarMenu>
               {group.items.map((item) => {
+                const Icon = NAV_ICONS[item.key];
                 const active =
                   pathname === item.href ||
                   (item.href !== '/admin' && pathname.startsWith(`${item.href}/`));
@@ -59,7 +109,8 @@ export function AdminSidebar() {
                         title={t(item.key)}
                         aria-current={active ? 'page' : undefined}
                       >
-                        {collapsed ? t(item.key).slice(0, 1) : t(item.key)}
+                        {Icon ? <Icon className="size-4.5 shrink-0" aria-hidden /> : null}
+                        {collapsed ? <span className="sr-only">{t(item.key)}</span> : t(item.key)}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

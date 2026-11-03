@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
 import { defineBlock } from '../define-block.util';
-import { localizedText } from '../localized.schema';
+import { localizedText, localizedTextEither } from '../localized.schema';
 
 export const pageHeaderPropsSchema = z.object({
-  eyebrow: localizedText({ max: 48, label: 'admin.blocks.pageHeader.eyebrow' }),
-  title: localizedText({ max: 120, label: 'admin.blocks.pageHeader.title' }),
+  eyebrow: localizedText({ max: 48, label: 'admin.blocks.pageHeader.eyebrow' }).optional(),
+  title: localizedTextEither({ max: 120, label: 'admin.blocks.pageHeader.title' }),
   intro: localizedText({ max: 400, label: 'admin.blocks.pageHeader.intro' }).optional(),
 });
 

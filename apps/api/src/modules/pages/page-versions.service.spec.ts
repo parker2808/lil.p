@@ -24,6 +24,8 @@ function pageRow(over: Record<string, unknown> = {}) {
   return {
     id: 10,
     key: 'HOME',
+    title: 'Home',
+    locale: 'en',
     seoTitleEn: 'Home',
     seoTitleVi: 'Trang chủ',
     seoDescriptionEn: 'Desc',
@@ -91,6 +93,77 @@ describe('PageVersionsService', () => {
   it('rejects publish when English SEO is missing', async () => {
     prisma.page.findUnique.mockResolvedValue(pageRow({ seoTitleEn: '' }));
     await expect(service.publish('home', {}, 1)).rejects.toBeInstanceOf(BadRequestException);
+  });
+
+  it('previews a Vietnamese-first page in Vietnamese and falls back to Vietnamese in English', async () => {
+    prisma.page.findUnique.mockResolvedValue(
+      pageRow({
+        key: 'IDEAS',
+        locale: 'vi',
+        title: 'Ý tưởng',
+        seoTitleEn: null,
+        seoTitleVi: 'Ý tưởng',
+        seoDescriptionEn: null,
+        seoDescriptionVi: null,
+        blocks: [
+          {
+            ...hero,
+            type: 'page-header',
+            key: 'page-header',
+            layout: 'ONE',
+            props: { title: { en: '', vi: 'Ý tưởng' } },
+          },
+        ],
+      }),
+    );
+    const vi = await service.getPreview('ideas', 'vi');
+    const en = await service.getPreview('ideas', 'en');
+    for (const page of [vi, en]) {
+      expect(page.seo).toMatchObject({ title: 'Ý tưởng', lang: 'vi' });
+      expect(page.blocks[0]).toMatchObject({ props: { title: 'Ý tưởng' }, lang: 'vi' });
+      expect(page.invalidBlocks).toEqual([]);
+    }
+  });
+
+  it('publishes a Vietnamese-first page without an English SEO title', async () => {
+    prisma.page.findUnique.mockResolvedValue(
+      pageRow({
+        key: 'IDEAS',
+        locale: 'vi',
+        title: 'Ý tưởng',
+        seoTitleEn: null,
+        seoTitleVi: 'Ý tưởng',
+        blocks: [
+          {
+            ...hero,
+            type: 'page-header',
+            key: 'page-header',
+            layout: 'ONE',
+            props: { title: { en: '', vi: 'Ý tưởng' } },
+          },
+        ],
+      }),
+    );
+    prisma.pageVersion.aggregate.mockResolvedValue({ _max: { version: null } });
+    prisma.pageVersion.create.mockResolvedValue({ id: 41 });
+    prisma.page.update.mockResolvedValue({});
+    await service.publish('ideas', {}, 1);
+    expect(prisma.pageVersion.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({
+        snapshot: expect.objectContaining({
+          seo: expect.objectContaining({ seoTitleEn: null, seoTitleVi: 'Ý tưởng' }),
+        }),
+      }),
+    });
+  });
+
+  it('rejects a Vietnamese page without its Vietnamese SEO title', async () => {
+    prisma.page.findUnique.mockResolvedValue(
+      pageRow({ locale: 'vi', seoTitleEn: null, seoTitleVi: null }),
+    );
+    await expect(service.publish('home', {}, 1)).rejects.toMatchObject({
+      response: { fieldErrors: { seoTitleVi: ['Required'] } },
+    });
   });
 
   it('rejects publish when the H1 is missing', async () => {

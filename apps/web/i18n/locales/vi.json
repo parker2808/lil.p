@@ -223,6 +223,8 @@
     },
     "password": {
       "title": "Đổi mật khẩu",
+      "showPassword": "Hiện mật khẩu",
+      "hidePassword": "Ẩn mật khẩu",
       "current": "Mật khẩu hiện tại",
       "next": "Mật khẩu mới",
       "save": "Cập nhật mật khẩu",
@@ -267,6 +269,8 @@
     },
     "login": {
       "title": "Đăng nhập",
+      "showPassword": "Hiện mật khẩu",
+      "hidePassword": "Ẩn mật khẩu",
       "intro": "Không gian quản trị",
       "email": "Email",
       "password": "Mật khẩu",

@@ -165,16 +165,16 @@ export class PagesService {
             key: dbKey,
             title: input.title,
             locale: input.locale,
-            seoTitleEn: input.title,
-            seoTitleVi: input.title,
+            seoTitleEn: input.locale === 'en' ? input.title : null,
+            seoTitleVi: input.locale === 'vi' ? input.title : null,
           },
         });
         if (input.template === 'starter') {
           const header = BLOCK_REGISTRY['page-header'];
           const prose = BLOCK_REGISTRY.prose;
           const localizedTitle = {
-            en: input.title,
-            vi: input.title,
+            en: input.locale === 'en' ? input.title : '',
+            vi: input.locale === 'vi' ? input.title : '',
           };
           await tx.pageBlock.createMany({
             data: [
@@ -184,8 +184,6 @@ export class PagesService {
                 key: header.type,
                 schemaVersion: header.version,
                 props: {
-                  ...header.defaults,
-                  eyebrow: { en: '', vi: '' },
                   title: localizedTitle,
                 } as Prisma.InputJsonValue,
                 layout: header.layouts[0] ?? 'ONE',

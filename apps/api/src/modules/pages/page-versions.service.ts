@@ -393,12 +393,18 @@ export class PageVersionsService {
       seoDescriptionVi: page.seoDescriptionVi,
     };
     const fieldErrors = mergeFieldErrors(
-      requiredFieldErrors({ seoTitleEn: page.seoTitleEn }),
+      requiredFieldErrors(
+        page.locale === 'vi' ? { seoTitleVi: page.seoTitleVi } : { seoTitleEn: page.seoTitleEn },
+      ),
       lintSnapshotFields(
         seo,
         snapshotBlocks.filter((block) => block.isVisible),
       ),
-      lintErrors({ seoTitleEn: page.seoTitleEn, seoDescriptionEn: page.seoDescriptionEn }),
+      lintErrors(
+        page.locale === 'vi'
+          ? { seoTitleVi: page.seoTitleVi, seoDescriptionVi: page.seoDescriptionVi }
+          : { seoTitleEn: page.seoTitleEn, seoDescriptionEn: page.seoDescriptionEn },
+      ),
     );
     if (Object.keys(fieldErrors).length > 0) {
       throw new BadRequestException({

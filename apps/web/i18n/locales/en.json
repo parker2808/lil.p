@@ -223,6 +223,8 @@
     },
     "password": {
       "title": "Change password",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
       "current": "Current password",
       "next": "New password",
       "save": "Update password",
@@ -267,6 +269,8 @@
     },
     "login": {
       "title": "Sign in",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password",
       "intro": "Admin workspace",
       "email": "Email",
       "password": "Password",

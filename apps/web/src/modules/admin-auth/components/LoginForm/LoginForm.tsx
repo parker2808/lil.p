@@ -70,6 +70,8 @@ export function LoginForm({ onSignedIn }: { onSignedIn: () => void }) {
           <FormField label={t('password')} required error={field.state.meta.errors[0]?.message}>
             <PasswordInput
               id={field.name}
+              showLabel={t('showPassword')}
+              hideLabel={t('hidePassword')}
               autoComplete="current-password"
               value={field.state.value}
               onBlur={field.handleBlur}

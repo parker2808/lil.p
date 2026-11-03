@@ -47,6 +47,8 @@ export function ChangePasswordDialog({
             <FieldLabel htmlFor="current-password">{t('current')}</FieldLabel>
             <PasswordInput
               id="current-password"
+              showLabel={t('showPassword')}
+              hideLabel={t('hidePassword')}
               autoComplete="current-password"
               value={currentPassword}
               onChange={(event) => setCurrentPassword(event.target.value)}
@@ -57,6 +59,8 @@ export function ChangePasswordDialog({
             <FieldLabel htmlFor="new-password">{t('next')}</FieldLabel>
             <PasswordInput
               id="new-password"
+              showLabel={t('showPassword')}
+              hideLabel={t('hidePassword')}
               autoComplete="new-password"
               minLength={12}
               value={newPassword}

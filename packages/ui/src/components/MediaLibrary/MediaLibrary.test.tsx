@@ -19,6 +19,7 @@ function item(id: number, missingAlt = false): MediaLibraryItem {
 
 const clientHeightDesc = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientHeight');
 const clientWidthDesc = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientWidth');
+const viewportWidthDesc = Object.getOwnPropertyDescriptor(window, 'innerWidth');
 
 function stubScrollerSize() {
   Object.defineProperty(HTMLElement.prototype, 'clientHeight', {
@@ -51,6 +52,7 @@ describe('MediaLibrary', () => {
 
   afterEach(() => {
     restoreScrollerSize();
+    if (viewportWidthDesc) Object.defineProperty(window, 'innerWidth', viewportWidthDesc);
     vi.restoreAllMocks();
   });
 
@@ -69,7 +71,17 @@ describe('MediaLibrary', () => {
     const scroller = container.querySelector('[data-slot="media-library"]');
     expect(scroller).toBeTruthy();
     const inner = scroller?.firstElementChild as HTMLElement;
-    expect(inner.style.height).toBe(`${Math.ceil(1000 / 4) * 168}px`);
+    expect(inner.style.height).toBe(`${Math.ceil(1000 / 4) * 184}px`);
     expect(screen.getAllByRole('button').length).toBeLessThan(1000);
+  });
+
+  it('uses two padded columns on a narrow viewport', () => {
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+    const items = Array.from({ length: 10 }, (_, index) => item(index + 1));
+    const { container } = render(<MediaLibrary items={items} labels={labels} />);
+    expect(container.querySelector('.grid-cols-2')).toBeTruthy();
+    expect(container.querySelector('[data-slot="media-library"]')?.firstElementChild).toHaveStyle({
+      height: '840px',
+    });
   });
 });

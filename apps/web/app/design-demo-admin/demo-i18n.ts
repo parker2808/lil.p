@@ -536,9 +536,6 @@ const vi: Record<string, string> = {
   '© 2026 PARKER': '© 2026 PARKER',
 };
 
-const sourceByText = new WeakMap<Text, { source: string; last: string }>();
-const sourceByAttribute = new WeakMap<Element, Record<string, { source: string; last: string }>>();
-
 function translated(value: string): string {
   const leading = value.match(/^\s*/)?.[0] ?? '';
   const trailing = value.match(/\s*$/)?.[0] ?? '';
@@ -557,48 +554,6 @@ function translated(value: string): string {
   return value;
 }
 
-export function applyDemoLocale(root: Element, locale: DemoLocale): void {
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-  let node = walker.nextNode() as Text | null;
-  while (node) {
-    if (node.parentElement?.closest('script,style')) {
-      node = walker.nextNode() as Text | null;
-      continue;
-    }
-    const current = node.textContent ?? '';
-    const saved = sourceByText.get(node);
-    const source = saved && current === saved.last ? saved.source : current;
-    const next = locale === 'vi' ? translated(source) : source;
-    sourceByText.set(node, { source, last: next });
-    if (current !== next) node.textContent = next;
-    node = walker.nextNode() as Text | null;
-  }
-  for (const element of [root, ...root.querySelectorAll('*')]) {
-    const attributes = ['aria-label', 'title', 'placeholder'];
-    const previous = sourceByAttribute.get(element) ?? {};
-    for (const attribute of attributes) {
-      const current = element.getAttribute(attribute);
-      if (current === null) continue;
-      const saved = previous[attribute];
-      const source = saved && current === saved.last ? saved.source : current;
-      const next = locale === 'vi' ? translated(source) : source;
-      previous[attribute] = { source, last: next };
-      if (current !== next) element.setAttribute(attribute, next);
-    }
-    sourceByAttribute.set(element, previous);
-  }
-  document.documentElement.lang = locale;
-}
-
-export function untranslatedDemoStrings(root: Element): string[] {
-  const misses = new Set<string>();
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-  let node = walker.nextNode() as Text | null;
-  while (node) {
-    const core = (node.textContent ?? '').trim();
-    if (core && /[A-Za-z]/.test(core) && !vi[core] && !/^\d|^[A-Z]{1,3}$/.test(core))
-      misses.add(core);
-    node = walker.nextNode() as Text | null;
-  }
-  return [...misses].sort();
+export function translateDemoString(value: string, locale: DemoLocale): string {
+  return locale === 'vi' ? translated(value) : value;
 }

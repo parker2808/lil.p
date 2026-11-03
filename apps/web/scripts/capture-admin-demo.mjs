@@ -4,7 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 const output = path.join(os.homedir(), 'Desktop/lilp-admin-demo-20261102');
-const origin = 'http://localhost:3101';
+const origin = process.env.DEMO_ORIGIN ?? 'http://localhost:3101';
 const routes = [
   'shell-expanded',
   'shell-collapsed',
@@ -101,8 +101,18 @@ for (const width of [1440, 390]) {
     await page.locator('.demo-root').waitFor();
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(35);
-    if (response?.status() !== 200 || errors.length) {
-      failures.push({ name, status: response?.status(), errors });
+    const pageState = await page.evaluate(() => ({
+      lang: document.documentElement.lang,
+      overflow: document.documentElement.scrollWidth > innerWidth + 1,
+    }));
+    const expectedLang = new URL(url).searchParams.get('lang') === 'vi' ? 'vi' : 'en';
+    if (
+      response?.status() !== 200 ||
+      errors.length ||
+      pageState.lang !== expectedLang ||
+      pageState.overflow
+    ) {
+      failures.push({ name, status: response?.status(), errors, pageState });
     }
     await page.screenshot({ path: `${output}/${name}`, animations: 'disabled' });
     count++;
@@ -120,34 +130,41 @@ for (const width of [1440, 390]) {
       `pages-empty${locale === 'vi' ? '-vi' : ''}-${width}.png`,
       `${origin}/design-demo-admin?screen=pages&state=empty&lang=${locale}`,
     );
-  }
-  for (const route of loading) {
-    await capture(
-      `${route}-loading-${width}.png`,
-      `${origin}/design-demo-admin?screen=${route}&state=loading`,
-    );
-  }
-  for (const [route, state] of [
-    ['login', 'validation'],
-    ['login', 'success'],
-    ['inbox', 'empty'],
-  ]) {
-    await capture(
-      `${route}-${state}-${width}.png`,
-      `${origin}/design-demo-admin?screen=${route}&state=${state}`,
-    );
-  }
-  await page.goto(`${origin}/design-demo-admin?screen=inbox-detail`, { waitUntil: 'load' });
-  await page.getByRole('button', { name: 'Archive', exact: true }).click();
-  await page.screenshot({
-    path: `${output}/inbox-archive-confirm-${width}.png`,
-    animations: 'disabled',
-  });
-  count++;
-  if (width === 390) {
-    await page.goto(`${origin}/design-demo-admin?screen=login`, { waitUntil: 'load' });
-    await page.getByRole('button', { name: /Sign in/ }).click();
-    await page.screenshot({ path: `${output}/login-loading-390.png`, animations: 'disabled' });
+    for (const route of loading) {
+      await capture(
+        `${route}-loading${locale === 'vi' ? '-vi' : ''}-${width}.png`,
+        `${origin}/design-demo-admin?screen=${route}&state=loading&lang=${locale}`,
+      );
+    }
+    for (const [route, state] of [
+      ['login', 'validation'],
+      ['login', 'success'],
+      ['inbox', 'empty'],
+    ]) {
+      await capture(
+        `${route}-${state}${locale === 'vi' ? '-vi' : ''}-${width}.png`,
+        `${origin}/design-demo-admin?screen=${route}&state=${state}&lang=${locale}`,
+      );
+    }
+    await page.goto(`${origin}/design-demo-admin?screen=inbox-detail&lang=${locale}`, {
+      waitUntil: 'load',
+    });
+    await page
+      .getByRole('button', { name: locale === 'vi' ? 'Lưu trữ' : 'Archive', exact: true })
+      .click();
+    await page.screenshot({
+      path: `${output}/inbox-archive-confirm${locale === 'vi' ? '-vi' : ''}-${width}.png`,
+      animations: 'disabled',
+    });
+    count++;
+    await page.goto(`${origin}/design-demo-admin?screen=login&lang=${locale}`, {
+      waitUntil: 'load',
+    });
+    await page.getByRole('button', { name: locale === 'vi' ? /Đăng nhập/ : /Sign in/ }).click();
+    await page.screenshot({
+      path: `${output}/login-loading${locale === 'vi' ? '-vi' : ''}-${width}.png`,
+      animations: 'disabled',
+    });
     count++;
   }
   await page.close();
@@ -167,7 +184,7 @@ fs.writeFileSync(
   JSON.stringify(
     {
       buildId: fs.readFileSync('.next/BUILD_ID', 'utf8').trim(),
-      source: 'next build + next start, local mock route',
+      source: 'next build + next start, local mock route, en/vi state matrix',
       routes,
       loading,
       widths: [1440, 390],

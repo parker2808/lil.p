@@ -17,10 +17,11 @@ export function pickGroup<K extends EnViKey>(
   locale: Locale,
 ): { values: Record<K, string | null>; lang: Locale } {
   const englishReady = keys.filter((key) => hasText(row[`${key}En`]));
+  const vietnameseReady = keys.filter((key) => hasText(row[`${key}Vi`]));
   const useVi =
-    locale === 'vi' &&
-    englishReady.every((key) => hasText(row[`${key}Vi`])) &&
-    englishReady.length > 0;
+    vietnameseReady.length > 0 &&
+    ((locale === 'vi' && englishReady.every((key) => hasText(row[`${key}Vi`]))) ||
+      englishReady.length === 0);
 
   const lang: Locale = useVi ? 'vi' : 'en';
   const suffix = lang === 'vi' ? 'Vi' : 'En';

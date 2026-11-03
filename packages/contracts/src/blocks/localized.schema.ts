@@ -20,6 +20,25 @@ export function localizedText(opts?: { max?: number; label?: string }) {
   });
 }
 
+/** A localized field for content created in either locale first. */
+export function localizedTextEither(opts?: { max?: number; label?: string }) {
+  const max = opts?.max ?? 240;
+  return z
+    .object({
+      en: z
+        .string()
+        .max(max)
+        .meta({ widget: 'text', label: opts?.label ?? 'admin.blocks.field.en' }),
+      vi: z
+        .string()
+        .max(max)
+        .optional()
+        .default('')
+        .meta({ widget: 'text', label: 'admin.blocks.field.vi' }),
+    })
+    .refine((value) => Boolean(value.en.trim() || value.vi.trim()), 'A title is required');
+}
+
 export function localizedMarkdown(opts?: { label?: string }) {
   return z.object({
     en: z

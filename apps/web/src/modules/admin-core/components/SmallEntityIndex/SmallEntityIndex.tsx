@@ -28,7 +28,7 @@ import { TooltipProvider } from '@portfolio/ui/components/ui/tooltip';
 import { type ColumnDef } from '@tanstack/react-table';
 import { useForm } from '@tanstack/react-form';
 import { ArrowDown, ArrowUp, Pencil, Trash2 } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import type { ZodType } from 'zod';
 
 export type SmallField = {
@@ -43,6 +43,13 @@ export type SmallEntityRow = {
   id: number;
   sortOrder?: number;
   isVisible?: boolean;
+};
+
+export type SmallEntityCardActions = {
+  edit: () => void;
+  move: (direction: -1 | 1) => void;
+  toggleVisible: () => void;
+  delete: () => void;
 };
 
 export function SmallEntityIndex<T extends SmallEntityRow>({
@@ -67,6 +74,7 @@ export function SmallEntityIndex<T extends SmallEntityRow>({
   onMove,
   onToggleVisible,
   onRetry,
+  renderCard,
 }: {
   title: string;
   items: T[];
@@ -99,6 +107,7 @@ export function SmallEntityIndex<T extends SmallEntityRow>({
   onMove?: (id: number, direction: -1 | 1) => void;
   onToggleVisible?: (row: T) => void;
   onRetry: () => void;
+  renderCard?: (row: T, index: number, actions: SmallEntityCardActions) => ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<T | null>(null);
@@ -178,7 +187,7 @@ export function SmallEntityIndex<T extends SmallEntityRow>({
         ) : null,
     });
     return [...columns, ...extra];
-  }, [canWrite, columns, hasReorder, hasVisible, labels, onMove, onToggleVisible]);
+  }, [canWrite, columns, hasReorder, hasVisible, labels, onMove, onToggleVisible, titleOf]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -237,18 +246,28 @@ export function SmallEntityIndex<T extends SmallEntityRow>({
         }}
         onClearFilters={() => setQ('')}
         onRetry={onRetry}
-        renderCard={(row) => (
-          <button
-            type="button"
-            className="bg-card w-full rounded-lg border p-3 text-left"
-            onClick={() => {
-              setEditing(row);
-              setOpen(true);
-            }}
-          >
-            <p className="text-ui font-medium">{titleOf(row)}</p>
-          </button>
-        )}
+        renderCard={(row) => {
+          const edit = () => {
+            setEditing(row);
+            setOpen(true);
+          };
+          return renderCard ? (
+            renderCard(row, filtered.indexOf(row), {
+              edit,
+              move: (direction) => onMove?.(row.id, direction),
+              toggleVisible: () => onToggleVisible?.(row),
+              delete: () => setPendingDelete(row),
+            })
+          ) : (
+            <button
+              type="button"
+              className="bg-card w-full rounded-lg border p-3 text-left"
+              onClick={edit}
+            >
+              <p className="text-ui font-medium">{titleOf(row)}</p>
+            </button>
+          );
+        }}
       />
       <ConfirmDialog
         open={pendingDelete !== null}

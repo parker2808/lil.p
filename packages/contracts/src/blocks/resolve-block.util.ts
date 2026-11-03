@@ -102,8 +102,11 @@ export function resolveBlockLocale(
   walkLocalized(props, (pair) => pairs.push(pair));
 
   const englishReady = pairs.filter((pair) => hasText(pair.en));
+  const vietnameseReady = pairs.filter((pair) => hasText(pair.vi));
   const useVi =
-    locale === 'vi' && englishReady.length > 0 && englishReady.every((pair) => hasText(pair.vi));
+    vietnameseReady.length > 0 &&
+    ((locale === 'vi' && englishReady.every((pair) => hasText(pair.vi))) ||
+      englishReady.length === 0);
   const lang: Locale = useVi ? 'vi' : 'en';
 
   const resolved = mapLocalized(props, (pair) =>

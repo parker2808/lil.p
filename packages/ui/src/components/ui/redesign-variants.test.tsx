@@ -64,12 +64,12 @@ describe('redesign variants', () => {
     );
 
     expect(screen.getByRole('link', { name: 'Active' })).toHaveClass(
-      'h-8',
+      'min-h-11',
       'border-l-2',
       'border-sidebar-primary',
     );
     expect(screen.getByRole('link', { name: 'Idle' })).toHaveClass(
-      'h-8',
+      'min-h-11',
       'border-l-2',
       'border-transparent',
     );
