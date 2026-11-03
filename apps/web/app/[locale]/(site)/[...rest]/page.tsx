@@ -5,6 +5,7 @@ import { setRequestLocale } from 'next-intl/server';
 import type { Locale } from '@portfolio/contracts';
 
 import { BlocksPage } from '@/modules/blocks/views/BlocksPage';
+import { getPage } from '@/modules/blocks/services/pages.service';
 import { ApiError } from '@/modules/core/utils/api-error.util';
 import { buildPageMetadata } from '@/modules/seo/utils/build-page-metadata.util';
 
@@ -17,9 +18,15 @@ export async function generateMetadata({
 }: {
   params: Promise<{ locale: string; rest: string[] }>;
 }): Promise<Metadata> {
-  const { rest } = await params;
+  const { locale, rest } = await params;
   const key = customPageKey(rest);
   if (!key) notFound();
+  try {
+    await getPage(key, locale as Locale);
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) notFound();
+    throw error;
+  }
   return buildPageMetadata(key, params);
 }
 

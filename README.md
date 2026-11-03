@@ -54,6 +54,12 @@ The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires pr
 
 The `real` seed profile requires `LILP_PRIVATE_SOURCE_PATH` at runtime. It validates nine owner project records, adds one verified public repository project, and publishes exactly ten projects. Run it only on a newly created disposable local database for verification; the guarded migration gate runs it twice and confirms no duplicate or changed rows. Ten repo covers are mapped by project slug: one public README screenshot and nine clearly illustrative covers. A CMS media cover takes priority when present.
 
+### Round 3 integrated audit
+
+The [R3-12 spec](./docs/specs/2026-11-03-r3-12-real-flow-audit.md) covers the integrated page-creation, public-route and seed stack. Run `env -u DATABASE_URL -u DATABASE_URL_TEST bash scripts/r3-12-e2e-gate.sh` for the full `pnpm check:all --e2e` suite on a random no-volume local MySQL container. For the staged schema-only migration check, run `env -u DATABASE_URL LILP_MIGRATION_ONLY=1 bash apps/api/prisma/seed/migration-gate.sh`; it still checks five old rows, constraints and Prisma drift, then destroys the container. `python3 scripts/audit-r3-captures.py` validates Desktop screenshot manifests and their PNGs; `--finalize` writes consolidated manifests and archives unreferenced PNGs outside the capture folders.
+
+The full PR12 run passed all nine gates. Set `R3_E2E_STATES=1` for the focused `public-details-states.spec.ts` run to refresh controlled loading and error captures. The final manifests contain 264 public and 608 admin route/state tuples, with no missing, stale or orphan PNGs.
+
 ## Environments
 
 There are three ways to run this repo. Each has its own setup — do not mix the steps.

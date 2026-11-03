@@ -22,7 +22,7 @@ export default async function Page({
   const query = (await draftMode()).isEnabled ? await searchParams : undefined;
   return (
     <div className="public-index public-home">
-      <HomeIndex locale={locale as Locale} searchParams={query} />
+      {await HomeIndex({ locale: locale as Locale, searchParams: query })}
     </div>
   );
 }

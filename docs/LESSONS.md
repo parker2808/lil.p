@@ -1,5 +1,11 @@
 # Lessons
 
+- 2026-11-03: A streamed Next.js 404 can retain HTTP 200 after the shell commits; assert the visible 404 state and `robots=noindex`, and expose streamed content under `@media (scripting: none)` so it remains readable without JavaScript.
+- 2026-11-03: Tailwind's generated layers can override a late unlayered no-script reveal rule; keep that rule in `@layer base` and verify it in a production browser with JavaScript disabled.
+- 2026-11-03: A command palette can scroll behind the viewport even while its trigger and input pass focus checks; assert the active option remains in view after keyboard navigation.
+
+- 2026-11-03: A stacked custom-page API must reserve one-segment fixture routes added by later public branches, and production Playwright needs a migrated disposable database before its API health check starts.
+
 - 2026-11-03: MySQL sorts an ENUM by declaration order but its replacement VARCHAR by text order; compare staged migration rows with `ORDER BY CAST(key AS CHAR)` so a type change does not masquerade as changed content.
 
 - 2026-11-03: A real route file can be unreachable when `next.config.ts` redirects its path first; verify resolved URLs before treating list-page captures as coverage for that component.

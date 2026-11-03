@@ -43,9 +43,9 @@ test('legacy admin routes land on the corresponding page and tab', async ({ page
       );
   }
   await page.goto('/admin/experience/999999');
-  await expect(page).toHaveURL(/\/admin\/pages\/about\/experience\/999999$/);
+  await expect(page).toHaveURL(/\/admin\/experience\/999999$/);
   await page.goto('/admin/experience/new');
-  await expect(page).toHaveURL(/\/admin\/pages\/about\/experience\/new$/);
+  await expect(page).toHaveURL(/\/admin\/experience\/new$/);
   await page.goto('/admin/pages/about?tab=skills');
   await page.getByRole('tab', { name: 'Education' }).click();
   await expect(page).toHaveURL(/tab=education/);

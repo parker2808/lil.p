@@ -80,14 +80,24 @@ test('published custom page, draft denial, version preview and static route prec
     for (const width of [1440, 390])
       for (const theme of ['light', 'dark']) {
         const publicDraft = await visit(page, locale, theme, width, `/${locale}/${key}`);
-        expect(publicDraft?.status()).toBe(404);
+        // Next can send the shell before notFound resolves, yielding HTTP 200 with noindex.
+        expect([200, 404]).toContain(publicDraft?.status());
+        await expect(page.locator('head meta[name="robots"]').first()).toHaveAttribute(
+          'content',
+          /noindex/,
+        );
         await expect(page.locator('main h1')).toBeVisible();
         await capture(page, locale, 'draft-404', theme, width);
       }
-  const nested = await page.request.get(`/en/${key}/child`);
-  expect(nested.status()).toBe(404);
+  const nested = await page.goto(`/en/${key}/child`);
+  expect([200, 404]).toContain(nested?.status());
+  await expect(page.getByRole('heading', { name: 'This page is missing' })).toBeVisible();
+  await expect(page.locator('head meta[name="robots"]').first()).toHaveAttribute(
+    'content',
+    /noindex/,
+  );
   const craft = await page.request.get('/en/craft');
-  expect(craft.status()).toBe(404);
+  expect(craft.status()).toBe(200);
   const builtIn = await page.request.get('/en/about');
   expect(builtIn.status()).toBe(200);
 

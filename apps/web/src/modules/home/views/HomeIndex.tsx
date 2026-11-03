@@ -22,7 +22,7 @@ export async function HomeIndex({
   return (
     <>
       {jsonLd ? <JsonLd data={jsonLd} /> : null}
-      <BlocksPage pageKey="home" locale={locale} searchParams={searchParams} />
+      {await BlocksPage({ pageKey: 'home', locale, searchParams })}
     </>
   );
 }

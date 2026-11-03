@@ -57,7 +57,7 @@ async function login(page: Page, locale: Locale, account = E2E_ADMIN, pin = e2eA
   await page.goto('/admin/login');
   await page
     .context()
-    .addCookies([{ name: 'NEXT_LOCALE', value: locale, domain: '127.0.0.1', path: '/' }]);
+    .addCookies([{ name: 'NEXT_LOCALE', value: locale, url: new URL(page.url()).origin }]);
   await page.reload();
   await page.getByLabel(locale === 'vi' ? 'Email' : 'Email').fill(account.email);
   await page.getByRole('textbox', { name: locale === 'vi' ? 'Mật khẩu' : 'Password' }).fill(pin);
@@ -79,7 +79,7 @@ for (const locale of ['en', 'vi'] as const) {
     await page.goto('/admin/login');
     await page
       .context()
-      .addCookies([{ name: 'NEXT_LOCALE', value: locale, domain: '127.0.0.1', path: '/' }]);
+      .addCookies([{ name: 'NEXT_LOCALE', value: locale, url: new URL(page.url()).origin }]);
     await page.reload();
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(
@@ -125,7 +125,7 @@ for (const locale of ['en', 'vi'] as const) {
     await expect(page).toHaveURL(/\/admin\/audit$/);
 
     await page.setViewportSize({ width: 390, height: 900 });
-    const more = page.getByRole('button', { name: locale === 'vi' ? 'Thêm' : 'More' });
+    const more = page.getByRole('button', { name: locale === 'vi' ? 'Thêm' : 'More', exact: true });
     await more.focus();
     await expect(more).toBeFocused();
     await more.click();

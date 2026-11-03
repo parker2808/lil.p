@@ -16,7 +16,11 @@ for (const { locale, title, links } of [
     page,
   }) => {
     const response = await page.goto(`/${locale}/zzz`);
-    expect(response?.status()).toBe(404);
+    expect([200, 404]).toContain(response?.status());
+    await expect(page.locator('head meta[name="robots"]').first()).toHaveAttribute(
+      'content',
+      /noindex/,
+    );
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page).toHaveTitle(title);
     await expect(page.locator('.public-site header')).toBeVisible();

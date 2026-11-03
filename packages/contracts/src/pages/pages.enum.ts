@@ -51,6 +51,8 @@ export const RESERVED_PUBLIC_PAGE_SLUGS = [
   'notes',
   'contact',
   'craft',
+  'r3-loading-test',
+  'r3-site-error-test',
   'rss',
   'api',
   'admin',

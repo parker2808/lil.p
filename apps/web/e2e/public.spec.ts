@@ -20,7 +20,7 @@ test.describe('public smoke', () => {
     await page.keyboard.press('Tab');
     await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused();
     await page.keyboard.press('Tab');
-    await expect(page.getByRole('link', { name: 'Parker Vu' })).toBeFocused();
+    await expect(page.getByRole('link', { name: 'lil.parker' })).toBeFocused();
     await page.keyboard.press('Tab');
     const work = page.getByRole('link', { name: 'Work' }).first();
     await expect(work).toBeFocused();

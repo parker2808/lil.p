@@ -79,6 +79,9 @@ if query "INSERT INTO page (\`key\`) VALUES ('HOME')" >/dev/null 2>&1; then echo
 assert_target
 (cd apps/api && pnpm exec prisma migrate diff --config "$config_file" --from-config-datasource --to-schema prisma/schema.prisma --exit-code > "$tmp_dir/schema-diff.log") || { echo 'Prisma schema drift detected'; exit 1; }
 echo 'Migration gate passed: five rows unchanged; unique/default/nullability/duplicate checks passed; Prisma diff empty.'
+if [[ "${LILP_MIGRATION_ONLY:-}" == 1 ]]; then
+  exit 0
+fi
 [[ -n "${LILP_PRIVATE_SOURCE_PATH:-}" && -f "$LILP_PRIVATE_SOURCE_PATH" ]] || { echo 'Private source is required for the disposable seed check'; exit 1; }
 seed_snapshot() {
   query "SELECT 'project', id, slug, status, HEX(CAST(updatedAt AS BINARY)) FROM project UNION ALL SELECT 'experience', id, company, roleEn, HEX(CAST(updatedAt AS BINARY)) FROM experience UNION ALL SELECT 'stat', id, labelEn, CAST(isVisible AS CHAR), HEX(CAST(updatedAt AS BINARY)) FROM profile_stat ORDER BY 1, 2"

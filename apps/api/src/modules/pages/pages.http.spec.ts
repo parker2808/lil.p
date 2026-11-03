@@ -17,7 +17,11 @@ type MockBlock = {
   type: string;
   key: string;
   schemaVersion: number;
-  props: { title?: { en: string; vi: string }; body?: { en: string; vi: string } };
+  props: {
+    eyebrow?: { en: string; vi: string };
+    title?: { en: string; vi: string };
+    body?: { en: string; vi: string };
+  };
   layout: string;
   surface: string;
   sortOrder: number;
@@ -204,6 +208,68 @@ describe('real page services over Nest HTTP with transactional Prisma state', ()
       expect(published.status).toBe(200);
       expect(published.body.publishedVersion).toBe(1);
       expect(audit.record).toHaveBeenCalledWith(db, expect.objectContaining({ action: 'PUBLISH' }));
+    },
+  );
+
+  it.each(['en', 'vi'] as const)(
+    'requires an H1 and locale body for an empty %s page',
+    async (locale) => {
+      page = null;
+      versionCount = 0;
+      const key = `empty-${locale}`;
+      const created = await request(app.getHttpServer())
+        .post('/api/admin/pages')
+        .set('x-test-role', 'admin')
+        .send({ title: 'Empty studio', key, locale, template: 'empty' })
+        .expect(201);
+      expect(created.body.blocks).toEqual([]);
+      const publish = () =>
+        request(app.getHttpServer())
+          .post(`/api/admin/pages/${key}/publish`)
+          .set('x-test-role', 'admin')
+          .send({});
+      expect((await publish()).status).toBe(409);
+
+      const base = {
+        pageId: currentPage().id,
+        schemaVersion: 1,
+        layout: 'ONE',
+        surface: 'PLAIN',
+        isVisible: true,
+        updatedAt: new Date('2026-11-03T00:00:00Z'),
+      };
+      currentPage().blocks = [
+        {
+          ...base,
+          id: 1,
+          type: 'page-header',
+          key: 'page-header',
+          sortOrder: 0,
+          props: {
+            eyebrow: { en: ' ', vi: '' },
+            title: { en: 'Studio notes', vi: 'Ghi chú xưởng' },
+          },
+        },
+      ];
+      const noBody = await publish();
+      expect(noBody.status).toBe(400);
+      expect(noBody.body).toMatchObject({
+        code: 'PAGE_BODY_REQUIRED',
+        fieldErrors: { body: expect.any(Array) },
+      });
+      currentPage().blocks.push({
+        ...base,
+        id: 2,
+        type: 'prose',
+        key: 'prose',
+        sortOrder: 1,
+        props: {
+          body: { en: 'Substantive English studio copy', vi: 'Nội dung xưởng tiếng Việt đầy đủ' },
+        },
+      });
+      const published = await publish();
+      expect(published.status).toBe(200);
+      expect(published.body.publishedVersion).toBe(1);
     },
   );
 

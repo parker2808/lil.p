@@ -35,7 +35,7 @@ type Entry = {
 async function setLocale(page: Page, locale: Locale) {
   await page
     .context()
-    .addCookies([{ name: 'NEXT_LOCALE', value: locale, domain: '127.0.0.1', path: '/' }]);
+    .addCookies([{ name: 'NEXT_LOCALE', value: locale, url: new URL(page.url()).origin }]);
 }
 
 async function capture(
