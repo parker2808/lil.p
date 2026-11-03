@@ -54,11 +54,32 @@ export function PublishBar({
     } catch (caught) {
       if (caught instanceof ApiError) {
         const keys = Object.keys(caught.fieldErrors ?? {})
+          .filter((path) => path.startsWith('block:'))
           .map((path) => path.replace(/^block:/, '').split('.')[0])
           .filter((key): key is string => Boolean(key));
         onInvalid(keys);
-        onFieldErrors(caught.fieldErrors ?? {});
-        setError(caught.code === 'INVALID_BLOCKS' ? t('invalidBlocks') : caught.message);
+        const fields = Object.fromEntries(
+          Object.entries(caught.fieldErrors ?? {}).map(([path]) => [
+            path,
+            [
+              path === 'body' || /\.body\.(en|vi)$/.test(path)
+                ? t('bodyRequired')
+                : path.startsWith('seoTitle')
+                  ? t('seoRequired')
+                  : t('validationFailed'),
+            ],
+          ]),
+        );
+        onFieldErrors(fields);
+        setError(
+          caught.code === 'INVALID_BLOCKS' || caught.code === 'BLOCK_REQUIRED'
+            ? t('invalidBlocks')
+            : caught.code === 'VALIDATION_FAILED'
+              ? 'body' in fields
+                ? t('bodyRequired')
+                : t('validationFailed')
+              : t('failed'),
+        );
         return;
       }
       setError(t('failed'));

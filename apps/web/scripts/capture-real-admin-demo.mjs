@@ -42,7 +42,8 @@ const routes = [
 ];
 
 fs.mkdirSync(output, { recursive: true });
-if (process.env.DEMO_PAGES_R3C === '1') {
+const r3dPages = process.env.DEMO_PAGES_R3D === '1';
+if (process.env.DEMO_PAGES_R3C === '1' || r3dPages) {
   const browser = await chromium.launch({ headless: true });
   const results = [];
   for (const width of [1440, 390]) {
@@ -123,6 +124,81 @@ if (process.env.DEMO_PAGES_R3C === '1') {
       await page.waitForURL(`**/admin/pages/${unique}`);
       await page.locator('h1').first().waitFor();
       await capture('created-editor');
+      if (r3dPages) {
+        const pageTitle = locale === 'vi' ? 'Trang mới' : 'New page';
+        const copy =
+          locale === 'vi'
+            ? 'Nội dung tiếng Việt đầy đủ cho trang mới.'
+            : 'Substantive English copy for the new page.';
+        async function openPreview() {
+          if (width === 390) {
+            await page
+              .getByRole('button', { name: locale === 'vi' ? 'Xem trước' : 'Preview' })
+              .last()
+              .click();
+            await page.getByRole('button', { name: '390px' }).click();
+          }
+          const frame = page.frameLocator('iframe:visible').first();
+          await frame.getByRole('heading', { name: pageTitle }).waitFor();
+          return frame;
+        }
+        await openPreview();
+        await capture('preview-empty');
+        if (width === 390) await page.keyboard.press('Escape');
+
+        await page
+          .getByRole('button', { name: locale === 'vi' ? 'Xuất bản' : 'Publish', exact: true })
+          .click();
+        await page
+          .getByText(
+            locale === 'vi'
+              ? 'Thêm nội dung hiển thị trước khi xuất bản.'
+              : 'Add visible body copy before publishing.',
+          )
+          .first()
+          .waitFor();
+        await capture('publish-blocked');
+
+        await page
+          .locator('[data-slot="block-row"]')
+          .filter({ hasText: 'prose' })
+          .getByText('prose')
+          .first()
+          .click();
+        if (width === 390) {
+          await page
+            .getByRole('button', { name: locale === 'vi' ? 'Bảng chỉnh sửa' : 'Inspector' })
+            .click();
+        }
+        const editor = page
+          .locator(
+            `[contenteditable="true"][aria-label*="${locale === 'vi' ? 'Vietnamese' : 'English'}"]:visible`,
+          )
+          .first();
+        await editor.waitFor();
+        // Let the inspector's initial debounced form sync settle before entering the test copy.
+        await page.waitForTimeout(2500);
+        const saved = page.waitForResponse(
+          (response) =>
+            response.request().method() === 'PATCH' &&
+            /\/api\/admin\/pages\/[^/]+\/blocks\/\d+$/.test(response.url()) &&
+            response.request().postData()?.includes(copy) &&
+            response.status() === 200,
+        );
+        await editor.fill(copy);
+        await saved;
+        if (width === 390) await page.keyboard.press('Escape');
+        const frame = await openPreview();
+        await frame.getByText(copy).waitFor();
+        await capture('preview-edited');
+        if (width === 390) await page.keyboard.press('Escape');
+
+        await page
+          .getByRole('button', { name: locale === 'vi' ? 'Xuất bản' : 'Publish', exact: true })
+          .click();
+        await page.getByText(locale === 'vi' ? 'Đã xuất bản bản 1' : 'Published v1').waitFor();
+        await capture('published');
+      }
       await context.close();
     }
   }
@@ -134,7 +210,7 @@ if (process.env.DEMO_PAGES_R3C === '1') {
       item.lang !== (item.file.includes('-vi-') ? 'vi' : 'en'),
   );
   fs.writeFileSync(
-    path.join(output, 'real-pages-r3c-review.json'),
+    path.join(output, r3dPages ? 'real-pages-r3d-review.json' : 'real-pages-r3c-review.json'),
     JSON.stringify({ results, failures }, null, 2),
   );
   fs.writeFileSync(

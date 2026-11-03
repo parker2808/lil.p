@@ -61,6 +61,107 @@ const pages = pageKeys.map((key) => ({
 const createdPages = new Map();
 let nextBlockId = 100;
 
+function isSubstantive(copy) {
+  const prose = (copy ?? '')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1');
+  return (prose.match(/\p{L}/gu)?.length ?? 0) >= 12;
+}
+
+function previewPage(key, locale) {
+  const detail = createdPages.get(key);
+  if (!detail) return { status: 404, body: { code: 'NOT_FOUND', message: 'Page not found' } };
+  const lang = locale === 'vi' ? 'vi' : 'en';
+  return {
+    status: 200,
+    body: {
+      key,
+      seo: {
+        title: detail[`seoTitle${lang === 'vi' ? 'Vi' : 'En'}`] ?? detail.title,
+        description: null,
+        lang,
+      },
+      blocks: detail.blocks
+        .filter((block) => block.isVisible)
+        .map((block) => ({
+          id: block.id,
+          type: block.type,
+          key: block.key,
+          layout: block.layout,
+          surface: block.surface,
+          lang,
+          props: Object.fromEntries(
+            Object.entries(block.props).map(([name, value]) => [
+              name,
+              value && typeof value === 'object' && 'en' in value
+                ? value[lang] || value[detail.locale] || ''
+                : value,
+            ]),
+          ),
+        })),
+      invalidBlocks: [],
+    },
+  };
+}
+
+function updateBlock(key, id, body) {
+  const detail = createdPages.get(key);
+  const block = detail?.blocks.find((item) => item.id === id);
+  if (!block) return { status: 404, body: { code: 'NOT_FOUND', message: 'Block not found' } };
+  if (
+    !body?.props ||
+    typeof body.props !== 'object' ||
+    (block.type === 'prose' &&
+      (typeof body.props.body?.en !== 'string' || typeof body.props.body?.vi !== 'string'))
+  ) {
+    return {
+      status: 400,
+      body: {
+        code: 'VALIDATION_FAILED',
+        message: 'Validation failed',
+        fieldErrors: { props: ['Invalid block props'] },
+      },
+    };
+  }
+  block.props = body.props;
+  block.updatedAt = new Date().toISOString();
+  detail.updatedAt = block.updatedAt;
+  detail.hasUnpublishedChanges = true;
+  return { status: 200, body: block };
+}
+
+function publishPage(key) {
+  const detail = createdPages.get(key);
+  if (!detail) return { status: 404, body: { code: 'NOT_FOUND', message: 'Page not found' } };
+  const fields = {};
+  const visibleProse = detail.blocks.filter((block) => block.isVisible && block.type === 'prose');
+  const hasBody = visibleProse.some((block) => isSubstantive(block.props.body?.[detail.locale]));
+  for (const block of visibleProse) {
+    if (!isSubstantive(block.props.body?.[detail.locale])) {
+      fields[`block:${block.key}.body.${detail.locale}`] = [
+        'Enter substantive body copy before publishing',
+      ];
+    }
+  }
+  if (!hasBody) fields.body = ['Add visible body copy before publishing'];
+  if (Object.keys(fields).length) {
+    return {
+      status: 400,
+      body: { code: 'VALIDATION_FAILED', message: 'Validation failed', fieldErrors: fields },
+    };
+  }
+  detail.publishedVersion = (detail.publishedVersion ?? 0) + 1;
+  detail.publishedAt = new Date().toISOString();
+  detail.hasUnpublishedChanges = false;
+  const listItem = pages.find((item) => item.key === key);
+  if (listItem) {
+    listItem.publishedVersion = detail.publishedVersion;
+    listItem.publishedAt = detail.publishedAt;
+    listItem.hasUnpublishedChanges = false;
+  }
+  return { status: 200, body: detail };
+}
+
 function createPage(body) {
   const fields = {};
   if (typeof body?.title !== 'string' || !body.title.trim() || body.title.length > 120) {
@@ -291,6 +392,50 @@ function fixture(pathname) {
   if (pathname === '/api/auth/me') return { id: 1, email: '', name: 'Parker', role: 'admin' };
   // Keep public prerendering in its API-unavailable path during a web build.
   if (pathname === '/api/health') return null;
+  if (pathname === '/api/public/site')
+    return {
+      settings: {
+        siteName: 'Demo portfolio',
+        domain: 'example.test',
+        defaultLocale: 'en',
+        seoTitle: 'Demo portfolio',
+        seoDescription: '',
+        footerNote: '',
+        contactIntro: '',
+        replyTimeNote: '',
+        contactEmail: '',
+        availability: 'OPEN',
+        availabilityNote: '',
+        analyticsEnabled: false,
+        ambientEffects: false,
+        marqueeEnabled: false,
+        ogImage: null,
+        heroStats: null,
+        lang: 'en',
+      },
+      profile: {
+        displayName: 'Parker',
+        legalName: 'Parker',
+        city: 'Demo City',
+        country: 'Demo Country',
+        timezone: 'UTC',
+        careerStartDate: '2020-01-01',
+        headline: 'Designing digital experiences',
+        subheadline: '',
+        bio: '',
+        languages: 'English',
+        heroKicker: null,
+        headlineAccent: null,
+        resumeEnId: null,
+        resumeViId: null,
+        avatar: null,
+        resume: null,
+        lang: 'en',
+      },
+      nav: { header: [], footer: [] },
+      socialLinks: [],
+      profileStats: [],
+    };
   if (pathname === '/api/admin/education') return education;
   if (pathname === '/api/admin/profile')
     return {
@@ -361,8 +506,12 @@ function fixture(pathname) {
   if (pathname === '/api/admin/messages') return page([message]);
   if (pathname === '/api/admin/messages/1') return message;
   if (pathname === '/api/admin/messages/unread-count') return { unread: 0 };
+  if (pathname.startsWith('/api/admin/preview/pages/')) {
+    return null;
+  }
   if (pathname.startsWith('/api/admin/pages/')) {
     const key = pathname.split('/')[4];
+    if (pathname.endsWith('/versions')) return [];
     if (createdPages.has(key)) return createdPages.get(key);
     return {
       ...pages.find((item) => item.key === key),
@@ -397,11 +546,22 @@ const server = http.createServer(async (request, response) => {
     return;
   }
   let result;
-  if (url.pathname === '/api/admin/pages' && request.method === 'POST') {
+  const blockPath = url.pathname.match(/^\/api\/admin\/pages\/([^/]+)\/blocks\/(\d+)$/);
+  const publishPath = url.pathname.match(/^\/api\/admin\/pages\/([^/]+)\/publish$/);
+  const previewPath = url.pathname.match(/^\/api\/admin\/preview\/pages\/([^/]+)$/);
+  if (request.method === 'POST' && publishPath) {
+    result = publishPage(publishPath[1]);
+  } else if (request.method === 'GET' && previewPath) {
+    result = previewPage(previewPath[1], url.searchParams.get('locale'));
+  } else if (
+    (url.pathname === '/api/admin/pages' && request.method === 'POST') ||
+    (blockPath && request.method === 'PATCH')
+  ) {
     let raw = '';
     for await (const chunk of request) raw += chunk;
     try {
-      result = createPage(JSON.parse(raw));
+      const body = JSON.parse(raw);
+      result = blockPath ? updateBlock(blockPath[1], Number(blockPath[2]), body) : createPage(body);
     } catch {
       result = {
         status: 400,

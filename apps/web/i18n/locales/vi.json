@@ -1220,7 +1220,10 @@
         "discardHint": "Bản nháp sẽ được thay bằng phiên bản đang hiển thị.",
         "cancel": "Hủy",
         "failed": "Không xuất bản được trang.",
-        "invalidBlocks": "Sửa các khối được đánh dấu trước khi xuất bản."
+        "invalidBlocks": "Sửa các khối được đánh dấu trước khi xuất bản.",
+        "validationFailed": "Sửa lỗi trên trang trước khi xuất bản.",
+        "bodyRequired": "Thêm nội dung hiển thị trước khi xuất bản.",
+        "seoRequired": "Thêm tiêu đề trang trước khi xuất bản."
       },
       "versions": {
         "open": "Lịch sử",

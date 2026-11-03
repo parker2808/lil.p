@@ -534,13 +534,6 @@
   padding: 0;
   border-radius: 10px;
 }
-.collection-icon-button {
-  cursor: pointer;
-}
-.collection-icon-button:focus-visible {
-  outline: 2px solid var(--brand-orange);
-  outline-offset: 2px;
-}
 .collection-pill {
   white-space: nowrap;
   flex-shrink: 0;

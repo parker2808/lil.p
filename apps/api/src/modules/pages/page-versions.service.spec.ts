@@ -132,11 +132,8 @@ describe('PageVersionsService', () => {
         response: {
           code: 'VALIDATION_FAILED',
           fieldErrors: {
-            [`block:prose.body.${locale}`]: [
-              locale === 'vi'
-                ? 'Nhập nội dung thật trước khi xuất bản'
-                : 'Enter real copy before publishing',
-            ],
+            [`block:prose.body.${locale}`]: ['Enter substantive body copy before publishing'],
+            body: ['Add visible body copy before publishing'],
           },
         },
       });
@@ -161,6 +158,56 @@ describe('PageVersionsService', () => {
       });
     },
   );
+
+  it.each([
+    ['en', 'untouched'],
+    ['en', 'hidden'],
+    ['en', 'deleted'],
+    ['vi', 'untouched'],
+    ['vi', 'hidden'],
+    ['vi', 'deleted'],
+  ] as const)('rejects %s custom page with %s starter prose', async (locale, state) => {
+    const title = locale === 'vi' ? 'Ý tưởng' : 'Ideas';
+    const header = {
+      ...hero,
+      type: 'page-header',
+      key: 'page-header',
+      layout: 'ONE',
+      props: { title: { en: locale === 'en' ? title : '', vi: locale === 'vi' ? title : '' } },
+    };
+    const prose = {
+      ...hero,
+      id: 2,
+      type: 'prose',
+      key: 'prose',
+      layout: 'ONE',
+      sortOrder: 1,
+      isVisible: state !== 'hidden',
+      props: {
+        body: {
+          en: state === 'untouched' ? '' : 'Substantive English body copy',
+          vi: state === 'untouched' ? '' : 'Nội dung tiếng Việt đầy đủ',
+        },
+      },
+    };
+    prisma.page.findUnique.mockResolvedValue(
+      pageRow({
+        key: 'IDEAS',
+        locale,
+        title,
+        seoTitleEn: locale === 'en' ? title : null,
+        seoTitleVi: locale === 'vi' ? title : null,
+        blocks: state === 'deleted' ? [header] : [header, prose],
+      }),
+    );
+    await expect(service.publish('ideas', {}, 1)).rejects.toMatchObject({
+      response: {
+        code: 'VALIDATION_FAILED',
+        fieldErrors: { body: ['Add visible body copy before publishing'] },
+      },
+    });
+    expect(prisma.pageVersion.create).not.toHaveBeenCalled();
+  });
 
   it('rejects publish when English SEO is missing', async () => {
     prisma.page.findUnique.mockResolvedValue(pageRow({ seoTitleEn: '' }));
@@ -212,6 +259,15 @@ describe('PageVersionsService', () => {
             key: 'page-header',
             layout: 'ONE',
             props: { title: { en: '', vi: 'Ý tưởng' } },
+          },
+          {
+            ...hero,
+            id: 2,
+            type: 'prose',
+            key: 'prose',
+            layout: 'ONE',
+            sortOrder: 1,
+            props: { body: { en: '', vi: 'Nội dung tiếng Việt đầy đủ' } },
           },
         ],
       }),

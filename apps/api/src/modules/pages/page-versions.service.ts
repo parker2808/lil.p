@@ -406,17 +406,24 @@ export class PageVersionsService {
           : { seoTitleEn: page.seoTitleEn, seoDescriptionEn: page.seoDescriptionEn },
       ),
     );
+    const customPage = !corePageKeySchema.safeParse(key).success;
+    let hasVisibleBody = false;
     for (const block of snapshotBlocks) {
       if (!block.isVisible || block.type !== 'prose') continue;
       const body = (block.props as { body?: { en?: string; vi?: string } }).body;
       const copy = page.locale === 'vi' ? body?.vi : body?.en;
-      if (!copy?.trim()) {
+      const prose =
+        copy?.replace(/!\[[^\]]*\]\([^)]*\)/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1') ?? '';
+      const substantive = (prose.match(/\p{L}/gu)?.length ?? 0) >= 12;
+      if (substantive) hasVisibleBody = true;
+      if (!copy?.trim() || (customPage && !substantive)) {
         fieldErrors[`block:${block.key}.body.${page.locale}`] = [
-          page.locale === 'vi'
-            ? 'Nhập nội dung thật trước khi xuất bản'
-            : 'Enter real copy before publishing',
+          'Enter substantive body copy before publishing',
         ];
       }
+    }
+    if (customPage && !hasVisibleBody) {
+      fieldErrors.body = ['Add visible body copy before publishing'];
     }
     if (Object.keys(fieldErrors).length > 0) {
       throw new BadRequestException({

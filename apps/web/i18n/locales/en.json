@@ -1220,7 +1220,10 @@
         "discardHint": "The draft is replaced with the live published version.",
         "cancel": "Cancel",
         "failed": "The page could not be published.",
-        "invalidBlocks": "Fix the highlighted blocks before publishing."
+        "invalidBlocks": "Fix the highlighted blocks before publishing.",
+        "validationFailed": "Fix the page errors before publishing.",
+        "bodyRequired": "Add visible body copy before publishing.",
+        "seoRequired": "Add a page title before publishing."
       },
       "versions": {
         "open": "History",

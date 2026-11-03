@@ -1141,18 +1141,18 @@ function CollectionRow({
 }) {
   return (
     <div className="collection-row">
-      <button className="collection-icon-button" aria-label={`Reorder ${item.title}`}>
+      <span className="collection-icon-button" aria-hidden="true">
         <GripVertical size={17} />
-      </button>
+      </span>
       <span className="collection-number">{String(index + 1).padStart(2, '0')}</span>
       <div className="collection-copy">
         <strong>{item.title}</strong>
         <small>{item.note}</small>
       </div>
       <span className="route-badge collection-pill">{item.tag}</span>
-      <button className="collection-icon-button" aria-label={`More options for ${item.title}`}>
+      <span className="collection-icon-button" aria-hidden="true">
         <MoreHorizontal size={18} />
-      </button>
+      </span>
     </div>
   );
 }
