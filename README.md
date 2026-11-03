@@ -15,6 +15,10 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 | Hosting   | Vercel for web (functions pinned to `sin1` Singapore in `vercel.json`, next to the API and DB), Render free for the API (Singapore), Cloudinary for media. All free tiers |
 | Keep-warm | A cron-job.org job pings `GET /api/health` (`SELECT 1`) every 10 minutes so the Render free instance does not spin down; `ApiWarmup` also pings it on page load           |
 
+### Public site
+
+The EN/VI home, projects, notes, about, and contact routes share the round 3 public shell and index styling. They continue to read CMS content through the public API; project and note filters stay in the URL across reloads, and the contact form keeps its server submission. `/[locale]/craft` is a localized, static interaction study linked from the public header. Its presentation and the index styles are scoped to public routes, so project and note details and admin screens keep their own layouts. See the [R3-05 spec](./docs/specs/2026-11-03-r3-05-public-shell-indexes.md) for the route, accessibility, and capture checks.
+
 ### Caching and rendering
 
 - Public pages under `/[locale]` are static and use ISR. Home, about, contact, project and note detail pages, RSS, OG images and the sitemap are prerendered at build when the API answers, otherwise on first visit.
@@ -23,6 +27,7 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 - `/notes` and `/projects` filter and paginate by query string, so they render per request, but their API reads still come from the data cache. `/admin` is always dynamic.
 - If the API is down at build time, the build still succeeds: nothing is prerendered and ISR fills the pages on first visit.
 - CSP: `/admin` and draft-mode requests (the site-wide `__prerender_bypass` cookie) get a per-request nonce with `'strict-dynamic'`. Public pages share cached HTML, so they use `script-src 'self' 'unsafe-inline'` with every other directive unchanged (see `csp.util.ts`).
+- Development public routes allow React's diagnostic `eval()` under CSP; production and nonce-protected routes do not.
 
 ## Environments
 

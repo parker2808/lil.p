@@ -124,7 +124,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
-- 2026-11-03: R3-05: route-scoped public shell/index presentation, localized craft study, 44px mobile header controls, and a development-only CSP allowance for React diagnostics; production Playwright verified CMS routes, EN/VI filters/contact, accessibility, and 80 theme/width/state captures.
+- 2026-11-03: R3-05: route-scoped public shell/index presentation, localized craft study, 44px mobile header controls, and a development-only CSP allowance for React diagnostics; production Playwright verified CMS routes, EN/VI filters/contact, accessibility, and 80 theme/width/state captures. The root README documents these public routes and behaviors.
 - 2026-11-03: R3-01: one shared `lil.parker` brand mark supplies public/admin chrome and generated app icons; scoped orange/green tokens and restrained login atmosphere.
 - 2026-11-02: Render S5: Blueprint `buildFilter` so web-only merges do not deploy the API.
 - 2026-11-02: CI S4: e2e only on `main`, `ready-e2e`-labeled PRs or manual dispatch; per-PR concurrency.
