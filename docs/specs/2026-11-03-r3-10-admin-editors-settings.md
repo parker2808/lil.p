@@ -14,3 +14,8 @@ Finish real project, post, page, experience, profile, and site editor routes and
 ## Checks
 
 Focused unit and production-build Playwright tests for all editor families, including four UI/page locale combinations, keyboard and focus states, standalone experience create/edit errors, and destructive confirmations. Run `pnpm check:all` and update the Graphify report.
+
+## Verification
+
+- `pnpm check:all`: seven gates passed. Focused editor unit tests: 8/8 passed. Production-build editor Playwright: 10/10 passed on a guarded, no-volume disposable MySQL container.
+- Ten admin route/state manifests map to 376 unique, present PNGs in `~/Desktop/lilp-admin-demo-20261102/`; each covers an asserted EN/VI, light/dark, 1440/390 state. The final cross-PR route/state audit belongs to PR 12.
