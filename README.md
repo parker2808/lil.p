@@ -24,6 +24,10 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 - If the API is down at build time, the build still succeeds: nothing is prerendered and ISR fills the pages on first visit.
 - CSP: `/admin` and draft-mode requests (the site-wide `__prerender_bypass` cookie) get a per-request nonce with `'strict-dynamic'`. Public pages share cached HTML, so they use `script-src 'self' 'unsafe-inline'` with every other directive unchanged (see `csp.util.ts`).
 
+### Design demo (draft, not for production)
+
+On `design/demo-redesign-2026-11-02` only: start the web app with `DESIGN_DEMO=1` to render the redesigned public site from mock data. Without the flag the site is unchanged.
+
 ## Environments
 
 There are three ways to run this repo. Each has its own setup — do not mix the steps.
