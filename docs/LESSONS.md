@@ -96,3 +96,4 @@
 - 2026-11-03: In a visual demo, display-only action chrome should have no button semantics, and decorative marks belong outside media artwork so they cannot obscure the image at narrow widths.
 - 2026-11-03: A custom-page route should map only API 404 responses to not-found; outages and schema failures must reach its retryable error boundary.
 - 2026-11-03: CMS block rows need translated metadata labels in both normal and invalid states; keep block keys as secondary technical details.
+- 2026-11-03: `context-check` runs on draft PRs too, so a demo branch with backend or web changes must update `PROJECT_CONTEXT.md` §7/§9 in the same branch, and a migration file on a demo branch must be listed in §7 as not applied.

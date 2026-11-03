@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- Admin design demo (`design/demo-admin-2026-11-02`, draft PR #157): `/design-demo-admin` is an isolated mock admin (own layout, EN/VI, mock API in `scripts/mock-admin-demo-api.mjs`) used for screenshot capture; specs `docs/specs/2026-11-0{2,3}-*admin*` and `2026-11-03-r3d-demo-b-fix.md`. The branch also carries the real custom-pages backend: `POST /admin/pages` ({title, key, locale, template}; 409 `PAGE_KEY_TAKEN`), `page.key` widened from enum to `VARCHAR(64)` plus nullable `title` and `locale` in migration `20261103010000_custom_pages` (file only, never run against TiDB or any real DB; Parker applies it at merge), a one-segment public route for published custom pages, and localized admin block-row labels. Not to merge as-is: the R3 stacked PRs (PR02-04) carry this work to `main`.
 - Render S5: `render.yaml` has a `buildFilter` (`apps/api/**`, `packages/contracts/**`, root `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `tsconfig.base.json`, `.dockerignore`, `render.yaml`; the Dockerfile is `apps/api/Dockerfile`). It applies only if the service is synced from the Blueprint; otherwise set the same Build Filters, or Auto-Deploy "After CI checks pass", in the Render dashboard (Parker).
 - CI S4: `api-e2e` and web-e2e shards run only on push to `main`, PRs labeled `ready-e2e`, or `workflow_dispatch`; without the label they are skipped and `web-e2e` still passes. Concurrency is per PR number. Policy in `docs/DEPLOY_AND_CI_RERUN.md` §8.
 - CI speed-up S3: web-e2e runs as 3 shards (`web-e2e shard i/3`), each with its own MySQL and seed; files per shard come from `apps/web/e2e/shards.ts` (`E2E_SHARD`), not `--shard`, because the visual and Lighthouse specs must share shard 1. Shards write blob reports; the `web-e2e` job merges them into the `playwright-report` artifact and fails if any shard failed. A new e2e spec must be added to `SPECS` in `shards.ts`. Locally, without `E2E_SHARD`, every spec runs as before.
@@ -122,6 +123,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-03: Admin design demo (draft PR #157): isolated `/design-demo-admin` mock admin, collection rows and media-card polish, Pages create dialog wired to new `POST /admin/pages`, custom-pages migration file, localized block-row labels.
 - 2026-11-02: Render S5: Blueprint `buildFilter` so web-only merges do not deploy the API.
 - 2026-11-02: CI S4: e2e only on `main`, `ready-e2e`-labeled PRs or manual dispatch; per-PR concurrency.
 - 2026-11-02: CI S3: web-e2e in 3 shards with per-shard MySQL and merged blob reports; visual and Lighthouse pinned to shard 1.

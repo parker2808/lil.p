@@ -24,6 +24,10 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 - If the API is down at build time, the build still succeeds: nothing is prerendered and ISR fills the pages on first visit.
 - CSP: `/admin` and draft-mode requests (the site-wide `__prerender_bypass` cookie) get a per-request nonce with `'strict-dynamic'`. Public pages share cached HTML, so they use `script-src 'self' 'unsafe-inline'` with every other directive unchanged (see `csp.util.ts`).
 
+### Design demo (draft, not for production)
+
+On `design/demo-admin-2026-11-02` only: `/design-demo-admin` serves an isolated admin redesign on mock data. That branch also adds `POST /admin/pages` for custom pages and the migration `20261103010000_custom_pages`; apply it locally with `pnpm db:migrate` only.
+
 ## Environments
 
 There are three ways to run this repo. Each has its own setup — do not mix the steps.
