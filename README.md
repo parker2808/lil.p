@@ -28,6 +28,12 @@ The public header and footer and the admin login and shell use the shared `lil.p
 - If the API is down at build time, the build still succeeds: nothing is prerendered and ISR fills the pages on first visit.
 - CSP: `/admin` and draft-mode requests (the site-wide `__prerender_bypass` cookie) get a per-request nonce with `'strict-dynamic'`. Public pages share cached HTML, so they use `script-src 'self' 'unsafe-inline'` with every other directive unchanged (see `csp.util.ts`).
 
+### Custom page creation API
+
+Admins can create a draft with `POST /api/admin/pages`. The JSON body requires `title` (1–120 characters after trimming), `key` (a lowercase, one-segment slug of 1–64 characters), `locale` (`en` or `vi`), and `template` (`starter` or `empty`). A successful request returns `201` with the editable admin page; `GET /api/admin/pages/:key` reads it back. Built-in page keys and public route names are reserved, and a taken key returns `409` with `PAGE_KEY_TAKEN`.
+
+`starter` adds a localized page heading and blank prose; `empty` starts without blocks. Both stay drafts until published. Custom pages need a visible first H1 and substantive visible prose in the page locale before publishing; missing prose returns `PAGE_BODY_REQUIRED` on the `body` field. This PR adds the API and database schema, with no new admin creation screen or public route. See [the R3-02 spec](./docs/specs/2026-11-03-r3-02-page-create-api.md) for acceptance and test coverage.
+
 ## Environments
 
 There are three ways to run this repo. Each has its own setup — do not mix the steps.
