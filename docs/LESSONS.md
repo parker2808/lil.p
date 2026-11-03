@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-03: A real route file can be unreachable when `next.config.ts` redirects its path first; verify resolved URLs before treating list-page captures as coverage for that component.
 - 2026-11-03: Playwright global setup runs `prisma migrate deploy`; for brand-route captures, point it only at a fresh guarded no-volume MySQL container and remove that container afterward.
 - 2026-11-03: The shared Playwright `signIn` helper finds English field names; reset `NEXT_LOCALE` to `en` before calling it after Vietnamese login captures, then switch locales for authenticated assertions.
 - 2026-11-03: The existing block schemas require a nonempty English string even for Vietnamese-first drafts, so a visually blank starter prose needs whitespace in its English field; publish must validate trimmed visible copy in the page locale independently of the starter block's presence.

@@ -4,7 +4,6 @@
 
 import type { AdminMedia } from '@portfolio/contracts';
 import { useWideScreen } from '@portfolio/ui/hooks/use-wide-screen.hook';
-import { MediaLibrary } from '@portfolio/ui/components/MediaLibrary/MediaLibrary';
 import { MediaUploader } from '@portfolio/ui/components/MediaUploader/MediaUploader';
 import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
 import { Button } from '@portfolio/ui/components/ui/button';
@@ -17,6 +16,7 @@ import { useMemo, useState } from 'react';
 
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 
+import { CollectionMediaLibrary } from '../components/CollectionMediaLibrary/CollectionMediaLibrary';
 import {
   flattenMediaPages,
   useAdminMediaList,
@@ -145,7 +145,7 @@ export function AdminMediaIndex() {
           </div>
         ) : null}
         {!list.isPending ? (
-          <MediaLibrary
+          <CollectionMediaLibrary
             items={tiles}
             selectedId={editing?.id}
             labels={{ missingAlt: t('missingAlt'), empty: t('empty'), pdf: t('pdf') }}

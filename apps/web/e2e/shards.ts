@@ -53,6 +53,7 @@ export const SPECS = [
   'admin-table-filters.spec.ts',
   'brand-foundation.spec.ts',
   'admin-shell-insights.spec.ts',
+  'admin-collections-r3.spec.ts',
 ] as const;
 
 /** Specs that must run together in shard 1 (pixel baselines, Lighthouse scores). */
