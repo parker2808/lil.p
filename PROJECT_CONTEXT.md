@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- R3 PR 8: real admin login, shell, dashboard and insight routes now have localized theme/navigation chrome and role-guarded audit access. Assertion-bound EN/VI 1440/390 normal, analytics loading, and audit empty/error captures and a state manifest live in the admin Desktop folder. Dashboard audit timestamps use one server render time to avoid hydration drift. The demo-only development “1 Issue” badge is a missing React key warning in its `LocalizedElement` JSX wrapper; live admin routes had no overlay/hydration error, but their shared CSP blocks React's development `eval()` debugging warning. Remaining dashboard/stats loading and non-audit failure captures need a controlled server-delay/error harness in a later route-state audit; no persistent database or deployment was touched.
 - R3-01 brand foundation: shared `lil.parker` mark and generated icons are in place; later round 3 PRs own route-specific UI and state captures. This branch stays local without a PR or deployment as requested.
 - R3 PR 2: custom-page SQL passed a staged old-schema→new-schema gate on a random, no-volume local MySQL container; five built-in page rows and IDs remained unchanged, key uniqueness/default/nullability held, and Prisma diff was empty. The migration file still needs safe rollout at merge; no persistent database was changed. Widening page keys also required one dashboard key conversion and one web metadata path conversion outside the page modules so both typechecks pass.
 - Render S5: `render.yaml` has a `buildFilter` (`apps/api/**`, `packages/contracts/**`, root `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `tsconfig.base.json`, `.dockerignore`, `render.yaml`; the Dockerfile is `apps/api/Dockerfile`). It applies only if the service is synced from the Blueprint; otherwise set the same Build Filters, or Auto-Deploy "After CI checks pass", in the Render dashboard (Parker).
@@ -124,6 +125,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-03: R3 PR 8 ports admin shell navigation and theme controls to real routes, guards audit for non-admin users, fixes localized not-found and dashboard time hydration, and adds production Playwright role/insight/state captures.
 - 2026-11-03: R3-01: one shared `lil.parker` brand mark supplies public/admin chrome and generated app icons; scoped orange/green tokens and restrained login atmosphere.
 - 2026-11-03: R3 PR 2 adds the admin-only create-page contract/endpoint, custom page title and locale columns, reserved route keys, transactional starter/empty drafts with audit, locale-aware draft previews, and a stable visible-body publish error; focused Nest HTTP and staged MySQL checks cover the flow.
 - 2026-11-02: Render S5: Blueprint `buildFilter` so web-only merges do not deploy the API.

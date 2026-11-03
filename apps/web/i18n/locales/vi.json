@@ -209,7 +209,8 @@
       "language": "Ngôn ngữ",
       "localeEn": "EN",
       "localeVi": "VI",
-      "switchLanguage": "Ngôn ngữ: {locale}"
+      "switchLanguage": "Ngôn ngữ: {locale}",
+      "toggleTheme": "Đổi giao diện"
     },
     "palette": {
       "open": "Chuyển đến",
@@ -276,10 +277,14 @@
       "checking": "Đang kiểm tra phiên đăng nhập",
       "workspace": "P / CMS",
       "artTitle": "Không gian yên tĩnh để tạo nên điều tiếp theo.",
-      "artNote": "Nội dung · Sáng tạo · Xuất bản"
+      "artNote": "Nội dung · Sáng tạo · Xuất bản",
+      "showPassword": "Hiện mật khẩu",
+      "hidePassword": "Ẩn mật khẩu"
     },
     "dashboard": {
       "title": "Bảng điều khiển",
+      "eyebrow": "Không gian làm việc",
+      "intro": "Những việc cần bạn chú ý, trong một góc nhìn rõ ràng.",
       "range": {
         "7d": "7d",
         "30d": "30d",

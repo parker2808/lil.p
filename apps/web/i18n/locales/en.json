@@ -209,7 +209,8 @@
       "language": "Language",
       "localeEn": "EN",
       "localeVi": "VI",
-      "switchLanguage": "Language: {locale}"
+      "switchLanguage": "Language: {locale}",
+      "toggleTheme": "Toggle theme"
     },
     "palette": {
       "open": "Jump to",
@@ -276,10 +277,14 @@
       "checking": "Checking session",
       "workspace": "P / CMS",
       "artTitle": "A quiet place to shape what comes next.",
-      "artNote": "Content · Craft · Publish"
+      "artNote": "Content · Craft · Publish",
+      "showPassword": "Show password",
+      "hidePassword": "Hide password"
     },
     "dashboard": {
       "title": "Dashboard",
+      "eyebrow": "Workspace",
+      "intro": "A clear view of what needs your attention.",
       "range": {
         "7d": "7d",
         "30d": "30d",

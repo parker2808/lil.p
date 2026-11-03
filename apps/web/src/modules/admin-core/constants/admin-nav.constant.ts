@@ -21,7 +21,9 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     items: [
       { href: '/admin/projects', key: 'projects', roles: ['admin', 'user'] },
       { href: '/admin/posts', key: 'posts', roles: ['admin', 'user'] },
+      { href: '/admin/pages', key: 'pages', roles: ['admin', 'user'] },
       { href: '/admin/media', key: 'media', roles: ['admin', 'user'] },
+      { href: '/admin/tags', key: 'tags', roles: ['admin', 'user'] },
     ],
   },
   {
@@ -30,6 +32,12 @@ export const ADMIN_NAV: AdminNavGroup[] = [
       { href: '/admin/pages/home', key: 'home', roles: ['admin', 'user'] },
       { href: '/admin/pages/about', key: 'about', roles: ['admin', 'user'] },
       { href: '/admin/pages/contact', key: 'contact', roles: ['admin', 'user'] },
+      { href: '/admin/experience', key: 'experience', roles: ['admin', 'user'] },
+      { href: '/admin/education', key: 'education', roles: ['admin', 'user'] },
+      { href: '/admin/skills', key: 'skills', roles: ['admin', 'user'] },
+      { href: '/admin/principles', key: 'principles', roles: ['admin', 'user'] },
+      { href: '/admin/process', key: 'process', roles: ['admin', 'user'] },
+      { href: '/admin/stats', key: 'stats', roles: ['admin', 'user'] },
     ],
   },
   {
@@ -41,6 +49,7 @@ export const ADMIN_NAV: AdminNavGroup[] = [
     items: [
       { href: '/admin/site', key: 'site', roles: ['admin', 'user'] },
       { href: '/admin/profile', key: 'profile', roles: ['admin', 'user'] },
+      { href: '/admin/domains', key: 'domains', roles: ['admin', 'user'] },
       { href: '/admin/users', key: 'users', roles: ['admin'] },
       { href: '/admin/audit', key: 'audit', roles: ['admin'] },
       { href: '/admin/analytics', key: 'analytics', roles: ['admin', 'user'] },

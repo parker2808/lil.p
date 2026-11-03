@@ -2,6 +2,7 @@ import {
   adminAuditListPageSchema,
   adminHealthSchema,
   adminStatsSchema,
+  meSchema,
   parseStatsRange,
   qk,
 } from '@portfolio/contracts';
@@ -16,6 +17,10 @@ function firstSearchParam(value: string | string[] | undefined): string | undefi
   return Array.isArray(value) ? value[0] : value;
 }
 
+function serverRenderTime(): number {
+  return Date.now();
+}
+
 export default async function AdminHomePage({
   searchParams,
 }: {
@@ -24,6 +29,8 @@ export default async function AdminHomePage({
   const query = await searchParams;
   const range = parseStatsRange(firstSearchParam(query.range));
   const queryClient = getQueryClient();
+  const me = await apiServer('/api/auth/me', { withAuth: true, schema: meSchema });
+  const renderedAt = serverRenderTime();
 
   await Promise.allSettled([
     queryClient.prefetchQuery({
@@ -38,19 +45,23 @@ export default async function AdminHomePage({
       queryKey: qk.admin.health,
       queryFn: () => apiServer('/api/admin/health', { withAuth: true, schema: adminHealthSchema }),
     }),
-    queryClient.prefetchQuery({
-      queryKey: qk.admin.audit(LATEST_AUDIT_PARAMS),
-      queryFn: () =>
-        apiServer(`/api/admin/audit?limit=${LATEST_AUDIT_PARAMS.limit}`, {
-          withAuth: true,
-          schema: adminAuditListPageSchema,
-        }),
-    }),
+    ...(me.role === 'admin'
+      ? [
+          queryClient.prefetchQuery({
+            queryKey: qk.admin.audit(LATEST_AUDIT_PARAMS),
+            queryFn: () =>
+              apiServer(`/api/admin/audit?limit=${LATEST_AUDIT_PARAMS.limit}`, {
+                withAuth: true,
+                schema: adminAuditListPageSchema,
+              }),
+          }),
+        ]
+      : []),
   ]);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <AdminDashboardIndex range={range} />
+      <AdminDashboardIndex range={range} renderedAt={renderedAt} />
     </HydrationBoundary>
   );
 }

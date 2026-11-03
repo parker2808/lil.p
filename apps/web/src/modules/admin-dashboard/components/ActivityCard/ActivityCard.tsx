@@ -11,12 +11,18 @@ import { LATEST_AUDIT_PARAMS } from '@/modules/admin-insights/services/admin-aud
 
 import { DashboardCard } from '../ActionCards/ActionCards';
 
-export function ActivityCard() {
+export function ActivityCard({ renderedAt }: { renderedAt?: number }) {
   const { data } = useAdminAudit(LATEST_AUDIT_PARAMS);
-  return <ActivityCardView items={data.items} />;
+  return <ActivityCardView items={data.items} renderedAt={renderedAt} />;
 }
 
-export function ActivityCardView({ items }: { items: AdminAuditLog[] }) {
+export function ActivityCardView({
+  items,
+  renderedAt,
+}: {
+  items: AdminAuditLog[];
+  renderedAt?: number;
+}) {
   const t = useTranslations('admin.audit');
   const locale = useLocale();
   const labels = {
@@ -39,7 +45,7 @@ export function ActivityCardView({ items }: { items: AdminAuditLog[] }) {
         <ActivityFeed empty={t('empty')}>
           {items.map((item) => (
             <li key={item.id}>
-              <AuditRow item={item} labels={labels} locale={locale} />
+              <AuditRow item={item} labels={labels} locale={locale} now={renderedAt} />
             </li>
           ))}
         </ActivityFeed>

@@ -14,7 +14,17 @@ describe('admin navigation', () => {
     ]);
     expect(
       ADMIN_NAV.find((group) => group.key === 'pages')?.items.map((item) => item.href),
-    ).toEqual(['/admin/pages/home', '/admin/pages/about', '/admin/pages/contact']);
+    ).toEqual([
+      '/admin/pages/home',
+      '/admin/pages/about',
+      '/admin/pages/contact',
+      '/admin/experience',
+      '/admin/education',
+      '/admin/skills',
+      '/admin/principles',
+      '/admin/process',
+      '/admin/stats',
+    ]);
     expect(
       navVisibleTo('user')
         .flatMap((group) => group.items)

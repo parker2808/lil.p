@@ -1,8 +1,10 @@
 import { getTranslations } from 'next-intl/server';
 import Link from 'next/link';
+import { cookies } from 'next/headers';
 
 export default async function AdminNotFound() {
-  const t = await getTranslations('admin.notFound');
+  const locale = (await cookies()).get('NEXT_LOCALE')?.value === 'vi' ? 'vi' : 'en';
+  const t = await getTranslations({ locale, namespace: 'admin.notFound' });
 
   return (
     <div className="mx-auto flex max-w-prose flex-col gap-4 py-16">

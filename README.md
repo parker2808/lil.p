@@ -25,6 +25,7 @@ The public header and footer and the admin login and shell use the shared `lil.p
 - Public API reads (`apiServer` without `withAuth`) never read cookies or headers. They use `fetch` with `next: { revalidate: 3600, tags }`, and every one carries the shared `public` tag.
 - Admin saves expire the cache right away. Successful admin mutations that change live content call the `revalidatePublicContent` server action (admins only, `updateTag('public')`); draft-only and non-public ones opt out with `meta.publicCache`. The API still posts per-entity tags to `/api/revalidate` for the content it publishes.
 - `/notes` and `/projects` filter and paginate by query string, so they render per request, but their API reads still come from the data cache. `/admin` is always dynamic.
+- The live admin shell uses role-filtered navigation and a server role check on `/admin/audit`. Its dashboard shows only cards the signed-in role can use; the topbar exposes an EN/VI selector and a theme control, with both actions in the mobile account menu. See [R3-08](./docs/specs/2026-11-03-r3-08-admin-shell-insights.md) for the route and state checks.
 - If the API is down at build time, the build still succeeds: nothing is prerendered and ISR fills the pages on first visit.
 - CSP: `/admin` and draft-mode requests (the site-wide `__prerender_bypass` cookie) get a per-request nonce with `'strict-dynamic'`. Public pages share cached HTML, so they use `script-src 'self' 'unsafe-inline'` with every other directive unchanged (see `csp.util.ts`).
 
