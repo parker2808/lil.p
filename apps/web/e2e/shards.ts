@@ -55,6 +55,8 @@ export const SPECS = [
   'admin-shell-insights.spec.ts',
   'admin-collections-r3.spec.ts',
   'admin-editors-r3.spec.ts',
+  'custom-public-pages.spec.ts',
+  'admin-page-create.spec.ts',
 ] as const;
 
 /** Specs that must run together in shard 1 (pixel baselines, Lighthouse scores). */

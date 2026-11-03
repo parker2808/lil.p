@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import {
   fromPrismaPageKey,
+  isReservedPublicPageSlug,
   type Locale,
+  pageKeySchema,
   publicPagePathForKey,
   type PublicSite,
   type PublicSitemap,
@@ -54,12 +56,21 @@ export class PublicSiteService {
     ]);
 
     const entries = [
-      ...pages.map((page) => {
+      ...pages.flatMap((page) => {
         const key = fromPrismaPageKey(page.key);
-        return {
-          path: publicPagePathForKey(key),
-          updatedAt: (page.publishedAt ?? page.updatedAt).toISOString(),
-        };
+        if (
+          !pageKeySchema.safeParse(key).success ||
+          (isReservedPublicPageSlug(key) &&
+            !['home', 'about', 'projects', 'notes', 'contact'].includes(key))
+        ) {
+          return [];
+        }
+        return [
+          {
+            path: publicPagePathForKey(key),
+            updatedAt: (page.publishedAt ?? page.updatedAt).toISOString(),
+          },
+        ];
       }),
       ...projects.map((project) => ({
         path: `/projects/${project.slug}`,

@@ -38,6 +38,16 @@ describe('PublicSiteService.getSitemap', () => {
         publishedAt: null,
         updatedAt: new Date('2026-03-01T00:00:00.000Z'),
       },
+      {
+        key: 'STUDIO-NOTES',
+        publishedAt: new Date('2026-03-02T00:00:00.000Z'),
+        updatedAt: new Date('2026-03-03T00:00:00.000Z'),
+      },
+      {
+        key: 'CRAFT',
+        publishedAt: null,
+        updatedAt: new Date('2026-03-04T00:00:00.000Z'),
+      },
     ]);
     prisma.project.findMany.mockResolvedValue([
       { slug: 'live-case', updatedAt: new Date('2026-04-01T00:00:00.000Z') },
@@ -50,6 +60,7 @@ describe('PublicSiteService.getSitemap', () => {
       entries: [
         { path: '/', updatedAt: '2026-01-01T00:00:00.000Z' },
         { path: '/about', updatedAt: '2026-03-01T00:00:00.000Z' },
+        { path: '/studio-notes', updatedAt: '2026-03-02T00:00:00.000Z' },
         { path: '/projects/live-case', updatedAt: '2026-04-01T00:00:00.000Z' },
         { path: '/notes/live-note', updatedAt: '2026-05-01T00:00:00.000Z' },
       ],

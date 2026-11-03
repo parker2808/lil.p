@@ -3,6 +3,9 @@
 - 2026-11-03: MySQL sorts an ENUM by declaration order but its replacement VARCHAR by text order; compare staged migration rows with `ORDER BY CAST(key AS CHAR)` so a type change does not masquerade as changed content.
 
 - 2026-11-03: A real route file can be unreachable when `next.config.ts` redirects its path first; verify resolved URLs before treating list-page captures as coverage for that component.
+- 2026-11-03: A Next catch-all page must await the shared async block renderer inside its try/catch to turn an API 404 into `notFound()`; returning its promise as JSX leaves the rejection outside that catch.
+- 2026-11-03: Next sets draft-mode's bypass cookie with `Secure`; Chromium does not send it back over `http://127.0.0.1`, so local production Playwright preview checks must use `http://localhost` with the same disposable backend.
+- 2026-11-03: A production Next fetch cache survives server restarts and can serve a previous API's page into an in-memory mock capture run; clear `.next/cache/fetch-cache` before switching API state.
 - 2026-11-03: Playwright global setup runs `prisma migrate deploy`; for brand-route captures, point it only at a fresh guarded no-volume MySQL container and remove that container afterward.
 - 2026-11-03: The shared Playwright `signIn` helper finds English field names; reset `NEXT_LOCALE` to `en` before calling it after Vietnamese login captures, then switch locales for authenticated assertions.
 - 2026-11-03: The existing block schemas require a nonempty English string even for Vietnamese-first drafts, so a visually blank starter prose needs whitespace in its English field; publish must validate trimmed visible copy in the page locale independently of the starter block's presence.
@@ -92,3 +95,4 @@
 - 2026-11-03: `docs/CHANGELOG_ARCHIVE.md` is historical and directs new changelog entries to `PROJECT_CONTEXT.md` §9; keep the live PR entry there and link it from the README when documenting behavior.
 
 - 2026-11-03: A source-presence check is insufficient for a real-content seed; derive publishable dates and summaries from the approved source, and remove legacy metrics that lack evidence.
+- 2026-11-03: A real route can have a complete page component but remain unreachable because `next.config.ts` redirects it; test the production URL before relying on the component, and ensure the new editor uses custom page titles rather than translating only built-in keys.

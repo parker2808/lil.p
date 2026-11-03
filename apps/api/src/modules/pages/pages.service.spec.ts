@@ -192,4 +192,15 @@ describe('PagesService', () => {
     const page = await service.getPublic('home', 'en');
     expect(page.blocks).toEqual([]);
   });
+
+  it('returns 404 for an unpublished custom page', async () => {
+    const prisma = {
+      page: {
+        findUnique: vi.fn().mockResolvedValue({ key: 'STUDIO-NOTES', publishedVersion: null }),
+      },
+    };
+    await expect(
+      new PagesService(prisma as never).getPublic('studio-notes', 'en'),
+    ).rejects.toMatchObject({ status: 404 });
+  });
 });
