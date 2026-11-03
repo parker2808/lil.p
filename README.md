@@ -37,6 +37,10 @@ Admins can create a draft with `POST /api/admin/pages`. The JSON body requires `
 
 `starter` adds a localized page heading and blank prose; `empty` starts without blocks. Both stay drafts until published. Custom pages need a visible first H1 and substantive visible prose in the page locale before publishing; missing prose returns `PAGE_BODY_REQUIRED` on the `body` field. This PR adds the API and database schema, with no new admin creation screen or public route. See [the R3-02 spec](./docs/specs/2026-11-03-r3-02-page-create-api.md) for acceptance and test coverage.
 
+### Real content seed verification
+
+The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires private source evidence for every factual claim and project cover. Keep source paths, source text, and contact details out of git and logs. The staged migration check is `env -u DATABASE_URL bash apps/api/prisma/seed/migration-gate.sh`; it creates a random, tmpfs-only MySQL container, compares the five built-in page rows across the old and current migrations, checks page constraints and Prisma schema drift, then removes the container. It refuses to run when `DATABASE_URL` is already set.
+
 ## Environments
 
 There are three ways to run this repo. Each has its own setup — do not mix the steps.

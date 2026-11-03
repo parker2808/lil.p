@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-03: MySQL sorts an ENUM by declaration order but its replacement VARCHAR by text order; compare staged migration rows with `ORDER BY CAST(key AS CHAR)` so a type change does not masquerade as changed content.
+
 - 2026-11-03: A real route file can be unreachable when `next.config.ts` redirects its path first; verify resolved URLs before treating list-page captures as coverage for that component.
 - 2026-11-03: Playwright global setup runs `prisma migrate deploy`; for brand-route captures, point it only at a fresh guarded no-volume MySQL container and remove that container afterward.
 - 2026-11-03: The shared Playwright `signIn` helper finds English field names; reset `NEXT_LOCALE` to `en` before calling it after Vietnamese login captures, then switch locales for authenticated assertions.
