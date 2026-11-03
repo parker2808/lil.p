@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createAdminExperience,
   getAdminExperience,
+  removeAdminExperience,
   updateAdminExperience,
 } from '../services/experience.service';
 
@@ -35,6 +36,17 @@ export function useSaveAdminExperience() {
       updateAdminExperience(id, body),
     onSuccess: (row) => {
       queryClient.setQueryData(qk.admin.detail('experience', row.id), row);
+      void queryClient.invalidateQueries({ queryKey: qk.admin.all('experience') });
+    },
+  });
+}
+
+export function useDeleteAdminExperience() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: removeAdminExperience,
+    onSuccess: (row) => {
+      queryClient.removeQueries({ queryKey: qk.admin.detail('experience', row.id) });
       void queryClient.invalidateQueries({ queryKey: qk.admin.all('experience') });
     },
   });

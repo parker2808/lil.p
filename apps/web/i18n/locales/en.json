@@ -677,6 +677,16 @@
         "loadError": "This role could not be loaded.",
         "company": "Company",
         "companyRequired": "Company is required.",
+        "locationRequired": "Location is required.",
+        "roleRequired": "English role is required.",
+        "startDateRequired": "Start date is required.",
+        "saveFailed": "The role could not be saved. Try again.",
+        "save": "Save role",
+        "delete": "Delete role",
+        "cancel": "Cancel",
+        "confirmDeleteTitle": "Delete this role?",
+        "confirmDelete": "This role will be removed from the timeline.",
+        "deleteFailed": "The role could not be deleted. Try again.",
         "companyUrl": "Company URL",
         "location": "Location",
         "employmentType": "Employment type",
@@ -1201,7 +1211,8 @@
         "discardHint": "The draft is replaced with the live published version.",
         "cancel": "Cancel",
         "failed": "The page could not be published.",
-        "invalidBlocks": "Fix the highlighted blocks before publishing."
+        "invalidBlocks": "Fix the highlighted blocks before publishing.",
+        "bodyRequired": "Add visible body copy in this page's language before publishing. Go to the body editor."
       },
       "versions": {
         "open": "History",

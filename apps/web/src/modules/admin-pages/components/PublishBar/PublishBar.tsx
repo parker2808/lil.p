@@ -29,10 +29,12 @@ export function PublishBar({
   pageKey,
   page,
   onInvalid,
+  onBodyRequired,
 }: {
   pageKey: PageKey;
   page: AdminPage;
   onInvalid: (keys: string[]) => void;
+  onBodyRequired?: () => void;
 }) {
   const t = useTranslations('admin.pages.publish');
   const isAdmin = useIsAdmin();
@@ -41,9 +43,11 @@ export function PublishBar({
   const [note, setNote] = useState('');
   const [confirmDiscard, setConfirmDiscard] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorPath, setErrorPath] = useState<string | null>(null);
 
   async function onPublish() {
     setError(null);
+    setErrorPath(null);
     try {
       await publish.mutateAsync(note.trim() || undefined);
       setNote('');
@@ -54,7 +58,16 @@ export function PublishBar({
           .map((path) => path.replace(/^block:/, '').split('.')[0])
           .filter((key): key is string => Boolean(key));
         onInvalid(keys);
-        setError(caught.code === 'INVALID_BLOCKS' ? t('invalidBlocks') : caught.message);
+        if (caught.code === 'PAGE_BODY_REQUIRED' && caught.fieldErrors?.body) {
+          setError(t('bodyRequired'));
+          setErrorPath('body');
+        } else {
+          setError(
+            caught.code === 'INVALID_BLOCKS' || caught.code === 'VALIDATION_FAILED'
+              ? t('invalidBlocks')
+              : t('failed'),
+          );
+        }
         return;
       }
       setError(t('failed'));
@@ -83,11 +96,12 @@ export function PublishBar({
             onChange={(event) => setNote(event.target.value)}
             placeholder={t('note')}
             maxLength={200}
-            className="w-40"
+            className="min-h-11 w-40"
           />
           <Button
             type="button"
             size="sm"
+            className="min-h-11"
             onClick={() => void onPublish()}
             disabled={publish.isPending}
           >
@@ -97,6 +111,7 @@ export function PublishBar({
             type="button"
             size="sm"
             variant="outline"
+            className="min-h-11"
             disabled={!page.publishedVersion || discard.isPending}
             onClick={() => setConfirmDiscard(true)}
           >
@@ -104,7 +119,25 @@ export function PublishBar({
           </Button>
         </div>
       </RoleGate>
-      {error ? <p className="text-ui-meta text-destructive">{error}</p> : null}
+      {error ? (
+        <p
+          role="alert"
+          data-field-path={errorPath ?? undefined}
+          className="text-ui-meta text-destructive"
+        >
+          {errorPath === 'body' ? (
+            <a
+              href="#page-body-editor"
+              className="inline-flex min-h-11 items-center underline underline-offset-4"
+              onClick={onBodyRequired}
+            >
+              {error}
+            </a>
+          ) : (
+            error
+          )}
+        </p>
+      ) : null}
       <AlertDialog open={confirmDiscard} onOpenChange={setConfirmDiscard}>
         <AlertDialogContent>
           <AlertDialogHeader>

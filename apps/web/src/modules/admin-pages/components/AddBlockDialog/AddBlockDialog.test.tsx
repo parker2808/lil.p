@@ -34,4 +34,17 @@ describe('AddBlockDialog', () => {
     await userEvent.click(hero);
     expect(onAdd).not.toHaveBeenCalled();
   });
+
+  it('offers the API-allowed blocks on an empty custom page', async () => {
+    const onAdd = vi.fn();
+    render(
+      <NextIntlClientProvider locale="en" messages={en}>
+        <AddBlockDialog pageKey="ideas" counts={{}} readOnly={false} onAdd={onAdd} />
+      </NextIntlClientProvider>,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Add block' }));
+    expect(await screen.findByRole('option', { name: /Page header/i })).toBeVisible();
+    expect(screen.getByRole('option', { name: /Prose/i })).toBeVisible();
+    expect(screen.getByRole('option', { name: /CTA band/i })).toBeVisible();
+  });
 });

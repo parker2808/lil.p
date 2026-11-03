@@ -27,16 +27,6 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: '/admin/pages', destination: '/admin/pages/home', permanent: false },
-      {
-        source: '/admin/experience/new',
-        destination: '/admin/pages/about/experience/new',
-        permanent: false,
-      },
-      {
-        source: '/admin/experience/:id',
-        destination: '/admin/pages/about/experience/:id',
-        permanent: false,
-      },
       ...['experience', 'education', 'skills', 'principles', 'process', 'stats', 'domains'].map(
         (tab) => ({
           source: `/admin/${tab}`,

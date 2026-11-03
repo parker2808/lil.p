@@ -1,7 +1,7 @@
-import { AdminAboutExperienceEditor } from '@/modules/admin-about/views/AdminAboutExperienceEditor';
+import { redirect } from 'next/navigation';
 
 export default function AdminNewExperiencePage() {
-  return <AdminAboutExperienceEditor experienceId={null} />;
+  redirect('/admin/experience/new');
 }
 
 export function generateMetadata() {

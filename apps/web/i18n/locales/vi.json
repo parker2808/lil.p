@@ -677,6 +677,16 @@
         "loadError": "Không tải được vai trò này.",
         "company": "Công ty",
         "companyRequired": "Cần có tên công ty.",
+        "locationRequired": "Cần có địa điểm.",
+        "roleRequired": "Cần có vai trò bằng tiếng Anh.",
+        "startDateRequired": "Cần có ngày bắt đầu.",
+        "saveFailed": "Không lưu được vai trò. Hãy thử lại.",
+        "save": "Lưu vai trò",
+        "delete": "Xóa vai trò",
+        "cancel": "Hủy",
+        "confirmDeleteTitle": "Xóa vai trò này?",
+        "confirmDelete": "Vai trò này sẽ bị xóa khỏi dòng thời gian.",
+        "deleteFailed": "Không xóa được vai trò. Hãy thử lại.",
         "companyUrl": "URL công ty",
         "location": "Địa điểm",
         "employmentType": "Hình thức làm việc",
@@ -1201,7 +1211,8 @@
         "discardHint": "Bản nháp sẽ được thay bằng phiên bản đang hiển thị.",
         "cancel": "Hủy",
         "failed": "Không xuất bản được trang.",
-        "invalidBlocks": "Sửa các khối được đánh dấu trước khi xuất bản."
+        "invalidBlocks": "Sửa các khối được đánh dấu trước khi xuất bản.",
+        "bodyRequired": "Thêm nội dung hiển thị bằng ngôn ngữ của trang trước khi xuất bản. Đến trình sửa nội dung."
       },
       "versions": {
         "open": "Lịch sử",
