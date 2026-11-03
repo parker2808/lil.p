@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-03: A Next catch-all page must await the shared async block renderer inside its try/catch to turn an API 404 into `notFound()`; returning its promise as JSX leaves the rejection outside that catch.
+- 2026-11-03: Next sets draft-mode's bypass cookie with `Secure`; Chromium does not send it back over `http://127.0.0.1`, so local production Playwright preview checks must use `http://localhost` with the same disposable backend.
+- 2026-11-03: A production Next fetch cache survives server restarts and can serve a previous API's page into an in-memory mock capture run; clear `.next/cache/fetch-cache` before switching API state.
 - 2026-11-03: Playwright global setup runs `prisma migrate deploy`; for brand-route captures, point it only at a fresh guarded no-volume MySQL container and remove that container afterward.
 - 2026-11-03: The shared Playwright `signIn` helper finds English field names; reset `NEXT_LOCALE` to `en` before calling it after Vietnamese login captures, then switch locales for authenticated assertions.
 - 2026-11-03: The existing block schemas require a nonempty English string even for Vietnamese-first drafts, so a visually blank starter prose needs whitespace in its English field; publish must validate trimmed visible copy in the page locale independently of the starter block's presence.

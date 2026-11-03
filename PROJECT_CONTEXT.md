@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- R3 PR 3: published custom CMS pages now resolve through the one-segment locale catch-all, with draft 404, authorized preview, localized metadata and sitemap entries; reserved/static and nested routes stay out of the custom lookup. Production-browser captures use disposable in-memory API state; a separate real-Nest check used only a fresh guarded tmpfs MySQL container. No persistent database was touched.
 - R3-01 brand foundation: shared `lil.parker` mark and generated icons are in place; later round 3 PRs own route-specific UI and state captures. This branch stays local without a PR or deployment as requested.
 - R3 PR 2: custom-page SQL passed a staged old-schema→new-schema gate on a random, no-volume local MySQL container; five built-in page rows and IDs remained unchanged, key uniqueness/default/nullability held, and Prisma diff was empty. The migration file still needs safe rollout at merge; no persistent database was changed. Widening page keys also required one dashboard key conversion and one web metadata path conversion outside the page modules so both typechecks pass.
 - Render S5: `render.yaml` has a `buildFilter` (`apps/api/**`, `packages/contracts/**`, root `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `tsconfig.base.json`, `.dockerignore`, `render.yaml`; the Dockerfile is `apps/api/Dockerfile`). It applies only if the service is synced from the Blueprint; otherwise set the same Build Filters, or Auto-Deploy "After CI checks pass", in the Render dashboard (Parker).
@@ -124,6 +125,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-03: R3 PR 3 adds real published custom page routes, safe custom preview paths, sitemap filtering, metadata and focused route/API coverage.
 - 2026-11-03: R3-01: one shared `lil.parker` brand mark supplies public/admin chrome and generated app icons; scoped orange/green tokens and restrained login atmosphere.
 - 2026-11-03: R3 PR 2 adds the admin-only create-page contract/endpoint, custom page title and locale columns, reserved route keys, transactional starter/empty drafts with audit, locale-aware draft previews, and a stable visible-body publish error; focused Nest HTTP and staged MySQL checks cover the flow.
 - 2026-11-02: Render S5: Blueprint `buildFilter` so web-only merges do not deploy the API.
