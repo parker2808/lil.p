@@ -46,6 +46,7 @@
     "loading": "Đang tải",
     "empty": "Chưa có nội dung",
     "error": "Đã xảy ra lỗi",
+    "errorDescription": "Không thể tải trang. Hãy thử lại hoặc trở về trang chủ.",
     "retry": "Thử lại",
     "notFound": "Không tìm thấy trang này"
   },

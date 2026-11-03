@@ -46,6 +46,7 @@
     "loading": "Loading",
     "empty": "Nothing here yet",
     "error": "Something went wrong",
+    "errorDescription": "The page could not load. Try again or return to the beginning.",
     "retry": "Retry",
     "notFound": "This page is missing"
   },

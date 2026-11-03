@@ -2,6 +2,72 @@
 .public-site {
   background: var(--background);
 }
+.public-route-skeleton {
+  min-height: 70vh;
+  padding-bottom: 96px;
+}
+.public-skeleton-heading {
+  display: grid;
+  gap: 20px;
+  padding-top: clamp(64px, 7vw, 104px);
+  padding-bottom: clamp(40px, 5vw, 68px);
+}
+.public-skeleton-detail,
+.public-skeleton-notes {
+  display: grid;
+  gap: 32px;
+}
+.public-skeleton-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+}
+.public-skeleton-panels,
+.public-skeleton-cards {
+  display: grid;
+  gap: 20px;
+}
+.public-skeleton-card {
+  display: grid;
+  gap: 16px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+}
+.public-skeleton-notes > div {
+  display: grid;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+  padding: 24px 0;
+}
+.public-skeleton-note .public-skeleton-heading {
+  max-width: 900px;
+}
+.public-missing button[aria-haspopup='dialog'] {
+  min-height: 44px;
+}
+.public-project-detail > header {
+  background: radial-gradient(
+    ellipse at 80% 20%,
+    color-mix(in srgb, var(--brand-green) 9%, transparent),
+    transparent 60%
+  );
+}
+.public-project-detail > header h1,
+.public-note-detail h1 {
+  letter-spacing: -0.055em;
+}
+@media (min-width: 768px) {
+  .public-skeleton-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .public-skeleton-columns {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+  .public-skeleton-panels {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 .site-header {
   background: color-mix(in srgb, var(--background) 88%, transparent);
   border-color: var(--border);

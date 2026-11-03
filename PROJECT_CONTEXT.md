@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- R3-07 public details/states: live project and note detail pages retain CMS content, SEO and draft preview. Public route skeletons include home, craft and the detail layouts; site/locale errors and 404 have localized recovery controls. The gated `R3_E2E_STATES` fixture exists only for production-build browser checks and serves 404 when unset. The 136 capture tuples and manifest live in the public Desktop folder; the branch remains local as requested. Out of scope: the existing locale suggestion toast close control is 32px, below the requested 44px mobile target.
 - R3-06 copy email: contact card, public CTA and search palette use site settings with a secure Clipboard API write, selection fallback, localized toasts and direct email links. The fallback depends on browser `execCommand('copy')` support; when both paths fail, the link remains usable. Local captures and manifest live in the public Desktop folder; this branch stays local as requested.
 - R3-05 public shell/indexes: the six live EN/VI index routes use CMS data with round 3 public styling; `/craft` is a localized static interaction study reachable from the header. The CMS navigation picker still lists only the older `PUBLIC_ROUTES`, so editors cannot add `/craft` there until that contract is extended in a later scoped change. PR 7 owns the public loading/error boundaries and their state captures. The 80 R3-05 capture tuples and manifest are in the public Desktop folder; this branch remains local as requested.
 - R3-01 brand foundation: shared `lil.parker` mark and generated icons are in place; later round 3 PRs own route-specific UI and state captures. This branch stays local without a PR or deployment as requested.
@@ -125,6 +126,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-03: R3-07: aligned public detail presentation and route loading skeletons, localized site/locale error recovery and 404, plus production browser coverage and state captures.
 - 2026-11-03: R3-06: reliable public copy-email action across contact, CTA and palette, with localized success/failure toasts, direct email links, focused unit/Playwright coverage and EN/VI state captures.
 - 2026-11-03: R3-05: route-scoped public shell/index presentation, localized craft study, 44px mobile header controls, and a development-only CSP allowance for React diagnostics; production Playwright verified CMS routes, EN/VI filters/contact, accessibility, and 80 theme/width/state captures. The root README documents these public routes and behaviors.
 - 2026-11-03: R3-01: one shared `lil.parker` brand mark supplies public/admin chrome and generated app icons; scoped orange/green tokens and restrained login atmosphere.

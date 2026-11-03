@@ -63,7 +63,7 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
   const crumbs = crumbLabel[locale];
 
   return (
-    <article>
+    <article className="public-project-detail">
       <JsonLd data={creativeWorkJsonLd(project, locale)} />
       <JsonLd
         data={breadcrumbListJsonLd([

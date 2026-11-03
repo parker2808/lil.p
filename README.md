@@ -21,6 +21,8 @@ The EN/VI home, projects, notes, about, and contact routes share the round 3 pub
 
 The contact page, public CTA, and search palette use the contact email configured in site settings. Copy email reports success or failure in the selected language and keeps a direct email link available. See the [R3-06 spec](./docs/specs/2026-11-03-r3-06-copy-email.md).
 
+Project and note detail pages keep their CMS content and draft preview paths. Their loading states now follow the final route layout, and localized error and missing-page screens provide recovery actions. See the [R3-07 spec](./docs/specs/2026-11-03-r3-07-public-details-states.md).
+
 ### Caching and rendering
 
 - Public pages under `/[locale]` are static and use ISR. Home, about, contact, project and note detail pages, RSS, OG images and the sitemap are prerendered at build when the API answers, otherwise on first visit.

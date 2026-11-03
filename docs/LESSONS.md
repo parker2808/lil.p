@@ -1,5 +1,11 @@
 # Lessons
 
+- 2026-11-03: The shared public primary button's orange backgrounds need different label colors across themes; use a darker scoped retry background with a white label and test both themes.
+- 2026-11-03: A thrown production route can omit the server-generated document title even when its error boundary renders; set a localized title in the client error boundary and verify it with axe.
+- 2026-11-03: Decorative status numerals still need readable contrast when axe evaluates rendered text; mix the brand color with foreground instead of transparency in both themes.
+- 2026-11-03: Reading test query parameters inside a statically generated detail page caused Next `DYNAMIC_SERVER_USAGE`; keep the live ISR page unchanged and render controlled loading/error fixtures on environment gated routes instead.
+- 2026-11-03: The public note URL is `/notes/:slug` but its Nest read endpoint is `/api/public/posts/:slug`; production browser assertions must compare against the actual API resource.
+- 2026-11-03: Next draft mode cookies are host scoped; a test that opens `127.0.0.1` while `/api/draft` redirects to `localhost` gets a public 404 despite a successful login, so use one web hostname throughout preview flows.
 - 2026-11-03: Public pages had copy buttons without a public Toaster, so `toast.success` alone produced no visible feedback; mount the Toaster in the public shell and share the clipboard fallback across contact, CTA and palette.
 - 2026-11-03: Public button variants can render at 40px high despite a larger surrounding row; measure the control itself at 390px and set an explicit 44px minimum for copy actions.
 - 2026-11-03: The shared `.tap` rule follows Tailwind utilities in the generated CSS and overrides `min-w-11` at desktop pointer settings; remove `.tap` from a control that needs a fixed 44px target or use a stronger scoped rule.

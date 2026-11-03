@@ -1,5 +1,5 @@
-import { PageSkeleton } from '@portfolio/ui/components/PageSkeleton/PageSkeleton';
+import { PublicRouteSkeleton } from '@/modules/core/components/PublicRouteSkeleton/PublicRouteSkeleton';
 
 export default function Loading() {
-  return <PageSkeleton variant="article" />;
+  return <PublicRouteSkeleton variant="project" />;
 }
