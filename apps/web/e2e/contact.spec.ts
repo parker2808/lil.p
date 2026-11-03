@@ -30,9 +30,8 @@ test.describe('contact', () => {
     await page.locator('#message').fill('I would like to talk about a migration.');
     const send = page.locator('form').getByRole('button', { name: /send message/i });
     await expect(send).toBeEnabled();
-    await send.evaluate((button) => {
-      (button as HTMLButtonElement).click();
-    });
+    await expect(page.locator('#name')).toHaveValue(E2E_VISITOR.name);
+    await send.click();
     await expect(page.getByText('Message sent')).toBeVisible({ timeout: 20_000 });
   });
 });

@@ -1,5 +1,10 @@
 # Lessons
 
+- 2026-11-03: Production Playwright draft previews must use `localhost` in both the web build and browser origin; a `127.0.0.1` origin loses Next's secure draft cookie after navigation.
+- 2026-11-03: Integrated visual changes require new Linux Chromium baselines; inspect expected and actual images before updating snapshots, and use the app's theme control so capture state matches its provider.
+- 2026-11-03: A modal makes background topbar controls inaccessible to role locators, but a capture fixture can invoke the existing theme button handler through its DOM element while preserving the modal state.
+- 2026-11-03: A browser form test should verify the field still holds its value and click the actual submit control; a programmatic DOM click can hide an input or hydration race.
+- 2026-11-03: The content checker reads tracked PNG bytes as text, so a compressed image can accidentally resemble an email; lossless recompression can clear that false positive while a decoded pixel comparison proves the baseline is unchanged.
 - 2026-11-03: A streamed Next.js 404 can retain HTTP 200 after the shell commits; assert the visible 404 state and `robots=noindex`, and expose streamed content under `@media (scripting: none)` so it remains readable without JavaScript.
 - 2026-11-03: Tailwind's generated layers can override a late unlayered no-script reveal rule; keep that rule in `@layer base` and verify it in a production browser with JavaScript disabled.
 - 2026-11-03: A command palette can scroll behind the viewport even while its trigger and input pass focus checks; assert the active option remains in view after keyboard navigation.

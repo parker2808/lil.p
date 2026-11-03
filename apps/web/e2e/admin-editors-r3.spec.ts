@@ -27,12 +27,15 @@ async function capture(
 ) {
   await mkdir(OUTPUT, { recursive: true });
   for (const theme of ['light', 'dark'] as const) {
-    await page.evaluate((next) => {
-      localStorage.setItem('theme', next);
-      document.documentElement.classList.remove('light', 'dark');
-      document.documentElement.classList.add(next);
-      document.documentElement.style.colorScheme = next;
-    }, theme);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const html = page.locator('html');
+    if (!(await html.evaluate((element, next) => element.classList.contains(next), theme))) {
+      await page
+        .locator(
+          `header button[aria-label="${locale === 'en' ? 'Toggle theme' : 'Đổi giao diện'}"]`,
+        )
+        .evaluate((button: HTMLButtonElement) => button.click());
+    }
     await expect(page.locator('html')).toHaveClass(new RegExp(`\\b${theme}\\b`));
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     for (const width of [1440, 390]) {
@@ -96,8 +99,10 @@ for (const uiLocale of ['en', 'vi'] as const) {
       test.setTimeout(300_000);
       const entries: Capture[] = [];
       await signIn(page);
-      if (uiLocale === 'vi')
+      if (uiLocale === 'vi') {
         await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+        await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
+      }
       const origin = new URL(page.url()).origin;
       const key = `r3editor-${uiLocale}-${pageLocale}-${Date.now()}`;
       const created = await page.request.post('/api/admin/pages', {
@@ -207,8 +212,10 @@ for (const uiLocale of ['en', 'vi'] as const) {
     test.setTimeout(180_000);
     const entries: Capture[] = [];
     await signIn(page);
-    if (uiLocale === 'vi')
+    if (uiLocale === 'vi') {
       await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+      await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
+    }
     const origin = new URL(page.url()).origin;
     const key = `r3empty-${uiLocale}-${Date.now()}`;
     const created = await page.request.post('/api/admin/pages', {
@@ -298,8 +305,10 @@ for (const uiLocale of ['en', 'vi'] as const) {
     test.setTimeout(240_000);
     const entries: Capture[] = [];
     await signIn(page);
-    if (uiLocale === 'vi')
+    if (uiLocale === 'vi') {
       await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+      await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
+    }
     await page.goto('/admin/experience/new');
     await expect(page.locator('[data-slot="editor-shell"]')).toBeVisible();
     await capture(page, entries, 'experience-new', uiLocale, 'normal');
@@ -398,8 +407,10 @@ for (const uiLocale of ['en', 'vi'] as const) {
     test.setTimeout(300_000);
     const entries: Capture[] = [];
     await signIn(page);
-    if (uiLocale === 'vi')
+    if (uiLocale === 'vi') {
       await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+      await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
+    }
     const origin = new URL(page.url()).origin;
     const slug = `r3-editor-${Date.now()}`;
 

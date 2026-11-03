@@ -23,7 +23,9 @@ port="$(docker inspect --format '{{(index (index .NetworkSettings.Ports "3306/tc
 [[ "$port" =~ ^[0-9]+$ ]] || exit 1
 export DATABASE_URL="mysql://root:${db_password}@127.0.0.1:${port}/${db_name}"
 export DATABASE_URL_TEST="$DATABASE_URL"
-export API_PORT=4000 WEB_ORIGIN=http://localhost:3000
+export API_PORT="${API_PORT:-4000}" WEB_PORT="${WEB_PORT:-3000}"
+export API_URL="http://127.0.0.1:${API_PORT}"
+export WEB_ORIGIN="http://localhost:${WEB_PORT}"
 export R3_CAPTURE_DIR="${HOME}/Desktop/lilp-design-demo-20261102"
 export JWT_ACCESS_SECRET="$(openssl rand -hex 32)"
 export JWT_REFRESH_SECRET="$(openssl rand -hex 32)"
@@ -44,7 +46,10 @@ assert_target
 echo 'Disposable MySQL ready; applying schema before Playwright health check.'
 (cd apps/api && pnpm exec prisma migrate deploy >/dev/null)
 assert_target
-if [[ "$#" -gt 0 ]]; then
+if [[ "${R3_VISUAL_UPDATE:-}" == 1 ]]; then
+  pnpm build
+  pnpm --filter @portfolio/web test:visual:update --update-snapshots=all
+elif [[ "$#" -gt 0 ]]; then
   pnpm build
   pnpm --filter @portfolio/web exec playwright test "$@"
 else
