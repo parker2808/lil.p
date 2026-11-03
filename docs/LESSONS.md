@@ -1,5 +1,9 @@
 # Lessons
 
+- 2026-11-03: Public pages had copy buttons without a public Toaster, so `toast.success` alone produced no visible feedback; mount the Toaster in the public shell and share the clipboard fallback across contact, CTA and palette.
+- 2026-11-03: Public button variants can render at 40px high despite a larger surrounding row; measure the control itself at 390px and set an explicit 44px minimum for copy actions.
+- 2026-11-03: The shared `.tap` rule follows Tailwind utilities in the generated CSS and overrides `min-w-11` at desktop pointer settings; remove `.tap` from a control that needs a fixed 44px target or use a stronger scoped rule.
+- 2026-11-03: Sonner defaults to a light toast even on a dark public page; feed it `resolvedTheme` and reload after changing the stored theme in captures so the provider state and page class agree.
 - 2026-11-03: Playwright global setup runs `prisma migrate deploy`; for brand-route captures, point it only at a fresh guarded no-volume MySQL container and remove that container afterward.
 - 2026-11-03: The shared Playwright `signIn` helper finds English field names; reset `NEXT_LOCALE` to `en` before calling it after Vietnamese login captures, then switch locales for authenticated assertions.
 - 2026-11-02: A Radix Dialog with no `DialogTrigger` focuses nothing on close (its default refocuses the trigger ref), so a palette opened from several controls stores `document.activeElement` on open and refocuses it in `onCloseAutoFocus`; `IconButton` also brings Radix Tooltip and the popper, which the public layout bundle avoids.

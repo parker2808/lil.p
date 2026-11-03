@@ -9,8 +9,10 @@ import { Link, usePathname } from '@i18n/navigation';
 import { Dialog, DialogContent, DialogTitle } from '@portfolio/ui/components/ui/dialog';
 import { cn } from '@portfolio/ui/lib/utils';
 import { useTheme } from 'next-themes';
+import { toast } from 'sonner';
 
 import { useNotesSearch } from '@/modules/notes/hooks/use-notes-search.hook';
+import { copyEmail } from '../../utils/copy-email.util';
 import { QueryProvider } from '../Providers/QueryProvider';
 import type { PaletteCaseStudy } from './CommandPalette';
 
@@ -69,7 +71,7 @@ function CommandPaletteDialogContent({
   const { resolvedTheme, setTheme } = useTheme();
   const [query, setQuery] = useState('');
   const [debounced, setDebounced] = useState('');
-  const [copied, setCopied] = useState(false);
+  const address = email?.trim();
 
   useEffect(() => {
     const handle = window.setTimeout(() => setDebounced(query.trim()), 200);
@@ -100,21 +102,29 @@ function CommandPaletteDialogContent({
           },
         ]
       : []),
-    ...(email
+    ...(address
       ? [
           {
             label: t('copyEmail'),
             node: (
               <button
                 type="button"
-                className={ITEM}
+                className={cn(ITEM, 'flex min-h-11 items-center')}
                 onClick={async () => {
-                  await navigator.clipboard.writeText(email);
-                  setCopied(true);
+                  if (await copyEmail(address)) toast.success(t('copied'));
+                  else toast.error(t('copyFailed'));
                 }}
               >
-                {copied ? t('copied') : t('copyEmail')}
+                {t('copyEmail')}
               </button>
+            ),
+          },
+          {
+            label: t('emailLink'),
+            node: (
+              <a href={`mailto:${address}`} className={cn(ITEM, 'flex min-h-11 items-center')}>
+                {t('emailLink')}
+              </a>
             ),
           },
         ]

@@ -34,12 +34,17 @@ export function ChannelCardsView({
 
   return (
     <ul className="border-border divide-border divide-y rounded-lg border">
-      <li className="flex items-center justify-between gap-3 px-4 py-3">
-        <a href={`mailto:${email}`} className="tap text-ui font-medium">
-          {labels.email}
-        </a>
-        <CopyEmailButton email={email} />
-      </li>
+      {email.trim() ? (
+        <li className="flex items-center justify-between gap-3 px-4 py-3">
+          <a
+            href={`mailto:${email.trim()}`}
+            className="text-ui inline-flex min-h-11 min-w-11 items-center font-medium"
+          >
+            {labels.email}
+          </a>
+          <CopyEmailButton email={email} showLink={false} />
+        </li>
+      ) : null}
       {github ? (
         <li className="flex items-center justify-between gap-3 px-4 py-3">
           <span className="text-ui font-medium">{labels.github}</span>

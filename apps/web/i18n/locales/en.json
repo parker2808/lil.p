@@ -15,6 +15,8 @@
     "craft": "Craft",
     "copyEmail": "Copy email",
     "copied": "Copied",
+    "copyFailed": "Couldn't copy email. Use the email link instead.",
+    "emailLink": "Email me",
     "suggestLocale": "This page is also available in Vietnamese",
     "switchLocale": "View in Vietnamese",
     "loading": "Loading",
