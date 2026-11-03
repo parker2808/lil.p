@@ -41,7 +41,7 @@ export async function NotesDetail({ locale, slug }: { locale: Locale; slug: stri
   const crumbs = crumbLabel[locale];
 
   return (
-    <article className="notes-reader">
+    <article className="notes-reader public-note-detail">
       <JsonLd data={blogPostingJsonLd(post, locale)} />
       <JsonLd
         data={breadcrumbListJsonLd([

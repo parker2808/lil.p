@@ -20,5 +20,9 @@ export default async function Page({
   setRequestLocale(locale);
   // Versioned CMS previews still read `?v=`; public filters are resolved in the browser.
   const query = (await draftMode()).isEnabled ? await searchParams : undefined;
-  return <ProjectsIndex locale={locale as Locale} searchParams={query} />;
+  return (
+    <div className="public-index public-projects">
+      <ProjectsIndex locale={locale as Locale} searchParams={query} />
+    </div>
+  );
 }

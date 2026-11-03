@@ -27,3 +27,18 @@
       box-shadow 160ms ease;
   }
 }
+
+.public-state-code {
+  color: color-mix(in srgb, var(--brand-green) 65%, var(--foreground));
+  font: 600 clamp(8rem, 24vw, 17rem) / 1 var(--font-mono);
+  letter-spacing: -0.09em;
+}
+
+.public-error-retry {
+  background: #a63220;
+  color: #fff;
+}
+
+.public-error-retry:hover {
+  background: #8e291a;
+

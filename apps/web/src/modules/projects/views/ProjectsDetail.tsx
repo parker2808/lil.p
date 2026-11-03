@@ -65,7 +65,7 @@ export async function ProjectsDetail({ locale, slug }: { locale: Locale; slug: s
   const repoCover = projectCoverAsset(project.slug);
 
   return (
-    <article>
+    <article className="public-project-detail">
       <JsonLd data={creativeWorkJsonLd(project, locale)} />
       <JsonLd
         data={breadcrumbListJsonLd([

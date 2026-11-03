@@ -102,6 +102,16 @@ export function SiteHeader({
               {item.label}
             </Link>
           ))}
+          {!nav.some((item) => item.href === '/craft') ? (
+            <Link
+              href="/craft"
+              aria-current={pathname === '/craft' ? 'page' : undefined}
+              data-slot="nav-link"
+              className="tap text-ui text-muted-foreground hover:text-foreground inline-flex items-center px-2 transition-colors"
+            >
+              {t('craft')}
+            </Link>
+          ) : null}
         </nav>
         <div className="ml-auto hidden items-center gap-2 md:flex">
           {desktop ? palette : null}
@@ -143,6 +153,18 @@ export function SiteHeader({
                     </Link>
                   </SheetClose>
                 ))}
+                {!nav.some((item) => item.href === '/craft') ? (
+                  <SheetClose asChild>
+                    <Link
+                      href="/craft"
+                      aria-current={pathname === '/craft' ? 'page' : undefined}
+                      data-slot="nav-link"
+                      className="mobile-menu-link text-muted-foreground hover:text-foreground"
+                    >
+                      {t('craft')}
+                    </Link>
+                  </SheetClose>
+                ) : null}
               </nav>
               <div className="mobile-menu-bottom">
                 <div className="mobile-menu-setting">

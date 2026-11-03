@@ -6,6 +6,16 @@
 - 2026-11-03: A Next catch-all page must await the shared async block renderer inside its try/catch to turn an API 404 into `notFound()`; returning its promise as JSX leaves the rejection outside that catch.
 - 2026-11-03: Next sets draft-mode's bypass cookie with `Secure`; Chromium does not send it back over `http://127.0.0.1`, so local production Playwright preview checks must use `http://localhost` with the same disposable backend.
 - 2026-11-03: A production Next fetch cache survives server restarts and can serve a previous API's page into an in-memory mock capture run; clear `.next/cache/fetch-cache` before switching API state.
+- 2026-11-03: The shared public primary button's orange backgrounds need different label colors across themes; use a darker scoped retry background with a white label and test both themes.
+- 2026-11-03: A thrown production route can omit the server-generated document title even when its error boundary renders; set a localized title in the client error boundary and verify it with axe.
+- 2026-11-03: Decorative status numerals still need readable contrast when axe evaluates rendered text; mix the brand color with foreground instead of transparency in both themes.
+- 2026-11-03: Reading test query parameters inside a statically generated detail page caused Next `DYNAMIC_SERVER_USAGE`; keep the live ISR page unchanged and render controlled loading/error fixtures on environment gated routes instead.
+- 2026-11-03: The public note URL is `/notes/:slug` but its Nest read endpoint is `/api/public/posts/:slug`; production browser assertions must compare against the actual API resource.
+- 2026-11-03: Next draft mode cookies are host scoped; a test that opens `127.0.0.1` while `/api/draft` redirects to `localhost` gets a public 404 despite a successful login, so use one web hostname throughout preview flows.
+- 2026-11-03: Public pages had copy buttons without a public Toaster, so `toast.success` alone produced no visible feedback; mount the Toaster in the public shell and share the clipboard fallback across contact, CTA and palette.
+- 2026-11-03: Public button variants can render at 40px high despite a larger surrounding row; measure the control itself at 390px and set an explicit 44px minimum for copy actions.
+- 2026-11-03: The shared `.tap` rule follows Tailwind utilities in the generated CSS and overrides `min-w-11` at desktop pointer settings; remove `.tap` from a control that needs a fixed 44px target or use a stronger scoped rule.
+- 2026-11-03: Sonner defaults to a light toast even on a dark public page; feed it `resolvedTheme` and reload after changing the stored theme in captures so the provider state and page class agree.
 - 2026-11-03: Playwright global setup runs `prisma migrate deploy`; for brand-route captures, point it only at a fresh guarded no-volume MySQL container and remove that container afterward.
 - 2026-11-03: The shared Playwright `signIn` helper finds English field names; reset `NEXT_LOCALE` to `en` before calling it after Vietnamese login captures, then switch locales for authenticated assertions.
 - 2026-11-03: The existing block schemas require a nonempty English string even for Vietnamese-first drafts, so a visually blank starter prose needs whitespace in its English field; publish must validate trimmed visible copy in the page locale independently of the starter block's presence.
@@ -96,3 +106,7 @@
 
 - 2026-11-03: A source-presence check is insufficient for a real-content seed; derive publishable dates and summaries from the approved source, and remove legacy metrics that lack evidence.
 - 2026-11-03: A real route can have a complete page component but remain unreachable because `next.config.ts` redirects it; test the production URL before relying on the component, and ensure the new editor uses custom page titles rather than translating only built-in keys.
+- 2026-11-03: Next development React diagnostics call `eval()` on public routes, so a nonce-free development CSP needs `unsafe-eval` while production and nonce policies must keep it excluded; the blocked call appears as a console error even without visible overlay text.
+- 2026-11-03: A screenshot matrix leaves Playwright at its last mobile viewport, so restore desktop width before testing desktop-only header links; assert mobile control boxes directly because one inherited 40px button escaped earlier route checks.
+- 2026-11-03: Record behavior and route changes in the root README in the same PR; this repo keeps current changelog entries in `PROJECT_CONTEXT.md` §9 and reserves `docs/CHANGELOG_ARCHIVE.md` for older history.
+- 2026-11-03: When stacked branches both refresh the tracked Graphify report, regenerate it after merging the base instead of combining generated report lines by hand.

@@ -15,6 +15,14 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 | Hosting   | Vercel for web (functions pinned to `sin1` Singapore in `vercel.json`, next to the API and DB), Render free for the API (Singapore), Cloudinary for media. All free tiers |
 | Keep-warm | A cron-job.org job pings `GET /api/health` (`SELECT 1`) every 10 minutes so the Render free instance does not spin down; `ApiWarmup` also pings it on page load           |
 
+### Public site
+
+The EN/VI home, projects, notes, about, and contact routes share the round 3 public shell and index styling. They continue to read CMS content through the public API; project and note filters stay in the URL across reloads, and the contact form keeps its server submission. `/[locale]/craft` is a localized, static interaction study linked from the public header. Its presentation and the index styles are scoped to public routes, so project and note details and admin screens keep their own layouts. See the [R3-05 spec](./docs/specs/2026-11-03-r3-05-public-shell-indexes.md) for the route, accessibility, and capture checks.
+
+The contact page, public CTA, and search palette use the contact email configured in site settings. Copy email reports success or failure in the selected language and keeps a direct email link available. See the [R3-06 spec](./docs/specs/2026-11-03-r3-06-copy-email.md).
+
+Project and note detail pages keep their CMS content and draft preview paths. Their loading states now follow the final route layout, and localized error and missing-page screens provide recovery actions. See the [R3-07 spec](./docs/specs/2026-11-03-r3-07-public-details-states.md).
+
 ### Brand assets
 
 The public header and footer and the admin login and shell use the shared `lil.parker` `BrandMark` from `packages/ui`. Its icon has one vector source: `packages/ui/src/components/BrandMark/brand-icon.svg`. To refresh the web app's `icon.svg` and `apple-icon.png` after changing that source, run `bash scripts/generate-brand-icons.sh` from the repo root (requires ImageMagick's `magick` command) and commit both generated files. Light and dark orange/green brand colors are defined in `packages/ui/src/styles/globals.css` and scoped to the redesigned surfaces in `packages/ui/src/styles/redesign.css`.
@@ -30,6 +38,7 @@ The public header and footer and the admin login and shell use the shared `lil.p
 - Admin page publishing maps the API's `PAGE_BODY_REQUIRED`/`body` error to a linked message in the admin UI language, independent of the page language. Standalone experience editing uses `/admin/experience/new` and `/admin/experience/[id]`, with explicit save, validation, and deletion confirmation; the older About URLs redirect there. See the [R3-10 spec](./docs/specs/2026-11-03-r3-10-admin-editors-settings.md) and the verification entry in [PROJECT_CONTEXT.md §9](./PROJECT_CONTEXT.md#9-changelog).
 - If the API is down at build time, the build still succeeds: nothing is prerendered and ISR fills the pages on first visit.
 - CSP: `/admin` and draft-mode requests (the site-wide `__prerender_bypass` cookie) get a per-request nonce with `'strict-dynamic'`. Public pages share cached HTML, so they use `script-src 'self' 'unsafe-inline'` with every other directive unchanged (see `csp.util.ts`).
+- Development public routes allow React's diagnostic `eval()` under CSP; production and nonce-protected routes do not.
 
 ### Custom page creation API
 
