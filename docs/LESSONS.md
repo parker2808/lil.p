@@ -94,3 +94,4 @@
 - 2026-11-03: Next development React diagnostics call `eval()` on public routes, so a nonce-free development CSP needs `unsafe-eval` while production and nonce policies must keep it excluded; the blocked call appears as a console error even without visible overlay text.
 - 2026-11-03: A screenshot matrix leaves Playwright at its last mobile viewport, so restore desktop width before testing desktop-only header links; assert mobile control boxes directly because one inherited 40px button escaped earlier route checks.
 - 2026-11-03: Record behavior and route changes in the root README in the same PR; this repo keeps current changelog entries in `PROJECT_CONTEXT.md` §9 and reserves `docs/CHANGELOG_ARCHIVE.md` for older history.
+- 2026-11-03: When stacked branches both refresh the tracked Graphify report, regenerate it after merging the base instead of combining generated report lines by hand.
