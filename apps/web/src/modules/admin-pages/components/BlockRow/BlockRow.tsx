@@ -14,6 +14,7 @@ import {
 } from '@portfolio/ui/components/ui/dropdown-menu';
 import { Switch } from '@portfolio/ui/components/ui/switch';
 import { MoreHorizontal } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import type { ReactNode } from 'react';
 
 import { BLOCK_EDITOR_META } from '../../constants/block-editor-meta.constant';
@@ -51,8 +52,10 @@ export function BlockRow({
   onDuplicate: () => void;
   onDelete: () => void;
 }) {
+  const t = useTranslations();
   const definition = BLOCK_REGISTRY[block.type as BlockType];
   const meta = BLOCK_EDITOR_META[block.type as BlockType];
+  const label = meta ? t(meta.labelKey) : labels.unknown;
   const locked = definition?.role === 'h1';
   const invalid = !definition || (block.issues && block.issues.length > 0);
 
@@ -60,7 +63,7 @@ export function BlockRow({
     return (
       <Alert variant="destructive" className="flex items-center justify-between gap-3">
         <div>
-          <p className="font-medium">{meta?.labelKey ? block.type : labels.unknown}</p>
+          <p className="font-medium">{label}</p>
           <p className="text-ui-meta font-mono">{block.key}</p>
           {block.issues?.map((issue) => (
             <p key={issue}>{issue}</p>
@@ -94,7 +97,7 @@ export function BlockRow({
         onClick={onSelect}
       >
         <Icon name={(meta?.icon ?? 'circle-dot') as IconKey} className="size-4 shrink-0" />
-        <span className="text-ui min-w-0 truncate font-medium">{block.type}</span>
+        <span className="text-ui min-w-0 truncate font-medium">{label}</span>
         <span className="text-ui-meta text-muted-foreground hidden font-mono sm:inline">
           {block.key}
         </span>

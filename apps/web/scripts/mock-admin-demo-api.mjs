@@ -538,8 +538,9 @@ function fixture(pathname) {
   return null;
 }
 
+const demoPort = Number(process.env.DEMO_API_PORT ?? 4000);
 const server = http.createServer(async (request, response) => {
-  const url = new URL(request.url, 'http://127.0.0.1:4000');
+  const url = new URL(request.url, `http://127.0.0.1:${demoPort}`);
   if (url.pathname === '/api/auth/me' && !request.headers.cookie?.includes('access_token=')) {
     response.writeHead(401, { 'content-type': 'application/json; charset=utf-8' });
     response.end(JSON.stringify({ message: 'Local demo session required' }));
@@ -586,4 +587,6 @@ const server = http.createServer(async (request, response) => {
   });
   response.end(JSON.stringify(result.body));
 });
-server.listen(4000, '127.0.0.1', () => console.log('Local admin demo API ready on 127.0.0.1:4000'));
+server.listen(demoPort, '127.0.0.1', () =>
+  console.log(`Local admin demo API ready on 127.0.0.1:${demoPort}`),
+);

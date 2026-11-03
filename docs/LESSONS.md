@@ -95,3 +95,4 @@
 - 2026-11-03: Custom page publish checks must validate visible body content at the page level, because an optional starter block can be hidden or deleted; translate API field paths in the admin UI locale rather than using the page locale for messages.
 - 2026-11-03: In a visual demo, display-only action chrome should have no button semantics, and decorative marks belong outside media artwork so they cannot obscure the image at narrow widths.
 - 2026-11-03: A custom-page route should map only API 404 responses to not-found; outages and schema failures must reach its retryable error boundary.
+- 2026-11-03: CMS block rows need translated metadata labels in both normal and invalid states; keep block keys as secondary technical details.
