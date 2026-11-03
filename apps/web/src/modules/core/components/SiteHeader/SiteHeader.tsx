@@ -7,6 +7,7 @@ import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
 import { Link, usePathname } from '@i18n/navigation';
+import { BrandMark } from '@portfolio/ui/components/BrandMark/BrandMark';
 import { Button } from '@portfolio/ui/components/ui/button';
 import {
   SegmentedControl,
@@ -27,13 +28,11 @@ import { LocaleSwitch } from '../LocaleSwitch/LocaleSwitch';
 import { ThemeToggle } from '../ThemeToggle/ThemeToggle';
 
 export function SiteHeader({
-  name,
   nav,
   caseStudies,
   email,
   resumeUrl,
 }: {
-  name: string;
   nav: PublicNavItem[];
   caseStudies: PaletteCaseStudy[];
   email?: string;
@@ -84,10 +83,7 @@ export function SiteHeader({
           href="/"
           className="font-heading text-ui inline-flex items-center gap-3 font-semibold"
         >
-          <span className="site-monogram" aria-hidden>
-            {name.slice(0, 1)}
-          </span>
-          {name}
+          <BrandMark />
         </Link>
         <nav className="hidden items-center gap-1 md:flex">
           {nav.map((item) => (

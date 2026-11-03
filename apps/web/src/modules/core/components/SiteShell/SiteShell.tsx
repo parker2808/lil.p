@@ -28,7 +28,6 @@ export async function SiteShell({ locale, children }: { locale: Locale; children
       <DraftBanner />
       <LocaleSuggestBanner />
       <SiteHeader
-        name={site.profile.displayName}
         nav={site.nav.header}
         caseStudies={projects.map(({ slug, title }) => ({ slug, title }))}
         email={site.settings.contactEmail || undefined}
@@ -38,7 +37,6 @@ export async function SiteShell({ locale, children }: { locale: Locale; children
         {children}
       </main>
       <SiteFooter
-        name={site.profile.displayName}
         nav={site.nav}
         social={site.socialLinks}
         updatedAt={new Date()}

@@ -2,6 +2,7 @@ import type { PublicNavItem, PublicSocialLink } from '@portfolio/contracts';
 import { getLocale, getTranslations } from 'next-intl/server';
 
 import { Link } from '@i18n/navigation';
+import { BrandMark } from '@portfolio/ui/components/BrandMark/BrandMark';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Kbd } from '@portfolio/ui/components/ui/kbd';
 
@@ -9,13 +10,11 @@ import { footerSitemap } from '../../utils/footer-sitemap.util';
 import { LocaleSwitch } from '../LocaleSwitch/LocaleSwitch';
 
 export async function SiteFooter({
-  name,
   nav,
   social,
   updatedAt,
   buildSha,
 }: {
-  name: string;
   nav: { header: PublicNavItem[]; footer: PublicNavItem[] };
   social: PublicSocialLink[];
   updatedAt: Date;
@@ -84,8 +83,8 @@ export async function SiteFooter({
         {sha ? <span>{sha}</span> : null}
         <LocaleSwitch label={t('locale')} />
       </div>
-      <div className="site-container footer-wordmark" aria-hidden>
-        {name}
+      <div className="site-container footer-wordmark">
+        <BrandMark />
       </div>
     </footer>
   );

@@ -51,6 +51,7 @@ export const SPECS = [
   'admin-inbox.spec.ts',
   'admin-palette.spec.ts',
   'admin-table-filters.spec.ts',
+  'brand-foundation.spec.ts',
 ] as const;
 
 /** Specs that must run together in shard 1 (pixel baselines, Lighthouse scores). */

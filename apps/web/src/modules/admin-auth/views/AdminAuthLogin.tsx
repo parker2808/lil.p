@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { BrandMark } from '@portfolio/ui/components/BrandMark/BrandMark';
 
 import { LoginForm } from '../components/LoginForm/LoginForm';
 import {
@@ -51,7 +52,7 @@ export function AdminAuthLogin() {
         {shell('skip')}
       </a>
       <aside className="login-art" aria-hidden>
-        <span className="login-mark">{t('workspace')}</span>
+        <BrandMark className="login-mark" />
         <p>{t('artTitle')}</p>
         <span className="font-mono text-sm">{t('artNote')}</span>
       </aside>

@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@portfolio/ui/components/ui/button';
+import { BrandMark } from '@portfolio/ui/components/BrandMark/BrandMark';
 import {
   Sidebar,
   SidebarContent,
@@ -23,7 +24,7 @@ import { RoleGate } from '../RoleGate/RoleGate';
 
 export function AdminSidebar() {
   const t = useTranslations('admin.nav');
-  const { role, name } = useMe();
+  const { role } = useMe();
   const { collapsed } = useAdminUi();
   const pathname = usePathname();
   const groups = navVisibleTo(role);
@@ -31,9 +32,9 @@ export function AdminSidebar() {
   return (
     <Sidebar collapsed={collapsed} className="hidden lg:flex">
       <SidebarHeader>
-        <p className="text-ui-title truncate font-medium" title={name}>
-          {collapsed ? name.slice(0, 1) : name}
-        </p>
+        <Link href="/admin" aria-label="lil.parker" className="admin-brand-link">
+          <BrandMark compact={collapsed} />
+        </Link>
       </SidebarHeader>
       <SidebarContent>
         {groups.map((group, index) => (

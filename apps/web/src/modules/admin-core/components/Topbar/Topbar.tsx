@@ -1,6 +1,7 @@
 'use client';
 
 import { type ReactNode, useState } from 'react';
+import { BrandMark } from '@portfolio/ui/components/BrandMark/BrandMark';
 import { Avatar, AvatarFallback } from '@portfolio/ui/components/ui/avatar';
 import { Badge } from '@portfolio/ui/components/ui/badge';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList } from '@portfolio/ui/components/ui/breadcrumb';
@@ -43,6 +44,9 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
 
   return (
     <header className="admin-topbar border-border flex h-12 shrink-0 items-center gap-3 border-b px-4">
+      <Link href="/admin" aria-label="lil.parker" className="admin-brand-link lg:hidden">
+        <BrandMark compact />
+      </Link>
       {section ? (
         <div className="flex min-w-0 items-center gap-2 lg:hidden">
           {section.href !== pathname ? (
