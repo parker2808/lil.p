@@ -1,7 +1,7 @@
 'use client';
 
 import type { AdminBlock, BlockType, PageKey } from '@portfolio/contracts';
-import { BLOCK_REGISTRY } from '@portfolio/contracts';
+import { BLOCK_REGISTRY, corePageKeySchema } from '@portfolio/contracts';
 import { ConfirmDialog } from '@portfolio/ui/components/ui/confirm-dialog';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
@@ -127,7 +127,8 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
         back={back}
         title={
           <span className="flex items-center gap-2">
-            {t(`names.${pageKey}`)}
+            {page.data.title ??
+              (corePageKeySchema.safeParse(pageKey).success ? t(`names.${pageKey}`) : pageKey)}
             <Link
               href={publicHref}
               className="text-ui text-primary underline-offset-4 hover:underline"

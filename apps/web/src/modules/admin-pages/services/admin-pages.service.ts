@@ -9,6 +9,7 @@ import {
   adminPageVersionSchema,
   type BlockCreateInput,
   type BlockUpdateInput,
+  type CreatePageInput,
   type PageKey,
   type PageUpdateInput,
 } from '@portfolio/contracts';
@@ -19,6 +20,14 @@ export function listAdminPages(): Promise<AdminPageListItem[]> {
   return apiClient<AdminPageListItem[]>('/api/admin/pages').then((data) =>
     adminPageListItemSchema.array().parse(data),
   );
+}
+
+export function createAdminPage(body: CreatePageInput): Promise<AdminPage> {
+  return apiClient<AdminPage>('/api/admin/pages', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(body),
+  }).then((data) => adminPageSchema.parse(data));
 }
 
 export function getAdminPage(key: PageKey): Promise<AdminPage> {

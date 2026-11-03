@@ -32,6 +32,8 @@ The public header and footer and the admin login and shell use the shared `lil.p
 
 Admins can create a draft with `POST /api/admin/pages`. The JSON body requires `title` (1–120 characters after trimming), `key` (a lowercase, one-segment slug of 1–64 characters), `locale` (`en` or `vi`), and `template` (`starter` or `empty`). A successful request returns `201` with the editable admin page; `GET /api/admin/pages/:key` reads it back. Built-in page keys and public route names are reserved, and a taken key returns `409` with `PAGE_KEY_TAKEN`.
 
+In the admin, open `/admin/pages` and use **Add page** in the header or empty state. The dialog suggests an editable slug from the title, validates each field, and keeps the form open if creation fails. After a successful create it opens the new editor. The Pages editor back link returns to the index. See the [R3-04 UI spec](./docs/specs/2026-11-03-r3-04-page-create-ui.md).
+
 `starter` adds a localized page heading and blank prose; `empty` starts without blocks. Both stay drafts until published. Custom pages need a visible first H1 and substantive visible prose in the page locale before publishing; missing prose returns `PAGE_BODY_REQUIRED` on the `body` field. Published custom pages render at `/en/{key}` and `/vi/{key}`, appear in the sitemap, and use the same CMS block rendering and cache invalidation as built-in pages. Drafts stay private but are available through authorized preview and saved versions. See the [R3-02](./docs/specs/2026-11-03-r3-02-page-create-api.md) and [R3-03](./docs/specs/2026-11-03-r3-03-custom-public-pages.md) specs for coverage.
 
 ## Environments

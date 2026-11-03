@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- R3 PR 4: the real `/admin/pages` index is reachable again after removing the old redirect, and admins can create localized draft pages through the typed POST dialog. The Pages editor now displays custom titles and links back to the index. Header/empty-state actions, focus return, field errors, HTTP 409 recovery and EN/VI production captures are covered. The route redirect, editor title and back link needed small changes outside the dialog files because they otherwise blocked the requested flow. Browser tests used only a fresh, guarded no-volume local MySQL container; no persistent database was touched.
 - R3 PR 3: published custom CMS pages now resolve through the one-segment locale catch-all, with draft 404, authorized preview, localized metadata and sitemap entries; reserved/static and nested routes stay out of the custom lookup. Production-browser captures use disposable in-memory API state; a separate real-Nest check used only a fresh guarded tmpfs MySQL container. No persistent database was touched.
 - R3-01 brand foundation: shared `lil.parker` mark and generated icons are in place; later round 3 PRs own route-specific UI and state captures. This branch stays local without a PR or deployment as requested.
 - R3 PR 2: custom-page SQL passed a staged old-schema→new-schema gate on a random, no-volume local MySQL container; five built-in page rows and IDs remained unchanged, key uniqueness/default/nullability held, and Prisma diff was empty. The migration file still needs safe rollout at merge; no persistent database was changed. Widening page keys also required one dashboard key conversion and one web metadata path conversion outside the page modules so both typechecks pass.
@@ -125,6 +126,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-03: R3 PR 4 adds the real Pages create dialog, editable Vietnamese-aware slug, inline errors, 409 recovery, typed POST and editor navigation; restores the Pages index route and adds focused production-browser captures.
 - 2026-11-03: R3 PR 3 adds real published custom page routes, safe custom preview paths, sitemap filtering, metadata and focused route/API coverage.
 - 2026-11-03: R3-01: one shared `lil.parker` brand mark supplies public/admin chrome and generated app icons; scoped orange/green tokens and restrained login atmosphere.
 - 2026-11-03: R3 PR 2 adds the admin-only create-page contract/endpoint, custom page title and locale columns, reserved route keys, transactional starter/empty drafts with audit, locale-aware draft previews, and a stable visible-body publish error; focused Nest HTTP and staged MySQL checks cover the flow.

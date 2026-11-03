@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import { signIn } from './helpers/auth';
 
 const legacy = [
-  ['/admin/pages', '/admin/pages/home', null],
+  ['/admin/pages', '/admin/pages', null],
   ['/admin/experience', '/admin/pages/about', 'experience'],
   ['/admin/education', '/admin/pages/about', 'education'],
   ['/admin/skills', '/admin/pages/about', 'skills'],

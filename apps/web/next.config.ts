@@ -26,7 +26,6 @@ const nextConfig: NextConfig = {
   // Nest sets X-Accel-Buffering: no; Next streams the rewrite instead of buffering heartbeats.
   async redirects() {
     return [
-      { source: '/admin/pages', destination: '/admin/pages/home', permanent: false },
       {
         source: '/admin/experience/new',
         destination: '/admin/pages/about/experience/new',

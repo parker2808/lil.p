@@ -9,7 +9,7 @@ export function useAdminBack(navKey: string): PageHeaderBack {
   const item = ADMIN_NAV.flatMap((group) => group.items).find((entry) => entry.key === navKey);
   if (!item && navKey === 'pages') {
     const section = navT('pages');
-    return { href: '/admin/pages/home', label: section, ariaLabel: shellT('back', { section }) };
+    return { href: '/admin/pages', label: section, ariaLabel: shellT('back', { section }) };
   }
   if (!item && navKey === 'experience') {
     const section = navT('experience');
