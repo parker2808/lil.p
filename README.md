@@ -15,6 +15,10 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 | Hosting   | Vercel for web (functions pinned to `sin1` Singapore in `vercel.json`, next to the API and DB), Render free for the API (Singapore), Cloudinary for media. All free tiers |
 | Keep-warm | A cron-job.org job pings `GET /api/health` (`SELECT 1`) every 10 minutes so the Render free instance does not spin down; `ApiWarmup` also pings it on page load           |
 
+### Brand assets
+
+The public header and footer and the admin login and shell use the shared `lil.parker` `BrandMark` from `packages/ui`. Its icon has one vector source: `packages/ui/src/components/BrandMark/brand-icon.svg`. To refresh the web app's `icon.svg` and `apple-icon.png` after changing that source, run `bash scripts/generate-brand-icons.sh` from the repo root (requires ImageMagick's `magick` command) and commit both generated files. Light and dark orange/green brand colors are defined in `packages/ui/src/styles/globals.css` and scoped to the redesigned surfaces in `packages/ui/src/styles/redesign.css`.
+
 ### Caching and rendering
 
 - Public pages under `/[locale]` are static and use ISR. Home, about, contact, project and note detail pages, RSS, OG images and the sitemap are prerendered at build when the API answers, otherwise on first visit.
