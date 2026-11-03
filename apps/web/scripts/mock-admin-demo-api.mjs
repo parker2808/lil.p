@@ -549,7 +549,9 @@ const server = http.createServer(async (request, response) => {
   const blockPath = url.pathname.match(/^\/api\/admin\/pages\/([^/]+)\/blocks\/(\d+)$/);
   const publishPath = url.pathname.match(/^\/api\/admin\/pages\/([^/]+)\/publish$/);
   const previewPath = url.pathname.match(/^\/api\/admin\/preview\/pages\/([^/]+)$/);
-  if (request.method === 'POST' && publishPath) {
+  if (request.method === 'GET' && url.pathname === '/api/public/pages/demo-error') {
+    result = { status: 503, body: { code: 'INTERNAL', message: 'Demo API unavailable' } };
+  } else if (request.method === 'POST' && publishPath) {
     result = publishPage(publishPath[1]);
   } else if (request.method === 'GET' && previewPath) {
     result = previewPage(previewPath[1], url.searchParams.get('locale'));

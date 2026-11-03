@@ -94,3 +94,4 @@
 - 2026-11-03: Starter CMS prose must be a valid empty draft with locale-specific publish validation; a previewable block can still be intentionally unpublishable until its selected-language copy is entered.
 - 2026-11-03: Custom page publish checks must validate visible body content at the page level, because an optional starter block can be hidden or deleted; translate API field paths in the admin UI locale rather than using the page locale for messages.
 - 2026-11-03: In a visual demo, display-only action chrome should have no button semantics, and decorative marks belong outside media artwork so they cannot obscure the image at narrow widths.
+- 2026-11-03: A custom-page route should map only API 404 responses to not-found; outages and schema failures must reach its retryable error boundary.

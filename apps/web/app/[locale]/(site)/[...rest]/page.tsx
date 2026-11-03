@@ -6,6 +6,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { pageKeySchema, type Locale } from '@portfolio/contracts';
 import { BlocksPage } from '@/modules/blocks/views/BlocksPage';
 import { getPage } from '@/modules/blocks/services/pages.service';
+import { ApiError } from '@/modules/core/utils/api-error.util';
 import { buildPageMetadata } from '@/modules/seo/utils/build-page-metadata.util';
 
 export async function generateMetadata({
@@ -35,8 +36,9 @@ export default async function UnknownSitePage({
   const query = (await draftMode()).isEnabled ? await searchParams : undefined;
   try {
     await getPage(key, locale as Locale);
-  } catch {
-    notFound();
+  } catch (error) {
+    if (error instanceof ApiError && error.status === 404) notFound();
+    throw error;
   }
   return <BlocksPage pageKey={key} locale={locale as Locale} searchParams={query} />;
 }
