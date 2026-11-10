@@ -18,6 +18,11 @@
       "types": "./dist/react.d.ts",
       "import": "./dist/react.js",
       "require": "./dist/react.cjs"
+    },
+    "./react/server": {
+      "types": "./dist/react/server.d.ts",
+      "import": "./dist/react/server.js",
+      "require": "./dist/react/server.cjs"
     }
   },
   "typesVersions": {
@@ -30,6 +35,9 @@
       ],
       "react": [
         "dist/react.d.ts"
+      ],
+      "react/server": [
+        "dist/react/server.d.ts"
       ]
     }
   },

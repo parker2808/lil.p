@@ -171,6 +171,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@parker2808/cms-core':
+        specifier: workspace:*
+        version: link:../../packages/cms-core
       '@portfolio/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts

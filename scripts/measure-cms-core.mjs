@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import { gzipSync } from 'node:zlib';
-import { readFileSync, readdirSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { gzipSync } from 'node:zlib';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const source = join(root, 'packages/cms-core/src');
@@ -16,7 +16,9 @@ export function measure({
   manifest = packageFile,
   limits = caps,
 } = {}) {
-  const { peerDependencies = {} } = JSON.parse(readFileSync(manifest, 'utf8'));
+  const { peerDependencies = {}, exports: packageExports = {} } = JSON.parse(
+    readFileSync(manifest, 'utf8'),
+  );
   for (const [name, major] of Object.entries({ react: 19, 'react-dom': 19, zod: 4 })) {
     if (!peerDependencies[name]?.startsWith(`^${major}.`)) {
       throw new Error(`Missing ${name} ${major} peer dependency`);
@@ -38,7 +40,9 @@ export function measure({
   }
 
   const sizes = {};
-  for (const name of ['contracts', 'engine', 'react']) {
+  const entries = ['contracts', 'engine', 'react'];
+  if (packageExports['./react/server']) entries.push('react/server');
+  for (const name of entries) {
     const code = readFileSync(join(distDir, `${name}.js`));
     const imports = code.toString().matchAll(/(?:from\s*|import\s*\(|import\s*)["']([^"']+)["']/g);
     for (const [, specifier] of imports) {
@@ -50,7 +54,10 @@ export function measure({
     sizes[name] = gzipSync(code, { level: 9, mtime: 0 }).byteLength;
   }
 
-  const totals = { browser: sizes.contracts + sizes.engine, react: sizes.react };
+  const totals = {
+    browser: sizes.contracts + sizes.engine,
+    react: sizes.react + (sizes['react/server'] ?? 0),
+  };
   for (const [surface, bytes] of Object.entries(totals)) {
     if (bytes > limits[surface]) {
       throw new Error(`${surface} exceeds ${limits[surface]} bytes gzip: ${bytes} bytes`);
@@ -64,6 +71,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     const result = measure();
     console.log(`cms-core browser: ${result.totals.browser}/${caps.browser} bytes gzip`);
     console.log(`cms-core react: ${result.totals.react}/${caps.react} bytes gzip`);
+    if (result.sizes['react/server'] !== undefined) {
+      console.log(`cms-core react/server: ${result.sizes['react/server']} bytes gzip`);
+    }
   } catch (error) {
     console.error(error);
     process.exitCode = 1;

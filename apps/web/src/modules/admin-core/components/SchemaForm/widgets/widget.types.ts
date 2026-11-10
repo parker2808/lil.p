@@ -40,6 +40,7 @@ export type LocalizedWidgetProps = {
   value: { en?: string; vi?: string };
   readOnly: boolean;
   label: string;
+  localeLabels: { en: string; vi: string };
   message: string;
   editorLabels: ReturnType<typeof editorLabelsFromMessages>;
   previewLabels: PreviewLabels;

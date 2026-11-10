@@ -13,6 +13,7 @@ export function LocalizedWidget({
   value,
   readOnly,
   label,
+  localeLabels,
   message,
   editorLabels,
   previewLabels,
@@ -35,7 +36,7 @@ export function LocalizedWidget({
       {field.kind === 'markdown' ? (
         <div className="grid gap-3">
           <MarkdownField
-            ariaLabel={`${label} (English)`}
+            ariaLabel={`${label} (${localeLabels.en})`}
             value={value.en ?? ''}
             onChange={(markdown) => onChange('en', markdown)}
             labels={editorLabels}
@@ -44,7 +45,7 @@ export function LocalizedWidget({
             variant="compact"
           />
           <MarkdownField
-            ariaLabel={`${label} (Vietnamese)`}
+            ariaLabel={`${label} (${localeLabels.vi})`}
             value={value.vi ?? ''}
             onChange={(markdown) => onChange('vi', markdown)}
             labels={editorLabels}
@@ -57,12 +58,14 @@ export function LocalizedWidget({
         <div className="grid gap-2 sm:grid-cols-2">
           <Textarea
             id={enPath}
+            aria-label={`${label} (${localeLabels.en})`}
             value={value.en ?? ''}
             disabled={readOnly}
             onChange={(event) => onChange('en', event.target.value)}
           />
           <Textarea
             id={viPath}
+            aria-label={`${label} (${localeLabels.vi})`}
             value={value.vi ?? ''}
             disabled={readOnly}
             onChange={(event) => onChange('vi', event.target.value)}
@@ -72,12 +75,14 @@ export function LocalizedWidget({
         <div className="grid gap-2 sm:grid-cols-2">
           <Input
             id={enPath}
+            aria-label={`${label} (${localeLabels.en})`}
             value={value.en ?? ''}
             disabled={readOnly}
             onChange={(event) => onChange('en', event.target.value)}
           />
           <Input
             id={viPath}
+            aria-label={`${label} (${localeLabels.vi})`}
             value={value.vi ?? ''}
             disabled={readOnly}
             onChange={(event) => onChange('vi', event.target.value)}
