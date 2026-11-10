@@ -179,6 +179,60 @@ describe('PagesService', () => {
     expect(page.blocks[0]?.lang).toBe('vi');
   });
 
+  it.each(['en', 'vi'] as const)(
+    'serves a VI-only custom page SEO title in Vietnamese for %s requests',
+    async (locale) => {
+      const prisma = {
+        page: {
+          findUnique: vi.fn().mockResolvedValue({
+            key: 'IDEAS',
+            publishedVersion: {
+              snapshot: {
+                seo: {
+                  seoTitleEn: null,
+                  seoTitleVi: 'Ý tưởng',
+                  seoDescriptionEn: null,
+                  seoDescriptionVi: 'Mô tả',
+                },
+                blocks: [],
+              },
+            },
+          }),
+        },
+      };
+      const page = await new PagesService(prisma as never).getPublic('ideas', locale);
+      expect(page.seo).toEqual({ title: 'Ý tưởng', description: 'Mô tả', lang: 'vi' });
+    },
+  );
+
+  it.each([
+    ['home', null, 'Trang chủ', null, 'en'],
+    ['ideas', 'Ideas', 'Ý tưởng', 'Ideas', 'en'],
+  ] as const)(
+    'keeps existing %s SEO fallback for EN title %s',
+    async (key, seoTitleEn, seoTitleVi, title, lang) => {
+      const prisma = {
+        page: {
+          findUnique: vi.fn().mockResolvedValue({
+            publishedVersion: {
+              snapshot: {
+                seo: {
+                  seoTitleEn,
+                  seoTitleVi,
+                  seoDescriptionEn: 'English description',
+                  seoDescriptionVi: null,
+                },
+                blocks: [],
+              },
+            },
+          }),
+        },
+      };
+      const page = await new PagesService(prisma as never).getPublic(key, 'vi');
+      expect(page.seo).toEqual({ title, description: 'English description', lang });
+    },
+  );
+
   it('returns an empty shell when the page was never published', async () => {
     const prisma = {
       page: {
