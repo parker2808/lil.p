@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- CMS B6b neutral theme (stacked on B6 `7e3b317`): core ships an explicit side-effectful `./theme.css` with scoped U3 light/dark tokens, opt-in surfaces and accessible controls. The required browser E2E check covers 224 computed AA text, feedback-text/border and focus/selection/drop pairs across both themes and desktop/mobile; B7 must apply these classes to its neutral fixture and verify the default/host token-only override. The app does not import CSS yet. CSS gzip remains separate from JS caps; no API, DB or B1 golden changes. See `docs/specs/2026-11-11-cms-b6b-core-theme.md`.
+
 - CMS B6 React extraction (stacked on accepted B4 `8c448ea2`): `./react/server` performs server-safe block dispatch with host-supplied wrappers/renderers and no client hooks or inspector imports; `./react` retains the built client directive and exposes schema field/metadata/widget contracts. The web adapter keeps portfolio renderers, TanStack form, translations, domain widget mappings and brand styling; core requires host-resolved localized labels instead of defaulting to English. Web declares a direct core dependency; web Docker copies its manifest before frozen install and builds dependency closure. Both React subpaths share the original 35 KiB gzip cap; no builder code, storage, API or migration changes. B5 PR #189 independently changes the API importer of the lockfile and the shared export test: integration must rerun pnpm install and reconcile those adjacent test assertions. B7 verifies the neutral package after B5/B6 acceptance; D follows the approved U3 design gate. See `docs/specs/2026-11-11-cms-core-b6-react.md`.
 
 - CMS B4 contracts/registry (stacked on accepted B3 `814afcf`): generic Zod page/block/locale/snapshot schemas, `defineBlock`, allowance and duplicate-rejecting `createRegistry` live in `@parker2808/cms-core/contracts`. The host retains its 20 definitions, copy and finite HTTP block enum; browser gzip is 864/61,440 bytes and React 34/35,840. All three subpaths resolve ESM and CJS; React 19, React DOM 19 and Zod 4 are declared peers excluded from browser bundles. Core-only imports load no host definitions; lint/dependency checks reject host imports, including side-effect imports and re-exports. No runtime route, EN/VI locale or admin table Shortcuts dialog change, migrations or new external packages. U2/U3 are accepted on separate unmerged branches; B6 follows B4 approval, D follows B7. See `docs/specs/2026-11-10-cms-b4-contracts-registry.md`.
@@ -152,6 +154,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Made B6b Chromium contrast checks mandatory in local and CI E2E; covered 224 rendered color pairs across four surfaces, four feedback statuses (text and border), indicators and special text pairs at two widths and themes. Added missing danger/info theme feedback tokens; no host CSS, API or golden changes.
+
+- 2026-11-11: Published B6b opt-in neutral core stylesheet with independent CSS gzip reporting, checked contrast/44px/focus/motion and documented light/dark token override; lil.p runtime visuals and contracts remain unchanged.
 
 - 2026-11-11: B6 review follow-up moves portfolio widget mappings into web and requires localized host label resolution in core; EN/VI regression tests reject untranslated labels and verify no portfolio vocabulary remains in core fields. Refreshed Graphify after the code commit; no package export or build-topology change.
 

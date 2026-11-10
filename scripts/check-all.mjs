@@ -15,6 +15,10 @@ const steps = [
 ];
 if (!args.has('--no-build')) steps.push(['build', 'pnpm build']);
 if (args.has('--e2e')) {
+  steps.push([
+    'cms-theme-browser',
+    'CMS_THEME_BROWSER=1 node --test packages/cms-core/test/theme.test.mjs',
+  ]);
   steps.push(['api-e2e', 'pnpm --filter @portfolio/api test:e2e']);
   steps.push(['web-e2e', 'pnpm --filter @portfolio/web test:e2e']);
 }

@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, readFileSync, writeFileSync } from 'node:fs';
 
 import { defineConfig } from 'tsup';
 
@@ -16,6 +16,7 @@ export default defineConfig({
   splitting: false,
   external: ['react', 'react-dom', 'zod'],
   onSuccess: async () => {
+    copyFileSync('src/theme/theme.css', 'dist/theme.css');
     const file = 'dist/react.cjs';
     const output = readFileSync(file, 'utf8');
     if (output.startsWith('"use strict";"use client";')) {
