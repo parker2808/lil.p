@@ -32,22 +32,63 @@ for (const locale of ['en', 'vi'] as const) {
   });
 }
 
-test('neutral and token override keep WCAG AA in both modes and widths', async ({ page }) => {
+test('all fixture routes and focused gallery meet WCAG 2.1 AA in both modes and widths', async ({
+  page,
+}) => {
+  test.setTimeout(12 * 60_000);
+  let checked = 0;
   for (const locale of ['en', 'vi'])
     for (const brand of ['neutral', 'lilp'])
       for (const mode of ['light', 'dark'])
-        for (const width of [1440, 390]) {
-          await page.setViewportSize({ width, height: 900 });
-          await page.goto(`/${locale}/editor?mode=${mode}&brand=${brand}`);
-          await expect(page.locator('.fixture-properties')).toBeVisible();
-          const report = await new AxeBuilder({ page })
-            .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
-            .analyze();
-          expect(report.violations, `${locale}/${brand}/${mode}/${width}`).toEqual([]);
-          expect(
-            await page.evaluate(() => document.documentElement.scrollWidth),
-          ).toBeLessThanOrEqual(width);
-        }
+        for (const width of [1440, 390])
+          for (const route of [...routes, 'components-focus'] as const) {
+            await page.setViewportSize({ width, height: 900 });
+            await page.goto(
+              `/${locale}/${route === 'home' ? '' : route === 'components-focus' ? 'components' : route}?mode=${mode}&brand=${brand}`,
+            );
+            if (route === 'editor') await expect(page.locator('.fixture-properties')).toBeVisible();
+            if (route === 'unknown')
+              await expect(page.getByTestId('source-snapshot')).toBeVisible();
+            if (route === 'components-focus')
+              await page
+                .getByRole('button', { name: locale === 'en' ? 'Retry' : 'Thử lại' })
+                .focus();
+            const report = await new AxeBuilder({ page })
+              .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+              .analyze();
+            expect(report.violations, `${locale}/${brand}/${mode}/${width}/${route}`).toEqual([]);
+            expect(
+              await page.evaluate(() => document.documentElement.scrollWidth),
+            ).toBeLessThanOrEqual(width);
+            if (width === 390) {
+              const undersized = await page
+                .locator(
+                  'a[href], button, select, input, textarea, [role="button"], [tabindex]:not([tabindex="-1"])',
+                )
+                .evaluateAll((elements) =>
+                  elements.flatMap((element) => {
+                    if (!(element instanceof HTMLElement) || !element.getClientRects().length)
+                      return [];
+                    const target =
+                      element instanceof HTMLInputElement && element.type === 'checkbox'
+                        ? (element.closest('label') ?? element)
+                        : element;
+                    const bounds = target.getBoundingClientRect();
+                    return bounds.width < 44 || bounds.height < 44
+                      ? [
+                          `${element.tagName.toLowerCase()}${element.className ? `.${element.className}` : ''} ${bounds.width.toFixed(1)}×${bounds.height.toFixed(1)}`,
+                        ]
+                      : [];
+                  }),
+                );
+              expect(
+                undersized,
+                `${locale}/${brand}/${mode}/${route}: targets below 44×44`,
+              ).toEqual([]);
+            }
+            checked++;
+          }
+  expect(checked).toBe(80);
 });
 
 test('captures the complete route, locale, theme, brand and viewport matrix', async ({ page }) => {
@@ -62,6 +103,7 @@ test('captures the complete route, locale, theme, brand and viewport matrix', as
     width: number;
     route: string;
     head: string;
+    captureCommand: string;
   }> = [];
   for (const locale of ['en', 'vi'])
     for (const brand of ['neutral', 'lilp'])
@@ -90,7 +132,17 @@ test('captures the complete route, locale, theme, brand and viewport matrix', as
               fullPage: true,
               animations: 'disabled',
             });
-            manifest.push({ file, locale, theme, brand, width, route, head });
+            manifest.push({
+              file,
+              locale,
+              theme,
+              brand,
+              width,
+              route,
+              head,
+              captureCommand:
+                'FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e',
+            });
             if (route === 'components') {
               await page
                 .getByRole('button', { name: locale === 'en' ? 'Retry' : 'Thử lại' })
@@ -109,6 +161,8 @@ test('captures the complete route, locale, theme, brand and viewport matrix', as
                 width,
                 route: 'components-focus',
                 head,
+                captureCommand:
+                  'FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e',
               });
             }
           }
