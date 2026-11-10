@@ -50,6 +50,8 @@ In the admin, open `/admin/pages` and use **Add page** in the header or empty st
 
 `starter` adds a localized page heading and blank prose; `empty` starts without blocks. Both stay drafts until published. Custom pages need a visible first H1 and substantive visible prose in the page locale before publishing; missing prose returns `PAGE_BODY_REQUIRED` on the `body` field. Published custom pages render at `/en/{key}` and `/vi/{key}`, appear in the sitemap, and use the same CMS block rendering and cache invalidation as built-in pages. Drafts stay private but are available through authorized preview and saved versions. See the [R3-02](./docs/specs/2026-11-03-r3-02-page-create-api.md) and [R3-03](./docs/specs/2026-11-03-r3-03-custom-public-pages.md) specs for coverage.
 
+A published custom page with only a Vietnamese SEO title serves that title and `lang: vi` in both language routes and saved-version previews, matching its draft preview; built-in and bilingual page fallback stays unchanged. See the [locale SEO spec](./docs/specs/2026-11-10-custom-page-locale-seo.md).
+
 ### Real content seed verification
 
 The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires private source evidence for every factual claim and project cover. Keep source paths, source text, and contact details out of git and logs. The staged migration check is `env -u DATABASE_URL bash apps/api/prisma/seed/migration-gate.sh`; it creates a random, tmpfs-only MySQL container, compares the five built-in page rows across the old and current migrations, checks page constraints and Prisma schema drift, then removes the container. It refuses to run when `DATABASE_URL` is already set.

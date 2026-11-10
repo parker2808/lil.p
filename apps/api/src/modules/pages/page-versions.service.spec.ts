@@ -243,6 +243,26 @@ describe('PageVersionsService', () => {
     }
   });
 
+  it.each(['en', 'vi'] as const)(
+    'previews a saved VI-only custom page version in Vietnamese for %s requests',
+    async (locale) => {
+      prisma.page.findUnique.mockResolvedValue(pageRow({ key: 'IDEAS', locale: 'vi' }));
+      prisma.pageVersion.findUnique.mockResolvedValue({
+        snapshot: {
+          seo: {
+            seoTitleEn: null,
+            seoTitleVi: 'Ý tưởng',
+            seoDescriptionEn: null,
+            seoDescriptionVi: 'Mô tả',
+          },
+          blocks: [],
+        },
+      });
+      const preview = await service.getPreview('ideas', locale, 1);
+      expect(preview.seo).toEqual({ title: 'Ý tưởng', description: 'Mô tả', lang: 'vi' });
+    },
+  );
+
   it('publishes a Vietnamese-first page without an English SEO title', async () => {
     prisma.page.findUnique.mockResolvedValue(
       pageRow({
