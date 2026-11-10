@@ -109,6 +109,7 @@ describe('PageVersionsService', () => {
       },
     ],
     ['future root version', { ...legacySnapshot, schemaVersion: 99 }],
+    ['explicit null SEO', { ...legacySnapshot, seo: null }],
     ['unknown root field', { ...legacySnapshot, unexpected: true }],
     ['unknown SEO field', { ...legacySnapshot, seo: { ...legacySnapshot.seo, unexpected: true } }],
     ['unknown block field', { ...legacySnapshot, blocks: [{ ...snapshotHero, unexpected: true }] }],

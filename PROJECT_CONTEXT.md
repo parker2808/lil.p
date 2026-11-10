@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- B5b #192 P2/P3 follow-up: restorable legacy snapshots may omit SEO fields, but an explicit `seo: null` must fail as 400 `INVALID_BLOCKS` before any delete/audit; existing historical read/EN–VI preview remains unchanged. Focused restore-refusal test covers the exact error shape and no writes. Graphify refreshed on the B5b worktree after the adapter change; no schema/migration/DB read, B1 golden or host route change. See `docs/specs/2026-11-11-cms-b5b-nest-engine-wiring.md`.
+
 - CMS B5b Nest wiring (stacked on accepted B5 `71e9ce4`, with accepted #189 `2de602e` merged at `066e12b`): page adapters now consume `@parker2808/cms-core/engine` through the declared API runtime dependency. Core findings retain existing Nest errors; strict restore refuses malformed, unknown and future-version blocks **before deletion**, while missing legacy SEO fields are filled with null before strict reading; public historical unknown blocks still skip with the existing log. One host-owned Prisma transaction per publish and post-commit effects remain unchanged. The compiled API requires the built CJS export; the real Docker image built and its final-layer smoke loads both host adapters. Original B5b local gate retried green after a separate #183 contact failure. After restacking, eight of nine locked disposable-MySQL checks pass; the sole macOS web E2E failure is the previously documented VI public-shell axe contrast at `apps/web/e2e/public-shell-indexes.spec.ts:73`, not the contact test. No web, schema, EN/VI route or B1 golden changes; Linux PR CI remains the complete gate. B6 owns React, D follows B7. See `docs/specs/2026-11-11-cms-b5b-nest-engine-wiring.md`.
 
 - CMS B5 pure engine (stacked on accepted B4 `8c448ea`): `./engine` exports injected policy findings, deterministic key/order utilities, strict unknown-safe snapshots, chained legacy migrations and typed host ports. The B5 review rejects unsupported root versions and unknown root/SEO/block fields instead of accepting Zod-stripped data; older/current blocks remain readable. Built CJS import passes without host definitions. Nest runtime integration remains on B5b; do not interpret a green B5 package gate as production adapter integration. No schema/HTTP/EN–VI or B1 golden changes. See `docs/specs/2026-11-11-cms-b5-pure-engine.md` and `docs/specs/2026-11-11-cms-b5-snapshot-review.md`.
@@ -155,6 +157,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Corrected B5b's restore compatibility guard to distinguish absent SEO from explicit null; null now follows the existing 400 `INVALID_BLOCKS` path with no delete/audit, verified in the focused version-service test. Rebuilt Graphify against this branch's head instead of leaving its older dcc1ca9 baseline.
 
 - 2026-11-11: Restacked B5b on accepted B5 snapshot hardening (`71e9ce4`), retaining both sides of README/PROJECT_CONTEXT/LESSONS conflicts and regenerating Graphify. Nest restoration now fills only absent legacy SEO fields before core validation; version details and EN/VI preview keep the host compatibility reader. Strict core failures still map to the existing 400 `INVALID_BLOCKS` body before any delete/audit. No API golden, schema or migration edits.
 

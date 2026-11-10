@@ -53,8 +53,8 @@ export function buildPageSnapshot(page: PageWithAllBlocks): PageSnapshot {
 export function readRestorableSnapshot(value: unknown): PageSnapshot | null {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
   const raw = value as { seo?: unknown };
-  const seo = raw.seo ?? {};
-  if (typeof seo !== 'object' || Array.isArray(seo)) return null;
+  const seo = Object.hasOwn(raw, 'seo') ? raw.seo : {};
+  if (!seo || typeof seo !== 'object' || Array.isArray(seo)) return null;
   const missingSeo = Object.fromEntries(
     ['seoTitleEn', 'seoTitleVi', 'seoDescriptionEn', 'seoDescriptionVi']
       .filter((key) => !Object.hasOwn(seo, key))
