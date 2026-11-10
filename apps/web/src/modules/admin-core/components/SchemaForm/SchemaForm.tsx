@@ -115,6 +115,10 @@ export function SchemaForm({
               readOnly={Boolean(readOnly)}
               fieldErrors={{ ...zodErrors, ...fieldErrors }}
               label={t.has(field.label) ? t(field.label) : field.label}
+              localeNames={{
+                en: editorT('languageEnglish'),
+                vi: editorT('languageVietnamese'),
+              }}
               editorLabels={editorLabels}
               previewLabels={previewLabels}
               widgetLabels={widgetLabels}
@@ -134,6 +138,7 @@ function SchemaFieldControl({
   readOnly,
   fieldErrors,
   label,
+  localeNames,
   editorLabels,
   previewLabels,
   widgetLabels,
@@ -145,6 +150,7 @@ function SchemaFieldControl({
   readOnly: boolean;
   fieldErrors: Record<string, string>;
   label: string;
+  localeNames: { en: string; vi: string };
   editorLabels: ReturnType<typeof editorLabelsFromMessages>;
   previewLabels: PreviewLabels;
   widgetLabels: WidgetLabels;
@@ -169,6 +175,7 @@ function SchemaFieldControl({
         value={localized}
         readOnly={readOnly}
         label={label}
+        localeNames={localeNames}
         message={message}
         editorLabels={editorLabels}
         previewLabels={previewLabels}

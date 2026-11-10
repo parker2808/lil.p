@@ -3,8 +3,10 @@ import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { NextIntlClientProvider } from 'next-intl';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { z } from 'zod';
 
 import en from '../../../../../i18n/locales/en.json';
+import viMessages from '../../../../../i18n/locales/vi.json';
 
 vi.mock('@/modules/admin-core/components/MarkdownField/MarkdownField', () => ({
   MarkdownField: () => null,
@@ -41,6 +43,53 @@ describe('SchemaForm', () => {
       view.unmount();
     }
   });
+
+  it.each([
+    ['en', en, 'English', 'Vietnamese'],
+    ['vi', viMessages, 'Tiếng Anh', 'Tiếng Việt'],
+  ] as const)(
+    'gives each localized input and textarea a distinct %s name',
+    (locale, messages, enName, viName) => {
+      const pageHeader = BLOCK_REGISTRY['page-header'];
+      const headerView = render(
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <SchemaForm
+            schema={pageHeader.props}
+            defaultValues={pageHeader.defaults as Record<string, unknown>}
+          />
+        </NextIntlClientProvider>,
+      );
+      const title = messages.admin.blocks.pageHeader.title;
+      expect(screen.getByRole('textbox', { name: `${title} (${enName})` })).toHaveAttribute(
+        'id',
+        'title.en',
+      );
+      expect(screen.getByRole('textbox', { name: `${title} (${viName})` })).toHaveAttribute(
+        'id',
+        'title.vi',
+      );
+      headerView.unmount();
+
+      const textareaSchema = z.object({
+        intro: z.object({
+          en: z.string().meta({ widget: 'textarea', label: 'admin.blocks.cta.intro' }),
+          vi: z.string().meta({ widget: 'textarea' }),
+        }),
+      });
+      render(
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <SchemaForm schema={textareaSchema} defaultValues={{ intro: { en: '', vi: '' } }} />
+        </NextIntlClientProvider>,
+      );
+      const intro = messages.admin.blocks.cta.intro;
+      expect(screen.getByRole('textbox', { name: `${intro} (${enName})` }).tagName).toBe(
+        'TEXTAREA',
+      );
+      expect(screen.getByRole('textbox', { name: `${intro} (${viName})` }).tagName).toBe(
+        'TEXTAREA',
+      );
+    },
+  );
 
   it('shows a zod message when the English CTA label is empty', async () => {
     renderForm('hero');
