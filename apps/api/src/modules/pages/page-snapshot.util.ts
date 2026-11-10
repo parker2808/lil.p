@@ -1,3 +1,4 @@
+import { readTree, type TreeDocument } from '@parker2808/cms-core/tree';
 import {
   BLOCK_REGISTRY,
   type BlockType,
@@ -14,12 +15,43 @@ import {
   publishLint,
   resolveBlockLocale,
 } from '@portfolio/contracts';
+import { z } from 'zod';
 
 import { pickGroup } from '../../i18n/pick-locale.util';
 import type { PageWithAllBlocks } from './entities/page.entity';
 import { definitionOf } from './pages-rules.util';
 
 export type SnapshotBlockRow = PageSnapshotBlock & { id?: number };
+
+const treeVersionSnapshotSchema = z.strictObject({
+  format: z.literal('tree'),
+  snapshotVersion: z.literal(1),
+  seo: z.strictObject({
+    seoTitleEn: z.string().nullable(),
+    seoTitleVi: z.string().nullable(),
+    seoDescriptionEn: z.string().nullable(),
+    seoDescriptionVi: z.string().nullable(),
+  }),
+  tree: z.unknown(),
+});
+
+export type TreeVersionSnapshot = {
+  format: 'tree';
+  snapshotVersion: 1;
+  seo: z.infer<typeof treeVersionSnapshotSchema>['seo'];
+  tree: TreeDocument;
+};
+
+export function hasSnapshotFormat(value: unknown): boolean {
+  return value !== null && typeof value === 'object' && 'format' in value;
+}
+
+export function readTreeVersionSnapshot(value: unknown): TreeVersionSnapshot | null {
+  const parsed = treeVersionSnapshotSchema.safeParse(value);
+  if (!parsed.success) return null;
+  const tree = readTree(parsed.data.tree);
+  return tree.ok ? { ...parsed.data, tree: tree.value } : null;
+}
 
 export type InvalidSnapshotBlock = {
   id: number;
@@ -50,6 +82,7 @@ export function buildPageSnapshot(page: PageWithAllBlocks): PageSnapshot {
 }
 
 export function readPageSnapshot(value: unknown): PageSnapshot | null {
+  if (hasSnapshotFormat(value)) return null;
   const parsed = pageSnapshotSchema.safeParse(value);
   if (parsed.success) {
     return parsed.data;
@@ -71,6 +104,32 @@ export function readPageSnapshot(value: unknown): PageSnapshot | null {
       })
     : [];
   return { seo, blocks };
+}
+
+export function readRestorablePageSnapshot(value: unknown): PageSnapshot | null {
+  if (!value || typeof value !== 'object' || hasSnapshotFormat(value)) return null;
+  const raw = value as { seo?: unknown; blocks?: unknown };
+  const seoKeys = ['seoTitleEn', 'seoTitleVi', 'seoDescriptionEn', 'seoDescriptionVi'];
+  if (
+    Object.keys(raw).some((key) => key !== 'seo' && key !== 'blocks') ||
+    (raw.seo !== undefined &&
+      (raw.seo === null ||
+        typeof raw.seo !== 'object' ||
+        Array.isArray(raw.seo) ||
+        Object.entries(raw.seo).some(
+          ([key, entry]) => !seoKeys.includes(key) || (entry !== null && typeof entry !== 'string'),
+        )))
+  ) {
+    return null;
+  }
+  if (
+    !Array.isArray(raw.blocks) ||
+    raw.blocks.some((block) => !pageSnapshotBlockSchema.strict().safeParse(block).success)
+  ) {
+    return null;
+  }
+  const snapshot = readPageSnapshot(value);
+  return snapshot?.blocks.length === raw.blocks.length ? snapshot : null;
 }
 
 function asNullableString(source: unknown, key: string): string | null {

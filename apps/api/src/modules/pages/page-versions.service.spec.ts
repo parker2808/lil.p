@@ -33,6 +33,8 @@ function pageRow(over: Record<string, unknown> = {}) {
     publishedVersionId: null,
     publishedVersion: null,
     publishedAt: null,
+    draftTree: null,
+    draftTreeRevision: 0n,
     updatedAt: new Date('2026-01-01T00:00:00.000Z'),
     blocks: [hero],
     ...over,
