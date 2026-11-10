@@ -63,6 +63,7 @@ function firstError(errors: unknown[]): string | null {
 
 export function ContactForm({ locale, topics }: { locale: Locale; topics: PublicContactTopic[] }) {
   const t = useTranslations('contact.form');
+  const formRef = useRef<HTMLFormElement>(null);
   const summaryRef = useRef<HTMLDivElement>(null);
   const [submitted, setSubmitted] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
@@ -122,6 +123,10 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
   }
 
   useEffect(() => {
+    formRef.current?.setAttribute('data-interactive', 'true');
+  }, []);
+
+  useEffect(() => {
     if (result && !result.ok) {
       summaryRef.current?.focus();
     }
@@ -141,6 +146,7 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
 
   return (
     <form
+      ref={formRef}
       action={formAction}
       className="bg-card-glass border-border shadow-1 relative flex flex-col gap-4 rounded-xl border p-6"
       noValidate
