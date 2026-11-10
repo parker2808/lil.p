@@ -1,24 +1,22 @@
-import { legacyTreeDocumentSchema, TREE_LIMITS, type TreeDocument, type TreeNode } from './schema';
-import { type ComponentRegistry, readTree, serializedBytes, type TreeResult } from './validation';
+import { legacyTreeDocumentSchema, type TreeDocument, type TreeNode } from './schema';
+import { type ComponentRegistry, preflightTree, readTree, type TreeResult } from './validation';
 
 function upgradeNode(node: Record<string, unknown>): TreeNode {
   const { props, ...fields } = node;
-  const upgraded = { ...fields, responsive: { base: props } } as TreeNode;
+  const upgraded: Record<string, unknown> = { ...fields, responsive: { base: props } };
   for (const slot of ['sections', 'content', 'columns', 'items'] as const) {
     const children = node[slot];
-    if (Array.isArray(children))
-      upgraded[slot] = children.map((child) => upgradeNode(child)) as TreeNode[];
+    if (Array.isArray(children)) upgraded[slot] = children.map((child) => upgradeNode(child));
   }
-  return upgraded;
+  return upgraded as TreeNode;
 }
 
 export function migrateTree(
   input: unknown,
   registry: ComponentRegistry = {},
 ): TreeResult<TreeDocument> {
-  const bytes = serializedBytes(input);
-  if (bytes === undefined || bytes > TREE_LIMITS.bytes)
-    return { ok: false, code: 'TREE_LIMIT', input };
+  const preflight = preflightTree(input);
+  if (!preflight.ok) return preflight;
   if (!input || typeof input !== 'object' || !('schemaVersion' in input)) {
     return { ok: false, code: 'INVALID_TREE', input };
   }

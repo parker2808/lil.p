@@ -18,17 +18,33 @@ export const responsiveSchema = z.strictObject({
 });
 
 export type ResponsiveProps = z.infer<typeof responsiveSchema>;
-export type TreeNode = {
-  id: string;
-  type: 'page' | 'section' | 'row' | 'grid' | 'column' | 'component' | 'legacy-component';
-  responsive: ResponsiveProps;
-  sections?: TreeNode[];
-  content?: TreeNode[];
-  columns?: TreeNode[];
-  items?: TreeNode[];
-  componentType?: string;
-};
-export type TreeDocument = { schemaVersion: 1; root: TreeNode };
+type NodeBase = { id: string; responsive: ResponsiveProps };
+type Without<Fields extends string> = { [Field in Fields]?: never };
+export type ComponentNode = NodeBase & { type: 'component'; componentType: string } & Without<
+    'sections' | 'content' | 'columns' | 'items'
+  >;
+export type LegacyComponentNode = NodeBase & { type: 'legacy-component' } & Without<
+    'sections' | 'content' | 'columns' | 'items' | 'componentType'
+  >;
+export type ContentNode = ComponentNode | LegacyComponentNode;
+export type GridNode = NodeBase & { type: 'grid'; items: ContentNode[] } & Without<
+    'sections' | 'content' | 'columns' | 'componentType'
+  >;
+export type ColumnNode = NodeBase & { type: 'column'; content: ContentNode[] } & Without<
+    'sections' | 'columns' | 'items' | 'componentType'
+  >;
+export type RowNode = NodeBase & { type: 'row'; columns: ColumnNode[] } & Without<
+    'sections' | 'content' | 'items' | 'componentType'
+  >;
+export type SectionNode = NodeBase & {
+  type: 'section';
+  content: (ContentNode | RowNode | GridNode)[];
+} & Without<'sections' | 'columns' | 'items' | 'componentType'>;
+export type PageNode = NodeBase & { type: 'page'; sections: SectionNode[] } & Without<
+    'content' | 'columns' | 'items' | 'componentType'
+  >;
+export type TreeNode = PageNode | SectionNode | RowNode | GridNode | ColumnNode | ContentNode;
+export type TreeDocument = { schemaVersion: 1; root: PageNode };
 
 function nodeSchemaFor(version: 0 | 1): z.ZodType {
   const attributes = version === 1 ? { responsive: responsiveSchema } : { props: jsonRecordSchema };

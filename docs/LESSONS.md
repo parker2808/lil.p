@@ -142,3 +142,4 @@
 - 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
 - 2026-11-11: Zod object parsing strips unknown keys by default; reject unsupported snapshot versions and unexpected persisted keys before parsing so a strict reader cannot silently lose stored data.
 - 2026-11-11: A tree converter can keep unknown legacy block types losslessly only by carrying the entire validated JSON block as opaque data rather than reparsing it into the registered builder component shape; gate builder use separately from opt-in conversion.
+- 2026-11-11: Validate untrusted tree depth/count iteratively before recursive Zod parsing; keep incomplete draft validation separate from publish-only H1/required-component policy and ensure slot rules leave room for content at the deepest allowed layout.

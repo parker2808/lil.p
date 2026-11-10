@@ -32,6 +32,47 @@ const layoutSchemas: Record<string, z.ZodType> = {
   grid: z.strictObject({ columns: z.number().int().min(2).max(4) }),
   column: z.strictObject({ span: z.number().int().min(1).max(4) }),
 };
+const mobileGridSchema = z.strictObject({ columns: z.number().int().min(1).max(4) });
+
+export function preflightTree(input: unknown): TreeResult<true> {
+  const bytes = serializedBytes(input);
+  if (bytes === undefined || bytes > TREE_LIMITS.bytes)
+    return { ok: false, code: 'TREE_LIMIT', input };
+  if (!input || typeof input !== 'object' || !('root' in input))
+    return { ok: false, code: 'INVALID_TREE', input };
+  const stack: { node: unknown; depth: number }[] = [{ node: input.root, depth: 1 }];
+  let count = 0;
+  while (stack.length) {
+    const { node, depth } = stack.pop()!;
+    count += 1;
+    if (count > TREE_LIMITS.nodes || depth > TREE_LIMITS.depth)
+      return { ok: false, code: 'TREE_LIMIT', input };
+    if (!node || typeof node !== 'object' || Array.isArray(node))
+      return { ok: false, code: 'INVALID_TREE', input };
+    const record = node as Record<string, unknown>;
+    for (const slot of ['sections', 'content', 'columns', 'items']) {
+      const children = record[slot];
+      if (Array.isArray(children)) {
+        for (const child of children) stack.push({ node: child, depth: depth + 1 });
+      }
+    }
+    const props = record.responsive ?? record.props;
+    if (props && typeof props === 'object') {
+      const values: { value: unknown; depth: number }[] = [{ value: props, depth: 0 }];
+      const seen = new Set<object>();
+      while (values.length) {
+        const { value, depth: propsDepth } = values.pop()!;
+        if (!value || typeof value !== 'object') continue;
+        if (propsDepth > 64) return { ok: false, code: 'TREE_LIMIT', input };
+        if (seen.has(value)) continue;
+        seen.add(value);
+        for (const child of Object.values(value))
+          values.push({ value: child, depth: propsDepth + 1 });
+      }
+    }
+  }
+  return { ok: true, value: true };
+}
 
 export function resolveResponsive(
   props: ResponsiveProps,
@@ -77,9 +118,8 @@ export function readTree(
   input: unknown,
   registry: ComponentRegistry = {},
 ): TreeResult<TreeDocument> {
-  const bytes = serializedBytes(input);
-  if (bytes === undefined || bytes > TREE_LIMITS.bytes)
-    return { ok: false, code: 'TREE_LIMIT', input };
+  const preflight = preflightTree(input);
+  if (!preflight.ok) return preflight;
   if (!input || typeof input !== 'object' || !('schemaVersion' in input)) {
     return { ok: false, code: 'INVALID_TREE', input };
   }
@@ -93,15 +133,7 @@ export function readTree(
   const document = parsed.data as TreeDocument;
   if (document.root.type !== 'page') return { ok: false, code: 'INVALID_SLOT', input };
   const ids = new Set<string>();
-  const present = new Set<string>();
-  const required = new Set(
-    Object.entries(registry)
-      .filter(([, item]) => item.role === 'required')
-      .map(([type]) => type),
-  );
   let count = 0;
-  let headings = 0;
-  let builderComponents = 0;
   const visit = (
     node: TreeNode,
     parent: TreeNode | undefined,
@@ -115,13 +147,15 @@ export function readTree(
     const slot =
       parent?.type === 'page'
         ? ['section']
-        : parent?.type === 'section' || parent?.type === 'column'
+        : parent?.type === 'section'
           ? ['component', 'legacy-component', 'row', 'grid']
-          : parent?.type === 'row'
-            ? ['column']
-            : parent?.type === 'grid'
-              ? ['component', 'legacy-component']
-              : [];
+          : parent?.type === 'column'
+            ? ['component', 'legacy-component']
+            : parent?.type === 'row'
+              ? ['column']
+              : parent?.type === 'grid'
+                ? ['component', 'legacy-component']
+                : [];
     if (parent && !slot.includes(node.type)) return { code: 'INVALID_SLOT', nodeId: node.id };
     const props = node.responsive;
     const schema =
@@ -133,10 +167,6 @@ export function readTree(
             : undefined
         : layoutSchemas[node.type];
     if (node.type === 'component' && !schema) return { code: 'UNKNOWN_TYPE', nodeId: node.id };
-    if (node.type === 'component') {
-      builderComponents += 1;
-      present.add(node.componentType!);
-    }
     for (const value of Object.values(props)) {
       if (serializedBytes(value)! > TREE_LIMITS.propsBytes)
         return { code: 'TREE_LIMIT', nodeId: node.id };
@@ -151,7 +181,9 @@ export function readTree(
     } else if (schema) {
       for (const breakpoint of ['base', 'mobile', 'tablet', 'desktop'] as const) {
         const override = props[breakpoint];
-        if (override && !exactParse(schema, { ...props.base, ...override }))
+        const effectiveSchema =
+          node.type === 'grid' && breakpoint === 'mobile' ? mobileGridSchema : schema;
+        if (override && !exactParse(effectiveSchema, { ...props.base, ...override }))
           return { code: 'INVALID_PROPS', nodeId: node.id };
       }
       if (node.type === 'component' && ['button', 'image'].includes(node.componentType!)) {
@@ -162,20 +194,17 @@ export function readTree(
             return { code: 'INVALID_PROPS', nodeId: node.id };
         }
       }
-      if (
-        node.type === 'component' &&
-        (node.componentType === 'heading' || registry[node.componentType!]?.role === 'h1')
-      ) {
-        if (
-          registry[node.componentType!]?.role === 'h1' ||
-          ['base', 'mobile', 'tablet', 'desktop'].some(
-            (key) => ({ ...props.base, ...props[key as keyof ResponsiveProps] }).level === 1,
-          )
-        )
-          headings += 1;
-      }
     }
-    const children = node.sections ?? node.content ?? node.columns ?? node.items ?? [];
+    const children =
+      node.type === 'page'
+        ? node.sections
+        : node.type === 'section' || node.type === 'column'
+          ? node.content
+          : node.type === 'row'
+            ? node.columns
+            : node.type === 'grid'
+              ? node.items
+              : [];
     if (node.type === 'row' && (children.length < 2 || children.length > 4)) {
       return { code: 'INVALID_SLOT', nodeId: node.id };
     }
@@ -186,12 +215,47 @@ export function readTree(
   };
   const error = visit(document.root, undefined, 1);
   if (error) return { ok: false, input, ...error };
+  return { ok: true, value: document };
+}
+
+export function validateTreeForPublish(
+  input: unknown,
+  registry: ComponentRegistry = {},
+): TreeResult<TreeDocument> {
+  const draft = readTree(input, registry);
+  if (!draft.ok) return draft;
+  const present = new Set<string>();
+  let headings = 0;
+  let builderComponents = 0;
+  const stack: TreeNode[] = [draft.value.root];
+  while (stack.length) {
+    const node = stack.pop()!;
+    if (node.type === 'component') {
+      builderComponents += 1;
+      present.add(node.componentType);
+      if (
+        registry[node.componentType]?.role === 'h1' ||
+        (node.componentType === 'heading' &&
+          ['base', 'mobile', 'tablet', 'desktop'].some(
+            (breakpoint) =>
+              ({ ...node.responsive.base, ...node.responsive[breakpoint as keyof ResponsiveProps] })
+                .level === 1,
+          ))
+      )
+        headings += 1;
+    } else if (node.type === 'page') stack.push(...node.sections);
+    else if (node.type === 'section' || node.type === 'column') stack.push(...node.content);
+    else if (node.type === 'row') stack.push(...node.columns);
+    else if (node.type === 'grid') stack.push(...node.items);
+  }
+  const required = Object.entries(registry)
+    .filter(([, item]) => item.role === 'required')
+    .map(([type]) => type);
   if (
     headings > 1 ||
     (builderComponents > 0 && headings !== 1) ||
-    (builderComponents > 0 && [...required].some((type) => !present.has(type)))
-  ) {
+    (builderComponents > 0 && required.some((type) => !present.has(type)))
+  )
     return { ok: false, code: 'HEADING_RULE', input };
-  }
-  return { ok: true, value: document };
+  return draft;
 }

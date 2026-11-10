@@ -16,6 +16,7 @@ import {
   TREE_VERSION,
   treeDocumentSchema,
   treeIdSchema,
+  validateTreeForPublish,
 } from '@parker2808/cms-core/tree';
 import { z } from 'zod';
 
@@ -36,8 +37,8 @@ const page = (content = [heading]) => ({
     sections: [{ id: 'section', type: 'section', responsive: responsive(), content }],
   },
 });
-const errorCode = (input, code, registry) => {
-  const result = readTree(input, registry);
+const errorCode = (input, code, registry, validate = readTree) => {
+  const result = validate(input, registry);
   assert.equal(result.ok, false);
   assert.equal(result.code, code);
   assert.strictEqual(result.input, input);
@@ -49,6 +50,7 @@ test('versioned public schemas, ESM and CJS resolve without host modules', () =>
   assert.match(import.meta.resolve(specifier), /\/dist\/tree\.js$/);
   assert.equal(require(specifier).TREE_VERSION, TREE_VERSION);
   assert.equal(typeof require(specifier).convertLegacySnapshot, 'function');
+  assert.equal(typeof require(specifier).validateTreeForPublish, 'function');
   assert.equal(typeof require(specifier).treeDocumentSchema.safeParse, 'function');
   assert.equal(typeof legacyTreeDocumentSchema.safeParse, 'function');
   assert.equal(typeof treeIdSchema.safeParse, 'function');
@@ -137,9 +139,10 @@ test('unknown/future/extra fields and invalid JSON fail closed without mutating 
 
 test('registered components, H1/required policies, URLs and rich text', () => {
   const registry = { alert: { props: z.strictObject({ text: z.string() }), role: 'required' } };
-  errorCode(page([heading]), 'HEADING_RULE', registry);
+  assert.equal(readTree(page([heading]), registry).ok, true);
+  errorCode(page([heading]), 'HEADING_RULE', registry, validateTreeForPublish);
   assert.equal(
-    readTree(
+    validateTreeForPublish(
       page([
         heading,
         {
@@ -153,7 +156,24 @@ test('registered components, H1/required policies, URLs and rich text', () => {
     ).ok,
     true,
   );
-  errorCode(page([heading, { ...heading, id: 'heading-2' }]), 'HEADING_RULE');
+  assert.equal(readTree(page([heading, { ...heading, id: 'heading-2' }])).ok, true);
+  errorCode(
+    page([heading, { ...heading, id: 'heading-2' }]),
+    'HEADING_RULE',
+    undefined,
+    validateTreeForPublish,
+  );
+  const incomplete = page([
+    {
+      id: 'paragraph',
+      type: 'component',
+      componentType: 'paragraph',
+      responsive: responsive({ text: 'Draft' }),
+    },
+  ]);
+  assert.equal(readTree(incomplete).ok, true);
+  errorCode(incomplete, 'HEADING_RULE', undefined, validateTreeForPublish);
+  assert.equal(readTree(page([])).ok, true);
   errorCode(
     page([
       {
@@ -211,11 +231,53 @@ test('bounded depth/count/bytes, including multibyte payloads', () => {
     ]),
     'TREE_LIMIT',
   );
+  let deep = heading;
+  for (let index = 0; index < 720; index += 1) {
+    deep = { id: `deep-${index}`, type: 'section', responsive: responsive(), content: [deep] };
+  }
+  errorCode(
+    {
+      schemaVersion: 1,
+      root: { id: 'page', type: 'page', responsive: responsive(), sections: [deep] },
+    },
+    'TREE_LIMIT',
+  );
+  const oldDeep = JSON.parse(
+    JSON.stringify({
+      schemaVersion: 0,
+      root: { id: 'page', type: 'page', props: {}, sections: [] },
+    }),
+  );
+  let oldChild = {
+    id: 'heading',
+    type: 'component',
+    componentType: 'heading',
+    props: { text: 'Hi', level: 1 },
+  };
+  for (let index = 0; index < 720; index += 1)
+    oldChild = { id: `old-${index}`, type: 'section', props: {}, content: [oldChild] };
+  oldDeep.root.sections = [oldChild];
+  const migrated = migrateTree(oldDeep);
+  assert.equal(migrated.ok, false);
+  assert.equal(migrated.code, 'TREE_LIMIT');
+  assert.strictEqual(migrated.input, oldDeep);
+  let deepProps = { text: 'deep', level: 1 };
+  for (let index = 0; index < 70; index += 1) deepProps = { nested: deepProps };
+  errorCode(page([{ ...heading, responsive: responsive(deepProps) }]), 'TREE_LIMIT');
   errorCode(
     page(
       Array.from({ length: TREE_LIMITS.nodes }, (_, index) => ({
         ...heading,
         id: `item-${index}`,
+      })),
+    ),
+    'TREE_LIMIT',
+  );
+  errorCode(
+    page(
+      Array.from({ length: 750 }, (_, index) => ({
+        ...heading,
+        id: `wide-${index}`,
       })),
     ),
     'TREE_LIMIT',
@@ -234,6 +296,42 @@ test('bounded depth/count/bytes, including multibyte payloads', () => {
       },
     ]),
     'TREE_LIMIT',
+  );
+});
+
+test('every allowed layout path can hold a component within the depth budget', () => {
+  const component = {
+    id: 'divider',
+    type: 'component',
+    componentType: 'divider',
+    responsive: responsive(),
+  };
+  const grid = {
+    id: 'grid',
+    type: 'grid',
+    responsive: { base: { columns: 2 }, mobile: { columns: 1 } },
+    items: [component],
+  };
+  assert.equal(readTree(page([grid])).ok, true);
+  errorCode(page([{ ...grid, responsive: { base: { columns: 1 } } }]), 'INVALID_PROPS');
+  const columns = [
+    { id: 'one', type: 'column', responsive: responsive({ span: 2 }), content: [heading] },
+    { id: 'two', type: 'column', responsive: responsive({ span: 2 }), content: [component] },
+  ];
+  assert.equal(
+    readTree(page([{ id: 'row', type: 'row', responsive: responsive(), columns }])).ok,
+    true,
+  );
+  errorCode(
+    page([
+      {
+        id: 'row',
+        type: 'row',
+        responsive: responsive(),
+        columns: [columns[0], { ...columns[1], content: [{ ...grid, items: [] }] }],
+      },
+    ]),
+    'INVALID_SLOT',
   );
 });
 

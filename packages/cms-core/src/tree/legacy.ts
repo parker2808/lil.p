@@ -1,5 +1,5 @@
 import { pageSnapshotBlockSchema, pageSnapshotSeoSchema } from '../contracts';
-import { TREE_LIMITS, type TreeDocument, type TreeNode } from './schema';
+import { type ResponsiveProps, type SectionNode, TREE_LIMITS, type TreeDocument } from './schema';
 import { readTree, serializedBytes, type TreeResult } from './validation';
 
 export type LegacyConversion = { tree: TreeDocument; seo: unknown };
@@ -18,7 +18,7 @@ export function convertLegacySnapshot(input: unknown): TreeResult<LegacyConversi
   ) {
     return { ok: false, code: 'INVALID_TREE', input };
   }
-  const sections: TreeNode[] = [];
+  const sections: SectionNode[] = [];
   const keys = new Set<string>();
   for (const block of snapshot.blocks) {
     if (
@@ -39,7 +39,7 @@ export function convertLegacySnapshot(input: unknown): TreeResult<LegacyConversi
         {
           id: `legacy-component-${raw.key}`,
           type: 'legacy-component',
-          responsive: { base: { block: raw as TreeNode['responsive']['base']['block'] } },
+          responsive: { base: { block: raw as ResponsiveProps['base'][string] } },
         },
       ],
     });
