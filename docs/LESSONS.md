@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-10: Regenerate contact sheets only after the final screenshot capture completes, and version a small privacy-redacted review set alongside the spec; a local-only sheet can silently retain a pre-fix skeleton while the individual screenshots are correct.
 - 2026-11-10: Capture public route baselines in an unauthenticated browser context; reusing the admin session can silently show the draft-preview banner and invalidate screenshots even when tests pass.
 - 2026-11-03: A stacked integration PR can branch from the verified top PR tip when every lower branch tip is already an ancestor; this preserves the full stack without modifying or merging the original PRs.
 - 2026-11-03: Production Playwright draft previews must use `localhost` in both the web build and browser origin; a `127.0.0.1` origin loses Next's secure draft cookie after navigation.

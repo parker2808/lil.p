@@ -1,17 +1,17 @@
 # Graph Report - feat-cms-u2-site-admin-patterns  (2026-11-10)
 
 ## Corpus Check
-- 1472 files · ~522,484 words
+- 1472 files · ~522,965 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 32 file(s) not represented in the graph (top: (none) 17, .css 11, .example 1)
 
 ## Summary
-- 6804 nodes · 21722 edges · 336 communities (285 shown, 51 thin omitted)
-- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 1767 edges (avg confidence: 0.92)
+- 6804 nodes · 21723 edges · 336 communities (285 shown, 51 thin omitted)
+- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 1768 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `84f9b42a`
+- Built from commit: `f2a4699e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -346,7 +346,7 @@
 6. `next` - 102 edges
 7. `apiClient()` - 100 edges
 8. `PrismaService` - 85 edges
-9. `Badge()` - 83 edges
+9. `Badge()` - 84 edges
 10. `apiServer()` - 81 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -1508,7 +1508,7 @@ Nodes (3): Default, meta, Story
 
 ## Knowledge Gaps
 - **17 isolated node(s):** `DATABASE_URL`, `./tsconfig.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json` (+12 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1965 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 1964 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **51 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions

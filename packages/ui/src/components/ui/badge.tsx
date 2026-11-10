@@ -3,7 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import type { ComponentProps } from 'react';
 
 export const badgeVariants = cva(
-  'text-eyebrow inline-flex items-center rounded-sm px-2 py-0.5 font-mono font-medium uppercase',
+  'text-eyebrow inline-flex items-center gap-1.5 rounded-sm px-2 py-0.5 font-mono font-medium uppercase',
   {
     variants: {
       variant: {
