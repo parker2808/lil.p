@@ -51,7 +51,16 @@ export function buildPageSnapshot(page: PageWithAllBlocks): PageSnapshot {
 }
 
 export function readRestorableSnapshot(value: unknown): PageSnapshot | null {
-  const result = readSnapshot(value, BLOCK_REGISTRY);
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const raw = value as { seo?: unknown };
+  const seo = raw.seo ?? {};
+  if (typeof seo !== 'object' || Array.isArray(seo)) return null;
+  const missingSeo = Object.fromEntries(
+    ['seoTitleEn', 'seoTitleVi', 'seoDescriptionEn', 'seoDescriptionVi']
+      .filter((key) => !Object.hasOwn(seo, key))
+      .map((key) => [key, null]),
+  );
+  const result = readSnapshot({ ...value, seo: { ...missingSeo, ...seo } }, BLOCK_REGISTRY);
   return result.ok ? result.snapshot : null;
 }
 
