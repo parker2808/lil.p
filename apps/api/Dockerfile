@@ -14,6 +14,7 @@ COPY apps/api/package.json apps/api/package.json
 COPY apps/web/package.json apps/web/package.json
 COPY packages/ui/package.json packages/ui/package.json
 COPY packages/contracts/package.json packages/contracts/package.json
+COPY packages/cms-core/package.json packages/cms-core/package.json
 COPY apps/api/prisma ./apps/api/prisma
 COPY apps/api/prisma.config.ts ./apps/api/prisma.config.ts
 RUN pnpm install --frozen-lockfile
@@ -21,6 +22,7 @@ RUN pnpm install --frozen-lockfile
 FROM deps AS builder
 COPY . .
 RUN pnpm --filter @portfolio/contracts build \
+  && pnpm --filter @parker2808/cms-core build \
   && pnpm --filter @portfolio/api build
 
 FROM builder AS pruned

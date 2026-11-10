@@ -142,6 +142,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         code: ErrorCode;
         message?: string;
         fieldErrors?: Record<string, string[]>;
+        mode?: 'legacy' | 'tree';
+        revision?: string;
       };
       return {
         statusCode,
@@ -149,6 +151,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
         message: payload.message ?? exception.message,
         requestId,
         fieldErrors: payload.fieldErrors,
+        ...(statusCode === HttpStatus.CONFLICT && payload.mode && payload.revision
+          ? { mode: payload.mode, revision: payload.revision }
+          : {}),
       };
     }
 

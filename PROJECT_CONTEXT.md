@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- CMS D2 persistence (draft stacked on D integration base): additive nullable `page.draftTree` and BIGINT `draftTreeRevision` preserve every legacy row and published snapshot. Eligible custom-page builder drafts use strict D1 `readTree` validation and an atomic revision+mode CAS; the existing block-list endpoints and B1 goldens remain unchanged. Revision-aware tree restore validates a strict version envelope before any write; tree publish remains disabled pending D3 renderer parity. Migration/e2e evidence uses only a disposable locked local MySQL; never deploy or merge the additive DDL without a separate gate. See `docs/specs/2026-11-11-cms-d2-persistence.md`.
+
 - D integration base (draft, B7 `68a388a` + D1 `d21c71d`): carries both the neutral fixture/theme and the typed tree; no API, database, runtime route or golden contract change. `./theme.css` and `./tree` exports both remain; pending B7 design approval. See `docs/specs/2026-11-11-cms-d-integration-base.md`.
 
 - CMS B7 independent fixture (stacked on accepted B6 #191 and carrying B5 #190 plus B6b): built-package-only EN/VI page/components/editor/unknown routes prove core theme, host registration/localization, strict or lossless snapshot handling, server/client split, budgets and 80 visual states. It is an in-memory Phase B example, not the Phase D nested builder, persistence or production API integration. Await B7 design/CI review before D1. See `docs/specs/2026-11-11-cms-core-b7-fixture.md`.
@@ -160,6 +162,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Added D2 additive tree-draft persistence and revision-checked custom-page builder HTTP contract, strict tree snapshot dispatch, legacy isolation and disabled tree publication; the local MySQL-only migration requires explicit deployment review. No B1 golden or public tree renderer changes.
 
 - 2026-11-11: Stacked D1's validated tree on B7's neutral standalone fixture, retaining `./tree` and `./theme.css` without altering runtime routes, persistence, API, goldens or visual output. Regenerated Graphify after resolving the overlapping docs.
 
