@@ -1,5 +1,7 @@
 # lil.p
 
+The [contact hydration regression spec](./docs/specs/2026-11-10-contact-hydration-flake.md) covers text entered into the server-rendered form before its client bundle loads. The browser test now waits for the contact form's own interactive marker before testing the client submission, while asserting the pre-hydration values and the single posted payload.
+
 The stacked [CMS U2 site/admin pattern spec](./docs/specs/2026-11-10-cms-u2-site-admin-patterns.md) and [43-route ledger](./docs/audits/2026-11-10-cms-u2-route-pattern-ledger.md) track shared navigation, forms, tables, feedback, loading/error/empty states, 44px target sizes, focus styles and EN/VI light/dark screenshot/a11y reviews. A clean disposable-MySQL run passed all 336 route/theme/viewport captures with no tagged WCAG A/AA or undersized-target findings; eight [privacy-safe reviewed screenshots](./docs/specs/assets/cms-u2/) complement the full local matrices. U2 adds retry to existing admin load errors and icon spacing to status badges while keeping API/database behavior unchanged. [Shared UI](./packages/ui/README.md) documents host-owned controls and table chrome; the EN/VI table shortcut help reflects selection-first archive/delete and active-row fallback.
 
 The [CMS U0 route/control baseline](./docs/audits/2026-11-10-cms-u0-route-control-baseline.md) maps the current public/admin routes, redirect and role boundaries, control ownership, and existing behavior/visual tests before UI standardization. It records uncovered live/visual states separately from executed focused tests; U0 changes no runtime behavior.
@@ -26,6 +28,8 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 ### Public site
 
 The EN/VI home, projects, notes, about, and contact routes share the round 3 public shell and index styling. They continue to read CMS content through the public API; project and note filters stay in the URL across reloads, and the contact form keeps its server submission. `/[locale]/craft` is a localized, static interaction study linked from the public header. Its presentation and the index styles are scoped to public routes, so project and note details and admin screens keep their own layouts. See the [R3-05 spec](./docs/specs/2026-11-03-r3-05-public-shell-indexes.md) for the route, accessibility, and capture checks.
+
+The contact form keeps text entered before hydration; its client submission waits until the form is interactive and sends one request.
 
 The contact page, public CTA, and search palette use the contact email configured in site settings. Copy email reports success or failure in the selected language and keeps a direct email link available. See the [R3-06 spec](./docs/specs/2026-11-03-r3-06-copy-email.md).
 
