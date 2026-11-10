@@ -162,7 +162,7 @@ jobs:
         run: >-
           tar -I 'zstd -1 -T0' -cf e2e-build.tar.zst
           --exclude=apps/web/.next/cache --exclude=apps/web/.next/standalone
-          packages/contracts/dist apps/api/dist apps/web/.next
+          packages/cms-core/dist packages/contracts/dist apps/api/dist apps/web/.next
       - uses: actions/upload-artifact@v4
         with:
           name: e2e-build

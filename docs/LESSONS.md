@@ -131,3 +131,4 @@
 - 2026-11-10: TypeScript's legacy `moduleResolution: node` ignores package subpath `exports` in transitive declarations; publish `typesVersions` alongside ESM subpath exports so the Nest consumer retains inferred locale, snapshot and block-ref types.
 - 2026-11-10: A host compiled to CommonJS needs a `require` condition for a newly extracted package subpath even when TypeScript accepts the ESM `import` types; exercise both resolution modes before E2E.
 - 2026-11-10: Local installed package `dist/` can hide a clean-CI failure; when host declarations import a new workspace package, build via pnpm's dependency-closure filter (`package...`) before compiling the host in every job.
+- 2026-11-10: A sharded E2E archive must carry the transitive workspace package's `dist/`, not just the host and app bundles; otherwise the test runner's fresh checkout resolves the symlink but has no built subpath target.
