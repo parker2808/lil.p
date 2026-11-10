@@ -94,7 +94,7 @@ describe('builder draft persistence over disposable MySQL', () => {
     await admin
       .post('/api/admin/pages/ideas/builder/publish')
       .send({ expectedRevision: '1' })
-      .expect(409);
+      .expect(400);
     await admin.post('/api/admin/pages/ideas/publish').send({}).expect(409);
     await admin.patch('/api/admin/pages/ideas').send({}).expect(409);
     const after = await prisma.page.findUniqueOrThrow({ where: { id: pageId } });
@@ -124,7 +124,7 @@ describe('builder draft persistence over disposable MySQL', () => {
     });
     await admin
       .post('/api/admin/pages/ideas/builder/activate')
-      .send({ expectedRevision: '0', tree: emptyTree })
+      .send({ expectedRevision: '1', tree: emptyTree })
       .expect(200);
     const before = await prisma.page.findUniqueOrThrow({ where: { id: pageId } });
     await prisma.pageVersion.create({
@@ -135,19 +135,19 @@ describe('builder draft persistence over disposable MySQL', () => {
       },
     });
     const blocked = await admin.post('/api/admin/pages/ideas/versions/1/restore').expect(409);
-    expect(blocked.body).toMatchObject({ code: 'CONFLICT', mode: 'tree', revision: '1' });
+    expect(blocked.body).toMatchObject({ code: 'CONFLICT', mode: 'tree', revision: '2' });
     const stale = await admin
       .post('/api/admin/pages/ideas/versions/2/builder/restore')
-      .send({ expectedRevision: '0' })
+      .send({ expectedRevision: '1' })
       .expect(409);
     expect(stale.body.code).toBe('CONFLICT');
     await admin
       .post('/api/admin/pages/ideas/versions/2/builder/restore')
-      .send({ expectedRevision: '1' })
+      .send({ expectedRevision: '2' })
       .expect(200);
     const restored = await prisma.page.findUniqueOrThrow({ where: { id: pageId } });
     expect(restored.draftTree).toEqual(emptyTree);
-    expect(restored.draftTreeRevision).toBe(2n);
+    expect(restored.draftTreeRevision).toBe(3n);
     expect(restored.publishedVersionId).toBe(before.publishedVersionId);
     expect(await prisma.pageBlock.count({ where: { pageId } })).toBe(1);
     expect(
@@ -155,12 +155,12 @@ describe('builder draft persistence over disposable MySQL', () => {
     ).toEqual(emptyTree);
     const legacyRestore = await admin
       .post('/api/admin/pages/ideas/versions/1/builder/restore')
-      .send({ expectedRevision: '2' })
+      .send({ expectedRevision: '3' })
       .expect(200);
-    expect(legacyRestore.body).toEqual({ mode: 'legacy', revision: '3', tree: null });
+    expect(legacyRestore.body).toEqual({ mode: 'legacy', revision: '4', tree: null });
     const legacyRow = await prisma.page.findUniqueOrThrow({ where: { id: pageId } });
     expect(legacyRow.draftTree).toBeNull();
-    expect(legacyRow.draftTreeRevision).toBe(3n);
+    expect(legacyRow.draftTreeRevision).toBe(4n);
     expect(legacyRow.publishedVersionId).toBe(before.publishedVersionId);
     expect(await prisma.pageBlock.count({ where: { pageId } })).toBe(0);
   });
@@ -172,7 +172,7 @@ describe('builder draft persistence over disposable MySQL', () => {
       .send({ expectedRevision: '0', tree: emptyTree })
       .expect(200);
     const before = await prisma.page.findUniqueOrThrow({ where: { id: pageId } });
-    for (const [version, snapshot] of [
+    for (const { version, snapshot } of [
       { version: 1, snapshot: { format: 'tree', snapshotVersion: 2, seo, tree: emptyTree } },
       {
         version: 2,

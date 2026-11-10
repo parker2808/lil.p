@@ -7,6 +7,27 @@ const emptyTree = {
   schemaVersion: 1,
   root: { id: 'page-root', type: 'page', responsive: { base: {} }, sections: [] },
 };
+const publishReadyTree = {
+  schemaVersion: 1,
+  root: {
+    ...emptyTree.root,
+    sections: [
+      {
+        id: 'section',
+        type: 'section',
+        responsive: { base: {} },
+        content: [
+          {
+            id: 'heading',
+            type: 'component',
+            componentType: 'heading',
+            responsive: { base: { text: 'Ideas', level: 1 } },
+          },
+        ],
+      },
+    ],
+  },
+};
 
 function setup(revision = 0n) {
   const page = {
@@ -131,9 +152,13 @@ describe('builder draft revision contract', () => {
     ).rejects.toMatchObject({ response: { code: 'CONFLICT' } });
     await service.activate('ideas', { expectedRevision: '0', tree: emptyTree });
     await expect(service.publish('ideas', { expectedRevision: '1' })).rejects.toMatchObject({
+      response: { code: 'VALIDATION_FAILED', fieldErrors: { tree: expect.any(Array) } },
+    });
+    await service.save('ideas', { expectedRevision: '1', tree: publishReadyTree });
+    await expect(service.publish('ideas', { expectedRevision: '2' })).rejects.toMatchObject({
       response: { code: 'CONFLICT', message: 'Tree publishing is not enabled' },
     });
-    expect(prisma.page.updateMany).toHaveBeenCalledTimes(1);
+    expect(prisma.page.updateMany).toHaveBeenCalledTimes(2);
   });
 
   it('rejects missing revisions and tree keys at the DTO boundary', () => {
