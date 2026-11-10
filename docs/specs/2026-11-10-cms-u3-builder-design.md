@@ -1,6 +1,6 @@
 # CMS U3 — builder design gate
 
-Status: proposed for coordinator review. Source: CMS-core ADR PR #172, Phase U3 / Phase D. This is a **visual study, not a builder**. No tree storage, drag engine, publish API, migration, or production route is introduced.
+Status: coordinator design-approved (recorded 2026-11-10 21:56 ICT at head `818dbac`); PR #178 remains draft. Source: CMS-core ADR PR #172, Phase U3 / Phase D. This is a **visual study, not a builder**. No tree storage, drag engine, publish API, migration, or production route is introduced.
 
 ## Plan (8 steps, revised after coordinator review)
 
@@ -40,7 +40,7 @@ Tab follows toolbar → palette → canvas → inspector; Shift+Tab reverses. En
 
 ## Review matrix / acceptance
 
-Review empty canvas, nested multi-section page, and mobile/tablet/desktop preview override with 1440×900 and 390×844 browser windows × EN/VI × light/dark, with both neutral and lil.p themes. Capture screenshot evidence, inspect clipping, hierarchy, nested insertion discoverability, selected-state clarity, contrast, screen-reader names and keyboard focus. Screenshot records and findings→fixes belong in the review section below. This gate requires coordinator visual approval **before Phase D**; a green suite alone does not constitute approval.
+Review empty canvas, nested multi-section page, and mobile/tablet/desktop preview override with 1440×900 and 390×844 browser windows × EN/VI × light/dark, with both neutral and lil.p themes. Capture screenshot evidence, inspect clipping, hierarchy, nested insertion discoverability, selected-state clarity, contrast, screen-reader names and keyboard focus. Screenshot records and findings→fixes belong in the review section below. The coordinator approved this visual gate; B6 may run after B4, and Phase D after B7, subject to the D4 acceptance items below.
 
 ## Review evidence and fixes
 
@@ -63,7 +63,12 @@ Measured WCAG contrast ratios (sRGB relative luminance, `(Llighter + .05)/(Ldark
 | Dark · neutral  |         8.93 |          7.84 |         6.74 |         9.40 |           7.58 |        5.69 |            7.68 |             6.74 |            8.92 |            9.22 |
 | Dark · lil.p    |         8.93 |          7.84 |         6.74 |         9.40 |           8.70 |        6.61 |            9.76 |             6.74 |            9.41 |            9.22 |
 
-Neutral text/surface: 15.07:1 light, 13.58:1 dark (unchanged for lil.p). The original neutral drop-zone foreground failed at 3.82:1 on white; `#3461b5` reaches 5.17:1 on its soft-blue background. These are scoped design-token measurements, not full WCAG certification. Keyboard focus, 44px targets and axe scanning have Playwright assertions; the full D4 keyboard drag/announcement journey, true undo history, autosave conflict resolution, and published SSR parity **cannot be validated from a static sample**. Coordinator approval remains outstanding.
+Neutral text/surface: 15.07:1 light, 13.58:1 dark (unchanged for lil.p). The original neutral drop-zone foreground failed at 3.82:1 on white; `#3461b5` reaches 5.17:1 on its soft-blue background. These are scoped design-token measurements, not full WCAG certification. Keyboard focus, 44px targets and axe scanning have Playwright assertions; the full D4 keyboard drag/announcement journey, true undo history, autosave conflict resolution, and published SSR parity **cannot be validated from a static sample**.
+
+**Coordinator decision (recorded 2026-11-10 21:56 ICT, head `818dbac`): approved.** All requested mobile, outline, palette, conflict, empty-target, contrast and screenshot-naming corrections are accepted. PR #178 stays draft; this approval does not authorize a merge or deployment. Two minor findings are **required D4 acceptance items**, not reasons to recapture the U3 study now:
+
+1. Dark-palette search: make placeholder text measure at least 4.5:1 against its field surface, **or** provide a persistent visible search label; verify in neutral and lil.p dark modes.
+2. Layers nesting: distinguish Page → Section → Row/Column → component depth with clearer indentation or guide lines in both desktop and mobile outlines; verify that the hierarchy remains legible in EN/VI and light/dark modes.
 
 The U2-stacked revision passed `pnpm check:all --e2e` **9/9 gates** with a disposable tmpfs MySQL database: format, lint, typecheck, unit, content, dependency, build, API E2E and web E2E. The web suite includes the 92-capture manifest, accessible modal/palette/outline assertions and 16 intentional skips. The prior run failed only because the removed screenshot files were not yet staged for the tracked-content check and a Playwright locator matched both the selected-item shortcut and bottom-bar Properties; staging the deletions and specifying `exact: true` resolved both. A production build served with `R3_E2E_STATES=0` returned HTTP 404 for `/en/cms-u3-study` without leaking sample content.
 
