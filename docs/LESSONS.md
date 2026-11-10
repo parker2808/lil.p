@@ -147,3 +147,4 @@
 - 2026-11-10: Design approval can leave scoped follow-ups; document low-contrast placeholders and ambiguous Layers indentation for D4 when the host is overloaded, until the coordinator explicitly brings them back into U3.
 - 2026-11-10: Browser placeholder opacity can defeat an otherwise AA-muted text token; set `::placeholder` color and opacity explicitly and assert computed contrast on the actual input. Tree depth also needs visible branch guides, not only indentation, in both desktop and mobile representations.
 - 2026-11-10: A flag-gated localized fixture needs its metadata localized and gated too; derive the title from the same EN/VI copy and test the disabled flag as well as both titles.
+- 2026-11-10: Stacked branches sharing generated Graphify reports should keep the updated base report during rebase conflicts, then regenerate the graph from the completed stack rather than resolving generated prose by hand.
