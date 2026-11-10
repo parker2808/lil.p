@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- D1 publish follow-up: `readTree` continues to accept empty drafts; `validateTreeForPublish` now rejects an empty tree with typed `HEADING_RULE` and requires exactly one H1. D2 must keep the structural draft and publish checks separate; no DB/API/golden change.
+
 - CMS D1 pure tree (stacked on accepted B6 `9e356db`, merging accepted B5 `71e9ce4`): versioned v0/v1 page→section→row/grid/column→component documents, strict Zod+registry/slot/ID/bounds policies, deterministic migrator and opt-in lossless legacy snapshot wrapper ship as `./tree` ESM/CJS/types. Iterative bounds preflight prevents recursive parser overflow; `readTree` accepts incomplete drafts while `validateTreeForPublish` checks H1/required content. Column slots hold components only and mobile grids allow one column. This early implementation does **not** imply acceptance before B7 approval. No persistence, host/API behavior, migration or B1 golden edits. B5/B6 merge `3303664` preserved both docs and export tests, regenerated Graphify rather than hand-merging its report; B6b may conflict with D1's narrow package.json/tsup tree entries. Combined contracts+engine+tree gzip is 5,672/61,440 bytes; React entries remain 1,621/35,840. D2 must separately gate storage/HTTP and legacy compatibility. See `docs/specs/2026-11-11-cms-d1-versioned-tree.md`.
 
 - CMS B6 React extraction (stacked on accepted B4 `8c448ea2`): `./react/server` performs server-safe block dispatch with host-supplied wrappers/renderers and no client hooks or inspector imports; `./react` retains the built client directive and exposes schema field/metadata/widget contracts. The web adapter keeps portfolio renderers, TanStack form, translations, domain widget mappings and brand styling; core requires host-resolved localized labels instead of defaulting to English. Web declares a direct core dependency; web Docker copies its manifest before frozen install and builds dependency closure. Both React subpaths share the original 35 KiB gzip cap; no builder code, storage, API or migration changes. B5 PR #189 independently changes the API importer of the lockfile and the shared export test: integration must rerun pnpm install and reconcile those adjacent test assertions. B7 verifies the neutral package after B5/B6 acceptance; D follows the approved U3 design gate. See `docs/specs/2026-11-11-cms-core-b6-react.md`.
@@ -155,6 +157,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: D1 closes empty-tree publish bypass while retaining valid empty drafts; one H1 publishes, two H1s fail. No database, API or golden changes.
 
 - 2026-11-11: D1 review follow-up rejects adversarial deep/wide trees before recursive parsing, separates draft and publish validators, permits one-column mobile grids, and aligns typed/validated slots with the five-level usable layout budget. No HTTP, DB, migrations or B1 golden changes.
 - 2026-11-11: Added D1 strict versioned tree schemas, registry validation, responsive breakpoint overrides, deterministic v0 migration and opt-in lossless legacy block-list conversion, with ESM/CJS/types and bounded browser-gzip regression tests. Merged B5 into B6 with both export assertions retained. No database writes, API/EN–VI/legacy golden changes; D1 acceptance waits on B7.

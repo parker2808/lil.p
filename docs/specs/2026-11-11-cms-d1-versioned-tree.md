@@ -25,6 +25,8 @@
 
 **Review follow-up (same D1 scope):** regressions cover 700+ nested nodes, 501+ wide nodes, draft without H1 versus publish, mobile one-column grids, every allowed slot at its deepest usable depth, and compile-time rejection of misplaced child slots. No legacy HTTP/DB or golden change.
 
+**Publish-policy review:** An empty tree must remain a valid draft but cannot publish without exactly one H1. Red-then-green tests cover empty draft/publish (`HEADING_RULE`), one H1 (accepted) and two H1s (rejected). The publish policy changes only the previously ungated empty-tree case; no legacy HTTP, DB or golden response changes.
+
 **Rollback:** revert only the new `./tree` export, implementation, tests and docs; no stored rows or snapshots change. D2 must separately design rollback-read for newly published tree pages.
 
 **Measured follow-up (Node 22, minified ESM, gzip level 9/mTime 0):** contracts 844 B + engine 1,589 B + tree 3,239 B = **5,672/61,440 B**. React 1,174 B + React/server 447 B = **1,621/35,840 B**. The package build still reports the original contracts+engine subset; `tree-contract.test.mjs` additionally fails the 60-KiB combined cap if the new tree entry grows over budget. No cap revision is requested. B5/B6 merge conflict resolution: preserved their separate README/context/lessons and engine+React export assertions, and regenerated the generated Graphify report rather than combining its conflict markers.
