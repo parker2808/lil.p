@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
-- CMS B1 golden HTTP suite is test-only and may proceed alongside U2/U3 per coordinator amendment; B2–B7 remain behind the Phase U gate. ADR #172 and U0 #175 remain separate review branches; PR #174's missing duplicate-block `BLOCK_LIMIT` is an upstream dependency, not a runtime fix in B1. See `docs/specs/2026-11-10-cms-b1-golden-http.md`.
+- CMS B1 golden HTTP suite is test-only and may proceed alongside U2/U3 per coordinator amendment; B2–B7 remain behind the Phase U gate. ADR #172 and U0 #175 remain separate review branches; PR #174's missing duplicate-block `BLOCK_LIMIT` is an upstream dependency, not a runtime fix in B1. PR #177 review adds observable restore/discard snapshot assertions, missing-version 404 and EN/VI published preview/public parity; the VI-only SEO bug has its own named case. See `docs/specs/2026-11-10-cms-b1-golden-http.md`.
 - CMS B1 observed baseline bug (not fixed here): a VI-created custom page with VI-only SEO title publishes with public `seo.title: null`, `seo.lang: en` even on `?locale=vi`; it needs a separately reviewed API fix, not a silent golden rewrite.
 
 - Round 3 integration: one review PR to `main` starts at the verified PR #169 head, which contains all eleven earlier Round 3 branch tips. The additional commit documents the handoff only. The original stacked PRs remain open; Parker decides whether and how to merge or close them. Database migration, deployment, and production changes are separate decisions.
@@ -139,7 +139,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
-- 2026-11-10: Added deterministic API-level CMS B1 golden HTTP contracts for pages/blocks/custom pages, publish/preview/restore, auth/roles, site settings, media and EN/VI; B1 sequencing exception does not lift the U gate for the rest of B. No runtime, schema, or migration changes.
+- 2026-11-10: Strengthened deterministic CMS B1 HTTP goldens with structural v1 draft restore/discard checks, public-content invariance, missing-version 404, EN/VI published preview/public block parity, and a separately named VI-only custom SEO bug baseline. B1 sequencing exception does not lift the U gate for the rest of B. No runtime, schema, or migration changes.
 
 - 2026-11-03: Prepared a single Round 3 integration review PR from the PR #169 head to `main`, preserving all eleven earlier branch tips and documenting the remaining release decisions.
 - 2026-11-03: Repaired PR #169 web E2E origin and integrated visual baselines, stabilized real theme and locale interactions in editor captures, updated the experience tab check and contact submission interaction, and allowed isolated local ports in the disposable MySQL gate. All nine local `check:all --e2e` gates, 17 focused browser tests, and 14 Linux visual tests pass.

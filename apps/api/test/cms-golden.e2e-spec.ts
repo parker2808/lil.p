@@ -32,6 +32,48 @@ function errorShape(body: unknown, statusCode: number, code: string): void {
   );
 }
 
+function draftSnapshotShape(page: {
+  seoTitleEn: string | null;
+  seoTitleVi: string | null;
+  seoDescriptionEn: string | null;
+  seoDescriptionVi: string | null;
+  blocks: Array<{
+    type: string;
+    key: string;
+    schemaVersion: number;
+    props: unknown;
+    layout: string;
+    surface: string;
+    isVisible: boolean;
+    sortOrder: number;
+  }>;
+}) {
+  return {
+    seo: {
+      seoTitleEn: page.seoTitleEn,
+      seoTitleVi: page.seoTitleVi,
+      seoDescriptionEn: page.seoDescriptionEn,
+      seoDescriptionVi: page.seoDescriptionVi,
+    },
+    blocks: page.blocks.map(
+      ({ type, key, schemaVersion, props, layout, surface, isVisible, sortOrder }) => ({
+        type,
+        key,
+        schemaVersion,
+        props,
+        layout,
+        surface,
+        isVisible,
+        sortOrder,
+      }),
+    ),
+  };
+}
+
+function resolvedBlocks(page: { blocks: Array<{ type: string; key: string; props: unknown }> }) {
+  return page.blocks.map(({ type, key, props }) => ({ type, key, props }));
+}
+
 describe('CMS golden HTTP contracts', () => {
   let app: INestApplication;
   let prisma: PrismaService;
@@ -234,6 +276,7 @@ describe('CMS golden HTTP contracts', () => {
       .send({ note: 'first' })
       .expect(200);
     expect(published.body.publishedVersion).toBe(1);
+    const publishedPages: Record<string, unknown> = {};
     for (const [locale, label, title] of [
       ['en', 'See work', 'Home'],
       ['vi', 'Xem việc', 'Trang chủ'],
@@ -250,6 +293,10 @@ describe('CMS golden HTTP contracts', () => {
         'prose',
       ]);
       expect(publicPage.body.blocks[0].props.primaryCta.label).toBe(label);
+      const preview = await admin.get(`/api/admin/preview/pages/home?locale=${locale}`).expect(200);
+      expect(preview.body.invalidBlocks).toEqual([]);
+      expect(resolvedBlocks(preview.body)).toEqual(resolvedBlocks(publicPage.body));
+      publishedPages[locale] = publicPage.body;
     }
     const versions = await admin.get('/api/admin/pages/home/versions').expect(200);
     expect(versions.body).toEqual([
@@ -260,77 +307,152 @@ describe('CMS golden HTTP contracts', () => {
       version: 1,
       snapshot: { blocks: expect.any(Array), seo: expect.any(Object) },
     });
-    await admin.post('/api/admin/pages/home/versions/1/restore').expect(200);
-    await admin.post('/api/admin/pages/home/discard').expect(200);
+    const publishedSnapshot = version.body.snapshot;
+    const changedHero = (await admin.get('/api/admin/pages/home').expect(200)).body.blocks[0];
+    await admin
+      .patch(`/api/admin/pages/home/blocks/${changedHero.id}`)
+      .send({ updatedAt: changedHero.updatedAt, props: HERO_PROPS })
+      .expect(200);
+    const changedPage = (await admin.get('/api/admin/pages/home').expect(200)).body;
+    await admin
+      .patch('/api/admin/pages/home')
+      .send({ updatedAt: changedPage.updatedAt, seoDescriptionVi: 'Bản nháp mới' })
+      .expect(200);
+    const beforeRestore = (await admin.get('/api/admin/pages/home').expect(200)).body;
+    expect(draftSnapshotShape(beforeRestore)).not.toEqual(publishedSnapshot);
+    errorShape(
+      (await admin.post('/api/admin/pages/home/versions/999/restore').expect(404)).body,
+      404,
+      'NOT_FOUND',
+    );
+    const restored = await admin.post('/api/admin/pages/home/versions/1/restore').expect(200);
+    expect(draftSnapshotShape(restored.body)).toEqual(publishedSnapshot);
+    expect(draftSnapshotShape((await admin.get('/api/admin/pages/home').expect(200)).body)).toEqual(
+      publishedSnapshot,
+    );
+
+    const restoredHero = restored.body.blocks[0];
+    await admin
+      .patch(`/api/admin/pages/home/blocks/${restoredHero.id}`)
+      .send({ updatedAt: restoredHero.updatedAt, props: HERO_PROPS })
+      .expect(200);
+    const beforeDiscard = (await admin.get('/api/admin/pages/home').expect(200)).body;
+    await admin
+      .patch('/api/admin/pages/home')
+      .send({ updatedAt: beforeDiscard.updatedAt, seoDescriptionEn: 'Unpublished copy' })
+      .expect(200);
     expect(
-      (await admin.get('/api/public/pages/home?locale=en').expect(200)).body.blocks[0].type,
-    ).toBe('hero');
+      draftSnapshotShape((await admin.get('/api/admin/pages/home').expect(200)).body),
+    ).not.toEqual(publishedSnapshot);
+    const discarded = await admin.post('/api/admin/pages/home/discard').expect(200);
+    expect(draftSnapshotShape(discarded.body)).toEqual(publishedSnapshot);
+    expect(draftSnapshotShape((await admin.get('/api/admin/pages/home').expect(200)).body)).toEqual(
+      publishedSnapshot,
+    );
+    for (const locale of ['en', 'vi']) {
+      expect((await admin.get(`/api/public/pages/home?locale=${locale}`).expect(200)).body).toEqual(
+        publishedPages[locale],
+      );
+    }
   });
 
-  it.each(['en', 'vi'] as const)(
-    'freezes %s custom page validation and publication',
-    async (locale) => {
-      const admin = await adminAgent(app);
-      const title = locale === 'en' ? 'Studio notes' : 'Ghi chú xưởng';
-      const key = `studio-${locale}`;
-      const created = await admin
-        .post('/api/admin/pages')
-        .send({ key, title, locale, template: 'starter' })
-        .expect(201);
-      expect(created.body).toMatchObject({
-        key,
-        title,
-        locale,
-        publishedVersion: null,
-        blocks: [
-          expect.objectContaining({ type: 'page-header' }),
-          expect.objectContaining({ type: 'prose' }),
-        ],
-      });
-      errorShape(
-        (
-          await admin
-            .post('/api/admin/pages')
-            .send({ key, title, locale, template: 'empty' })
-            .expect(409)
-        ).body,
-        409,
-        'PAGE_KEY_TAKEN',
-      );
-      errorShape(
-        (await admin.post(`/api/admin/pages/${key}/publish`).send({}).expect(400)).body,
-        400,
-        'PAGE_BODY_REQUIRED',
-      );
-      const prose = created.body.blocks[1];
-      await admin
-        .patch(`/api/admin/pages/${key}/blocks/${prose.id}`)
-        .send({
-          updatedAt: prose.updatedAt,
-          props: {
-            body: { en: 'Substantive English studio copy', vi: 'Nội dung xưởng tiếng Việt đầy đủ' },
-          },
-        })
-        .expect(200);
-      await admin.post(`/api/admin/pages/${key}/publish`).send({}).expect(200);
-      const publicPage = await request(app.getHttpServer())
-        .get(`/api/public/pages/${key}?locale=${locale}`)
-        .expect(200);
-      expect(publicPage.body).toMatchObject({
-        key,
-        seo: locale === 'vi' ? { title: null, lang: 'en' } : { title, lang: locale },
-        blocks: expect.any(Array),
-      });
-      expect(publicPage.body.blocks.map((block: { type: string }) => block.type)).toEqual([
-        'page-header',
-        'prose',
-      ]);
-      expect(
-        (await admin.get(`/api/admin/preview/pages/${key}?locale=${locale}`).expect(200)).body
-          .invalidBlocks,
-      ).toEqual([]);
-    },
-  );
+  it('freezes EN custom page validation and publication', async () => {
+    const admin = await adminAgent(app);
+    const locale = 'en';
+    const title = 'Studio notes';
+    const key = `studio-${locale}`;
+    const created = await admin
+      .post('/api/admin/pages')
+      .send({ key, title, locale, template: 'starter' })
+      .expect(201);
+    expect(created.body).toMatchObject({
+      key,
+      title,
+      locale,
+      publishedVersion: null,
+      blocks: [
+        expect.objectContaining({ type: 'page-header' }),
+        expect.objectContaining({ type: 'prose' }),
+      ],
+    });
+    errorShape(
+      (
+        await admin
+          .post('/api/admin/pages')
+          .send({ key, title, locale, template: 'empty' })
+          .expect(409)
+      ).body,
+      409,
+      'PAGE_KEY_TAKEN',
+    );
+    errorShape(
+      (await admin.post(`/api/admin/pages/${key}/publish`).send({}).expect(400)).body,
+      400,
+      'PAGE_BODY_REQUIRED',
+    );
+    const prose = created.body.blocks[1];
+    await admin
+      .patch(`/api/admin/pages/${key}/blocks/${prose.id}`)
+      .send({
+        updatedAt: prose.updatedAt,
+        props: {
+          body: { en: 'Substantive English studio copy', vi: 'Nội dung xưởng tiếng Việt đầy đủ' },
+        },
+      })
+      .expect(200);
+    await admin.post(`/api/admin/pages/${key}/publish`).send({}).expect(200);
+    const publicPage = await request(app.getHttpServer())
+      .get(`/api/public/pages/${key}?locale=${locale}`)
+      .expect(200);
+    expect(publicPage.body).toMatchObject({
+      key,
+      seo: { title, lang: locale },
+      blocks: expect.any(Array),
+    });
+    expect(publicPage.body.blocks.map((block: { type: string }) => block.type)).toEqual([
+      'page-header',
+      'prose',
+    ]);
+    expect(
+      (await admin.get(`/api/admin/preview/pages/${key}?locale=${locale}`).expect(200)).body
+        .invalidBlocks,
+    ).toEqual([]);
+  });
+
+  it('KNOWN BUG baseline: VI-only custom page SEO falls back to EN', async () => {
+    // See docs/specs/2026-11-10-cms-b1-golden-http.md §Observed baseline discrepancies.
+    const admin = await adminAgent(app);
+    const created = await admin
+      .post('/api/admin/pages')
+      .send({ key: 'studio-vi', title: 'Ghi chú xưởng', locale: 'vi', template: 'starter' })
+      .expect(201);
+    const prose = created.body.blocks[1];
+    await admin
+      .patch(`/api/admin/pages/studio-vi/blocks/${prose.id}`)
+      .send({
+        updatedAt: prose.updatedAt,
+        props: {
+          body: { en: 'Substantive English studio copy', vi: 'Nội dung xưởng tiếng Việt đầy đủ' },
+        },
+      })
+      .expect(200);
+    await admin.post('/api/admin/pages/studio-vi/publish').send({}).expect(200);
+    const publicPage = await request(app.getHttpServer())
+      .get('/api/public/pages/studio-vi?locale=vi')
+      .expect(200);
+    expect(publicPage.body).toMatchObject({
+      key: 'studio-vi',
+      seo: { title: null, lang: 'en' },
+    });
+    expect(publicPage.body.blocks.map((block: { type: string }) => block.type)).toEqual([
+      'page-header',
+      'prose',
+    ]);
+    expect(
+      (await admin.get('/api/admin/preview/pages/studio-vi?locale=vi').expect(200)).body
+        .invalidBlocks,
+    ).toEqual([]);
+  });
 
   it('freezes error envelopes, settings, media and auth status/shape', async () => {
     const admin = await adminAgent(app);

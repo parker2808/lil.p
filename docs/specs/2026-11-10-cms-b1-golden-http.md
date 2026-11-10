@@ -14,6 +14,12 @@ Status: test-only proposal · 2026-11-10 · base `d0d474b` · ADR PR #172 and U0
 
 B1 is **test-only and API-level** and may run alongside U2/U3; B2–B7 still wait for the U design gate. No production behavior, schema, migration, deployment or merge is authorized. Use explicit keys, isolated table resets and structural assertions rather than committed response snapshots. Record observed bugs, do not fix them here. `BLOCK_LIMIT` duplication applies only after PR #174 lands; until then record the missing duplicate guard as an upstream dependency and keep its assertion conditional on the merged base.
 
+## Review amendment — PR #177
+
+- After publish, compare EN/VI preview and public block type/key/order/resolved props. `invalidBlocks` is the preview-only diagnostic field; IDs differ between draft rows and published snapshots and are not comparable.
+- Change draft after v1 publish, restore v1 and compare the full snapshot block structure and four raw SEO fields; change it again, discard, and compare the resulting draft to the published snapshot while confirming the public response is unchanged. Missing-version restore must return the `404 NOT_FOUND` envelope.
+- Keep the VI-only custom SEO fallback in a separately named KNOWN BUG case so a resolver fix explicitly changes that baseline rather than silently updating a shared locale expectation.
+
 ## Observed baseline discrepancies
 
 - Custom page created with `locale: vi` and a VI-only title publishes, but `GET /api/public/pages/:key?locale=vi` responds with `seo: { title: null, lang: "en" }`. The golden records this current response rather than changing the locale resolver in B1; resolve separately after coordinator review. The body blocks still render VI content.
