@@ -95,7 +95,7 @@ test('reviewed visual matrix', async ({ page }) => {
       await expect(
         page.getByRole('region', { name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder' }),
       ).toHaveAttribute('data-theme', theme);
-      for (const width of [1440, 390] as const) {
+      for (const width of [1440, 768, 390] as const) {
         await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
         for (const brand of ['neutral', 'lilp'] as const) {
           await page.goto('/admin/builder/home');
@@ -113,14 +113,14 @@ test('reviewed visual matrix', async ({ page }) => {
           }
           await capture('empty');
           const palette =
-            width === 390
+            width !== 1440
               ? page
                   .getByRole('navigation', { name: /Page builder|Trình dựng trang/ })
                   .getByRole('button', { name: locale === 'vi' ? 'Thành phần' : 'Components' })
               : null;
           if (palette) await palette.click();
           const container =
-            width === 390
+            width !== 1440
               ? page.getByRole('dialog', { name: locale === 'vi' ? 'Thành phần' : 'Components' })
               : page.getByRole('complementary', {
                   name: locale === 'vi' ? 'Thành phần' : 'Components',
@@ -130,7 +130,7 @@ test('reviewed visual matrix', async ({ page }) => {
             .click();
           if (palette) await palette.click();
           const components =
-            width === 390
+            width !== 1440
               ? page.getByRole('dialog', { name: locale === 'vi' ? 'Thành phần' : 'Components' })
               : page.getByRole('complementary', {
                   name: locale === 'vi' ? 'Thành phần' : 'Components',

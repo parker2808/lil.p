@@ -9,7 +9,8 @@ import {
 
 export type Slot = 'sections' | 'content' | 'columns' | 'items';
 export type Destination = { parentId: string; slot: Slot; index: number };
-export type CompositionError = 'NOT_FOUND' | 'INVALID_TARGET' | 'INVALID_ID' | 'INVALID_TREE';
+export type CompositionError =
+  'NOT_FOUND' | 'INVALID_TARGET' | 'INVALID_ID' | 'INVALID_TREE' | 'REQUIRED_COLUMN';
 export type CompositionResult =
   | { ok: true; document: TreeDocument; selectedId: string }
   | { ok: false; document: TreeDocument; reason: CompositionError };
@@ -200,6 +201,8 @@ export function removeNode(
   const draft = structuredClone(document);
   const source = locate(draft, nodeId);
   if (!source) return { ok: false, document, reason: 'NOT_FOUND' };
+  if (source.parent.type === 'row' && source.parent.columns.length <= 2)
+    return { ok: false, document, reason: 'REQUIRED_COLUMN' };
   slotChildren(source.parent, source.slot)!.splice(source.index, 1);
   return finish(document, draft, source.parent.id, registry);
 }

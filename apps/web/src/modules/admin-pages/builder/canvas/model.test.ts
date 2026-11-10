@@ -103,7 +103,7 @@ describe('canvas composition commands', () => {
     expect(removeNode(document, 'left')).toMatchObject({
       ok: false,
       document,
-      reason: 'INVALID_TREE',
+      reason: 'REQUIRED_COLUMN',
     });
     expect(removeNode(document, 'row').ok).toBe(true);
   });

@@ -1,0 +1,45 @@
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { afterEach, expect, it, vi } from 'vitest';
+
+import { BuilderShell } from './BuilderShell';
+import { reduceBuilderCommand, type BuilderState } from './canvas/commands';
+
+vi.mock('next-intl', () => ({ useLocale: () => 'en' }));
+
+const state: BuilderState = {
+  document: {
+    schemaVersion: 1,
+    root: { id: 'page', type: 'page', responsive: { base: {} }, sections: [] },
+  },
+  selectedId: 'page',
+};
+
+afterEach(() => {
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1440 });
+  window.dispatchEvent(new Event('resize'));
+});
+
+it('mounts the host Properties editor exactly once across desktop and mobile sheet transitions', async () => {
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1440 });
+  const renderProperties = vi.fn(() => <span data-testid="host-properties" />);
+  render(
+    <BuilderShell
+      pageKey="home"
+      state={state}
+      onDispatch={(command) => reduceBuilderCommand(state, command)}
+      renderProperties={renderProperties}
+    />,
+  );
+  expect(screen.getAllByTestId('host-properties')).toHaveLength(1);
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+  fireEvent(window, new Event('resize'));
+  await waitFor(() => expect(screen.queryByTestId('host-properties')).toBeNull());
+  fireEvent.click(
+    within(screen.getByRole('navigation', { name: 'Page builder' })).getByRole('button', {
+      name: 'Properties',
+    }),
+  );
+  await waitFor(() => expect(screen.getAllByTestId('host-properties')).toHaveLength(1));
+  fireEvent.keyDown(screen.getByRole('dialog', { name: 'Properties' }), { key: 'Escape' });
+  await waitFor(() => expect(screen.queryByTestId('host-properties')).toBeNull());
+});

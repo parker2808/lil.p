@@ -16,13 +16,12 @@ import {
   children,
   findNode,
   insertNode,
-  moveNode,
   outline,
-  removeNode,
-  reorderNode,
   validDestinations,
   type Destination,
 } from './canvas/model';
+import { reduceBuilderCommand, type BuilderCommand, type BuilderState } from './canvas/commands';
+import type { CompositionResult } from './canvas/model';
 import { navigateOutline, visibleOutline } from './layers/keyboard';
 import { newNode, paletteKinds, type PaletteKind } from './palette/catalog';
 import styles from './builder.module.css';
@@ -51,6 +50,7 @@ type Copy = {
   placed: string;
   selected: string;
   removed: string;
+  requiredColumn: string;
   publishHint: string;
   empty: string;
   choose: string;
@@ -83,6 +83,7 @@ const copy: Record<'en' | 'vi', Copy> = {
     placed: 'Item placed',
     selected: 'Selected',
     removed: 'Item deleted',
+    requiredColumn: 'Keep at least two columns in a row. Delete the row instead.',
     publishHint: 'Publish needs a heading. Draft composition remains available.',
     empty: 'Empty page',
     choose: 'Add a section to start your page',
@@ -125,6 +126,7 @@ const copy: Record<'en' | 'vi', Copy> = {
     placed: 'Đã đặt mục',
     selected: 'Đã chọn',
     removed: 'Đã xóa mục',
+    requiredColumn: 'Hàng cần ít nhất hai cột. Hãy xóa cả hàng thay vì cột.',
     publishHint: 'Cần tiêu đề để xuất bản. Bạn vẫn có thể soạn bản nháp.',
     empty: 'Trang trống',
     choose: 'Thêm một phần để bắt đầu trang',
@@ -161,7 +163,7 @@ function subscribeViewport(onChange: () => void) {
 }
 
 function viewportDevice(): 'mobile' | 'tablet' | 'desktop' {
-  return window.innerWidth < 1101 ? 'mobile' : window.innerWidth < 1700 ? 'tablet' : 'desktop';
+  return window.innerWidth < 600 ? 'mobile' : window.innerWidth < 1700 ? 'tablet' : 'desktop';
 }
 
 function subscribeTheme(onChange: () => void) {
@@ -181,24 +183,25 @@ function label(node: TreeNode, text: Copy) {
 }
 
 export type BuilderMount = (props: {
-  document: TreeDocument;
-  selectedId: string;
-  onDocumentChange: (document: TreeDocument) => void;
-  onSelect: (id: string) => void;
+  state: BuilderState;
+  onDispatch: (command: BuilderCommand) => CompositionResult;
 }) => ReactNode;
 
 export function BuilderShell({
   pageKey,
+  state,
+  onDispatch,
   renderProperties,
 }: {
   pageKey: string;
+  state: BuilderState;
+  onDispatch: (command: BuilderCommand) => CompositionResult;
   renderProperties?: BuilderMount;
 }) {
   const locale = useLocale() === 'vi' ? 'vi' : 'en';
   const theme = useSyncExternalStore(subscribeTheme, documentTheme, () => 'light');
   const text = copy[locale];
-  const [document, setDocument] = useState<TreeDocument>(initial);
-  const [selectedId, setSelectedId] = useState('page');
+  const { document, selectedId } = state;
   const [sheet, setSheet] = useState<'components' | 'layers' | 'properties' | null>(null);
   const [query, setQuery] = useState('');
   const [announcement, setAnnouncement] = useState('');
@@ -219,6 +222,7 @@ export function BuilderShell({
   const confirmRef = useRef<HTMLDivElement | null>(null);
   const deleteTriggerRef = useRef<HTMLElement | null>(null);
   const treeRef = useRef<HTMLDivElement | null>(null);
+  const canvasRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!sheet) return;
@@ -226,22 +230,28 @@ export function BuilderShell({
     first?.focus();
   }, [sheet]);
 
+  useEffect(() => {
+    if (sheet || !triggerRef.current) return;
+    const trigger = triggerRef.current;
+    triggerRef.current = null;
+    requestAnimationFrame(() => trigger.focus());
+  }, [sheet]);
+
   function closeSheet() {
     setSheet(null);
     requestAnimationFrame(() => triggerRef.current?.focus());
   }
-  function closeConfirmation() {
+  function closeConfirmation(restoreTrigger = true) {
     setConfirmDelete(false);
-    requestAnimationFrame(() => deleteTriggerRef.current?.focus());
+    if (restoreTrigger) requestAnimationFrame(() => deleteTriggerRef.current?.focus());
   }
   function openSheet(value: 'components' | 'layers' | 'properties', trigger: HTMLButtonElement) {
     triggerRef.current = trigger;
     setSheet(value);
   }
-  function apply(result: ReturnType<typeof insertNode>) {
+  function apply(command: BuilderCommand) {
+    const result = onDispatch(command);
     if (result.ok) {
-      setDocument(result.document);
-      setSelectedId(result.selectedId);
       setFocusId(result.selectedId);
       const nextExpanded = new Set(expanded);
       for (const item of outline(result.document))
@@ -256,8 +266,9 @@ export function BuilderShell({
       setAnnouncement(
         `${text.selected}: ${label(findNode(result.document, result.selectedId)!, text)}`,
       );
-    } else setAnnouncement(text.invalid);
-    return result.ok;
+    } else
+      setAnnouncement(result.reason === 'REQUIRED_COLUMN' ? text.requiredColumn : text.invalid);
+    return result;
   }
   function locations(kind: PaletteKind): Destination[] {
     const node = newNode(kind, () => crypto.randomUUID(), locale);
@@ -298,7 +309,7 @@ export function BuilderShell({
       setAnnouncement(text.invalid);
       return;
     }
-    if (apply(insertNode(document, node, target))) closeSheet();
+    if (apply({ type: 'insert', node, destination: target }).ok) setSheet(null);
   }
   function visibleItems() {
     return visibleOutline(document, expanded);
@@ -326,6 +337,25 @@ export function BuilderShell({
       setAnnouncement(text.invalid);
       return;
     }
+    const paletteKind = source.startsWith('palette:') ? source.slice(8) : null;
+    if (paletteKind && !paletteKinds.includes(paletteKind as PaletteKind)) {
+      setAnnouncement(text.invalid);
+      return;
+    }
+    const node = paletteKind
+      ? newNode(paletteKind as PaletteKind, () => crypto.randomUUID(), locale)
+      : null;
+    const commandFor = (destination: Destination): BuilderCommand =>
+      node ? { type: 'insert', node, destination } : { type: 'move', id: source, destination };
+    const valid = (destination: Destination) =>
+      node
+        ? insertNode(document, node, destination).ok
+        : validDestinations(document, source).some(
+            (item) =>
+              item.parentId === destination.parentId &&
+              item.slot === destination.slot &&
+              item.index === destination.index,
+          );
     const slot =
       target.type === 'page'
         ? 'sections'
@@ -335,9 +365,8 @@ export function BuilderShell({
             ? 'items'
             : 'columns';
     const inside = { parentId: targetId, slot, index: children(target).length } as Destination;
-    const insideResult = moveNode(document, source, inside);
-    if (insideResult.ok) {
-      apply(insideResult);
+    if (valid(inside)) {
+      apply(commandFor(inside));
       return;
     }
     const parentId = outline(document).find((item) => item.id === targetId)?.parentId;
@@ -354,13 +383,13 @@ export function BuilderShell({
           : parent.type === 'grid'
             ? 'items'
             : 'columns';
-    apply(
-      moveNode(document, source, {
-        parentId,
-        slot: siblingSlot,
-        index: children(parent).findIndex((item) => item.id === targetId),
-      }),
-    );
+    const sibling = {
+      parentId,
+      slot: siblingSlot,
+      index: children(parent).findIndex((item) => item.id === targetId),
+    } as Destination;
+    if (valid(sibling)) apply(commandFor(sibling));
+    else setAnnouncement(text.invalid);
   }
   function focusTree(id: string) {
     setFocusId(id);
@@ -394,17 +423,21 @@ export function BuilderShell({
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         const source = pickup.source;
-        apply(moveNode(document, source, pickup.destinations[pickup.index]!));
+        const placed = apply({
+          type: 'move',
+          id: source,
+          destination: pickup.destinations[pickup.index]!,
+        }).ok;
         setPickup(null);
         focusTree(source);
-        setAnnouncement(text.placed);
+        if (placed) setAnnouncement(text.placed);
         return;
       }
       return;
     }
     if (event.altKey && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
       event.preventDefault();
-      apply(reorderNode(document, id, event.key === 'ArrowUp' ? -1 : 1));
+      apply({ type: 'reorder', id, direction: event.key === 'ArrowUp' ? -1 : 1 });
       focusTree(id);
     } else if (
       event.key === 'ArrowDown' ||
@@ -427,7 +460,7 @@ export function BuilderShell({
       focusTree(next.focusId);
     } else if (event.key === 'Enter') {
       event.preventDefault();
-      setSelectedId(id);
+      apply({ type: 'select', id });
       setAnnouncement(`${text.selected}: ${label(current.node, text)}`);
     } else if (event.key === ' ' && id !== 'page') {
       event.preventDefault();
@@ -438,7 +471,7 @@ export function BuilderShell({
       }
     } else if (event.key === 'Delete' && id !== 'page') {
       event.preventDefault();
-      setSelectedId(id);
+      apply({ type: 'select', id });
       deleteTriggerRef.current = event.target as HTMLElement;
       setConfirmDelete(true);
     }
@@ -499,9 +532,21 @@ export function BuilderShell({
                       <button
                         key={kind}
                         type="button"
+                        draggable={available}
+                        onDragStart={(event) => {
+                          if (!available) {
+                            event.preventDefault();
+                            return;
+                          }
+                          event.dataTransfer.setData('text/plain', `palette:${kind}`);
+                          event.dataTransfer.effectAllowed = 'copy';
+                        }}
                         aria-disabled={!available}
                         title={available ? undefined : reason}
-                        onClick={() => (available ? add(kind) : setAnnouncement(reason))}
+                        onClick={() => {
+                          if (available) add(kind);
+                          else setAnnouncement(reason);
+                        }}
                       >
                         <span className={styles.tileIcon} aria-hidden="true">
                           {kind === 'section'
@@ -539,12 +584,7 @@ export function BuilderShell({
           <h3>{label(findNode(document, selectedId) ?? document.root, text)}</h3>
           <p>{text.unsaved}</p>
           <p className={styles.hint}>{text.publishHint}</p>
-          {renderProperties?.({
-            document,
-            selectedId,
-            onDocumentChange: setDocument,
-            onSelect: setSelectedId,
-          })}
+          {renderProperties?.({ state, onDispatch })}
         </div>
       );
     return (
@@ -585,7 +625,7 @@ export function BuilderShell({
                 dropOn(event.dataTransfer.getData('text/plain'), item.id);
               }}
               onClick={() => {
-                setSelectedId(item.id);
+                apply({ type: 'select', id: item.id });
                 setFocusId(item.id);
               }}
               className={styles.treeItem}
@@ -635,7 +675,8 @@ export function BuilderShell({
         >
           <button
             type="button"
-            onClick={() => setSelectedId(node.id)}
+            data-canvas-id={node.id}
+            onClick={() => apply({ type: 'select', id: node.id })}
             aria-label={`${text.select} ${label(node, text)}`}
           >
             {label(node, text)}
@@ -645,7 +686,7 @@ export function BuilderShell({
               <button
                 type="button"
                 onClick={() => {
-                  apply(reorderNode(document, node.id, -1));
+                  apply({ type: 'reorder', id: node.id, direction: -1 });
                 }}
                 aria-label={`${text.move} ↑`}
               >
@@ -654,7 +695,7 @@ export function BuilderShell({
               <button
                 type="button"
                 onClick={() => {
-                  apply(reorderNode(document, node.id, 1));
+                  apply({ type: 'reorder', id: node.id, direction: 1 });
                 }}
                 aria-label={`${text.move} ↓`}
               >
@@ -768,7 +809,7 @@ export function BuilderShell({
           <h2>{text.layers}</h2>
           {panel('layers')}
         </aside>
-        <section className={styles.canvasArea} aria-label={text.canvas}>
+        <section className={styles.canvasArea} aria-label={text.canvas} ref={canvasRef}>
           <div className={styles.canvasToolbar}>
             <span>
               {text.canvas} · {document.root.sections.length} {text.labels.section.toLowerCase()}
@@ -800,10 +841,12 @@ export function BuilderShell({
             </div>
           </div>
         </section>
-        <aside className={`${styles.sidebar} ${styles.inspector}`} aria-label={text.properties}>
-          <h2>{text.properties}</h2>
-          {panel('properties')}
-        </aside>
+        {viewport !== 'mobile' && renderProperties && (
+          <aside className={`${styles.sidebar} ${styles.inspector}`} aria-label={text.properties}>
+            <h2>{text.properties}</h2>
+            {panel('properties')}
+          </aside>
+        )}
       </div>
       <div
         className={styles.selectionStrip}
@@ -815,14 +858,14 @@ export function BuilderShell({
           <>
             <button
               type="button"
-              onClick={() => apply(reorderNode(document, selectedId, -1))}
+              onClick={() => apply({ type: 'reorder', id: selectedId, direction: -1 })}
               aria-label={`${text.move} ↑`}
             >
               ↑
             </button>
             <button
               type="button"
-              onClick={() => apply(reorderNode(document, selectedId, 1))}
+              onClick={() => apply({ type: 'reorder', id: selectedId, direction: 1 })}
               aria-label={`${text.move} ↓`}
             >
               ↓
@@ -901,7 +944,9 @@ export function BuilderShell({
                 ×
               </button>
             </div>
-            {panel(sheet)}
+            {sheet === 'properties' && viewport !== 'mobile' && renderProperties
+              ? null
+              : panel(sheet)}
           </div>
         </div>
       )}
@@ -936,15 +981,28 @@ export function BuilderShell({
           >
             <h2>{text.confirm}</h2>
             <div>
-              <button type="button" autoFocus onClick={closeConfirmation}>
+              <button type="button" autoFocus onClick={() => closeConfirmation()}>
                 {text.cancel}
               </button>
               <button
                 type="button"
                 onClick={() => {
-                  apply(removeNode(document, selectedId));
-                  closeConfirmation();
-                  setAnnouncement(text.removed);
+                  const wasInTree = !!deleteTriggerRef.current?.closest('[role="tree"]');
+                  const result = apply({ type: 'remove', id: selectedId });
+                  closeConfirmation(!result.ok);
+                  if (result.ok) {
+                    setAnnouncement(text.removed);
+                    requestAnimationFrame(() => {
+                      const selector = wasInTree
+                        ? treeRef.current?.querySelector<HTMLElement>(
+                            `[data-tree-id="${result.selectedId}"]`,
+                          )
+                        : canvasRef.current?.querySelector<HTMLElement>(
+                            `[data-canvas-id="${result.selectedId}"]`,
+                          );
+                      selector?.focus();
+                    });
+                  }
                 }}
               >
                 {text.remove}
@@ -958,4 +1016,18 @@ export function BuilderShell({
       </div>
     </section>
   );
+}
+
+export function BuilderStudy({ pageKey }: { pageKey: string }) {
+  const [state, setState] = useState<BuilderState>({ document: initial, selectedId: 'page' });
+  const current = useRef(state);
+  const onDispatch = (command: BuilderCommand): CompositionResult => {
+    const result = reduceBuilderCommand(current.current, command);
+    if (result.ok) {
+      current.current = { document: result.document, selectedId: result.selectedId };
+      setState(current.current);
+    }
+    return result;
+  };
+  return <BuilderShell pageKey={pageKey} state={state} onDispatch={onDispatch} />;
 }

@@ -1,6 +1,6 @@
 .shell {
-  height: calc(100dvh - 92px);
-  min-height: 680px;
+  height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -300,6 +300,17 @@
     zoom: 0.84;
   }
 }
+@media (min-width: 600px) and (max-width: 1100px) {
+  .pageFrame[data-device='tablet'] {
+    zoom: 0.84;
+  }
+}
+@media (min-width: 600px) and (max-width: 1699px) {
+  .pageFrame[data-device='tablet'] .nodeBar button {
+    min-width: 53px;
+    min-height: 53px;
+  }
+}
 .node {
   border: 1px solid transparent;
   border-radius: var(--builder-radius-sm);
@@ -482,9 +493,14 @@
 }
 @media (max-width: 1100px) {
   .shell {
-    height: calc(100dvh - 68px);
-    min-height: 520px;
+    height: 100%;
+    min-height: 0;
     border-radius: 0;
+  }
+  .header,
+  .selectionStrip,
+  .mobileBar {
+    flex-shrink: 0;
   }
   .workspace {
     display: flex;
@@ -500,6 +516,10 @@
   }
   .pageFrame[data-device='mobile'] {
     width: min(390px, 100%) !important;
+    min-height: 0;
+  }
+  .node[data-node-type='page'] {
+    min-height: min(320px, 40dvh);
   }
   .mobileBar {
     display: grid;

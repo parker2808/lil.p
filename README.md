@@ -69,7 +69,7 @@ The [CMS B1 golden HTTP suite](./docs/specs/2026-11-10-cms-b1-golden-http.md) fr
 
 [D integration base](./docs/specs/2026-11-11-cms-d-integration-base.md) carries both B7's neutral theme/fixture and D1's typed tree on a stacked draft branch; lil.p's live routes and data remain unchanged.
 
-[D4 canvas study](./docs/specs/2026-11-11-cms-d4-canvas.md) adds an admin-only, `R3_E2E_STATES=1` gated `/admin/builder/[key]` composition route with local-only draft state, slot-validated insertion/movement, an EN/VI searchable palette, Layers keyboard outline and mobile sheets. It imports the core neutral theme and optionally applies token-only lil.p colors. **It cannot save, publish, restore or preview public content**; D2/D3/D5/D6 integrate those capabilities later. With the flag off the route returns not found; the legacy editor stays unchanged.
+[D4 canvas study](./docs/specs/2026-11-11-cms-d4-canvas.md) adds an admin-only, `R3_E2E_STATES=1` gated `/admin/builder/[key]` composition route with a controlled local-only draft, atomic slot-validated commands, drag-insert/keyboard palette, Layers outline and mobile sheets sized beneath host navigation. Properties has one host mount; D5 owns future history/autosave. It imports the core neutral theme and optionally applies token-only lil.p colors. **It cannot save, publish, restore or preview public content**; D2/D3/D5/D6 integrate those capabilities later. With the flag off the route returns not found; the legacy editor stays unchanged.
 
 ### Real content seed verification
 
