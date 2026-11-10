@@ -131,3 +131,4 @@
 - 2026-11-10: A green local screenshot update can still encode records created by earlier E2E specs; compare CI artifact actuals against the clean seed and assert fixture contents before regenerating unrelated pixel baselines.
 - 2026-11-10: A wrapper that forwards `--update-snapshots=all` defeats a nested visual script's verification mode; ensure the verify path cannot write baselines and check the git diff after it runs.
 - 2026-11-10: A server-rendered interactive test fixture can receive Tab before Radix hydration; expose a test-only effect marker and wait for it before asserting keyboard behavior, without weakening separate pre-hydration form tests.
+- 2026-11-10: An all-registry render loop under one Vitest timeout can fail only under CI load; compare equal-host baseline timings, then use one test per registry item to retain coverage and expose the slow case without increasing global timeouts.

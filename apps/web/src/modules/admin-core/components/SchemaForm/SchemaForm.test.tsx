@@ -35,13 +35,13 @@ describe('SchemaForm', () => {
     cleanup();
   });
 
-  it('renders a form for every block type', () => {
-    for (const type of Object.keys(BLOCK_REGISTRY) as (keyof typeof BLOCK_REGISTRY)[]) {
+  it.each(Object.keys(BLOCK_REGISTRY) as (keyof typeof BLOCK_REGISTRY)[])(
+    'renders a form for the %s block',
+    (type) => {
       const view = renderForm(type);
       expect(view.container.querySelector('[data-slot="field"]')).not.toBeNull();
-      view.unmount();
-    }
-  });
+    },
+  );
 
   it('shows a zod message when the English CTA label is empty', async () => {
     renderForm('hero');
