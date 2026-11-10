@@ -25,7 +25,7 @@ Base: `feat/cms-u1-shared-controls` at `84f9b42`; stacked draft PR; ADR #172 gov
 
 ## Route and component inventory
 
-[The 43-row migration ledger](../audits/2026-11-10-cms-u2-route-pattern-ledger.md) records each `page.tsx` route, redirect/flag/role caveat, pattern owner, and prospective generic primitive vs site adapter. No code moves to the core. Existing `AdminTable`/`DataTable`, `PageHeader`, `EmptyState`, `ErrorState`, and `PageSkeleton` remain the shared owners; U2 uses those owners rather than introducing parallel wrappers. `/help` text and message keys do not change; existing EN/VI `admin.shell.retry` supplies new retry labels.
+[The 43-row migration ledger](../audits/2026-11-10-cms-u2-route-pattern-ledger.md) records each `page.tsx` route, redirect/flag/role caveat, pattern owner, and prospective generic primitive vs site adapter. No code moves to the core. Existing `AdminTable`/`DataTable`, `PageHeader`, `EmptyState`, `ErrorState`, and `PageSkeleton` remain the shared owners; U2 uses those owners rather than introducing parallel wrappers. Existing EN/VI `admin.shell.retry` supplies new retry labels. The follow-up corrects the shared table shortcut help in both locales: Backspace/Delete acts on selected rows, or the active row when none are selected, and confirms before archive/delete. Public `/help` copy is unchanged.
 
 ## Accessibility and visual evidence
 
