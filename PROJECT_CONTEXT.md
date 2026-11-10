@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- API image CMS-core prerequisite (stacked on B4): `apps/api/Dockerfile` copies the core workspace manifest before frozen install and builds core before contracts/API; the API declares core directly for B5, the pruned final image loads both CJS subpaths, and Render includes `packages/cms-core/**`. Locked local Docker build passes with the CJS smoke check; PR CI remains pending. No migration, deployment or production DB operation; see `docs/specs/2026-11-11-api-docker-cms-core.md`.
 - CMS B4 contracts/registry (stacked on accepted B3 `814afcf`): generic Zod page/block/locale/snapshot schemas, `defineBlock`, allowance and duplicate-rejecting `createRegistry` live in `@parker2808/cms-core/contracts`. The host retains its 20 definitions, copy and finite HTTP block enum; browser gzip is 864/61,440 bytes and React 34/35,840. All three subpaths resolve ESM and CJS; React 19, React DOM 19 and Zod 4 are declared peers excluded from browser bundles. Core-only imports load no host definitions; lint/dependency checks reject host imports, including side-effect imports and re-exports. No runtime route, EN/VI locale or admin table Shortcuts dialog change, migrations or new external packages. U2/U3 are accepted on separate unmerged branches; B6 follows B4 approval, D follows B7. See `docs/specs/2026-11-10-cms-b4-contracts-registry.md`.
 
 - Out of B4 scope: the locked local macOS web E2E failed its existing VI public-shell axe contrast check (`#414248` on `#ff8f74`, measured 4.49:1 vs required 4.5:1). All other `check:all --e2e` stages passed on disposable MySQL. This UI palette issue requires separate review; B4 does not change UI, tests or production code. See the B4 spec for evidence and the Linux CI result for platform coverage.
@@ -151,6 +152,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-11: Wired the API's direct CMS-core runtime dependency, Docker frozen-install/build order and final-image CJS smoke check; included core-only changes in Render's API build filter. No app route or DB changes.
 - 2026-11-10: Hardened B4 package boundary: every subpath now has a tested CJS require condition; dependency checks cover side-effect imports and re-exports, and core-only imports prove no host definitions load. Corrected B3/B4 milestones and admin Shortcuts/SEO handoff docs; measured browser caps unchanged.
 
 - 2026-11-10: Corrected B4 peer declarations for React 19, React DOM 19 and Zod 4 while retaining local development dependencies; budget measurement now verifies declared peers before accepting externalized imports. Same gzip caps, API/EN–VI behavior and host ownership.
