@@ -1,6 +1,6 @@
 # lil.p
 
-The [proposed CMS core ADR](./docs/specs/2026-11-10-cms-core-adr.md) maps the current portfolio blocks and routes to a reusable package boundary. It proposes `@parker2808/cms-core` as an in-repo package first, then a separate visual page builder phase with a typed layout tree, core component set, and drag-and-drop editor. No extraction, dependency switch, private repository creation, migration, or deployment is part of the ADR. The [current changelog](./PROJECT_CONTEXT.md#9-changelog) records this planning change.
+The [proposed CMS core ADR](./docs/specs/2026-11-10-cms-core-adr.md) maps current portfolio blocks and routes to a reusable package boundary. It orders route-complete shadcn/ui standardization (U), in-repo `@parker2808/cms-core` extraction (B), an accessible visual page builder (D), product verification, then private distribution (C). The Lil Portfolio coordinator reviews the ADR and phase gates. No implementation, dependency switch, private repository creation, migration, or deployment is part of this ADR PR. The [current changelog](./PROJECT_CONTEXT.md#9-changelog) records the planning change.
 
 Portfolio monorepo: Next.js public site + admin (`apps/web`), NestJS API (`apps/api`), design system (`packages/ui`), and shared zod contracts (`packages/contracts`).
 
