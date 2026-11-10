@@ -23,8 +23,12 @@
       "types": "./dist/react/server.d.ts",
       "import": "./dist/react/server.js",
       "require": "./dist/react/server.cjs"
-    }
+    },
+    "./theme.css": "./dist/theme.css"
   },
+  "sideEffects": [
+    "./dist/theme.css"
+  ],
   "typesVersions": {
     "*": {
       "contracts": [

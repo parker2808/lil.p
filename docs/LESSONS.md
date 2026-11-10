@@ -141,3 +141,4 @@
 - 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
 - 2026-11-11: Generic schema field extraction should require a host-localized label resolver and accept host widget registrations; inferring labels from a fixed English schema property can leak copy into Vietnamese UI.
 - 2026-11-11: Zod object parsing strips unknown keys by default; reject unsupported snapshot versions and unexpected persisted keys before parsing so a strict reader cannot silently lose stored data.
+- 2026-11-11: Ship a neutral core theme as a separately measured, side-effectful CSS subpath with scoped semantic tokens; test the actual light/dark token pairs and host overrides without inflating JS bundle caps or altering host pages.

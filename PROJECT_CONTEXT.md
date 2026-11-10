@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- CMS B6b neutral theme (stacked on B6 `7e3b317`): core ships an explicit side-effectful `./theme.css` with scoped U3 light/dark tokens, opt-in surfaces and accessible controls. B7 must apply these classes to its neutral fixture and verify the default/host token-only override; the app does not import CSS yet. The CSS gzip is separate from JS caps. No API, DB or B1 golden changes. See `docs/specs/2026-11-11-cms-b6b-core-theme.md`.
+
 - CMS B6 React extraction (stacked on accepted B4 `8c448ea2`): `./react/server` performs server-safe block dispatch with host-supplied wrappers/renderers and no client hooks or inspector imports; `./react` retains the built client directive and exposes schema field/metadata/widget contracts. The web adapter keeps portfolio renderers, TanStack form, translations, domain widget mappings and brand styling; core requires host-resolved localized labels instead of defaulting to English. Web declares a direct core dependency; web Docker copies its manifest before frozen install and builds dependency closure. Both React subpaths share the original 35 KiB gzip cap; no builder code, storage, API or migration changes. B5 PR #189 independently changes the API importer of the lockfile and the shared export test: integration must rerun pnpm install and reconcile those adjacent test assertions. B7 verifies the neutral package after B5/B6 acceptance; D follows the approved U3 design gate. See `docs/specs/2026-11-11-cms-core-b6-react.md`.
 - CMS B5 pure engine (stacked on accepted B4 `8c448ea`): `./engine` exports injected policy findings, deterministic key/order utilities, strict unknown-safe snapshots, chained legacy migrations and typed host ports. The B5 review rejects unsupported root versions and unknown root/SEO/block fields instead of accepting Zod-stripped data; older/current blocks remain readable. Built CJS import passes without host definitions. Nest runtime integration remains on B5b; do not interpret a green B5 package gate as production adapter integration. No schema/HTTP/EN–VI or B1 golden changes. See `docs/specs/2026-11-11-cms-b5-pure-engine.md` and `docs/specs/2026-11-11-cms-b5-snapshot-review.md`.
 
@@ -153,6 +155,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Published B6b opt-in neutral core stylesheet with independent CSS gzip reporting, checked contrast/44px/focus/motion and documented light/dark token override; lil.p runtime visuals and contracts remain unchanged.
 
 - 2026-11-11: B6 review follow-up moves portfolio widget mappings into web and requires localized host label resolution in core; EN/VI regression tests reject untranslated labels and verify no portfolio vocabulary remains in core fields. Refreshed Graphify after the code commit; no package export or build-topology change.
 
