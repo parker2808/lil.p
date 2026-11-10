@@ -23,6 +23,10 @@ textarea {
   min-height: 44px;
 }
 button,
+select {
+  min-width: 44px;
+}
+button,
 select,
 input,
 textarea,
@@ -85,6 +89,7 @@ input[aria-invalid='true'] {
 .fixture-logo {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.75rem;
   font-size: 1.1rem;
   font-weight: 750;
@@ -94,8 +99,8 @@ input[aria-invalid='true'] {
 .fixture-mark {
   display: grid;
   place-items: center;
-  width: 2.4rem;
-  height: 2.4rem;
+  width: 44px;
+  height: 44px;
   border: 1px solid var(--builder-border);
   border-radius: var(--builder-radius);
   font-size: 1.65rem;
@@ -127,6 +132,7 @@ input[aria-invalid='true'] {
 .fixture-preferences label {
   display: flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.5rem;
   font-size: 0.8rem;
 }
@@ -166,6 +172,12 @@ input[aria-invalid='true'] {
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.11em;
+}
+.fixture-intro > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
 }
 .fixture-surface,
 .fixture-panel {

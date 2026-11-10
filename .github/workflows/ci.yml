@@ -264,6 +264,11 @@ jobs:
       - run: pnpm --filter @portfolio/web test:e2e
         env:
           E2E_SHARD: ${{ matrix.shard }}
+      - name: Fixture route and WCAG matrix
+        if: matrix.shard == 1
+        run: |
+          pnpm --filter @parker2808/cms-core-fixture build
+          pnpm --filter @parker2808/cms-core-fixture test:e2e
       - uses: actions/upload-artifact@v4
         if: always()
         with:

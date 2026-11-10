@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
-- CMS B7 independent fixture (stacked on accepted B6 #191 and carrying B5 #190 plus B6b): built-package-only EN/VI page/components/editor/unknown routes prove core theme, host registration/localization, strict or lossless snapshot handling, server/client split, budgets and 80 visual states. It is an in-memory Phase B example, not the Phase D nested builder, persistence or production API integration. Await B7 design/CI review before D1. See `docs/specs/2026-11-11-cms-core-b7-fixture.md`.
+- CMS B7 independent fixture (stacked on accepted B6 #191 and carrying B5 #190 plus accepted B6b #193 `d070824`): built-package-only EN/VI page/components/editor/unknown routes prove core theme, host registration/localization, strict/lossless snapshots, server/client split, budgets and 80 visual states. Mandatory axe across all 80 route/focus/brand/locale/theme/viewport states and ≥44×44 mobile targets now gates the fixture; capture manifest records source revision. It is an in-memory Phase B example, not the Phase D nested builder, persistence or production API integration. Await B7 design/CI review before D1 acceptance. See `docs/specs/2026-11-11-cms-core-b7-fixture.md`.
 
 - CMS B6b neutral theme (stacked on B6 `7e3b317`): core ships explicit side-effectful `./theme.css` with scoped U3 light/dark tokens and accessible controls. The required browser E2E check covers 224 computed AA pairs; B7 imports the core stylesheet and applies a separate token-only override. The portfolio app does not import CSS yet. CSS gzip remains separate from JS caps; no API, DB or B1 golden changes. See `docs/specs/2026-11-11-cms-b6b-core-theme.md`.
 
@@ -157,6 +157,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: B7 design review integrates accepted B6b #193, enlarges fixture logo/brand controls and two editor buttons to ≥44px, gates every fixture route and focused gallery with 80 axe states and mobile target checks, and recaptures provenance-tagged screenshots. No app, DB or API changes.
 
 - 2026-11-11: Added a standalone, built-package-only CMS fixture with bilingual routes, in-memory editing, strict/lossless snapshot examples, B6 server/client boundary proofs and B6b neutral theme plus token-only comparison. Captured and reviewed 80 desktop/mobile light/dark states; no API, DB, builder persistence or B1 golden changes.
 - 2026-11-11: Made B6b Chromium contrast checks mandatory in local and CI E2E; covered 224 rendered color pairs across four surfaces, four feedback statuses (text and border), indicators and special text pairs at two widths and themes. Added missing danger/info theme feedback tokens; no host CSS, API or golden changes.

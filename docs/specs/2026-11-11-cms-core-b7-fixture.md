@@ -1,6 +1,10 @@
 # B7 — standalone neutral CMS core fixture
 
-**Status: implementation and visual review complete 2026-11-11 ICT; stacked draft PR/CI pending.** Accepted B6 #191 `9e356db`, B5 #190 `71e9ce4` (strict snapshot reader), and B6b `e12774e` (neutral theme) are merged into this branch without editing sibling worktrees. The B7 draft on `docs/cms-prep-nonE2E`, the ADR on `docs/cms-core-adr`, and approved U3 on `feat/cms-u3-builder-design` define the acceptance gate.
+## Design-review follow-up
+
+Merge accepted B6b `d070824` into B7, preserving both branches' documentation and regenerating Graphify after the merge. The fixture's logo link and brand-label checkbox must each expose a ≥44 × 44 CSS px interactive rectangle at 390px, without moving portfolio styling into core. A browser assertion checks **every visible interactive target** on all fixture routes at 390px. Run axe WCAG 2/2.1 AA including color contrast on the home, component gallery, focused gallery, unknown-content and editor states for EN/VI × light/dark × 1440/390 (40 route/state combinations per brand, 80 across neutral and lilp). All violations fail the gate, not just editor violations. Recapture changed images and record the exact captured source revision and command in the manifest. This review changes no host app, persisted content or API contract.
+
+**Status: design-review fixes in progress 2026-11-11 ICT; stacked draft PR/CI pending.** Accepted B6 #191 `9e356db`, B5 #190 `71e9ce4` (strict snapshot reader), and B6b `d070824` (theme review fixes) are merged into this branch without editing sibling worktrees. The B7 draft on `docs/cms-prep-nonE2E`, the ADR on `docs/cms-core-adr`, and approved U3 on `feat/cms-u3-builder-design` define the acceptance gate.
 
 ## Plan
 
@@ -34,6 +38,8 @@ The first merge resolved adjacent B5/B6 edits in `PROJECT_CONTEXT.md`, the root/
 **Merge record:** B6 merge `7eba316` and B5 merge `83fe7e5` retain both branches' README, lessons, and §7/§9 notes. `packages/cms-core/test/exports.test.mjs` and the lockfile merge cleanly; the generated Graphify report is kept temporarily from B7 and must be regenerated after integration. Node 22 frozen install verifies the importer resolution before the gate.
 
 ## Implementation and review
+
+Design-review evidence: the required browser gate checks EN/VI × neutral/lil.p × light/dark × 1440/390 across home, gallery, focused gallery, editor and unknown (80 axe route/states). At 390px every visible effective interactive target is checked against 44×44 CSS px. The expanded check found two 40px editor buttons; the fixture stylesheet now sets shared button min-width without changing core or the portfolio app. The merge resolved `PROJECT_CONTEXT.md` by keeping both B7 and accepted B6b entries; the generated Graphify report was selected temporarily from B7 and regenerated, not hand-merged.
 
 - B6b merge `345320a` required no source or lockfile conflict. Shared edits are exactly the `examples/*` workspace inclusion and its lockfile importer; no existing application or B1 golden changes. The fixture uses built package subpaths only, host-defined registry/renderer/widgets, required locale-specific labels, deterministic media/capability ports and in-memory editing. Its four routes are `/en|vi/`, `/components`, `/editor`, `/unknown`; the invalid route renders localized not-found with `noindex`. Nothing saves or publishes.
 - Frozen raw snapshots cover legacy missing SEO (typed `INVALID_SNAPSHOT`, with Nest legacy compatibility owned by B5b), current accepted, future root/block versions, unknown block type and unknown block fields. An extra unknown nested prop is retained losslessly. The test asserts original JSON is unchanged after repeated rejection/acceptance; B1 goldens remain untouched.
