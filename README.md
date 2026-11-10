@@ -1,5 +1,7 @@
 # lil.p
 
+The planned reusable CMS package is `@parker2808/cms-core`. Parker approved naming or linking its private repository and declaring it as a dependency here; the package has not yet been extracted or connected. See the [CMS core repository exception](./docs/specs/2026-11-10-agents-private-cms-core-exception.md) and the [current changelog](./PROJECT_CONTEXT.md#9-changelog). Private source content and credentials must stay out of this public repo.
+
 Portfolio monorepo: Next.js public site + admin (`apps/web`), NestJS API (`apps/api`), design system (`packages/ui`), and shared zod contracts (`packages/contracts`).
 
 The Round 3 integration branch contains the verified PR #169 head and all eleven earlier Round 3 branch tips. It is a review PR to `main`; the stacked PRs remain open. See the [integration handoff](./docs/specs/2026-11-03-r3-stack-integration.md) and [Round 3 audit](./docs/specs/2026-11-03-r3-12-real-flow-audit.md) for scope and checks.
