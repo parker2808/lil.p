@@ -140,7 +140,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
-- 2026-11-10: Isolate the public contact submission hydration race with a controlled JavaScript gate and form-level interactive marker; verify pre-hydration values and a single client POST without retries or relaxed timeouts. CI verification pending.
+- 2026-11-10: Isolate the public contact submission hydration race with a controlled JavaScript gate and form-level interactive marker; verify pre-hydration values and a single client POST without retries or relaxed timeouts. Guarded `check:all --e2e` passed 9/9; first PR head CI passed all 11 jobs.
 - 2026-11-10: CMS U2 documents host-owned shared UI controls and corrects EN/VI table shortcut help for selected rows or the active-row fallback, with a localized unit assertion.
 - 2026-11-10: CMS U2 review follow-up refreshes the desktop/mobile contact sheets from final populated-row captures, versions eight redacted design samples, and gives shared status badge icons a 6px gap from text. Focused 3/3 browser samples and badge unit pass; full review-fix CI pending.
 - 2026-11-10: CMS U2 stacked route-complete interaction audit: 43-file ledger and 336 EN/VI light/dark 1440/390 screenshots; clean disposable-MySQL run passes every tagged WCAG A/AA and 44px target check. Added fallback title, common focus/target states, localized retry/loader patterns and interactive design-capture mode. Full prior-head CI and Linux visual gates passed.
