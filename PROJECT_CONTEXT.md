@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- CMS B3 scaffold (stacked on accepted B2 `44e2da4`, draft PR #181 stays unmerged): three empty ESM subpaths, built declarations, and an enforced reproducible gzip budget in the package build/check:all and CI. Coordinator approved provisional ADR caps as starting budgets: contracts+engine ≤60 KiB, React ≤35 KiB excluding React/Zod peers. Actual empty-scaffold baseline: 40 bytes combined, 34 bytes React; remeasure once code is extracted and propose any cap revision explicitly. No host integration, route/schema/EN–VI `/help` changes or migrations. B4 must wait for B3 acceptance; B6 waits for U2/U3 and D for U3. See `docs/specs/2026-11-10-cms-b3-package-skeleton.md`.
+
 - CMS B2 one-source page allowance (stacked on B1 `02405d9`): Parker's 2026-11-10 20:46 ICT amendment permits backend B2–B5 alongside the U gate because pure policy/contracts do not freeze UI controls into core. B6 React extraction still waits for U2/U3 acceptance, and D waits for U3 design approval. B2 moves the existing custom-page three-type allowance to per-block metadata and one shared predicate for Nest and the EN/VI dialog. ADR B4 owns `createRegistry` and duplicate-type validation; do not introduce it prematurely. See `docs/specs/2026-11-10-cms-b2-page-allowance.md`.
 
 - CMS B1 golden HTTP suite is test-only and may proceed alongside U2/U3 per coordinator amendment; its original B2–B7 gate is superseded for backend B2–B5 only by the later B2 decision above. ADR #172 and U0 #175 remain separate review branches; PR #174's missing duplicate-block `BLOCK_LIMIT` is an upstream dependency, not a runtime fix in B1. PR #177 review adds observable restore/discard snapshot assertions, missing-version 404 and EN/VI published preview/public parity; the VI-only SEO bug has its own named case. See `docs/specs/2026-11-10-cms-b1-golden-http.md`.
@@ -140,6 +142,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-10: Added B3's three empty typed ESM package exports and a measured gzip gate in the package build (`check:all`/CI); floor 40 bytes contracts+engine and 34 bytes React against approved 60/35 KiB caps. No imports from lil.p, migrations, dependency additions to the host, HTTP goldens or UI/help changes.
 
 - 2026-11-10: Centralized CMS B2 page allowance in block definitions (`customPage`) and one predicate shared by Nest and the web Add Block dialog; froze the built-in/custom matrix and EN/VI options in unit tests. B1 golden HTTP behavior and error codes remain unchanged; no schema, migrations, dependencies or new API fields. Registry creation and duplicate-type checks remain in B4.
 
