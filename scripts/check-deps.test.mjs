@@ -1,10 +1,16 @@
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { test } from 'node:test';
 
-import { runCheckDeps, scanLicenses, scanLockfile, scanNpmrc } from './check-deps.mjs';
+import {
+  runCheckDeps,
+  scanCmsCoreImports,
+  scanLicenses,
+  scanLockfile,
+  scanNpmrc,
+} from './check-deps.mjs';
 
 test('scanLockfile flags paid Tiptap packages', () => {
   assert.deepEqual(scanLockfile('  @tiptap-pro/foo: 1.0.0\n'), ['@tiptap-pro/']);
@@ -33,4 +39,17 @@ test('runCheckDeps fails when a lockfile lists @tiptap-pro/', () => {
   );
   const failures = runCheckDeps(dir);
   assert.ok(failures.some((line) => line.includes('@tiptap-pro/')));
+});
+
+test('cms-core cannot import host modules', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'check-cms-core-'));
+  const source = join(dir, 'packages/cms-core/src');
+  mkdirSync(source, { recursive: true });
+  writeFileSync(join(source, 'contracts.ts'), "import { foo } from '@portfolio/contracts';\n");
+  assert.equal(scanCmsCoreImports(dir).length, 1);
+  assert.equal(runCheckDeps(dir).length, 1);
+  writeFileSync(join(source, 'contracts.ts'), "import { foo } from '@/modules/pages';\n");
+  assert.equal(scanCmsCoreImports(dir).length, 1);
+  writeFileSync(join(source, 'contracts.ts'), "import { z } from 'zod';\n");
+  assert.deepEqual(scanCmsCoreImports(dir), []);
 });

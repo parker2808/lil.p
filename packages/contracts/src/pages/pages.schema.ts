@@ -1,3 +1,10 @@
+import {
+  invalidPreviewBlockSchema,
+  pageSnapshotBlockSchema,
+  pageSnapshotSchema,
+  pageSnapshotSeoSchema,
+  publicPageSeoSchema,
+} from '@parker2808/cms-core/contracts';
 import { z } from 'zod';
 
 import { adminBlockSchema, blockKeySchema, publicBlockSchema } from '../blocks/block.schema';
@@ -5,11 +12,13 @@ import { blockTypeSchema } from '../blocks/block-registry.constant';
 import { localeSchema } from '../common/locale.schema';
 import { blockSurfaceSchema, layoutPresetSchema, pageKeySchema } from './pages.enum';
 
-export const publicPageSeoSchema = z.object({
-  title: z.string().nullable(),
-  description: z.string().nullable(),
-  lang: localeSchema,
-});
+export {
+  invalidPreviewBlockSchema,
+  pageSnapshotBlockSchema,
+  pageSnapshotSchema,
+  pageSnapshotSeoSchema,
+  publicPageSeoSchema,
+};
 
 export const publicPageSchema = z.object({
   key: pageKeySchema,
@@ -17,38 +26,8 @@ export const publicPageSchema = z.object({
   blocks: z.array(publicBlockSchema),
 });
 
-export const invalidPreviewBlockSchema = z.object({
-  id: z.number().int(),
-  type: z.string(),
-  key: z.string(),
-  issues: z.array(z.string()),
-});
-
 export const publicPagePreviewSchema = publicPageSchema.extend({
   invalidBlocks: z.array(invalidPreviewBlockSchema),
-});
-
-export const pageSnapshotBlockSchema = z.object({
-  type: z.string(),
-  key: blockKeySchema,
-  schemaVersion: z.number().int(),
-  props: z.unknown(),
-  layout: layoutPresetSchema,
-  surface: blockSurfaceSchema,
-  isVisible: z.boolean(),
-  sortOrder: z.number().int(),
-});
-
-export const pageSnapshotSeoSchema = z.object({
-  seoTitleEn: z.string().nullable(),
-  seoTitleVi: z.string().nullable(),
-  seoDescriptionEn: z.string().nullable(),
-  seoDescriptionVi: z.string().nullable(),
-});
-
-export const pageSnapshotSchema = z.object({
-  seo: pageSnapshotSeoSchema,
-  blocks: z.array(pageSnapshotBlockSchema),
 });
 
 export const adminPageListItemSchema = z.object({

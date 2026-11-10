@@ -1,14 +1,18 @@
+import {
+  type BlockSurface,
+  blockSurfaceSchema,
+  type LayoutPreset,
+  layoutPresetSchema,
+  type PageKey,
+  pageKeySchema,
+} from '@parker2808/cms-core/contracts';
 import { z } from 'zod';
 
 /** URL / cache-tag form. Prisma stores the uppercase twin. */
 export const corePageKeySchema = z.enum(['home', 'about', 'projects', 'notes', 'contact']);
 export type CorePageKey = z.infer<typeof corePageKeySchema>;
-export const pageKeySchema = z
-  .string()
-  .min(1)
-  .max(64)
-  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
-export type PageKey = z.infer<typeof pageKeySchema>;
+export { blockSurfaceSchema, layoutPresetSchema, pageKeySchema };
+export type { BlockSurface, LayoutPreset, PageKey };
 
 export const prismaPageKeySchema = z
   .string()
@@ -83,17 +87,3 @@ export function publicPagePathForKey(key: PageKey): string {
     ? PAGE_PUBLIC_PATHS[key as CorePageKey]
     : `/${key}`;
 }
-
-export const layoutPresetSchema = z.enum([
-  'ONE',
-  'TWO',
-  'THREE',
-  'FOUR',
-  'SPLIT_8_4',
-  'SPLIT_4_8',
-  'SPLIT_7_5',
-]);
-export type LayoutPreset = z.infer<typeof layoutPresetSchema>;
-
-export const blockSurfaceSchema = z.enum(['PLAIN', 'BAND']);
-export type BlockSurface = z.infer<typeof blockSurfaceSchema>;

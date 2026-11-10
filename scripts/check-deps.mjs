@@ -58,6 +58,29 @@ export function scanLicenses(packages) {
     .map((pkg) => `${pkg.name}@${pkg.version} license=${pkg.license ?? 'missing'}`);
 }
 
+export function scanCmsCoreImports(rootDir) {
+  const violations = [];
+  const pending = [join(rootDir, 'packages/cms-core/src')];
+  while (pending.length > 0) {
+    const directory = pending.pop();
+    if (!existsSync(directory)) continue;
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const path = join(directory, entry.name);
+      if (entry.isDirectory()) {
+        pending.push(path);
+      } else if (/\.[cm]?[jt]sx?$/.test(entry.name)) {
+        const source = readFileSync(path, 'utf8');
+        if (
+          /(?:from\s*|import\s*\(|require\s*\()\s*['"](?:@portfolio\/|@\/modules\/)/.test(source)
+        ) {
+          violations.push(`${path} imports a host module`);
+        }
+      }
+    }
+  }
+  return violations;
+}
+
 export function runCheckDeps(rootDir = ROOT) {
   const failures = [];
   const lockPath = join(rootDir, 'pnpm-lock.yaml');
@@ -75,6 +98,8 @@ export function runCheckDeps(rootDir = ROOT) {
   for (const hit of scanLicenses(collectScopedPackages(rootDir))) {
     failures.push(hit);
   }
+
+  failures.push(...scanCmsCoreImports(rootDir));
 
   return failures;
 }

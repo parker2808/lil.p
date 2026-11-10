@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- CMS B4 contracts/registry (stacked on accepted B3 `814afcf`): generic Zod page/block/locale/snapshot schemas and definition, allowance and duplicate-rejecting registry helpers live in `@parker2808/cms-core/contracts`. The host retains its 20 definitions, copy and finite HTTP block enum; browser gzip is 864/61,440 bytes and React 34/35,840. No runtime route or EN/VI `/help` change, migrations or new external dependencies. B5/B6 wait for coordinator review. See `docs/specs/2026-11-10-cms-b4-contracts-registry.md`.
+
 - CMS B3 scaffold (stacked on accepted B2 `44e2da4`, draft PR #181 stays unmerged): three empty ESM subpaths, built declarations, and an enforced reproducible gzip budget in the package build/check:all and CI. Coordinator approved provisional ADR caps as starting budgets: contracts+engine ≤60 KiB, React ≤35 KiB excluding React/Zod peers. Actual empty-scaffold baseline: 40 bytes combined, 34 bytes React; remeasure once code is extracted and propose any cap revision explicitly. No host integration, route/schema/EN–VI `/help` changes or migrations. B4 must wait for B3 acceptance; B6 waits for U2/U3 and D for U3. See `docs/specs/2026-11-10-cms-b3-package-skeleton.md`.
 
 - CMS B2 one-source page allowance (stacked on B1 `02405d9`): Parker's 2026-11-10 20:46 ICT amendment permits backend B2–B5 alongside the U gate because pure policy/contracts do not freeze UI controls into core. B6 React extraction still waits for U2/U3 acceptance, and D waits for U3 design approval. B2 moves the existing custom-page three-type allowance to per-block metadata and one shared predicate for Nest and the EN/VI dialog. ADR B4 owns `createRegistry` and duplicate-type validation; do not introduce it prematurely. See `docs/specs/2026-11-10-cms-b2-page-allowance.md`.
@@ -142,6 +144,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-10: Extracted generic B4 CMS contracts and host-composed registry; duplicate type values now fail construction, unknown types remain undefined. Retained host HTTP schemas, 20 host definitions and page allowance; added import-boundary lint/deps checks and measured 864-byte gzip contracts+engine surface under the 60 KiB cap. No migrations, routes, EN/VI `/help` or UI changes.
 
 - 2026-11-10: Added B3's three empty typed ESM package exports and a measured gzip gate in the package build (`check:all`/CI); floor 40 bytes contracts+engine and 34 bytes React against approved 60/35 KiB caps. No imports from lil.p, migrations, dependency additions to the host, HTTP goldens or UI/help changes.
 
