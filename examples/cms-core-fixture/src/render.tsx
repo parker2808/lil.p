@@ -2,9 +2,8 @@ import type { InvalidPreviewBlock, Locale, PublicBlock } from '@parker2808/cms-c
 import { renderBlocks } from '@parker2808/cms-core/react/server';
 import { Fragment, type ReactNode } from 'react';
 
+import { mediaPath } from './adapters';
 import { type BlockType, copy, registry } from './content';
-
-const media = { '/illustration.svg': '/illustration.svg' } as const;
 
 export function PageBlocks({
   blocks,
@@ -30,8 +29,10 @@ export function PageBlocks({
       unknown: words.unknownBlock,
     },
     registry,
-    renderComponent: (_entry, item, language) => {
-      const props = item.props as Record<string, unknown>;
+    renderComponent: (entry, item, language) => {
+      const parsed = entry.props.safeParse(item.props);
+      if (!parsed.success) return <span role="alert">{words.error}</span>;
+      const props = parsed.data as Record<string, unknown>;
       const localized = (field: string) => (props[field] as Record<Locale, string>)[language];
       switch (item.type) {
         case 'heading':
@@ -48,7 +49,7 @@ export function PageBlocks({
           return (
             <img
               className="fixture-image"
-              src={media[String(props.src) as keyof typeof media] ?? '/illustration.svg'}
+              src={mediaPath(props.src) ?? undefined}
               alt={localized('alt')}
             />
           );

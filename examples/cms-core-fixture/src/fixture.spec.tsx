@@ -23,6 +23,7 @@ import current from '../snapshots/current.json';
 import future from '../snapshots/future-version.json';
 import legacy from '../snapshots/legacy-missing-seo.json';
 import unknown from '../snapshots/unknown-field.json';
+import { capabilities, mediaResolver } from './adapters';
 import { App, routeFor } from './App';
 import { block, copy, definitions, registry, sampleBlocks } from './content';
 import { Editor } from './Editor';
@@ -68,6 +69,14 @@ describe('standalone built-package consumer', () => {
         /@portfolio\/|@\/modules\/|packages\/cms-core\/src|apps\/(web|api)|next-intl|@prisma/,
       );
     }
+  });
+
+  it('supplies deterministic media and capability adapters without a backend', async () => {
+    expect(await mediaResolver.resolve('illustration', 1)).toBe('/illustration.svg');
+    expect(await mediaResolver.resolve('illustration', 99)).toBeNull();
+    expect(await capabilities.canEdit('sample-editor', 'sample')).toBe(true);
+    expect(await capabilities.canEdit('reader', 'sample')).toBe(false);
+    expect(await capabilities.canPublish('sample-editor', 'sample')).toBe(false);
   });
 
   it('returns explicit rejection without changing unsupported source data', () => {
