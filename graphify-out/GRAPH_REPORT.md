@@ -1,17 +1,17 @@
 # Graph Report - feat-cms-d3-renderer  (2026-11-11)
 
 ## Corpus Check
-- 1522 files · ~529,726 words
+- 1522 files · ~530,028 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 35 file(s) not represented in the graph (top: (none) 17, .css 14, .example 1)
 
 ## Summary
-- 7169 nodes · 22442 edges · 318 communities (286 shown, 32 thin omitted)
-- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 1801 edges (avg confidence: 0.92)
+- 7169 nodes · 22443 edges · 318 communities (286 shown, 32 thin omitted)
+- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 1802 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `38b25cba`
+- Built from commit: `a17a329f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1503,7 +1503,7 @@ Nodes (3): Default, meta, Story
 
 ## Knowledge Gaps
 - **18 isolated node(s):** `DATABASE_URL`, `./tsconfig.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json` (+13 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2101 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2100 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **32 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions

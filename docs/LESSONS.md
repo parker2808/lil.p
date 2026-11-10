@@ -149,3 +149,4 @@
 - 2026-11-11: A tree converter can keep unknown legacy block types losslessly only by carrying the entire validated JSON block as opaque data rather than reparsing it into the registered builder component shape; gate builder use separately from opt-in conversion.
 - 2026-11-11: Validate untrusted tree depth/count iteratively before recursive Zod parsing; keep incomplete draft validation separate from publish-only H1/required-component policy and ensure slot rules leave room for content at the deepest allowed layout.
 - 2026-11-11: When integrating sibling core exports, keep both theme CSS and tree JS declarations in the manifest and rebuild Graphify after a docs-only merge conflict instead of combining generated graph reports by hand.
+- 2026-11-11: Check exactly-one-H1 for every publish attempt, including a zero-component tree; draft permissiveness must not bypass publish policy.

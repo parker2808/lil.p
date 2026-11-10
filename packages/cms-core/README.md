@@ -25,6 +25,8 @@ D1's opt-in `./tree` entry exports `treeDocumentSchema`, `legacyTreeDocumentSche
 
 D3's opt-in `renderTree({ input, createElement, labels, registry?, components?, resolveMedia? })` is exported from `./react/server`. Pass the host's React `createElement`; the returned `{ ok, content }` is suitable for both authorized draft preview and public SSR. On failure, it also returns the typed error code and original input, and renders only the host-localized safe warning rather than a partial tree. The same draft reader handles both views; call `validateTreeForPublish` separately in the host's publish path. Core supports nested sections, rows, columns and grids (mobile single-column), validated starter components and explicitly registered host components. The server entry imports no editor/client module; `theme.css` styles the opt-in `.cms-core .cms-tree` markup with neutral tokens and responsive breakpoints. Production host snapshot dispatch remains with D2; legacy `renderBlocks` remains the default. See [D3 spec](../../docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md).
 
+An empty tree is valid for `readTree` autosave, but `validateTreeForPublish` returns `HEADING_RULE` until exactly one H1 exists. Multiple H1s also fail; the host must not substitute the draft reader for publication.
+
 Build and check the browser gzip budgets with `pnpm --filter @parker2808/cms-core test` (which builds and checks the D1 combined cap).
 The build runs `scripts/measure-cms-core.mjs` and fails above 60 KiB combined
 contracts+engine or 35 KiB combined `./react` + `./react/server`. These are **minified ESM artifact gzip sums**
