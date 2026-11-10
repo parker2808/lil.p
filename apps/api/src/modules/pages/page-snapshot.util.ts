@@ -106,6 +106,32 @@ export function readPageSnapshot(value: unknown): PageSnapshot | null {
   return { seo, blocks };
 }
 
+export function readRestorablePageSnapshot(value: unknown): PageSnapshot | null {
+  if (!value || typeof value !== 'object' || hasSnapshotFormat(value)) return null;
+  const raw = value as { seo?: unknown; blocks?: unknown };
+  const seoKeys = ['seoTitleEn', 'seoTitleVi', 'seoDescriptionEn', 'seoDescriptionVi'];
+  if (
+    Object.keys(raw).some((key) => key !== 'seo' && key !== 'blocks') ||
+    (raw.seo !== undefined &&
+      (raw.seo === null ||
+        typeof raw.seo !== 'object' ||
+        Array.isArray(raw.seo) ||
+        Object.entries(raw.seo).some(
+          ([key, entry]) => !seoKeys.includes(key) || (entry !== null && typeof entry !== 'string'),
+        )))
+  ) {
+    return null;
+  }
+  if (
+    !Array.isArray(raw.blocks) ||
+    raw.blocks.some((block) => !pageSnapshotBlockSchema.strict().safeParse(block).success)
+  ) {
+    return null;
+  }
+  const snapshot = readPageSnapshot(value);
+  return snapshot?.blocks.length === raw.blocks.length ? snapshot : null;
+}
+
 function asNullableString(source: unknown, key: string): string | null {
   if (!source || typeof source !== 'object') {
     return null;

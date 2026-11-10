@@ -49,6 +49,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 ## 7. Open items
 
 - CMS D2 persistence (draft stacked on D integration base): additive nullable `page.draftTree` and BIGINT `draftTreeRevision` preserve every legacy row and published snapshot. Eligible custom-page builder drafts use strict D1 `readTree` validation and an atomic revision+mode CAS; the existing block-list endpoints and B1 goldens remain unchanged. Revision-aware tree restore validates a strict version envelope before any write; tree publish remains disabled pending D3 renderer parity. Migration/e2e evidence uses only a disposable locked local MySQL; never deploy or merge the additive DDL without a separate gate. See `docs/specs/2026-11-11-cms-d2-persistence.md`.
+- D2 review hardening: legacy restore conditionally claims the same revision/mode before replacing block rows; builder restore refuses a legacy target that would silently drop blocks, and tree-mode unversioned preview returns typed 409 pending D3. Real simultaneous save and restore/activation cases exercise a disposable MySQL, not mocks. Public published snapshots remain unchanged.
 
 - D integration base (draft, B7 `2307b54` + D1 `2b50dbc`): carries the reviewed neutral fixture/theme and typed tree with its empty-publish H1 gate; no API, database, runtime route or golden contract change. `./theme.css` and `./tree` exports both remain. See `docs/specs/2026-11-11-cms-d-integration-base.md`.
 
@@ -165,6 +166,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 ## 9. Changelog
 
 - 2026-11-11: Added D2 additive tree-draft persistence and revision-checked custom-page builder HTTP contract, strict tree snapshot dispatch, legacy isolation and disabled tree publication; the local MySQL-only migration requires explicit deployment review. No B1 golden or public tree renderer changes.
+- 2026-11-11: Hardened D2 restore against concurrent activation and lossy legacy snapshots; tree-mode draft preview fails closed until D3. Added real-DB simultaneous-writer regression cases and preserved missing-SEO compatibility.
 
 - 2026-11-11: Stacked D1's validated tree on B7's neutral standalone fixture, retaining `./tree` and `./theme.css` without altering runtime routes, persistence, API, goldens or visual output. Regenerated Graphify after resolving the overlapping docs.
 - 2026-11-11: B7 design review integrates accepted B6b #193, enlarges fixture logo/brand controls and two editor buttons to ≥44px, gates every fixture route and focused gallery with 80 axe states and mobile target checks, and recaptures provenance-tagged screenshots. No app, DB or API changes.

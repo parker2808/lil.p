@@ -103,6 +103,99 @@ describe('builder draft persistence over disposable MySQL', () => {
     expect(await prisma.pageVersion.count({ where: { pageId } })).toBe(0);
   });
 
+  it('allows only one of two simultaneous saves with the same revision', async () => {
+    const admin = await adminAgent(app);
+    await admin
+      .post('/api/admin/pages/ideas/builder/activate')
+      .send({ expectedRevision: '0', tree: emptyTree })
+      .expect(200);
+    const variants = ['first', 'second'].map((id) => ({
+      ...emptyTree,
+      root: { ...emptyTree.root, id },
+    }));
+    const results = await Promise.all(
+      variants.map((tree) =>
+        admin.put('/api/admin/pages/ideas/builder/draft').send({ expectedRevision: '1', tree }),
+      ),
+    );
+    expect(results.map((result) => result.status).sort()).toEqual([200, 409]);
+    expect(results.find((result) => result.status === 409)?.body).toMatchObject({
+      code: 'CONFLICT',
+      mode: 'tree',
+      revision: '2',
+    });
+    const saved = await prisma.page.findUniqueOrThrow({ where: { id: pageId } });
+    expect(saved.draftTreeRevision).toBe(2n);
+    expect(variants).toContainEqual(saved.draftTree);
+  });
+
+  it('races legacy restore with activation without losing the winning draft', async () => {
+    const admin = await adminAgent(app);
+    await prisma.pageVersion.create({
+      data: { pageId, version: 1, snapshot: { seo: {}, blocks: [] } },
+    });
+    const [restore, activate] = await Promise.all([
+      admin.post('/api/admin/pages/ideas/versions/1/restore'),
+      admin
+        .post('/api/admin/pages/ideas/builder/activate')
+        .send({ expectedRevision: '0', tree: emptyTree }),
+    ]);
+    expect([restore.status, activate.status].sort()).toEqual([200, 409]);
+    const saved = await prisma.page.findUniqueOrThrow({ where: { id: pageId } });
+    expect(saved.draftTreeRevision).toBe(1n);
+    if (activate.status === 200) {
+      expect(saved.draftTree).toEqual(emptyTree);
+      expect(restore.body).toMatchObject({ code: 'CONFLICT', mode: 'tree', revision: '1' });
+    } else {
+      expect(saved.draftTree).toBeNull();
+      expect(activate.body).toMatchObject({ code: 'CONFLICT', revision: '1' });
+    }
+  });
+
+  it('rejects a lossy legacy builder restore without touching tree, blocks, or SEO', async () => {
+    const admin = await adminAgent(app);
+    await admin
+      .post('/api/admin/pages/ideas/builder/activate')
+      .send({ expectedRevision: '0', tree: emptyTree })
+      .expect(200);
+    const invalidSnapshots = [
+      {
+        seo: { seoTitleEn: 'Original' },
+        blocks: [{ type: 'unknown-future-block', key: 'future' }],
+      },
+      { seo: { seoTitleEn: 12 }, blocks: [] },
+      { seo: null, blocks: [] },
+      { seo: { seoTitleEn: 'Original' }, blocks: [], unknown: true },
+    ];
+    const before = await prisma.page.findUniqueOrThrow({ where: { id: pageId } });
+    for (const [index, snapshot] of invalidSnapshots.entries()) {
+      await prisma.pageVersion.create({ data: { pageId, version: index + 1, snapshot } });
+      const error = await admin
+        .post(`/api/admin/pages/ideas/versions/${index + 1}/builder/restore`)
+        .send({ expectedRevision: '1' })
+        .expect(400);
+      expect(error.body).toMatchObject({
+        code: 'INVALID_BLOCKS',
+        fieldErrors: { snapshot: expect.any(Array) },
+      });
+    }
+    const after = await prisma.page.findUniqueOrThrow({ where: { id: pageId } });
+    expect(after.draftTree).toEqual(before.draftTree);
+    expect(after.draftTreeRevision).toBe(before.draftTreeRevision);
+    expect(after.seoTitleEn).toBe(before.seoTitleEn);
+    expect(await prisma.pageBlock.count({ where: { pageId } })).toBe(0);
+  });
+
+  it('fails closed on unversioned preview while a tree draft is active', async () => {
+    const admin = await adminAgent(app);
+    await admin
+      .post('/api/admin/pages/ideas/builder/activate')
+      .send({ expectedRevision: '0', tree: emptyTree })
+      .expect(200);
+    const response = await admin.get('/api/admin/preview/pages/ideas?locale=en').expect(409);
+    expect(response.body).toMatchObject({ code: 'CONFLICT', mode: 'tree', revision: '1' });
+  });
+
   it('restores a strict historical tree without altering legacy rows or published pointer', async () => {
     const admin = await adminAgent(app);
     const legacy = await prisma.pageVersion.create({

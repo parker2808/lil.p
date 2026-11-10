@@ -71,6 +71,8 @@ The [CMS B1 golden HTTP suite](./docs/specs/2026-11-10-cms-b1-golden-http.md) fr
 
 [CMS D2 persistence](./docs/specs/2026-11-11-cms-d2-persistence.md) adds nullable `Page.draftTree` storage and decimal-string `draftTreeRevision` CAS for eligible custom-page builder drafts. Authenticated admin draft read/activate/save and revision-aware tree restore reject unknown data instead of stripping it. Legacy pages and public block-list routes retain their existing responses; tree publication remains server-disabled until D3 public SSR parity. The migration and API tests run on disposable local MySQL only; this draft is not permission to deploy database DDL.
 
+D2's legacy restore now takes a revision-and-mode compare-and-swap lock before touching block rows; builder restore rejects snapshots with unparsable blocks, while missing SEO keys remain compatible. Unversioned preview of an active tree draft returns a typed 409 until D3 renders it; concurrent-writer regressions run against disposable MySQL.
+
 ### Real content seed verification
 
 The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires private source evidence for every factual claim and project cover. Keep source paths, source text, and contact details out of git and logs. The staged migration check is `env -u DATABASE_URL bash apps/api/prisma/seed/migration-gate.sh`; it creates a random, tmpfs-only MySQL container, compares the five built-in page rows across the old and current migrations, checks page constraints and Prisma schema drift, then removes the container. It refuses to run when `DATABASE_URL` is already set.
