@@ -32,6 +32,20 @@ describe('pages-rules.util', () => {
     }
   });
 
+  it('uses the shared allowance for custom keys without changing BLOCK_NOT_ALLOWED', () => {
+    for (const type of ['page-header', 'prose', 'cta-band'] as const) {
+      expect(() => assertAllowedOnPage(BLOCK_REGISTRY[type], 'ideas')).not.toThrow();
+    }
+    for (const type of ['hero', 'about-intro'] as const) {
+      try {
+        assertAllowedOnPage(BLOCK_REGISTRY[type], 'ideas');
+        throw new Error('expected throw');
+      } catch (error) {
+        expect(codeOf(error)).toBe('BLOCK_NOT_ALLOWED');
+      }
+    }
+  });
+
   it('rejects a type over maxPerPage', () => {
     try {
       assertWithinLimit(BLOCK_REGISTRY.hero, 1);

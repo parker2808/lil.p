@@ -125,3 +125,4 @@
 - 2026-11-10: Keep CMS HTTP goldens structural and seed-isolated: assert semantic status/code/locale fields, not dynamic IDs, timestamps, cookie values or snapshots; B1 can freeze API behavior before U2/U3 while implementation B remains gated.
 - 2026-11-10: Public SEO resolves a group of localized fields together: a VI title with a missing VI description falls back to EN for both; seed both locales' descriptions when asserting VI SEO and record VI-only custom-page fallback separately.
 - 2026-11-10: A restore/discard HTTP golden must first diverge the draft from the published snapshot, then compare normalized block/SEO state and confirm public content stays fixed; response status alone cannot detect a no-op.
+- 2026-11-10: A shared page-allowance predicate should read each definition's built-in pages and explicit custom-page flag; freeze the full built-in/custom matrix and both EN/VI picker options so Nest and the editor cannot drift.
