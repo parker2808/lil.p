@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- CMS D4 canvas (stacked on D base `38b25cb`): `/admin/builder/[key]` is a flag-gated, authenticated in-memory study with a slot-validated D1 tree, searchable nine-item palette, nested Layers outline, pointer and keyboard movement, and mobile sheets. Core CSS supplies neutral defaults; lil.p branding changes tokens only. D5 mounts properties/history/autosave through callbacks; D2/D3/D6 still own persistence, public rendering and journey registration. No live save/publish/restore or legacy editor change. See `docs/specs/2026-11-11-cms-d4-canvas.md`.
+
 - D integration base (draft, B7 `68a388a` + D1 `d21c71d`): carries both the neutral fixture/theme and the typed tree; no API, database, runtime route or golden contract change. `./theme.css` and `./tree` exports both remain; pending B7 design approval. See `docs/specs/2026-11-11-cms-d-integration-base.md`.
 
 - CMS B7 independent fixture (stacked on accepted B6 #191 and carrying B5 #190 plus B6b): built-package-only EN/VI page/components/editor/unknown routes prove core theme, host registration/localization, strict or lossless snapshot handling, server/client split, budgets and 80 visual states. It is an in-memory Phase B example, not the Phase D nested builder, persistence or production API integration. Await B7 design/CI review before D1. See `docs/specs/2026-11-11-cms-core-b7-fixture.md`.
@@ -160,6 +162,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Added a gated D4 canvas route and pure tree composition/keyboard models, with EN/VI palette and Layers, mobile sheet access and D5 callback handoff. This provisional editor changes no API, database, legacy goldens or public content; browser/visual evidence is recorded in the D4 spec.
 
 - 2026-11-11: Stacked D1's validated tree on B7's neutral standalone fixture, retaining `./tree` and `./theme.css` without altering runtime routes, persistence, API, goldens or visual output. Regenerated Graphify after resolving the overlapping docs.
 
