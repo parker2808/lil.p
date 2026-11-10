@@ -64,6 +64,10 @@ The [R3-12 spec](./docs/specs/2026-11-03-r3-12-real-flow-audit.md) covers the in
 
 The PR #169 CI repair passes all nine local `check:all --e2e` gates on disposable MySQL, 17 focused browser tests, and 14 Linux visual tests. Set `R3_E2E_STATES=1` for the focused `public-details-states.spec.ts` run to refresh controlled loading and error captures. The final manifests contain 264 public and 608 admin route/state tuples, with no missing, stale or orphan PNGs.
 
+### CMS U0 pre-change baseline
+
+The [route/control baseline](./docs/audits/2026-11-10-cms-u0-route-control-baseline.md) maps public and admin routes, redirects, control owners, and remaining accessibility gaps. On a clean `d0d474b` worktree, the guarded `pnpm check:all --e2e` run passed all nine gates with a disposable MySQL container. The reproducible screenshot test is `apps/web/e2e/u0-capture.spec.ts`: set `U0_CAPTURE_DIR` to a local directory **outside the repo** and `R3_E2E_STATES=1`, then run `env -u DATABASE_URL -u DATABASE_URL_TEST bash scripts/r3-12-e2e-gate.sh u0-capture.spec.ts admin-ia.spec.ts`. It records a JSON manifest and EN/VI, light/dark, 1440/390 screenshots; keep platform-specific pixels out of git (only Linux Chromium pixel baselines belong in the tracked visual snapshots). The manifest and location are documented in the audit. Never point this gate at a persistent database.
+
 ## Environments
 
 There are three ways to run this repo. Each has its own setup — do not mix the steps.
