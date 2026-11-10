@@ -1,6 +1,6 @@
 # D4 — accessible tree composition
 
-Status: implementation review. Base: `feat/cms-d-base` at `38b25cb` (B7 + D1), integrated without conflicts. The U3 approved study is the visual reference, not functional evidence.
+Status: implementation review. Base: `feat/cms-d-base` at `3bbd1b2` (reviewed B7 + D1 empty-publish policy). The U3 approved study is the visual reference, not functional evidence.
 
 ## Plan
 
@@ -39,3 +39,5 @@ Contrast ratios below use the core stylesheet's actual sRGB tokens and WCAG rela
 Pointer dragging and keyboard-only insertion, pickup, nested placement, cancellation, tree traversal, and responsive sheet dismissal use the same validated composition commands. D4-only Playwright runs with a disposable database and the shared E2E lock; D6 will register the journey in the shared shards. The flag-off route returns 404 through `notFound()`; neither the UI nor the tests persist a draft or call publish.
 
 Verification (November 11, 2026, ICT): 7 focused unit tests passed; `D4_CAPTURE=1 R3_E2E_STATES=1 bash scripts/r3-12-e2e-gate.sh --config src/modules/admin-pages/builder/playwright.config.ts` passed 6/6 and wrote the 40-file manifest. A second focused run passed 5/5 with the capture-only case skipped; its axe checks covered EN/VI × light/dark × 1440/390 plus the mobile Layers dialogs. The disposable-MySQL `bash scripts/r3-12-e2e-gate.sh` passed all 9 `check:all --e2e` gates, including default web visual/a11y coverage. The shared lock was removed after each run. Graphify was refreshed against the D4 worktree; generated report commit metadata refers to the last committed integration base until this branch is committed.
+
+Base sync (November 11, 2026, ICT): D base `3bbd1b2` integrates D1's publish-only empty-page H1 requirement and the reviewed B7 fixture/contrast gate. D4 still composes H1-less drafts via `readTree`; its disabled Publish affordance does not call the publish validator or persist changes. The merge preserves both D4 and base documentation; the generated graph report is refreshed from the combined tree.

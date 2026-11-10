@@ -251,11 +251,7 @@ export function validateTreeForPublish(
   const required = Object.entries(registry)
     .filter(([, item]) => item.role === 'required')
     .map(([type]) => type);
-  if (
-    headings > 1 ||
-    (builderComponents > 0 && headings !== 1) ||
-    (builderComponents > 0 && required.some((type) => !present.has(type)))
-  )
+  if (headings !== 1 || (builderComponents > 0 && required.some((type) => !present.has(type))))
     return { ok: false, code: 'HEADING_RULE', input };
   return draft;
 }

@@ -210,6 +210,19 @@ test('registered components, H1/required policies, URLs and rich text', () => {
   );
 });
 
+test('publish requires exactly one H1 even for an empty draft', () => {
+  const empty = { ...page(), root: { ...page().root, sections: [] } };
+  assert.equal(readTree(empty).ok, true);
+  errorCode(empty, 'HEADING_RULE', undefined, validateTreeForPublish);
+  assert.equal(validateTreeForPublish(page([heading])).ok, true);
+  errorCode(
+    page([heading, { ...heading, id: 'another-heading' }]),
+    'HEADING_RULE',
+    undefined,
+    validateTreeForPublish,
+  );
+});
+
 test('bounded depth/count/bytes, including multibyte payloads', () => {
   const grid = {
     id: 'grid',
