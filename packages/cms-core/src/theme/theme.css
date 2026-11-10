@@ -12,6 +12,8 @@
   --builder-accent-soft: #e8efff;
   --builder-success: #26755a;
   --builder-warning: #86501b;
+  --builder-danger: #a33d42;
+  --builder-info: #176493;
   --builder-selection: #346ddd;
   --builder-drop: #3461b5;
   --builder-focus: #255cce;
@@ -55,6 +57,8 @@
   --builder-accent-soft: #283b5c;
   --builder-success: #83d9b0;
   --builder-warning: #ecc58d;
+  --builder-danger: #ff9ca3;
+  --builder-info: #89c8ec;
   --builder-selection: #9bbaff;
   --builder-drop: #9bbaff;
   --builder-focus: #b4ccff;
@@ -229,10 +233,22 @@
 
 .cms-core__status--success {
   color: var(--builder-success);
+  border: 1px solid currentColor;
 }
 
 .cms-core__status--warning {
   color: var(--builder-warning);
+  border: 1px solid currentColor;
+}
+
+.cms-core__status--danger {
+  color: var(--builder-danger);
+  border: 1px solid currentColor;
+}
+
+.cms-core__status--info {
+  color: var(--builder-info);
+  border: 1px solid currentColor;
 }
 
 .cms-core .cms-tree {
