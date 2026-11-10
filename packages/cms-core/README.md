@@ -25,6 +25,8 @@ D1's opt-in `./tree` entry exports `treeDocumentSchema`, `legacyTreeDocumentSche
 
 An empty tree is valid for `readTree` autosave, but `validateTreeForPublish` returns `HEADING_RULE` until exactly one H1 exists. Multiple H1s also fail; the host must not substitute the draft reader for publication.
 
+D5 adds `applyTreeOperation`, `createTreeHistory`/`commitTreeHistory`/`undoTreeHistory`/`redoTreeHistory` and `DraftAutosave` to `./tree`. Supply a D1 component registry for strict property validation; duplicate operations need a host ID allocator. History coalesces typing on one node/breakpoint/key only within 600ms and retains at most 50 operations by default. Autosave accepts a D2 transport (`save({tree, expectedRevision})` and `read()`) and an injected timer; revisions are decimal strings. `review()` reads the remote draft after a conflict or uncertain save but never overwrites local state. `resolveReviewed('acknowledge')` is allowed only when remote matches the known attempted or acknowledged tree; `resolveReviewed('reload')` explicitly discards local edits, so the host must offer export/confirmation first. There is no browser storage or live UI wiring in this package change; see the [D5 spec](../../docs/specs/2026-11-11-cms-d5-core-logic.md).
+
 Build and check the browser gzip budgets with `pnpm --filter @parker2808/cms-core test` (which builds and checks the D1 combined cap).
 The build runs `scripts/measure-cms-core.mjs` and fails above 60 KiB combined
 contracts+engine or 35 KiB combined `./react` + `./react/server`. These are **minified ESM artifact gzip sums**

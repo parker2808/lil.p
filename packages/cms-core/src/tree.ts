@@ -1,3 +1,5 @@
+export * from './tree/autosave';
+export * from './tree/editing';
 export * from './tree/legacy';
 export * from './tree/migration';
 export * from './tree/schema';

@@ -150,3 +150,4 @@
 - 2026-11-11: Check exactly-one-H1 for every publish attempt, including a zero-component tree; draft permissiveness must not bypass publish policy.
 - 2026-11-11: A browser contrast test hidden behind an opt-in environment flag does not protect the visual gate; require Chromium in local/CI E2E and assert each rendered text, feedback border and indicator against its adjacent surface in both palettes.
 - 2026-11-11: An editor-only axe check misses route-specific gallery and unknown-content regressions; assert every fixture route and focused state across locale, theme, brand and viewport, and measure effective mobile hit areas, including labels wrapping checkboxes.
+- 2026-11-11: A timed-out CAS save may already have committed; keep the attempted tree and newer local edits separately, read the remote revision before retry and require explicit review rather than blindly replaying with a new revision.
