@@ -69,7 +69,7 @@ The [CMS B1 golden HTTP suite](./docs/specs/2026-11-10-cms-b1-golden-http.md) fr
 
 [D integration base](./docs/specs/2026-11-11-cms-d-integration-base.md) carries both B7's neutral theme/fixture and D1's typed tree on a stacked draft branch; lil.p's live routes and data remain unchanged.
 
-[CMS D3 shared SSR renderer](./docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md) adds an opt-in, server-only tree renderer to `@parker2808/cms-core/react/server`; draft preview and public output share strict reading and markup. Legacy lil.p routes remain the default until D2 provides authorized tree snapshot dispatch and publish gating.
+[CMS D3 shared SSR renderer](./docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md) adds an opt-in, server-only tree renderer to `@parker2808/cms-core/react/server`; breakpoint-specific row spans and single semantic headings are covered by a required browser matrix. Host rendering failures have a separate typed result from invalid media content. Legacy lil.p routes remain the default until D2 provides authorized tree snapshot dispatch and publish gating; route parity remains unverified.
 
 ### Real content seed verification
 

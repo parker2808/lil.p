@@ -30,7 +30,7 @@ export type TreeRenderResult<Node> =
   | {
       ok: false;
       content: Node;
-      code: TreeErrorCode;
+      code: TreeErrorCode | 'RENDER_FAILED';
       input: unknown;
       nodeId?: string;
     };
@@ -39,6 +39,32 @@ function safeUrl(value: string): boolean {
   return (
     (value.startsWith('/') && !value.startsWith('//') && !value.includes('\\')) ||
     /^https:\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)*(?::[0-9]{1,5})?(?:[/?#][^\s\\]*)?$/i.test(value)
+  );
+}
+
+class InvalidMediaError extends Error {}
+
+function headingContent<Node>(node: ComponentNode, options: TreeRenderOptions<Node>): Node {
+  const variants: Breakpoint[] = ['mobile', 'tablet', 'desktop'];
+  const resolved = variants.map((breakpoint) => resolveResponsive(node.responsive, breakpoint));
+  const level = resolved.some((props) => props.level === 1) ? 1 : node.responsive.base.level;
+  const texts = resolved.map((props) => String(props.text));
+  if (texts.every((text) => text === texts[0])) {
+    return options.createElement(`h${level}`, null, texts[0]);
+  }
+  return options.createElement(
+    `h${level}`,
+    null,
+    variants.map((breakpoint, index) =>
+      options.createElement(
+        'span',
+        {
+          className: `cms-tree__heading-text cms-tree__heading-text--${breakpoint}`,
+          key: breakpoint,
+        },
+        texts[index],
+      ),
+    ),
   );
 }
 
@@ -65,6 +91,9 @@ function renderComponent<Node>(
   node: ComponentNode,
   options: TreeRenderOptions<Node>,
 ): Node | Node[] {
+  if (node.componentType === 'heading' && !options.components?.heading) {
+    return headingContent(node, options);
+  }
   return responsiveContent(node, options, (props) => {
     const custom = options.components?.[node.componentType];
     if (custom) {
@@ -81,7 +110,7 @@ function renderComponent<Node>(
         const src = options.resolveMedia
           ? options.resolveMedia(String(props.src))
           : String(props.src);
-        if (!src || !safeUrl(src)) throw new Error('INVALID_MEDIA');
+        if (!src || !safeUrl(src)) throw new InvalidMediaError('INVALID_MEDIA');
         return options.createElement('img', { src, alt: String(props.alt), loading: 'lazy' });
       }
       case 'button':
@@ -117,7 +146,11 @@ function renderNode<Node>(node: TreeNode, options: TreeRenderOptions<Node>): Nod
         { className: 'cms-tree__section', 'data-node-id': node.id, key: node.id },
         node.content.map((child) => renderNode(child, options)),
       );
-    case 'row':
+    case 'row': {
+      const tracks = (breakpoint: Breakpoint) =>
+        node.columns
+          .map((column) => `${resolveResponsive(column.responsive, breakpoint).span}fr`)
+          .join(' ');
       return options.createElement(
         'div',
         {
@@ -125,13 +158,16 @@ function renderNode<Node>(node: TreeNode, options: TreeRenderOptions<Node>): Nod
           'data-node-id': node.id,
           key: node.id,
           style: {
-            '--cms-row-desktop': node.columns
-              .map((column) => `${resolveResponsive(column.responsive, 'desktop').span}fr`)
-              .join(' '),
+            '--cms-row-mobile': node.columns.some((column) => column.responsive.mobile)
+              ? tracks('mobile')
+              : 'minmax(0, 1fr)',
+            '--cms-row-tablet': tracks('tablet'),
+            '--cms-row-desktop': tracks('desktop'),
           },
         },
         node.columns.map((child) => renderNode(child, options)),
       );
+    }
     case 'column': {
       return options.createElement(
         'div',
@@ -184,7 +220,12 @@ export function renderTree<Node>(options: TreeRenderOptions<Node>): TreeRenderRe
   }
   try {
     return { ok: true, document: result.value, content: renderNode(result.value.root, options) };
-  } catch {
-    return { ok: false, code: 'INVALID_PROPS', input: options.input, content: warning };
+  } catch (error) {
+    return {
+      ok: false,
+      code: error instanceof InvalidMediaError ? 'INVALID_PROPS' : 'RENDER_FAILED',
+      input: options.input,
+      content: warning,
+    };
   }
 }

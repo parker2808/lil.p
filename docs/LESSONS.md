@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-11: A responsive SSR heading must not duplicate semantic heading tags for CSS text variants; test the markup count and computed visible text separately. Gating the browser matrix in CI catches breakpoint-specific column spans omitted from pure SSR snapshots.
+
 - 2026-11-11: A package cannot import its own unbuilt `./tree` dist entry during a simultaneous tsup build; import the public source barrel inside the package and verify the built server export still bundles only server-safe tree code. Screenshot fixtures must serve local assets and capture neutral appearance before trying token-only host overrides.
 
 - 2026-11-11: A lazy editor can leave a valid-looking screenshot of its loading fallback; wait for an editor-specific visible element before capturing the visual matrix. Vite's `pnpm preview -- --port` forwards the extra `--` to Vite and silently serves its default port; invoke `pnpm exec vite preview --port` instead.

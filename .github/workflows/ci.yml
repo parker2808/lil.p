@@ -261,6 +261,9 @@ jobs:
       - name: Required CMS theme computed AA matrix
         if: matrix.shard == 1
         run: CMS_THEME_BROWSER=1 node --test packages/cms-core/test/theme.test.mjs
+      - name: Required CMS tree responsive matrix
+        if: matrix.shard == 1
+        run: CMS_TREE_BROWSER=1 node --test packages/cms-core/test/tree-renderer.test.mjs
       - run: pnpm --filter @portfolio/web test:e2e
         env:
           E2E_SHARD: ${{ matrix.shard }}

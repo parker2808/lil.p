@@ -85,13 +85,10 @@ test('built ESM and CJS server entries expose tree rendering without editor impo
   assert.ok(totals.browser <= limits.browser);
 });
 
-test('shared draft reader produces identical public and preview SSR without executable content', () => {
-  const publicResult = render(tree);
-  const previewResult = render(tree);
-  assert.equal(publicResult.ok, true);
-  assert.equal(previewResult.ok, true);
-  const html = markup(publicResult);
-  assert.equal(markup(previewResult), html);
+test('draft SSR contract escapes content; route preview/public parity awaits D2 and D6', () => {
+  const result = render(tree);
+  assert.equal(result.ok, true);
+  const html = markup(result);
   assert.match(html, /<h1>Hello<\/h1>/);
   assert.match(html, /&lt;script&gt;not HTML&lt;\/script&gt;/);
   assert.doesNotMatch(html, /<script>/);
@@ -103,6 +100,28 @@ test('shared draft reader produces identical public and preview SSR without exec
   assert.match(html, /--cms-grid-mobile:1/);
   assert.ok(html.indexOf('Hello') < html.indexOf('Rich &amp; plain'));
   assert.ok(html.indexOf('Rich &amp; plain') < html.indexOf('&lt;script&gt;'));
+});
+
+test('responsive headings render one semantic H1 and row tracks preserve spans', () => {
+  const sample = globalThis.structuredClone(tree);
+  const columns = sample.root.sections[0].content[0].columns;
+  columns[0].responsive.mobile = { span: 1 };
+  columns[1].responsive.mobile = { span: 2 };
+  columns[0].responsive.tablet = { span: 3 };
+  columns[1].responsive.tablet = { span: 1 };
+  columns[1].responsive.desktop = { span: 2 };
+  const title = columns[0].content[0];
+  title.responsive.mobile = { text: 'Mobile', level: 2 };
+  title.responsive.tablet = { text: 'Tablet' };
+  title.responsive.desktop = { text: 'Desktop' };
+  const result = render(sample);
+  assert.equal(result.ok, true);
+  const html = markup(result);
+  assert.equal((html.match(/<h1>/g) ?? []).length, 1);
+  assert.equal((html.match(/<h2>/g) ?? []).length, 0);
+  assert.match(html, /--cms-row-mobile:1fr 2fr/);
+  assert.match(html, /--cms-row-tablet:3fr 1fr/);
+  assert.match(html, /--cms-row-desktop:1fr 2fr/);
 });
 
 test('responsive component variants and registered host components stay server-only', () => {
@@ -188,6 +207,32 @@ test('media resolver cannot introduce unsafe URLs', () => {
     assert.strictEqual(result.input, tree);
     assert.doesNotMatch(markup(result), /javascript:/);
   }
+});
+
+test('host renderer and resolver failures have a distinct typed code', () => {
+  const sample = globalThis.structuredClone(tree);
+  sample.root.sections[0].content[1].items = [
+    makeNode('quote', 'component', { text: 'Quote' }, { componentType: 'quote' }),
+  ];
+  const failure = render(sample, {
+    registry: { quote: { props: z.strictObject({ text: z.string() }) } },
+    components: {
+      quote: () => {
+        throw new Error('host failure');
+      },
+    },
+  });
+  assert.equal(failure.ok, false);
+  assert.equal(failure.code, 'RENDER_FAILED');
+  assert.strictEqual(failure.input, sample);
+  assert.doesNotMatch(markup(failure), /host failure/);
+  const media = render(tree, {
+    resolveMedia: () => {
+      throw new Error('resolver failure');
+    },
+  });
+  assert.equal(media.ok, false);
+  assert.equal(media.code, 'RENDER_FAILED');
 });
 
 test('core stylesheet defines responsive grid and variants under neutral scope', () => {
@@ -291,6 +336,41 @@ test(
               markup(render(localized, { resolveMedia: () => 'https://example.test/picture.svg' })),
               markup(result),
             );
+            const responsive = globalThis.structuredClone(localized);
+            const columns = responsive.root.sections[0].content[0].columns;
+            columns[0].responsive.mobile = { span: 1 };
+            columns[1].responsive.mobile = { span: 2 };
+            columns[0].responsive.tablet = { span: 3 };
+            columns[1].responsive.tablet = { span: 1 };
+            columns[1].responsive.desktop = { span: 2 };
+            const title = columns[0].content[0];
+            title.responsive.mobile = { text: 'Mobile' };
+            title.responsive.tablet = { text: 'Tablet' };
+            title.responsive.desktop = { text: 'Desktop' };
+            const responsiveResult = render(responsive, {
+              resolveMedia: () => 'https://example.test/picture.svg',
+            });
+            assert.equal(responsiveResult.ok, true);
+            await page.setContent(
+              `<main class="cms-core" data-theme="${mode}">${markup(responsiveResult)}</main>`,
+            );
+            await page.addStyleTag({ content: css });
+            assert.equal(await page.locator('h1').count(), 1);
+            assert.equal(
+              await page.locator('h1').innerText(),
+              width === 390 ? 'Mobile' : width === 768 ? 'Tablet' : 'Desktop',
+            );
+            const tracks = await page
+              .locator('.cms-tree__row')
+              .evaluate((element) =>
+                globalThis
+                  .getComputedStyle(element)
+                  .gridTemplateColumns.split(' ')
+                  .map(Number.parseFloat),
+              );
+            assert.equal(tracks.length, 2);
+            const ratio = tracks[0] / tracks[1];
+            assert.ok(Math.abs(ratio - (width === 768 ? 3 : width === 390 ? 0.5 : 0.5)) < 0.03);
             await page.close();
           }
         }
