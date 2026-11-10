@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-10: A bilingual field needs one accessible name per locale control; one label attached to the EN input leaves the VI input or textarea unnamed even when both are visually side by side.
+- 2026-11-10: Rendering all 20 block forms inside one Vitest case can exceed the Linux CI timeout; use one parameterized case per block to preserve coverage and give each render its own time budget.
+
 - 2026-11-03: A stacked integration PR can branch from the verified top PR tip when every lower branch tip is already an ancestor; this preserves the full stack without modifying or merging the original PRs.
 - 2026-11-03: Production Playwright draft previews must use `localhost` in both the web build and browser origin; a `127.0.0.1` origin loses Next's secure draft cookie after navigation.
 - 2026-11-03: Integrated visual changes require new Linux Chromium baselines; inspect expected and actual images before updating snapshots, and use the app's theme control so capture state matches its provider.
