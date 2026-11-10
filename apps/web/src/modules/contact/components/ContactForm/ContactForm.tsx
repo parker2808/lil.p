@@ -176,8 +176,11 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
                 id="name"
                 name="name"
                 autoComplete="name"
-                value={field.state.value}
-                onBlur={field.handleBlur}
+                defaultValue={field.state.value}
+                onBlur={(event) => {
+                  field.handleChange(event.target.value);
+                  field.handleBlur();
+                }}
                 onChange={(event) => {
                   field.handleChange(event.target.value);
                   setValidationErrors((errors) => ({ ...errors, name: [] }));
@@ -202,8 +205,11 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
                 name="email"
                 type="email"
                 autoComplete="email"
-                value={field.state.value}
-                onBlur={field.handleBlur}
+                defaultValue={field.state.value}
+                onBlur={(event) => {
+                  field.handleChange(event.target.value);
+                  field.handleBlur();
+                }}
                 onChange={(event) => {
                   field.handleChange(event.target.value);
                   setValidationErrors((errors) => ({ ...errors, email: [] }));
@@ -221,7 +227,13 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
             return (
               <Field>
                 <FieldLabel htmlFor="topic">{t('topic')}</FieldLabel>
-                <Select name="topic" value={field.state.value} onValueChange={field.handleChange}>
+                <input type="hidden" name="topic" value={field.state.value} />
+                <Select
+                  value={field.state.value}
+                  onValueChange={(value) =>
+                    field.handleChange(value === '__empty_topic__' ? '' : value)
+                  }
+                >
                   <SelectTrigger
                     id="topic"
                     onBlur={field.handleBlur}
@@ -231,6 +243,7 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
                     <SelectValue placeholder={t('topicPlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="__empty_topic__">{t('topicPlaceholder')}</SelectItem>
                     {topics.map((topic) => (
                       <SelectItem key={topic.id} value={topic.slug}>
                         {topic.label}
@@ -260,8 +273,11 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
             <Textarea
               id="message"
               name="message"
-              value={field.state.value}
-              onBlur={field.handleBlur}
+              defaultValue={field.state.value}
+              onBlur={(event) => {
+                field.handleChange(event.target.value);
+                field.handleBlur();
+              }}
               onChange={(event) => {
                 field.handleChange(event.target.value);
                 setValidationErrors((errors) => ({ ...errors, message: [] }));
@@ -280,7 +296,7 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
               name="website"
               tabIndex={-1}
               autoComplete="off"
-              value={field.state.value}
+              defaultValue={field.state.value}
               onChange={(event) => field.handleChange(event.target.value)}
             />
           </div>

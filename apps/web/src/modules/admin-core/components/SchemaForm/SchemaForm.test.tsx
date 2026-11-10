@@ -72,6 +72,19 @@ describe('SchemaForm', () => {
     expect(screen.getAllByRole('textbox', { name: /Vietnamese/ }).length).toBeGreaterThan(0);
   });
 
+  it('preserves both localized values while neighboring fields update', async () => {
+    const user = userEvent.setup();
+    renderForm('hero');
+    const english = document.getElementById('primaryCta.label.en') as HTMLInputElement;
+    const vietnamese = document.getElementById('primaryCta.label.vi') as HTMLInputElement;
+    await user.clear(english);
+    await user.type(english, 'Contact me');
+    await user.clear(vietnamese);
+    await user.type(vietnamese, 'Liên hệ');
+    expect(english).toHaveValue('Contact me');
+    expect(vietnamese).toHaveValue('Liên hệ');
+  });
+
   it('translates distinct accessible names for Vietnamese editors', () => {
     render(
       <NextIntlClientProvider locale="vi" messages={viMessages}>

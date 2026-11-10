@@ -93,6 +93,8 @@ test('real Pages creation validates, recovers from HTTP 409, and opens the edito
         await page
           .getByRole('option', { name: locale === 'en' ? 'Empty blocks' : 'Trang trống' })
           .click();
+        await expect(title).toHaveValue('Động lực mới');
+        await expect(slug).toHaveValue(`r304-${locale}-${theme}-${width}`);
         await capture(page, 'admin-pages', locale, 'dialog', theme, width);
 
         const key = `r304-${locale}-${theme}-${width}`;

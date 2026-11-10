@@ -30,6 +30,49 @@ describe('shared choices', () => {
     await waitFor(() => expect(screen.getByRole('radio', { name: 'Two' })).toBeChecked());
   });
 
+  it('does not select an empty group on Tab or programmatic focus', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(
+      <>
+        <button>Before</button>
+        <RadioGroup aria-label="Layout" onValueChange={onValueChange}>
+          <RadioGroupItem value="one">One</RadioGroupItem>
+          <RadioGroupItem value="two">Two</RadioGroupItem>
+        </RadioGroup>
+      </>,
+    );
+    const first = screen.getByRole('radio', { name: 'One' });
+    await user.click(screen.getByRole('button', { name: 'Before' }));
+    await user.tab();
+    expect(first).toHaveFocus();
+    expect(first).not.toBeChecked();
+    screen.getByRole('radio', { name: 'Two' }).focus();
+    expect(onValueChange).not.toHaveBeenCalled();
+    await user.keyboard(' ');
+    expect(onValueChange).toHaveBeenCalledWith('two');
+  });
+
+  it('preserves an existing selection on Tab entry and programmatic focus', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(
+      <>
+        <button>Before</button>
+        <RadioGroup aria-label="Layout" defaultValue="two" onValueChange={onValueChange}>
+          <RadioGroupItem value="one">One</RadioGroupItem>
+          <RadioGroupItem value="two">Two</RadioGroupItem>
+        </RadioGroup>
+      </>,
+    );
+    await user.click(screen.getByRole('button', { name: 'Before' }));
+    await user.tab();
+    expect(screen.getByRole('radio', { name: 'Two' })).toHaveFocus();
+    screen.getByRole('radio', { name: 'One' }).focus();
+    expect(screen.getByRole('radio', { name: 'Two' })).toBeChecked();
+    expect(onValueChange).not.toHaveBeenCalled();
+  });
+
   it('names and operates the select with the keyboard', async () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();

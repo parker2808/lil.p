@@ -6,15 +6,15 @@ import type { ComponentProps } from 'react';
 
 export function RadioGroup({
   className,
-  onKeyUp,
+  onKeyDown,
   ...props
 }: ComponentProps<typeof RadioGroupPrimitive.Root>) {
   return (
     <RadioGroupPrimitive.Root
       data-slot="radio-group"
       className={cn('flex flex-wrap gap-2', className)}
-      onKeyUp={(event) => {
-        onKeyUp?.(event);
+      onKeyDown={(event) => {
+        onKeyDown?.(event);
         if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(event.key)) return;
         const group = event.currentTarget;
         setTimeout(() => {
@@ -22,6 +22,7 @@ export function RadioGroup({
           if (
             active instanceof HTMLElement &&
             group.contains(active) &&
+            active !== event.target &&
             active.getAttribute('role') === 'radio' &&
             active.getAttribute('aria-checked') === 'false'
           ) {

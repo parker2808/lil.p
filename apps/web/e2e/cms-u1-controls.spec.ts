@@ -71,6 +71,19 @@ test('block surface radios support keyboard-only selection', async ({ page }) =>
   const wasBand = await band.isChecked();
   const original = wasBand ? band : plain;
   const next = wasBand ? plain : band;
+  const patches: string[] = [];
+  page.on('request', (request) => {
+    if (request.url().includes('/api/admin/pages/home/blocks/') && request.method() === 'PATCH') {
+      patches.push(request.url());
+    }
+  });
+  await original.focus();
+  await expect(original).toBeFocused();
+  await expect(original).toBeChecked();
+  await next.focus();
+  await expect(original).toBeChecked();
+  await page.waitForTimeout(50);
+  expect(patches).toHaveLength(0);
   await original.focus();
   const updated = page.waitForResponse(
     (response) =>
@@ -98,4 +111,26 @@ test('block surface radios support keyboard-only selection', async ({ page }) =>
   await expectTouchTarget(page.getByRole('switch').first());
   await page.goto('/admin/projects');
   await expectTouchTarget(page.getByRole('checkbox').first());
+});
+
+test('radio Tab entry and programmatic focus leave empty and selected groups unchanged', async ({
+  page,
+}) => {
+  await page.goto('/en/r3-loading-test/radio');
+  const empty = page.getByRole('radiogroup', { name: 'Empty choice' });
+  await page.getByRole('button', { name: 'Before empty' }).focus();
+  await page.keyboard.press('Tab');
+  await expect(empty.getByRole('radio', { name: 'One' })).toBeFocused();
+  await expect(page.getByTestId('empty-value')).toBeEmpty();
+  await empty.getByRole('radio', { name: 'Two' }).focus();
+  await expect(page.getByTestId('empty-value')).toBeEmpty();
+  await page.keyboard.press('Space');
+  await expect(page.getByTestId('empty-value')).toHaveText('two');
+
+  const selected = page.getByRole('radiogroup', { name: 'Selected choice' });
+  await page.getByRole('button', { name: 'Before selected' }).focus();
+  await page.keyboard.press('Tab');
+  await expect(selected.getByRole('radio', { name: 'Two' })).toBeFocused();
+  await selected.getByRole('radio', { name: 'One' }).focus();
+  await expect(page.getByTestId('selected-value')).toHaveText('two');
 });

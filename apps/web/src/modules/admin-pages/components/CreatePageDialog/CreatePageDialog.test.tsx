@@ -55,6 +55,8 @@ describe('CreatePageDialog', () => {
     await user.click(screen.getByRole('option', { name: 'Vietnamese' }));
     await user.click(screen.getByLabelText('Start with'));
     await user.click(screen.getByRole('option', { name: 'Empty blocks' }));
+    expect(screen.getByLabelText('Page title')).toHaveValue('Ideas');
+    expect(screen.getByLabelText('Slug')).toHaveValue('ideas');
     fireEvent.click(screen.getByRole('button', { name: 'Create page' }));
     await waitFor(() =>
       expect(createAdminPage).toHaveBeenCalledWith({
