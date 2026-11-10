@@ -14,6 +14,11 @@
       "import": "./dist/engine.js",
       "require": "./dist/engine.cjs"
     },
+    "./tree": {
+      "types": "./dist/tree.d.ts",
+      "import": "./dist/tree.js",
+      "require": "./dist/tree.cjs"
+    },
     "./react": {
       "types": "./dist/react.d.ts",
       "import": "./dist/react.js",
@@ -32,6 +37,9 @@
       ],
       "engine": [
         "dist/engine.d.ts"
+      ],
+      "tree": [
+        "dist/tree.d.ts"
       ],
       "react": [
         "dist/react.d.ts"
