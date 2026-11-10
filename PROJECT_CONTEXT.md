@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- Disposable PR #187 verifies the stacked-base context guard: its initial code-only diff intentionally lacked a context update and failed the `context` check; this follow-up adds the missing entry to verify the positive case. The PR is for CI proof only and must never merge.
+
 - CI context guard: PR #178 targets `feat/cms-u2-site-admin-patterns`, so the former `context-check` workflow's `branches: [main]` filter omitted its `context` job despite non-docs changes. Removing only that filter makes the existing triple-dot base/head guard run for stacked and main-target PRs alike; no `skip-context` authorization or script semantics change. A missing-context stacked PR should now fail; retain docs-only (`docs/`) exemption. Validate with this fix PR's `context` check, a local negative case and a future stacked PR after the fix lands; do not mistake this main-target PR run for proof that GitHub has run the changed workflow against PR #178. No merge/deploy is authorized.
 - Round 3 integration: one review PR to `main` starts at the verified PR #169 head, which contains all eleven earlier Round 3 branch tips. The additional commit documents the handoff only. The original stacked PRs remain open; Parker decides whether and how to merge or close them. Database migration, deployment, and production changes are separate decisions.
 - PR #169 CI repair: web E2E builds and shards now share the `localhost` origin required by draft cookies; editor captures use the live theme handler, the Vietnamese experience check targets its About tab, and the contact check uses a real click after verifying its name field. Twenty Linux visual baselines reflect the integrated R3 design. The guarded E2E gate accepts alternate local API/web ports when another worktree occupies the defaults. Focused browser checks pass 17/17, Linux visual checks pass 14/14, and the full disposable-MySQL `pnpm check:all --e2e` passes all nine gates locally; PR CI remains open.
@@ -136,6 +138,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-10: Added a temporary context entry to verify that the stacked-base `context` job accepts the same code diff after its required documentation is present; discard with the proof PR.
 
 - 2026-11-10: Remove the `main`-only pull-request trigger from `context-check` so stacked PRs receive the same PROJECT_CONTEXT file-change guard; document the PR #178 gap and keep the `skip-context` and `docs/` rules unchanged.
 - 2026-11-03: Prepared a single Round 3 integration review PR from the PR #169 head to `main`, preserving all eleven earlier branch tips and documenting the remaining release decisions.
