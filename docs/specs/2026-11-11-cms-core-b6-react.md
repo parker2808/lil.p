@@ -35,3 +35,14 @@ At `8c448ea2`, `packages/cms-core/package.json` exports exactly `./contracts`, `
 ## Gates after integration
 
 Keep public and preview SSR/markup and B1 goldens unchanged; unknown blocks remain draft-only. Verify EN/VI accessible names and keyboard behavior, light/dark at 1440/390, and no editor/widget modules in the server/public import graph. Preserve the built client directive and the combined 35 KiB gzip React cap. Run Graphify, documentation, unit and full `pnpm check:all --e2e` under the shared E2E lock. Draft PR against `feat/cms-b4-contracts-registry`; no merge.
+
+## Independent review follow-up (P1–P3)
+
+1. Keep only primitive widget mappings in core; register portfolio widget metadata in web.
+2. Require a host label resolver when deriving fields, with no implicit English fallback.
+3. Prove EN/VI names and absence of portfolio field names in core tests.
+4. Refresh Graphify at the new head and rerun the locked gate.
+
+The host maps its `project`, `projectIds`, `statIds`, `domain`, icon, hue and route widgets. The core derives generic schema kinds and delegates the field label to a **required** host resolver given the field path and optional metadata key; a missing translation is an explicit host error, not a fallback to English text or an untranslated key. Portfolio list controls remain host-owned. Neither the core's package export topology nor its tsup config changes in this review pass because B6b owns theme exports.
+
+Review-fix gate on Node 22: `pnpm check:all` passed 7/7, then the locked `scripts/r3-12-e2e-gate.sh` passed `pnpm check:all --e2e` 9/9, including web E2E; the lock was released on exit. `pnpm check:content` and Prettier checks passed. Rebuilt gzip sizes are 864/61,440 bytes for contracts+engine, 1,621/35,840 bytes for the combined React entries (`./react` 1,174; `./react/server` 447). No B1 goldens or visual baselines changed.

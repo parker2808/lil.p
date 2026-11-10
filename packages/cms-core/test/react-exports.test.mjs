@@ -92,15 +92,25 @@ test('server dispatch preserves order and draft-only unknowns with host wrappers
 test('form contracts let a host override widgets and supply localized messages', async () => {
   const { schemaToFields, fieldMessage, createEditorMetadata, SchemaFieldControl } =
     await import('@parker2808/cms-core/react');
+  const labels = {
+    en: { title: 'Title', caption: 'Caption' },
+    vi: { title: 'Tiêu đề', caption: 'Chú thích' },
+  };
   const fields = schemaToFields(
     z.object({
       title: z.object({ en: z.string(), vi: z.string() }),
       caption: z.string().meta({ widget: 'callout' }),
     }),
-    { widgetKinds: { callout: 'textarea' } },
+    { widgetKinds: { callout: 'textarea' }, labelFor: (path) => labels.vi[path] },
   );
   assert.equal(fields[0].kind, 'localized-text');
   assert.equal(fields[1].kind, 'textarea');
+  assert.equal(fields[0].label, labels.vi.title);
+  assert.notEqual(fields[0].label, labels.en.title);
+  assert.throws(
+    () => schemaToFields(z.object({ title: z.string() }), { labelFor: () => '' }),
+    /Missing localized label/,
+  );
   assert.equal(
     fieldMessage(fields[0], { message: 'Invalid' }, { 'props.title.en': 'Cần tiếng Anh' }),
     'Cần tiếng Anh',
@@ -126,4 +136,11 @@ test('form contracts let a host override widgets and supply localized messages',
     }),
   );
   assert.match(html, /Tiêu đề: true/);
+});
+
+test('core field derivation has no portfolio widget vocabulary', () => {
+  for (const file of ['../src/react/fields.ts', '../src/react/SchemaForm.ts']) {
+    const source = readFileSync(new URL(file, import.meta.url), 'utf8');
+    assert.doesNotMatch(source, /\b(?:projectIds|statIds|project|projects|domain|stats)\b/);
+  }
 });

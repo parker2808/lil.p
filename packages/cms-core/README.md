@@ -11,6 +11,10 @@ unknown notices; it imports no client form/widget code. `./react` exposes Zod
 schema field derivation, headless form controls and editor metadata, preserving
 the built `"use client"` directive in ESM and CJS. All subpaths publish
 CommonJS and legacy TypeScript subpath resolution for the existing hosts.
+`schemaToFields(schema, { labelFor, widgetKinds? })` requires the host to
+resolve each field path and optional metadata key to a localized label;
+missing labels are errors. Core maps only generic widget kinds, while hosts
+register domain widgets through `widgetKinds` and supply their own controls.
 React 19, React DOM 19 and Zod 4 are peers (also local development dependencies for package tests).
 
 Build and check the browser gzip budgets with `pnpm --filter @parker2808/cms-core build`.

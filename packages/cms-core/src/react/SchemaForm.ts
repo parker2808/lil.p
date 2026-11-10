@@ -72,7 +72,7 @@ export function SchemaFieldControl<Node>({
   ) {
     return widgets.localized(control);
   }
-  if (field.kind === 'array' || field.kind === 'projects' || field.kind === 'stats') {
+  if (field.kind === 'array') {
     return widgets.array(control);
   }
   return widgets.scalar(control);

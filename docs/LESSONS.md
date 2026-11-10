@@ -138,3 +138,4 @@
 - 2026-11-10: When publishing separate ESM/CJS subpaths, test both import and require for every entry and guard side-effect imports/re-exports, not only named imports.
 - 2026-11-11: A server-rendered React surface cannot consume a client-marked package entry without changing its public boundary; publish and measure a separate server-safe entry, and verify both built formats keep client directives only on client output.
 - 2026-11-11: A pnpm workspace host must declare its core dependency directly even when a sibling package already depends on it; verify Docker copies the package manifest before frozen install and builds its dependency closure before the host.
+- 2026-11-11: Generic schema field extraction should require a host-localized label resolver and accept host widget registrations; inferring labels from a fixed English schema property can leak copy into Vietnamese UI.

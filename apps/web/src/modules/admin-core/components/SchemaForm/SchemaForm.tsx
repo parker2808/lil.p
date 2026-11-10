@@ -37,7 +37,14 @@ export function SchemaForm({
   const fieldT = useTranslations('admin.blocks.field');
   const iconT = useTranslations('admin.pickers.icon');
   const hueT = useTranslations('admin.pickers.hue');
-  const fields = useMemo(() => schemaToFields(schema), [schema]);
+  const fields = useMemo(
+    () =>
+      schemaToFields(schema, (path, key) => {
+        if (!key || !t.has(key)) throw new Error(`Missing localized field label for ${path}`);
+        return t(key);
+      }),
+    [schema, t],
+  );
   const form = useForm({
     defaultValues,
     validators: { onChange: schema as never },
@@ -110,7 +117,7 @@ export function SchemaForm({
                 issue={api.state.meta.errors[0]}
                 readOnly={Boolean(readOnly)}
                 fieldErrors={{ ...zodErrors, ...fieldErrors }}
-                label={t.has(field.label) ? t(field.label) : field.label}
+                label={field.label}
                 editorLabels={editorLabels}
                 previewLabels={previewLabels}
                 widgetLabels={widgetLabels}

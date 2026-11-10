@@ -9,14 +9,8 @@ export type SchemaFieldKind =
   | 'localized-text'
   | 'localized-textarea'
   | 'markdown'
-  | 'icon'
-  | 'hue'
-  | 'route'
-  | 'project'
-  | 'projects'
-  | 'stats'
-  | 'tag'
-  | 'array';
+  | 'array'
+  | (string & {});
 
 export type SchemaField = {
   path: string;
@@ -58,16 +52,6 @@ const DEFAULT_WIDGET_KIND: Readonly<Record<string, SchemaFieldKind>> = {
   switch: 'switch',
   select: 'select',
   markdown: 'markdown',
-  icon: 'icon',
-  hue: 'hue',
-  route: 'route',
-  project: 'project',
-  projects: 'projects',
-  projectIds: 'projects',
-  stats: 'stats',
-  statIds: 'stats',
-  tag: 'tag',
-  domain: 'tag',
 };
 
 function unwrap(node: JsonSchema): JsonSchema {
@@ -138,6 +122,8 @@ function walk(
   path: string,
   required: boolean,
   widgetKinds: Readonly<Record<string, SchemaFieldKind>>,
+  labelFor: (path: string, key: string | undefined) => string,
+  parentLabelKey?: string,
 ): SchemaField[] {
   const current = unwrap(node);
   if (current.type === 'object' && current.properties && !isLocalized(current)) {
@@ -147,16 +133,25 @@ function walk(
         path ? `${path}.${key}` : key,
         Boolean(current.required?.includes(key)),
         widgetKinds,
+        labelFor,
+        parentLabelKey,
       ),
     );
   }
 
   const kind = kindFor(current, path, widgetKinds);
+  const label = labelFor(
+    path,
+    current.label ??
+      (isLocalized(current) ? current.properties?.en?.label : undefined) ??
+      parentLabelKey,
+  );
+  if (!label) throw new Error(`Missing localized label for ${path}`);
   const field: SchemaField = {
     path,
     kind,
     required,
-    label: current.label ?? (isLocalized(current) ? (current.properties?.en?.label ?? path) : path),
+    label,
     min: current.minimum ?? current.minLength,
     max: current.maximum ?? current.maxLength,
     enum: (current.enum ?? (current.const !== undefined ? [current.const] : undefined)) as
@@ -166,7 +161,14 @@ function walk(
   };
 
   if (kind === 'array' && current.items) {
-    const itemFields = walk(current.items, `${path}[]`, true, widgetKinds);
+    const itemFields = walk(
+      current.items,
+      `${path}[]`,
+      true,
+      widgetKinds,
+      labelFor,
+      current.label ?? parentLabelKey,
+    );
     field.item = itemFields[0];
     field.fields = itemFields;
   }
@@ -176,13 +178,20 @@ function walk(
 
 export function schemaToFields(
   schema: ZodType,
-  options: { widgetKinds?: Readonly<Record<string, SchemaFieldKind>> } = {},
+  options: {
+    labelFor: (path: string, key: string | undefined) => string;
+    widgetKinds?: Readonly<Record<string, SchemaFieldKind>>;
+  },
 ): SchemaField[] {
   const json = z.toJSONSchema(schema, { io: 'input' }) as JsonSchema;
   if (json.type !== 'object' || !json.properties) {
     throw new Error('Block props schema must be an object');
   }
-  return walk(json, '', true, { ...DEFAULT_WIDGET_KIND, ...options.widgetKinds }).filter(
-    (field) => field.path.length > 0,
-  );
+  return walk(
+    json,
+    '',
+    true,
+    { ...DEFAULT_WIDGET_KIND, ...options.widgetKinds },
+    options.labelFor,
+  ).filter((field) => field.path.length > 0);
 }
