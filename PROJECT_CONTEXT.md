@@ -48,9 +48,11 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
-- CMS B4 contracts/registry (stacked on accepted B3 `814afcf`): generic Zod page/block/locale/snapshot schemas and definition, allowance and duplicate-rejecting registry helpers live in `@parker2808/cms-core/contracts`. The host retains its 20 definitions, copy and finite HTTP block enum; browser gzip is 864/61,440 bytes and React 34/35,840. CI and root typecheck build core before host contracts on clean checkout. No runtime route or EN/VI `/help` change, migrations or new external dependencies. B5/B6 wait for coordinator review. See `docs/specs/2026-11-10-cms-b4-contracts-registry.md`.
+- CMS B4 contracts/registry (stacked on accepted B3 `814afcf`): generic Zod page/block/locale/snapshot schemas and definition, allowance and duplicate-rejecting registry helpers live in `@parker2808/cms-core/contracts`. The host retains its 20 definitions, copy and finite HTTP block enum; browser gzip is 864/61,440 bytes and React 34/35,840. React 19, React DOM 19 and Zod 4 are declared peers and externalized by the build; measurement verifies their declarations. CI and root typecheck build core before host contracts on clean checkout. No runtime route or EN/VI `/help` change, migrations or new external packages. B5/B6 wait for coordinator review. See `docs/specs/2026-11-10-cms-b4-contracts-registry.md`.
 
 - Out of B4 scope: the locked local macOS web E2E failed its existing VI public-shell axe contrast check (`#414248` on `#ff8f74`, measured 4.49:1 vs required 4.5:1). All other `check:all --e2e` stages passed on disposable MySQL. This UI palette issue requires separate review; B4 does not change UI, tests or production code. See the B4 spec for evidence and the Linux CI result for platform coverage.
+
+- B4 peer-audit local gate: package tests and seven non-E2E stages pass; a separate locked disposable-MySQL `check:all --e2e` attempt omitted required `API_PORT` and `WEB_ORIGIN` and failed API config validation, two web draft-preview checks and the known macOS contrast check. A corrected locked API E2E rerun passes 23 files/113 tests. The full local gate is not green; use full Linux CI for this change and do not infer a product regression from the misconfigured preview run.
 
 - CMS B3 scaffold (stacked on accepted B2 `44e2da4`, draft PR #181 stays unmerged): three empty ESM subpaths, built declarations, and an enforced reproducible gzip budget in the package build/check:all and CI. Coordinator approved provisional ADR caps as starting budgets: contracts+engine ≤60 KiB, React ≤35 KiB excluding React/Zod peers. Actual empty-scaffold baseline: 40 bytes combined, 34 bytes React; remeasure once code is extracted and propose any cap revision explicitly. No host integration, route/schema/EN–VI `/help` changes or migrations. B4 must wait for B3 acceptance; B6 waits for U2/U3 and D for U3. See `docs/specs/2026-11-10-cms-b3-package-skeleton.md`.
 
@@ -146,6 +148,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-10: Corrected B4 peer declarations for React 19, React DOM 19 and Zod 4 while retaining local development dependencies; budget measurement now verifies declared peers before accepting externalized imports. Same gzip caps, API/EN–VI behavior and host ownership.
 
 - 2026-11-10: Extracted generic B4 CMS contracts and host-composed registry; duplicate type values now fail construction, unknown types remain undefined. Retained host HTTP schemas, 20 host definitions and page allowance; added import-boundary lint/deps checks and measured 864-byte gzip contracts+engine surface under the 60 KiB cap. No migrations, routes, EN/VI `/help` or UI changes.
 
