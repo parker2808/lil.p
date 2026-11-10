@@ -30,13 +30,9 @@ import { StudyAutoPreview, StudyMobilePanels, StudyOutline, StudyPalette } from 
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-  title: 'CMS U3 · Builder design study',
-  robots: { index: false, follow: false },
-};
-
 const copy = {
   en: {
+    metadataTitle: 'CMS U3 · Builder design study',
     study: 'DESIGN STUDY · U3',
     back: 'Design review',
     page: 'New page',
@@ -148,6 +144,7 @@ const copy = {
     scaleLabel: 'design width · scaled',
   },
   vi: {
+    metadataTitle: 'CMS U3 · Mẫu thiết kế trình dựng trang',
     study: 'MẪU THIẾT KẾ · U3',
     back: 'Duyệt thiết kế',
     page: 'Trang mới',
@@ -259,6 +256,19 @@ const copy = {
     scaleLabel: 'khổ thiết kế · thu nhỏ',
   },
 } as const;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  if (process.env.R3_E2E_STATES !== '1') notFound();
+  const { locale } = await params;
+  return {
+    title: copy[locale === 'vi' ? 'vi' : 'en'].metadataTitle,
+    robots: { index: false, follow: false },
+  };
+}
 
 type Choice = {
   scene: 'empty' | 'nested' | 'overrides';

@@ -146,3 +146,4 @@
 - 2026-11-10: Duration-balanced E2E shard assignment can silently move a content-creating spec ahead of clean-seed pixel tests when one new spec is registered; pin the mutator outside the visual shard instead of weakening snapshot assertions.
 - 2026-11-10: Design approval can leave scoped follow-ups; document low-contrast placeholders and ambiguous Layers indentation for D4 when the host is overloaded, until the coordinator explicitly brings them back into U3.
 - 2026-11-10: Browser placeholder opacity can defeat an otherwise AA-muted text token; set `::placeholder` color and opacity explicitly and assert computed contrast on the actual input. Tree depth also needs visible branch guides, not only indentation, in both desktop and mobile representations.
+- 2026-11-10: A flag-gated localized fixture needs its metadata localized and gated too; derive the title from the same EN/VI copy and test the disabled flag as well as both titles.
