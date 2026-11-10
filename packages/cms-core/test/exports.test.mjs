@@ -21,6 +21,11 @@ test('built subpaths resolve independently and only contracts exports runtime va
     } else if (subpath === 'react') {
       assert.equal(typeof entry.schemaToFields, 'function');
       assert.equal(typeof required.schemaToFields, 'function');
+    } else if (subpath === 'engine') {
+      assert.equal(typeof entry.readSnapshot, 'function');
+      assert.equal(typeof required.readSnapshot, 'function');
+      assert.equal(typeof entry.checkPageAllowance, 'function');
+      assert.equal(typeof required.checkPageAllowance, 'function');
     } else {
       assert.deepEqual(Object.keys(entry), []);
       assert.deepEqual(Object.keys(required), []);
