@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-10: Regenerate contact sheets only after the final screenshot capture completes, and version a small privacy-redacted review set alongside the spec; a local-only sheet can silently retain a pre-fix skeleton while the individual screenshots are correct.
 - 2026-11-10: Capture public route baselines in an unauthenticated browser context; reusing the admin session can silently show the draft-preview banner and invalidate screenshots even when tests pass.
 - 2026-11-03: A stacked integration PR can branch from the verified top PR tip when every lower branch tip is already an ancestor; this preserves the full stack without modifying or merging the original PRs.
 - 2026-11-03: Production Playwright draft previews must use `localhost` in both the web build and browser origin; a `127.0.0.1` origin loses Next's secure draft cookie after navigation.
@@ -132,3 +133,8 @@
 - 2026-11-10: A wrapper that forwards `--update-snapshots=all` defeats a nested visual script's verification mode; ensure the verify path cannot write baselines and check the git diff after it runs.
 - 2026-11-10: A server-rendered interactive test fixture can receive Tab before Radix hydration; expose a test-only effect marker and wait for it before asserting keyboard behavior, without weakening separate pre-hydration form tests.
 - 2026-11-10: An all-registry render loop under one Vitest timeout can fail only under CI load; compare equal-host baseline timings, then use one test per registry item to retain coverage and expose the slow case without increasing global timeouts.
+- 2026-11-10: A static 43-file route inventory is not a 43-screen accessibility audit: redirect-only files share destination UI and flagged fixtures can lack inherited metadata. Audit real routes on a clean disposable seed, and distinguish visible hit areas from clipped skip links, duplicate aria-hidden links and CSS full-card overlays before classifying size failures.
+- 2026-11-10: A successful 44px shared-control pass can still leave tiny inline links inside the CMS editor title; keep whole-route audits and resolve the final offender at its owning component rather than excluding it. An E2E file must be added to the explicit shard list or CI silently omits it.
+- 2026-11-10: Adding fallback title metadata at a parent layout can silently override the translated 404 title. Scope fixture-only metadata to gated routes; test both fixture document titles and public 404 titles after accessibility changes.
+- 2026-11-10: Disposable MySQL does not imply a clean Next ISR/data cache across repeated visual runs. A direct API clean-seed assertion can pass while the page renders cached records from a prior database; invalidate the existing public tag and route path before visual capture, then compare rendered seeded content without masking or accepting contaminated baselines.
+- 2026-11-10: Check the shared DataTable keyboard handler before describing destructive shortcuts: Backspace/Delete confirms selected rows or falls back to the active row, while the action name depends on the host.

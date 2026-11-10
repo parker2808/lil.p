@@ -12,4 +12,15 @@ describe('Badge', () => {
     expect(badge.className).toContain('text-hue-jade');
     expect(badge.className).toContain('bg-hue-jade-subtle');
   });
+
+  it('spaces a status icon from its label', () => {
+    render(
+      <Badge variant="success">
+        <svg aria-hidden="true" />
+        Published
+      </Badge>,
+    );
+
+    expect(screen.getByText('Published').className).toContain('gap-1.5');
+  });
 });

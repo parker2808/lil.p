@@ -75,6 +75,14 @@ async function expectScreen(page: Page, name: string, fullPage = true): Promise<
   });
 }
 
+async function refreshSeededPage(page: Page, path: string): Promise<void> {
+  const response = await page.request.post('/api/revalidate', {
+    headers: { 'x-revalidate-secret': process.env.REVALIDATE_SECRET ?? '' },
+    data: { tags: ['public'], paths: [path] },
+  });
+  expect(response.ok()).toBe(true);
+}
+
 async function assertCleanDemoContent(page: Page, route: 'notes' | 'about'): Promise<void> {
   if (route === 'notes') {
     const response = await page.request.get('/api/public/posts?locale=en');
@@ -112,6 +120,7 @@ for (const viewport of VIEWPORTS) {
     for (const [name, route, fullPage] of PUBLIC_ROUTES) {
       test(`public ${name}`, async ({ page }) => {
         if (name === 'notes' || name === 'about') await assertCleanDemoContent(page, name);
+        await refreshSeededPage(page, route);
         await page.goto(route);
         await expectScreen(page, `public-${name}-${viewport.width}`, fullPage);
       });

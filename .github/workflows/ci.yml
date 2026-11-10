@@ -57,6 +57,8 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm --filter @portfolio/contracts build
       - run: pnpm -r --parallel --if-present test
+      - name: SchemaForm per-case performance evidence
+        run: pnpm --filter @portfolio/web exec vitest run src/modules/admin-core/components/SchemaForm/SchemaForm.test.tsx --reporter=verbose
 
   build:
     needs: changes

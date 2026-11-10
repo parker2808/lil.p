@@ -1,13 +1,15 @@
 import { createHash } from 'node:crypto';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
 import { E2E_USER } from './helpers/credentials';
 
 const output = process.env.U0_CAPTURE_DIR;
+const auditOutput = process.env.U2_AUDIT_DIR;
 const locales = ['en', 'vi'] as const;
 const themes = ['light', 'dark'] as const;
 const widths = [1440, 390] as const;
@@ -58,6 +60,80 @@ type Capture = {
   sha256: string;
 };
 
+type AuditIssue = {
+  route: string;
+  locale: string;
+  theme: string;
+  width: number;
+  kind: string;
+  target: string;
+  detail: string;
+};
+
+const auditIssues: AuditIssue[] = [];
+
+async function audit(page: Page, route: string, locale: string, theme: string, width: number) {
+  const violations = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+    .analyze();
+  for (const violation of violations.violations) {
+    for (const node of violation.nodes) {
+      auditIssues.push({
+        route,
+        locale,
+        theme,
+        width,
+        kind: violation.id,
+        target: node.target.join(' '),
+        detail: node.failureSummary ?? violation.help,
+      });
+    }
+  }
+  const targets = await page.evaluate(() =>
+    Array.from(
+      document.querySelectorAll<HTMLElement>(
+        'a[href],button,input:not([type="hidden"]),select,textarea,[role="button"],[role="checkbox"],[role="switch"],[role="radio"],[role="tab"],[role="combobox"]',
+      ),
+    )
+      .filter((element) => {
+        const style = getComputedStyle(element);
+        return (
+          style.display !== 'none' &&
+          style.visibility !== 'hidden' &&
+          style.pointerEvents !== 'none' &&
+          style.clipPath !== 'inset(50%)' &&
+          !element.closest('[aria-hidden="true"]') &&
+          element.getClientRects().length > 0
+        );
+      })
+      .map((element) => {
+        const overlay = getComputedStyle(element, '::after');
+        const card = element.closest<HTMLElement>('.group.relative');
+        const box =
+          card && overlay.position === 'absolute' && overlay.inset === '0px'
+            ? card.getBoundingClientRect()
+            : element.getBoundingClientRect();
+        return {
+          target: `${element.tagName.toLowerCase()}${element.id ? `#${element.id}` : ''}${element.getAttribute('role') ? `[role=${element.getAttribute('role')}]` : ''}${element.getAttribute('data-slot') ? `[data-slot=${element.getAttribute('data-slot')}]` : ''}${element.classList.length ? `.${Array.from(element.classList).slice(0, 2).join('.')}` : ''}${element.parentElement?.closest('[data-slot]')?.getAttribute('data-slot') ? ` @${element.parentElement.closest('[data-slot]')?.getAttribute('data-slot')}` : ''}`,
+          width: box.width,
+          height: box.height,
+        };
+      })
+      .filter((target) => target.width < 44 || target.height < 44),
+  );
+  for (const target of targets) {
+    auditIssues.push({
+      route,
+      locale,
+      theme,
+      width,
+      kind: 'target-size-44',
+      target: target.target,
+      detail: `${Math.round(target.width)}×${Math.round(target.height)}px`,
+    });
+  }
+}
+
 async function capture(page: Page, route: string, locale: string, results: Capture[]) {
   await page.goto(route);
   await expect(page.locator('main#content')).toBeVisible();
@@ -84,13 +160,14 @@ async function capture(page: Page, route: string, locale: string, results: Captu
         file,
         sha256: createHash('sha256').update(bytes).digest('hex'),
       });
+      if (auditOutput) await audit(page, route, locale, theme, width);
     }
   }
 }
 
 test('U0 pre-change route screenshots', async ({ browser, page }) => {
   test.skip(!output, 'Opt-in only: set U0_CAPTURE_DIR to a local path outside the repo');
-  test.setTimeout(1_200_000);
+  test.setTimeout(auditOutput ? 3_600_000 : 1_200_000);
   await mkdir(output!, { recursive: true });
   const results: Capture[] = [];
   const failures: Array<{ route: string; locale: string; reason: string }> = [];
@@ -187,6 +264,10 @@ test('U0 pre-change route screenshots', async ({ browser, page }) => {
     }
   } finally {
     await publicContext.close();
+    if (auditOutput) {
+      await mkdir(auditOutput, { recursive: true });
+      await writeFile(join(auditOutput, 'issues.json'), JSON.stringify(auditIssues, null, 2));
+    }
     await writeFile(
       join(output!, 'manifest.json'),
       JSON.stringify(
@@ -208,4 +289,5 @@ test('U0 pre-change route screenshots', async ({ browser, page }) => {
     );
   }
   expect(failures, 'Capture failures (see manifest)').toEqual([]);
+  if (auditOutput) expect(auditIssues, 'WCAG AA and 44px issues (see issues.json)').toEqual([]);
 });

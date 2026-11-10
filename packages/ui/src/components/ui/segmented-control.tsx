@@ -38,8 +38,8 @@ export function SegmentedControlItem({
     <Component
       data-slot="segmented-control-item"
       className={cn(
-        'text-ui inline-flex h-8 cursor-pointer items-center justify-center px-3',
-        'data-[state=on]:bg-primary data-[state=on]:text-primary-foreground',
+        'text-ui inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center px-3',
+        'data-[state=on]:bg-primary data-[state=on]:text-primary-foreground focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none',
         className,
       )}
       {...props}

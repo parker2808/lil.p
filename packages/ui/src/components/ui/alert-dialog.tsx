@@ -87,7 +87,7 @@ export function AlertDialogAction({
   return (
     <AlertDialogPrimitive.Action
       className={cn(
-        'bg-destructive text-destructive-foreground hover:bg-destructive/90 text-ui inline-flex h-8 items-center rounded-md px-3',
+        'bg-destructive text-destructive-foreground hover:bg-destructive/90 text-ui inline-flex min-h-11 min-w-11 items-center rounded-md px-3',
         className,
       )}
       {...props}

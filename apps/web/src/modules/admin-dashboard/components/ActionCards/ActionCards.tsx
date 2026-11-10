@@ -44,7 +44,7 @@ export function DashboardCard({
         <CardTitle id={titleId} className="text-ui-title">
           {title}
         </CardTitle>
-        <Link href={href} className="text-ui shrink-0">
+        <Link href={href} className="text-ui inline-flex min-h-11 shrink-0 items-center">
           {action}
         </Link>
       </CardHeader>
@@ -105,7 +105,10 @@ export function DraftsCardView({ stats }: { stats: Pick<AdminStats, 'projects' |
               .filter((list) => list.count > 0)
               .map((list) => (
                 <li key={list.key}>
-                  <Link href={list.href} className="text-ui hover:text-primary">
+                  <Link
+                    href={list.href}
+                    className="text-ui hover:text-primary inline-flex min-h-11 items-center"
+                  >
                     {t(list.key, { count: list.count })}
                   </Link>
                 </li>

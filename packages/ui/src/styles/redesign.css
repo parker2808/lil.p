@@ -133,14 +133,8 @@ html:root {
 .tap {
   display: inline-flex;
   align-items: center;
-  min-width: 24px;
-  min-height: 24px;
-}
-@media (pointer: coarse) {
-  .tap {
-    min-width: 44px;
-    min-height: 44px;
-  }
+  min-width: 44px;
+  min-height: 44px;
 }
 .public-site ::selection,
 .admin ::selection {
@@ -293,6 +287,7 @@ html:root {
 .admin-brand-link {
   display: inline-flex;
   min-height: 44px;
+  min-width: 44px;
   align-items: center;
   max-width: 100%;
 }
@@ -361,14 +356,10 @@ html:root {
 .public-site .tap-breadcrumb {
   display: inline-flex;
   align-items: center;
-  min-height: 24px;
+  min-height: 44px;
 }
-@media (pointer: coarse) {
-  .site-footer a,
-  .public-site .tap-breadcrumb,
-  .site-header nav a {
-    min-height: 44px;
-  }
+.site-header nav a {
+  min-height: 44px;
 }
 .public-block {
   padding-block: clamp(48px, 7vw, 112px);
@@ -987,6 +978,8 @@ html:root {
 }
 .admin-table-sort {
   display: inline-flex;
+  min-height: 44px;
+  min-width: 44px;
   align-items: center;
   gap: 4px;
   text-transform: inherit;
@@ -1024,6 +1017,8 @@ html:root {
   }
   .reader-index li a {
     display: flex;
+    min-height: 44px;
+    align-items: center;
     gap: var(--space-3);
     padding: 12px 8px;
     font-size: 13px;
@@ -1113,10 +1108,16 @@ html:root {
   margin-block: 0 24px;
 }
 .view-switch button {
+  min-width: 44px;
+  min-height: 44px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   padding: 8px 14px;
   font: 12px var(--font-mono);
+}
+.view-switch button:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 .view-switch [aria-pressed='true'] {
   background: var(--foreground);

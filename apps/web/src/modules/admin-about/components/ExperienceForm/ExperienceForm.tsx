@@ -202,7 +202,7 @@ export function ExperienceForm({
                 key={skill.id}
                 type="button"
                 disabled={readOnly}
-                className="disabled:opacity-50"
+                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md disabled:opacity-50"
                 onClick={() => {
                   const next = new Set(selectedSkills);
                   if (on) {

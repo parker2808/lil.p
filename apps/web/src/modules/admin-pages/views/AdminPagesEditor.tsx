@@ -130,7 +130,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
             {t.has(`names.${pageKey}`) ? t(`names.${pageKey}`) : page.data.title || pageKey}
             <Link
               href={publicHref}
-              className="text-ui text-primary underline-offset-4 hover:underline"
+              className="text-ui text-primary focus-visible:ring-ring inline-flex min-h-11 items-center rounded-md underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:outline-none"
             >
               {t('openPage')}
             </Link>

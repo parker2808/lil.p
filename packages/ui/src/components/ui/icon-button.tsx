@@ -15,11 +15,7 @@ export function IconButton({ label, className, ...props }: IconButtonProps) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button
-          className={cn('size-8 shrink-0 p-0', 'pointer-coarse:size-11', className)}
-          {...props}
-          aria-label={label}
-        />
+        <Button className={cn('size-11 shrink-0 p-0', className)} {...props} aria-label={label} />
       </TooltipTrigger>
       <TooltipContent>{label}</TooltipContent>
     </Tooltip>

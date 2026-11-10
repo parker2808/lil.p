@@ -23,6 +23,7 @@ describe('PageHeader', () => {
     const link = screen.getByRole('link', { name: 'Back to Projects' });
     expect(link).toHaveAttribute('href', '/admin/projects');
     expect(link).toHaveTextContent('Projects');
+    expect(link).toHaveClass('min-h-11', 'min-w-11');
     expect(link.querySelector('[data-slot="page-header-back-icon"]')).toBeInTheDocument();
     expect(link).toHaveClass('sm:hidden');
   });

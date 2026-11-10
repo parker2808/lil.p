@@ -3,6 +3,7 @@
 /* eslint-disable @next/next/no-img-element -- media previews use the existing CDN URL and srcset. */
 
 import type { AdminMedia } from '@portfolio/contracts';
+import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
 import { useWideScreen } from '@portfolio/ui/hooks/use-wide-screen.hook';
 import { MediaUploader } from '@portfolio/ui/components/MediaUploader/MediaUploader';
 import { Skeleton } from '@portfolio/ui/components/ui/skeleton';
@@ -26,6 +27,7 @@ import { useMediaUpload } from '../hooks/use-media-upload.hook';
 
 export function AdminMediaIndex() {
   const t = useTranslations('admin.media');
+  const shell = useTranslations('admin.shell');
   const canWrite = useIsAdmin();
   const wide = useWideScreen();
   const list = useAdminMediaList();
@@ -136,7 +138,13 @@ export function AdminMediaIndex() {
             onCancel={upload.cancel}
           />
         ) : null}
-        {list.isError ? <p className="text-destructive">{t('loadError')}</p> : null}
+        {list.isError ? (
+          <ErrorState
+            message={t('loadError')}
+            retryLabel={shell('retry')}
+            onRetry={() => void list.refetch()}
+          />
+        ) : null}
         {list.isPending ? (
           <div aria-busy="true" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {Array.from({ length: 8 }, (_, i) => (

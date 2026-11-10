@@ -33,7 +33,7 @@ export function TagFilter({
             {renderLink({
               href: notesHref({ q, tag: pill.slug }),
               className: [
-                'text-meta inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1',
+                'text-meta inline-flex min-h-11 min-w-11 items-center gap-1.5 rounded-md border px-2.5 py-1',
                 active
                   ? 'border-border-strong bg-accent text-accent-foreground'
                   : 'border-border bg-card text-muted-foreground hover:border-border-strong',

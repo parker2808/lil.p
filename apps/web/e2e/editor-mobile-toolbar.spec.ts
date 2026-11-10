@@ -12,7 +12,7 @@ test('editor toolbar is one scrolling row with a More menu at 375px', async ({ p
   await expect(toolbar).toBeVisible();
 
   const box = await toolbar.boundingBox();
-  expect(box?.height).toBeLessThanOrEqual(48);
+  expect(box?.height).toBeLessThanOrEqual(56);
 
   const scroll = await toolbar.evaluate((element) => {
     element.scrollLeft = element.scrollWidth;

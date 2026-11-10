@@ -1,6 +1,6 @@
 {
   "collapse": {
-    "height": "32px",
+    "height": "44px",
     "font-size": "14px",
     "font-weight": "500",
     "color": "rgb(20, 32, 28)",
@@ -10,10 +10,10 @@
     "border-radius": "12px",
     "border-left-width": "0px",
     "border-left-color": "rgb(213, 224, 219)",
-    "width": "32px"
+    "width": "44px"
   },
   "inbox": {
-    "height": "28px",
+    "height": "44px",
     "font-size": "14px",
     "font-weight": "500",
     "color": "rgb(20, 32, 28)",
@@ -25,7 +25,7 @@
     "border-left-color": "rgb(213, 224, 219)"
   },
   "palette": {
-    "height": "28px",
+    "height": "44px",
     "font-size": "14px",
     "font-weight": "500",
     "color": "rgb(20, 32, 28)",
@@ -37,7 +37,7 @@
     "border-left-color": "rgb(213, 224, 219)"
   },
   "account": {
-    "height": "28px",
+    "height": "44px",
     "font-size": "14px",
     "font-weight": "500",
     "color": "rgb(20, 32, 28)",
@@ -61,7 +61,7 @@
     "border-left-color": "rgb(164, 182, 173)"
   },
   "activeNav": {
-    "height": "32px",
+    "height": "44px",
     "font-size": "14px",
     "font-weight": "400",
     "color": "rgb(23, 99, 74)",

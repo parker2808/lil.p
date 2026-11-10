@@ -29,7 +29,7 @@ function ThemeButton({ className, ...props }: ComponentProps<'button'>) {
     <button
       type="button"
       className={cn(
-        'border-border bg-card text-foreground inline-flex size-10 items-center justify-center rounded-md border',
+        'border-border bg-card text-foreground focus-visible:ring-ring inline-flex size-11 items-center justify-center rounded-md border focus-visible:ring-2 focus-visible:outline-none',
         'hover:border-border-strong hover:bg-accent',
         className,
       )}

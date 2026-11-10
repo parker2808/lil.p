@@ -35,6 +35,7 @@ describe('ThemeToggle', () => {
     renderToggle();
 
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Theme' })).toHaveClass('size-11');
     await user.click(screen.getByRole('button', { name: 'Theme' }));
 
     expect(await screen.findByRole('menuitemradio', { name: 'Light' })).toBeInTheDocument();

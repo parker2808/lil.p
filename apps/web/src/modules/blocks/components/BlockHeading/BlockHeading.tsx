@@ -19,7 +19,14 @@ export function BlockHeading({ heading, id }: { heading?: BlockHeadingProps; id?
         intro={heading.intro}
         iconKey={heading.iconKey}
         action={
-          heading.link ? <Link href={heading.link.href}>{heading.link.label}</Link> : undefined
+          heading.link ? (
+            <Link
+              href={heading.link.href}
+              className="focus-visible:ring-ring inline-flex min-h-11 items-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
+            >
+              {heading.link.label}
+            </Link>
+          ) : undefined
         }
       />
     </div>

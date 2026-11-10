@@ -66,7 +66,11 @@ export function Timeline({
           <div className="col-start-2 row-start-2 min-w-0 pt-1 pb-8 md:col-start-3 md:row-start-1 md:pt-0">
             <h3 className="text-subheading font-sans font-semibold">
               {group.companyUrl ? (
-                <a href={group.companyUrl} rel="noreferrer" className="hover:text-primary">
+                <a
+                  href={group.companyUrl}
+                  rel="noreferrer"
+                  className="hover:text-primary focus-visible:ring-ring inline-flex min-h-11 items-center rounded-md focus-visible:ring-2 focus-visible:outline-none"
+                >
                   {group.company}
                 </a>
               ) : (
