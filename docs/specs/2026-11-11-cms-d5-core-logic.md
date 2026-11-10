@@ -32,8 +32,9 @@ transport after D2 freezes the DTO, never guess a numerical revision.
   reading an inherited field never writes. D1 registry schemas validate the
   effective props, including safe URLs and mobile grid columns.
 - History stores immutable before/after documents and selected IDs. Typing
-  coalesces only the same node/breakpoint/property within 600ms; structural
-  operations and explicit edits never coalesce. Max 50 entries; undo/redo
+  coalesces only the same node/breakpoint/property within 600ms; call
+  `endTreeTyping` on blur/explicit commit. Structural edits never coalesce.
+  Max 50 entries; undo/redo
   restores snapshots, and a new change after undo discards redo.
 - Autosave debounces 500ms and serializes saves. Acknowledgement advances only
   the saved revision and document, never overwrites a newer local edit.
@@ -50,3 +51,8 @@ bounded/coalesced undo, edit-during-save, offline recovery, 409 and
 timeout-after-commit. `pnpm check:all` and Graphify gate this pure change;
 browser/DB journeys remain gated on D2/D4/D6 and their shared E2E lock.
 Rollback reverts this unused core entry without touching stored drafts.
+
+Graphify's `update .` indexes code and misses documentation-only edits and
+21 migration SQL files (SQL parser unavailable here); README, this spec,
+`PROJECT_CONTEXT.md` §7/§9 and `docs/LESSONS.md` were checked manually.
+No D2/D4 integration or browser-golden coverage is claimed by this PR.

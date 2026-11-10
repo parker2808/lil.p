@@ -20,8 +20,15 @@ export type AutosaveState = {
 };
 
 const revisionPattern = /^(0|[1-9]\d*)$/;
-const same = (left: TreeDocument, right: TreeDocument) =>
-  JSON.stringify(left) === JSON.stringify(right);
+const canonical = (value: TreeDocument) =>
+  JSON.stringify(value, (_key, item: unknown) =>
+    item && typeof item === 'object' && !Array.isArray(item)
+      ? Object.fromEntries(
+          Object.entries(item).sort(([left], [right]) => left.localeCompare(right)),
+        )
+      : item,
+  );
+const same = (left: TreeDocument, right: TreeDocument) => canonical(left) === canonical(right);
 
 export class DraftAutosave {
   private current: AutosaveState;

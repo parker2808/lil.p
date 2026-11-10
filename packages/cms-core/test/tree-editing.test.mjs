@@ -7,6 +7,7 @@ import {
   commitTreeHistory,
   createTreeHistory,
   DraftAutosave,
+  endTreeTyping,
   readTree,
   redoTreeHistory,
   undoTreeHistory,
@@ -223,6 +224,14 @@ test('history coalesces only consecutive typing; undo/redo restores exact snapsh
     selectedId: 'heading',
   }).value;
   assert.equal(history.future.length, 0);
+  history = endTreeTyping(history);
+  const afterBlur = commitTreeHistory(history, edit('new', 'tablet'), {
+    at: 1250,
+    typing: true,
+    selectedId: 'heading',
+  });
+  assert.equal(afterBlur.ok, true);
+  assert.equal(afterBlur.value.past.length, history.past.length + 1);
   assert.deepEqual(content(original)[0].responsive, { base: { text: 'Hello', level: 1 } });
 });
 
@@ -265,6 +274,16 @@ test('serialized CAS does not overwrite local edits entered during an in-flight 
   assert.equal(controller.state.status, 'saved');
   assert.equal(calls[1].expectedRevision, '1');
   assert.equal(content(controller.state.local)[0].responsive.mobile.text, 'two');
+});
+
+test('server object-key ordering does not produce a false save conflict', async () => {
+  const { controller } = harness(async (draft) => ({
+    revision: '1',
+    tree: { root: draft.tree.root, schemaVersion: draft.tree.schemaVersion },
+  }));
+  controller.edit(applyTreeOperation(page(), edit('new')).value);
+  await controller.flush();
+  assert.equal(controller.state.status, 'saved');
 });
 
 test('409 and timeout retain edits, review remote before retry, never auto-merge conflicts', async () => {

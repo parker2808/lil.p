@@ -224,6 +224,12 @@ export function undoTreeHistory(history: TreeHistory): TreeHistory {
   };
 }
 
+export function endTreeTyping(history: TreeHistory): TreeHistory {
+  const last = history.past.at(-1);
+  if (!last?.typingKey) return history;
+  return { ...history, past: [...history.past.slice(0, -1), { ...last, typingKey: undefined }] };
+}
+
 export function redoTreeHistory(history: TreeHistory): TreeHistory {
   const [entry, ...future] = history.future;
   if (!entry) return history;
