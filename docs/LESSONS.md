@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-11: A transitive workspace package added after Docker's manifest-copy stage can break frozen install, and its build output can be missing even when TypeScript compiles; list every runtime workspace manifest before install and smoke-test CJS exports from the pruned final image.
 - 2026-11-10: A bundle budget that excludes peers must validate the package's peer declarations; externalizing imports in tsup alone does not guarantee a valid consumer contract.
 
 - 2026-11-03: A stacked integration PR can branch from the verified top PR tip when every lower branch tip is already an ancestor; this preserves the full stack without modifying or merging the original PRs.
@@ -137,4 +138,7 @@
 - 2026-11-10: A pre-existing contrast ratio of 4.49:1 can fail macOS axe even when unrelated CMS contracts are the only runtime change; record the exact colors, affected test and platform rather than masking the failure or changing out-of-scope UI.
 - 2026-11-10: When publishing separate ESM/CJS subpaths, test both import and require for every entry and guard side-effect imports/re-exports, not only named imports.
 - 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
+- 2026-11-11: When merging parallel API packaging and pure engine branches, retain both documentation changes but regenerate Graphify; production CJS smoke must load the compiled host adapter, not just resolve the core subpath.
 - 2026-11-11: Zod object parsing strips unknown keys by default; reject unsupported snapshot versions and unexpected persisted keys before parsing so a strict reader cannot silently lose stored data.
+- 2026-11-11: In a legacy snapshot compatibility reader, `?? {}` conflates an absent SEO object with an explicitly persisted null; check property presence before filling only absent keys, then reject malformed supplied data before transaction writes.
+- 2026-11-11: When tightening a shared snapshot reader, normalize only missing legacy fields at the host boundary; rebuild the workspace package before adapter tests so stale dist files cannot hide the new rejection behavior.

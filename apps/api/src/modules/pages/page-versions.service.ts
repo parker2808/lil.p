@@ -6,6 +6,7 @@ import {
   Optional,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { buildSnapshot, orderBlocks } from '@parker2808/cms-core/engine';
 import {
   BLOCK_REGISTRY,
   type CorePageKey,
@@ -38,12 +39,14 @@ import {
   type InvalidSnapshotBlock,
   lintSnapshotFields,
   readPageSnapshot,
+  readRestorableSnapshot,
   snapshotBlockCount,
   snapshotToPublicPage,
 } from './page-snapshot.util';
 import {
   assertAllowedOnPage,
   assertLayoutAllowed,
+  assertWithinLimit,
   definitionOf,
   parsePageKey,
 } from './pages-rules.util';
@@ -165,7 +168,7 @@ export class PageVersionsService {
           message: `Version ${version} was not found`,
         });
       }
-      const snapshot = readPageSnapshot(row.snapshot);
+      const snapshot = readRestorableSnapshot(row.snapshot);
       if (!snapshot) {
         throw new BadRequestException({
           code: 'INVALID_BLOCKS',
@@ -302,7 +305,7 @@ export class PageVersionsService {
     key: PageKey,
     page: PageWithAllBlocks,
   ): Promise<PageSnapshot> {
-    const ordered = page.blocks.slice().sort((a, b) => a.sortOrder - b.sortOrder);
+    const ordered = orderBlocks(page.blocks);
     const h1 = ordered.find((block) => definitionOf(block.type)?.role === 'h1' && block.isVisible);
     if (!h1) {
       throw new ConflictException({
@@ -347,12 +350,7 @@ export class PageVersionsService {
         }
         counts.set(block.type, (counts.get(block.type) ?? 0) + 1);
         const count = counts.get(block.type) ?? 0;
-        if (definition.maxPerPage !== undefined && count > definition.maxPerPage) {
-          throw new ConflictException({
-            code: 'BLOCK_LIMIT',
-            message: `${definition.type} is limited to ${definition.maxPerPage} per page`,
-          });
-        }
+        assertWithinLimit(definition, count - 1);
       }
 
       const parsed = parseSnapshotBlock(
@@ -460,7 +458,7 @@ export class PageVersionsService {
       });
     }
 
-    return { seo, blocks: snapshotBlocks };
+    return buildSnapshot(seo, snapshotBlocks);
   }
 
   private async assertRefsExist(

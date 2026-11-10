@@ -14,13 +14,15 @@ COPY apps/api/package.json apps/api/package.json
 COPY apps/web/package.json apps/web/package.json
 COPY packages/ui/package.json packages/ui/package.json
 COPY packages/contracts/package.json packages/contracts/package.json
+COPY packages/cms-core/package.json packages/cms-core/package.json
 COPY apps/api/prisma ./apps/api/prisma
 COPY apps/api/prisma.config.ts ./apps/api/prisma.config.ts
 RUN pnpm install --frozen-lockfile
 
 FROM deps AS builder
 COPY . .
-RUN pnpm --filter @portfolio/contracts build \
+RUN pnpm --filter @parker2808/cms-core build \
+  && pnpm --filter @portfolio/contracts build \
   && pnpm --filter @portfolio/api build
 
 FROM builder AS pruned
@@ -52,8 +54,11 @@ COPY --from=builder --chown=nestjs:nodejs /app/apps/api/src/generated /app/src/g
 COPY --from=builder --chown=nestjs:nodejs /app/apps/api/prisma /app/prisma
 COPY --from=builder --chown=nestjs:nodejs /app/apps/api/prisma.config.ts /app/prisma.config.ts
 COPY --from=builder --chown=nestjs:nodejs /app/apps/api/docker-entrypoint.sh /app/docker-entrypoint.sh
+COPY --from=builder /app/apps/api/scripts/smoke-cms-core.mjs /tmp/smoke-cms-core.mjs
 
-RUN chmod +x /app/docker-entrypoint.sh \
+RUN node /tmp/smoke-cms-core.mjs /app \
+  && rm /tmp/smoke-cms-core.mjs \
+  && chmod +x /app/docker-entrypoint.sh \
   && mkdir -p /app/uploads \
   && chown nestjs:nodejs /app/uploads
 

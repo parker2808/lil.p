@@ -19,6 +19,20 @@ const hero = {
   sortOrder: 0,
   updatedAt: new Date('2026-01-01T00:00:00.000Z'),
 };
+const snapshotHero = {
+  type: hero.type,
+  key: hero.key,
+  layout: hero.layout,
+  surface: hero.surface,
+  schemaVersion: hero.schemaVersion,
+  props: hero.props,
+  isVisible: hero.isVisible,
+  sortOrder: hero.sortOrder,
+};
+const legacySnapshot = {
+  seo: { seoTitleEn: 'Legacy home' },
+  blocks: [snapshotHero],
+};
 
 function pageRow(over: Record<string, unknown> = {}) {
   return {
@@ -66,6 +80,132 @@ describe('PageVersionsService', () => {
       $transaction: vi.fn(async (fn: (tx: typeof prisma) => Promise<unknown>) => fn(prisma)),
     };
     service = new PageVersionsService(prisma as never);
+  });
+
+  it.each([
+    ['malformed', { seo: {}, blocks: [null] }],
+    [
+      'unknown type',
+      {
+        seo: {
+          seoTitleEn: 'Home',
+          seoTitleVi: null,
+          seoDescriptionEn: null,
+          seoDescriptionVi: null,
+        },
+        blocks: [{ ...snapshotHero, type: 'unknown' }],
+      },
+    ],
+    [
+      'future version',
+      {
+        seo: {
+          seoTitleEn: 'Home',
+          seoTitleVi: null,
+          seoDescriptionEn: null,
+          seoDescriptionVi: null,
+        },
+        blocks: [{ ...snapshotHero, schemaVersion: 99 }],
+      },
+    ],
+    ['future root version', { ...legacySnapshot, schemaVersion: 99 }],
+    ['explicit null SEO', { ...legacySnapshot, seo: null }],
+    ['unknown root field', { ...legacySnapshot, unexpected: true }],
+    ['unknown SEO field', { ...legacySnapshot, seo: { ...legacySnapshot.seo, unexpected: true } }],
+    ['unknown block field', { ...legacySnapshot, blocks: [{ ...snapshotHero, unexpected: true }] }],
+  ])('refuses %s restore before deleting blocks or writing audit', async (_reason, snapshot) => {
+    prisma.page.findUnique.mockResolvedValue(pageRow());
+    prisma.pageVersion.findUnique.mockResolvedValue({ snapshot });
+    const audit = { record: vi.fn() };
+    const versions = new PageVersionsService(prisma as never, undefined, undefined, audit as never);
+
+    await expect(versions.restore('home', 1)).rejects.toMatchObject({
+      status: 400,
+      response: {
+        code: 'INVALID_BLOCKS',
+        message: 'This version snapshot could not be read',
+        fieldErrors: { snapshot: ['Invalid snapshot'] },
+      },
+    });
+    expect(prisma.$transaction).toHaveBeenCalledTimes(1);
+    expect(prisma.pageBlock.deleteMany).not.toHaveBeenCalled();
+    expect(prisma.pageBlock.createMany).not.toHaveBeenCalled();
+    expect(prisma.page.update).not.toHaveBeenCalled();
+    expect(audit.record).not.toHaveBeenCalled();
+  });
+
+  it('restores known legacy v0 blocks without rewriting their props or version', async () => {
+    prisma.page.findUnique.mockResolvedValue(pageRow());
+    prisma.pageVersion.findUnique.mockResolvedValue({
+      snapshot: {
+        seo: {
+          seoTitleEn: 'Home',
+          seoTitleVi: null,
+          seoDescriptionEn: null,
+          seoDescriptionVi: null,
+        },
+        blocks: [
+          {
+            ...snapshotHero,
+            schemaVersion: 0,
+            props: { cta: { label: { en: 'View' }, href: '/projects' } },
+          },
+        ],
+      },
+    });
+    prisma.page.update.mockResolvedValue({});
+    await service.restore('home', 1);
+    expect(prisma.$transaction).toHaveBeenCalledTimes(1);
+    expect(prisma.pageBlock.createMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          schemaVersion: 0,
+          props: { cta: { label: { en: 'View' }, href: '/projects' } },
+        }),
+      ],
+    });
+  });
+
+  it('reads, previews in EN/VI and restores a persisted version with missing SEO fields', async () => {
+    prisma.page.findUnique.mockResolvedValue(pageRow());
+    prisma.pageVersion.findUnique.mockResolvedValue({
+      version: 1,
+      createdAt: new Date('2026-01-01T00:00:00.000Z'),
+      note: null,
+      createdBy: null,
+      snapshot: legacySnapshot,
+    });
+    prisma.page.update.mockResolvedValue({});
+
+    const version = await service.getVersion('home', 1);
+    expect(version.snapshot.seo).toEqual({
+      seoTitleEn: 'Legacy home',
+      seoTitleVi: null,
+      seoDescriptionEn: null,
+      seoDescriptionVi: null,
+    });
+    for (const locale of ['en', 'vi'] as const) {
+      const preview = await service.getPreview('home', locale, 1);
+      expect(preview.seo.title).toBe('Legacy home');
+      expect(preview.blocks.map(({ type, key }) => ({ type, key }))).toEqual([
+        { type: 'hero', key: 'hero' },
+      ]);
+      expect(preview.invalidBlocks).toEqual([]);
+    }
+    await service.restore('home', 1);
+    expect(prisma.pageBlock.deleteMany).toHaveBeenCalledTimes(1);
+    expect(prisma.pageBlock.createMany).toHaveBeenCalledWith({
+      data: [expect.objectContaining({ props: snapshotHero.props, schemaVersion: 1 })],
+    });
+    expect(prisma.page.update).toHaveBeenCalledWith({
+      where: { id: 10 },
+      data: expect.objectContaining({
+        seoTitleEn: 'Legacy home',
+        seoTitleVi: null,
+        seoDescriptionEn: null,
+        seoDescriptionVi: null,
+      }),
+    });
   });
 
   it('rejects publish when a visible block is invalid', async () => {
