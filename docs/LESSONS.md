@@ -122,3 +122,4 @@
 - 2026-11-03: A screenshot matrix leaves Playwright at its last mobile viewport, so restore desktop width before testing desktop-only header links; assert mobile control boxes directly because one inherited 40px button escaped earlier route checks.
 - 2026-11-03: Record behavior and route changes in the root README in the same PR; this repo keeps current changelog entries in `PROJECT_CONTEXT.md` §9 and reserves `docs/CHANGELOG_ARCHIVE.md` for older history.
 - 2026-11-03: When stacked branches both refresh the tracked Graphify report, regenerate it after merging the base instead of combining generated report lines by hand.
+- 2026-11-10: A `pull_request.branches: [main]` workflow filter skips the entire job for stacked PRs targeting feature branches, even if the diff script would have caught a missing context update; use the PR's actual base for policy, not a trigger restricted to main.
