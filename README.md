@@ -44,6 +44,8 @@ The public header and footer and the admin login and shell use the shared `lil.p
 
 ### Custom page creation API
 
+Duplicating a page block respects the block type's `maxPerPage` limit, just like adding a new block. When the limit is reached, `POST /api/admin/pages/:key/blocks/:id/duplicate` returns `409 BLOCK_LIMIT` and leaves the page unchanged. See the [duplicate-limit spec](./docs/specs/2026-11-10-pages-duplicate-limit.md) and the [current changelog](./PROJECT_CONTEXT.md#9-changelog).
+
 Admins can create a draft with `POST /api/admin/pages`. The JSON body requires `title` (1–120 characters after trimming), `key` (a lowercase, one-segment slug of 1–64 characters), `locale` (`en` or `vi`), and `template` (`starter` or `empty`). A successful request returns `201` with the editable admin page; `GET /api/admin/pages/:key` reads it back. Built-in page keys and public route names are reserved, and a taken key returns `409` with `PAGE_KEY_TAKEN`.
 
 In the admin, open `/admin/pages` and use **Add page** in the header or empty state. The dialog suggests an editable slug from the title, validates each field, and keeps the form open if creation fails. After a successful create it opens the new editor. The Pages editor back link returns to the index. See the [R3-04 UI spec](./docs/specs/2026-11-03-r3-04-page-create-ui.md).
