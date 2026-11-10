@@ -241,7 +241,7 @@ export function StudyOutline({ labels, empty }: { labels: Labels; empty: boolean
               {level < 3 ? '▾' : '·'}
             </span>
             {label}
-            {index === selectedIndex && <MousePointer2 size={14} aria-label={labels.selected} />}
+            {index === selectedIndex && <MousePointer2 size={14} aria-hidden="true" />}
           </div>
         ))}
       </div>
@@ -311,6 +311,13 @@ export function StudyMobilePanels({
         className={styles.mobileSheet}
         ref={dialogRef}
         aria-labelledby="study-sheet-title"
+        onKeyDown={(event) => {
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            event.stopPropagation();
+            dialogRef.current?.close();
+          }
+        }}
         onClose={() => triggerRef.current?.focus()}
       >
         <header className={styles.mobileSheetHeader}>
@@ -327,8 +334,9 @@ export function StudyMobilePanels({
         </header>
         <div
           className={styles.mobileSheetScroll}
-          role="region"
+          role="group"
           aria-label={tabs.find((tab) => tab.key === panel)?.label}
+          tabIndex={0}
         >
           {panel === 'components' ? components : panel === 'layers' ? layers : properties}
         </div>

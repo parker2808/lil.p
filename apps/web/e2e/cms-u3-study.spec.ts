@@ -14,6 +14,8 @@ const evidence = new Set([
   'nested-mobile-vi-dark-lilp-390.png',
   'overrides-tablet-en-dark-neutral-1440.png',
   'overrides-mobile-vi-light-lilp-390.png',
+  'sheet-components-mobile-en-light-neutral-390.png',
+  'sheet-layers-mobile-en-light-neutral-390.png',
 ]);
 
 test('U3 study is gated and has named sample navigation', async ({ page }) => {
@@ -65,6 +67,10 @@ test('U3 study is gated and has named sample navigation', async ({ page }) => {
     'true',
   );
   await expect(sheet.getByText('Add a section first').first()).toBeVisible();
+  const sheetAccessibility = await new AxeBuilder({ page }).include('dialog').analyze();
+  expect(
+    sheetAccessibility.violations.map(({ id, nodes }) => ({ id, count: nodes.length })),
+  ).toEqual([]);
   await sheet.getByRole('searchbox', { name: 'Search components' }).fill('divider');
   await expect(sheet.getByRole('button', { name: 'Divider' })).toBeVisible();
   await expect(sheet.getByRole('button', { name: 'Heading' })).toHaveCount(0);
@@ -82,13 +88,13 @@ test('U3 study is gated and has named sample navigation', async ({ page }) => {
   expect(accessibility.violations.map(({ id, nodes }) => ({ id, count: nodes.length }))).toEqual(
     [],
   );
-  await page.getByRole('button', { name: 'Properties' }).click();
+  await page.getByRole('button', { name: 'Properties', exact: true }).click();
   await page
     .getByRole('dialog', { name: 'Properties' })
     .getByRole('navigation', { name: 'Status sample' })
     .getByRole('link', { name: 'Conflict' })
     .click();
-  await page.getByRole('button', { name: 'Properties' }).click();
+  await page.getByRole('button', { name: 'Properties', exact: true }).click();
   await expect(page.getByRole('dialog').getByText('Your unsaved changes are kept.')).toBeVisible();
   await expect(page.getByRole('dialog').getByRole('link', { name: 'Retry' })).toBeVisible();
   await expect(
@@ -100,6 +106,27 @@ test('U3 study is gated and has named sample navigation', async ({ page }) => {
     .getByRole('link', { name: 'Undo' })
     .click();
   await expect(page.getByRole('status').getByText('Change undone')).toBeVisible();
+});
+
+test('U3 narrow viewport defaults to mobile preview and exposes an outline sheet', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/en/cms-u3-study?scene=nested');
+  await expect(page.locator('[data-device="mobile"]')).toBeVisible();
+  await expect(page.getByText('390 px · design width · scaled')).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(844);
+  await page.getByRole('button', { name: 'Layers' }).click();
+  const sheet = page.getByRole('dialog', { name: 'Layers' });
+  await sheet.getByRole('treeitem', { name: 'New page' }).focus();
+  await page.keyboard.press('ArrowDown');
+  await expect(sheet.getByRole('treeitem', { name: 'Hero section' })).toBeFocused();
+  await page.keyboard.press('ArrowDown');
+  await expect(sheet.getByRole('treeitem', { name: 'Heading', exact: true })).toBeFocused();
+  await page.keyboard.press('Alt+ArrowDown');
+  await expect(sheet.getByText('Static design sample — no content changes')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: 'Layers' })).toBeFocused();
 });
 
 test('U3 review matrix screenshots', async ({ page }) => {
@@ -154,6 +181,23 @@ test('U3 review matrix screenshots', async ({ page }) => {
         const bytes = await page.screenshot({ path: join(output!, file), animations: 'disabled' });
         captures.push({ file, sha256: createHash('sha256').update(bytes).digest('hex') });
         if (evidenceDir) await writeFile(join(evidenceDir, file), bytes);
+        if (locale === 'en' && theme === 'light' && brand === 'neutral') {
+          await page.getByRole('button', { name: 'Close panel' }).click();
+          for (const panel of ['Components', 'Layers']) {
+            await page.getByRole('button', { name: panel }).click();
+            const panelFile = `sheet-${panel.toLowerCase()}-mobile-en-light-neutral-390.png`;
+            const panelBytes = await page.screenshot({
+              path: join(output!, panelFile),
+              animations: 'disabled',
+            });
+            captures.push({
+              file: panelFile,
+              sha256: createHash('sha256').update(panelBytes).digest('hex'),
+            });
+            if (evidenceDir) await writeFile(join(evidenceDir, panelFile), panelBytes);
+            await page.getByRole('button', { name: 'Close panel' }).click();
+          }
+        }
       }
     }
   }

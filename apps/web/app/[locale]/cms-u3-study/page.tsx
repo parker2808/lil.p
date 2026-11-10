@@ -145,6 +145,7 @@ const copy = {
     mobileNote: 'Mobile: single column · compact heading',
     tabletNote: 'Tablet: two columns · balanced spacing',
     desktopNote: 'Desktop: two columns · generous spacing',
+    scaleLabel: 'design width · scaled',
   },
   vi: {
     study: 'MẪU THIẾT KẾ · U3',
@@ -255,6 +256,7 @@ const copy = {
     mobileNote: 'Điện thoại: một cột · tiêu đề gọn',
     tabletNote: 'Máy tính bảng: hai cột · khoảng cách cân đối',
     desktopNote: 'Máy tính: hai cột · khoảng cách rộng',
+    scaleLabel: 'khổ thiết kế · thu nhỏ',
   },
 } as const;
 
@@ -475,7 +477,13 @@ export default async function BuilderStudy({
                 ))}
               </nav>
             </div>
-            <div className={styles.canvasBackdrop} data-preview={selection.device}>
+            <div
+              className={styles.canvasBackdrop}
+              data-preview={selection.device}
+              role="region"
+              aria-label={t.preview}
+              tabIndex={0}
+            >
               <div className={styles.previewFrame} data-device={selection.device}>
                 <div className={styles.previewChrome}>
                   <span className={styles.previewDots}>
@@ -490,7 +498,7 @@ export default async function BuilderStudy({
                       : selection.device === 'tablet'
                         ? '768'
                         : '1440'}{' '}
-                    {sampleLabels.unit}
+                    {sampleLabels.unit} · {t.scaleLabel}
                   </span>
                 </div>
                 <div className={styles.paper}>

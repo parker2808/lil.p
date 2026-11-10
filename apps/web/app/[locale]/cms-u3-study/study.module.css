@@ -4,7 +4,7 @@
   --builder-surface: #fff;
   --builder-raised: #f3f5f7;
   --builder-text: #1b2738;
-  --builder-muted: #627184;
+  --builder-muted: #5c6b7e;
   --builder-border: #dce2e8;
   --builder-accent: #255cce;
   --builder-accent-text: #fff;
@@ -90,6 +90,11 @@
   outline-offset: 2px;
 }
 .paletteScroll:focus-visible {
+  outline: 2px solid var(--builder-focus);
+  outline-offset: -2px;
+}
+.canvasBackdrop:focus-visible,
+.mobileSheetScroll:focus-visible {
   outline: 2px solid var(--builder-focus);
   outline-offset: -2px;
 }
@@ -201,6 +206,11 @@
   background: var(--builder-accent);
   color: var(--builder-accent-text);
   padding: 0 18px;
+}
+.topActions .publishButton:disabled {
+  background: var(--builder-raised);
+  color: var(--builder-muted);
+  border: 1px solid var(--builder-border);
 }
 .actionDivider {
   height: 24px;
@@ -418,7 +428,7 @@
   gap: 2px;
 }
 .outlineNode {
-  min-height: 37px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -834,7 +844,7 @@
   font-weight: 700;
 }
 .dropZone {
-  min-height: 35px;
+  min-height: 44px;
   border: 1px dashed var(--builder-drop);
   border-radius: 7px;
   background: var(--builder-accent-soft);
@@ -886,7 +896,7 @@
 }
 .nestedZone {
   border: 1px dashed var(--builder-drop);
-  min-height: 35px;
+  min-height: 44px;
   border-radius: 6px;
 }
 .endZone {
