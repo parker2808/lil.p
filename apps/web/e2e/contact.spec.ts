@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { E2E_VISITOR } from './helpers/credentials';
+import { selectChoice } from './helpers/select-choice';
 
 test.describe('contact', () => {
   test('shows errors under required fields and focuses the first on empty submit', async ({
@@ -23,10 +24,10 @@ test.describe('contact', () => {
   test('submits a message from the public form', async ({ page }) => {
     await page.goto('/en/contact');
     await expect(page.getByRole('heading', { name: /talk about your product/i })).toBeVisible();
+    await expect(page.locator('#topic')).toBeVisible();
+    await selectChoice(page, page.locator('#topic'), 'A role');
     await page.locator('#name').fill(E2E_VISITOR.name);
     await page.locator('#email').fill(E2E_VISITOR.email);
-    await expect(page.locator('#topic')).toBeVisible();
-    await page.locator('#topic').selectOption({ index: 1 });
     await page.locator('#message').fill('I would like to talk about a migration.');
     const send = page.locator('form').getByRole('button', { name: /send message/i });
     await expect(send).toBeEnabled();

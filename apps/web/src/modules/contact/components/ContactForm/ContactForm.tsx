@@ -8,8 +8,16 @@ import {
 } from '@portfolio/contracts';
 import { Alert } from '@portfolio/ui/components/ui/alert';
 import { Button } from '@portfolio/ui/components/ui/button';
+import { Field, FieldError, FieldLabel } from '@portfolio/ui/components/ui/field';
 import { FormField } from '@portfolio/ui/components/ui/form-field';
 import { Input } from '@portfolio/ui/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@portfolio/ui/components/ui/select';
 import { Textarea } from '@portfolio/ui/components/ui/textarea';
 import { useForm } from '@tanstack/react-form';
 import { useTranslations } from 'next-intl';
@@ -208,28 +216,32 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
 
       {topics.length > 0 ? (
         <form.Field name="topic">
-          {(field) => (
-            <FormField
-              label={t('topic')}
-              error={firstError(field.state.meta.errors) ?? fieldErrors.topic?.[0]}
-            >
-              <select
-                id="topic"
-                name="topic"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(event) => field.handleChange(event.target.value)}
-                className="border-input bg-background text-ui flex h-8 w-full rounded-md border px-3"
-              >
-                <option value="">{t('topicPlaceholder')}</option>
-                {topics.map((topic) => (
-                  <option key={topic.id} value={topic.slug}>
-                    {topic.label}
-                  </option>
-                ))}
-              </select>
-            </FormField>
-          )}
+          {(field) => {
+            const error = firstError(field.state.meta.errors) ?? fieldErrors.topic?.[0];
+            return (
+              <Field>
+                <FieldLabel htmlFor="topic">{t('topic')}</FieldLabel>
+                <Select name="topic" value={field.state.value} onValueChange={field.handleChange}>
+                  <SelectTrigger
+                    id="topic"
+                    onBlur={field.handleBlur}
+                    aria-invalid={Boolean(error)}
+                    aria-describedby={error ? 'topic-error' : undefined}
+                  >
+                    <SelectValue placeholder={t('topicPlaceholder')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {topics.map((topic) => (
+                      <SelectItem key={topic.id} value={topic.slug}>
+                        {topic.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {error ? <FieldError id="topic-error">{error}</FieldError> : null}
+              </Field>
+            );
+          }}
         </form.Field>
       ) : null}
 

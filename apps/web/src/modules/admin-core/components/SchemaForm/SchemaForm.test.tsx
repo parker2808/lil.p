@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import en from '../../../../../i18n/locales/en.json';
+import viMessages from '../../../../../i18n/locales/vi.json';
 
 vi.mock('@/modules/admin-core/components/MarkdownField/MarkdownField', () => ({
   MarkdownField: () => null,
@@ -63,6 +64,25 @@ describe('SchemaForm', () => {
       </NextIntlClientProvider>,
     );
     expect(screen.getByText('Server said no')).toBeInTheDocument();
+  });
+
+  it('names both localized fields separately', () => {
+    renderForm('hero');
+    expect(screen.getAllByRole('textbox', { name: /English/ }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('textbox', { name: /Vietnamese/ }).length).toBeGreaterThan(0);
+  });
+
+  it('translates distinct accessible names for Vietnamese editors', () => {
+    render(
+      <NextIntlClientProvider locale="vi" messages={viMessages}>
+        <SchemaForm
+          schema={BLOCK_REGISTRY.hero.props}
+          defaultValues={BLOCK_REGISTRY.hero.defaults as Record<string, unknown>}
+        />
+      </NextIntlClientProvider>,
+    );
+    expect(screen.getAllByRole('textbox', { name: /Tiếng Anh/ }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('textbox', { name: /Tiếng Việt/ }).length).toBeGreaterThan(0);
   });
 
   it('disables every input when readOnly', () => {
