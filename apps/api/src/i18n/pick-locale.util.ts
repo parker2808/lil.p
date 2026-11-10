@@ -3,7 +3,7 @@ import type { Locale } from '@portfolio/contracts';
 type EnViKey = string;
 
 function hasText(value: unknown): value is string {
-  return typeof value === 'string' && value.trim().length > 0;
+  return typeof value === 'string' && value.trim().length !== 0;
 }
 
 /**
