@@ -28,7 +28,7 @@ export function PaginationItem(props: ComponentProps<'li'>) {
 
 export function paginationLinkClassName(isActive?: boolean) {
   return cn(
-    'text-ui inline-flex min-h-8 min-w-8 items-center justify-center rounded-md px-2',
+    'text-ui inline-flex min-h-11 min-w-11 items-center justify-center rounded-md px-2',
     isActive
       ? 'bg-accent text-accent-foreground'
       : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',

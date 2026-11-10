@@ -41,7 +41,7 @@ describe('Topbar', () => {
     renderTopbar();
     const collapse = screen.getByRole('button', { name: 'Collapse sidebar' });
 
-    expect(collapse).toHaveClass('redesign-button', 'size-8', 'p-0');
+    expect(collapse).toHaveClass('redesign-button', 'size-11', 'p-0');
     expect(collapse).toHaveAttribute('aria-expanded', 'true');
     expect(collapse).toHaveTextContent('');
     expect(collapse.querySelector('svg')).not.toBeNull();

@@ -17,7 +17,7 @@ export function LocaleTabs({
     <div
       role="group"
       aria-label={`${labels.en} / ${labels.vi}`}
-      className="bg-muted inline-flex h-8 items-center rounded-md p-0.5"
+      className="bg-muted inline-flex min-h-12 items-center rounded-md p-0.5"
     >
       {(['en', 'vi'] as const).map((locale) => (
         <button
@@ -26,7 +26,7 @@ export function LocaleTabs({
           aria-pressed={value === locale}
           disabled={disabled}
           className={cn(
-            'text-ui inline-flex h-7 items-center gap-2 rounded-sm px-2.5',
+            'text-ui focus-visible:ring-ring inline-flex min-h-11 min-w-11 items-center gap-2 rounded-sm px-2.5 focus-visible:ring-2 focus-visible:outline-none',
             value === locale ? 'bg-card text-foreground' : 'text-muted-foreground',
           )}
           onClick={() => onChange(locale)}

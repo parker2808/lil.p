@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 
 import { PublicRouteSkeleton } from '@/modules/core/components/PublicRouteSkeleton/PublicRouteSkeleton';
 import { RadioKeyboardFixture } from '@/modules/admin-core/components/RadioKeyboardFixture/RadioKeyboardFixture';
@@ -6,6 +7,7 @@ import { RadioKeyboardFixture } from '@/modules/admin-core/components/RadioKeybo
 import ProjectsLoading from '../../projects/loading';
 
 export const dynamic = 'force-dynamic';
+export const metadata: Metadata = { title: 'lil.parker' };
 
 const variants = [
   'home',

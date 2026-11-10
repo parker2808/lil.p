@@ -42,7 +42,7 @@ export function TechFilterMenu({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         type="button"
-        className="border-border bg-card text-meta hover:border-border-strong inline-flex shrink-0 items-center gap-2 rounded-md border px-2.5 py-1"
+        className="border-border bg-card text-meta hover:border-border-strong focus-visible:ring-ring inline-flex min-h-11 shrink-0 items-center gap-2 rounded-md border px-2.5 py-1 focus-visible:ring-2 focus-visible:outline-none"
       >
         <span>{labels.tech}</span>
         <ChevronDown aria-hidden className="size-3.5" />

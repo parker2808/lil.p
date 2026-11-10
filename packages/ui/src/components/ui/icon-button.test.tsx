@@ -19,7 +19,7 @@ describe('IconButton', () => {
     const button = screen.getByRole('button', { name: 'Delete project' });
     expect(button).toHaveAttribute('aria-label', 'Delete project');
     expect(screen.getByTestId('icon')).toBeInTheDocument();
-    expect(button).toHaveClass('size-8');
+    expect(button).toHaveClass('size-11');
 
     await user.tab();
 

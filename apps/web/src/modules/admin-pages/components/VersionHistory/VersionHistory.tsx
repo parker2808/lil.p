@@ -1,6 +1,7 @@
 'use client';
 
 import type { PageKey } from '@portfolio/contracts';
+import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { formatDateTime } from '@portfolio/ui/components/AuditRow/relative-time.util';
 import {
@@ -29,6 +30,7 @@ export function VersionHistory({
   onPreviewVersion: (version: number | null) => void;
 }) {
   const t = useTranslations('admin.pages.versions');
+  const shell = useTranslations('admin.shell');
   const locale = useLocale();
   const versions = usePageVersions(pageKey);
   const restore = useRestorePage(pageKey);
@@ -43,7 +45,13 @@ export function VersionHistory({
       </SheetTrigger>
       <SheetContent>
         <SheetTitle>{t('title')}</SheetTitle>
-        {versions.isError ? <p className="text-destructive">{t('error')}</p> : null}
+        {versions.isError ? (
+          <ErrorState
+            message={t('error')}
+            retryLabel={shell('retry')}
+            onRetry={() => void versions.refetch()}
+          />
+        ) : null}
         <ul className="mt-4 flex flex-col gap-3">
           {(versions.data ?? []).map((row) => (
             <li key={row.version} className="border-border rounded-md border p-3">

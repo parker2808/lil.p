@@ -90,7 +90,7 @@ export function BlockRow({
       {handle}
       <button
         type="button"
-        className="flex min-w-0 flex-1 items-center gap-2 text-left"
+        className="flex min-h-11 min-w-0 flex-1 items-center gap-2 text-left"
         onClick={onSelect}
       >
         <Icon name={(meta?.icon ?? 'circle-dot') as IconKey} className="size-4 shrink-0" />
