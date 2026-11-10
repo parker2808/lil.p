@@ -196,6 +196,7 @@ Live hosting is **Vercel (web) + Render (API) + TiDB Cloud (MySQL) + Cloudinary 
 ### How a change reaches production
 
 1. Open a PR (or push) to `main`. CI runs format, lint, typecheck, tests, content checks, build, and API e2e.
+   On a PR without `ready-e2e`, API/web E2E is skipped. Adding that label later starts E2E-only CI without cancelling the original code-check run; further code pushes still cancel stale code-check runs. Unrelated labels do not rerun expensive checks.
 2. Vercel and Render auto-deploy `main`.
 3. On boot, the API image runs `prisma migrate deploy` — it applies committed migrations only, never creates new ones, never resets data.
 
