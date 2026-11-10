@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- CMS B5 pure engine (stacked on accepted B4 `8c448ea`): `./engine` exports injected policy findings, deterministic key/order utilities, strict unknown-safe snapshots, chained legacy migrations and typed host ports. The B5 review rejects unsupported root versions and unknown root/SEO/block fields instead of accepting Zod-stripped data; older/current blocks remain readable. Built CJS import passes without host definitions. Nest runtime integration remains on B5b; do not interpret a green B5 package gate as production adapter integration. No schema/HTTP/EN–VI or B1 golden changes. See `docs/specs/2026-11-11-cms-b5-pure-engine.md` and `docs/specs/2026-11-11-cms-b5-snapshot-review.md`.
+
 - CMS B4 contracts/registry (stacked on accepted B3 `814afcf`): generic Zod page/block/locale/snapshot schemas, `defineBlock`, allowance and duplicate-rejecting `createRegistry` live in `@parker2808/cms-core/contracts`. The host retains its 20 definitions, copy and finite HTTP block enum; browser gzip is 864/61,440 bytes and React 34/35,840. All three subpaths resolve ESM and CJS; React 19, React DOM 19 and Zod 4 are declared peers excluded from browser bundles. Core-only imports load no host definitions; lint/dependency checks reject host imports, including side-effect imports and re-exports. No runtime route, EN/VI locale or admin table Shortcuts dialog change, migrations or new external packages. U2/U3 are accepted on separate unmerged branches; B6 follows B4 approval, D follows B7. See `docs/specs/2026-11-10-cms-b4-contracts-registry.md`.
 
 - Out of B4 scope: the locked local macOS web E2E failed its existing VI public-shell axe contrast check (`#414248` on `#ff8f74`, measured 4.49:1 vs required 4.5:1). All other `check:all --e2e` stages passed on disposable MySQL. This UI palette issue requires separate review; B4 does not change UI, tests or production code. See the B4 spec for evidence and the Linux CI result for platform coverage.
@@ -150,6 +152,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Hardened B5 snapshot reads against unknown root, SEO and block fields and unsupported root versions before Zod can strip data. Added legacy/current/future version tests; B5b retains its separate host legacy-SEO compatibility path. No persisted-data rewrite or API contract change.
+
+- 2026-11-11: Added B5's pure page engine and typed host ports with strict unknown type/version refusal, stable ordering and CJS smoke. Kept Nest runtime, transactions, API responses and persisted snapshots unchanged pending separately approved API dependency wiring; no migrations or new dependencies.
 
 - 2026-11-10: Hardened B4 package boundary: every subpath now has a tested CJS require condition; dependency checks cover side-effect imports and re-exports, and core-only imports prove no host definitions load. Corrected B3/B4 milestones and admin Shortcuts/SEO handoff docs; measured browser caps unchanged.
 
