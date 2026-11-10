@@ -17,7 +17,14 @@ import {
   Type,
   X,
 } from 'lucide-react';
-import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type KeyboardEvent,
+  type ReactNode,
+} from 'react';
 import { useRouter } from 'next/navigation';
 
 import styles from './study.module.css';
@@ -233,8 +240,9 @@ export function StudyOutline({ labels, empty }: { labels: Labels; empty: boolean
             aria-expanded={(nodes[index + 1]?.level ?? 0) > level ? true : undefined}
             tabIndex={activeIndex === index ? 0 : -1}
             data-index={index}
+            data-depth={level - 1}
             className={`${styles.outlineNode} ${index === selectedIndex ? styles.outlineSelected : ''}`}
-            style={{ paddingInlineStart: `calc(10px + ${level - 1} * 17px)` }}
+            style={{ '--outline-indent': `${12 + (level - 1) * 20}px` } as CSSProperties}
             onClick={() => setActiveIndex(index)}
           >
             <span className={styles.outlineMarker} aria-hidden="true">

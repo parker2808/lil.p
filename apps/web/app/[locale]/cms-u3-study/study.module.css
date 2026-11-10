@@ -347,6 +347,10 @@
   color: var(--builder-text);
   font-size: 12px;
 }
+.paletteSearch input::placeholder {
+  color: var(--builder-muted);
+  opacity: 1;
+}
 .paletteScroll {
   overflow-y: auto;
   min-height: 0;
@@ -428,15 +432,32 @@
   gap: 2px;
 }
 .outlineNode {
+  position: relative;
   min-height: 44px;
   display: flex;
   align-items: center;
   gap: 6px;
+  padding-inline-start: var(--outline-indent);
   border-radius: 8px;
   color: var(--builder-text);
   font-size: 12px;
   cursor: default;
   white-space: nowrap;
+}
+.outlineNode::before {
+  position: absolute;
+  inset-inline-start: calc(var(--outline-indent) - 22px);
+  top: 0;
+  width: 12px;
+  height: 22px;
+  border-inline-start: 1.5px solid var(--builder-muted);
+  border-bottom: 1.5px solid var(--builder-muted);
+  border-end-start-radius: 5px;
+  content: '';
+  pointer-events: none;
+}
+.outlineNode[data-depth='0']::before {
+  display: none;
 }
 .outlineNode svg {
   margin-left: auto;

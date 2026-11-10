@@ -6,6 +6,7 @@ import { expect, test } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 const output = process.env.CMS_U3_CAPTURE_DIR;
+const followupOutput = process.env.CMS_U3_FOLLOWUP_DIR;
 const evidenceDir = process.env.CMS_U3_EVIDENCE_DIR;
 const evidence = new Set([
   'empty-desktop-en-light-neutral-1440.png',
@@ -17,6 +18,137 @@ const evidence = new Set([
   'sheet-components-mobile-en-light-neutral-390.png',
   'sheet-layers-mobile-en-light-neutral-390.png',
 ]);
+
+function contrastRatio(foreground: string, background: string) {
+  const luminance = (color: string) => {
+    const channels = color
+      .match(/[\d.]+/g)
+      ?.slice(0, 3)
+      .map(Number);
+    if (channels?.length !== 3) throw new Error(`Unexpected color: ${color}`);
+    const [red, green, blue] = channels.map((channel) => {
+      const value = channel / 255;
+      return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+    });
+    return red! * 0.2126 + green! * 0.7152 + blue! * 0.0722;
+  };
+  const values = [luminance(foreground), luminance(background)].sort((left, right) => right - left);
+  return (values[0]! + 0.05) / (values[1]! + 0.05);
+}
+
+test('U3 search contrast and Layers guides cover desktop and mobile tokens', async ({ page }) => {
+  for (const theme of ['light', 'dark']) {
+    for (const brand of ['neutral', 'lilp']) {
+      for (const width of [1440, 390]) {
+        await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
+        const query = new URLSearchParams({
+          scene: 'nested',
+          device: width === 390 ? 'mobile' : 'desktop',
+          theme,
+          brand,
+        });
+        await page.goto(`/en/cms-u3-study?${query}`);
+        if (width === 390) await page.getByRole('button', { name: 'Components' }).click();
+        const root = width === 390 ? 'dialog' : 'aside';
+        const palette = await page
+          .locator(root)
+          .locator('input[type="search"]')
+          .evaluate((input) => ({
+            foreground: getComputedStyle(input, '::placeholder').color,
+            opacity: getComputedStyle(input, '::placeholder').opacity,
+            background: getComputedStyle(input).backgroundColor,
+          }));
+        expect(palette.opacity, `${theme}/${brand}/${width} placeholder opacity`).toBe('1');
+        expect(
+          contrastRatio(palette.foreground, palette.background),
+          `${theme}/${brand}/${width} placeholder contrast`,
+        ).toBeGreaterThanOrEqual(4.5);
+        if (width === 390) {
+          await page.getByRole('button', { name: 'Close panel' }).click();
+          await page.getByRole('button', { name: 'Layers' }).click();
+        }
+        const guides = await page
+          .locator(root)
+          .getByRole('treeitem')
+          .evaluateAll((nodes) =>
+            nodes.map((node) => ({
+              depth: Number((node as HTMLElement).dataset.depth),
+              indent: parseFloat(getComputedStyle(node).paddingInlineStart),
+              guide: getComputedStyle(node, '::before').borderInlineStartWidth,
+            })),
+          );
+        for (const node of guides) {
+          expect(node.indent, `${theme}/${brand}/${width} depth ${node.depth}`).toBe(
+            12 + 20 * node.depth,
+          );
+          if (node.depth > 0) expect(parseFloat(node.guide)).toBeGreaterThanOrEqual(1);
+        }
+      }
+    }
+  }
+});
+
+test('U3 follow-up palette and Layers screenshots', async ({ page }) => {
+  test.skip(!followupOutput, 'Opt-in affected screenshot review');
+  test.setTimeout(300_000);
+  await mkdir(followupOutput!, { recursive: true });
+  if (evidenceDir) await mkdir(evidenceDir, { recursive: true });
+  const captures: { file: string; sha256: string }[] = [];
+  for (const locale of ['en', 'vi']) {
+    for (const theme of ['light', 'dark']) {
+      for (const brand of ['neutral', 'lilp']) {
+        for (const width of [1440, 390]) {
+          await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
+          const query = new URLSearchParams({
+            scene: 'nested',
+            device: width === 390 ? 'mobile' : 'desktop',
+            theme,
+            brand,
+          });
+          await page.goto(`/${locale}/cms-u3-study?${query}`);
+          const panels = width === 390 ? ['components', 'layers'] : ['desktop'];
+          for (const panel of panels) {
+            if (width === 390) {
+              await page
+                .getByRole('button', {
+                  exact: true,
+                  name:
+                    panel === 'layers'
+                      ? locale === 'en'
+                        ? 'Layers'
+                        : 'Lớp'
+                      : locale === 'en'
+                        ? 'Components'
+                        : 'Thành phần',
+                })
+                .click();
+              await expect(page.getByRole('dialog')).toBeVisible();
+            } else {
+              await expect(page.locator('aside').getByRole('treeitem').last()).toBeVisible();
+            }
+            const file =
+              width === 390
+                ? `sheet-${panel}-mobile-${locale}-${theme}-${brand}-390.png`
+                : `nested-desktop-${locale}-${theme}-${brand}-1440.png`;
+            const bytes = await page.screenshot({
+              path: join(followupOutput!, file),
+              fullPage: width === 1440,
+              animations: 'disabled',
+            });
+            captures.push({ file, sha256: createHash('sha256').update(bytes).digest('hex') });
+            if (evidenceDir) await writeFile(join(evidenceDir, file), bytes);
+            if (width === 390)
+              await page
+                .getByRole('button', { name: locale === 'en' ? 'Close panel' : 'Đóng bảng' })
+                .click();
+          }
+        }
+      }
+    }
+  }
+  await writeFile(join(followupOutput!, 'manifest.json'), JSON.stringify(captures, null, 2));
+  expect(captures).toHaveLength(24);
+});
 
 test('U3 study is gated and has named sample navigation', async ({ page }) => {
   await page.goto('/en/cms-u3-study');
