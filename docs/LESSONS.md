@@ -126,3 +126,4 @@
 - 2026-11-03: Record behavior and route changes in the root README in the same PR; this repo keeps current changelog entries in `PROJECT_CONTEXT.md` §9 and reserves `docs/CHANGELOG_ARCHIVE.md` for older history.
 - 2026-11-03: When stacked branches both refresh the tracked Graphify report, regenerate it after merging the base instead of combining generated report lines by hand.
 - 2026-11-10: Capture a route-complete behavior and control baseline before UI standardization, then extract its stable interfaces before building a new page tree; a code-only Graphify report cannot establish documentation or visual coverage.
+- 2026-11-10: A reusable CMS needs a finished default theme without host styling; screenshot-backed design review of individual components and assembled pages must gate completion alongside functional tests.
