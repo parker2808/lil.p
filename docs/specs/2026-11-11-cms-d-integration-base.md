@@ -17,3 +17,5 @@
 5. Publish a draft stacked PR; verify CI.
 
 **Rollback:** revert the integration merge on this branch; B7 and D1 source PRs stay unchanged.
+
+**Follow-up integration:** D1 `2b50dbc` now rejects publish of an empty H1-less tree while accepting an empty draft. Merge B7's later design-review head `2307b54` without discarding its axe/44px fixture gates or screenshot provenance. Preserve both documentation histories and regenerate Graphify; no runtime route, database or legacy golden change.

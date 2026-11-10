@@ -23,6 +23,10 @@ No raw CSS/HTML from the DB; no dependency, migration, HTTP contract or B1 golde
 
 ## Neutral review and coverage
 
+### Review follow-up: mandatory computed AA matrix
+
+The browser-computed contrast check is a required step of both the local `check:all --e2e` gate and CI's web-E2E shard after Chromium installation; it must never silently skip when a browser is unavailable. The palette now includes danger/info feedback tokens and visible semantic status borders. For light and dark, measure on every chrome/canvas/surface/raised background: text and muted (≥4.5:1); success, warning, danger and info feedback text (≥4.5:1) and their visible borders (≥3:1); focus, selection and drop indicators against every adjacent surface (≥3:1). Also measure accent-text/accent, accent/accent-soft, drop/accent-soft and art-ink/art text (≥4.5:1). Compute from browser styles, not hard-coded expectations, at desktop/mobile widths; assert 56 pairs per theme and width (224 total) and name each failure. The host must retain these thresholds under token overrides. The four neutral screenshots remain examples, not changing host baselines.
+
 The opt-in fixture uses only neutral copy and the same markup at 1440/390, light/dark. Reviewed samples: [light desktop](./assets/cms-b6b-theme/neutral-light-1440.png), [dark desktop](./assets/cms-b6b-theme/neutral-dark-1440.png), [light mobile](./assets/cms-b6b-theme/neutral-light-390.png), [dark mobile](./assets/cms-b6b-theme/neutral-dark-390.png). These are **core-token examples**, not new lil.p route baselines. Browser-computed styles check text/accent contrast, focus, 44px button/input heights, token-only override and reduced motion. The Node unit test additionally computes every named color pairing across both actual CSS palettes. A host override is responsible for retaining AA contrast.
 
 | Review finding                                                                                | Resolution                                                                                    |
@@ -35,6 +39,7 @@ Graphify's code-only graph does not model CSS declarations; the stylesheet, expo
 
 ## Verification
 
-- `@parker2808/cms-core/theme.css`: 1,596 B gzip, separate from browser (864 B) and React (1,621 B, including 447 B `./react/server`) JS caps. No lockfile, migration or golden-contract changes.
+- Review follow-up: `@parker2808/cms-core/theme.css` measures 1,659 B gzip, separate from browser (859 B) and React (1,621 B, including 444 B `./react/server`) JS caps. No lockfile, migration or golden-contract changes.
+- Node 22 `pnpm check:all` passed 7/7; the locked `pnpm check:all --e2e` passed 10/10 on disposable tmpfs MySQL, including the newly required Chromium matrix (56 pairs × 2 themes × 2 widths = 224), API E2E and web E2E. Lock and disposable container were released.
 - Neutral fixture: 4/4 Node and computed Chromium tests passed; reviewed the four linked desktop/mobile, light/dark captures after fixing the focus/action spacing. This fixture is not a host page baseline.
 - `pnpm check:all --e2e` on disposable local MySQL: 9/9 passed, including API and web E2E. An earlier run passed the first seven checks and API E2E but failed the existing web contact hydration-value assertion and admin independent-scroll assertion (178 passed, 2 failed); no host code was changed or baseline loosened. The final complete run passed unchanged. The contact fix is in separate PR #183 and is not on this B6 stack.

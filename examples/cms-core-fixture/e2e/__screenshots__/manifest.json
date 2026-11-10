@@ -6,7 +6,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-light-1440-components.png",
@@ -15,7 +16,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-light-1440-components-focus.png",
@@ -24,7 +26,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-light-1440-editor.png",
@@ -33,7 +36,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-light-1440-unknown.png",
@@ -42,7 +46,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-light-390-home.png",
@@ -51,7 +56,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-light-390-components.png",
@@ -60,7 +66,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-light-390-components-focus.png",
@@ -69,7 +76,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-light-390-editor.png",
@@ -78,7 +86,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-light-390-unknown.png",
@@ -87,7 +96,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-dark-1440-home.png",
@@ -96,7 +106,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-dark-1440-components.png",
@@ -105,7 +116,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-dark-1440-components-focus.png",
@@ -114,7 +126,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-dark-1440-editor.png",
@@ -123,7 +136,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-dark-1440-unknown.png",
@@ -132,7 +146,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-dark-390-home.png",
@@ -141,7 +156,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-dark-390-components.png",
@@ -150,7 +166,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-dark-390-components-focus.png",
@@ -159,7 +176,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-dark-390-editor.png",
@@ -168,7 +186,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-neutral-dark-390-unknown.png",
@@ -177,7 +196,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-light-1440-home.png",
@@ -186,7 +206,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-light-1440-components.png",
@@ -195,7 +216,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-light-1440-components-focus.png",
@@ -204,7 +226,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-light-1440-editor.png",
@@ -213,7 +236,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-light-1440-unknown.png",
@@ -222,7 +246,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-light-390-home.png",
@@ -231,7 +256,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-light-390-components.png",
@@ -240,7 +266,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-light-390-components-focus.png",
@@ -249,7 +276,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-light-390-editor.png",
@@ -258,7 +286,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-light-390-unknown.png",
@@ -267,7 +296,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-dark-1440-home.png",
@@ -276,7 +306,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-dark-1440-components.png",
@@ -285,7 +316,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-dark-1440-components-focus.png",
@@ -294,7 +326,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-dark-1440-editor.png",
@@ -303,7 +336,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-dark-1440-unknown.png",
@@ -312,7 +346,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-dark-390-home.png",
@@ -321,7 +356,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-dark-390-components.png",
@@ -330,7 +366,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-dark-390-components-focus.png",
@@ -339,7 +376,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-dark-390-editor.png",
@@ -348,7 +386,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "en-lilp-dark-390-unknown.png",
@@ -357,7 +396,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-light-1440-home.png",
@@ -366,7 +406,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-light-1440-components.png",
@@ -375,7 +416,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-light-1440-components-focus.png",
@@ -384,7 +426,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-light-1440-editor.png",
@@ -393,7 +436,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-light-1440-unknown.png",
@@ -402,7 +446,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-light-390-home.png",
@@ -411,7 +456,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-light-390-components.png",
@@ -420,7 +466,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-light-390-components-focus.png",
@@ -429,7 +476,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-light-390-editor.png",
@@ -438,7 +486,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-light-390-unknown.png",
@@ -447,7 +496,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-dark-1440-home.png",
@@ -456,7 +506,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-dark-1440-components.png",
@@ -465,7 +516,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-dark-1440-components-focus.png",
@@ -474,7 +526,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-dark-1440-editor.png",
@@ -483,7 +536,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-dark-1440-unknown.png",
@@ -492,7 +546,8 @@
     "brand": "neutral",
     "width": 1440,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-dark-390-home.png",
@@ -501,7 +556,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-dark-390-components.png",
@@ -510,7 +566,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-dark-390-components-focus.png",
@@ -519,7 +576,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-dark-390-editor.png",
@@ -528,7 +586,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-neutral-dark-390-unknown.png",
@@ -537,7 +596,8 @@
     "brand": "neutral",
     "width": 390,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-light-1440-home.png",
@@ -546,7 +606,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-light-1440-components.png",
@@ -555,7 +616,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-light-1440-components-focus.png",
@@ -564,7 +626,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-light-1440-editor.png",
@@ -573,7 +636,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-light-1440-unknown.png",
@@ -582,7 +646,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-light-390-home.png",
@@ -591,7 +656,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-light-390-components.png",
@@ -600,7 +666,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-light-390-components-focus.png",
@@ -609,7 +676,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-light-390-editor.png",
@@ -618,7 +686,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-light-390-unknown.png",
@@ -627,7 +696,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-dark-1440-home.png",
@@ -636,7 +706,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-dark-1440-components.png",
@@ -645,7 +716,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-dark-1440-components-focus.png",
@@ -654,7 +726,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-dark-1440-editor.png",
@@ -663,7 +736,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-dark-1440-unknown.png",
@@ -672,7 +746,8 @@
     "brand": "lilp",
     "width": 1440,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-dark-390-home.png",
@@ -681,7 +756,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "home",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-dark-390-components.png",
@@ -690,7 +766,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "components",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-dark-390-components-focus.png",
@@ -699,7 +776,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "components-focus",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-dark-390-editor.png",
@@ -708,7 +786,8 @@
     "brand": "lilp",
     "width": 390,
     "route": "editor",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   },
   {
     "file": "vi-lilp-dark-390-unknown.png",
@@ -717,6 +796,7 @@
     "brand": "lilp",
     "width": 390,
     "route": "unknown",
-    "head": "345320af1d26dd4ed466cede0008c39747359196"
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
   }
 ]
