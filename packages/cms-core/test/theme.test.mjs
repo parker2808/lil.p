@@ -23,10 +23,16 @@ function tokens(selector) {
 }
 
 function luminance(hex) {
-  const digits = hex.slice(1);
+  const digits = hex.startsWith('#') ? hex.slice(1) : null;
   const expanded =
-    digits.length === 3 ? [...digits].map((digit) => digit.repeat(2)).join('') : digits;
-  const rgb = expanded.match(/[\da-f]{2}/gi).map((part) => parseInt(part, 16) / 255);
+    digits?.length === 3 ? [...digits].map((digit) => digit.repeat(2)).join('') : digits;
+  const rgb = expanded
+    ? expanded.match(/[\da-f]{2}/gi).map((part) => parseInt(part, 16) / 255)
+    : hex
+        .match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*1)?\)$/)
+        ?.slice(1)
+        .map((part) => Number(part) / 255);
+  assert.equal(rgb?.length, 3, `Unsupported computed color ${hex}`);
   const linear = rgb.map((channel) =>
     channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4,
   );
@@ -37,6 +43,17 @@ function contrast(foreground, background) {
   const values = [luminance(foreground), luminance(background)].sort((left, right) => right - left);
   return (values[0] + 0.05) / (values[1] + 0.05);
 }
+
+const surfaces = ['chrome', 'canvas', 'surface', 'raised'];
+const feedback = ['success', 'warning', 'danger', 'info'];
+const indicators = ['focus', 'selection', 'drop'];
+const specialPairs = [
+  ['accent-text', 'accent'],
+  ['accent', 'accent-soft'],
+  ['drop', 'accent-soft'],
+  ['art-ink', 'art'],
+];
+const pairsPerMode = surfaces.length * (2 + feedback.length * 2 + indicators.length) + 4;
 
 test('built stylesheet is exported, preserved, scoped and measured independently', () => {
   assert.equal(manifest.exports['./theme.css'], './dist/theme.css');
@@ -54,22 +71,21 @@ test('actual light and dark CSS token pairs meet WCAG AA text and focus contrast
   const light = tokens('.cms-core');
   const dark = { ...light, ...tokens(".cms-core[data-theme='dark']") };
   for (const [mode, palette] of Object.entries({ light, dark })) {
-    for (const surface of ['chrome', 'canvas', 'surface', 'raised']) {
-      for (const foreground of ['text', 'muted', 'success', 'warning']) {
+    for (const surface of surfaces) {
+      for (const foreground of ['text', 'muted', ...feedback]) {
         const ratio = contrast(palette[`--builder-${foreground}`], palette[`--builder-${surface}`]);
         assert.ok(ratio >= 4.5, `${mode}: ${foreground}/${surface} is ${ratio.toFixed(2)}:1`);
       }
-      for (const foreground of ['focus', 'selection', 'drop']) {
+      for (const foreground of indicators) {
         const ratio = contrast(palette[`--builder-${foreground}`], palette[`--builder-${surface}`]);
         assert.ok(ratio >= 3, `${mode}: ${foreground}/${surface} is ${ratio.toFixed(2)}:1`);
       }
+      for (const role of feedback) {
+        const ratio = contrast(palette[`--builder-${role}`], palette[`--builder-${surface}`]);
+        assert.ok(ratio >= 3, `${mode}: ${role} border/${surface} is ${ratio.toFixed(2)}:1`);
+      }
     }
-    for (const [foreground, background] of [
-      ['accent-text', 'accent'],
-      ['accent', 'accent-soft'],
-      ['drop', 'accent-soft'],
-      ['art-ink', 'art'],
-    ]) {
+    for (const [foreground, background] of specialPairs) {
       const ratio = contrast(
         palette[`--builder-${foreground}`],
         palette[`--builder-${background}`],
@@ -107,7 +123,7 @@ test('core controls are reachable and focusable without a host theme', () => {
 });
 
 test(
-  'browser-computed tokens, focus, targets and token-only host overrides',
+  'browser-computed AA matrix, focus, targets and token-only host overrides',
   {
     skip: !process.env.CMS_THEME_BROWSER,
   },
@@ -130,6 +146,82 @@ test(
           <button class="cms-core__button cms-core__button--primary">Add section</button></section></div>
         </main>`);
           await page.addStyleTag({ content: theme });
+          const computedPairs = await page.locator('.cms-core').evaluate((root) => {
+            const surfaces = ['chrome', 'canvas', 'surface', 'raised'];
+            const feedback = ['success', 'warning', 'danger', 'info'];
+            const indicators = ['focus', 'selection', 'drop'];
+            const pairs = [];
+            const probe = globalThis.document.createElement('div');
+            root.append(probe);
+            const computed = (token) => {
+              probe.style.color = `var(--builder-${token})`;
+              return globalThis.getComputedStyle(probe).color;
+            };
+            for (const surface of surfaces) {
+              probe.style.backgroundColor = `var(--builder-${surface})`;
+              const background = globalThis.getComputedStyle(probe).backgroundColor;
+              for (const role of ['text', 'muted', ...feedback]) {
+                probe.className =
+                  role === 'text'
+                    ? 'cms-core__title'
+                    : role === 'muted'
+                      ? 'cms-core__muted'
+                      : `cms-core__status cms-core__status--${role}`;
+                probe.style.color = '';
+                pairs.push({
+                  label: `${role}/${surface}`,
+                  foreground: globalThis.getComputedStyle(probe).color,
+                  background,
+                  minimum: 4.5,
+                });
+                probe.className = '';
+              }
+              for (const role of indicators) {
+                pairs.push({
+                  label: `${role}/${surface}`,
+                  foreground: computed(role),
+                  background,
+                  minimum: 3,
+                });
+              }
+              for (const role of feedback) {
+                probe.className = `cms-core__status cms-core__status--${role}`;
+                probe.style.color = '';
+                const style = globalThis.getComputedStyle(probe);
+                pairs.push({
+                  label: `${role} border/${surface}`,
+                  foreground: style.borderTopColor,
+                  background,
+                  minimum: 3,
+                });
+                probe.className = '';
+              }
+            }
+            for (const [foreground, background] of [
+              ['accent-text', 'accent'],
+              ['accent', 'accent-soft'],
+              ['drop', 'accent-soft'],
+              ['art-ink', 'art'],
+            ]) {
+              probe.style.backgroundColor = `var(--builder-${background})`;
+              pairs.push({
+                label: `${foreground}/${background}`,
+                foreground: computed(foreground),
+                background: globalThis.getComputedStyle(probe).backgroundColor,
+                minimum: 4.5,
+              });
+            }
+            probe.remove();
+            return pairs;
+          });
+          assert.equal(computedPairs.length, pairsPerMode);
+          for (const pair of computedPairs) {
+            const ratio = contrast(pair.foreground, pair.background);
+            assert.ok(
+              ratio >= pair.minimum,
+              `${mode} ${width}px: computed ${pair.label} is ${ratio.toFixed(2)}:1 (needs ${pair.minimum}:1)`,
+            );
+          }
           const initial = await page.locator('.cms-core').evaluate((root) => {
             const style = globalThis.getComputedStyle(root);
             const button = root.querySelector('.cms-core__button--primary');
@@ -144,9 +236,6 @@ test(
               input: input.getBoundingClientRect().height,
             };
           });
-          assert.ok(contrast(initial.text, initial.surface) >= 4.5);
-          assert.ok(contrast(initial.muted, initial.surface) >= 4.5);
-          assert.ok(contrast(initial.accentText, initial.accent) >= 4.5);
           assert.ok(initial.button >= 44 && initial.input >= 44);
           const actionGap = await page.locator('.cms-core__button--primary').evaluate((element) => {
             const target = element.previousElementSibling;
@@ -160,6 +249,11 @@ test(
               .evaluate((element) => globalThis.getComputedStyle(element).outlineWidth),
             '2px',
           );
+          const outlineColor = await page
+            .locator('.cms-core__button--primary')
+            .evaluate((element) => globalThis.getComputedStyle(element).outlineColor);
+          const focusPair = computedPairs.find((pair) => pair.label === 'focus/surface');
+          assert.equal(outlineColor, focusPair.foreground);
           await page.screenshot({ animations: 'disabled' });
           const primaryBackground = await page
             .locator('.cms-core__button--primary')
