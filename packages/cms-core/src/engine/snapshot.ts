@@ -19,7 +19,51 @@ function copyValue<Value>(value: Value): Value {
   return value;
 }
 
+function hasUnknownFields(value: unknown, allowed: readonly string[]): boolean {
+  return (
+    value !== null &&
+    typeof value === 'object' &&
+    Object.keys(value).some((key) => !allowed.includes(key))
+  );
+}
+
 export function readSnapshot(value: unknown, registry: BlockRegistry): SnapshotResult {
+  if (value && typeof value === 'object' && 'schemaVersion' in value) {
+    return { ok: false, reason: 'FUTURE_VERSION' };
+  }
+  if (hasUnknownFields(value, ['seo', 'blocks'])) {
+    return { ok: false, reason: 'INVALID_SNAPSHOT' };
+  }
+  if (value && typeof value === 'object' && 'seo' in value) {
+    if (
+      hasUnknownFields(value.seo, [
+        'seoTitleEn',
+        'seoTitleVi',
+        'seoDescriptionEn',
+        'seoDescriptionVi',
+      ])
+    ) {
+      return { ok: false, reason: 'INVALID_SNAPSHOT' };
+    }
+    if ('blocks' in value && Array.isArray(value.blocks)) {
+      for (const [index, block] of value.blocks.entries()) {
+        if (
+          hasUnknownFields(block, [
+            'type',
+            'key',
+            'schemaVersion',
+            'props',
+            'layout',
+            'surface',
+            'isVisible',
+            'sortOrder',
+          ])
+        ) {
+          return { ok: false, reason: 'INVALID_BLOCK', index };
+        }
+      }
+    }
+  }
   const parsed = pageSnapshotSchema.safeParse(value);
   if (!parsed.success) return { ok: false, reason: 'INVALID_SNAPSHOT' };
   for (const [index, block] of parsed.data.blocks.entries()) {

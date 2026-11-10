@@ -116,6 +116,36 @@ test('strict snapshots reject unknown/future/invalid blocks instead of dropping 
     readSnapshot({ ...snapshot, blocks: [{ ...block, schemaVersion: 0 }] }, registry).ok,
     true,
   );
+  assert.equal(
+    readSnapshot({ ...snapshot, blocks: [{ ...block, schemaVersion: 3 }] }, registry).ok,
+    true,
+  );
+  assert.deepEqual(readSnapshot({ ...snapshot, schemaVersion: 4 }, registry), {
+    ok: false,
+    reason: 'FUTURE_VERSION',
+  });
+  assert.deepEqual(readSnapshot({ ...snapshot, unexpected: true }, registry), {
+    ok: false,
+    reason: 'INVALID_SNAPSHOT',
+  });
+  assert.deepEqual(readSnapshot({ ...snapshot, seo: { ...seo, unexpected: true } }, registry), {
+    ok: false,
+    reason: 'INVALID_SNAPSHOT',
+  });
+  assert.deepEqual(
+    readSnapshot({ ...snapshot, blocks: [{ ...block, unexpected: true }] }, registry),
+    { ok: false, reason: 'INVALID_BLOCK', index: 0 },
+  );
+  assert.deepEqual(
+    readSnapshot(
+      { ...snapshot, blocks: [{ ...block, props: { title: 'Start', extra: 1 } }] },
+      registry,
+    ),
+    {
+      ok: true,
+      snapshot: { ...snapshot, blocks: [{ ...block, props: { title: 'Start', extra: 1 } }] },
+    },
+  );
   assert.deepEqual(readSnapshot({ ...snapshot, blocks: [{ ...block, key: 'BAD' }] }, registry), {
     ok: false,
     reason: 'INVALID_SNAPSHOT',
