@@ -8,11 +8,7 @@ import {
   Check,
   ChevronDown,
   CircleHelp,
-  Columns3,
   Eye,
-  GripVertical,
-  Image as ImageIcon,
-  LayoutGrid,
   Monitor,
   MousePointer2,
   Plus,
@@ -30,6 +26,7 @@ import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 
 import styles from './study.module.css';
+import { StudyAutoPreview, StudyMobilePanels, StudyOutline, StudyPalette } from './study-panels';
 
 export const dynamic = 'force-dynamic';
 
@@ -47,6 +44,11 @@ const copy = {
     saved: 'All changes saved',
     conflict: 'Could not save changes',
     conflictHint: 'Another version was saved. Review before retrying.',
+    retained: 'Your unsaved changes are kept.',
+    retry: 'Retry',
+    reviewChanges: 'Review changes',
+    publishUnavailable: 'Publishing is unavailable in this static design sample.',
+    publishConflict: 'Resolve the save conflict before publishing.',
     undone: 'Change undone',
     statusSample: 'Status sample',
     statusSaved: 'Saved',
@@ -56,6 +58,7 @@ const copy = {
     undo: 'Undo',
     redo: 'Redo',
     palette: 'Components',
+    layers: 'Layers',
     paletteHint: 'A place for every idea.',
     layout: 'LAYOUT',
     content: 'CONTENT',
@@ -64,6 +67,19 @@ const copy = {
     grid: 'Grid',
     heading: 'Heading',
     text: 'Text',
+    paragraph: 'Paragraph',
+    button: 'Button',
+    divider: 'Divider',
+    spacer: 'Spacer',
+    searchPalette: 'Search components',
+    noMatches: 'No matching components',
+    pageOnly: 'Only allowed on Page',
+    addSectionFirst: 'Add a section first',
+    selectedPath: 'Page / Hero / Heading',
+    outlineHint: '↑↓ navigate · ←→ levels · Space / Alt+↑↓ proposed for the real builder',
+    sampleOnly: 'Static design sample — no content changes',
+    close: 'Close panel',
+    openInspector: 'Open selected item properties',
     image: 'Image',
     canvas: 'Canvas',
     canvasHint: 'Shape your page, one piece at a time.',
@@ -138,6 +154,11 @@ const copy = {
     saved: 'Đã lưu mọi thay đổi',
     conflict: 'Không thể lưu thay đổi',
     conflictHint: 'Đã có phiên bản khác. Hãy kiểm tra trước khi thử lại.',
+    retained: 'Thay đổi chưa lưu của bạn vẫn được giữ.',
+    retry: 'Thử lại',
+    reviewChanges: 'Xem thay đổi',
+    publishUnavailable: 'Không thể xuất bản trong mẫu thiết kế tĩnh này.',
+    publishConflict: 'Xử lý xung đột lưu trước khi xuất bản.',
     undone: 'Đã hoàn tác thay đổi',
     statusSample: 'Trạng thái mẫu',
     statusSaved: 'Đã lưu',
@@ -147,6 +168,7 @@ const copy = {
     undo: 'Hoàn tác',
     redo: 'Làm lại',
     palette: 'Thành phần',
+    layers: 'Lớp',
     paletteHint: 'Chỗ cho mọi ý tưởng.',
     layout: 'BỐ CỤC',
     content: 'NỘI DUNG',
@@ -155,6 +177,19 @@ const copy = {
     grid: 'Lưới',
     heading: 'Tiêu đề',
     text: 'Văn bản',
+    paragraph: 'Đoạn văn',
+    button: 'Nút',
+    divider: 'Đường phân cách',
+    spacer: 'Khoảng trống',
+    searchPalette: 'Tìm thành phần',
+    noMatches: 'Không có thành phần phù hợp',
+    pageOnly: 'Chỉ được thêm vào Trang',
+    addSectionFirst: 'Hãy thêm một phần trước',
+    selectedPath: 'Trang / Giới thiệu / Tiêu đề',
+    outlineHint: '↑↓ di chuyển · ←→ cấp · Space / Alt+↑↓ dành cho trình biên tập',
+    sampleOnly: 'Mẫu thiết kế tĩnh — không thay đổi nội dung',
+    close: 'Đóng bảng',
+    openInspector: 'Mở thuộc tính thành phần đã chọn',
     image: 'Hình ảnh',
     canvas: 'Khung trang',
     canvasHint: 'Tạo hình cho trang, từng mảnh một.',
@@ -266,6 +301,7 @@ export default async function BuilderStudy({
   const t = copy[locale];
   const emptyIndex = `${t.pageLabel} / 01`;
   const headingIndex = `${t.pageLabel} / 001`;
+  const layerCount = `${selection.scene === 'empty' ? '01' : '02'} / 02`;
   const link = (key: keyof Choice, value: string) =>
     `/${locale}/cms-u3-study?${new URLSearchParams({ ...selection, [key]: value })}`;
   const scenes = [
@@ -278,14 +314,6 @@ export default async function BuilderStudy({
     { value: 'tablet', label: t.tablet, icon: Tablet },
     { value: 'mobile', label: t.mobile, icon: Smartphone },
   ] as const;
-  const palette = [
-    { label: t.section, icon: LayoutGrid },
-    { label: t.columns, icon: Columns3 },
-    { label: t.grid, icon: LayoutGrid },
-    { label: t.heading, icon: Type },
-    { label: t.text, icon: Type },
-    { label: t.image, icon: ImageIcon },
-  ];
 
   return (
     <main
@@ -295,6 +323,7 @@ export default async function BuilderStudy({
       data-brand={selection.brand}
       data-scene={selection.scene}
     >
+      <StudyAutoPreview explicit={typeof query.device === 'string'} />
       <div className={styles.shell}>
         <header className={styles.topbar}>
           <div className={styles.identity}>
@@ -341,7 +370,11 @@ export default async function BuilderStudy({
               <Eye size={16} />
               {t.preview}
             </Button>
-            <Button className={styles.publishButton} disabled>
+            <Button
+              className={styles.publishButton}
+              disabled
+              title={selection.status === 'conflict' ? t.publishConflict : t.publishUnavailable}
+            >
               {t.publish}
               <ArrowRight size={16} />
             </Button>
@@ -353,6 +386,10 @@ export default async function BuilderStudy({
             <span className={styles.reviewDot} />
             {t.sample}
           </div>
+          <span className={styles.publishExplanation}>
+            <CircleHelp size={14} aria-hidden="true" />
+            {selection.status === 'conflict' ? t.publishConflict : t.publishUnavailable}
+          </span>
           <nav className={styles.sceneNav} aria-label={t.switchScene}>
             {scenes.map(({ value, label }) => (
               <a
@@ -390,31 +427,13 @@ export default async function BuilderStudy({
               </div>
               <Plus size={18} aria-hidden="true" />
             </div>
-            <div className={styles.paletteScroll} role="region" aria-label={t.palette} tabIndex={0}>
-              <p className={styles.groupLabel}>{t.layout}</p>
-              <div className={styles.paletteGrid}>
-                {palette.slice(0, 3).map(({ label, icon: Icon }) => (
-                  <div key={label} className={styles.paletteTile}>
-                    <Icon size={20} strokeWidth={1.7} aria-hidden="true" />
-                    <span>{label}</span>
-                    <GripVertical size={13} className={styles.grip} aria-hidden="true" />
-                  </div>
-                ))}
+            <StudyPalette labels={t} empty={selection.scene === 'empty'} idPrefix="desktop" />
+            <div className={styles.layersPanel}>
+              <div className={styles.layersHeading}>
+                <h2>{t.layers}</h2>
+                <span>{layerCount}</span>
               </div>
-              <p className={styles.groupLabel}>{t.content}</p>
-              <div className={styles.paletteGrid}>
-                {palette.slice(3).map(({ label, icon: Icon }) => (
-                  <div key={label} className={styles.paletteTile}>
-                    <Icon size={20} strokeWidth={1.7} aria-hidden="true" />
-                    <span>{label}</span>
-                    <GripVertical size={13} className={styles.grip} aria-hidden="true" />
-                  </div>
-                ))}
-              </div>
-              <div className={styles.paletteTip}>
-                <CircleHelp size={16} aria-hidden="true" />
-                <span>{t.tokenNote}</span>
-              </div>
+              <StudyOutline labels={t} empty={selection.scene === 'empty'} />
             </div>
             <div className={styles.panelFoot}>
               <CircleHelp size={16} aria-hidden="true" />
@@ -456,7 +475,7 @@ export default async function BuilderStudy({
                 ))}
               </nav>
             </div>
-            <div className={styles.canvasBackdrop}>
+            <div className={styles.canvasBackdrop} data-preview={selection.device}>
               <div className={styles.previewFrame} data-device={selection.device}>
                 <div className={styles.previewChrome}>
                   <span className={styles.previewDots}>
@@ -489,7 +508,11 @@ export default async function BuilderStudy({
                         <Plus size={17} aria-hidden="true" />
                         {t.addSection}
                       </div>
-                      <div className={styles.emptyGrid} aria-hidden="true" />
+                      <div className={styles.emptyGrid} role="note">
+                        <Plus size={20} aria-hidden="true" />
+                        <strong>{t.addSection}</strong>
+                        <span>{t.emptyHint}</span>
+                      </div>
                     </div>
                   ) : (
                     <div className={styles.composition}>
@@ -719,12 +742,111 @@ export default async function BuilderStudy({
                         : t.saved}
                   </strong>
                   <small>{selection.status === 'conflict' ? t.conflictHint : t.change}</small>
+                  {selection.status === 'conflict' && <small>{t.retained}</small>}
                 </span>
                 {selection.status !== 'conflict' && <Check size={15} aria-hidden="true" />}
               </div>
+              {selection.status === 'conflict' && (
+                <div className={styles.conflictActions}>
+                  <a href={link('status', 'saved')}>{t.retry}</a>
+                  <a href={link('scene', 'nested')}>{t.reviewChanges}</a>
+                </div>
+              )}
             </div>
           </aside>
         </div>
+        <StudyMobilePanels
+          labels={t}
+          selected={selection.scene !== 'empty'}
+          components={
+            <StudyPalette labels={t} empty={selection.scene === 'empty'} idPrefix="mobile" />
+          }
+          layers={<StudyOutline labels={t} empty={selection.scene === 'empty'} />}
+          properties={
+            <div className={styles.mobileProperties}>
+              {selection.scene === 'empty' ? (
+                <div className={styles.inspectorEmpty}>
+                  <MousePointer2 size={24} aria-hidden="true" />
+                  <h3>{t.noSelection}</h3>
+                  <p>{t.noSelectionHint}</p>
+                </div>
+              ) : (
+                <>
+                  <p className={styles.groupLabel}>{t.selection}</p>
+                  <div className={styles.selectionCard}>
+                    <span className={styles.selectionIcon}>
+                      <Type size={18} aria-hidden="true" />
+                    </span>
+                    <span>
+                      <strong>{t.heading}</strong>
+                      <small>{t.breadcrumb}</small>
+                    </span>
+                  </div>
+                  <div className={styles.inspectorTabs}>
+                    <span className={styles.tabActive}>{t.contentTab}</span>
+                    <span>{t.designTab}</span>
+                  </div>
+                  <div className={styles.field}>
+                    <span className={styles.fieldLabel}>{t.headingLabel}</span>
+                    <div className={styles.fieldValue}>{t.headingValue}</div>
+                  </div>
+                  <div className={styles.field}>
+                    <span className={styles.fieldLabel}>{t.level}</span>
+                    <div className={styles.selectValue}>
+                      {sampleLabels.headingLevel}
+                      <ChevronDown size={15} aria-hidden="true" />
+                    </div>
+                  </div>
+                  <p className={styles.groupLabel}>{t.device}</p>
+                  <div className={styles.overrideList}>
+                    {devices.map(({ value, label, icon: Icon }) => (
+                      <div
+                        key={value}
+                        className={selection.device === value ? styles.overrideActive : ''}
+                      >
+                        <Icon size={16} aria-hidden="true" />
+                        <span>{label}</span>
+                        <small>{t.inherited}</small>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+              <div className={styles.mobileStatus}>
+                <p className={styles.groupLabel}>{t.status}</p>
+                <nav className={styles.statusChoices} aria-label={t.statusSample}>
+                  {(
+                    [
+                      ['saved', t.statusSaved],
+                      ['conflict', t.statusConflict],
+                      ['undone', t.undo],
+                    ] as const
+                  ).map(([value, label]) => (
+                    <a
+                      key={value}
+                      href={link('status', value)}
+                      aria-current={selection.status === value ? 'page' : undefined}
+                      className={selection.status === value ? styles.statusChoiceActive : ''}
+                    >
+                      {label}
+                    </a>
+                  ))}
+                </nav>
+                {selection.status === 'conflict' && (
+                  <p className={styles.conflictMessage}>
+                    {t.conflictHint} {t.retained}
+                  </p>
+                )}
+                {selection.status === 'conflict' && (
+                  <div className={styles.conflictActions}>
+                    <a href={link('status', 'saved')}>{t.retry}</a>
+                    <a href={link('scene', 'nested')}>{t.reviewChanges}</a>
+                  </div>
+                )}
+              </div>
+            </div>
+          }
+        />
       </div>
     </main>
   );

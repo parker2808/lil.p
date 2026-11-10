@@ -9,9 +9,9 @@ const output = process.env.CMS_U3_CAPTURE_DIR;
 const evidenceDir = process.env.CMS_U3_EVIDENCE_DIR;
 const evidence = new Set([
   'empty-desktop-en-light-neutral-1440.png',
-  'empty-desktop-vi-dark-lilp-390.png',
+  'empty-mobile-vi-dark-lilp-390.png',
   'nested-desktop-en-light-neutral-1440.png',
-  'nested-desktop-vi-dark-lilp-390.png',
+  'nested-mobile-vi-dark-lilp-390.png',
   'overrides-tablet-en-dark-neutral-1440.png',
   'overrides-mobile-vi-light-lilp-390.png',
 ]);
@@ -53,16 +53,49 @@ test('U3 study is gated and has named sample navigation', async ({ page }) => {
   await expect(
     page.getByRole('navigation', { name: 'Sample page' }).getByRole('link', { name: 'Nested' }),
   ).toBeFocused();
+  expect(await page.evaluate(() => document.documentElement.scrollHeight)).toBeLessThanOrEqual(844);
+  await page.getByRole('button', { name: 'Components' }).click();
+  const sheet = page.getByRole('dialog', { name: 'Components' });
+  await expect(sheet).toBeVisible();
+  await expect(sheet.getByRole('button', { name: 'Section' })).toBeVisible();
+  await expect(sheet.getByRole('button', { name: 'Spacer' })).toBeVisible();
+  await expect(sheet.getByRole('button', { name: 'Button' })).toBeVisible();
+  await expect(sheet.getByRole('button', { name: 'Spacer' })).toHaveAttribute(
+    'aria-disabled',
+    'true',
+  );
+  await expect(sheet.getByText('Add a section first').first()).toBeVisible();
+  await sheet.getByRole('searchbox', { name: 'Search components' }).fill('divider');
+  await expect(sheet.getByRole('button', { name: 'Divider' })).toBeVisible();
+  await expect(sheet.getByRole('button', { name: 'Heading' })).toHaveCount(0);
+  await page.keyboard.press('Escape');
+  await expect(sheet).not.toBeVisible();
+  await expect(page.getByRole('button', { name: 'Components' })).toBeFocused();
+  await page.getByRole('button', { name: 'Layers' }).click();
+  const layers = page.getByRole('dialog', { name: 'Layers' });
+  await expect(layers.getByRole('tree', { name: 'Layers' })).toBeVisible();
+  await layers.getByRole('treeitem', { name: 'New page' }).focus();
+  await page.keyboard.press('ArrowDown');
+  await expect(layers.getByRole('treeitem', { name: 'New page' })).toBeFocused();
+  await page.keyboard.press('Escape');
   const accessibility = await new AxeBuilder({ page }).include('main#content').analyze();
   expect(accessibility.violations.map(({ id, nodes }) => ({ id, count: nodes.length }))).toEqual(
     [],
   );
+  await page.getByRole('button', { name: 'Properties' }).click();
   await page
+    .getByRole('dialog', { name: 'Properties' })
     .getByRole('navigation', { name: 'Status sample' })
     .getByRole('link', { name: 'Conflict' })
     .click();
-  await expect(page.getByText('Could not save changes').last()).toBeVisible();
+  await page.getByRole('button', { name: 'Properties' }).click();
+  await expect(page.getByRole('dialog').getByText('Your unsaved changes are kept.')).toBeVisible();
+  await expect(page.getByRole('dialog').getByRole('link', { name: 'Retry' })).toBeVisible();
+  await expect(
+    page.getByRole('dialog').getByRole('link', { name: 'Review changes' }),
+  ).toBeVisible();
   await page
+    .getByRole('dialog')
     .getByRole('navigation', { name: 'Status sample' })
     .getByRole('link', { name: 'Undo' })
     .click();
@@ -82,7 +115,7 @@ test('U3 review matrix screenshots', async ({ page }) => {
         for (const scene of ['empty', 'nested', 'overrides']) {
           for (const device of scene === 'overrides'
             ? ['desktop', 'tablet', 'mobile']
-            : ['desktop']) {
+            : [width === 390 ? 'mobile' : 'desktop']) {
             for (const brand of ['neutral', 'lilp']) {
               const query = new URLSearchParams({ scene, device, theme, brand });
               await page.goto(`/${locale}/cms-u3-study?${query}`);
@@ -107,6 +140,23 @@ test('U3 review matrix screenshots', async ({ page }) => {
       }
     }
   }
+  for (const locale of ['en', 'vi']) {
+    for (const theme of ['light', 'dark']) {
+      for (const brand of ['neutral', 'lilp']) {
+        await page.setViewportSize({ width: 390, height: 844 });
+        const query = new URLSearchParams({ scene: 'nested', device: 'mobile', theme, brand });
+        await page.goto(`/${locale}/cms-u3-study?${query}`);
+        await page
+          .locator('nav')
+          .getByRole('button', { name: locale === 'en' ? 'Properties' : 'Thuộc tính' })
+          .click();
+        const file = `sheet-properties-mobile-${locale}-${theme}-${brand}-390.png`;
+        const bytes = await page.screenshot({ path: join(output!, file), animations: 'disabled' });
+        captures.push({ file, sha256: createHash('sha256').update(bytes).digest('hex') });
+        if (evidenceDir) await writeFile(join(evidenceDir, file), bytes);
+      }
+    }
+  }
   for (const variant of [
     { status: 'conflict', locale: 'en', theme: 'dark', brand: 'neutral', width: 1440 },
     { status: 'undone', locale: 'vi', theme: 'light', brand: 'lilp', width: 390 },
@@ -114,12 +164,12 @@ test('U3 review matrix screenshots', async ({ page }) => {
     await page.setViewportSize({ width: variant.width, height: variant.width === 390 ? 844 : 900 });
     const query = new URLSearchParams({
       scene: 'nested',
-      device: 'desktop',
+      device: variant.width === 390 ? 'mobile' : 'desktop',
       status: variant.status,
       theme: variant.theme,
       brand: variant.brand,
     });
-    const file = `status-${variant.status}-${variant.locale}-${variant.theme}-${variant.brand}-${variant.width}.png`;
+    const file = `status-${variant.status}-${variant.width === 390 ? 'mobile-' : ''}${variant.locale}-${variant.theme}-${variant.brand}-${variant.width}.png`;
     await page.goto(`/${variant.locale}/cms-u3-study?${query}`);
     const bytes = await page.screenshot({
       path: join(output!, file),

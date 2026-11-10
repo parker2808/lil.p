@@ -2,20 +2,22 @@
 
 Status: proposed for coordinator review. Source: CMS-core ADR PR #172, Phase U3 / Phase D. This is a **visual study, not a builder**. No tree storage, drag engine, publish API, migration, or production route is introduced.
 
-## Plan (8 steps)
+## Plan (8 steps, revised after coordinator review)
 
 1. Read U1 baseline, ADR, Graphify and route guards.
 2. Specify core tokens, slots, and keyboard path.
-3. Build a flag-gated, sample-only composition study.
-4. Exercise empty, nested and responsive compositions.
-5. Capture EN/VI, light/dark, 1440/390 evidence.
-6. Record visual/accessibility findings and applied fixes.
+3. Compose desktop outline and complete slot-aware palette.
+4. Fit mobile canvas with accessible bottom sheets.
+5. Measure all theme/brand contrast pairs.
+6. Capture corrected EN/VI desktop/mobile evidence.
 7. Refresh Graphify, docs and disposable-DB checks.
-8. Open draft PR, await coordinator approval.
+8. Update draft PR, await coordinator approval.
 
 ## Boundaries
 
 The study route is available only when `R3_E2E_STATES=1` and otherwise calls `notFound()`. It contains fixed, local sample data; no backend calls, persistence, drag-and-drop, arbitrary HTML/CSS or mutations. Controls in the study illustrate intent only. `packages/ui` shadcn primitives supply controls. The neutral theme is the finished core baseline; the lil.p variant changes semantic token values only, never markup, spacing, or behavior. No new dependency. The U0 route/control baseline remains unaffected.
+
+Coordinator review revision: at ≤760px the canvas owns the viewport below compact review chrome; a persistent selected-item strip and three 44px bottom actions open Components, Layers or Properties in a named modal bottom sheet. Native modal focus containment, Escape and trigger focus restoration are required; no content mutation occurs. At narrow widths with no explicit preview query, choose Mobile (390px) rather than falsely labelling a responsive frame 1440px. The desktop left rail shows the full palette and a separate outline of Page → Section → Row/Column → component; its mobile sheet uses the same outline. A searched palette groups layout and content and visibly explains slot-invalid items. Conflict samples show retained unsaved changes, Retry and Review changes, and a reason for disabled Publish. The empty page has one labelled section target, not an unexplained placeholder. Screenshot names encode browser width separately from preview device, and the review set covers eight EN/VI × light/dark × neutral/lil.p sheet variants plus the desktop outline.
 
 ## Slots and components (D1/D4 proposal, not implementation)
 
