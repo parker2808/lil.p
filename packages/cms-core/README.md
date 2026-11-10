@@ -5,9 +5,12 @@
 page/block/locale/snapshot contracts, `defineBlock`, `createRegistry`, and the
 host-keyed page-allowance predicate through `./contracts`. The host keeps all
 20 block definitions and composes its finite block-type schema from them.
-`./engine` remains empty until B5; `./react` remains empty until B6 and
-preserves the `"use client"` directive. `./contracts` additionally publishes
-CommonJS and legacy TypeScript subpath resolution for the existing Nest host.
+`./engine` provides B5's pure registry-injected policy findings, stable ordering,
+strict snapshots and version migrations, plus typed host ports; it does not
+start transactions or call ports. The Nest adapter remains host-owned and is
+not wired by B5 pending approval for the direct API production dependency.
+`./react` remains empty until B6 and preserves the `"use client"` directive.
+All three subpaths publish CommonJS and legacy TypeScript subpath resolution.
 React 19, React DOM 19 and Zod 4 are peers (also local development dependencies for package tests).
 
 Build and check the browser gzip budgets with `pnpm --filter @parker2808/cms-core build`.
