@@ -1,6 +1,6 @@
 # CMS U0 — route/control inventory and pre-change baseline
 
-Baseline: `main` `d0d474b` (2026-11-10). This is **source/test evidence**, not a live browser or full visual sign-off. No behavior, routes, components, API contracts, or DB schema were changed. See [U0 spec](../specs/2026-11-10-cms-u0-audit.md) and the [CMS ADR](../specs/2026-11-10-cms-core-adr.md). A2/#174 and A3/#173 are separate draft PRs, absent from this baseline; A3's localized-field labels are U1 acceptance.
+Baseline: `main` `d0d474b` (2026-11-10). This is **source/test evidence**, not a live browser or full visual sign-off. No behavior, routes, components, API contracts, or DB schema were changed. See [U0 spec](../specs/2026-11-10-cms-u0-audit.md) and the CMS ADR in [PR #172](https://github.com/parker2808/lil.p/pull/172), which is not yet on `main`. A2/#174 and A3/#173 are separate draft PRs, absent from this baseline; A3's localized-field labels are U1 acceptance.
 
 ## Route source of truth
 
