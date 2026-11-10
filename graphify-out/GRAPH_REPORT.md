@@ -1,7 +1,7 @@
 # Graph Report - feat-cms-d3-renderer  (2026-11-11)
 
 ## Corpus Check
-- 1522 files · ~532,673 words
+- 1522 files · ~532,905 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 35 file(s) not represented in the graph (top: (none) 17, .css 14, .example 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `14bdd011`
+- Built from commit: `22d952b2`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1524,7 +1524,7 @@ Nodes (3): Default, meta, Story
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `cn()` connect `cn` to `Input`, `next-intl`, `next`, `CaseCard`, `HeroStatsFieldset.tsx`, `use-me.hook.tsx`, `EditorShell`, `FeatureCard.stories.tsx`, `ActionCards.tsx`, `AdminPagesEditor.tsx`, `CaseCard.tsx`, `Timeline.tsx`, `ProjectsDetail.tsx`, `DataTable`, `AdminMediaIndex.tsx`, `AdminListTable.tsx`, `ref_testing_library_react`, `portfolio-design-system.md`, `ref_react`, `M0 — Groundwork`, `Prose`, `StatBand.tsx`, `NotesDetail.tsx`, `M0 — Nền tảng`, `Button`, `AddBlockDialog.tsx`, `SmallEntityIndex.tsx`, `skills/skills.service.ts`, `AdminSiteIndex.tsx`, `next-intl`, `ContentProgress.tsx`?**
+- **Why does `@nestjs/common` connect `@nestjs/common` to `media.service.ts`, `ref_vitest`, `ContactForm.tsx`, `pages.http.spec.ts`, `Public`, `site-settings.service.ts`, `experience/experience.service.ts`, `.recordNow`, `content-migration.e2e-spec.ts`, `admin-pages.controller.ts`, `PublicProjectDetail`, `pages/pages.service.ts`, `page-versions.service.ts`, `AuditService`, `.getPage`, `analytics.service.ts`, `process-steps/process-steps.service.ts`, `tags/tags.service.ts`, `principles/principles.service.ts`, `contact-topics/contact-topics.service.ts`, `admin-experience.controller.ts`, `app.module.ts`, `skills.type.ts`, `profile-stats/profile-stats.service.ts`, `Locale`, `profile/profile.service.ts`, `social-links/social-links.service.ts`, `.record`, `AdminNavItem`, `dashboard/dashboard.service.ts`, `posts/posts.service.ts`, `skills/skills.service.ts`, `EventsService`, `AdminUser`, `navigation.schema.ts`?**
   _High betweenness centrality (0.033) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `cn()` (e.g. with `T04 · Design tokens + shadcn theme in `packages/ui`` and `T04 · Design token + shadcn theme trong `packages/ui``) actually correct?**
   _`cn()` has 2 INFERRED edges - model-reasoned connections that need verification._
@@ -1532,8 +1532,8 @@ _Questions this graph is uniquely positioned to answer:_
   _18 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Input` be split into smaller, more focused modules?**
   _Cohesion score 0.1417004048582996 - nodes in this community are weakly interconnected._
-- **Why does `@nestjs/common` connect `@nestjs/common` to `media.service.ts`, `ref_vitest`, `ContactForm.tsx`, `pages.http.spec.ts`, `Public`, `site-settings.service.ts`, `experience/experience.service.ts`, `.recordNow`, `content-migration.e2e-spec.ts`, `admin-pages.controller.ts`, `PublicProjectDetail`, `pages/pages.service.ts`, `page-versions.service.ts`, `AuditService`, `.getPage`, `analytics.service.ts`, `process-steps/process-steps.service.ts`, `tags/tags.service.ts`, `principles/principles.service.ts`, `contact-topics/contact-topics.service.ts`, `admin-experience.controller.ts`, `app.module.ts`, `skills.type.ts`, `profile-stats/profile-stats.service.ts`, `Locale`, `profile/profile.service.ts`, `social-links/social-links.service.ts`, `.record`, `AdminNavItem`, `dashboard/dashboard.service.ts`, `posts/posts.service.ts`, `skills/skills.service.ts`, `EventsService`, `AdminUser`, `navigation.schema.ts`?**
-  _High betweenness centrality (0.033) - this node is a cross-community bridge._
+- **Why does `cn()` connect `cn` to `Input`, `next-intl`, `next`, `CaseCard`, `HeroStatsFieldset.tsx`, `use-me.hook.tsx`, `EditorShell`, `FeatureCard.stories.tsx`, `ActionCards.tsx`, `AdminPagesEditor.tsx`, `CaseCard.tsx`, `Timeline.tsx`, `ProjectsDetail.tsx`, `DataTable`, `AdminMediaIndex.tsx`, `AdminListTable.tsx`, `ref_testing_library_react`, `portfolio-design-system.md`, `ref_react`, `M0 — Groundwork`, `Prose`, `StatBand.tsx`, `NotesDetail.tsx`, `M0 — Nền tảng`, `Button`, `AddBlockDialog.tsx`, `SmallEntityIndex.tsx`, `skills/skills.service.ts`, `AdminSiteIndex.tsx`, `next-intl`, `ContentProgress.tsx`?**
+  _High betweenness centrality (0.032) - this node is a cross-community bridge._
 - **Are the 11 inferred relationships involving `Button()` (e.g. with `4. Architecture at a glance` and `T12 · UI primitives matching Figma component sets`) actually correct?**
   _`Button()` has 11 INFERRED edges - model-reasoned connections that need verification._
 - **Should `index.ts` be split into smaller, more focused modules?**
