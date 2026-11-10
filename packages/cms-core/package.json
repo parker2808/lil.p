@@ -11,11 +11,13 @@
     },
     "./engine": {
       "types": "./dist/engine.d.ts",
-      "import": "./dist/engine.js"
+      "import": "./dist/engine.js",
+      "require": "./dist/engine.cjs"
     },
     "./react": {
       "types": "./dist/react.d.ts",
-      "import": "./dist/react.js"
+      "import": "./dist/react.js",
+      "require": "./dist/react.cjs"
     }
   },
   "typesVersions": {

@@ -50,6 +50,18 @@ test('cms-core cannot import host modules', () => {
   assert.equal(runCheckDeps(dir).length, 1);
   writeFileSync(join(source, 'contracts.ts'), "import { foo } from '@/modules/pages';\n");
   assert.equal(scanCmsCoreImports(dir).length, 1);
+  for (const statement of [
+    "import '@portfolio/contracts';",
+    'import "@/modules/pages";',
+    "export * from '@portfolio/contracts';",
+    "export { foo } from '@/modules/pages';",
+    "export * as host from '@portfolio/contracts';",
+    "const host = require('@portfolio/contracts');",
+    "const host = import('@/modules/pages');",
+  ]) {
+    writeFileSync(join(source, 'contracts.ts'), `${statement}\n`);
+    assert.equal(scanCmsCoreImports(dir).length, 1, statement);
+  }
   writeFileSync(join(source, 'contracts.ts'), "import { z } from 'zod';\n");
   assert.deepEqual(scanCmsCoreImports(dir), []);
 });

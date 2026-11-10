@@ -71,7 +71,9 @@ export function scanCmsCoreImports(rootDir) {
       } else if (/\.[cm]?[jt]sx?$/.test(entry.name)) {
         const source = readFileSync(path, 'utf8');
         if (
-          /(?:from\s*|import\s*\(|require\s*\()\s*['"](?:@portfolio\/|@\/modules\/)/.test(source)
+          /\b(?:from\s*|import\s*(?:\(|(?=['"]))|require\s*\()\s*['"](?:@portfolio\/|@\/modules\/)/.test(
+            source,
+          )
         ) {
           violations.push(`${path} imports a host module`);
         }

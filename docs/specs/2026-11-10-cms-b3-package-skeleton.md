@@ -13,7 +13,7 @@ Status: implementation proposal · 2026-11-10 · stacked on accepted B2 `44e2da4
 
 ## Scope and sequencing
 
-Parker accepted B2 PR #181 at `44e2da4` (CI 42832737761) without authorizing merge. The 20:46 ICT amendment allows backend B2–B5 alongside the U gate because packaging and pure contracts do not freeze UI controls. B6 React extraction still waits for U2/U3 acceptance; D waits for U3 design approval. B3 creates `packages/cms-core` with independent `./contracts`, `./engine`, `./react` entry points, but does **not** move definitions, create a registry, extract logic or React, or connect the host runtime. The React entry retains a client directive for future extraction. No migrations, new external dependencies, API/route change, `/help` copy change, or visual change. Existing EN/VI and B1 HTTP goldens must remain untouched.
+Parker accepted B2 PR #181 at `44e2da4` (CI 42832737761) without authorizing merge. The 20:46 ICT amendment allows backend B2–B5 alongside the U gate because packaging and pure contracts do not freeze UI controls. The later coordination update accepts U2/U3 on separate unmerged branches; B6 React extraction follows B4 approval and D follows B7. B3 creates `packages/cms-core` with independent `./contracts`, `./engine`, `./react` entry points, but does **not** move definitions, create a registry, extract logic or React, or connect the host runtime. The React entry retains a client directive for future extraction. No migrations, new external dependencies, API/route change, admin table Shortcuts dialog change, or visual change. Existing EN/VI and B1 HTTP goldens must remain untouched.
 
 ## Budget contract
 

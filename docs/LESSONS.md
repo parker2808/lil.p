@@ -135,3 +135,4 @@
 - 2026-11-10: Local installed package `dist/` can hide a clean-CI failure; when host declarations import a new workspace package, build via pnpm's dependency-closure filter (`package...`) before compiling the host in every job.
 - 2026-11-10: A sharded E2E archive must carry the transitive workspace package's `dist/`, not just the host and app bundles; otherwise the test runner's fresh checkout resolves the symlink but has no built subpath target.
 - 2026-11-10: A pre-existing contrast ratio of 4.49:1 can fail macOS axe even when unrelated CMS contracts are the only runtime change; record the exact colors, affected test and platform rather than masking the failure or changing out-of-scope UI.
+- 2026-11-10: When publishing separate ESM/CJS subpaths, test both import and require for every entry and guard side-effect imports/re-exports, not only named imports.
