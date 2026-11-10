@@ -27,6 +27,8 @@ D3's opt-in `renderTree({ input, createElement, labels, registry?, components?, 
 
 An empty tree is valid for `readTree` autosave, but `validateTreeForPublish` returns `HEADING_RULE` until exactly one H1 exists. Multiple H1s also fail; the host must not substitute the draft reader for publication.
 
+The semantic `heading` renderer is core-owned: do not pass `components.heading`. A host override returns `RENDER_FAILED` and a safe warning instead of duplicating responsive heading tags.
+
 Build and check the browser gzip budgets with `pnpm --filter @parker2808/cms-core test` (which builds and checks the D1 combined cap).
 The build runs `scripts/measure-cms-core.mjs` and fails above 60 KiB combined
 contracts+engine or 35 KiB combined `./react` + `./react/server`. These are **minified ESM artifact gzip sums**

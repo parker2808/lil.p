@@ -91,7 +91,7 @@ function renderComponent<Node>(
   node: ComponentNode,
   options: TreeRenderOptions<Node>,
 ): Node | Node[] {
-  if (node.componentType === 'heading' && !options.components?.heading) {
+  if (node.componentType === 'heading') {
     return headingContent(node, options);
   }
   return responsiveContent(node, options, (props) => {
@@ -100,8 +100,6 @@ function renderComponent<Node>(
       return custom(node, props);
     }
     switch (node.componentType) {
-      case 'heading':
-        return options.createElement(`h${props.level}`, null, String(props.text));
       case 'paragraph':
         return options.createElement('p', null, String(props.text));
       case 'rich-text':
@@ -207,6 +205,9 @@ export function renderTree<Node>(options: TreeRenderOptions<Node>): TreeRenderRe
     options.labels.unsupported,
   );
   if (!result.ok) return { ...result, content: warning };
+  if (options.components?.heading) {
+    return { ok: false, code: 'RENDER_FAILED', input: options.input, content: warning };
+  }
   const pending: TreeNode[] = [result.value.root];
   while (pending.length) {
     const node = pending.pop()!;

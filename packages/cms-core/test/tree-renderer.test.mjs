@@ -124,6 +124,22 @@ test('responsive headings render one semantic H1 and row tracks preserve spans',
   assert.match(html, /--cms-row-desktop:1fr 2fr/);
 });
 
+test('host cannot replace a responsive heading with duplicate semantic elements', () => {
+  const sample = globalThis.structuredClone(tree);
+  sample.root.sections[0].content[0].columns[0].content[0].responsive.mobile = {
+    text: 'Mobile',
+  };
+  const result = render(sample, {
+    components: {
+      heading: (_node, props) => createElement('h1', null, String(props.text)),
+    },
+  });
+  assert.equal(result.ok, false);
+  assert.equal(result.code, 'RENDER_FAILED');
+  assert.strictEqual(result.input, sample);
+  assert.equal((markup(result).match(/<h1>/g) ?? []).length, 0);
+});
+
 test('responsive component variants and registered host components stay server-only', () => {
   const custom = makeNode('custom', 'component', { text: 'Base' }, { componentType: 'quote' });
   custom.responsive.mobile = { text: 'Điện thoại' };

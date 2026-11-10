@@ -71,6 +71,8 @@ The [CMS B1 golden HTTP suite](./docs/specs/2026-11-10-cms-b1-golden-http.md) fr
 
 [CMS D3 shared SSR renderer](./docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md) adds an opt-in, server-only tree renderer to `@parker2808/cms-core/react/server`; breakpoint-specific row spans and single semantic headings are covered by a required browser matrix. Host rendering failures have a separate typed result from invalid media content. Legacy lil.p routes remain the default until D2 provides authorized tree snapshot dispatch and publish gating; route parity remains unverified.
 
+Core owns semantic headings in D3: a host `components.heading` override fails with a typed result instead of emitting duplicate responsive H1s.
+
 ### Real content seed verification
 
 The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires private source evidence for every factual claim and project cover. Keep source paths, source text, and contact details out of git and logs. The staged migration check is `env -u DATABASE_URL bash apps/api/prisma/seed/migration-gate.sh`; it creates a random, tmpfs-only MySQL container, compares the five built-in page rows across the old and current migrations, checks page constraints and Prisma schema drift, then removes the container. It refuses to run when `DATABASE_URL` is already set.
