@@ -1,0 +1,14 @@
+{
+  "blocks": [
+    {
+      "type": "paragraph",
+      "key": "paragraph-1",
+      "schemaVersion": 0,
+      "props": { "body": { "en": "Older text", "vi": "Văn bản cũ" } },
+      "layout": "ONE",
+      "surface": "PLAIN",
+      "isVisible": true,
+      "sortOrder": 0
+    }
+  ]
+}

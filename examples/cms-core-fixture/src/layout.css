@@ -1,0 +1,416 @@
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  font-family: var(--builder-font, system-ui, sans-serif);
+  background: var(--builder-bg);
+  color: var(--builder-text);
+}
+button,
+select,
+input,
+textarea {
+  font: inherit;
+}
+a {
+  color: inherit;
+}
+button,
+select,
+input,
+textarea {
+  min-height: 44px;
+}
+button,
+select,
+input,
+textarea,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+button:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 3px solid var(--builder-focus);
+  outline-offset: 3px;
+}
+button,
+select,
+input,
+textarea {
+  border: 1px solid var(--builder-border);
+  border-radius: var(--builder-radius);
+  background: var(--builder-surface);
+  color: var(--builder-text);
+}
+button,
+select {
+  cursor: pointer;
+  padding: 0.65rem 0.85rem;
+}
+button:disabled,
+select:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+input,
+textarea {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+}
+textarea {
+  resize: vertical;
+}
+input[aria-invalid='true'] {
+  border-color: var(--builder-danger);
+}
+.fixture-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.fixture-topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 2rem;
+  padding: 1rem max(1.2rem, calc((100vw - 1320px) / 2));
+  border-bottom: 1px solid var(--builder-border);
+  background: var(--builder-surface);
+}
+.fixture-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: 750;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.fixture-mark {
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid var(--builder-border);
+  border-radius: var(--builder-radius);
+  font-size: 1.65rem;
+}
+.fixture-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+.fixture-nav a {
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--builder-radius);
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.fixture-nav a[aria-current='page'] {
+  background: var(--builder-selected);
+  color: var(--builder-selected-text);
+}
+.fixture-preferences {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+.fixture-preferences label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+.fixture-preferences select {
+  max-width: 9rem;
+}
+.fixture-brand-toggle input {
+  width: 1.15rem;
+  min-height: 1.15rem;
+  accent-color: var(--builder-accent);
+}
+.fixture-main {
+  width: min(1320px, 100%);
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 4rem) clamp(1rem, 3vw, 2rem);
+  flex: 1;
+}
+.fixture-intro {
+  max-width: 55rem;
+  margin-bottom: 2.5rem;
+}
+.fixture-intro h1 {
+  margin: 0.7rem 0 0.8rem;
+  font-size: clamp(2.2rem, 5vw, 4.25rem);
+  letter-spacing: -0.05em;
+  line-height: 1.08;
+}
+.fixture-intro > p:not(.fixture-overline) {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--builder-muted);
+}
+.fixture-overline {
+  margin: 0;
+  color: var(--builder-muted);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+}
+.fixture-surface,
+.fixture-panel {
+  border: 1px solid var(--builder-border);
+  background: var(--builder-surface);
+  border-radius: var(--builder-radius);
+  box-shadow: var(--builder-shadow);
+}
+.fixture-surface {
+  padding: clamp(1.4rem, 5vw, 5rem);
+}
+.fixture-page-content {
+  display: grid;
+  gap: 1.6rem;
+}
+.fixture-block {
+  min-width: 0;
+}
+.fixture-heading {
+  max-width: 15ch;
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.055em;
+  margin: 0;
+}
+.fixture-paragraph {
+  max-width: 65ch;
+  font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+  color: var(--builder-muted);
+  line-height: 1.65;
+  margin: 0;
+}
+.fixture-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.4rem;
+  padding: 0.85rem 1.1rem;
+  min-height: 48px;
+  border-radius: var(--builder-radius);
+  background: var(--builder-accent);
+  color: var(--builder-accent-text);
+  text-decoration: none;
+  font-weight: 700;
+}
+.fixture-action span {
+  font-size: 1.3em;
+}
+.fixture-image {
+  display: block;
+  width: min(100%, 720px);
+  aspect-ratio: 3/2;
+  object-fit: cover;
+  border-radius: var(--builder-radius);
+}
+.fixture-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.fixture-panel {
+  min-width: 0;
+  padding: clamp(1rem, 2vw, 1.7rem);
+}
+.fixture-panel h2 {
+  font-size: 1.12rem;
+  margin: 0 0 1rem;
+}
+.fixture-gallery-card {
+  min-height: 180px;
+}
+.fixture-gallery-card .fixture-heading {
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+}
+.fixture-gallery-card .fixture-image {
+  max-height: 330px;
+}
+.fixture-card-head,
+.fixture-panel-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid var(--builder-border);
+  padding-bottom: 1rem;
+  margin-bottom: 1.2rem;
+}
+.fixture-card-head {
+  font-weight: 700;
+}
+.fixture-card-head code {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--builder-muted);
+}
+.fixture-gallery pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+.fixture-warning {
+  padding: 1rem;
+  border: 1px solid var(--builder-danger);
+  border-radius: var(--builder-radius);
+}
+.fixture-warning p {
+  margin-bottom: 0;
+}
+.fixture-hint {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--builder-muted);
+}
+.fixture-editor {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.72fr) minmax(350px, 1.6fr) minmax(250px, 0.9fr);
+  align-items: start;
+  gap: 1rem;
+}
+.fixture-editor .fixture-live {
+  min-height: 520px;
+}
+.fixture-live .fixture-heading {
+  font-size: clamp(2rem, 3vw, 3.8rem);
+}
+.fixture-live .fixture-page-content {
+  gap: 1rem;
+}
+.fixture-outline-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.fixture-outline-item {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.fixture-outline-item[aria-current='true'] {
+  background: var(--builder-selected);
+  color: var(--builder-selected-text);
+  border-color: var(--builder-accent);
+}
+.fixture-outline-item > span:first-child {
+  width: 1.25rem;
+  text-align: center;
+  font-weight: 700;
+}
+.fixture-add,
+.fixture-field,
+.fixture-properties {
+  display: grid;
+  gap: 1rem;
+}
+.fixture-add label,
+.fixture-field label {
+  display: grid;
+  gap: 0.5rem;
+  font-weight: 600;
+}
+.fixture-add label {
+  margin-top: 1.3rem;
+}
+.fixture-toolbar {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.fixture-localized {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.8rem;
+}
+.fixture-localized legend {
+  padding: 0;
+  margin-bottom: 0.8rem;
+  font-weight: 700;
+}
+.fixture-error {
+  color: var(--builder-danger);
+  font-weight: 600;
+}
+.fixture-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem max(1.2rem, calc((100vw - 1320px) / 2));
+  border-top: 1px solid var(--builder-border);
+  color: var(--builder-muted);
+  font-size: 0.8rem;
+}
+@media (max-width: 1050px) {
+  .fixture-editor {
+    grid-template-columns: minmax(190px, 0.7fr) minmax(0, 1.3fr);
+  }
+  .fixture-properties {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 650px) {
+  .fixture-topbar {
+    gap: 0.75rem;
+  }
+  .fixture-logo {
+    width: 100%;
+  }
+  .fixture-nav {
+    order: 3;
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+  .fixture-nav a {
+    white-space: nowrap;
+  }
+  .fixture-preferences {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .fixture-preferences label {
+    font-size: 0.75rem;
+  }
+  .fixture-preferences select {
+    max-width: 7rem;
+  }
+  .fixture-main {
+    padding-top: 2rem;
+  }
+  .fixture-gallery,
+  .fixture-editor {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .fixture-properties {
+    grid-column: auto;
+  }
+  .fixture-footer {
+    flex-direction: column;
+  }
+}

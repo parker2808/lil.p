@@ -1,0 +1,21 @@
+{
+  "seo": {
+    "seoTitleEn": null,
+    "seoTitleVi": null,
+    "seoDescriptionEn": null,
+    "seoDescriptionVi": null
+  },
+  "blocks": [
+    {
+      "type": "paragraph",
+      "key": "paragraph-1",
+      "schemaVersion": 1,
+      "props": { "body": { "en": "Keep me", "vi": "Giữ lại" }, "unrecognized": { "nested": true } },
+      "layout": "ONE",
+      "surface": "PLAIN",
+      "isVisible": true,
+      "sortOrder": 0,
+      "newBlockFlag": true
+    }
+  ]
+}
