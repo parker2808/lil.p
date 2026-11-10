@@ -1,5 +1,7 @@
 # lil.p
 
+The [proposed CMS core ADR](./docs/specs/2026-11-10-cms-core-adr.md) maps the current portfolio blocks and routes to a reusable package boundary. It proposes `@parker2808/cms-core` as an in-repo package first; no extraction, dependency switch, private repository creation, or deployment is part of the ADR. The [current changelog](./PROJECT_CONTEXT.md#9-changelog) records this planning change.
+
 Portfolio monorepo: Next.js public site + admin (`apps/web`), NestJS API (`apps/api`), design system (`packages/ui`), and shared zod contracts (`packages/contracts`).
 
 The Round 3 integration branch contains the verified PR #169 head and all eleven earlier Round 3 branch tips. It is a review PR to `main`; the stacked PRs remain open. See the [integration handoff](./docs/specs/2026-11-03-r3-stack-integration.md) and [Round 3 audit](./docs/specs/2026-11-03-r3-12-real-flow-audit.md) for scope and checks.

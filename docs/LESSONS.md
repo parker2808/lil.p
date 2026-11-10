@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-10: Extract page/block mechanics behind a host-provided registry and persistence/auth ports; leave portfolio block definitions, domain pickers, routes and deployment adapters in the application until a neutral standalone fixture proves reuse.
+
 - 2026-11-03: A stacked integration PR can branch from the verified top PR tip when every lower branch tip is already an ancestor; this preserves the full stack without modifying or merging the original PRs.
 - 2026-11-03: Production Playwright draft previews must use `localhost` in both the web build and browser origin; a `127.0.0.1` origin loses Next's secure draft cookie after navigation.
 - 2026-11-03: Integrated visual changes require new Linux Chromium baselines; inspect expected and actual images before updating snapshots, and use the app's theme control so capture state matches its provider.
