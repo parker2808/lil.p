@@ -55,6 +55,8 @@ Contrast spot checks by sRGB calculation: neutral muted-on-white 4.98:1, neutral
 
 Validation: `pnpm check:all --e2e` passed all **9/9 gates** against disposable tmpfs MySQL after the final accessibility fix (186 web tests passed, 16 skipped). An earlier rerun had two intermittent failures in existing `admin-scroll` and pre-hydration `contact` tests under concurrent local suites; neither test nor its route is changed here. The focused study spec passed 2/2 tests, including the screenshot matrix and axe check. A production build served with `R3_E2E_STATES=0` returned HTTP 404 for `/en/cms-u3-study` without leaking sample content.
 
+CI follow-up: adding the study spec changed duration-based shard balancing and moved the existing `admin-editors-r3` spec into the pixel-baseline shard. That spec creates posts and experience records, so the later `visual.spec.ts` clean-seed assertions found five posts instead of three and two extra experience records. Pinning the mutating spec to its prior nonvisual shard restores isolation without weakening clean-seed assertions or altering visual baselines.
+
 ## Rollback
 
 Remove the gated study route and this spec; no stored content, API or DB state changes. With the flag off, the sample must be unreachable. Legacy U0 pages and goldens remain untouched.

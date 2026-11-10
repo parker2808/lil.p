@@ -70,6 +70,7 @@ export const SPECS = [
 const PINNED: Record<string, number> = {
   'visual.spec.ts': 1,
   'lighthouse.spec.ts': 1,
+  'admin-editors-r3.spec.ts': 4,
 };
 
 /** CI seconds per file, measured on run 41382787431; unknown files count as 4. */
