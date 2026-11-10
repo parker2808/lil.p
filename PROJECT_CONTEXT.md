@@ -48,6 +48,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- CMS D3 server renderer (draft, stacked on D integration base): `./react/server` exposes opt-in `renderTree` with a bounded shared draft reader for public SSR and preview, safe typed warnings on invalid/unknown/legacy trees, neutral responsive styles and host-provided localized labels/media/component adapters. D2 still owns snapshot discrimination, authenticated preview, persistence and publish gating; existing lil.p routes stay legacy. See `docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md`.
+- D3 review follow-up: row spans now resolve per mobile/tablet/desktop and a responsive heading yields one semantic element; `RENDER_FAILED` distinguishes thrown host errors from invalid resolved media. Shard-1 CI and local E2E gate the computed browser matrix; D2/D6 still own real route preview/public parity, with no production tree dispatch in D3.
+- D3 host heading contract: `components.heading` is unsupported and returns typed `RENDER_FAILED` with unchanged input; core owns semantic heading output so responsive host overrides cannot duplicate H1 tags.
+
 - D integration base (draft, B7 `2307b54` + D1 `2b50dbc`): carries the reviewed neutral fixture/theme and typed tree with its empty-publish H1 gate; no API, database, runtime route or golden contract change. `./theme.css` and `./tree` exports both remain. See `docs/specs/2026-11-11-cms-d-integration-base.md`.
 
 - D1 publish follow-up: `readTree` continues to accept empty drafts; `validateTreeForPublish` now rejects an empty tree with typed `HEADING_RULE` and requires exactly one H1. D2 must keep the structural draft and publish checks separate; no DB/API/golden change.
@@ -161,6 +165,12 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Reject D3 host overrides of the semantic heading renderer before traversal, retaining a typed failure and one-heading SSR contract; no HTTP, DB or legacy route changes.
+
+- 2026-11-11: Corrected D3 responsive row span styling and heading semantics; distinguished host exceptions from invalid media content, and made the 390/768/1440 EN/VI light/dark computed renderer matrix mandatory for E2E. Existing HTTP, DB, goldens and legacy routes remain unchanged.
+
+- 2026-11-11: Added opt-in pure SSR tree rendering to the server-only core entry with typed error-preserving fallback and responsive theme styling; legacy routes, database, B1 goldens and client bundle remain unchanged until D2 supplies an explicit snapshot dispatch and publish gate. Browser matrix: EN/VI, light/dark, 1440/390 plus tablet 768; no live host parity claim.
 
 - 2026-11-11: Stacked D1's validated tree on B7's neutral standalone fixture, retaining `./tree` and `./theme.css` without altering runtime routes, persistence, API, goldens or visual output. Regenerated Graphify after resolving the overlapping docs.
 - 2026-11-11: B7 design review integrates accepted B6b #193, enlarges fixture logo/brand controls and two editor buttons to ≥44px, gates every fixture route and focused gallery with 80 axe states and mobile target checks, and recaptures provenance-tagged screenshots. No app, DB or API changes.
