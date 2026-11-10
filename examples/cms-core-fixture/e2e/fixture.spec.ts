@@ -2,6 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 const shots = join(import.meta.dirname, '__screenshots__');
@@ -21,7 +22,7 @@ for (const locale of ['en', 'vi'] as const) {
       'aria-current',
       'true',
     );
-    await expect(page.locator('.fixture-properties input[lang="vi"]')).toBeVisible();
+    await expect(page.locator('.fixture-properties textarea[lang="vi"]')).toBeVisible();
     await page.goto(`/${locale}/unknown`);
     await expect(page.locator('[data-unknown="not-installed"]')).toBeVisible();
     await expect(page.getByTestId('source-snapshot')).toContainText('future');
@@ -72,7 +73,14 @@ test('captures the complete route, locale, theme, brand and viewport matrix', as
               `/${locale}/${route === 'home' ? '' : route}?mode=${theme}&brand=${brand}`,
             );
             await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
-            await expect(page.locator('html')).toHaveAttribute('data-brand', brand);
+            await expect(page.locator('.cms-core')).toHaveAttribute('data-brand', brand);
+            if (route === 'editor')
+              await expect(page.locator('.fixture-outline-item').first()).toBeVisible();
+            if (route === 'components')
+              await expect(page.locator('.fixture-gallery-card').first()).toBeVisible();
+            if (route === 'unknown')
+              await expect(page.getByTestId('source-snapshot')).toBeVisible();
+            if (route === 'home') await expect(page.locator('.fixture-page-content')).toBeVisible();
             expect(
               await page.evaluate(() => document.documentElement.scrollWidth),
             ).toBeLessThanOrEqual(width);
@@ -83,8 +91,27 @@ test('captures the complete route, locale, theme, brand and viewport matrix', as
               animations: 'disabled',
             });
             manifest.push({ file, locale, theme, brand, width, route, head });
+            if (route === 'components') {
+              await page
+                .getByRole('button', { name: locale === 'en' ? 'Retry' : 'Thử lại' })
+                .focus();
+              const focusFile = `${locale}-${brand}-${theme}-${width}-components-focus.png`;
+              await page.screenshot({
+                path: join(shots, focusFile),
+                fullPage: true,
+                animations: 'disabled',
+              });
+              manifest.push({
+                file: focusFile,
+                locale,
+                theme,
+                brand,
+                width,
+                route: 'components-focus',
+                head,
+              });
+            }
           }
   writeFileSync(join(shots, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
-  expect(manifest).toHaveLength(64);
+  expect(manifest).toHaveLength(80);
 });
-import AxeBuilder from '@axe-core/playwright';

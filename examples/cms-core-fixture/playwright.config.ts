@@ -10,7 +10,7 @@ export default defineConfig({
   reporter: 'list',
   use: { baseURL: `http://127.0.0.1:${port}`, ...devices['Desktop Chrome'] },
   webServer: {
-    command: `pnpm preview -- --port ${port}`,
+    command: `pnpm exec vite preview --host 127.0.0.1 --port ${port}`,
     url: `http://127.0.0.1:${port}/en/`,
     reuseExistingServer: false,
     timeout: 60_000,

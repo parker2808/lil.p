@@ -63,6 +63,8 @@ The [CMS B1 golden HTTP suite](./docs/specs/2026-11-10-cms-b1-golden-http.md) fr
 
 [CMS B6b neutral theme](./docs/specs/2026-11-11-cms-b6b-core-theme.md) adds opt-in `@parker2808/cms-core/theme.css`: scoped light/dark tokens and reusable surface/control states, with token-only host overrides. It is not imported by lil.p yet, so existing public/admin visuals, APIs and B1 goldens do not change. Its CSS gzip is reported separately from the existing JS budgets.
 
+[CMS B7 standalone fixture](./examples/cms-core-fixture/README.md) consumes built public core exports, including the core-owned neutral stylesheet, in a separate React/Vite example. Its EN/VI page, components, in-memory editor and unknown-data routes prove host registration, localized fields, safe snapshot handling and server/client entry separation without Next/Nest, API or persistence. A separate token-only orange/green comparison and 80 responsive light/dark captures are documented in the [B7 spec](./docs/specs/2026-11-11-cms-core-b7-fixture.md); this Phase B example is not a builder.
+
 ### Real content seed verification
 
 The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires private source evidence for every factual claim and project cover. Keep source paths, source text, and contact details out of git and logs. The staged migration check is `env -u DATABASE_URL bash apps/api/prisma/seed/migration-gate.sh`; it creates a random, tmpfs-only MySQL container, compares the five built-in page rows across the old and current migrations, checks page constraints and Prisma schema drift, then removes the container. It refuses to run when `DATABASE_URL` is already set.

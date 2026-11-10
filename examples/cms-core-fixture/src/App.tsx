@@ -34,12 +34,11 @@ export function App({ pathname = window.location.pathname }: { pathname?: string
   useEffect(() => {
     document.documentElement.lang = locale;
     document.documentElement.dataset.theme = mode;
-    document.documentElement.dataset.brand = brand ? 'lilp' : 'neutral';
     document.title = `${route === 'not-found' ? words.notFound : route === 'home' ? words.home : words[route]} · ${words.name}`;
   }, [brand, locale, mode, route, words]);
 
   return (
-    <div className="fixture-shell">
+    <div className="cms-core fixture-shell" data-brand={brand ? 'lilp' : 'neutral'}>
       <header className="fixture-topbar">
         <a
           className="fixture-logo"

@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-11: A lazy editor can leave a valid-looking screenshot of its loading fallback; wait for an editor-specific visible element before capturing the visual matrix. Vite's `pnpm preview -- --port` forwards the extra `--` to Vite and silently serves its default port; invoke `pnpm exec vite preview --port` instead.
+
 - 2026-11-10: A bundle budget that excludes peers must validate the package's peer declarations; externalizing imports in tsup alone does not guarantee a valid consumer contract.
 
 - 2026-11-03: A stacked integration PR can branch from the verified top PR tip when every lower branch tip is already an ancestor; this preserves the full stack without modifying or merging the original PRs.

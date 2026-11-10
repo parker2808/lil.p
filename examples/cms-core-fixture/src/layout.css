@@ -6,9 +6,6 @@ html {
 }
 body {
   margin: 0;
-  font-family: var(--builder-font, system-ui, sans-serif);
-  background: var(--builder-bg);
-  color: var(--builder-text);
 }
 button,
 select,
@@ -57,7 +54,8 @@ select {
 button:disabled,
 select:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  background: var(--builder-raised);
+  color: var(--builder-muted);
 }
 input,
 textarea {
@@ -68,7 +66,7 @@ textarea {
   resize: vertical;
 }
 input[aria-invalid='true'] {
-  border-color: var(--builder-danger);
+  border-color: var(--builder-warning);
 }
 .fixture-shell {
   min-height: 100vh;
@@ -116,8 +114,8 @@ input[aria-invalid='true'] {
   align-items: center;
 }
 .fixture-nav a[aria-current='page'] {
-  background: var(--builder-selected);
-  color: var(--builder-selected-text);
+  background: var(--builder-accent-soft);
+  color: var(--builder-accent);
 }
 .fixture-preferences {
   margin-left: auto;
@@ -271,7 +269,7 @@ input[aria-invalid='true'] {
 }
 .fixture-warning {
   padding: 1rem;
-  border: 1px solid var(--builder-danger);
+  border: 1px solid var(--builder-warning);
   border-radius: var(--builder-radius);
 }
 .fixture-warning p {
@@ -311,8 +309,8 @@ input[aria-invalid='true'] {
   gap: 0.7rem;
 }
 .fixture-outline-item[aria-current='true'] {
-  background: var(--builder-selected);
-  color: var(--builder-selected-text);
+  background: var(--builder-accent-soft);
+  color: var(--builder-accent);
   border-color: var(--builder-accent);
 }
 .fixture-outline-item > span:first-child {
@@ -353,7 +351,7 @@ input[aria-invalid='true'] {
   font-weight: 700;
 }
 .fixture-error {
-  color: var(--builder-danger);
+  color: var(--builder-warning);
   font-weight: 600;
 }
 .fixture-footer {
@@ -383,11 +381,12 @@ input[aria-invalid='true'] {
   .fixture-nav {
     order: 3;
     width: 100%;
-    overflow-x: auto;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .fixture-nav a {
-    white-space: nowrap;
+    justify-content: center;
+    text-align: center;
   }
   .fixture-preferences {
     margin-left: 0;
