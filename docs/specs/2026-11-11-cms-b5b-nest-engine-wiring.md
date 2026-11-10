@@ -19,7 +19,7 @@ Status: stacked on accepted B5 draft PR #190 at `acfb18c` (replacement CI run `4
 
 ## Gate and rollback
 
-Add focused adapter tests for exact exception mapping and restore refusal with unchanged rows/audit, plus published public unknown-block compatibility and one publish transaction. Test built CJS from the compiled API and final pruned Docker image; do not edit core, web, Dockerfile, Render, lockfile or B1 goldens. Run `pnpm check:all --e2e` and real API Docker build only under the shared lock on disposable local MySQL; release the lock and owned container on exit. Report bundle sizes unchanged from B5 where measured (2,272/61,440 B contracts+engine and 34/35,840 B React). Roll back only B5b adapter changes and the separately identified #189 prerequisite if necessary; no migration, published-snapshot rewrite or deployment. Keep stacked PR draft for coordinator review.
+Add focused adapter tests for exact exception mapping and restore refusal with unchanged rows/audit, plus published public unknown-block compatibility and one publish transaction. Test built CJS from the compiled API and final pruned Docker image; do not edit core, web, Dockerfile, Render, lockfile or B1 goldens. Run `pnpm check:all --e2e` and real API Docker build only under the shared lock on disposable local MySQL; release the lock and owned container on exit. The current build measures 2,278/61,440 B contracts+engine and 34/35,840 B React gzip (6 B above the B5 report's earlier 2,272 B, still under cap). Roll back only B5b adapter changes and the separately identified #189 prerequisite if necessary; no migration, published-snapshot rewrite or deployment. Keep stacked PR draft for coordinator review.
 
 ## Local verification evidence
 
