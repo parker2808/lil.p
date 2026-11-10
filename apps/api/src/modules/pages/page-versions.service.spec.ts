@@ -68,6 +68,84 @@ describe('PageVersionsService', () => {
     service = new PageVersionsService(prisma as never);
   });
 
+  it.each([
+    ['malformed', { seo: {}, blocks: [null] }],
+    [
+      'unknown type',
+      {
+        seo: {
+          seoTitleEn: 'Home',
+          seoTitleVi: null,
+          seoDescriptionEn: null,
+          seoDescriptionVi: null,
+        },
+        blocks: [{ ...hero, type: 'unknown' }],
+      },
+    ],
+    [
+      'future version',
+      {
+        seo: {
+          seoTitleEn: 'Home',
+          seoTitleVi: null,
+          seoDescriptionEn: null,
+          seoDescriptionVi: null,
+        },
+        blocks: [{ ...hero, schemaVersion: 99 }],
+      },
+    ],
+  ])('refuses %s restore before deleting blocks or writing audit', async (_reason, snapshot) => {
+    prisma.page.findUnique.mockResolvedValue(pageRow());
+    prisma.pageVersion.findUnique.mockResolvedValue({ snapshot });
+    const audit = { record: vi.fn() };
+    const versions = new PageVersionsService(prisma as never, undefined, undefined, audit as never);
+
+    await expect(versions.restore('home', 1)).rejects.toMatchObject({
+      response: {
+        code: 'INVALID_BLOCKS',
+        message: 'This version snapshot could not be read',
+        fieldErrors: { snapshot: ['Invalid snapshot'] },
+      },
+    });
+    expect(prisma.$transaction).toHaveBeenCalledTimes(1);
+    expect(prisma.pageBlock.deleteMany).not.toHaveBeenCalled();
+    expect(prisma.pageBlock.createMany).not.toHaveBeenCalled();
+    expect(prisma.page.update).not.toHaveBeenCalled();
+    expect(audit.record).not.toHaveBeenCalled();
+  });
+
+  it('restores known legacy v0 blocks without rewriting their props or version', async () => {
+    prisma.page.findUnique.mockResolvedValue(pageRow());
+    prisma.pageVersion.findUnique.mockResolvedValue({
+      snapshot: {
+        seo: {
+          seoTitleEn: 'Home',
+          seoTitleVi: null,
+          seoDescriptionEn: null,
+          seoDescriptionVi: null,
+        },
+        blocks: [
+          {
+            ...hero,
+            schemaVersion: 0,
+            props: { cta: { label: { en: 'View' }, href: '/projects' } },
+          },
+        ],
+      },
+    });
+    prisma.page.update.mockResolvedValue({});
+    await service.restore('home', 1);
+    expect(prisma.$transaction).toHaveBeenCalledTimes(1);
+    expect(prisma.pageBlock.createMany).toHaveBeenCalledWith({
+      data: [
+        expect.objectContaining({
+          schemaVersion: 0,
+          props: { cta: { label: { en: 'View' }, href: '/projects' } },
+        }),
+      ],
+    });
+  });
+
   it('rejects publish when a visible block is invalid', async () => {
     prisma.page.findUnique.mockResolvedValue(
       pageRow({

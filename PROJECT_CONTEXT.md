@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- CMS B5b Nest wiring (stacked on accepted B5 `acfb18c`, with accepted #189 `2de602e` merged at `066e12b`): page adapters now consume `@parker2808/cms-core/engine` through the declared API runtime dependency. Core findings retain existing Nest errors; strict restore refuses malformed, unknown and future-version blocks **before deletion**; public historical unknown blocks still skip with the existing log. One host-owned Prisma transaction per publish and post-commit effects remain unchanged. The compiled API requires the built CJS export; the real Docker image built and its final-layer smoke loads both host adapters. The first disposable-MySQL gate passed eight stages including API E2E but web contact failed at `apps/web/e2e/contact.spec.ts:33` (separate #183); one full locked retry passed all nine stages. No new schema, EN/VI route or B1 golden changes; B6 owns React, D follows B7. See `docs/specs/2026-11-11-cms-b5b-nest-engine-wiring.md`.
+
 - CMS B5 pure engine (stacked on accepted B4 `8c448ea`): `./engine` exports injected policy findings, deterministic key/order utilities, strict unknown-safe snapshots, chained legacy migrations and typed host ports. Built CJS import passes without host definitions. **Out of scope / blocked:** directly wiring Nest requires `apps/api/package.json` and lockfile changes outside B5 ownership; the API Docker prerequisite is owned separately. Do not interpret a green B5 package gate as a production adapter integration. No schema/HTTP/EN–VI or B1 golden changes. See `docs/specs/2026-11-11-cms-b5-pure-engine.md`.
 
 - API image CMS-core prerequisite (stacked on B4): `apps/api/Dockerfile` copies the core workspace manifest before frozen install and builds core before contracts/API; the API declares core directly for B5, the pruned final image loads both CJS subpaths, and Render includes `packages/cms-core/**`. Locked local Docker build passes with the CJS smoke check; PR CI remains pending. No migration, deployment or production DB operation; see `docs/specs/2026-11-11-api-docker-cms-core.md`.
@@ -153,6 +155,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Wired B5b's Nest pages rules, stable ordering and snapshot creation to the pure core engine after merging accepted #189 packaging. Kept all valid HTTP responses and published public unknown-block compatibility; restored snapshots now fail safely on malformed/unknown/future-version input without deleting draft rows. Extended the final-image CJS smoke to load the compiled page adapters; no migration or golden edits.
 
 - 2026-11-11: Added B5's pure page engine and typed host ports with strict unknown type/version refusal, stable ordering and CJS smoke. Kept Nest runtime, transactions, API responses and persisted snapshots unchanged pending separately approved API dependency wiring; no migrations or new dependencies.
 
