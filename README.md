@@ -70,6 +70,8 @@ The PR #169 CI repair passes all nine local `check:all --e2e` gates on disposabl
 
 The [route/control baseline](./docs/audits/2026-11-10-cms-u0-route-control-baseline.md) maps public and admin routes, redirects, control owners, and remaining accessibility gaps. On a clean `d0d474b` worktree, the guarded `pnpm check:all --e2e` run passed all nine gates with a disposable MySQL container. The reproducible screenshot test is `apps/web/e2e/u0-capture.spec.ts`: set `U0_CAPTURE_DIR` to a local directory **outside the repo** and `R3_E2E_STATES=1`, then run `env -u DATABASE_URL -u DATABASE_URL_TEST bash scripts/r3-12-e2e-gate.sh u0-capture.spec.ts admin-ia.spec.ts`. It records a JSON manifest and EN/VI, light/dark, 1440/390 screenshots; keep platform-specific pixels out of git (only Linux Chromium pixel baselines belong in the tracked visual snapshots). The manifest and location are documented in the audit. Never point this gate at a persistent database.
 
+For tracked visual snapshots, use a fresh disposable demo seed: the visual spec checks canonical About/Notes records before capture, so screenshots taken after other E2E specs create posts or education must not become baselines. The U1 spec records why its four accidental About/Notes snapshots were restored to U0 and how to verify them with Linux Chromium.
+
 ## Environments
 
 There are three ways to run this repo. Each has its own setup — do not mix the steps.

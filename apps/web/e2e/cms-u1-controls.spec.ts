@@ -117,6 +117,7 @@ test('radio Tab entry and programmatic focus leave empty and selected groups unc
   page,
 }) => {
   await page.goto('/en/r3-loading-test/radio');
+  await expect(page.locator('main[data-hydrated="true"]')).toBeVisible();
   const empty = page.getByRole('radiogroup', { name: 'Empty choice' });
   await page.getByRole('button', { name: 'Before empty' }).focus();
   await page.keyboard.press('Tab');

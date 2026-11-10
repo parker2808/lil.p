@@ -1,7 +1,7 @@
 'use client';
 
 import { RadioGroup, RadioGroupItem } from '@portfolio/ui/components/ui/radio-group';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const names = {
   beforeEmpty: 'Before empty',
@@ -13,9 +13,14 @@ const names = {
 export function RadioKeyboardFixture() {
   const [empty, setEmpty] = useState('');
   const [selected, setSelected] = useState('two');
+  const mainRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    mainRef.current?.setAttribute('data-hydrated', 'true');
+  }, []);
 
   return (
-    <main>
+    <main ref={mainRef} data-hydrated="false">
       <button type="button">{names.beforeEmpty}</button>
       <RadioGroup aria-label="Empty choice" value={empty} onValueChange={setEmpty}>
         <RadioGroupItem value="one">{names.one}</RadioGroupItem>
