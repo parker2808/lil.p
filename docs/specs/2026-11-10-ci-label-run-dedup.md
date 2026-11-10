@@ -22,3 +22,5 @@
 ## Limitations
 
 Opening a PR and adding `ready-e2e` afterward necessarily creates two workflow runs on the same head: the initial code checks and the E2E-only label run. This is intentional rather than two competing full runs. Label-triggered E2E can overlap a later code push; the later push runs E2E again if the label remains, and only its checks describe the new head.
+
+On #188 (head `5359e93`), the ordinary CI run 42859052326 passed all 12 checks. Adding the unrelated `documentation` label while that run was active produced run 42859177304 (skipped) without cancelling the ordinary run. The `ready-e2e` label path remains **unproven**: this PR did not carry that label or run E2E/DB. Verify the label-only E2E run, check names, and non-cancellation when the next authorized PR receives `ready-e2e`; do not claim that path is green based on the unrelated-label proof.
