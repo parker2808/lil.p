@@ -1,7 +1,7 @@
 # Graph Report - feat-cms-b5b-nest-wiring  (2026-11-11)
 
 ## Corpus Check
-- 1486 files · ~512,670 words
+- 1486 files · ~513,209 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 32 file(s) not represented in the graph (top: (none) 17, .css 11, .example 1)
 
@@ -11,8 +11,8 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `dcc1ca9c`
-- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Built from source commit: `be850203` (the subsequent Graphify report-only commit does not change source code).
+- Compare the latest source-code commit with this head to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
