@@ -18,6 +18,9 @@ test('built subpaths resolve independently and only contracts exports runtime va
       assert.equal(typeof required.createRegistry, 'function');
       assert.deepEqual(Object.keys(entry.createRegistry([])), []);
       assert.deepEqual(Object.keys(required.createRegistry([])), []);
+    } else if (subpath === 'react') {
+      assert.equal(typeof entry.schemaToFields, 'function');
+      assert.equal(typeof required.schemaToFields, 'function');
     } else {
       assert.deepEqual(Object.keys(entry), []);
       assert.deepEqual(Object.keys(required), []);

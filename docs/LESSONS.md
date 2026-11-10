@@ -136,3 +136,5 @@
 - 2026-11-10: A sharded E2E archive must carry the transitive workspace package's `dist/`, not just the host and app bundles; otherwise the test runner's fresh checkout resolves the symlink but has no built subpath target.
 - 2026-11-10: A pre-existing contrast ratio of 4.49:1 can fail macOS axe even when unrelated CMS contracts are the only runtime change; record the exact colors, affected test and platform rather than masking the failure or changing out-of-scope UI.
 - 2026-11-10: When publishing separate ESM/CJS subpaths, test both import and require for every entry and guard side-effect imports/re-exports, not only named imports.
+- 2026-11-11: A server-rendered React surface cannot consume a client-marked package entry without changing its public boundary; publish and measure a separate server-safe entry, and verify both built formats keep client directives only on client output.
+- 2026-11-11: A pnpm workspace host must declare its core dependency directly even when a sibling package already depends on it; verify Docker copies the package manifest before frozen install and builds its dependency closure before the host.

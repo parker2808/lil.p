@@ -1,6 +1,10 @@
 'use client';
 
 import { Field, FieldError, FieldLabel } from '@portfolio/ui/components/ui/field';
+import {
+  SchemaFieldControl as CoreSchemaFieldControl,
+  SchemaForm as CoreSchemaForm,
+} from '@parker2808/cms-core/react';
 import { useForm } from '@tanstack/react-form';
 import { useTranslations } from 'next-intl';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -13,16 +17,6 @@ import { ArrayWidget } from './widgets/ArrayWidget';
 import { LocalizedWidget } from './widgets/LocalizedWidget';
 import { ScalarWidget } from './widgets/ScalarWidget';
 import type { PreviewLabels, WidgetLabels } from './widgets/widget.types';
-
-function firstIssueMessage(issue: unknown): string {
-  if (typeof issue === 'string') {
-    return issue;
-  }
-  if (issue && typeof issue === 'object' && 'message' in issue) {
-    return String((issue as { message: unknown }).message);
-  }
-  return '';
-}
 
 export function SchemaForm({
   schema,
@@ -105,24 +99,28 @@ export function SchemaForm({
 
   return (
     <div className="flex flex-col gap-4">
-      {fields.map((field) => (
-        <form.Field key={field.path} name={field.path as never}>
-          {(api) => (
-            <SchemaFieldControl
-              field={field}
-              value={api.state.value}
-              issue={api.state.meta.errors[0]}
-              readOnly={Boolean(readOnly)}
-              fieldErrors={{ ...zodErrors, ...fieldErrors }}
-              label={t.has(field.label) ? t(field.label) : field.label}
-              editorLabels={editorLabels}
-              previewLabels={previewLabels}
-              widgetLabels={widgetLabels}
-              onChange={(next) => api.handleChange(next as never)}
-            />
-          )}
-        </form.Field>
-      ))}
+      <CoreSchemaForm
+        fields={fields}
+        renderField={(field) => (
+          <form.Field key={field.path} name={field.path as never}>
+            {(api) => (
+              <SchemaFieldControl
+                field={field}
+                value={api.state.value}
+                issue={api.state.meta.errors[0]}
+                readOnly={Boolean(readOnly)}
+                fieldErrors={{ ...zodErrors, ...fieldErrors }}
+                label={t.has(field.label) ? t(field.label) : field.label}
+                editorLabels={editorLabels}
+                previewLabels={previewLabels}
+                widgetLabels={widgetLabels}
+                localeLabels={{ en: fieldT('en'), vi: fieldT('vi') }}
+                onChange={(next) => api.handleChange(next as never)}
+              />
+            )}
+          </form.Field>
+        )}
+      />
     </div>
   );
 }
@@ -137,6 +135,7 @@ function SchemaFieldControl({
   editorLabels,
   previewLabels,
   widgetLabels,
+  localeLabels,
   onChange,
 }: {
   field: SchemaField;
@@ -148,56 +147,50 @@ function SchemaFieldControl({
   editorLabels: ReturnType<typeof editorLabelsFromMessages>;
   previewLabels: PreviewLabels;
   widgetLabels: WidgetLabels;
+  localeLabels: { en: string; vi: string };
   onChange: (value: unknown) => void;
 }) {
-  const serverError =
-    fieldErrors[field.path] ??
-    fieldErrors[`props.${field.path}`] ??
-    fieldErrors[`${field.path}.en`] ??
-    fieldErrors[`props.${field.path}.en`];
-  const message = serverError ?? firstIssueMessage(issue);
-
-  if (
-    field.kind === 'localized-text' ||
-    field.kind === 'localized-textarea' ||
-    field.kind === 'markdown'
-  ) {
-    const localized = (value ?? { en: '', vi: '' }) as { en?: string; vi?: string };
-    return (
-      <LocalizedWidget
-        field={field}
-        value={localized}
-        readOnly={readOnly}
-        label={label}
-        message={message}
-        editorLabels={editorLabels}
-        previewLabels={previewLabels}
-        onChange={(locale, next) => onChange({ ...localized, [locale]: next })}
-      />
-    );
-  }
-
   return (
-    <Field>
-      <FieldLabel htmlFor={field.path}>{label}</FieldLabel>
-      {field.kind === 'array' || field.kind === 'projects' || field.kind === 'stats' ? (
-        <ArrayWidget
-          field={field}
-          value={value}
-          readOnly={readOnly}
-          onChange={onChange}
-          labels={widgetLabels}
-        />
-      ) : (
-        <ScalarWidget
-          field={field}
-          value={value}
-          readOnly={readOnly}
-          onChange={onChange}
-          labels={widgetLabels}
-        />
-      )}
-      <FieldError>{message}</FieldError>
-    </Field>
+    <CoreSchemaFieldControl
+      field={field}
+      value={value}
+      issue={issue}
+      fieldErrors={fieldErrors}
+      label={label}
+      readOnly={readOnly}
+      onChange={onChange}
+      widgets={{
+        localized: (control) => {
+          const localized = (control.value ?? { en: '', vi: '' }) as { en?: string; vi?: string };
+          return (
+            <LocalizedWidget
+              field={control.field}
+              value={localized}
+              readOnly={control.readOnly}
+              label={control.label}
+              message={control.message}
+              localeLabels={localeLabels}
+              editorLabels={editorLabels}
+              previewLabels={previewLabels}
+              onChange={(locale, next) => control.onChange({ ...localized, [locale]: next })}
+            />
+          );
+        },
+        array: (control) => (
+          <Field>
+            <FieldLabel htmlFor={control.field.path}>{control.label}</FieldLabel>
+            <ArrayWidget {...control} labels={widgetLabels} />
+            <FieldError>{control.message}</FieldError>
+          </Field>
+        ),
+        scalar: (control) => (
+          <Field>
+            <FieldLabel htmlFor={control.field.path}>{control.label}</FieldLabel>
+            <ScalarWidget {...control} labels={widgetLabels} />
+            <FieldError>{control.message}</FieldError>
+          </Field>
+        ),
+      }}
+    />
   );
 }

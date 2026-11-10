@@ -1,6 +1,7 @@
 import type { BlockType, IconKey } from '@portfolio/contracts';
+import { createEditorMetadata, type EditorMetadata } from '@parker2808/cms-core/react';
 
-export const BLOCK_EDITOR_META = {
+export const BLOCK_EDITOR_META = createEditorMetadata({
   hero: {
     icon: 'sparkles',
     labelKey: 'admin.pages.types.hero',
@@ -101,4 +102,4 @@ export const BLOCK_EDITOR_META = {
     labelKey: 'admin.pages.types.contactForm',
     descriptionKey: 'admin.pages.types.contactFormHint',
   },
-} as const satisfies Record<BlockType, { icon: IconKey; labelKey: string; descriptionKey: string }>;
+} as const satisfies Record<BlockType, EditorMetadata & { icon: IconKey }>);
