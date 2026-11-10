@@ -140,3 +140,4 @@
 - 2026-11-11: A pnpm workspace host must declare its core dependency directly even when a sibling package already depends on it; verify Docker copies the package manifest before frozen install and builds its dependency closure before the host.
 - 2026-11-11: Generic schema field extraction should require a host-localized label resolver and accept host widget registrations; inferring labels from a fixed English schema property can leak copy into Vietnamese UI.
 - 2026-11-11: Ship a neutral core theme as a separately measured, side-effectful CSS subpath with scoped semantic tokens; test the actual light/dark token pairs and host overrides without inflating JS bundle caps or altering host pages.
+- 2026-11-11: A browser contrast test hidden behind an opt-in environment flag does not protect the visual gate; require Chromium in local/CI E2E and assert each rendered text, feedback border and indicator against its adjacent surface in both palettes.
