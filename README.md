@@ -1,6 +1,7 @@
 # lil.p
 
 The [CMS core ADR](./docs/specs/2026-11-10-cms-core-adr.md) maps current portfolio blocks and routes to a reusable package boundary. It orders route-complete shadcn/ui standardization (U), in-repo `@parker2808/cms-core` extraction (B), an accessible visual page builder (D), product verification, then private distribution (C). The core includes a polished default light/dark theme; lil.p supplies orange/green token overrides. Coordinator design review requires screenshots and findings/fixes for core components and assembled pages, not just working drag/drop. No implementation, dependency switch, private repository creation, migration, or deployment is part of this ADR PR. The [current changelog](./PROJECT_CONTEXT.md#9-changelog) records the planning change.
+The planned reusable CMS package is `@parker2808/cms-core`. Parker approved naming or linking its private repository and declaring it as a dependency here; the package has not yet been extracted or connected. See the [CMS core repository exception](./docs/specs/2026-11-10-agents-private-cms-core-exception.md) and the [current changelog](./PROJECT_CONTEXT.md#9-changelog). Private source content and credentials must stay out of this public repo.
 
 Portfolio monorepo: Next.js public site + admin (`apps/web`), NestJS API (`apps/api`), design system (`packages/ui`), and shared zod contracts (`packages/contracts`).
 
@@ -202,6 +203,8 @@ Live hosting is **Vercel (web) + Render (API) + TiDB Cloud (MySQL) + Cloudinary 
 3. On boot, the API image runs `prisma migrate deploy` — it applies committed migrations only, never creates new ones, never resets data.
 
 Nothing else is run by hand on a normal deploy.
+
+The `context-check` workflow runs on **all** pull requests, including stacked PRs targeting a feature branch. If a PR changes anything outside `docs/`, update `PROJECT_CONTEXT.md` §7 and §9 relative to that PR's base; a `docs/`-only change is exempt. The `skip-context` label requires Parker's approval. The [stacked context-guard spec](./docs/specs/2026-11-10-context-check-stacked.md) documents the trigger and evidence.
 
 ### Which branches Vercel deploys
 
