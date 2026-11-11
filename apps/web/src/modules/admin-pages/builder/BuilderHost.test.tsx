@@ -2,7 +2,7 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-li
 import { afterEach, expect, it, vi } from 'vitest';
 
 import { BuilderHost } from './BuilderHost';
-import { readBuilderDraft, saveBuilderDraft } from './autosave/transport';
+import { readActiveBuilderDraft, readBuilderDraft, saveBuilderDraft } from './autosave/transport';
 
 vi.mock('next-intl', () => ({ useLocale: () => 'en' }));
 vi.mock('@/modules/admin-core/hooks/use-me.hook', () => ({ useMe: () => ({ id: 10 }) }));
@@ -56,6 +56,28 @@ it('saves a validated edit against the acknowledged revision and keeps a conflic
     { timeout: 2500 },
   );
   await screen.findByText('Conflict · your edits are kept locally');
+  expect(document.querySelectorAll('[data-node-type="section"]')).toHaveLength(1);
+  expect(localStorage.getItem('cms-builder-recovery:10:ideas')).toContain('sections');
+});
+
+it('keeps local edits when a concurrent restore removes the server tree', async () => {
+  vi.mocked(readBuilderDraft).mockResolvedValue({ mode: 'tree', revision: '8', tree: empty });
+  vi.mocked(saveBuilderDraft).mockRejectedValue({ status: 409 });
+  vi.mocked(readActiveBuilderDraft).mockResolvedValue({ revision: '9', tree: null });
+  render(<BuilderHost pageKey="ideas" />);
+  await screen.findByText('Draft saved');
+  fireEvent.click(
+    within(screen.getByRole('complementary', { name: 'Components' })).getByRole('button', {
+      name: 'Section',
+    }),
+  );
+  await screen.findByText('Conflict · your edits are kept locally');
+  fireEvent.click(screen.getByRole('button', { name: 'Retry' }));
+  await screen.findAllByText('Server draft was restored · your edits are kept locally');
+  const review = screen.getByRole('region', { name: 'Review changes' });
+  expect(
+    within(review).getByRole('button', { name: 'Discard local edits and reload server draft' }),
+  ).toBeDisabled();
   expect(document.querySelectorAll('[data-node-type="section"]')).toHaveLength(1);
   expect(localStorage.getItem('cms-builder-recovery:10:ideas')).toContain('sections');
 });

@@ -18,9 +18,21 @@ controlled canvas dispatch and focus integration; D2 owns HTTP, authentication,
 storage and final DTOs. No UI or server route is wired here. `readTree` is the
 draft gate; `validateTreeForPublish` remains a distinct server-side gate.
 The adapter supplies the component registry, ID allocator, scheduler and D2
-transport. No new dependency, database migration, legacy response or golden
+transport. No new dependency, database migration, legacy HTTP response or golden
 change. Proposed D2 CAS uses decimal-string `expectedRevision`; adapt the
 transport after D2 freezes the DTO, never guess a numerical revision.
+
+Review corrections: the D5 operation/history/autosave APIs require an explicit
+component registry from the host rather than silently defaulting it to the
+starter set. Core tests supply only the neutral starter definition; the D6
+integration gate must construct the host registry from **all 20** lil.p block
+definitions and exercise an edit/round-trip for each type. Core must not import
+the host package to simulate that gate. D2's valid `tree: null` legacy-mode
+response is a distinct review state after a concurrent restore: keep the local
+tree and its last acknowledged revision, block writes and require the host to
+offer export/recovery or leave the editor. A remote reload may discard dirty
+local state only with an explicit `discardLocalEdits: true` choice; a null
+legacy tree can never be reloaded into this tree-only controller.
 
 ## State contracts
 
@@ -41,6 +53,8 @@ transport after D2 freezes the DTO, never guess a numerical revision.
   409 blocks auto-save and publish until explicit review; failures with an
   ambiguous outcome (offline/timeout/5xx) require a fresh GET before retry.
   GET is review-only: no automatic merge, revision substitution or discard.
+  A legacy-mode GET with `tree: null` stops autosave without dropping local
+  edits; a reloaded builder draft requires explicit discard confirmation.
   The host must expose export/unsaved-change recovery before navigation;
   in-memory state is not durable crash recovery.
 

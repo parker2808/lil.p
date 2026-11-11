@@ -1,7 +1,10 @@
 # Lessons
 
+- 2026-11-11: `check:content` reads tracked PNG bytes as UTF-8 and can flag random compressed data as an email; losslessly recompress the affected capture and rerun the scanner rather than suppressing a genuine text finding.
+
 - 2026-11-11: Production draft preview tests require one `localhost` web origin in both the Next build and Playwright browser; `127.0.0.1` can authenticate yet land on public 404 because the secure draft cookie is scoped differently. A fresh disposable MySQL container may also need one internal app-user TCP login to warm its authentication cache before host queries.
 
+- 2026-11-11: Treat a concurrent restore from a builder tree to legacy mode as a distinct autosave conflict, preserving local unsaved content; a reload must require explicit discard acknowledgement and cannot interpret a null tree as an empty page.
 - 2026-11-11: A lazy editor can leave a valid-looking screenshot of its loading fallback; wait for an editor-specific visible element before capturing the visual matrix. Vite's `pnpm preview -- --port` forwards the extra `--` to Vite and silently serves its default port; invoke `pnpm exec vite preview --port` instead.
 
 - 2026-11-10: A bundle budget that excludes peers must validate the package's peer declarations; externalizing imports in tsup alone does not guarantee a valid consumer contract.

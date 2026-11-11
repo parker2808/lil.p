@@ -28,6 +28,7 @@ import type { BuilderCommand } from './canvas/commands';
 import type { CompositionResult } from './canvas/model';
 import { commitComposition, commitProperty } from './history/adapter';
 import { PropertiesPanel } from './properties/PropertiesPanel';
+import { builderRegistry } from './properties/registry';
 import styles from './builder.module.css';
 
 const empty: TreeDocument = {
@@ -42,6 +43,7 @@ const labels = {
     local: 'Local study · not saved',
     loading: 'Loading draft',
     legacy: 'Local study · activate to save',
+    legacyConflict: 'Server draft was restored · your edits are kept locally',
     activate: 'Activate tree draft',
     saving: 'Saving draft',
     saved: 'Draft saved',
@@ -52,7 +54,7 @@ const labels = {
     retry: 'Retry',
     reviewChanges: 'Review changes',
     keepLocal: 'Keep local edits',
-    reload: 'Reload server draft',
+    reload: 'Discard local edits and reload server draft',
     export: 'Export local draft',
     restore: 'Restore local edits',
     dismiss: 'Dismiss recovery',
@@ -64,6 +66,7 @@ const labels = {
     local: 'Bản mẫu cục bộ · chưa lưu',
     loading: 'Đang tải bản nháp',
     legacy: 'Bản mẫu cục bộ · kích hoạt để lưu',
+    legacyConflict: 'Bản nháp máy chủ đã được khôi phục · thay đổi của bạn vẫn được giữ cục bộ',
     activate: 'Kích hoạt bản nháp cây',
     saving: 'Đang lưu bản nháp',
     saved: 'Đã lưu bản nháp',
@@ -74,7 +77,7 @@ const labels = {
     retry: 'Thử lại',
     reviewChanges: 'Xem thay đổi',
     keepLocal: 'Giữ thay đổi cục bộ',
-    reload: 'Tải lại bản nháp máy chủ',
+    reload: 'Bỏ thay đổi cục bộ và tải lại bản nháp máy chủ',
     export: 'Xuất bản nháp cục bộ',
     restore: 'Khôi phục thay đổi cục bộ',
     dismiss: 'Bỏ qua bản khôi phục',
@@ -145,6 +148,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
               schedule: (callback, delay) => setTimeout(callback, delay),
               cancel: (handle) => clearTimeout(handle as ReturnType<typeof setTimeout>),
             },
+            builderRegistry,
           );
           setMode('active');
         } else setMode('legacy');
@@ -249,6 +253,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
           schedule: (callback, delay) => setTimeout(callback, delay),
           cancel: (handle) => clearTimeout(handle as ReturnType<typeof setTimeout>),
         },
+        builderRegistry,
       );
       clearRecovery(key);
       setStatus('saved');
@@ -261,7 +266,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
   async function review() {
     setReviewOpen(true);
     const remote = await autosave.current?.review();
-    setRemoteAvailable(Boolean(remote));
+    setRemoteAvailable(Boolean(remote?.tree));
     setStatus(autosave.current?.state.status ?? 'review');
   }
 
@@ -269,12 +274,12 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
     const controller = autosave.current;
     if (!controller) return;
     const remote = await controller.review();
-    setRemoteAvailable(Boolean(remote));
+    setRemoteAvailable(Boolean(remote?.tree));
     if (remote && controller.resolveReviewed('acknowledge')) {
       controller.edit(history.current.document);
     }
     setStatus(controller.state.status);
-    setReviewOpen(controller.state.status === 'conflict' || controller.state.status === 'review');
+    setReviewOpen(['conflict', 'review', 'legacy'].includes(controller.state.status));
   }
 
   function exportLocal() {
@@ -291,7 +296,11 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
 
   function reload() {
     const controller = autosave.current;
-    if (!controller?.state.remote || !controller.resolveReviewed('reload')) return;
+    if (
+      !controller?.state.remote?.tree ||
+      !controller.resolveReviewed('reload', { discardLocalEdits: true })
+    )
+      return;
     present(createTreeHistory(controller.state.local, 'page'));
     clearRecovery(key);
     setStatus('saved');
@@ -310,7 +319,9 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
             ? text.noAccess
             : !online && status !== 'saved'
               ? text.offline
-              : text[status === 'invalid' ? 'review' : status];
+              : text[
+                  status === 'invalid' ? 'review' : status === 'legacy' ? 'legacyConflict' : status
+                ];
 
   if (mode === 'loading')
     return (
@@ -351,7 +362,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
                 {text.activate}
               </Button>
             )}
-            {mode === 'active' && ['review', 'conflict', 'invalid'].includes(status) && (
+            {mode === 'active' && ['review', 'conflict', 'invalid', 'legacy'].includes(status) && (
               <>
                 <Button type="button" variant="outline" onClick={() => void retry()}>
                   {text.retry}

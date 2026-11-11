@@ -1,6 +1,13 @@
-import { readTree, type DraftSnapshot, type TreeDocument } from '@parker2808/cms-core/tree';
+import {
+  readTree,
+  type BuilderDraftSnapshot,
+  type DraftSnapshot,
+  type TreeDocument,
+} from '@parker2808/cms-core/tree';
 
 import { apiClient } from '@/modules/core/services/api-client.service';
+
+import { builderRegistry } from '../properties/registry';
 
 export type BuilderDraftResponse = {
   mode: 'legacy' | 'tree';
@@ -8,11 +15,11 @@ export type BuilderDraftResponse = {
   tree: TreeDocument | null;
 };
 
-function verified(response: BuilderDraftResponse): DraftSnapshot {
+function verified(response: BuilderDraftResponse): BuilderDraftSnapshot {
   if (
     response.mode !== 'tree' ||
     !response.tree ||
-    !readTree(response.tree).ok ||
+    !readTree(response.tree, builderRegistry).ok ||
     !/^(0|[1-9]\d*)$/.test(response.revision)
   )
     throw new Error('Invalid builder draft response');
@@ -29,7 +36,7 @@ export function activateBuilderDraft(
   key: string,
   tree: TreeDocument,
   expectedRevision: string,
-): Promise<DraftSnapshot> {
+): Promise<BuilderDraftSnapshot> {
   return apiClient<BuilderDraftResponse>(
     `/api/admin/pages/${encodeURIComponent(key)}/builder/activate`,
     {
@@ -44,7 +51,7 @@ export function saveBuilderDraft(
   key: string,
   tree: TreeDocument,
   expectedRevision: string,
-): Promise<DraftSnapshot> {
+): Promise<BuilderDraftSnapshot> {
   return apiClient<BuilderDraftResponse>(
     `/api/admin/pages/${encodeURIComponent(key)}/builder/draft`,
     {
@@ -56,5 +63,9 @@ export function saveBuilderDraft(
 }
 
 export function readActiveBuilderDraft(key: string): Promise<DraftSnapshot> {
-  return readBuilderDraft(key).then(verified);
+  return readBuilderDraft(key).then((response) =>
+    response.mode === 'legacy' && response.tree === null && /^(0|[1-9]\d*)$/.test(response.revision)
+      ? { revision: response.revision, tree: null }
+      : verified(response),
+  );
 }

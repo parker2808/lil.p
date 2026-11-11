@@ -1,6 +1,7 @@
 import { commitTreeHistory, type TreeHistory, type TreeOperation } from '@parker2808/cms-core/tree';
 
 import { reduceBuilderCommand, type BuilderCommand } from '../canvas/commands';
+import { builderRegistry } from '../properties/registry';
 import type { CompositionResult } from '../canvas/model';
 
 export function commitComposition(
@@ -39,10 +40,15 @@ export function commitProperty(
   operation: TreeOperation,
   typing = false,
 ): { history: TreeHistory; error?: string } {
-  const result = commitTreeHistory(history, operation, {
-    at: Date.now(),
-    selectedId: history.selectedId,
-    typing,
-  });
+  const result = commitTreeHistory(
+    history,
+    operation,
+    {
+      at: Date.now(),
+      selectedId: history.selectedId,
+      typing,
+    },
+    builderRegistry,
+  );
   return result.ok ? { history: result.value } : { history, error: result.code };
 }

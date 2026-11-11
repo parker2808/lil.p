@@ -3,15 +3,22 @@ import { test } from 'node:test';
 import { setImmediate } from 'node:timers';
 
 import {
-  applyTreeOperation,
-  commitTreeHistory,
+  applyTreeOperation as applyCoreTreeOperation,
+  commitTreeHistory as commitCoreTreeHistory,
   createTreeHistory,
   DraftAutosave,
   endTreeTyping,
   readTree,
   redoTreeHistory,
+  starterComponentSchemas,
   undoTreeHistory,
 } from '@parker2808/cms-core/tree';
+
+const registry = { heading: { props: starterComponentSchemas.heading } };
+const applyTreeOperation = (document, operation) =>
+  applyCoreTreeOperation(document, operation, registry);
+const commitTreeHistory = (history, operation, options) =>
+  commitCoreTreeHistory(history, operation, options, registry);
 
 const page = () => ({
   schemaVersion: 1,
@@ -44,6 +51,14 @@ const edit = (value, breakpoint = 'mobile') => ({
   value,
 });
 const content = (document) => document.root.sections[0].content;
+
+test('D5 requires an explicit host component registry', () => {
+  assert.throws(() => applyCoreTreeOperation(page(), edit('new')), /registry is required/);
+  assert.throws(
+    () => new DraftAutosave({ tree: page(), revision: '0' }, {}, {}),
+    /registry is required/,
+  );
+});
 
 test('property overrides inherit, clear without touching base, and reject invalid edits losslessly', () => {
   const original = page();
@@ -247,7 +262,12 @@ function harness(save, read = async () => ({ tree: page(), revision: '0' })) {
       timers.delete(handle);
     },
   };
-  const controller = new DraftAutosave({ tree: page(), revision: '0' }, { save, read }, scheduler);
+  const controller = new DraftAutosave(
+    { tree: page(), revision: '0' },
+    { save, read },
+    scheduler,
+    registry,
+  );
   return { controller, timers };
 }
 
@@ -301,7 +321,9 @@ test('409 and timeout retain edits, review remote before retry, never auto-merge
   await controller.review();
   assert.equal(controller.resolveReviewed('acknowledge'), false);
   assert.equal(content(controller.state.local)[0].responsive.mobile.text, 'mine');
-  assert.equal(controller.resolveReviewed('reload'), true);
+  assert.equal(controller.resolveReviewed('reload'), false);
+  assert.equal(content(controller.state.local)[0].responsive.mobile.text, 'mine');
+  assert.equal(controller.resolveReviewed('reload', { discardLocalEdits: true }), true);
   assert.deepEqual(controller.state.local, remote.tree);
 
   let saved;
@@ -323,6 +345,40 @@ test('409 and timeout retain edits, review remote before retry, never auto-merge
   assert.equal(content(timeout.controller.state.local)[0].responsive.mobile.text, 'later');
   timeout.controller.dispose();
   assert.equal(timeout.timers.size, 0);
+});
+
+test('concurrent restore to legacy mode keeps local edits and blocks autosave', async () => {
+  let saves = 0;
+  const { controller, timers } = harness(
+    async () => {
+      saves++;
+      throw { status: 409 };
+    },
+    async () => ({ tree: null, revision: '3' }),
+  );
+  controller.edit(applyTreeOperation(page(), edit('mine')).value);
+  await controller.flush();
+  assert.equal(controller.state.status, 'conflict');
+  assert.deepEqual(await controller.review(), { tree: null, revision: '3' });
+  assert.equal(controller.state.status, 'legacy');
+  assert.equal(controller.state.acknowledged.revision, '0');
+  assert.equal(controller.resolveReviewed('acknowledge'), false);
+  assert.equal(controller.resolveReviewed('reload', { discardLocalEdits: true }), false);
+  controller.edit(applyTreeOperation(controller.state.local, edit('still mine')).value);
+  await controller.flush();
+  assert.equal(saves, 1);
+  assert.equal(timers.size, 0);
+  assert.equal(content(controller.state.local)[0].responsive.mobile.text, 'still mine');
+});
+
+test('legacy-mode save acknowledgement cannot replace local builder draft', async () => {
+  const { controller } = harness(async () => ({ tree: null, revision: '4' }));
+  controller.edit(applyTreeOperation(page(), edit('mine')).value);
+  await controller.flush();
+  assert.equal(controller.state.status, 'legacy');
+  assert.deepEqual(controller.state.remote, { tree: null, revision: '4' });
+  assert.equal(controller.state.acknowledged.revision, '0');
+  assert.equal(content(controller.state.local)[0].responsive.mobile.text, 'mine');
 });
 
 test('offline review backs off and never sends another save without an explicit resolution', async () => {
@@ -352,6 +408,7 @@ test('offline review backs off and never sends another save without an explicit 
       },
     },
     scheduler,
+    registry,
   );
   controller.edit(applyTreeOperation(page(), edit('offline')).value);
   await controller.flush();

@@ -98,7 +98,7 @@ test('custom page edits autosave, reload, undo and review conflict without losin
   ).toBeVisible();
   await page
     .getByRole('region', { name: 'Review changes' })
-    .getByRole('button', { name: 'Reload server draft' })
+    .getByRole('button', { name: 'Discard local edits and reload server draft' })
     .click();
   await context.setOffline(true);
   await palette.getByRole('button', { name: 'Spacer', exact: true }).click();

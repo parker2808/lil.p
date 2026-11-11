@@ -2,7 +2,8 @@ import { cloneTreeValue } from './editing';
 import type { TreeDocument } from './schema';
 import { type ComponentRegistry, readTree, type TreeResult } from './validation';
 
-export type DraftSnapshot = { tree: TreeDocument; revision: string };
+export type BuilderDraftSnapshot = { tree: TreeDocument; revision: string };
+export type DraftSnapshot = BuilderDraftSnapshot | { tree: null; revision: string };
 export type DraftTransport = {
   save: (draft: { tree: TreeDocument; expectedRevision: string }) => Promise<DraftSnapshot>;
   read: () => Promise<DraftSnapshot>;
@@ -11,10 +12,11 @@ export type DraftScheduler = {
   schedule: (callback: () => void, delay: number) => unknown;
   cancel: (handle: unknown) => void;
 };
-export type AutosaveStatus = 'saved' | 'dirty' | 'saving' | 'conflict' | 'review' | 'invalid';
+export type AutosaveStatus =
+  'saved' | 'dirty' | 'saving' | 'conflict' | 'review' | 'invalid' | 'legacy';
 export type AutosaveState = {
   local: TreeDocument;
-  acknowledged: DraftSnapshot;
+  acknowledged: BuilderDraftSnapshot;
   remote?: DraftSnapshot;
   status: AutosaveStatus;
 };
@@ -40,12 +42,14 @@ export class DraftAutosave {
   private reviewDelay = 1000;
 
   constructor(
-    initial: DraftSnapshot,
+    initial: BuilderDraftSnapshot,
     private readonly transport: DraftTransport,
     private readonly scheduler: DraftScheduler,
-    private readonly registry: ComponentRegistry = {},
+    private readonly registry: ComponentRegistry,
     private readonly debounceMs = 500,
   ) {
+    if (!registry || typeof registry !== 'object')
+      throw new TypeError('Component registry is required');
     const valid = readTree(initial.tree, registry);
     if (!valid.ok || !revisionPattern.test(initial.revision))
       throw new Error('Invalid draft snapshot');
@@ -68,7 +72,8 @@ export class DraftAutosave {
     if (
       this.current.status !== 'conflict' &&
       this.current.status !== 'review' &&
-      this.current.status !== 'invalid'
+      this.current.status !== 'invalid' &&
+      this.current.status !== 'legacy'
     ) {
       this.current.status = same(this.current.local, this.current.acknowledged.tree)
         ? 'saved'
@@ -108,8 +113,14 @@ export class DraftAutosave {
       try {
         const response = await this.transport.save({ tree: attempted, expectedRevision: revision });
         if (this.disposed) return;
+        if (response.tree === null && revisionPattern.test(response.revision)) {
+          this.current.remote = cloneTreeValue(response);
+          this.current.status = 'legacy';
+          return;
+        }
         if (
           !revisionPattern.test(response.revision) ||
+          response.tree === null ||
           !same(response.tree, attempted) ||
           !readTree(response.tree, this.registry).ok
         ) {
@@ -137,13 +148,15 @@ export class DraftAutosave {
     if (this.reviewTimer !== undefined) this.scheduler.cancel(this.reviewTimer);
     this.reviewTimer = undefined;
     if (this.request) await this.request;
-    if (this.disposed || !['review', 'conflict', 'invalid'].includes(this.current.status)) return;
+    if (this.disposed || !['review', 'conflict', 'invalid', 'legacy'].includes(this.current.status))
+      return;
     try {
       const remote = await this.transport.read();
       if (this.disposed) return;
-      if (!revisionPattern.test(remote.revision) || !readTree(remote.tree, this.registry).ok)
-        return;
+      if (!revisionPattern.test(remote.revision)) return;
+      if (remote.tree !== null && !readTree(remote.tree, this.registry).ok) return;
       this.current.remote = cloneTreeValue(remote);
+      this.current.status = remote.tree === null ? 'legacy' : 'conflict';
       this.reviewDelay = 1000;
       return cloneTreeValue(remote);
     } catch {
@@ -159,9 +172,13 @@ export class DraftAutosave {
     }
   }
 
-  resolveReviewed(choice: 'acknowledge' | 'reload'): boolean {
+  resolveReviewed(
+    choice: 'acknowledge' | 'reload',
+    options?: { discardLocalEdits: true },
+  ): boolean {
     if (this.disposed || !this.current.remote || this.request) return false;
     const remote = this.current.remote;
+    if (remote.tree === null || (choice === 'reload' && !options?.discardLocalEdits)) return false;
     if (
       choice === 'acknowledge' &&
       !same(remote.tree, this.lastAttempt ?? this.current.local) &&
