@@ -30,6 +30,7 @@ async function capture(
 }
 
 test.setTimeout(600_000);
+test.use({ actionTimeout: 15_000 });
 
 test('real Pages creation validates, recovers from HTTP 409, and opens the editor', async ({
   page,
@@ -84,10 +85,16 @@ test('real Pages creation validates, recovers from HTTP 409, and opens the edito
         await expect(slug).toHaveAttribute('aria-invalid', 'true');
         await slug.fill(`r304-${locale}-${theme}-${width}`);
         await expect(slug).not.toHaveAttribute('aria-invalid');
-        await dialog.getByLabel(locale === 'en' ? 'Language' : 'Ngôn ngữ').selectOption(locale);
-        await dialog
-          .getByLabel(locale === 'en' ? 'Start with' : 'Bắt đầu bằng')
-          .selectOption('empty');
+        await dialog.getByLabel(locale === 'en' ? 'Language' : 'Ngôn ngữ').click();
+        await page
+          .getByRole('option', { name: locale === 'en' ? 'English' : 'Tiếng Việt' })
+          .click();
+        await dialog.getByLabel(locale === 'en' ? 'Start with' : 'Bắt đầu bằng').click();
+        await page
+          .getByRole('option', { name: locale === 'en' ? 'Empty blocks' : 'Trang trống' })
+          .click();
+        await expect(title).toHaveValue('Động lực mới');
+        await expect(slug).toHaveValue(`r304-${locale}-${theme}-${width}`);
         await capture(page, 'admin-pages', locale, 'dialog', theme, width);
 
         const key = `r304-${locale}-${theme}-${width}`;

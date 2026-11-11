@@ -16,7 +16,14 @@ import { PUBLIC_ROUTES, type Hue, type IconKey } from '@portfolio/contracts';
 
 import type { ScalarWidgetProps } from './widget.types';
 
-export function ScalarWidget({ field, value, readOnly, onChange, labels }: ScalarWidgetProps) {
+export function ScalarWidget({
+  field,
+  label,
+  value,
+  readOnly,
+  onChange,
+  labels,
+}: ScalarWidgetProps) {
   if (field.kind === 'switch') {
     return (
       <Switch
@@ -104,6 +111,7 @@ export function ScalarWidget({ field, value, readOnly, onChange, labels }: Scala
     }
     return (
       <HuePicker
+        groupLabel={label}
         value={(value as Hue | undefined) ?? 'JADE'}
         onChange={(next) => onChange(next)}
         labels={labels.hues}

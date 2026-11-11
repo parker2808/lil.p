@@ -191,7 +191,7 @@ test('U0 pre-change route screenshots', async ({ browser, page }) => {
       join(output!, 'manifest.json'),
       JSON.stringify(
         {
-          baseline: 'd0d474b',
+          baseline: process.env.U0_CAPTURE_BASELINE ?? 'd0d474b',
           flag: process.env.R3_E2E_STATES === '1' ? 'R3_E2E_STATES=1' : 'off',
           generatedAt: new Date().toISOString(),
           captures: results,
