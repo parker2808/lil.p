@@ -23,6 +23,10 @@ Review remediation (05:47 ICT): keep the original eight-step plan, with these ch
 14. Mount Properties in the 768px modal sheet, not the hidden desktop inspector.
 15. Verify the single mount, keyboard focus and bilingual tablet captures.
 16. Document the D4-command to D5-operation handoff before integration.
+17. Reproduce compact-to-desktop Properties overlap with its sheet open.
+18. Close the stale sheet across either workspace breakpoint.
+19. Test bidirectional focus, Escape, locale and theme.
+20. Run locked visual and full gates, refresh Graphify.
 
 ## Contract
 
@@ -64,5 +68,9 @@ Tablet review (November 11, 2026, ICT): at 768px the responsive stylesheet hides
 **D4 → D5 adapter note:** `BuilderCommand` is the synchronous validated shell intent; D5 translates `insert`, `move`, `remove` and `reorder` into the corresponding `TreeOperation` (`reorder` becomes a same-parent `move`, adjusting the index after removal) and commits exactly once through `commitTreeHistory`. Return the resulting document and selection as D4's synchronous `CompositionResult`; never commit D4's provisional reducer document and then apply the operation again. `select` updates selection without history, while `replace` is an explicitly validated whole-document boundary for undo/redo or server reload, not a tree operation. Reject a failed command without enqueuing an operation or dropping unsaved work. D5 owns revision CAS/reload confirmation and must not create a second document setter inside D4.
 
 Gate follow-up: the reviewed tablet capture passed. The keyboard delete gate revealed that confirmation can observe a previously selected node rather than the focused trigger's node; the trigger now pins the node ID before confirmation and validates/removes precisely that node, preserving typed rejection and surviving-node focus. A dedicated regression covers 1100px compact and 1101px desktop boundaries alongside 768px keyboard sheet behavior.
+
+Breakpoint-transition follow-up (November 11, 2026): the prior test closed the tablet sheet before moving to desktop, so it did not cover an open Properties dialog crossing 1100px. A stale dialog and desktop inspector must never coexist; when the workspace changes mode, dismiss the dialog and restore focus to a visible control. Reopen Properties on compact re-entry rather than retaining a hidden modal. Test 768→1100→1440→768 with the sheet open at each boundary, keyboard Escape and localized labels in both themes. This is D4-only; the D5 operation adapter remains unchanged.
+
+Transition gate: the old shell kept a Properties dialog open alongside the desktop inspector after a compact-to-desktop resize, reproduced by the new failing unit test. The rendered modal now disappears immediately above 1100px, and the resize handler dismisses its state and focuses the inspector; returning to compact moves inspector focus to the visible Properties trigger. The focused Chromium case passed across EN/VI and light/dark at 768→1100→1440→1100→768, including one host editor, Escape and focus restoration. The first browser fixtures exposed hidden topbar language/theme controls at compact width; their setup now changes those controls at desktop width. Under the shared lock, the final disposable-MySQL `check:all --e2e` passed **11/11** (including web, API, fixture and contrast gates); the container and lock were removed. No D5 operation or legacy/API contract changed.
 
 Review evidence: the 768px Properties sheet shows the localized host input in all eight EN/VI × light/dark × neutral/lil.p captures; the manifest has 64 captures total. The first post-review full gate hit the previously tracked intermittent public-contact case (#201); a subsequent visual gate exposed the stale selection on keyboard delete, fixed by pinning the target at the trigger. After that fix, the disposable-MySQL locked `check:all --e2e` passed all 11 checks, including the keyboard and web suites. Non-E2E `check:all` passed 7/7. No other worktree's lock or processes were touched.

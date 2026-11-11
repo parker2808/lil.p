@@ -178,3 +178,5 @@
 - 2026-11-11: Capture a destructive confirmation's target ID at the initiating keyboard/pointer event, rather than reading a selected ID that may lag focus after a batched state update.
 - 2026-11-11: A controlled composition-to-history adapter should validate once for typed user feedback, commit one core operation against the original tree, and compare results; never apply the provisional composition tree and then the operation to it.
 - 2026-11-11: A draft activation response acknowledges only the submitted tree, not edits made while awaiting the server; replay the latest history into the new controller and never overwrite pending stored recovery before the user chooses restore or dismiss.
+- 2026-11-11: Test responsive sheet ownership while its dialog remains open across a breakpoint; closing the sheet before resizing hides stale-modal and focus-restoration failures.
+- 2026-11-11: A browser regression that changes locale/theme after shrinking to tablet can time out on desktop-only topbar controls; perform topbar setup at desktop width before exercising responsive transitions.
