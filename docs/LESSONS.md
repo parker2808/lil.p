@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-11: A contrast scan immediately after toggling the public theme can sample transitional foreground against settled background; wait for finite CSS transitions before running axe, rather than disabling contrast checks or changing production colors.
+
 - 2026-11-11: `check:content` reads tracked PNG bytes as UTF-8 and can flag random compressed data as an email; losslessly recompress the affected capture and rerun the scanner rather than suppressing a genuine text finding.
 
 - 2026-11-11: Production draft preview tests require one `localhost` web origin in both the Next build and Playwright browser; `127.0.0.1` can authenticate yet land on public 404 because the secure draft cookie is scoped differently. A fresh disposable MySQL container may also need one internal app-user TCP login to warm its authentication cache before host queries.
