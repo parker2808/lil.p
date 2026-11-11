@@ -1,6 +1,11 @@
 # Lessons
 
 - 2026-11-11: A contrast scan immediately after toggling the public theme can sample transitional foreground against settled background; wait for finite CSS transitions before running axe, rather than disabling contrast checks or changing production colors.
+- 2026-11-11: A green monorepo build can hide a deployment-only DTS failure when a provider's isolated build command skips a new workspace dependency; pin the provider command in the repository and run it from a clean checkout in CI.
+- 2026-11-11: Vercel branch previews are disabled outside `main` here, so green PR CI is not Vercel deployment evidence; a clean CI build must execute the full core → contracts → web deployment command, and the next main deploy still needs a READY status and live health checks.
+- 2026-11-11: Artifact-listing visibility does not prove a concurrently uploaded GitHub Actions artifact is finalized for download; make E2E consumers depend on the build job rather than racing its upload with a list-and-download check.
+
+- 2026-11-11: A clean integration merge can still carry a Graphify header naming its pre-merge parent; regenerate from the merged commit and check for duplicated changelog entries before requesting final-head review.
 
 - 2026-11-11: `check:content` reads tracked PNG bytes as UTF-8 and can flag random compressed data as an email; losslessly recompress the affected capture and rerun the scanner rather than suppressing a genuine text finding.
 

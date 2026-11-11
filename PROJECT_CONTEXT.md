@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- Vercel build-graph hotfix from `main` `f751e8b`: build cms-core before contracts DTS and web; the clean `vercel-build` CI job checks that ordering. Web-E2E shards wait for the build job's artifact upload to finish. Production deployment remains gated on READY and health checks. See `docs/specs/2026-11-11-vercel-cms-core-build-graph.md`.
+
 - CMS D5 UI (draft integration): the gated D4 builder now hosts one schema-derived Properties panel with base/tablet/mobile override clearing, bounded undo/redo and D2 custom-page revision-checked activation/autosave. `home` remains local-only. Conflict/offline/ambiguous saves retain edits and require explicit review/retry/export/reload; refresh recovery is scoped to the authenticated user/page, including during failed remote reads and in-flight activation. D4 composition maps to one D5 history commit per accepted operation. Tree publish stays disabled. D6 owns the complete journey registration and production enablement is not authorized. See `docs/specs/2026-11-11-cms-d5-ui.md`.
 
 - CMS D4 canvas (stacked on D base `3bbd1b2`): `/admin/builder/[key]` provides slot-validated D1 composition, a searchable drag/keyboard palette, nested Layers and host-nav-safe mobile/tablet sheets. At ≤1100px Properties mounts once in the visible sheet, otherwise in the desktop inspector; resizing with an open sheet closes it at desktop width and restores focus. D5 owns document/history/autosave through D4's controlled dispatch contract. D6 still owns journey registration. Core CSS supplies neutral defaults; lil.p branding changes tokens only. Publishing, legacy editing and public pages remain unchanged. See `docs/specs/2026-11-11-cms-d4-canvas.md`.
@@ -169,6 +171,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Cherry-picked `main` #205's topological Vercel core→contracts→web build and serialized web-E2E artifact consumption onto the D5 stack; no E2E test retries, HTTP, DB or package-export changes.
 
 - 2026-11-11: D5 preserves edits made during an in-flight activation and offers stored recovery after a failed remote read without overwriting it on the next edit. Deferred-response and failed-fetch unit regressions plus activated/conflict responsive captures guard these draft-only paths; no public, API or production DB change.
 
