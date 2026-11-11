@@ -36,6 +36,9 @@ first, so it does not reproduce the isolated Vercel command.
   omits SQL without `tree_sitter_sql` and does not replace manual review of the
   Vercel config, workflow, README and deployment docs.
 - Production READY status and the three endpoint checks are post-merge gates.
+- Vercel config currently deploys only `main`, so this PR has no deployment
+  preview. Green clean-build CI proves the full build order but not production
+  readiness; inspect Vercel's READY status after the merge before resuming.
 
 ## CI artifact race found on the first hotfix run
 
