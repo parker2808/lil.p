@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- C1 standalone README/changelog/LICENSE text is drafted in the extraction runbook only; review it against the final integrated export map, source history and third-party license notices before authorized private extraction. No package, credential or repository is created in this docs PR.
+
 - 2026-11-11 10:20 ICT reconciliation: main has merged #184 `85f95f1`, #171 `7b85d71`, #172 `c127e7b`, #180 `ae6df9d`, #175 `c22eb93`, #174 `9fe18b7`, #176 `cd6d77e`, #177 `a6d11a1`, #181 `f328b3c` and #182 `0a9416b`; #185 remains next. This docs-only branch rehearses C1 from the pushed D5 UI head without creating a repository or changing package source. See the [live ledger](./docs/specs/2026-11-10-cms-stack-integration-plan.md#live-merge-ledger-2026-11-11-after-182).
 
 - 2026-11-11 08:35 ICT integration refresh: #175 `c22eb93` and #174 `9fe18b7` are now merged after #180. #173/#183 remain superseded by #176/#201. #197 D3 accepted `0d2b94a` and #199 D2 accepted `0762e12` (migration merge waits for full candidate verification); #200 D5 core accepted `430672d` with P3 Graphify header still at `a45019cb`. #198 D4 still has a P1 missing Properties mount at 768px; D4↔D5 adapter and D5 UI evidence remain pending. This #203 branch resolves main's U0/duplicate-limit documentation alongside its own entries; it authors no code or DB change. [Current ledger](./docs/specs/2026-11-10-cms-stack-integration-plan.md#live-merge-ledger-2026-11-11-after-174).
@@ -196,6 +198,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Drafted standalone README, unreleased changelog and proprietary LICENSE templates in the C1 extraction runbook, pending final integrated SHA and rights review; docs-only, no package, repository, credential or release created.
 
 - 2026-11-11: Reconciled #203 after #181 and recorded a standalone C1 scratch rehearsal against the D5 UI head; retained both sides' documentation without authoring package or DB changes.
 

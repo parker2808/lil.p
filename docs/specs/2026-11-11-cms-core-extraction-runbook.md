@@ -6,6 +6,82 @@
 
 ## Decision: preserve package history, then select distribution
 
+### C1 standalone document drafts (not yet files in an extracted repository)
+
+Apply these texts **only to the isolated, reviewed package after final D2–D6 verification**. Replace `<reviewed-source-sha>` with the exact approved integrated commit, confirm the final export map and third-party notices, and have Parker review the proprietary notice. These are proposed contents, not a claim that `v0.1.0` exists or that a repository has been created. Keep the host's ADR, fixtures and golden tests in lil.p; do not copy host-relative links or private material.
+
+Proposed standalone `README.md`:
+
+```markdown
+# @parker2808/cms-core
+
+Private, host-configured CMS building blocks. The host owns its block definitions,
+authorization, persistence transactions, localized messages and deployment.
+The package does not ship portfolio block definitions or an application server.
+
+## Requirements and installation
+
+Node 22 and pnpm 10; React 19, React DOM 19 and Zod 4 are peer dependencies.
+Install only the reviewed, pinned package artifact through your authorized private
+distribution path. Do not put credentials in package manifests, lockfiles or URLs.
+
+## Public entries
+
+- `@parker2808/cms-core/contracts`: generic block/page contracts, `defineBlock`, `createRegistry`.
+- `@parker2808/cms-core/engine`: registry-injected policy, ordering, snapshots, host ports.
+- `@parker2808/cms-core/tree`: versioned draft/publish validation, migration, editing, history, autosave.
+- `@parker2808/cms-core/react/server`: server-safe `renderBlocks`/`renderTree` with host renderers.
+- `@parker2808/cms-core/react`: client form, widget and editor metadata contracts.
+- `@parker2808/cms-core/theme.css`: neutral light/dark `--builder-*` theme; import once.
+
+Use subpath imports: there is no package-root (`.`) export. JavaScript entries
+provide ESM and CommonJS and their types; CSS is a side-effectful stylesheet.
+Pass explicit host registries, localized labels and renderers; do not import
+host code into core. A draft `readTree` is not a publish approval: run
+`validateTreeForPublish` before publication and keep the host's write/restore
+transaction and revision checks authoritative. Public SSR imports only
+`./react/server`, never the client entry. Override branding through accessible
+theme token values, not core markup or selectors.
+
+## Verification and provenance
+
+Run the standalone frozen-install, lint, typecheck, unit/export, dependency,
+build, bundle and packed-consumer gates defined in this repository's reviewed
+CI. Browser theme and complete HTTP/visual parity remain host/fixture gates.
+This extraction originates at reviewed lil.p source `<reviewed-source-sha>`;
+see `CHANGELOG.md` for the release record. Distribution is restricted by `LICENSE`.
+```
+
+Proposed standalone `CHANGELOG.md` (replace placeholders only after review; do not publish this as a released version in advance):
+
+```markdown
+# Changelog
+
+## Unreleased — C1 extraction candidate
+
+- Preserve the `packages/cms-core` history from lil.p source `<reviewed-source-sha>`;
+  record the reviewed filtered-history head in the private release record.
+- Isolate package-local build, lint, tests, measurement and dependency checks;
+  retain approved exports, neutral theme, ESM/CommonJS/types and gzip caps.
+- Confirm packed-file allowlist, license/notice review, full-history scan,
+  host-boundary checks and consumer imports before tagging `v0.1.0`.
+
+No release is implied by this candidate entry. Record the actual release date,
+source and extracted heads, CI evidence, compatibility and rollback at release.
+```
+
+Proposed standalone `LICENSE` (subject to Parker's final rights/notice review):
+
+```text
+Copyright (c) 2026. All rights reserved.
+
+This software is proprietary. No permission is granted to use, copy, modify,
+or distribute it except under a separate written agreement.
+```
+
+Set `package.json` `license` to `UNLICENSED`. This notice does not replace
+third-party licenses or establish ownership of historical contributions.
+
 ### C1 scratch archive at D5 UI `b71697b` (2026-11-11; no release)
 
 `git archive origin/feat/cms-d5-ui packages/cms-core` was unpacked and relocated to an isolated `/tmp/cms-core-c1-dryrun.*` directory; the source worktree was untouched. Node **22.21.1** and the globally selected pnpm **12.15.0** installed dependencies with `--ignore-scripts` (exit 0), but the archived manifest has no `packageManager` pin or standalone lockfile; the isolated environment therefore selected pnpm 12, not the repo's pnpm 10.34.9. This is a tooling gap, not a frozen-install proof. With browser testing disabled, unchanged `pnpm run typecheck` exited 2 (`tsconfig.json` extends absent `../../tsconfig.base.json`, missing ES library); `pnpm run lint` exited 127 (no local ESLint); `pnpm run build` exited 1 (the missing base config blocks declarations); `pnpm run test` exited 1 at its nested build. No browser, server, DB, pack, remote or publish gate ran. The archived package has 29 tracked files, including D5 `src/tree/autosave.ts`, `src/tree/editing.ts` and `test/tree-editing.test.mjs`, but **not** D3 `test/tree-renderer.test.mjs`; this is a branch-specific rehearsal, not integrated D2–D6 evidence.
@@ -245,14 +321,7 @@ The diff is a **field-level insertion/replacement guide**, not a literal patch c
 
 Keep B6b's existing conditional `sizes.css` gzip block and separate theme printout **unchanged**; do not add it twice. In the copied `scripts/measure-cms-core.test.mjs`, keep the existing `./measure-cms-core.mjs` import unchanged; add a fixture with `./tree` and `./theme.css` exports, built `tree.js` and `theme.css`, asserting browser totals include tree bytes and CSS is measured separately. In extracted `test/react-exports.test.mjs`, `test/theme.test.mjs` **and `test/tree-renderer.test.mjs`**, change `../../../scripts/measure-cms-core.mjs` to `../scripts/measure-cms-core.mjs`. Add `./tree` ESM/CJS/types resolution in the existing export test; do not replace B5/B6 assertions. After D5 integration, include `test/tree-editing.test.mjs` and its `./tree` exports. Run `pnpm build`, `pnpm test`, `pnpm typecheck`, `pnpm lint`, the isolated import-boundary check and a tarball ESM/CJS consumer before claiming standalone readiness. These are future authorized checks, not commands run by this docs PR.
 
-**License gap and read-only audit (2026-11-11):** the B6b manifest lists no runtime dependencies; its peers are `react ^19`, `react-dom ^19`, `zod ^4`. The local installed peer manifests report **react 19.3.0 MIT, react-dom 19.3.0 MIT, zod 4.6.7 MIT**; no package-owned LICENSE/COPYING file was tracked at the reviewed B6b SHA. This is a package-manifest audit, **not** a transitive/deployment or integrated-SHA license clearance. Recommend `"license": "UNLICENSED"` and a standalone private `LICENSE` file (below), subject to Parker's decision and counsel review; preserve third-party peer license/notice obligations even though these peers are not vendored. Do not infer an open-source license for the core from MIT peers. Proposed `LICENSE` contents:
-
-```text
-Copyright (c) 2026. All rights reserved.
-
-This software is proprietary. No permission is granted to use, copy, modify,
-or distribute it except under a separate written agreement.
-```
+**License gap and read-only audit (2026-11-11):** the B6b manifest lists no runtime dependencies; its peers are `react ^19`, `react-dom ^19`, `zod ^4`. The local installed peer manifests report **react 19.3.0 MIT, react-dom 19.3.0 MIT, zod 4.6.7 MIT**; no package-owned LICENSE/COPYING file was tracked at the reviewed B6b SHA. This is a package-manifest audit, **not** a transitive/deployment or integrated-SHA license clearance. Recommend `"license": "UNLICENSED"` and the [standalone private LICENSE draft](#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository), subject to Parker's decision and counsel review; preserve third-party peer license/notice obligations even though these peers are not vendored. Do not infer an open-source license for the core from MIT peers.
 
 For a future release, audit the **approved integrated** dependency graph, source history, notices and package tarball again. If Parker elects open source, replace both `UNLICENSED` and this proposed text only after his explicit licensing decision. No ownership, legal status or distribution permission is established by this draft.
 

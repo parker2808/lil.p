@@ -1,5 +1,7 @@
 # lil.p
 
+The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) now includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates require final-source and rights review; no repository or release is created by this documentation.
+
 The [CMS U0 route/control baseline](./docs/audits/2026-11-10-cms-u0-route-control-baseline.md) maps the current public/admin routes, redirect and role boundaries, control ownership, and existing behavior/visual tests before UI standardization. It records uncovered live/visual states separately from executed focused tests; U0 changes no runtime behavior.
 
 ### CMS U1 shared controls

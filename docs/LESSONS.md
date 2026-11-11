@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-11: An isolated package's README, changelog and proprietary notice must be reviewed against the final integrated export map, history and dependency licenses; draft text is not a release or permission to distribute.
+
 - 2026-11-11: A later CMS renderer adds another root measurement-script import and a browser test loading a fixture outside the package; audit the final combined test inventory before treating an older isolated pack rehearsal as release evidence.
 
 - 2026-11-11: When a docs PR absorbs newer main commits, preserve both branches' README/context/lessons entries, carry main's generated Graphify report for its code, and mark historical stack snapshots as superseded rather than dropping prior evidence.
