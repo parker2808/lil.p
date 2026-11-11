@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-11: A later CMS renderer adds another root measurement-script import and a browser test loading a fixture outside the package; audit the final combined test inventory before treating an older isolated pack rehearsal as release evidence.
+
 - 2026-11-11: When a docs PR absorbs newer main commits, preserve both branches' README/context/lessons entries, carry main's generated Graphify report for its code, and mark historical stack snapshots as superseded rather than dropping prior evidence.
 
 - 2026-11-11: A stacked route-parity PR can inherit an unmerged migration; verify ancestry and run its behavior in an isolated candidate for pre-migration evidence, then land the migration only after full verification and restack the route PR onto the merged parent.
