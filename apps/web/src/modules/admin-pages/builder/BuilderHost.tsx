@@ -58,6 +58,7 @@ const labels = {
     export: 'Export local draft',
     restore: 'Restore local edits',
     dismiss: 'Dismiss recovery',
+    recoveryFailed: 'Local recovery is unavailable. Stay on this page or export your edits.',
     noAccess: 'Draft unavailable · editing locally only',
   },
   vi: {
@@ -81,6 +82,7 @@ const labels = {
     export: 'Xuất bản nháp cục bộ',
     restore: 'Khôi phục thay đổi cục bộ',
     dismiss: 'Bỏ qua bản khôi phục',
+    recoveryFailed: 'Không thể khôi phục cục bộ. Hãy ở lại trang hoặc xuất các thay đổi.',
     noAccess: 'Không thể tải bản nháp · chỉ chỉnh sửa cục bộ',
   },
 } as const;
@@ -119,6 +121,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
     () => true,
   );
   const [recovery, setRecovery] = useState<TreeDocument | undefined>();
+  const [recoveryFailed, setRecoveryFailed] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [remoteAvailable, setRemoteAvailable] = useState(false);
   const autosave = useRef<DraftAutosave | null>(null);
@@ -174,8 +177,10 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
       if (
         snapshot.status === 'saved' &&
         JSON.stringify(snapshot.local) === JSON.stringify(history.current.document)
-      )
+      ) {
         clearRecovery(key);
+        setRecoveryFailed(false);
+      }
     }, 250);
     return () => window.clearInterval(interval);
   }, [key, mode]);
@@ -184,13 +189,23 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
     (next: TreeHistory) => {
       present(next);
       if (pageKey !== 'home') {
-        writeRecovery(key, next.document);
+        setRecoveryFailed(!writeRecovery(key, next.document));
         autosave.current?.edit(next.document);
         setStatus(autosave.current?.state.status ?? 'dirty');
       }
     },
     [key, pageKey, present],
   );
+
+  useEffect(() => {
+    if (!recoveryFailed || status === 'saved') return;
+    const guard = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', guard);
+    return () => window.removeEventListener('beforeunload', guard);
+  }, [recoveryFailed, status]);
 
   const onDispatch = useCallback(
     (command: BuilderCommand): CompositionResult => {
@@ -397,6 +412,14 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
             }}
           >
             {text.dismiss}
+          </Button>
+        </div>
+      )}
+      {recoveryFailed && status !== 'saved' && (
+        <div role="alert" className={styles.recovery}>
+          <p>{text.recoveryFailed}</p>
+          <Button type="button" onClick={exportLocal}>
+            {text.export}
           </Button>
         </div>
       )}

@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { readRecovery, recoveryKey, writeRecovery } from './recovery';
+import { clearRecovery, readRecovery, recoveryKey, writeRecovery } from './recovery';
 
 const tree = {
   schemaVersion: 1 as const,
@@ -24,5 +24,16 @@ describe('page/user-scoped recovery', () => {
     expect(readRecovery(key)).toBeUndefined();
     localStorage.setItem(key, JSON.stringify({ at: Date.now(), tree: { missing: true } }));
     expect(readRecovery(key)).toBeUndefined();
+  });
+
+  it('does not crash an acknowledged save when storage rejects cleanup', () => {
+    const remove = vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
+      throw new Error('Storage unavailable');
+    });
+    try {
+      expect(() => clearRecovery(recoveryKey(3, 'example'))).not.toThrow();
+    } finally {
+      remove.mockRestore();
+    }
   });
 });

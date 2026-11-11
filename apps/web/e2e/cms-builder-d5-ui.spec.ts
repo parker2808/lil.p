@@ -17,6 +17,55 @@ const manifest: Array<{
 
 test.setTimeout(240_000);
 
+test('reload before autosave retains the unsaved tree for explicit restoration', async ({
+  page,
+}) => {
+  await signIn(page);
+  const key = `d5-recovery-${Date.now()}`;
+  const origin = new URL(page.url()).origin;
+  const created = await page.request.post('/api/admin/pages', {
+    headers: { Origin: origin },
+    data: { title: 'D5 recovery', key, locale: 'en', template: 'starter' },
+  });
+  expect(created.status(), await created.text()).toBe(201);
+  await page.goto(`/admin/builder/${key}`);
+  await page.getByRole('button', { name: 'Activate tree draft' }).click();
+  await expect(page.getByText('Draft saved')).toBeVisible();
+  await page.route(`**/admin/pages/${key}/builder/draft`, (route) =>
+    route.request().method() === 'PUT' ? route.abort('failed') : route.continue(),
+  );
+  await page
+    .getByRole('complementary', { name: 'Components' })
+    .getByRole('button', { name: 'Section', exact: true })
+    .click();
+  await expect
+    .poll(() =>
+      page.evaluate((pageKey) => {
+        const recoveryKey = Object.keys(localStorage).find(
+          (key) => key.startsWith('cms-builder-recovery:') && key.endsWith(`:${pageKey}`),
+        );
+        return recoveryKey ? localStorage.getItem(recoveryKey) : null;
+      }, key),
+    )
+    .not.toBeNull();
+  await page.reload();
+  const recovery = page.getByRole('region', { name: 'Restore local edits' });
+  await expect(recovery).toBeVisible();
+  await expect(page.locator('[data-node-type="section"]')).toHaveCount(0);
+  const remote = await (await page.request.get(`/api/admin/pages/${key}/builder/draft`)).json();
+  expect(remote.tree.root.sections).toHaveLength(0);
+  await page.unroute(`**/admin/pages/${key}/builder/draft`);
+  await recovery.getByRole('button', { name: 'Restore local edits' }).click();
+  await expect(page.locator('[data-node-type="section"]')).toHaveCount(1);
+  await expect
+    .poll(async () => {
+      const response = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+      return (await response.json()).tree.root.sections.length;
+    })
+    .toBe(1);
+  await expect(page.getByText('Draft saved')).toBeVisible({ timeout: 15_000 });
+});
+
 test('custom page edits autosave, reload, undo and review conflict without losing local changes', async ({
   page,
   context,

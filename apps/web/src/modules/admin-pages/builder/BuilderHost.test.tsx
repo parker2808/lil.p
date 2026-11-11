@@ -81,3 +81,46 @@ it('keeps local edits when a concurrent restore removes the server tree', async 
   expect(document.querySelectorAll('[data-node-type="section"]')).toHaveLength(1);
   expect(localStorage.getItem('cms-builder-recovery:10:ideas')).toContain('sections');
 });
+
+it('restores a dirty edit after unmount before the debounce can save it', async () => {
+  vi.mocked(readBuilderDraft).mockResolvedValue({ mode: 'tree', revision: '8', tree: empty });
+  const first = render(<BuilderHost pageKey="ideas" />);
+  await screen.findByText('Draft saved');
+  fireEvent.click(
+    within(screen.getByRole('complementary', { name: 'Components' })).getByRole('button', {
+      name: 'Section',
+    }),
+  );
+  expect(localStorage.getItem('cms-builder-recovery:10:ideas')).toContain('sections');
+  first.unmount();
+  render(<BuilderHost pageKey="ideas" />);
+  const recovery = await screen.findByRole('region', { name: 'Restore local edits' });
+  expect(document.querySelectorAll('[data-node-type="section"]')).toHaveLength(0);
+  fireEvent.click(within(recovery).getByRole('button', { name: 'Restore local edits' }));
+  expect(document.querySelectorAll('[data-node-type="section"]')).toHaveLength(1);
+  expect(localStorage.getItem('cms-builder-recovery:10:ideas')).toContain('sections');
+});
+
+it('warns before reload and offers export if local recovery cannot be stored', async () => {
+  vi.mocked(readBuilderDraft).mockResolvedValue({ mode: 'tree', revision: '8', tree: empty });
+  const storage = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+    throw new Error('Storage unavailable');
+  });
+  try {
+    render(<BuilderHost pageKey="ideas" />);
+    await screen.findByText('Draft saved');
+    fireEvent.click(
+      within(screen.getByRole('complementary', { name: 'Components' })).getByRole('button', {
+        name: 'Section',
+      }),
+    );
+    const warning = screen.getByRole('alert');
+    expect(within(warning).getByText(/Local recovery is unavailable/)).toBeVisible();
+    expect(within(warning).getByRole('button', { name: 'Export local draft' })).toBeVisible();
+    const unload = new Event('beforeunload', { cancelable: true });
+    window.dispatchEvent(unload);
+    expect(unload.defaultPrevented).toBe(true);
+  } finally {
+    storage.mockRestore();
+  }
+});

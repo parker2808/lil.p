@@ -1,7 +1,7 @@
 # Graph Report - feat-cms-d5-ui  (2026-11-11)
 
 ## Corpus Check
-- 1562 files · ~555,544 words
+- 1562 files · ~556,029 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 37 file(s) not represented in the graph (top: (none) 17, .css 16, .example 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0b50637f`
+- Built from commit: `ba8bba2a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

@@ -34,5 +34,9 @@ export function writeRecovery(key: string, tree: TreeDocument): boolean {
 }
 
 export function clearRecovery(key: string): void {
-  localStorage.removeItem(key);
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    return;
+  }
 }
