@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-11: An SSR form can receive keystrokes before hydration; controlled inputs can lose them and tests that fill too early may race event handlers. Keep DOM values, synchronize client form state on mount, await a real readiness marker in ordinary tests and separately test delayed-script input.
+
 - 2026-11-11: A lazy editor can leave a valid-looking screenshot of its loading fallback; wait for an editor-specific visible element before capturing the visual matrix. Vite's `pnpm preview -- --port` forwards the extra `--` to Vite and silently serves its default port; invoke `pnpm exec vite preview --port` instead.
 
 - 2026-11-10: A bundle budget that excludes peers must validate the package's peer declarations; externalizing imports in tsup alone does not guarantee a valid consumer contract.

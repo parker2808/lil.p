@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- Contact hydration: a local macOS 11/12 contact E2E run exposed input timing before the client form was interactive. The form now preserves and synchronizes pre-hydration DOM text and marks readiness on mount; browser tests enter text before hydration and verify a single client POST, while ordinary submit tests await readiness. No CMS goldens, API or DB changes; see `docs/specs/2026-11-11-contact-hydration-readiness.md`.
+
 - D integration base (draft, B7 `2307b54` + D1 `2b50dbc`): carries the reviewed neutral fixture/theme and typed tree with its empty-publish H1 gate; no API, database, runtime route or golden contract change. `./theme.css` and `./tree` exports both remain. See `docs/specs/2026-11-11-cms-d-integration-base.md`.
 
 - D1 publish follow-up: `readTree` continues to accept empty drafts; `validateTreeForPublish` now rejects an empty tree with typed `HEADING_RULE` and requires exactly one H1. D2 must keep the structural draft and publish checks separate; no DB/API/golden change.
@@ -161,6 +163,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Contact inputs keep text entered before hydration; browser tests gate ordinary filling on form interactivity and verify pre-hydration entry with one client submission. No API, DB, golden or locale text changes.
 
 - 2026-11-11: Stacked D1's validated tree on B7's neutral standalone fixture, retaining `./tree` and `./theme.css` without altering runtime routes, persistence, API, goldens or visual output. Regenerated Graphify after resolving the overlapping docs.
 - 2026-11-11: B7 design review integrates accepted B6b #193, enlarges fixture logo/brand controls and two editor buttons to ≥44px, gates every fixture route and focused gallery with 80 axe states and mobile target checks, and recaptures provenance-tagged screenshots. No app, DB or API changes.
