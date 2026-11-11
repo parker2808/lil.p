@@ -1,6 +1,8 @@
 # Lessons
 
 - 2026-11-11: A server-only React tree renderer belongs in the Next host; Nest must deliver a strictly validated tree envelope, preserve VI-only custom-page SEO and fail closed on unsupported or untagged tree snapshots rather than coercing them into empty legacy pages. An opt-in route parity fixture is not proof of the still-disabled tree publish journey.
+- 2026-11-11: A real contact hydration readiness fix, not retries, must gate CMS E2E alongside route parity; merge the focused pre-hydration regression before claiming the full integration gate green.
+- 2026-11-11: An SSR form can receive keystrokes before hydration; controlled inputs can lose them and tests that fill too early may race event handlers. Keep DOM values, synchronize client form state on mount, await a real readiness marker in ordinary tests and separately test delayed-script input.
 
 - 2026-11-11: A server renderer's semantic invariant must include host extension points; routing built-ins through a single-heading path is insufficient if a host override can still create breakpoint-specific H1 elements.
 
