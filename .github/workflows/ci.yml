@@ -180,9 +180,10 @@ jobs:
           retention-days: 1
 
   web-e2e-shard:
-    # Starts right away (no `needs`): MySQL, pnpm install and browser deps run
-    # while build-e2e builds, then the shard waits for the e2e-build artifact.
+    # Download only after upload-artifact has finalized in the build job;
+    # listing artifacts early does not guarantee download-artifact can read one.
     name: web-e2e shard ${{ matrix.shard }}/4
+    needs: build-e2e
     if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e')
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -228,18 +229,6 @@ jobs:
             cmd="install --with-deps chromium"
           fi
           (cd apps/web && pnpm exec playwright $cmd > /tmp/pw-install.log 2>&1; echo $? > /tmp/pw-install.done) > /dev/null 2>&1 &
-      - name: Wait for the e2e-build artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          for i in $(seq 1 150); do
-            n=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" \
-              --jq '[.artifacts[] | select(.name == "e2e-build")] | length')
-            [ "$n" = 1 ] && exit 0
-            sleep 2
-          done
-          echo "e2e-build artifact did not appear (did the web-e2e build job fail?)"
-          exit 1
       - uses: actions/download-artifact@v4
         with:
           name: e2e-build

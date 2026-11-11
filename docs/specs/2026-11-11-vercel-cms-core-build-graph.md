@@ -16,6 +16,7 @@ first, so it does not reproduce the isolated Vercel command.
 2. Add a clean-install CI job executing that exact configured command.
 3. Document the build graph and run local/CI checks.
 4. Merge only on green checks and confirm a READY production deployment.
+5. Gate web-E2E shards on completion of their build artifact upload.
 
 ## Acceptance
 
@@ -35,3 +36,15 @@ first, so it does not reproduce the isolated Vercel command.
   omits SQL without `tree_sitter_sql` and does not replace manual review of the
   Vercel config, workflow, README and deployment docs.
 - Production READY status and the three endpoint checks are post-merge gates.
+
+## CI artifact race found on the first hotfix run
+
+Run `42961208393` passed the new `vercel-build` job but three web-E2E shards
+failed before tests: `download-artifact` could not find `e2e-build` even though
+the REST listing had just reported it. The build uploaded and finalized the
+artifact at 04:45:40Z; shard 1 began its download at that instant and shards
+2/4 also failed within two seconds. This is an ordering bug in the pre-existing
+parallel shard setup, not a Vercel DTS regression. Make shards depend on
+completion of `build-e2e` instead of using an artifact-listing poll that can
+observe the upload before downloads are ready. This trades some startup
+parallelism for a real completed-job dependency; test retries remain unchanged.

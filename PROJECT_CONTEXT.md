@@ -49,6 +49,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - Vercel build-graph hotfix: the isolated contracts build on `main` `89b9312` fails DTS resolution of unbuilt `@parker2808/cms-core/contracts`. Pin the topological command in `vercel.json` and require the clean `vercel-build` CI job; production deployment remains gated on READY and three 200 health responses. See `docs/specs/2026-11-11-vercel-cms-core-build-graph.md`.
+- Hotfix CI ordering follow-up: the first #205 run passed `vercel-build` but web-E2E shards raced an unfinished artifact upload; depend on build completion before downloading instead of polling the artifact list. No E2E assertions or thresholds changed.
 
 - 2026-11-11 B4 integration with merged B3: preserve the host's 20-definition registry and built-in/custom allowance while moving generic contracts into core. The merged package retains B3's 60/35 KiB gzip gates and adds peer validation and ESM/CJS exports. The B1 golden HTTP expectations stay unchanged; final-head PR CI and independent conflict review gate #185.
 
@@ -188,6 +189,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 9. Changelog
 
 - 2026-11-11: Pinned the topological Vercel build graph in repository config and added an isolated CI regression for a fresh CMS-core declaration build; no HTTP, DB or package-export changes.
+- 2026-11-11: Serialized web-E2E artifact consumption behind build-job completion after a three-shard artifact availability race on the first hotfix run; no test retries or masks.
 
 - 2026-11-11: Restacked B4 over merged B3; retained B3 budgets and B4 host-composed registry, peer validation, CJS resolution and host compatibility, regenerated the lockfile and Graphify, and kept B1 goldens unchanged.
 
