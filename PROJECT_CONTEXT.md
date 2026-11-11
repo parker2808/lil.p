@@ -170,6 +170,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-11: D5 maps D4's validated composition commands to one core tree-operation history commit with matching synchronous selection/result, preserving typed rejection and avoiding duplicate application; `select` has no history and whole-document `replace` is a validated snapshot boundary. The 1100/1101px tablet-to-desktop panel transition is merged from D4; no public, API or DB change.
+
 - 2026-11-11: Integrated D5 Properties, history shortcuts and draft autosave into the gated D4 host, with explicit custom-page activation and local recovery. No public page, legacy editor, tree publish, production DB, migration or golden behavior changed.
 - 2026-11-11: D4 Properties mounts in the compact tablet sheet rather than a CSS-hidden desktop inspector; a 768px unit and eight browser captures protect the one-mount, modal keyboard and EN/VI/light/dark contract (64 captures total). Keyboard/pointer delete confirmations pin their trigger ID to avoid stale selection. Documented the D4 command to D5 operation adapter; locked disposable-MySQL check:all --e2e passed 11/11. No API, DB or public change.
 
