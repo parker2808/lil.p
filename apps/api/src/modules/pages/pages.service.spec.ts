@@ -173,6 +173,7 @@ describe('PagesService', () => {
 
     const service = new PagesService(prisma as never);
     const page = await service.getPublic('home', 'vi', 'req-test');
+    if (!('blocks' in page)) throw new Error('Expected legacy page');
     expect(page.key).toBe('home');
     expect(page.blocks).toHaveLength(1);
     expect(page.blocks[0]?.type).toBe('hero');
@@ -190,6 +191,7 @@ describe('PagesService', () => {
     };
     const service = new PagesService(prisma as never);
     const page = await service.getPublic('home', 'en');
+    if (!('blocks' in page)) throw new Error('Expected legacy page');
     expect(page.blocks).toEqual([]);
   });
 

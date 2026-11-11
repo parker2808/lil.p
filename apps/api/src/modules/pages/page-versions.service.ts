@@ -52,6 +52,7 @@ import {
   definitionOf,
   parsePageKey,
 } from './pages-rules.util';
+import { toTreePage, type TreePage, treeRoutesEnabled } from './tree-page.util';
 
 type Tx = Prisma.TransactionClient;
 
@@ -336,7 +337,11 @@ export class PageVersionsService {
     return this.restore(rawKey, published.version);
   }
 
-  async getPreview(rawKey: string, locale: Locale, version?: number): Promise<PublicPagePreview> {
+  async getPreview(
+    rawKey: string,
+    locale: Locale,
+    version?: number,
+  ): Promise<PublicPagePreview | (TreePage & { invalidBlocks: [] })> {
     const key = parsePageKey(rawKey);
     const page = await this.requirePage(this.prisma, key);
 
@@ -350,7 +355,11 @@ export class PageVersionsService {
           message: `Version ${version} was not found`,
         });
       }
-      if (hasSnapshotFormat(row.snapshot)) throw storedTreeError();
+      if (hasSnapshotFormat(row.snapshot)) {
+        const snapshot = readTreeVersionSnapshot(row.snapshot);
+        if (!snapshot || !treeRoutesEnabled()) throw storedTreeError();
+        return { ...toTreePage(key, locale, snapshot.seo, snapshot.tree), invalidBlocks: [] };
+      }
       const snapshot = readPageSnapshot(row.snapshot);
       if (!snapshot) {
         return {
@@ -376,6 +385,11 @@ export class PageVersionsService {
     }
 
     if (page.draftTree !== null) {
+      if (treeRoutesEnabled()) {
+        const tree = readTree(page.draftTree);
+        if (!tree.ok) throw storedTreeError();
+        return { ...toTreePage(key, locale, page, tree.value), invalidBlocks: [] };
+      }
       throw new ConflictException({
         code: 'CONFLICT',
         message: 'Tree preview pending D3',

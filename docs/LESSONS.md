@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-11: A server-only React tree renderer belongs in the Next host; Nest must deliver a strictly validated tree envelope, preserve VI-only custom-page SEO and fail closed on unsupported or untagged tree snapshots rather than coercing them into empty legacy pages. An opt-in route parity fixture is not proof of the still-disabled tree publish journey.
+
 - 2026-11-11: A server renderer's semantic invariant must include host extension points; routing built-ins through a single-heading path is insufficient if a host override can still create breakpoint-specific H1 elements.
 
 - 2026-11-11: A responsive SSR heading must not duplicate semantic heading tags for CSS text variants; test the markup count and computed visible text separately. Gating the browser matrix in CI catches breakpoint-specific column spans omitted from pure SSR snapshots.

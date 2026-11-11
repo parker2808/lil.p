@@ -14,6 +14,8 @@ const steps = [
   ['deps', 'pnpm check:deps'],
 ];
 if (!args.has('--no-build')) steps.push(['build', 'pnpm build']);
+if (!args.has('--no-build'))
+  steps.push(['public-builder-bytes', 'node scripts/check-public-builder-bytes.mjs']);
 if (args.has('--e2e')) {
   steps.push([
     'cms-theme-browser',

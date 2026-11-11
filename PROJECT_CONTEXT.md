@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- CMS D6 guarded route integration (draft): D2 and D3 merge with both histories preserved. With `CMS_TREE_ROUTES=1`, authenticated tree draft/version preview and published tree JSON share strict D1 validation and the Next server renders both with D3; default legacy block-list contracts remain unchanged. Tree publish stays disabled in D2, so route parity uses a disposable version fixture, not an end-to-end publish claim. D4/D5 builder integration, full mouse/keyboard/visual journeys, migration approval and release remain out of scope. See `docs/specs/2026-11-11-cms-d6-route-parity.md`.
+
 - CMS D2 persistence (draft stacked on D integration base): additive nullable `page.draftTree` and BIGINT `draftTreeRevision` preserve every legacy row and published snapshot. Eligible custom-page builder drafts use strict D1 `readTree` validation and an atomic revision+mode CAS; the existing block-list endpoints and B1 goldens remain unchanged. Revision-aware tree restore validates a strict version envelope before any write; tree publish remains disabled pending D3 renderer parity. Migration/e2e evidence uses only a disposable locked local MySQL; never deploy or merge the additive DDL without a separate gate. See `docs/specs/2026-11-11-cms-d2-persistence.md`.
 - D2 review hardening: legacy restore conditionally claims the same revision/mode before replacing block rows; builder restore refuses a legacy target that would silently drop blocks, and tree-mode unversioned preview returns typed 409 pending D3. Real simultaneous save and restore/activation cases exercise a disposable MySQL, not mocks. Public published snapshots remain unchanged.
 - CMS D3 server renderer (draft, stacked on D integration base): `./react/server` exposes opt-in `renderTree` with a bounded shared draft reader for public SSR and preview, safe typed warnings on invalid/unknown/legacy trees, neutral responsive styles and host-provided localized labels/media/component adapters. D2 still owns snapshot discrimination, authenticated preview, persistence and publish gating; existing lil.p routes stay legacy. See `docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md`.
@@ -168,16 +170,15 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
-<<<<<<< HEAD
+- 2026-11-11: Combined D2 persistence and D3 SSR with opt-in strict tree preview/public dispatch and shared Next rendering; EN/VI route parity uses an isolated published-version fixture. Default legacy goldens and disabled tree publish remain unchanged; public production client chunks are checked for zero builder/editor bytes.
+
 - 2026-11-11: Added D2 additive tree-draft persistence and revision-checked custom-page builder HTTP contract, strict tree snapshot dispatch, legacy isolation and disabled tree publication; the local MySQL-only migration requires explicit deployment review. No B1 golden or public tree renderer changes.
 - 2026-11-11: Hardened D2 restore against concurrent activation and lossy legacy snapshots; tree-mode draft preview fails closed until D3. Added real-DB simultaneous-writer regression cases and preserved missing-SEO compatibility.
-=======
 - 2026-11-11: Reject D3 host overrides of the semantic heading renderer before traversal, retaining a typed failure and one-heading SSR contract; no HTTP, DB or legacy route changes.
 
 - 2026-11-11: Corrected D3 responsive row span styling and heading semantics; distinguished host exceptions from invalid media content, and made the 390/768/1440 EN/VI light/dark computed renderer matrix mandatory for E2E. Existing HTTP, DB, goldens and legacy routes remain unchanged.
 
 - 2026-11-11: Added opt-in pure SSR tree rendering to the server-only core entry with typed error-preserving fallback and responsive theme styling; legacy routes, database, B1 goldens and client bundle remain unchanged until D2 supplies an explicit snapshot dispatch and publish gate. Browser matrix: EN/VI, light/dark, 1440/390 plus tablet 768; no live host parity claim.
->>>>>>> origin/feat/cms-d3-renderer
 
 - 2026-11-11: Stacked D1's validated tree on B7's neutral standalone fixture, retaining `./tree` and `./theme.css` without altering runtime routes, persistence, API, goldens or visual output. Regenerated Graphify after resolving the overlapping docs.
 - 2026-11-11: B7 design review integrates accepted B6b #193, enlarges fixture logo/brand controls and two editor buttons to ≥44px, gates every fixture route and focused gallery with 80 axe states and mobile target checks, and recaptures provenance-tagged screenshots. No app, DB or API changes.

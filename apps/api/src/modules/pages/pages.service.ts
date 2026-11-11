@@ -32,9 +32,15 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { PublishingService } from '../publishing/publishing.service';
 import { pageTags } from '../publishing/tags.util';
+import { storedTreeError } from './builder-draft.service';
 import { pageWithAllBlocksInclude } from './entities/page.entity';
 import { toAdminBlock, toAdminPage, toAdminPageListItem } from './entities/page.mapper';
-import { readPageSnapshot, snapshotToPublicPage } from './page-snapshot.util';
+import {
+  hasSnapshotFormat,
+  readPageSnapshot,
+  readTreeVersionSnapshot,
+  snapshotToPublicPage,
+} from './page-snapshot.util';
 import {
   assertAllowedOnPage,
   assertCanDelete,
@@ -47,6 +53,7 @@ import {
   nextBlockKey,
   parsePageKey,
 } from './pages-rules.util';
+import { toTreePage, type TreePage, treeRoutesEnabled } from './tree-page.util';
 
 type Tx = Prisma.TransactionClient;
 
@@ -95,7 +102,11 @@ export class PagesService {
     @Optional() private readonly publishing?: PublishingService,
   ) {}
 
-  async getPublic(key: PageKey, locale: Locale, requestId = 'unknown'): Promise<PublicPage> {
+  async getPublic(
+    key: PageKey,
+    locale: Locale,
+    requestId = 'unknown',
+  ): Promise<PublicPage | TreePage> {
     const row = await this.prisma.page.findUnique({
       where: { key: toPrismaPageKey(key) },
       include: { publishedVersion: true },
@@ -104,6 +115,11 @@ export class PagesService {
       throw new NotFoundException({ code: 'NOT_FOUND', message: `Page ${key} was not found` });
     }
 
+    if (row.publishedVersion && hasSnapshotFormat(row.publishedVersion.snapshot)) {
+      const snapshot = readTreeVersionSnapshot(row.publishedVersion.snapshot);
+      if (!snapshot || !treeRoutesEnabled()) throw storedTreeError();
+      return toTreePage(key, locale, snapshot.seo, snapshot.tree);
+    }
     const snapshot = row.publishedVersion ? readPageSnapshot(row.publishedVersion.snapshot) : null;
     if (!snapshot) {
       if (!corePageKeySchema.safeParse(key).success) {

@@ -43,7 +43,7 @@ export type TreeVersionSnapshot = {
 };
 
 export function hasSnapshotFormat(value: unknown): boolean {
-  return value !== null && typeof value === 'object' && 'format' in value;
+  return value !== null && typeof value === 'object' && ('format' in value || 'tree' in value);
 }
 
 export function readTreeVersionSnapshot(value: unknown): TreeVersionSnapshot | null {

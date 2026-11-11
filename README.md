@@ -77,6 +77,8 @@ D2's legacy restore now takes a revision-and-mode compare-and-swap lock before t
 
 Core owns semantic headings in D3: a host `components.heading` override fails with a typed result instead of emitting duplicate responsive H1s.
 
+[CMS D6 guarded route integration](./docs/specs/2026-11-11-cms-d6-route-parity.md) combines D2 and D3: `CMS_TREE_ROUTES=1` enables strict tree snapshot JSON on authenticated preview and published public routes, rendered by the same server-only D3 tree renderer in Next. The default legacy API and UI stay unchanged; tree publishing remains disabled pending the full D6 journey gate. A disposable-MySQL route parity test covers EN/VI, and the production public chunk check rejects builder/editor bytes.
+
 ### Real content seed verification
 
 The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires private source evidence for every factual claim and project cover. Keep source paths, source text, and contact details out of git and logs. The staged migration check is `env -u DATABASE_URL bash apps/api/prisma/seed/migration-gate.sh`; it creates a random, tmpfs-only MySQL container, compares the five built-in page rows across the old and current migrations, checks page constraints and Prisma schema drift, then removes the container. It refuses to run when `DATABASE_URL` is already set.
