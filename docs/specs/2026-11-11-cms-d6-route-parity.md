@@ -18,6 +18,9 @@
 12. Enumerate all 20 host schemas from the explicit registry.
 13. Round-trip operations, history and autosave against each schema.
 14. Compare bilingual preview/public SSR with host render mappings.
+15. Inject the host's 20 schemas into live draft, publish and stored-snapshot validation.
+16. Map all 20 host components into Next tree preview/public SSR.
+17. Exercise each host definition through real HTTP and browser parity.
 
 ## Review gates (2026-11-11)
 
@@ -26,7 +29,15 @@
 - **Host schemas (separate D5 integration gate):** Before D5 UI acceptance, register property schemas for all 20 host block definitions and prove no missing/unknown type falls back to a starter schema. The pure starter tree uses explicitly supported core component types; do not claim 20-definition registration as passing from this D6 route test.
 - **All-20 release-gate extension:** Carry the D5 pure tree APIs from #200 (not its UI). The lil.p host explicitly supplies the 20 definition schemas, rather than adding them to core. For each definition exercise an insert and, where defaults contain a field, a valid responsive property edit; reject an invalid property without mutation, replay history undo/redo and validate revision-aware autosave; assert missing and unknown definitions fail closed. Render a host-mapped EN and VI tree with the same server-side D3 renderer for preview and public input and compare deterministic markup. This is schema/renderer parity evidence, not a claim that the currently starter-only HTTP tree routes accept all 20 types: that separate host API/Next registry wiring must be proven before release.
 
-The new host-gate test in `apps/web/src/modules/blocks/host-schema-gate.test.tsx` passes 21 cases: registry count plus one schema/edit/history/autosave/EN+VI SSR case per definition (40 deterministic preview/public comparisons). The server render mapping is deliberately test-local and prints the validated props, not a replacement for the host's real block components. It proves explicit registry injection and parity of the pure D3 server renderer; it **does not** mark all-20 live HTTP publish or Next display as passing. The existing real HTTP journey continues to cover the starter tree; all-20 live route wiring remains BLOCKED. D5 #200 is carried in this stacked branch, so both lower PRs #199 and #200 require their own acceptance before #202 merges.
+The host-gate unit test in `apps/web/src/modules/blocks/host-schema-gate.test.tsx` passes 21 cases: registry count plus one schema/edit/history/autosave/EN+VI SSR case per definition (40 deterministic preview/public comparisons). Its renderer mapping remains test-local. The subsequent browser test `apps/web/e2e/cms-tree-host-blocks.spec.ts` passes all 20 definitions through live HTTP activation and publication, Next public and authorized version-preview rendering in both locales (40 route pairs), with actual host components and validated resolved-props fingerprints. D5 #200 is carried in this stacked branch, so both lower PRs #199 and #200 require their own acceptance before #202 merges.
+
+### Live host registry follow-up
+
+The host, not cms-core, owns the 20 Zod property schemas and React block components. Pass one host registry to Nest draft save/read, publish and immutable-snapshot validation; pass the same registry and host component mapping to Next SSR for both public and authenticated version preview. Localize props through the existing host resolver, preserve node IDs and responsive variants, and fail closed on unsupported or invalid data. Test every definition through actual HTTP activation/publish and EN/VI Next rendering, without changing the B1 legacy goldens or authorizing a production migration. Graphify provenance must cite the actual final D6 branch source, not `c8fc833a`.
+
+For host components that fetch post/project collections, preview may legitimately include unpublished rows while public SSR does not. The live parity gate compares HTTP tree/SEO, ordered tree node IDs and the SHA-256 of each localized effective host prop set; it also asserts each real host component is mounted. Do not compare dynamic listing HTML byte-for-byte or misreport editorial data as a tree-renderer mismatch.
+
+The first focused disposable-MySQL browser attempt did not discover the new spec because the explicit E2E shard allowlist omitted it; after registration it reached a draft/public notes-list difference (5 versus 3 entries) and exposed why byte-for-byte dynamic HTML parity is invalid. The corrected focused run passed **1/1** with all 20 definitions and 40 locale route pairs; each run released the shared lock and destroyed its disposable container.
 
 The first post-merge locked full gate caught a test-fixture TypeScript annotation (`Record<string, unknown>` versus JSON-compatible responsive props): typecheck/build/web E2E failed as a consequence, while the 21 focused tests passed. The fixture type was corrected to D1 `ResponsiveProps['base']`; focused web typecheck passed, followed by a fresh complete `pnpm check:all --e2e` gate passing **13/13** on disposable tmpfs MySQL under the shared lock. The failed attempt is not counted as green; the successful gate released its lock and container.
 

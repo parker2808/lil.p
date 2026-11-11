@@ -1,6 +1,17 @@
+import { createHash } from 'node:crypto';
+
 import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
 import type { ReactNode } from 'react';
-import type { Locale, PageKey, PublicPagePreview } from '@portfolio/contracts';
+import {
+  BLOCK_REGISTRY,
+  HOST_TREE_REGISTRY,
+  resolveBlockLocale,
+  type BlockType,
+  type Locale,
+  type PageKey,
+  type PublicBlock,
+  type PublicPagePreview,
+} from '@portfolio/contracts';
 import { renderTree } from '@parker2808/cms-core/react/server';
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -35,8 +46,37 @@ export async function BlocksPage({
   const t = await getTranslations('states');
   const preview = page as PublicPagePreview;
   if ('tree' in page) {
+    const components = Object.fromEntries(
+      Object.entries(BLOCK_RENDERERS).map(([type, entry]) => [
+        type,
+        (node: { id: string }, props: Record<string, unknown>) => {
+          const resolved = resolveBlockLocale(props, locale);
+          const block: PublicBlock = {
+            id: 0,
+            key: node.id,
+            type: type as BlockType,
+            layout: BLOCK_REGISTRY[type as BlockType].layouts[0]!,
+            surface: 'PLAIN',
+            props: resolved.props,
+            lang: resolved.lang,
+          };
+          return createElement(
+            'div',
+            {
+              'data-host-block-type': type,
+              'data-host-props-hash': createHash('sha256')
+                .update(JSON.stringify({ props: resolved.props, lang: resolved.lang }))
+                .digest('hex'),
+            },
+            createElement(entry.component, { block, context: { locale, searchParams } }),
+          );
+        },
+      ]),
+    );
     const result = renderTree({
       input: page.tree,
+      registry: HOST_TREE_REGISTRY,
+      components,
       createElement,
       labels: { unsupported: t('error') },
     });

@@ -2,6 +2,7 @@ import { readTree, type TreeDocument, type TreeNode } from '@parker2808/cms-core
 import {
   BLOCK_REGISTRY,
   type BlockType,
+  HOST_TREE_REGISTRY,
   isLocalizedPair,
   type Locale,
   type PageKey,
@@ -49,7 +50,7 @@ export function hasSnapshotFormat(value: unknown): boolean {
 export function readTreeVersionSnapshot(value: unknown): TreeVersionSnapshot | null {
   const parsed = treeVersionSnapshotSchema.safeParse(value);
   if (!parsed.success) return null;
-  const tree = readTree(parsed.data.tree);
+  const tree = readTree(parsed.data.tree, HOST_TREE_REGISTRY);
   return tree.ok && isTreeRenderable(tree.value) ? { ...parsed.data, tree: tree.value } : null;
 }
 

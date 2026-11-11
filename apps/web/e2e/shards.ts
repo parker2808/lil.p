@@ -57,6 +57,7 @@ export const SPECS = [
   'admin-editors-r3.spec.ts',
   'custom-public-pages.spec.ts',
   'cms-tree-journey.spec.ts',
+  'cms-tree-host-blocks.spec.ts',
   'admin-page-create.spec.ts',
   'public-shell-indexes.spec.ts',
   'copy-email.spec.ts',
@@ -71,6 +72,7 @@ const PINNED: Record<string, number> = {
 
 /** CI seconds per file, measured on run 41382787431; unknown files count as 4. */
 const WEIGHT: Record<string, number> = {
+  'cms-tree-host-blocks.spec.ts': 120,
   'a11y.spec.ts': 63,
   'lighthouse.spec.ts': 58,
   'visual.spec.ts': 27,

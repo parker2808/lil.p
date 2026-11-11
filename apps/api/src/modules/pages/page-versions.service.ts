@@ -11,6 +11,7 @@ import {
   BLOCK_REGISTRY,
   type CorePageKey,
   corePageKeySchema,
+  HOST_TREE_REGISTRY,
   type Locale,
   type PageKey,
   type PageSnapshot,
@@ -195,7 +196,7 @@ export class PageVersionsService {
             revision: page.draftTreeRevision.toString(),
           });
         }
-        const parsed = validateTreeForPublish(page.draftTree);
+        const parsed = validateTreeForPublish(page.draftTree, HOST_TREE_REGISTRY);
         if (!parsed.ok) throw treeValidationError(parsed.code, parsed.nodeId);
         if (!isTreeRenderable(parsed.value)) throw treeValidationError('UNKNOWN_TYPE');
         if (!treeRoutesEnabled()) {
@@ -353,7 +354,7 @@ export class PageVersionsService {
         });
       }
       if (page.draftTree !== null) {
-        const current = readTree(page.draftTree);
+        const current = readTree(page.draftTree, HOST_TREE_REGISTRY);
         if (!current.ok) throw storedTreeError();
       }
       const row = await tx.pageVersion.findUnique({
@@ -484,7 +485,7 @@ export class PageVersionsService {
 
     if (page.draftTree !== null) {
       if (treeRoutesEnabled()) {
-        const tree = readTree(page.draftTree);
+        const tree = readTree(page.draftTree, HOST_TREE_REGISTRY);
         if (!tree.ok) throw storedTreeError();
         return { ...toTreePage(key, locale, page, tree.value), invalidBlocks: [] };
       }

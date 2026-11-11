@@ -10,7 +10,7 @@ import {
   type ResponsiveProps,
   type TreeDocument,
 } from '@parker2808/cms-core/tree';
-import { BLOCK_REGISTRY } from '@portfolio/contracts';
+import { BLOCK_REGISTRY, HOST_TREE_REGISTRY } from '@portfolio/contracts';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
@@ -44,6 +44,33 @@ describe('D6 all-20 host schema release gate', () => {
   it('registers exactly the 20 host definitions rather than accepting an implicit starter schema', () => {
     expect(Object.keys(BLOCK_REGISTRY)).toHaveLength(20);
     expect(Object.keys(hostRegistry).sort()).toEqual(Object.keys(BLOCK_REGISTRY).sort());
+    expect(Object.keys(HOST_TREE_REGISTRY).sort()).toEqual(Object.keys(BLOCK_REGISTRY).sort());
+    for (const definition of Object.values(BLOCK_REGISTRY)) {
+      expect(
+        readTree(
+          {
+            ...blank,
+            root: {
+              ...blank.root,
+              sections: [
+                {
+                  ...blank.root.sections[0]!,
+                  content: [
+                    {
+                      id: `host-${definition.type}`,
+                      type: 'component',
+                      componentType: definition.type,
+                      responsive: { base: definition.defaults },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          HOST_TREE_REGISTRY,
+        ).ok,
+      ).toBe(true);
+    }
   });
 
   it.each(Object.values(BLOCK_REGISTRY))(

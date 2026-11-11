@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { readTree } from '@parker2808/cms-core/tree';
-import { corePageKeySchema, toPrismaPageKey } from '@portfolio/contracts';
+import { corePageKeySchema, HOST_TREE_REGISTRY, toPrismaPageKey } from '@portfolio/contracts';
 
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
@@ -53,7 +53,7 @@ export class BuilderDraftService {
     if (corePageKeySchema.safeParse(key).success) throw this.conflict(page);
     this.assertRevision(page, input.expectedRevision, mode);
     if (mode === 'tree') this.toDraft(page);
-    const parsed = readTree(input.tree);
+    const parsed = readTree(input.tree, HOST_TREE_REGISTRY);
     if (!parsed.ok) throw treeValidationError(parsed.code, parsed.nodeId);
     if (page.draftTreeRevision === MAX_REVISION) throw this.conflict(page);
     const changed = await this.prisma.page.updateMany({
@@ -99,7 +99,7 @@ export class BuilderDraftService {
   private toDraft(page: Awaited<ReturnType<BuilderDraftService['requirePage']>>) {
     if (page.draftTree === null)
       return { mode: 'legacy' as const, revision: page.draftTreeRevision.toString(), tree: null };
-    const parsed = readTree(page.draftTree);
+    const parsed = readTree(page.draftTree, HOST_TREE_REGISTRY);
     if (!parsed.ok) throw storedTreeError();
     return {
       mode: 'tree' as const,
