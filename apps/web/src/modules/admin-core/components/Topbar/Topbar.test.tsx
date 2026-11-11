@@ -58,6 +58,6 @@ describe('Topbar', () => {
 
     expect(screen.getByRole('button', { name: /^Account/ })).toHaveClass('h-7');
     const language = screen.getByRole('combobox', { name: 'Language' });
-    expect(language).toHaveClass('border-input', 'h-8', 'rounded-md');
+    expect(language).toHaveClass('border-input', 'min-h-11', 'rounded-md');
   });
 });

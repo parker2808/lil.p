@@ -12,6 +12,7 @@ export const SPECS = [
   'admin-pages.spec.ts',
   'admin-save-status.spec.ts',
   'a11y.spec.ts',
+  'cms-u1-controls.spec.ts',
   'lighthouse.spec.ts',
   'ux-overlay.spec.ts',
   'admin-scroll.spec.ts',

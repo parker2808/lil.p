@@ -18,6 +18,7 @@ export const pageHeaderBlock = defineBlock({
     title: { en: 'Case studies', vi: '' },
   },
   pages: ['projects', 'notes'],
+  customPage: true,
   layouts: ['ONE'],
   maxPerPage: 1,
   role: 'h1',

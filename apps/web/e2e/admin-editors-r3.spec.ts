@@ -100,7 +100,8 @@ for (const uiLocale of ['en', 'vi'] as const) {
       const entries: Capture[] = [];
       await signIn(page);
       if (uiLocale === 'vi') {
-        await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+        await page.getByRole('combobox', { name: 'Language' }).click();
+        await page.getByRole('option', { name: 'VI' }).click();
         await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
       }
       const origin = new URL(page.url()).origin;
@@ -213,7 +214,8 @@ for (const uiLocale of ['en', 'vi'] as const) {
     const entries: Capture[] = [];
     await signIn(page);
     if (uiLocale === 'vi') {
-      await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+      await page.getByRole('combobox', { name: 'Language' }).click();
+      await page.getByRole('option', { name: 'VI' }).click();
       await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
     }
     const origin = new URL(page.url()).origin;
@@ -306,7 +308,8 @@ for (const uiLocale of ['en', 'vi'] as const) {
     const entries: Capture[] = [];
     await signIn(page);
     if (uiLocale === 'vi') {
-      await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+      await page.getByRole('combobox', { name: 'Language' }).click();
+      await page.getByRole('option', { name: 'VI' }).click();
       await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
     }
     await page.goto('/admin/experience/new');
@@ -408,7 +411,8 @@ for (const uiLocale of ['en', 'vi'] as const) {
     const entries: Capture[] = [];
     await signIn(page);
     if (uiLocale === 'vi') {
-      await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+      await page.getByRole('combobox', { name: 'Language' }).click();
+      await page.getByRole('option', { name: 'VI' }).click();
       await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
     }
     const origin = new URL(page.url()).origin;

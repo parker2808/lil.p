@@ -17,6 +17,7 @@ export const proseBlock = defineBlock({
     body: { en: 'Draft copy.', vi: '' },
   },
   pages: ['home', 'about', 'projects', 'notes', 'contact'],
+  customPage: true,
   layouts: ['ONE', 'SPLIT_8_4'],
   role: 'optional',
 });

@@ -16,7 +16,7 @@ describe('HuePicker', () => {
   it('shows a pill for each hue', async () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
-    render(<HuePicker value="JADE" onChange={onChange} labels={labels} />);
+    render(<HuePicker value="JADE" onChange={onChange} labels={labels} groupLabel="Hue" />);
 
     expect(screen.getByRole('radio', { name: 'Jade' })).toBeChecked();
     expect(screen.getByRole('radio', { name: 'Amber' })).toBeInTheDocument();

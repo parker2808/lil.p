@@ -2,8 +2,7 @@ import { BadRequestException, ConflictException, NotFoundException } from '@nest
 import {
   BLOCK_REGISTRY,
   type BlockType,
-  type CorePageKey,
-  corePageKeySchema,
+  isBlockAllowedOnPage,
   type PageKey,
   pageKeySchema,
 } from '@portfolio/contracts';
@@ -24,11 +23,7 @@ export function parsePageKey(raw: string): PageKey {
 }
 
 export function assertAllowedOnPage(definition: RegistryDefinition, pageKey: PageKey): void {
-  const core = corePageKeySchema.safeParse(pageKey);
-  const allowed = core.success
-    ? definition.pages.includes(core.data as CorePageKey)
-    : ['page-header', 'prose', 'cta-band'].includes(definition.type);
-  if (!allowed) {
+  if (!isBlockAllowedOnPage(definition, pageKey)) {
     throw new BadRequestException({
       code: 'BLOCK_NOT_ALLOWED',
       message: `${definition.type} is not allowed on ${pageKey}`,

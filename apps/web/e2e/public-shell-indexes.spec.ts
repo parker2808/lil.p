@@ -129,7 +129,8 @@ test('real public indexes, filters, contact and captures in EN/VI', async ({ pag
       }
     await page.locator('#name').fill(E2E_VISITOR.name);
     await page.locator('#email').fill(E2E_VISITOR.email);
-    await page.locator('#topic').selectOption({ index: 1 });
+    await page.locator('#topic').click();
+    await page.getByRole('option').first().click();
     await page.locator('#message').fill('I would like to discuss a project.');
     await page.locator('form').getByRole('button').last().click();
     await expect(page.getByText(locale === 'en' ? 'Message sent' : 'Đã gửi')).toBeVisible();
