@@ -219,10 +219,16 @@ export function BuilderShell({
   const [expanded, setExpanded] = useState<Set<string>>(new Set(['page']));
   const viewport = useSyncExternalStore(subscribeViewport, viewportDevice, () => 'mobile');
   const compact = useSyncExternalStore(subscribeViewport, compactWorkspace, () => true);
+  const visibleSheet = sheet === 'properties' && !compact ? null : sheet;
   const [chosenDevice, setChosenDevice] = useState<'mobile' | 'tablet' | 'desktop' | null>(null);
   const device = chosenDevice ?? viewport;
   const [brand, setBrand] = useState<'neutral' | 'lilp'>('neutral');
   const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const inspectorRef = useRef<HTMLElement | null>(null);
+  const propertiesTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const previousCompactRef = useRef(true);
+  const currentSheetRef = useRef(sheet);
+  const inspectorFocusedRef = useRef(false);
   const sheetRef = useRef<HTMLDivElement | null>(null);
   const confirmRef = useRef<HTMLDivElement | null>(null);
   const deleteTriggerRef = useRef<HTMLElement | null>(null);
@@ -231,17 +237,43 @@ export function BuilderShell({
   const canvasRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (!sheet) return;
-    const first = sheetRef.current?.querySelector<HTMLElement>('button, input, [tabindex="0"]');
-    first?.focus();
+    currentSheetRef.current = sheet;
   }, [sheet]);
 
   useEffect(() => {
-    if (sheet || !triggerRef.current) return;
+    previousCompactRef.current = compactWorkspace();
+    const onResize = () => {
+      const nextCompact = compactWorkspace();
+      if (previousCompactRef.current === nextCompact) return;
+      previousCompactRef.current = nextCompact;
+      if (!nextCompact && currentSheetRef.current === 'properties') {
+        triggerRef.current = null;
+        currentSheetRef.current = null;
+        setSheet(null);
+        requestAnimationFrame(() => inspectorRef.current?.focus());
+      } else if (nextCompact && inspectorFocusedRef.current) {
+        inspectorFocusedRef.current = false;
+        requestAnimationFrame(() => propertiesTriggerRef.current?.focus());
+      }
+    };
+    window.addEventListener('resize', onResize, true);
+    return () => {
+      window.removeEventListener('resize', onResize, true);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!visibleSheet) return;
+    const first = sheetRef.current?.querySelector<HTMLElement>('button, input, [tabindex="0"]');
+    first?.focus();
+  }, [visibleSheet]);
+
+  useEffect(() => {
+    if (visibleSheet || !triggerRef.current) return;
     const trigger = triggerRef.current;
     triggerRef.current = null;
     requestAnimationFrame(() => trigger.focus());
-  }, [sheet]);
+  }, [visibleSheet]);
 
   function closeSheet() {
     setSheet(null);
@@ -774,7 +806,7 @@ export function BuilderShell({
       data-brand={brand}
       aria-label={text.title}
     >
-      <header className={styles.header} inert={!!sheet || confirmDelete}>
+      <header className={styles.header} inert={!!visibleSheet || confirmDelete}>
         <div>
           <p className={styles.eyebrow}>
             {text.draft} · {pageKey}
@@ -807,7 +839,7 @@ export function BuilderShell({
       </header>
       <div
         className={`${styles.workspace} ${renderProperties ? styles.withInspector : ''}`}
-        inert={!!sheet || confirmDelete}
+        inert={!!visibleSheet || confirmDelete}
       >
         <aside className={styles.sidebar} aria-label={text.components}>
           <h2>{text.components}</h2>
@@ -850,7 +882,23 @@ export function BuilderShell({
           </div>
         </section>
         {!compact && renderProperties && (
-          <aside className={`${styles.sidebar} ${styles.inspector}`} aria-label={text.properties}>
+          <aside
+            className={`${styles.sidebar} ${styles.inspector}`}
+            aria-label={text.properties}
+            ref={inspectorRef}
+            tabIndex={-1}
+            onFocusCapture={() => {
+              inspectorFocusedRef.current = true;
+            }}
+            onBlurCapture={(event) => {
+              if (
+                !compactWorkspace() &&
+                event.relatedTarget &&
+                !event.currentTarget.contains(event.relatedTarget as Node)
+              )
+                inspectorFocusedRef.current = false;
+            }}
+          >
             <h2>{text.properties}</h2>
             {panel('properties')}
           </aside>
@@ -858,7 +906,7 @@ export function BuilderShell({
       </div>
       <div
         className={styles.selectionStrip}
-        inert={!!sheet || confirmDelete}
+        inert={!!visibleSheet || confirmDelete}
         aria-label={text.selected}
       >
         <span className={styles.selectionPath}>{selectedPath.join(' / ')}</span>
@@ -899,19 +947,24 @@ export function BuilderShell({
           ↗
         </button>
       </div>
-      <nav className={styles.mobileBar} aria-label={text.title} inert={!!sheet || confirmDelete}>
+      <nav
+        className={styles.mobileBar}
+        aria-label={text.title}
+        inert={!!visibleSheet || confirmDelete}
+      >
         {(['components', 'layers', 'properties'] as const).map((name) => (
           <button
             key={name}
             type="button"
-            aria-expanded={sheet === name}
+            aria-expanded={visibleSheet === name}
+            ref={name === 'properties' ? propertiesTriggerRef : undefined}
             onClick={(event) => openSheet(name, event.currentTarget)}
           >
             {text[name]}
           </button>
         ))}
       </nav>
-      {sheet && (
+      {visibleSheet && (
         <div
           className={styles.backdrop}
           onMouseDown={(event) => {
@@ -921,7 +974,7 @@ export function BuilderShell({
           <div
             role="dialog"
             aria-modal="true"
-            aria-label={text[sheet]}
+            aria-label={text[visibleSheet]}
             className={styles.sheet}
             ref={sheetRef}
             onKeyDown={(event) => {
@@ -948,12 +1001,12 @@ export function BuilderShell({
             }}
           >
             <div className={styles.sheetTitle}>
-              <h2>{text[sheet]}</h2>
+              <h2>{text[visibleSheet]}</h2>
               <button type="button" onClick={closeSheet} aria-label={text.cancel}>
                 ×
               </button>
             </div>
-            {sheet === 'properties' && !compact && renderProperties ? null : panel(sheet)}
+            {panel(visibleSheet)}
           </div>
         </div>
       )}

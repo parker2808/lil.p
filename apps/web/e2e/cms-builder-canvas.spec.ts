@@ -92,6 +92,65 @@ test('tablet Properties sheet contains its panel and restores keyboard focus', a
   await expect(page.getByRole('dialog', { name: 'Properties' })).toHaveCount(0);
 });
 
+test('Properties stays single-mounted across 768, 1100 and desktop in both directions', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 768, height: 900 });
+  await signIn(page);
+  for (const locale of ['en', 'vi'] as const) {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.getByRole('combobox', { name: 'Language' }).selectOption(locale);
+    await page.setViewportSize({ width: 768, height: 900 });
+    await page.goto('/admin/builder/properties-preview');
+    await expect(page.locator('html')).toHaveAttribute('lang', locale);
+    const name = locale === 'vi' ? 'Thuộc tính' : 'Properties';
+    const field = locale === 'vi' ? 'ID mục đã chọn' : 'Selected item ID';
+    const trigger = page
+      .getByRole('navigation', { name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder' })
+      .getByRole('button', { name });
+    for (const theme of ['light', 'dark'] as const) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      if (
+        !(await page
+          .locator('html')
+          .evaluate((element, value) => element.classList.contains(value), theme))
+      )
+        await page
+          .getByRole('button', {
+            name: locale === 'vi' ? 'Đổi giao diện' : 'Toggle theme',
+            exact: true,
+          })
+          .click();
+      await expect(page.locator('html')).toHaveClass(new RegExp(theme));
+      await page.setViewportSize({ width: 768, height: 900 });
+      await trigger.click();
+      for (const width of [1100, 1440, 1100, 768] as const) {
+        await page.setViewportSize({ width, height: 900 });
+        const dialog = page.getByRole('dialog', { name });
+        const inspector = page.getByRole('complementary', { name });
+        if (width === 1440) {
+          await expect(dialog).toHaveCount(0);
+          await expect(inspector.getByRole('textbox', { name: field })).toHaveCount(1);
+          await expect(inspector).toBeFocused();
+        } else {
+          await expect(inspector).toHaveCount(0);
+          if (await dialog.count()) {
+            await expect(dialog.getByRole('textbox', { name: field })).toHaveCount(1);
+          } else {
+            await expect(trigger).toBeFocused();
+            await trigger.click();
+            await expect(dialog.getByRole('textbox', { name: field })).toHaveCount(1);
+          }
+        }
+        await expect(page.getByRole('textbox', { name: field })).toHaveCount(1);
+      }
+      await page.keyboard.press('Escape');
+      await expect(page.getByRole('dialog', { name })).toHaveCount(0);
+      await expect(trigger).toBeFocused();
+    }
+  }
+});
+
 test('reviewed visual matrix', async ({ page }) => {
   test.skip(process.env.D4_CAPTURE !== '1', 'Only capture during the serialized visual gate');
   test.setTimeout(360_000);

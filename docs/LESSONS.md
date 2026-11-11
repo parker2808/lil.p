@@ -157,3 +157,5 @@
 - 2026-11-11: Keep one owner of builder document/selection and dispatch validated atomic operations, so history/autosave can wrap edits; after deletion, announce only the actual result and focus a surviving node rather than a detached trigger.
 - 2026-11-11: Match a responsive editor's JS mount boundary to the CSS visibility breakpoint; a 768px tablet can hide the desktop inspector while a device classification still reports “tablet,” leaving a modal sheet empty.
 - 2026-11-11: Capture a destructive confirmation's target ID at the initiating keyboard/pointer event, rather than reading a selected ID that may lag focus after a batched state update.
+- 2026-11-11: Test responsive sheet ownership while its dialog remains open across a breakpoint; closing the sheet before resizing hides stale-modal and focus-restoration failures.
+- 2026-11-11: A browser regression that changes locale/theme after shrinking to tablet can time out on desktop-only topbar controls; perform topbar setup at desktop width before exercising responsive transitions.
