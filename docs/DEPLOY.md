@@ -107,7 +107,10 @@ that cold start.
    to `sin1` (Singapore, next to Render and TiDB); keep it at the Root Directory
    if that setting ever changes.
 2. Build command:
-   `pnpm --filter @portfolio/contracts build && pnpm --filter @portfolio/web build`
+   `pnpm --filter @portfolio/contracts... build && pnpm --filter @portfolio/web build`.
+   This command is pinned in the root `vercel.json`; the `...` builds the
+   workspace dependencies (including CMS core) before contracts' DTS pass.
+   CI's `vercel-build` job runs the configured command on a clean checkout.
 3. Install: `pnpm install --frozen-lockfile` (enable pnpm / Corepack).
 4. Environment variables:
 
