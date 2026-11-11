@@ -177,3 +177,4 @@
 - 2026-11-11: Match a responsive editor's JS mount boundary to the CSS visibility breakpoint; a 768px tablet can hide the desktop inspector while a device classification still reports “tablet,” leaving a modal sheet empty.
 - 2026-11-11: Capture a destructive confirmation's target ID at the initiating keyboard/pointer event, rather than reading a selected ID that may lag focus after a batched state update.
 - 2026-11-11: A controlled composition-to-history adapter should validate once for typed user feedback, commit one core operation against the original tree, and compare results; never apply the provisional composition tree and then the operation to it.
+- 2026-11-11: A draft activation response acknowledges only the submitted tree, not edits made while awaiting the server; replay the latest history into the new controller and never overwrite pending stored recovery before the user chooses restore or dismiss.

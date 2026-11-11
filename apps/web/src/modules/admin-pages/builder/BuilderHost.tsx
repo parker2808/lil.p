@@ -121,6 +121,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
     () => true,
   );
   const [recovery, setRecovery] = useState<TreeDocument | undefined>();
+  const recoveryBaseline = useRef<TreeDocument>(empty);
   const [recoveryFailed, setRecoveryFailed] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [remoteAvailable, setRemoteAvailable] = useState(false);
@@ -155,11 +156,15 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
           );
           setMode('active');
         } else setMode('legacy');
+        recoveryBaseline.current = history.current.document;
         const stored = readRecovery(key);
         if (stored && JSON.stringify(stored) !== JSON.stringify(draft.tree)) setRecovery(stored);
       })
       .catch(() => {
-        if (!cancelled) setMode('unavailable');
+        if (cancelled) return;
+        recoveryBaseline.current = history.current.document;
+        setRecovery(readRecovery(key));
+        setMode('unavailable');
       });
     return () => {
       cancelled = true;
@@ -175,6 +180,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
       if (!snapshot) return;
       setStatus(snapshot.status);
       if (
+        !recovery &&
         snapshot.status === 'saved' &&
         JSON.stringify(snapshot.local) === JSON.stringify(history.current.document)
       ) {
@@ -183,18 +189,18 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
       }
     }, 250);
     return () => window.clearInterval(interval);
-  }, [key, mode]);
+  }, [key, mode, recovery]);
 
   const changed = useCallback(
     (next: TreeHistory) => {
       present(next);
       if (pageKey !== 'home') {
-        setRecoveryFailed(!writeRecovery(key, next.document));
+        setRecoveryFailed(recovery ? true : !writeRecovery(key, next.document));
         autosave.current?.edit(next.document);
         setStatus(autosave.current?.state.status ?? 'dirty');
       }
     },
-    [key, pageKey, present],
+    [key, pageKey, present, recovery],
   );
 
   useEffect(() => {
@@ -257,7 +263,8 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
         setMode('unavailable');
         return;
       }
-      const draft = await activateBuilderDraft(pageKey, history.current.document, remote.revision);
+      const submitted = history.current.document;
+      const draft = await activateBuilderDraft(pageKey, submitted, remote.revision);
       autosave.current = new DraftAutosave(
         draft,
         {
@@ -270,8 +277,14 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
         },
         builderRegistry,
       );
-      clearRecovery(key);
-      setStatus('saved');
+      if (JSON.stringify(history.current.document) !== JSON.stringify(draft.tree)) {
+        autosave.current.edit(history.current.document);
+        if (!recovery) setRecoveryFailed(!writeRecovery(key, history.current.document));
+      } else if (!recovery) {
+        clearRecovery(key);
+        setRecoveryFailed(false);
+      }
+      setStatus(autosave.current.state.status);
       setMode('active');
     } catch {
       setMode('unavailable');
@@ -398,6 +411,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
             type="button"
             onClick={() => {
               changed(createTreeHistory(recovery, 'page'));
+              setRecoveryFailed(!writeRecovery(key, recovery));
               setRecovery(undefined);
             }}
           >
@@ -408,7 +422,13 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
             variant="outline"
             onClick={() => {
               setRecovery(undefined);
-              clearRecovery(key);
+              if (
+                JSON.stringify(history.current.document) ===
+                JSON.stringify(recoveryBaseline.current)
+              ) {
+                clearRecovery(key);
+                setRecoveryFailed(false);
+              } else setRecoveryFailed(!writeRecovery(key, history.current.document));
             }}
           >
             {text.dismiss}

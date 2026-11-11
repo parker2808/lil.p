@@ -15,6 +15,44 @@ const manifest: Array<{
   file: string;
 }> = [];
 
+async function captureDraftState(
+  page: import('@playwright/test').Page,
+  state: 'active' | 'conflict',
+  theme: 'light' | 'dark',
+) {
+  await mkdir(captures, { recursive: true });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.evaluate(
+    (value) => document.documentElement.classList.toggle('dark', value === 'dark'),
+    theme,
+  );
+  await expect(
+    page
+      .locator('[data-theme]')
+      .filter({ has: page.getByRole('heading', { name: 'Page builder' }) }),
+  ).toHaveAttribute('data-theme', theme);
+  for (const width of [1440, 768, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect(page.locator('[data-node-type="section"]')).toHaveCount(1);
+    await page.evaluate(async () => {
+      await Promise.all(
+        document
+          .getAnimations()
+          .filter((animation) => animation instanceof CSSTransition)
+          .map((animation) => animation.finished.catch(() => undefined)),
+      );
+    });
+    const violations = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+      .analyze();
+    expect(violations.violations).toEqual([]);
+    const file = `en-${theme}-${width}-${state}.png`;
+    await page.screenshot({ path: join(captures, file), animations: 'disabled' });
+    manifest.push({ locale: 'en', theme, width, state, file });
+  }
+  await page.setViewportSize({ width: 1440, height: 900 });
+}
+
 test.setTimeout(240_000);
 
 test('Properties remains editable at 1100 and 768 after desktop', async ({ page }) => {
@@ -143,6 +181,7 @@ test('custom page edits autosave, reload, undo and review conflict without losin
     .toBe(2);
   await expect(page.getByText('Draft saved')).toBeVisible({ timeout: 15_000 });
 
+  await captureDraftState(page, 'active', 'light');
   const remote = await (await page.request.get(`/api/admin/pages/${key}/builder/draft`)).json();
   remote.tree.root.sections[0].content[0].responsive.base.text = 'Concurrent heading';
   const concurrent = await page.request.put(`/api/admin/pages/${key}/builder/draft`, {
@@ -154,6 +193,7 @@ test('custom page edits autosave, reload, undo and review conflict without losin
   await expect(page.getByText('Conflict · your edits are kept locally')).toBeVisible({
     timeout: 15_000,
   });
+  await captureDraftState(page, 'conflict', 'dark');
   expect(
     (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze())
       .violations,

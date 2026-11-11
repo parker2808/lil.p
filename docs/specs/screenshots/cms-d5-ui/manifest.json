@@ -3,6 +3,48 @@
     "locale": "en",
     "theme": "light",
     "width": 1440,
+    "state": "active",
+    "file": "en-light-1440-active.png"
+  },
+  {
+    "locale": "en",
+    "theme": "light",
+    "width": 768,
+    "state": "active",
+    "file": "en-light-768-active.png"
+  },
+  {
+    "locale": "en",
+    "theme": "light",
+    "width": 390,
+    "state": "active",
+    "file": "en-light-390-active.png"
+  },
+  {
+    "locale": "en",
+    "theme": "dark",
+    "width": 1440,
+    "state": "conflict",
+    "file": "en-dark-1440-conflict.png"
+  },
+  {
+    "locale": "en",
+    "theme": "dark",
+    "width": 768,
+    "state": "conflict",
+    "file": "en-dark-768-conflict.png"
+  },
+  {
+    "locale": "en",
+    "theme": "dark",
+    "width": 390,
+    "state": "conflict",
+    "file": "en-dark-390-conflict.png"
+  },
+  {
+    "locale": "en",
+    "theme": "light",
+    "width": 1440,
     "state": "properties",
     "file": "en-light-1440-properties.png"
   },

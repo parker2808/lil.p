@@ -2,7 +2,12 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-li
 import { afterEach, expect, it, vi } from 'vitest';
 
 import { BuilderHost } from './BuilderHost';
-import { readActiveBuilderDraft, readBuilderDraft, saveBuilderDraft } from './autosave/transport';
+import {
+  activateBuilderDraft,
+  readActiveBuilderDraft,
+  readBuilderDraft,
+  saveBuilderDraft,
+} from './autosave/transport';
 
 vi.mock('next-intl', () => ({ useLocale: () => 'en' }));
 vi.mock('@/modules/admin-core/hooks/use-me.hook', () => ({ useMe: () => ({ id: 10 }) }));
@@ -99,6 +104,62 @@ it('restores a dirty edit after unmount before the debounce can save it', async 
   fireEvent.click(within(recovery).getByRole('button', { name: 'Restore local edits' }));
   expect(document.querySelectorAll('[data-node-type="section"]')).toHaveLength(1);
   expect(localStorage.getItem('cms-builder-recovery:10:ideas')).toContain('sections');
+});
+
+it('reconciles edits made during activation before clearing recovery', async () => {
+  vi.mocked(readBuilderDraft).mockResolvedValue({ mode: 'legacy', revision: '8', tree: null });
+  let finishActivation!: (draft: { tree: typeof empty; revision: string }) => void;
+  vi.mocked(activateBuilderDraft).mockReturnValue(
+    new Promise((resolve) => {
+      finishActivation = resolve;
+    }),
+  );
+  let finishSave!: (draft: { tree: typeof empty; revision: string }) => void;
+  vi.mocked(saveBuilderDraft).mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        finishSave = resolve;
+      }),
+  );
+  render(<BuilderHost pageKey="ideas" />);
+  await screen.findByText('Local study · activate to save');
+  const palette = screen.getByRole('complementary', { name: 'Components' });
+  fireEvent.click(within(palette).getByRole('button', { name: 'Section' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Activate tree draft' }));
+  await waitFor(() => expect(activateBuilderDraft).toHaveBeenCalledTimes(1));
+  const submitted = vi.mocked(activateBuilderDraft).mock.calls[0]![1];
+  fireEvent.click(within(palette).getByRole('button', { name: 'Heading' }));
+  finishActivation({ tree: submitted as typeof empty, revision: '9' });
+  await waitFor(
+    () => expect(saveBuilderDraft).toHaveBeenCalledWith('ideas', expect.anything(), '9'),
+    {
+      timeout: 2500,
+    },
+  );
+  const savedTree = vi.mocked(saveBuilderDraft).mock.calls[0]![1];
+  expect(JSON.stringify(savedTree)).toContain('heading');
+  expect(JSON.stringify(submitted)).not.toContain('heading');
+  expect(localStorage.getItem('cms-builder-recovery:10:ideas')).toContain('heading');
+  finishSave({ tree: savedTree as typeof empty, revision: '10' });
+  await screen.findByText('Draft saved');
+});
+
+it('offers stored recovery after a failed remote read without overwriting it on edit', async () => {
+  vi.mocked(readBuilderDraft).mockRejectedValue(new Error('Network unavailable'));
+  const stored = JSON.stringify({ at: Date.now(), tree: empty });
+  localStorage.setItem('cms-builder-recovery:10:ideas', stored);
+  render(<BuilderHost pageKey="ideas" />);
+  const recovery = await screen.findByRole('region', { name: 'Restore local edits' });
+  fireEvent.click(
+    within(screen.getByRole('complementary', { name: 'Components' })).getByRole('button', {
+      name: 'Section',
+    }),
+  );
+  expect(localStorage.getItem('cms-builder-recovery:10:ideas')).toBe(stored);
+  expect(recovery).toBeVisible();
+  fireEvent.click(within(recovery).getByRole('button', { name: 'Dismiss recovery' }));
+  expect(localStorage.getItem('cms-builder-recovery:10:ideas')).toContain('sections');
+  expect(document.querySelectorAll('[data-node-type="section"]')).toHaveLength(1);
 });
 
 it('warns before reload and offers export if local recovery cannot be stored', async () => {
