@@ -252,6 +252,7 @@
 - NavLink.stories.tsx
 - B6b — neutral CMS core theme
 - collapsible.tsx
+- MockResizeObserver
 - exports
 - scripts
 - CoverPlaceholder.stories.tsx
@@ -273,7 +274,6 @@
 - FactChips.stories.tsx
 - admin-pages.controller.ts
 - R3-03 — Published custom pages
-- R3-04 — Create a page in the real admin
 - R3-06: reliable public email action
 - R3-07: Public details and states
 - R3-08 — Admin shell and insights
