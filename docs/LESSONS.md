@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-10: Capture public route baselines in an unauthenticated browser context; reusing the admin session can silently show the draft-preview banner and invalidate screenshots even when tests pass.
+- 2026-11-10: A Next page file is not necessarily a reachable screen: inspect redirects, role gates, test-only flags and shared layouts, and distinguish source/test inventory from actual live screenshot coverage.
+
 - 2026-11-11: When restacking a long docs-only child after a squashed parent, reconstruct only the reviewed child diff on the current `main` and preserve prior release notes; earlier no-approval language needs a dated superseding record once a conditional owner grant arrives.
 - 2026-11-10: A public monorepo can document the approved private package name and repository link without exposing its content or credentials; keep the exception scoped to one package and keep all other private repository identities hidden.
 - 2026-11-10: A real stacked PR targeting the branch that contains a workflow trigger change can exercise `pull_request` on that non-main base before the change merges; capture both failing and passing `context` job URLs rather than inferring coverage from a main-target PR.

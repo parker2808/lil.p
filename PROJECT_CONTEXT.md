@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- CMS U0: 43 route files, redirects/guards/flags and control owners mapped in `docs/audits/2026-11-10-cms-u0-route-control-baseline.md`; clean `main` `d0d474b` passed all nine guarded `check:all --e2e` gates on disposable MySQL (194 Playwright tests in 55 files; 69 requested visual/a11y/EN-VI/admin cases included). Explicit tests cover seven About-tab and two legacy experience editor redirects. Reproducible EN/VI, light/dark 1440/390 route captures and a manifest are kept outside git; see the audit for reviewed coverage and remaining keyboard/WCAG gaps. No production behavior/API/DB change; A2/A3 remain draft and A3 is included in U1. Graphify's code AST is refreshed with docs/CSS/SQL extraction limits recorded in the audit.
+
 - 2026-11-11 07:45 ICT merge scope: Parker's t250u approval, clarified by the coordinator, covers the ordered stack's **final-head** merges and their automatic `main` production deploys when each head is green with no unresolved P0–P2. #184 merged as `85f95f1`, #171 as `7b85d71`, #172 as `c127e7b`; each passed its post-merge checks, Vercel success and `/`, `/vi`, `/api/health` health gates. #180 still requires its own green final head before merge. Production DB access, secrets, paid services and a private repository are outside this grant; D2 waits for full D6 verification. Historical no-approval notes below describe their authors' earlier documentation-only scope.
 - CMS core A0: Parker approved a narrow exception to name/link the private repository distributing `@parker2808/cms-core` and declare the package dependency. Repository creation, credentials, publication, merge, and deploy remain separate decisions. The ADR and extraction are separate tasks.
 - CI context guard: PR #178 targets `feat/cms-u2-site-admin-patterns`, so the former `context-check` workflow's `branches: [main]` filter omitted its `context` job despite non-docs changes. Removing only that filter makes the existing triple-dot base/head guard run for stacked and main-target PRs alike; no `skip-context` authorization or script semantics change. Disposable PR #187 against the non-main `fix/context-check-stacked` base proved the real `context` job fails without `PROJECT_CONTEXT.md` ([negative job](https://github.com/parker2808/lil.p/actions/runs/42854166729/job/129962535597)) and passes after its addition ([positive job](https://github.com/parker2808/lil.p/actions/runs/42855321398/job/129966652906)). This does not retrospectively supply a job for PR #178; the `docs/` exemption remains. No merge/deploy is authorized.
@@ -181,6 +183,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-10: Extended CMS U0 main-based route/control inventory with a guarded full-stack behavior baseline (9/9 gates; 194 web e2e tests), explicit legacy redirects, reproducible EN/VI light/dark 1440/390 screenshots and a pre-change manifest; no production behavior or DB migration.
 
 - 2026-11-11: Restacked #180's own documentation on the landed ADR, preserved the #184/#171/#172 histories and recorded Parker's t250u conditional final-head merge/automatic-deploy scope; no production DB or secret access.
 - 2026-11-10: Documented Parker's narrow public-repo naming and dependency exception for the planned private `@parker2808/cms-core` package; all other private repositories and private data remain protected.
