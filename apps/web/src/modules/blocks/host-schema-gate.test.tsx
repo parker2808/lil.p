@@ -49,7 +49,7 @@ describe('D6 all-20 host schema release gate', () => {
   it.each(Object.values(BLOCK_REGISTRY))(
     '$type validates D5 edits, history and autosave and renders EN/VI SSR parity',
     async (definition) => {
-      const base = structuredClone(definition.defaults) as Record<string, unknown>;
+      const base = structuredClone(definition.defaults) as ResponsiveProps['base'];
       if (definition.type === 'page-header') {
         base.title = { ...(base.title as Record<string, string>), vi: 'Tiêu đề kiểm thử' };
       }
