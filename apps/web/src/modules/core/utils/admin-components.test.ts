@@ -7,7 +7,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const modules = resolve(here, '../..');
 const redesignCss = resolve(here, '../../../../../../packages/ui/src/styles/redesign.css');
 const buttonHeightOverride = /<(?:Button|IconButton)\b[^<]*?\bclassName="[^"]*(?<=["\s:])h-\d/;
-const selectClassName = /<select\b[\s\S]*?\bclassName=([^\n]+)/g;
+const nativeSelect = /<select\b/;
 const adminButtonRule = /\.admin\b[^{]*(?:button|sidebar-menu)[^{]*\{/;
 
 function adminFiles() {
@@ -25,15 +25,11 @@ describe('admin components', () => {
     expect(offenders).toEqual([]);
   });
 
-  it('styles native admin selects with the shared input chrome', () => {
-    const selects = adminFiles().flatMap((path) =>
-      [...readFileSync(join(modules, path), 'utf8').matchAll(selectClassName)].map(
-        ([, className = '']) => ({ path, className }),
-      ),
+  it('uses the shared Select instead of native admin selects', () => {
+    const offenders = adminFiles().filter((path) =>
+      nativeSelect.test(readFileSync(join(modules, path), 'utf8')),
     );
-
-    expect(selects.length).toBeGreaterThan(0);
-    expect(selects.filter(({ className }) => !className.includes('inputClassName'))).toEqual([]);
+    expect(offenders).toEqual([]);
   });
 
   it('has no admin-only button rules in the redesign stylesheet', () => {

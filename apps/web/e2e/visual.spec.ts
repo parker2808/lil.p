@@ -75,12 +75,43 @@ async function expectScreen(page: Page, name: string, fullPage = true): Promise<
   });
 }
 
+async function assertCleanDemoContent(page: Page, route: 'notes' | 'about'): Promise<void> {
+  if (route === 'notes') {
+    const response = await page.request.get('/api/public/posts?locale=en');
+    expect(response.ok()).toBe(true);
+    const data = (await response.json()) as { total: number; items: { slug: string }[] };
+    expect(data.total).toBe(3);
+    expect(data.items.map((item) => item.slug).sort()).toEqual([
+      'readable-release-notes',
+      'strangler-routes',
+      'vue-to-react',
+    ]);
+  } else {
+    const [educationResponse, experienceResponse] = await Promise.all([
+      page.request.get('/api/public/education?locale=en'),
+      page.request.get('/api/public/experience?locale=en'),
+    ]);
+    expect(educationResponse.ok()).toBe(true);
+    expect(experienceResponse.ok()).toBe(true);
+    const education = (await educationResponse.json()) as { school: string }[];
+    const experience = (await experienceResponse.json()) as { company: string }[];
+    expect(education.map((item) => item.school)).toEqual(['Technical University']);
+    expect(experience.map((item) => item.company).sort()).toEqual([
+      'Acme Platform',
+      'Acme Platform',
+      'Contoso Commerce',
+      'Example Enterprise',
+    ]);
+  }
+}
+
 for (const viewport of VIEWPORTS) {
   test.describe(`${viewport.width}px`, () => {
     test.use({ viewport });
 
     for (const [name, route, fullPage] of PUBLIC_ROUTES) {
       test(`public ${name}`, async ({ page }) => {
+        if (name === 'notes' || name === 'about') await assertCleanDemoContent(page, name);
         await page.goto(route);
         await expectScreen(page, `public-${name}-${viewport.width}`, fullPage);
       });

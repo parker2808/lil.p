@@ -10,7 +10,7 @@ import {
 import { Input } from '@portfolio/ui/components/ui/input';
 import { Field, FieldError, FieldLabel } from '@portfolio/ui/components/ui/field';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@portfolio/ui/components/ui/tabs';
-import { ToggleGroup, ToggleGroupItem } from '@portfolio/ui/components/ui/toggle-group';
+import { RadioGroup, RadioGroupItem } from '@portfolio/ui/components/ui/radio-group';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
@@ -75,20 +75,17 @@ export function BlockInspector({
       </TabsContent>
       <TabsContent value="appearance" className="pt-3">
         <div className="flex flex-col gap-2">
-          <p className="text-ui">{t('surface')}</p>
-          <ToggleGroup
-            type="single"
+          <RadioGroup
+            aria-label={t('surface')}
             value={block.surface}
             disabled={readOnly}
             onValueChange={(next) => {
-              if (next) {
-                void onUpdate({ surface: next as BlockSurface, updatedAt: block.updatedAt });
-              }
+              void onUpdate({ surface: next as BlockSurface, updatedAt: block.updatedAt });
             }}
           >
-            <ToggleGroupItem value="PLAIN">{t('plain')}</ToggleGroupItem>
-            <ToggleGroupItem value="BAND">{t('band')}</ToggleGroupItem>
-          </ToggleGroup>
+            <RadioGroupItem value="PLAIN">{t('plain')}</RadioGroupItem>
+            <RadioGroupItem value="BAND">{t('band')}</RadioGroupItem>
+          </RadioGroup>
           <p className="text-ui-meta text-muted-foreground">{t('bandNote')}</p>
         </div>
       </TabsContent>

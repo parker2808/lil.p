@@ -1,7 +1,6 @@
 name: context-check
 on:
   pull_request:
-    branches: [main]
     types: [opened, synchronize, reopened, labeled, unlabeled]
 jobs:
   context:

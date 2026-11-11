@@ -15,7 +15,8 @@ test('Vietnamese login has no known English auth copy', async ({ page }) => {
 
 test('Vietnamese dashboard, shell and lists have no known English copy', async ({ page }) => {
   await signIn(page);
-  await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+  await page.getByRole('combobox', { name: 'Language' }).click();
+  await page.getByRole('option', { name: 'VI' }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
 
   const routes = [

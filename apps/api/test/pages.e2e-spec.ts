@@ -175,6 +175,15 @@ describe('admin pages and blocks', () => {
     expect(res.body.code).toBe('BLOCK_LIMIT');
   });
 
+  it('returns 409 BLOCK_LIMIT when duplicating a limit-one block without a write', async () => {
+    const before = await agent.get('/api/admin/pages/home').expect(200);
+    const hero = before.body.blocks.find((block: { type: string }) => block.type === 'hero');
+    const res = await agent.post(`/api/admin/pages/home/blocks/${hero.id}/duplicate`).expect(409);
+    expect(res.body.code).toBe('BLOCK_LIMIT');
+    const after = await agent.get('/api/admin/pages/home').expect(200);
+    expect(after.body.blocks).toEqual(before.body.blocks);
+  });
+
   it('returns 409 BLOCK_LOCKED when deleting the H1 block', async () => {
     const page = await agent.get('/api/admin/pages/home').expect(200);
     const res = await agent
