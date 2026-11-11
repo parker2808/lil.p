@@ -77,6 +77,15 @@ jobs:
         if: needs.changes.outputs.ui == 'true' || github.event_name != 'pull_request'
         run: pnpm --filter @portfolio/ui build-storybook
 
+  vercel-build:
+    name: vercel-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: node scripts/check-vercel-build.mjs
+
   api-e2e:
     if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e')
     runs-on: ubuntu-latest

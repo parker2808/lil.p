@@ -1,6 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "regions": ["sin1"],
+  "buildCommand": "pnpm --filter @portfolio/contracts... build && pnpm --filter @portfolio/web build",
   "ignoreCommand": "sh scripts/vercel-ignore-build.sh",
   "git": {
     "deploymentEnabled": {

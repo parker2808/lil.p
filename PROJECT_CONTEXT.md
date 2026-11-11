@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- Vercel build-graph hotfix: the isolated contracts build on `main` `89b9312` fails DTS resolution of unbuilt `@parker2808/cms-core/contracts`. Pin the topological command in `vercel.json` and require the clean `vercel-build` CI job; production deployment remains gated on READY and three 200 health responses. See `docs/specs/2026-11-11-vercel-cms-core-build-graph.md`.
+
 - 2026-11-11 B4 integration with merged B3: preserve the host's 20-definition registry and built-in/custom allowance while moving generic contracts into core. The merged package retains B3's 60/35 KiB gzip gates and adds peer validation and ESM/CJS exports. The B1 golden HTTP expectations stay unchanged; final-head PR CI and independent conflict review gate #185.
 
 - CMS B4 contracts/registry (stacked on accepted B3 `814afcf`): generic Zod page/block/locale/snapshot schemas, `defineBlock`, allowance and duplicate-rejecting `createRegistry` live in `@parker2808/cms-core/contracts`. The host retains its 20 definitions, copy and finite HTTP block enum; browser gzip is 864/61,440 bytes and React 34/35,840. All three subpaths resolve ESM and CJS; React 19, React DOM 19 and Zod 4 are declared peers excluded from browser bundles. Core-only imports load no host definitions; lint/dependency checks reject host imports, including side-effect imports and re-exports. No runtime route, EN/VI locale or admin table Shortcuts dialog change, migrations or new external packages. U2/U3 are accepted on separate unmerged branches; B6 follows B4 approval, D follows B7. See `docs/specs/2026-11-10-cms-b4-contracts-registry.md`.
@@ -184,6 +186,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Pinned the topological Vercel build graph in repository config and added an isolated CI regression for a fresh CMS-core declaration build; no HTTP, DB or package-export changes.
 
 - 2026-11-11: Restacked B4 over merged B3; retained B3 budgets and B4 host-composed registry, peer validation, CJS resolution and host compatibility, regenerated the lockfile and Graphify, and kept B1 goldens unchanged.
 
