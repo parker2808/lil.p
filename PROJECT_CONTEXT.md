@@ -30,7 +30,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - No secrets, tokens, or `.env` values in the repo, PRs, logs, or chat. Repo is public.
 - No real contact info: use `<email>` / `<phone>` placeholders.
-- Never name or link any private data repo.
+- Never name or link any private data repo. The sole naming/link exception is the private repository distributing `@parker2808/cms-core`; this does not permit its contents or credentials in this public repo. See `AGENTS.md`.
 - No paid services or paid Tiptap extensions.
 - R16 (Figma) is dropped — do not implement.
 
@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- CMS core A0: Parker approved a narrow exception to name/link the private repository distributing `@parker2808/cms-core` and declare the package dependency. Repository creation, credentials, publication, merge, and deploy remain separate decisions. The ADR and extraction are separate tasks.
 - CI context guard: PR #178 targets `feat/cms-u2-site-admin-patterns`, so the former `context-check` workflow's `branches: [main]` filter omitted its `context` job despite non-docs changes. Removing only that filter makes the existing triple-dot base/head guard run for stacked and main-target PRs alike; no `skip-context` authorization or script semantics change. Disposable PR #187 against the non-main `fix/context-check-stacked` base proved the real `context` job fails without `PROJECT_CONTEXT.md` ([negative job](https://github.com/parker2808/lil.p/actions/runs/42854166729/job/129962535597)) and passes after its addition ([positive job](https://github.com/parker2808/lil.p/actions/runs/42855321398/job/129966652906)). This does not retrospectively supply a job for PR #178; the `docs/` exemption remains. No merge/deploy is authorized.
 - Round 3 integration: one review PR to `main` starts at the verified PR #169 head, which contains all eleven earlier Round 3 branch tips. The additional commit documents the handoff only. The original stacked PRs remain open; Parker decides whether and how to merge or close them. Database migration, deployment, and production changes are separate decisions.
 - PR #169 CI repair: web E2E builds and shards now share the `localhost` origin required by draft cookies; editor captures use the live theme handler, the Vietnamese experience check targets its About tab, and the contact check uses a real click after verifying its name field. Twenty Linux visual baselines reflect the integrated R3 design. The guarded E2E gate accepts alternate local API/web ports when another worktree occupies the defaults. Focused browser checks pass 17/17, Linux visual checks pass 14/14, and the full disposable-MySQL `pnpm check:all --e2e` passes all nine gates locally; PR CI remains open.
@@ -137,6 +138,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-10: Documented Parker's narrow public-repo naming and dependency exception for the planned private `@parker2808/cms-core` package; all other private repositories and private data remain protected.
 - 2026-11-10: Verified the context guard on a non-main PR base with two disposable CI runs: no context entry fails and a subsequent context entry passes; recorded both job links in the spec.
 
 - 2026-11-10: Remove the `main`-only pull-request trigger from `context-check` so stacked PRs receive the same PROJECT_CONTEXT file-change guard; document the PR #178 gap and keep the `skip-context` and `docs/` rules unchanged.

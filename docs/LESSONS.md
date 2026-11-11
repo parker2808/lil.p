@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-10: A public monorepo can document the approved private package name and repository link without exposing its content or credentials; keep the exception scoped to one package and keep all other private repository identities hidden.
 - 2026-11-10: A real stacked PR targeting the branch that contains a workflow trigger change can exercise `pull_request` on that non-main base before the change merges; capture both failing and passing `context` job URLs rather than inferring coverage from a main-target PR.
 
 - 2026-11-03: A stacked integration PR can branch from the verified top PR tip when every lower branch tip is already an ancestor; this preserves the full stack without modifying or merging the original PRs.
