@@ -155,3 +155,4 @@
 - 2026-11-11: When a stacked design branch meets a reviewed base update, preserve both branches' documented lessons and regenerate generated graph reports rather than hand-merging graph data.
 - 2026-11-11: A builder nested inside an admin flex layout must size against the host main content box, not subtract guessed pixels from 100dvh; a fixed page-node minimum can hide builder navigation behind the host mobile bar.
 - 2026-11-11: Keep one owner of builder document/selection and dispatch validated atomic operations, so history/autosave can wrap edits; after deletion, announce only the actual result and focus a surviving node rather than a detached trigger.
+- 2026-11-11: A timed-out CAS save may already have committed; keep the attempted tree and newer local edits separately, read the remote revision before retry and require explicit review rather than blindly replaying with a new revision.
