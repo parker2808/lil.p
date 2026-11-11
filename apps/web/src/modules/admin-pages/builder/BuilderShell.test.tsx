@@ -20,7 +20,7 @@ afterEach(() => {
   window.dispatchEvent(new Event('resize'));
 });
 
-it('mounts the host Properties editor exactly once across desktop and mobile sheet transitions', async () => {
+it('mounts Properties once in desktop inspector or mobile/tablet sheet and restores focus', async () => {
   Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1440 });
   const renderProperties = vi.fn(() => <span data-testid="host-properties" />);
   render(
@@ -32,16 +32,25 @@ it('mounts the host Properties editor exactly once across desktop and mobile she
     />,
   );
   expect(screen.getAllByTestId('host-properties')).toHaveLength(1);
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1100 });
+  fireEvent(window, new Event('resize'));
+  await waitFor(() => expect(screen.queryByTestId('host-properties')).toBeNull());
   Object.defineProperty(window, 'innerWidth', { configurable: true, value: 768 });
   fireEvent(window, new Event('resize'));
   await waitFor(() => expect(screen.queryByTestId('host-properties')).toBeNull());
-  fireEvent.click(
-    within(screen.getByRole('navigation', { name: 'Page builder' })).getByRole('button', {
-      name: 'Properties',
-    }),
+  const tabletTrigger = within(screen.getByRole('navigation', { name: 'Page builder' })).getByRole(
+    'button',
+    { name: 'Properties' },
   );
+  fireEvent.click(tabletTrigger);
+  const tabletSheet = screen.getByRole('dialog', { name: 'Properties' });
+  expect(within(tabletSheet).getByTestId('host-properties')).toBeInTheDocument();
+  expect(screen.getAllByTestId('host-properties')).toHaveLength(1);
+  fireEvent.keyDown(tabletSheet, { key: 'Escape' });
+  await waitFor(() => expect(screen.queryByTestId('host-properties')).toBeNull());
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1101 });
+  fireEvent(window, new Event('resize'));
   await waitFor(() => expect(screen.getAllByTestId('host-properties')).toHaveLength(1));
-  fireEvent.keyDown(screen.getByRole('dialog', { name: 'Properties' }), { key: 'Escape' });
   Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
   fireEvent(window, new Event('resize'));
   await waitFor(() => expect(screen.queryByTestId('host-properties')).toBeNull());

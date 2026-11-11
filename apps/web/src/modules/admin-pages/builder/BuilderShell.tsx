@@ -229,6 +229,7 @@ export function BuilderShell({
   const sheetRef = useRef<HTMLDivElement | null>(null);
   const confirmRef = useRef<HTMLDivElement | null>(null);
   const deleteTriggerRef = useRef<HTMLElement | null>(null);
+  const deleteTargetRef = useRef<string | null>(null);
   const treeRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLElement | null>(null);
 
@@ -482,6 +483,7 @@ export function BuilderShell({
     } else if (event.key === 'Delete' && id !== 'page') {
       event.preventDefault();
       apply({ type: 'select', id });
+      deleteTargetRef.current = id;
       deleteTriggerRef.current = event.target as HTMLElement;
       setConfirmDelete(true);
     }
@@ -713,6 +715,7 @@ export function BuilderShell({
               <button
                 type="button"
                 onClick={(event) => {
+                  deleteTargetRef.current = node.id;
                   deleteTriggerRef.current = event.currentTarget;
                   setConfirmDelete(true);
                 }}
@@ -897,6 +900,7 @@ export function BuilderShell({
             <button
               type="button"
               onClick={(event) => {
+                deleteTargetRef.current = selectedId;
                 deleteTriggerRef.current = event.currentTarget;
                 setConfirmDelete(true);
               }}
@@ -1021,7 +1025,10 @@ export function BuilderShell({
                 type="button"
                 onClick={() => {
                   const wasInTree = !!deleteTriggerRef.current?.closest('[role="tree"]');
-                  const result = apply({ type: 'remove', id: selectedId });
+                  const result = apply({
+                    type: 'remove',
+                    id: deleteTargetRef.current ?? selectedId,
+                  });
                   closeConfirmation(!result.ok);
                   if (result.ok) {
                     setAnnouncement(text.removed);
@@ -1052,6 +1059,7 @@ export function BuilderShell({
 }
 
 export function BuilderStudy({ pageKey }: { pageKey: string }) {
+  const locale = useLocale() === 'vi' ? 'vi' : 'en';
   const [state, setState] = useState<BuilderState>({ document: initial, selectedId: 'page' });
   const current = useRef(state);
   const onDispatch = (command: BuilderCommand): CompositionResult => {
@@ -1062,5 +1070,21 @@ export function BuilderStudy({ pageKey }: { pageKey: string }) {
     }
     return result;
   };
-  return <BuilderShell pageKey={pageKey} state={state} onDispatch={onDispatch} />;
+  return (
+    <BuilderShell
+      pageKey={pageKey}
+      state={state}
+      onDispatch={onDispatch}
+      renderProperties={
+        pageKey === 'properties-preview'
+          ? ({ state: currentState }) => (
+              <label className={styles.field}>
+                {locale === 'vi' ? 'ID mục đã chọn' : 'Selected item ID'}
+                <input value={currentState.selectedId} readOnly />
+              </label>
+            )
+          : undefined
+      }
+    />
+  );
 }

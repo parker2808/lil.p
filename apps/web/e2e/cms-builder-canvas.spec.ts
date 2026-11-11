@@ -58,6 +58,40 @@ test('mobile sheets contain focus, restore it, and retain a full canvas', async 
   await expect(page.getByRole('region', { name: 'Page canvas' })).toBeVisible();
 });
 
+test('tablet Properties sheet contains its panel and restores keyboard focus', async ({ page }) => {
+  await page.setViewportSize({ width: 768, height: 900 });
+  await signIn(page);
+  await page.goto('/admin/builder/properties-preview');
+  const trigger = page
+    .getByRole('navigation', { name: 'Page builder' })
+    .getByRole('button', { name: 'Properties' });
+  await trigger.click();
+  const sheet = page.getByRole('dialog', { name: 'Properties' });
+  await expect(sheet.getByRole('heading', { name: 'Properties' })).toBeVisible();
+  await expect(sheet.getByRole('textbox', { name: 'Selected item ID' })).toHaveValue('page');
+  await expect(
+    sheet.getByText('Publish needs a heading. Draft composition remains available.'),
+  ).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(sheet).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await page.setViewportSize({ width: 1100, height: 900 });
+  await trigger.click();
+  await expect(
+    page
+      .getByRole('dialog', { name: 'Properties' })
+      .getByRole('textbox', { name: 'Selected item ID' }),
+  ).toBeVisible();
+  await page.keyboard.press('Escape');
+  await page.setViewportSize({ width: 1101, height: 900 });
+  await expect(
+    page
+      .getByRole('complementary', { name: 'Properties' })
+      .getByRole('textbox', { name: 'Selected item ID' }),
+  ).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'Properties' })).toHaveCount(0);
+});
+
 test('reviewed visual matrix', async ({ page }) => {
   test.skip(process.env.D4_CAPTURE !== '1', 'Only capture during the serialized visual gate');
   test.setTimeout(360_000);
@@ -146,6 +180,38 @@ test('reviewed visual matrix', async ({ page }) => {
               .getByRole('button', { name: locale === 'vi' ? 'Lớp' : 'Layers' })
               .click();
             await capture('layers-sheet');
+            await page.keyboard.press('Escape');
+          }
+          if (width === 768) {
+            await page.goto('/admin/builder/properties-preview');
+            const previewBuilder = page.getByRole('region', {
+              name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder',
+            });
+            if (brand === 'lilp')
+              await previewBuilder
+                .getByRole('button', { name: /Switch neutral|Đổi giao diện/ })
+                .click();
+            await page
+              .getByRole('navigation', { name: /Page builder|Trình dựng trang/ })
+              .getByRole('button', { name: locale === 'vi' ? 'Thuộc tính' : 'Properties' })
+              .click();
+            const properties = page.getByRole('dialog', {
+              name: locale === 'vi' ? 'Thuộc tính' : 'Properties',
+            });
+            await expect(
+              properties.getByRole('heading', {
+                name: locale === 'vi' ? 'Thuộc tính' : 'Properties',
+              }),
+            ).toBeVisible();
+            const selectedId = properties.getByRole('textbox', {
+              name: locale === 'vi' ? 'ID mục đã chọn' : 'Selected item ID',
+            });
+            await expect(selectedId).toHaveValue('page');
+            await selectedId.scrollIntoViewIfNeeded();
+            const inputBounds = await selectedId.boundingBox();
+            expect(inputBounds).not.toBeNull();
+            expect(inputBounds!.y + inputBounds!.height).toBeLessThanOrEqual(900);
+            await capture('properties-sheet');
             await page.keyboard.press('Escape');
           }
         }
