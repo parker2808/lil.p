@@ -1,6 +1,6 @@
 import type { z } from 'zod';
 
-import type { LayoutPreset, PageKey } from '../pages/pages.enum';
+import { corePageKeySchema, type LayoutPreset, type PageKey } from '../pages/pages.enum';
 
 export type BlockRole = 'h1' | 'required' | 'optional';
 
@@ -12,6 +12,7 @@ export type BlockDefinition<T extends z.ZodType = z.ZodType> = {
   props: T;
   defaults: z.infer<T>;
   pages: readonly PageKey[];
+  customPage?: boolean;
   layouts: readonly LayoutPreset[];
   maxPerPage?: number;
   role: BlockRole;
@@ -30,4 +31,13 @@ export function defineBlock<T extends z.ZodType>(
     migrate: definition.migrate ?? ((props) => props),
     refs: definition.refs ?? (() => []),
   };
+}
+
+export function isBlockAllowedOnPage(
+  definition: Pick<BlockDefinition, 'pages' | 'customPage'>,
+  pageKey: PageKey,
+): boolean {
+  return corePageKeySchema.safeParse(pageKey).success
+    ? definition.pages.includes(pageKey)
+    : definition.customPage === true;
 }

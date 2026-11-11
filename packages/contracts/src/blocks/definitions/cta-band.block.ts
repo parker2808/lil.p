@@ -20,6 +20,7 @@ export const ctaBandBlock = defineBlock({
     showSocial: true,
   },
   pages: ['home', 'about', 'projects', 'notes', 'contact'],
+  customPage: true,
   layouts: ['ONE'],
   maxPerPage: 1,
   role: 'optional',
