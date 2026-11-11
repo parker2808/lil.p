@@ -1,6 +1,6 @@
 # PROJECT_CONTEXT — lil.p (portfolio)
 
-Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (docs-only PRs are exempt). CI checks file presence and a file-level update, not individual sections; `skip-context` bypasses CI.
+Mandatory reading for every agent. Update §7 and §9 in every PR, including stacked PRs, when files outside `docs/` change. CI checks file presence and a file-level update, not individual sections; `skip-context` bypasses CI with Parker's OK.
 
 ## 1. Requirements
 
@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- CI context guard: PR #178 targets `feat/cms-u2-site-admin-patterns`, so the former `context-check` workflow's `branches: [main]` filter omitted its `context` job despite non-docs changes. Removing only that filter makes the existing triple-dot base/head guard run for stacked and main-target PRs alike; no `skip-context` authorization or script semantics change. Disposable PR #187 against the non-main `fix/context-check-stacked` base proved the real `context` job fails without `PROJECT_CONTEXT.md` ([negative job](https://github.com/parker2808/lil.p/actions/runs/42854166729/job/129962535597)) and passes after its addition ([positive job](https://github.com/parker2808/lil.p/actions/runs/42855321398/job/129966652906)). This does not retrospectively supply a job for PR #178; the `docs/` exemption remains. No merge/deploy is authorized.
 - Round 3 integration: one review PR to `main` starts at the verified PR #169 head, which contains all eleven earlier Round 3 branch tips. The additional commit documents the handoff only. The original stacked PRs remain open; Parker decides whether and how to merge or close them. Database migration, deployment, and production changes are separate decisions.
 - PR #169 CI repair: web E2E builds and shards now share the `localhost` origin required by draft cookies; editor captures use the live theme handler, the Vietnamese experience check targets its About tab, and the contact check uses a real click after verifying its name field. Twenty Linux visual baselines reflect the integrated R3 design. The guarded E2E gate accepts alternate local API/web ports when another worktree occupies the defaults. Focused browser checks pass 17/17, Linux visual checks pass 14/14, and the full disposable-MySQL `pnpm check:all --e2e` passes all nine gates locally; PR CI remains open.
 - R3 PR 12 integrates the PR4 and PR7 remote tips, including their ancestors, into the PR11-based audit branch. The Pages index remains reachable and standalone experience routes remain direct. Focused Nest HTTP checks cover both templates, locale-body publish refusal, transactions and authorization; the guarded staged migration gate passes with five old rows unchanged and zero Prisma drift. `pnpm check:all --e2e` passes all nine gates, and focused production loading/error Playwright passes 2/2. The final capture audit has 264 public and 608 admin fresh tuples with zero missing, invalid, stale, or orphan PNGs. The private-source double-seed portion of the PR11 gate remains unavailable locally because `LILP_PRIVATE_SOURCE_PATH` is unset; PR11's own verified run covers it.
@@ -136,6 +137,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-10: Verified the context guard on a non-main PR base with two disposable CI runs: no context entry fails and a subsequent context entry passes; recorded both job links in the spec.
+
+- 2026-11-10: Remove the `main`-only pull-request trigger from `context-check` so stacked PRs receive the same PROJECT_CONTEXT file-change guard; document the PR #178 gap and keep the `skip-context` and `docs/` rules unchanged.
 - 2026-11-03: Prepared a single Round 3 integration review PR from the PR #169 head to `main`, preserving all eleven earlier branch tips and documenting the remaining release decisions.
 - 2026-11-03: Repaired PR #169 web E2E origin and integrated visual baselines, stabilized real theme and locale interactions in editor captures, updated the experience tab check and contact submission interaction, and allowed isolated local ports in the disposable MySQL gate. All nine local `check:all --e2e` gates, 17 focused browser tests, and 14 Linux visual tests pass.
 - 2026-11-03: R3 PR 12 merges the page-creation and public-route tracks on PR11, reserves added fixture routes against custom-page slug collisions, extends real Nest HTTP empty-page coverage, fixes integrated public 404/no-script and admin interaction regressions, and adds guarded E2E and capture-manifest audit scripts. All nine `check:all --e2e` gates and the focused production loading/error case pass; 872 fresh public/admin capture tuples pass the final manifest audit.

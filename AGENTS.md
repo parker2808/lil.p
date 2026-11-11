@@ -24,7 +24,7 @@ Read `PROJECT_CONTEXT.md` in full and `docs/LESSONS.md` before starting. Append 
 - For docs-only work, run Prettier on changed files and `pnpm check:content`. Report check results in the PR.
 - CI in `.github/workflows/ci.yml` uses `.github/actions/setup`; keep job timeouts and cancellation of stale PR runs.
 - Use a `<type>/<topic>` branch and conventional commits (commitlint). Open one PR and watch CI until green.
-- Every PR to `main` updates `PROJECT_CONTEXT.md` §7 and §9; `context-check` enforces a file change for non-docs PRs. Use `skip-context` only with Parker's OK.
+- Every PR, including stacked PRs, updates `PROJECT_CONTEXT.md` §7 and §9 when changing files outside `docs/`; `context-check` enforces a file change. Use `skip-context` only with Parker's OK.
 - Never merge to `main` without Parker's explicit OK.
 
 ## Public repo limits
