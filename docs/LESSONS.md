@@ -1,6 +1,7 @@
 # Lessons
 
 - 2026-11-10: A public monorepo can document the approved private package name and repository link without exposing its content or credentials; keep the exception scoped to one package and keep all other private repository identities hidden.
+- 2026-11-10: A real stacked PR targeting the branch that contains a workflow trigger change can exercise `pull_request` on that non-main base before the change merges; capture both failing and passing `context` job URLs rather than inferring coverage from a main-target PR.
 
 - 2026-11-03: A stacked integration PR can branch from the verified top PR tip when every lower branch tip is already an ancestor; this preserves the full stack without modifying or merging the original PRs.
 - 2026-11-03: Production Playwright draft previews must use `localhost` in both the web build and browser origin; a `127.0.0.1` origin loses Next's secure draft cookie after navigation.
@@ -124,3 +125,4 @@
 - 2026-11-03: A screenshot matrix leaves Playwright at its last mobile viewport, so restore desktop width before testing desktop-only header links; assert mobile control boxes directly because one inherited 40px button escaped earlier route checks.
 - 2026-11-03: Record behavior and route changes in the root README in the same PR; this repo keeps current changelog entries in `PROJECT_CONTEXT.md` §9 and reserves `docs/CHANGELOG_ARCHIVE.md` for older history.
 - 2026-11-03: When stacked branches both refresh the tracked Graphify report, regenerate it after merging the base instead of combining generated report lines by hand.
+- 2026-11-10: A `pull_request.branches: [main]` workflow filter skips the entire job for stacked PRs targeting feature branches, even if the diff script would have caught a missing context update; use the PR's actual base for policy, not a trigger restricted to main.
