@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-10: A duplicate endpoint must enforce the same registry cardinality rule as create before it shifts order or writes; cover the 409 response and unchanged page state through the real Nest route.
+
 - 2026-11-10: Capture public route baselines in an unauthenticated browser context; reusing the admin session can silently show the draft-preview banner and invalidate screenshots even when tests pass.
 - 2026-11-10: A Next page file is not necessarily a reachable screen: inspect redirects, role gates, test-only flags and shared layouts, and distinguish source/test inventory from actual live screenshot coverage.
 
