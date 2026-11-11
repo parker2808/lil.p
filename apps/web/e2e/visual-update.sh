@@ -19,6 +19,12 @@ until docker logs "$container" 2>&1 | grep -q 'Listening on'; do
   sleep 1
 done
 
-PW_TEST_CONNECT_WS_ENDPOINT="ws://127.0.0.1:${port}/" \
-  PW_TEST_CONNECT_EXPOSE_NETWORK='<loopback>' \
-  pnpm exec playwright test visual.spec.ts --update-snapshots "$@"
+if [ "${VISUAL_VERIFY:-0}" = 1 ]; then
+  PW_TEST_CONNECT_WS_ENDPOINT="ws://127.0.0.1:${port}/" \
+    PW_TEST_CONNECT_EXPOSE_NETWORK='<loopback>' \
+    pnpm exec playwright test visual.spec.ts "$@"
+else
+  PW_TEST_CONNECT_WS_ENDPOINT="ws://127.0.0.1:${port}/" \
+    PW_TEST_CONNECT_EXPOSE_NETWORK='<loopback>' \
+    pnpm exec playwright test visual.spec.ts --update-snapshots "$@"
+fi
