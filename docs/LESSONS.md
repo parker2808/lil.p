@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-11: Production draft preview tests require one `localhost` web origin in both the Next build and Playwright browser; `127.0.0.1` can authenticate yet land on public 404 because the secure draft cookie is scoped differently. A fresh disposable MySQL container may also need one internal app-user TCP login to warm its authentication cache before host queries.
+
 - 2026-11-11: A lazy editor can leave a valid-looking screenshot of its loading fallback; wait for an editor-specific visible element before capturing the visual matrix. Vite's `pnpm preview -- --port` forwards the extra `--` to Vite and silently serves its default port; invoke `pnpm exec vite preview --port` instead.
 
 - 2026-11-10: A bundle budget that excludes peers must validate the package's peer declarations; externalizing imports in tsup alone does not guarantee a valid consumer contract.
@@ -160,3 +162,9 @@
 - 2026-11-11: A historical legacy restore increments the same draft revision even with a null tree; account for that increment in subsequent activation and restore contract tests.
 - 2026-11-11: A transaction's earlier page read does not guard a later unconditional update against concurrent builder activation; claim the revision and SQL-null mode in a conditional update before replacing blocks, and reject legacy restore input that would drop malformed blocks.
 - 2026-11-11: When local browser sign-in fails with Prisma pool 45028 while CI is green, validate with a fresh locked tmpfs MySQL and rebuild Next against the same default API port; the isolated D2 full gate passed, but the earlier transient root cause is unproven.
+- 2026-11-11: Keep the D4 shell controlled and mount the schema-derived Properties panel once; a single host can atomically record composition and property edits while the revision-checked autosave controller preserves uncertainty without force-writing.
+- 2026-11-11: Responsive editor panels must use the same compact breakpoint as CSS; a tablet can hide a desktop inspector even when it is wider than the mobile preview breakpoint.
+- 2026-11-11: A modal Properties sheet must trap focus through textarea/select fields, and browser contrast audits must wait for button transitions and scope to the active dialog rather than the inert, dimmed canvas.
+- 2026-11-11: Conflict tests must change remote content, not just its revision; an identical remote tree may safely acknowledge a stale revision and retry without losing edits.
+- 2026-11-11: Schema enum values can remain stable storage keys while a host-owned Properties select localizes their user-facing EN/VI choices.
+- 2026-11-11: A mobile builder must retain a visible save-state indicator outside the Properties sheet; hiding a polite live status in responsive CSS also removes its screen-reader announcement.

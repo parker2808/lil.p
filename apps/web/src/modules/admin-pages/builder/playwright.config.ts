@@ -7,7 +7,11 @@ import shared from '../../../../playwright.config';
 export default defineConfig({
   ...shared,
   testDir: resolve(import.meta.dirname, '../../../../e2e'),
-  testMatch: ['cms-builder-canvas.spec.ts', 'cms-builder-keyboard.spec.ts'],
+  testMatch: [
+    'cms-builder-canvas.spec.ts',
+    'cms-builder-keyboard.spec.ts',
+    'cms-builder-d5-ui.spec.ts',
+  ],
   globalSetup: resolve(import.meta.dirname, '../../../../e2e/global-setup.ts'),
   webServer: (Array.isArray(shared.webServer)
     ? shared.webServer

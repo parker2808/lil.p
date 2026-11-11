@@ -14,7 +14,7 @@ import { specsForShard } from './e2e/shards';
 const apiPort = process.env.API_PORT ?? '4000';
 const webPort = process.env.WEB_PORT ?? '3000';
 const apiOrigin = `http://127.0.0.1:${apiPort}`;
-const webOrigin = process.env.WEB_ORIGIN ?? `http://127.0.0.1:${webPort}`;
+const webOrigin = process.env.WEB_ORIGIN ?? `http://localhost:${webPort}`;
 const databaseUrl = process.env.DATABASE_URL_TEST ?? process.env.DATABASE_URL ?? localDatabaseUrl();
 const jwtAccess = process.env.JWT_ACCESS_SECRET ?? testJwtAccess();
 const jwtRefresh = process.env.JWT_REFRESH_SECRET ?? testJwtRefresh();
@@ -88,7 +88,7 @@ export default defineConfig({
       url: `${webOrigin}/admin/login`,
       reuseExistingServer: false,
       timeout: 120_000,
-      env: { ...sharedEnv, NODE_ENV: 'production' },
+      env: { ...sharedEnv, NODE_ENV: 'production', R3_E2E_STATES: '1' },
     },
   ],
 });
