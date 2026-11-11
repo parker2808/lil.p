@@ -15,7 +15,12 @@ export async function buildPageMetadata(
     const { locale } = await params;
     const typed = locale as Locale;
     const [site, page] = await Promise.all([getSite(typed), getPage(key, typed)]);
-    return pageMetadata({ site, page, locale: typed, path: publicPagePathForKey(key) });
+    return pageMetadata({
+      site,
+      page: 'tree' in page ? { ...page, blocks: [] } : page,
+      locale: typed,
+      path: publicPagePathForKey(key),
+    });
   } catch {
     return fallbackMetadata();
   }

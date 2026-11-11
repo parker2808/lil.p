@@ -14,6 +14,7 @@ import { metadataBase } from '@/modules/seo/utils/site-url.util';
 import { routing } from '../../i18n/routing';
 
 import '../globals.css';
+import '@parker2808/cms-core/theme.css';
 
 export const metadata: Metadata = {
   metadataBase: metadataBase(),

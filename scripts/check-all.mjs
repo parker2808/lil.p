@@ -14,10 +14,16 @@ const steps = [
   ['deps', 'pnpm check:deps'],
 ];
 if (!args.has('--no-build')) steps.push(['build', 'pnpm build']);
+if (!args.has('--no-build'))
+  steps.push(['public-builder-bytes', 'node scripts/check-public-builder-bytes.mjs']);
 if (args.has('--e2e')) {
   steps.push([
     'cms-theme-browser',
     'CMS_THEME_BROWSER=1 node --test packages/cms-core/test/theme.test.mjs',
+  ]);
+  steps.push([
+    'cms-tree-browser',
+    'CMS_TREE_BROWSER=1 node --test packages/cms-core/test/tree-renderer.test.mjs',
   ]);
   steps.push(['api-e2e', 'pnpm --filter @portfolio/api test:e2e']);
   steps.push(['web-e2e', 'pnpm --filter @portfolio/web test:e2e']);

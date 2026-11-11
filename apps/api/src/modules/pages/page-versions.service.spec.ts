@@ -33,6 +33,8 @@ function pageRow(over: Record<string, unknown> = {}) {
     publishedVersionId: null,
     publishedVersion: null,
     publishedAt: null,
+    draftTree: null,
+    draftTreeRevision: 0n,
     updatedAt: new Date('2026-01-01T00:00:00.000Z'),
     blocks: [hero],
     ...over,
@@ -122,6 +124,7 @@ describe('PageVersionsService', () => {
       });
       prisma.page.findUnique.mockResolvedValue(row);
       const preview = await service.getPreview('ideas', locale);
+      if (!('blocks' in preview)) throw new Error('Expected legacy preview');
       expect(preview.invalidBlocks).toEqual([]);
       expect(preview.blocks[1]).toMatchObject({
         type: 'prose',
@@ -237,6 +240,7 @@ describe('PageVersionsService', () => {
     const vi = await service.getPreview('ideas', 'vi');
     const en = await service.getPreview('ideas', 'en');
     for (const page of [vi, en]) {
+      if (!('blocks' in page)) throw new Error('Expected legacy preview');
       expect(page.seo).toMatchObject({ title: 'Ý tưởng', lang: 'vi' });
       expect(page.blocks[0]).toMatchObject({ props: { title: 'Ý tưởng' }, lang: 'vi' });
       expect(page.invalidBlocks).toEqual([]);

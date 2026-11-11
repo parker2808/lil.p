@@ -5,16 +5,17 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Optional,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Put,
 } from '@nestjs/common';
 import {
   type AdminBlock,
   type AdminPage,
   type AdminPageListItem,
-  type AdminPageVersion,
   type AdminPageVersionListItem,
   type BlockCreateInput,
   type BlockUpdateInput,
@@ -34,6 +35,15 @@ import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { ZodValidationPipe } from '../../common/pipes/zod-validation.pipe';
 import type { RequestUser } from '../auth/strategies/jwt.strategy';
+import { BuilderDraftService } from './builder-draft.service';
+import {
+  type BuilderDraftInput,
+  builderDraftInputSchema,
+  type BuilderPublishInput,
+  builderPublishInputSchema,
+  type BuilderRevisionInput,
+  builderRevisionInputSchema,
+} from './dto/builder-draft.dto';
 import { PageVersionsService } from './page-versions.service';
 import { PagesService } from './pages.service';
 
@@ -42,7 +52,41 @@ export class AdminPagesController {
   constructor(
     private readonly pages: PagesService,
     private readonly versions: PageVersionsService,
+    @Optional() private readonly builder?: BuilderDraftService,
   ) {}
+
+  @Get(':key/builder/draft')
+  @Roles('admin', 'user')
+  getBuilderDraft(@Param('key') key: string) {
+    return this.builder!.get(key);
+  }
+
+  @Post(':key/builder/activate')
+  @HttpCode(HttpStatus.OK)
+  activateBuilder(
+    @Param('key') key: string,
+    @Body(new ZodValidationPipe(builderDraftInputSchema)) body: BuilderDraftInput,
+  ) {
+    return this.builder!.activate(key, body);
+  }
+
+  @Put(':key/builder/draft')
+  saveBuilderDraft(
+    @Param('key') key: string,
+    @Body(new ZodValidationPipe(builderDraftInputSchema)) body: BuilderDraftInput,
+  ) {
+    return this.builder!.save(key, body);
+  }
+
+  @Post(':key/builder/publish')
+  @HttpCode(HttpStatus.OK)
+  publishBuilder(
+    @Param('key') key: string,
+    @Body(new ZodValidationPipe(builderPublishInputSchema)) body: BuilderPublishInput,
+    @CurrentUser() user: RequestUser,
+  ): Promise<AdminPage> {
+    return this.versions.publishBuilder(key, body, user.id);
+  }
 
   @Get()
   @Roles('admin', 'user')
@@ -131,11 +175,18 @@ export class AdminPagesController {
 
   @Get(':key/versions/:version')
   @Roles('admin', 'user')
-  getVersion(
+  getVersion(@Param('key') key: string, @Param('version', ParseIntPipe) version: number) {
+    return this.versions.getVersion(key, version);
+  }
+
+  @Post(':key/versions/:version/builder/restore')
+  @HttpCode(HttpStatus.OK)
+  restoreBuilder(
     @Param('key') key: string,
     @Param('version', ParseIntPipe) version: number,
-  ): Promise<AdminPageVersion> {
-    return this.versions.getVersion(key, version);
+    @Body(new ZodValidationPipe(builderRevisionInputSchema)) body: BuilderRevisionInput,
+  ) {
+    return this.versions.restoreBuilder(key, version, body.expectedRevision);
   }
 
   @Post(':key/versions/:version/restore')

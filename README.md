@@ -19,6 +19,8 @@ Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./
 
 ### Public site
 
+The contact form keeps text entered before hydration, synchronizes it when interactive and sends one client request; its server action remains available without JavaScript. See the [contact hydration spec](./docs/specs/2026-11-11-contact-hydration-readiness.md).
+
 The EN/VI home, projects, notes, about, and contact routes share the round 3 public shell and index styling. They continue to read CMS content through the public API; project and note filters stay in the URL across reloads, and the contact form keeps its server submission. `/[locale]/craft` is a localized, static interaction study linked from the public header. Its presentation and the index styles are scoped to public routes, so project and note details and admin screens keep their own layouts. See the [R3-05 spec](./docs/specs/2026-11-03-r3-05-public-shell-indexes.md) for the route, accessibility, and capture checks.
 
 The contact page, public CTA, and search palette use the contact email configured in site settings. Copy email reports success or failure in the selected language and keeps a direct email link available. See the [R3-06 spec](./docs/specs/2026-11-03-r3-06-copy-email.md).
@@ -68,6 +70,18 @@ The [CMS B1 golden HTTP suite](./docs/specs/2026-11-10-cms-b1-golden-http.md) fr
 [CMS D1 versioned tree](./docs/specs/2026-11-11-cms-d1-versioned-tree.md) adds a pure `./tree` ESM/CJS/types subpath for bounded, strictly validated page→section→row/grid/column→component documents. `readTree` accepts structurally valid incomplete drafts, including empty pages; `validateTreeForPublish` requires exactly one H1 even on otherwise empty pages, plus registered required content before publishing. It exports v0→v1 migration, breakpoint prop resolution, starter schemas and an opt-in lossless legacy snapshot converter. D1 starts alongside B7 but acceptance waits for B7 approval. It changes no API, page data, migrations, EN/VI UI or B1 goldens. The combined contracts+engine+tree artifacts measure **5,672/61,440 bytes gzip** (844 + 1,589 + 3,239); React and React/server remain **1,621/35,840 bytes gzip**. The B5/B6 merge retained both sets of export checks; B6b also edits package exports/tsup, so integration should reconcile those two small entry hunks.
 
 [D integration base](./docs/specs/2026-11-11-cms-d-integration-base.md) carries both B7's neutral theme/fixture and D1's typed tree on a stacked draft branch; lil.p's live routes and data remain unchanged.
+
+[CMS D2 persistence](./docs/specs/2026-11-11-cms-d2-persistence.md) adds nullable `Page.draftTree` storage and decimal-string `draftTreeRevision` CAS for eligible custom-page builder drafts. Authenticated admin draft read/activate/save and revision-aware tree restore reject unknown data instead of stripping it. Legacy pages and public block-list routes retain their existing responses; tree publication remains server-disabled until D3 public SSR parity. The migration and API tests run on disposable local MySQL only; this draft is not permission to deploy database DDL.
+
+D2's legacy restore now takes a revision-and-mode compare-and-swap lock before touching block rows; builder restore rejects snapshots with unparsable blocks, while missing SEO keys remain compatible. Unversioned preview of an active tree draft returns a typed 409 until D3 renders it; concurrent-writer regressions run against disposable MySQL.
+
+[CMS D3 shared SSR renderer](./docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md) adds an opt-in, server-only tree renderer to `@parker2808/cms-core/react/server`; breakpoint-specific row spans and single semantic headings are covered by a required browser matrix. Host rendering failures have a separate typed result from invalid media content. Legacy lil.p routes remain the default until D2 provides authorized tree snapshot dispatch and publish gating; route parity remains unverified.
+
+Core owns semantic headings in D3: a host `components.heading` override fails with a typed result instead of emitting duplicate responsive H1s.
+
+[CMS D6 guarded route integration](./docs/specs/2026-11-11-cms-d6-route-parity.md) combines D2 and D3: `CMS_TREE_ROUTES=1` enables strict tree snapshot JSON on authenticated preview and public routes, rendered by the same server-only D3 renderer in Next. Opt-in publish uses a version-checked host transaction; the disposable-MySQL API/browser journey covers EN/VI save, publish, preview/public SSR, restore and republish. Legacy routes remain unchanged; D5 client autosave and dirty-reload acceptance remain separate gates. The required CI build step checks zero builder/editor bytes in public chunks. The stacked #201 contact hydration fix preserves pre-mount input. This stacked D6 PR must not merge before D2 #199's final gate.
+
+[D5 pure tree logic](./docs/specs/2026-11-11-cms-d5-core-logic.md) adds explicit-registry atomic edits, responsive overrides, bounded history and CAS autosave to `./tree` without shipping its editor UI. D6's release-gate extension checks all 20 host schemas and EN/VI SSR parity using test-local host render mappings; actual all-20 HTTP registration, real block display and dirty-reload UI remain separate blocked gates. #202 now carries #200 and must wait for both #199 and #200 approvals.
 
 ### Real content seed verification
 

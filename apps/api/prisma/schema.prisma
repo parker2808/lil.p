@@ -217,6 +217,8 @@ model Page {
   publishedVersion   PageVersion? @relation("PublishedVersion", fields: [publishedVersionId], references: [id], onDelete: SetNull)
   publishedAt        DateTime?
   blocks             PageBlock[]
+  draftTree          Json?
+  draftTreeRevision  BigInt       @default(0)
   versions           PageVersion[] @relation("PageVersions")
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt

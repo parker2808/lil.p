@@ -1,8 +1,11 @@
 import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
 import type { ReactNode } from 'react';
 import type { Locale, PageKey, PublicPagePreview } from '@portfolio/contracts';
+import { renderTree } from '@parker2808/cms-core/react/server';
 import { draftMode } from 'next/headers';
+import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
+import { createElement } from 'react';
 
 import { BlockRenderer } from '../components/BlockRenderer/BlockRenderer';
 import { BLOCK_RENDERERS } from '../constants/block-renderers.constant';
@@ -31,6 +34,15 @@ export async function BlocksPage({
   const draft = await draftMode();
   const t = await getTranslations('states');
   const preview = page as PublicPagePreview;
+  if ('tree' in page) {
+    const result = renderTree({
+      input: page.tree,
+      createElement,
+      labels: { unsupported: t('error') },
+    });
+    if (!result.ok) notFound();
+    return <main className="cms-core">{result.content}</main>;
+  }
   // Resolve async blocks before writing their wrappers. This also preserves a complete
   // initial HTML document without the client script needed to reveal streamed chunks.
   const resolved: Record<number, ReactNode> = Object.fromEntries(

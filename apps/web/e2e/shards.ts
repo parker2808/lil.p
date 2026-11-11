@@ -56,6 +56,7 @@ export const SPECS = [
   'admin-collections-r3.spec.ts',
   'admin-editors-r3.spec.ts',
   'custom-public-pages.spec.ts',
+  'cms-tree-journey.spec.ts',
   'admin-page-create.spec.ts',
   'public-shell-indexes.spec.ts',
   'copy-email.spec.ts',

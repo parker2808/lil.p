@@ -1,5 +1,19 @@
 # Lessons
 
+- 2026-11-11: A pure tree editor must receive every host component schema explicitly, including during autosave and history replay; a passing neutral starter-schema test cannot prove portfolio-wide property safety or HTTP renderability.
+- 2026-11-11: A concurrent builder-to-legacy restore must stop autosave with local edits intact; reloading a remote builder tree needs explicit discard acknowledgement, never implicit revision substitution.
+
+- 2026-11-11: A server-only React tree renderer belongs in the Next host; Nest must deliver a strictly validated tree envelope, preserve VI-only custom-page SEO and fail closed on unsupported or untagged tree snapshots rather than coercing them into empty legacy pages. An opt-in route parity fixture alone is not proof of a real publish journey; use revision-checked HTTP publish, restore and browser SSR evidence separately from D5 client autosave.
+- 2026-11-11: Stored tree validation must also reject structurally valid but unrenderable legacy-component nodes before public dispatch; checking only tree schema and returning a renderer warning can turn an invalid published page into HTTP 200.
+- 2026-11-11: A real contact hydration readiness fix, not retries, must gate CMS E2E alongside route parity; merge the focused pre-hydration regression before claiming the full integration gate green.
+- 2026-11-11: An SSR form can receive keystrokes before hydration; controlled inputs can lose them and tests that fill too early may race event handlers. Keep DOM values, synchronize client form state on mount, await a real readiness marker in ordinary tests and separately test delayed-script input.
+
+- 2026-11-11: A server renderer's semantic invariant must include host extension points; routing built-ins through a single-heading path is insufficient if a host override can still create breakpoint-specific H1 elements.
+
+- 2026-11-11: A responsive SSR heading must not duplicate semantic heading tags for CSS text variants; test the markup count and computed visible text separately. Gating the browser matrix in CI catches breakpoint-specific column spans omitted from pure SSR snapshots.
+
+- 2026-11-11: A package cannot import its own unbuilt `./tree` dist entry during a simultaneous tsup build; import the public source barrel inside the package and verify the built server export still bundles only server-safe tree code. Screenshot fixtures must serve local assets and capture neutral appearance before trying token-only host overrides.
+
 - 2026-11-11: A lazy editor can leave a valid-looking screenshot of its loading fallback; wait for an editor-specific visible element before capturing the visual matrix. Vite's `pnpm preview -- --port` forwards the extra `--` to Vite and silently serves its default port; invoke `pnpm exec vite preview --port` instead.
 
 - 2026-11-10: A bundle budget that excludes peers must validate the package's peer declarations; externalizing imports in tsup alone does not guarantee a valid consumer contract.
@@ -147,6 +161,10 @@
 - 2026-11-11: A tree converter can keep unknown legacy block types losslessly only by carrying the entire validated JSON block as opaque data rather than reparsing it into the registered builder component shape; gate builder use separately from opt-in conversion.
 - 2026-11-11: Validate untrusted tree depth/count iteratively before recursive Zod parsing; keep incomplete draft validation separate from publish-only H1/required-component policy and ensure slot rules leave room for content at the deepest allowed layout.
 - 2026-11-11: When integrating sibling core exports, keep both theme CSS and tree JS declarations in the manifest and rebuild Graphify after a docs-only merge conflict instead of combining generated graph reports by hand.
+- 2026-11-11: A nullable JSON column must distinguish SQL NULL legacy mode from a versioned empty builder tree; use a monotonic BIGINT compare-and-swap rather than timestamps to reject stale autosaves without dropping recovery blocks.
+- 2026-11-11: A historical legacy restore increments the same draft revision even with a null tree; account for that increment in subsequent activation and restore contract tests.
 - 2026-11-11: Check exactly-one-H1 for every publish attempt, including a zero-component tree; draft permissiveness must not bypass publish policy.
 - 2026-11-11: A browser contrast test hidden behind an opt-in environment flag does not protect the visual gate; require Chromium in local/CI E2E and assert each rendered text, feedback border and indicator against its adjacent surface in both palettes.
 - 2026-11-11: An editor-only axe check misses route-specific gallery and unknown-content regressions; assert every fixture route and focused state across locale, theme, brand and viewport, and measure effective mobile hit areas, including labels wrapping checkboxes.
+- 2026-11-11: A transaction's earlier page read does not guard a later unconditional update against concurrent builder activation; claim the revision and SQL-null mode in a conditional update before replacing blocks, and reject legacy restore input that would drop malformed blocks.
+- 2026-11-11: When local browser sign-in fails with Prisma pool 45028 while CI is green, validate with a fresh locked tmpfs MySQL and rebuild Next against the same default API port; the isolated D2 full gate passed, but the earlier transient root cause is unproven.
