@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-11: When a stacked feature branch diverges from main through many unmerged parents, cherry-pick the approved isolated hotfix rather than merging all older main history into the feature stack; verify the focused CI-listed browser case against the integrated host, not only the upstream study route.
+
 - 2026-11-11: A contrast scan immediately after toggling the public theme can sample transitional foreground against settled background; wait for finite CSS transitions before running axe, rather than disabling contrast checks or changing production colors.
 - 2026-11-11: A green monorepo build can hide a deployment-only DTS failure when a provider's isolated build command skips a new workspace dependency; pin the provider command in the repository and run it from a clean checkout in CI.
 - 2026-11-11: Vercel branch previews are disabled outside `main` here, so green PR CI is not Vercel deployment evidence; a clean CI build must execute the full core → contracts → web deployment command, and the next main deploy still needs a READY status and live health checks.

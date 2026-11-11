@@ -83,6 +83,55 @@ test('Properties remains editable at 1100 and 768 after desktop', async ({ page 
   ).toHaveValue('Tablet heading');
 });
 
+test('an open active draft Properties sheet closes at desktop width without double mounting', async ({
+  page,
+}) => {
+  await signIn(page);
+  const key = `d5-sheet-transition-${Date.now()}`;
+  const origin = new URL(page.url()).origin;
+  const created = await page.request.post('/api/admin/pages', {
+    headers: { Origin: origin },
+    data: { title: 'D5 sheet transition', key, locale: 'en', template: 'starter' },
+  });
+  expect(created.status(), await created.text()).toBe(201);
+  await page.goto(`/admin/builder/${key}`);
+  await page.getByRole('button', { name: 'Activate tree draft' }).click();
+  await expect(page.getByText('Draft saved')).toBeVisible();
+  const palette = page.getByRole('complementary', { name: 'Components' });
+  await palette.getByRole('button', { name: 'Section', exact: true }).click();
+  await palette.getByRole('button', { name: 'Heading', exact: true }).click();
+  await page.setViewportSize({ width: 768, height: 900 });
+  const trigger = page
+    .getByRole('navigation', { name: 'Page builder' })
+    .getByRole('button', { name: 'Properties' });
+  await trigger.click();
+  const sheet = page.getByRole('dialog', { name: 'Properties' });
+  const inspector = page.getByRole('complementary', { name: 'Properties' });
+  await expect(sheet.getByRole('textbox', { name: 'Text' })).toHaveCount(1);
+  await expect(inspector).toHaveCount(0);
+  await sheet.getByRole('textbox', { name: 'Text' }).fill('Saved across the breakpoint');
+  await page.setViewportSize({ width: 1100, height: 900 });
+  await expect(sheet.getByRole('textbox', { name: 'Text' })).toHaveCount(1);
+  await expect(inspector).toHaveCount(0);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(sheet).toHaveCount(0);
+  await expect(inspector.getByRole('textbox', { name: 'Text' })).toHaveValue(
+    'Saved across the breakpoint',
+  );
+  await expect(page.getByRole('textbox', { name: 'Text' })).toHaveCount(1);
+  await expect(inspector).toBeFocused();
+  await page.setViewportSize({ width: 768, height: 900 });
+  await expect(inspector).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+  await trigger.click();
+  await expect(sheet.getByRole('textbox', { name: 'Text' })).toHaveValue(
+    'Saved across the breakpoint',
+  );
+  await page.keyboard.press('Escape');
+  await expect(sheet).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+});
+
 test('reload before autosave retains the unsaved tree for explicit restoration', async ({
   page,
 }) => {
