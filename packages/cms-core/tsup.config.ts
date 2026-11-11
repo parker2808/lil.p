@@ -6,7 +6,7 @@ export default defineConfig({
     engine: 'src/engine.ts',
     react: 'src/react.ts',
   },
-  format: ['esm'],
+  format: ['esm', 'cjs'],
   dts: true,
   clean: true,
   minify: true,

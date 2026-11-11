@@ -1,18 +1,19 @@
 # Lessons
 
-- 2026-11-10: A duplicate endpoint must enforce the same registry cardinality rule as create before it shifts order or writes; cover the 409 response and unchanged page state through the real Nest route.
+- 2026-11-11: A clean integration merge can still carry a Graphify header naming its pre-merge parent; regenerate from the merged commit and check for duplicated changelog entries before requesting final-head review.
 
+- 2026-11-11: When a scaffold package and its extracted-contract branch both add the same files, retain the extracted contracts and host adapter while testing the scaffold's original gzip caps against the merged built artifacts; do not resolve a lockfile or generated graph by hand.
+
+- 2026-11-10: A bundle budget that excludes peers must validate the package's peer declarations; externalizing imports in tsup alone does not guarantee a valid consumer contract.
+- 2026-11-10: A duplicate endpoint must enforce the same registry cardinality rule as create before it shifts order or writes; cover the 409 response and unchanged page state through the real Nest route.
 - 2026-11-10: Capture public route baselines in an unauthenticated browser context; reusing the admin session can silently show the draft-preview banner and invalidate screenshots even when tests pass.
 - 2026-11-10: A Next page file is not necessarily a reachable screen: inspect redirects, role gates, test-only flags and shared layouts, and distinguish source/test inventory from actual live screenshot coverage.
-
 - 2026-11-11: When restacking a long docs-only child after a squashed parent, reconstruct only the reviewed child diff on the current `main` and preserve prior release notes; earlier no-approval language needs a dated superseding record once a conditional owner grant arrives.
 - 2026-11-10: A public monorepo can document the approved private package name and repository link without exposing its content or credentials; keep the exception scoped to one package and keep all other private repository identities hidden.
 - 2026-11-10: A real stacked PR targeting the branch that contains a workflow trigger change can exercise `pull_request` on that non-main base before the change merges; capture both failing and passing `context` job URLs rather than inferring coverage from a main-target PR.
 - 2026-11-11: A green Linux E2E run does not exclude a macOS contact hydration race: heading visibility and an enabled submit button do not prove the controlled form is interactive, and the U2 contact-fix branch gates its separate delayed-script regression but not the ordinary submit test. Preserve pre-hydration value assertions when adding a hydrated-path readiness check; do not replace the regression with a blind wait.
 - 2026-11-11: A direct seeded-MySQL API login can succeed while browser login fails through Next's build-time `/api/*` rewrite; compare the built `API_URL`/API port with the Playwright server before blaming the random disposable MySQL host port. Playwright's test DB URL and server DB URL are shared explicitly; preserve that invariant and diagnose the actual proxied response without printing credentials.
-
 - 2026-11-11: Before carrying a package integration precondition into later draft specs, inspect the accepted export map and built import/require tests; an earlier missing CJS condition may already be fixed, while empty entries still need implementation and deployment proof.
-
 - 2026-11-10: Extract page/block mechanics behind a host-provided registry and persistence/auth ports; leave portfolio block definitions, domain pickers, routes and deployment adapters in the application until a neutral standalone fixture proves reuse.
 - 2026-11-10: A reusable CMS block engine is a foundation for a visual page builder, not the builder itself; keep behavior-preserving extraction separate from a versioned layout tree and its additive, independently approved storage migration.
 
@@ -143,6 +144,13 @@
 - 2026-11-10: A restore/discard HTTP golden must first diverge the draft from the published snapshot, then compare normalized block/SEO state and confirm public content stays fixed; response status alone cannot detect a no-op.
 - 2026-11-10: A shared page-allowance predicate should read each definition's built-in pages and explicit custom-page flag; freeze the full built-in/custom matrix and both EN/VI picker options so Nest and the editor cannot drift.
 - 2026-11-10: A new core package's empty entry points are only a measurable size floor; build each public ESM subpath, gzip its output deterministically, sum contracts+engine, and enforce approved caps on every build rather than treating empty scaffold size as an extraction forecast.
+- 2026-11-10: Keep a generic CMS registry independent of host block definitions and pass built-in page keys to allowance; compose host definitions once and specialize the finite public block schema at the host boundary to preserve HTTP validation.
+- 2026-11-10: TypeScript's legacy `moduleResolution: node` ignores package subpath `exports` in transitive declarations; publish `typesVersions` alongside ESM subpath exports so the Nest consumer retains inferred locale, snapshot and block-ref types.
+- 2026-11-10: A host compiled to CommonJS needs a `require` condition for a newly extracted package subpath even when TypeScript accepts the ESM `import` types; exercise both resolution modes before E2E.
+- 2026-11-10: Local installed package `dist/` can hide a clean-CI failure; when host declarations import a new workspace package, build via pnpm's dependency-closure filter (`package...`) before compiling the host in every job.
+- 2026-11-10: A sharded E2E archive must carry the transitive workspace package's `dist/`, not just the host and app bundles; otherwise the test runner's fresh checkout resolves the symlink but has no built subpath target.
+- 2026-11-10: A pre-existing contrast ratio of 4.49:1 can fail macOS axe even when unrelated CMS contracts are the only runtime change; record the exact colors, affected test and platform rather than masking the failure or changing out-of-scope UI.
+- 2026-11-10: When publishing separate ESM/CJS subpaths, test both import and require for every entry and guard side-effect imports/re-exports, not only named imports.
 - 2026-11-10: A form wrapper that clones an input cannot safely wrap a composite Radix Select: bind the label, error attributes and name to the actual trigger/root instead; a Select portal inside a modal must stack above the dialog, and repeated E2E sign-in redirects away from its login form.
 - 2026-11-10: Waiting for a client-only control before filling a public form hid pre-hydration data loss; test input before hydration instead. Visual hashes also change with seeded data, so review images instead of treating every changed hash as a UI regression.
 - 2026-11-10: Radix RadioGroup can move focus on a fast arrow key without selecting because its roving-focus timer runs after keyup; verify both a quick Playwright keypress and the checked state, not just focus movement.

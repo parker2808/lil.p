@@ -7,9 +7,21 @@ import { fileURLToPath } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const source = join(root, 'packages/cms-core/src');
 const dist = join(root, 'packages/cms-core/dist');
+const packageFile = join(root, 'packages/cms-core/package.json');
 const caps = { browser: 60 * 1024, react: 35 * 1024 };
 
-export function measure({ sourceDir = source, distDir = dist, limits = caps } = {}) {
+export function measure({
+  sourceDir = source,
+  distDir = dist,
+  manifest = packageFile,
+  limits = caps,
+} = {}) {
+  const { peerDependencies = {} } = JSON.parse(readFileSync(manifest, 'utf8'));
+  for (const [name, major] of Object.entries({ react: 19, 'react-dom': 19, zod: 4 })) {
+    if (!peerDependencies[name]?.startsWith(`^${major}.`)) {
+      throw new Error(`Missing ${name} ${major} peer dependency`);
+    }
+  }
   const pending = [sourceDir];
   while (pending.length) {
     const directory = pending.pop();
@@ -30,7 +42,8 @@ export function measure({ sourceDir = source, distDir = dist, limits = caps } = 
     const code = readFileSync(join(distDir, `${name}.js`));
     const imports = code.toString().matchAll(/(?:from\s*|import\s*\(|import\s*)["']([^"']+)["']/g);
     for (const [, specifier] of imports) {
-      if (!/^(react(?:\/.*)?|react-dom(?:\/.*)?|zod(?:\/.*)?)$/.test(specifier)) {
+      const peer = specifier.split('/')[0];
+      if (!['react', 'react-dom', 'zod'].includes(peer) || !peerDependencies[peer]) {
         throw new Error(`Unexpected unbundled import in ${name}: ${specifier}`);
       }
     }
