@@ -17,6 +17,34 @@ const manifest: Array<{
 
 test.setTimeout(240_000);
 
+test('Properties remains editable at 1100 and 768 after desktop', async ({ page }) => {
+  await signIn(page);
+  await page.setViewportSize({ width: 1101, height: 900 });
+  await page.goto('/admin/builder/home');
+  const palette = page.getByRole('complementary', { name: 'Components' });
+  await palette.getByRole('button', { name: 'Section', exact: true }).click();
+  await palette.getByRole('button', { name: 'Heading', exact: true }).click();
+  await expect(
+    page.getByRole('complementary', { name: 'Properties' }).getByRole('textbox', { name: 'Text' }),
+  ).toHaveCount(1);
+
+  await page.setViewportSize({ width: 1100, height: 900 });
+  await expect(page.getByRole('complementary', { name: 'Properties' })).toHaveCount(0);
+  const navigation = page.getByRole('navigation', { name: 'Page builder' });
+  await navigation.getByRole('button', { name: 'Properties' }).click();
+  const sheet = page.getByRole('dialog', { name: 'Properties' });
+  await expect(sheet.getByRole('textbox', { name: 'Text' })).toHaveCount(1);
+  await page.setViewportSize({ width: 768, height: 900 });
+  await expect(sheet.getByRole('textbox', { name: 'Text' })).toHaveCount(1);
+  await sheet.getByRole('textbox', { name: 'Text' }).fill('Tablet heading');
+  await sheet.press('Escape');
+  await expect(sheet).toHaveCount(0);
+  await page.setViewportSize({ width: 1101, height: 900 });
+  await expect(
+    page.getByRole('complementary', { name: 'Properties' }).getByRole('textbox', { name: 'Text' }),
+  ).toHaveValue('Tablet heading');
+});
+
 test('reload before autosave retains the unsaved tree for explicit restoration', async ({
   page,
 }) => {

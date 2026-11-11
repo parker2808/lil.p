@@ -1,7 +1,7 @@
 # Graph Report - feat-cms-d5-ui  (2026-11-11)
 
 ## Corpus Check
-- 1562 files · ~556,289 words
+- 1562 files · ~556,657 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 37 file(s) not represented in the graph (top: (none) 17, .css 16, .example 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1ae0b31f`
+- Built from commit: `0ae099b5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -252,7 +252,6 @@
 - NavLink.stories.tsx
 - B6b — neutral CMS core theme
 - collapsible.tsx
-- MockResizeObserver
 - exports
 - scripts
 - CoverPlaceholder.stories.tsx
@@ -274,6 +273,7 @@
 - FactChips.stories.tsx
 - admin-pages.controller.ts
 - R3-03 — Published custom pages
+- R3-04 — Create a page in the real admin
 - R3-06: reliable public email action
 - R3-07: Public details and states
 - R3-08 — Admin shell and insights
