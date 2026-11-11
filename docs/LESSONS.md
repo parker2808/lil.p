@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-11: Treat a concurrent restore from a builder tree to legacy mode as a distinct autosave conflict, preserving local unsaved content; a reload must require explicit discard acknowledgement and cannot interpret a null tree as an empty page.
 - 2026-11-11: A lazy editor can leave a valid-looking screenshot of its loading fallback; wait for an editor-specific visible element before capturing the visual matrix. Vite's `pnpm preview -- --port` forwards the extra `--` to Vite and silently serves its default port; invoke `pnpm exec vite preview --port` instead.
 
 - 2026-11-10: A bundle budget that excludes peers must validate the package's peer declarations; externalizing imports in tsup alone does not guarantee a valid consumer contract.

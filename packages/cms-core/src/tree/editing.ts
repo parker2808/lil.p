@@ -62,8 +62,10 @@ function invalid(document: TreeDocument): TreeResult<TreeDocument> {
 export function applyTreeOperation(
   document: TreeDocument,
   operation: TreeOperation,
-  registry: ComponentRegistry = {},
+  registry: ComponentRegistry,
 ): TreeResult<TreeDocument> {
+  if (!registry || typeof registry !== 'object')
+    throw new TypeError('Component registry is required');
   const source = readTree(document, registry);
   if (!source.ok) return source;
   const candidate = cloneTreeValue(source.value);
@@ -175,7 +177,7 @@ export function commitTreeHistory(
   history: TreeHistory,
   operation: TreeOperation,
   options: { selectedId?: string; at: number; typing?: boolean; limit?: number },
-  registry: ComponentRegistry = {},
+  registry: ComponentRegistry,
 ): TreeResult<TreeHistory> {
   const result = applyTreeOperation(history.document, operation, registry);
   if (!result.ok) return result;
