@@ -1,6 +1,12 @@
 # lil.p
 
-The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-gap-closure-checklist-apply-only-after-d2d6-verification-and-ordered-merges) lists standalone tooling, export, dependency, pack and license gates for the eventual private package. The [live CMS stack ledger](./docs/specs/2026-11-10-cms-stack-integration-plan.md#live-merge-ledger-2026-11-11-after-180) records #184/#171/#172/#180 merged and the remaining conditional order, including the D2 migration and D6 verification gates. The older PR snapshot is historical; these docs neither change the live package nor authorize bypassing final-head checks.
+The [CMS U0 route/control baseline](./docs/audits/2026-11-10-cms-u0-route-control-baseline.md) maps the current public/admin routes, redirect and role boundaries, control ownership, and existing behavior/visual tests before UI standardization. It records uncovered live/visual states separately from executed focused tests; U0 changes no runtime behavior.
+
+### CMS U0 pre-change baseline
+
+The [route/control baseline](./docs/audits/2026-11-10-cms-u0-route-control-baseline.md) maps public and admin routes, redirects, control owners, and remaining accessibility gaps. On a clean `d0d474b` worktree, the guarded `pnpm check:all --e2e` run passed all nine gates with a disposable MySQL container. The reproducible screenshot test is `apps/web/e2e/u0-capture.spec.ts`: set `U0_CAPTURE_DIR` to a local directory **outside the repo** and `R3_E2E_STATES=1`, then run `env -u DATABASE_URL -u DATABASE_URL_TEST bash scripts/r3-12-e2e-gate.sh u0-capture.spec.ts admin-ia.spec.ts`. It records a JSON manifest and EN/VI, light/dark, 1440/390 screenshots; keep platform-specific pixels out of git (only Linux Chromium pixel baselines belong in the tracked visual snapshots). The manifest and location are documented in the audit. Never point this gate at a persistent database.
+
+The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-gap-closure-checklist-apply-only-after-d2d6-verification-and-ordered-merges) lists standalone tooling, export, dependency, pack and license gates for the eventual private package. The [live CMS stack ledger](./docs/specs/2026-11-10-cms-stack-integration-plan.md#live-merge-ledger-2026-11-11-after-174) records #184/#171/#172/#180/#175/#174 merged and the remaining conditional order, including the D2 migration and D6 verification gates. The older PR snapshot is historical; these docs neither change the live package nor authorize bypassing final-head checks.
 
 The [D2 persistence draft](./docs/specs/2026-11-11-cms-d2-persistence-design.md#d1-validation-decisions-blocking-d2-wiring) and [D2–D6 lane briefs](./docs/specs/2026-11-11-cms-builder-d-lane-briefs.md) distinguish autosave-safe structural draft validation from H1/required-content publish validation. They require pre-Zod depth/count/byte bounds, a valid one-column mobile grid and typed HTTP rejection without data loss; the historical D1 #194 findings are tracked in the dated stack snapshot. The [stack plan](./docs/specs/2026-11-10-cms-stack-integration-plan.md#parker-approvals-needed) records Parker's conditional merge approval separately from production DB access, secrets and private repository creation.
 
@@ -75,6 +81,8 @@ The public header and footer and the admin login and shell use the shared `lil.p
 - Development public routes allow React's diagnostic `eval()` under CSP; production and nonce-protected routes do not.
 
 ### Custom page creation API
+
+Duplicating a page block respects the block type's `maxPerPage` limit, just like adding a new block. When the limit is reached, `POST /api/admin/pages/:key/blocks/:id/duplicate` returns `409 BLOCK_LIMIT` and leaves the page unchanged. See the [duplicate-limit spec](./docs/specs/2026-11-10-pages-duplicate-limit.md) and the [current changelog](./PROJECT_CONTEXT.md#9-changelog).
 
 Admins can create a draft with `POST /api/admin/pages`. The JSON body requires `title` (1–120 characters after trimming), `key` (a lowercase, one-segment slug of 1–64 characters), `locale` (`en` or `vi`), and `template` (`starter` or `empty`). A successful request returns `201` with the editable admin page; `GET /api/admin/pages/:key` reads it back. Built-in page keys and public route names are reserved, and a taken key returns `409` with `PAGE_KEY_TAKEN`.
 

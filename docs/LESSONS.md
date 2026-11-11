@@ -1,6 +1,12 @@
 # Lessons
 
+- 2026-11-11: When a docs PR absorbs newer main commits, preserve both branches' README/context/lessons entries, carry main's generated Graphify report for its code, and mark historical stack snapshots as superseded rather than dropping prior evidence.
+
 - 2026-11-11: A stacked route-parity PR can inherit an unmerged migration; verify ancestry and run its behavior in an isolated candidate for pre-migration evidence, then land the migration only after full verification and restack the route PR onto the merged parent.
+- 2026-11-10: A duplicate endpoint must enforce the same registry cardinality rule as create before it shifts order or writes; cover the 409 response and unchanged page state through the real Nest route.
+
+- 2026-11-10: Capture public route baselines in an unauthenticated browser context; reusing the admin session can silently show the draft-preview banner and invalidate screenshots even when tests pass.
+- 2026-11-10: A Next page file is not necessarily a reachable screen: inspect redirects, role gates, test-only flags and shared layouts, and distinguish source/test inventory from actual live screenshot coverage.
 
 - 2026-11-11: When restacking a long docs-only child after a squashed parent, reconstruct only the reviewed child diff on the current `main` and preserve prior release notes; earlier no-approval language needs a dated superseding record once a conditional owner grant arrives.
 - 2026-11-10: A public monorepo can document the approved private package name and repository link without exposing its content or credentials; keep the exception scoped to one package and keep all other private repository identities hidden.

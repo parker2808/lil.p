@@ -48,7 +48,12 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-11 08:35 ICT integration refresh: #175 `c22eb93` and #174 `9fe18b7` are now merged after #180. #173/#183 remain superseded by #176/#201. #197 D3 accepted `0d2b94a` and #199 D2 accepted `0762e12` (migration merge waits for full candidate verification); #200 D5 core accepted `430672d` with P3 Graphify header still at `a45019cb`. #198 D4 still has a P1 missing Properties mount at 768px; D4↔D5 adapter and D5 UI evidence remain pending. This #203 branch resolves main's U0/duplicate-limit documentation alongside its own entries; it authors no code or DB change. [Current ledger](./docs/specs/2026-11-10-cms-stack-integration-plan.md#live-merge-ledger-2026-11-11-after-174).
+
 - 2026-11-11 08:20 ICT stack reconciliation: #184 `85f95f1`, #171 `7b85d71`, #172 `c127e7b` and #180 `ae6df9d` are merged. Parker's t250u 04:11 ICT advance approval covers ordered final heads and automatic deploys only after green checks, no open P0–P2 and serialized post-merge verification. #173/#183 are superseded by #176/#201 and must close without merge after replacement checks. #199's additive migration remains gated by full candidate verification; #202, which carries its ancestry, follows #199's final gate. D5 UI and a separate D6 tree-publish journey PR remain pending. See the [live ledger](docs/specs/2026-11-10-cms-stack-integration-plan.md#live-merge-ledger-2026-11-11-after-180) and [C1 gap checklist](docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-gap-closure-checklist-apply-only-after-d2d6-verification-and-ordered-merges). This branch changes only docs; no migration, extraction or deployment.
+- CMS core A2: page block duplication now checks the registry limit before mutating order or inserting a block. This is a separate bug fix; broader policy extraction remains gated on Parker's ADR approval. No DB schema or deployment change is included.
+
+- CMS U0: 43 route files, redirects/guards/flags and control owners mapped in `docs/audits/2026-11-10-cms-u0-route-control-baseline.md`; clean `main` `d0d474b` passed all nine guarded `check:all --e2e` gates on disposable MySQL (194 Playwright tests in 55 files; 69 requested visual/a11y/EN-VI/admin cases included). Explicit tests cover seven About-tab and two legacy experience editor redirects. Reproducible EN/VI, light/dark 1440/390 route captures and a manifest are kept outside git; see the audit for reviewed coverage and remaining keyboard/WCAG gaps. No production behavior/API/DB change; A2/A3 remain draft and A3 is included in U1. Graphify's code AST is refreshed with docs/CSS/SQL extraction limits recorded in the audit.
 
 - 2026-11-11 07:45 ICT merge scope: Parker's t250u approval, clarified by the coordinator, covers the ordered stack's **final-head** merges and their automatic `main` production deploys when each head is green with no unresolved P0–P2. #184 merged as `85f95f1`, #171 as `7b85d71`, #172 as `c127e7b`; each passed its post-merge checks, Vercel success and `/`, `/vi`, `/api/health` health gates. #180 still requires its own green final head before merge. Production DB access, secrets, paid services and a private repository are outside this grant; D2 waits for full D6 verification. Historical no-approval notes below describe their authors' earlier documentation-only scope.
 - CMS core A0: Parker approved a narrow exception to name/link the private repository distributing `@parker2808/cms-core` and declare the package dependency. Repository creation, credentials, publication, merge, and deploy remain separate decisions. The ADR and extraction are separate tasks.
@@ -184,7 +189,12 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-11: Merged updated `main` into docs #203, retained U0 and duplicate-limit docs/Graphify, marked #175/#174 landed and recorded reviewed D2/D3/D5 heads and outstanding D4/D5 integration gates. No authored code changes.
+
 - 2026-11-11: Reconciled the CMS integration ledger after #180 landed, pinned t250u's conditional final-head gates and superseded PRs, enumerated D6 verification before #199/#202, and converted the C1 rehearsal gaps into an extracted-package checklist. Documentation only.
+- 2026-11-10: Enforced `maxPerPage` in page-block duplication and added service and Nest e2e coverage for 409 `BLOCK_LIMIT` with no write.
+
+- 2026-11-10: Extended CMS U0 main-based route/control inventory with a guarded full-stack behavior baseline (9/9 gates; 194 web e2e tests), explicit legacy redirects, reproducible EN/VI light/dark 1440/390 screenshots and a pre-change manifest; no production behavior or DB migration.
 
 - 2026-11-11: Restacked #180's own documentation on the landed ADR, preserved the #184/#171/#172 histories and recorded Parker's t250u conditional final-head merge/automatic-deploy scope; no production DB or secret access.
 - 2026-11-10: Documented Parker's narrow public-repo naming and dependency exception for the planned private `@parker2808/cms-core` package; all other private repositories and private data remain protected.
