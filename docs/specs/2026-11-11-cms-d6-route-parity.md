@@ -14,12 +14,20 @@
 8. Reject unrenderable stored trees and require the public scanner in CI.
 9. Publish validated tree snapshots transactionally with CAS, then test API/browser parity and restore.
 10. Document independent D5 host gates, review dependencies and open draft PR.
+11. Integrate D5's pure tree helpers without D5 UI.
+12. Enumerate all 20 host schemas from the explicit registry.
+13. Round-trip operations, history and autosave against each schema.
+14. Compare bilingual preview/public SSR with host render mappings.
 
 ## Review gates (2026-11-11)
 
 - **Fail closed:** A `legacy-component` or any unsupported node in a versioned published snapshot must produce 400 `INVALID_BLOCKS` on public and version preview, not a 200 warning. Next must not return a warning page with HTTP 200 if D3 rendering fails for any other reason; add a focused SSR regression. Incomplete drafts may retain legacy nodes losslessly but cannot publish them.
 - **CI:** Run `scripts/check-public-builder-bytes.mjs` as a required build job step after the web build, in addition to `check:all`; keep the zero-byte proof across all public route manifests.
 - **Host schemas (separate D5 integration gate):** Before D5 UI acceptance, register property schemas for all 20 host block definitions and prove no missing/unknown type falls back to a starter schema. The pure starter tree uses explicitly supported core component types; do not claim 20-definition registration as passing from this D6 route test.
+- **All-20 release-gate extension:** Carry the D5 pure tree APIs from #200 (not its UI). The lil.p host explicitly supplies the 20 definition schemas, rather than adding them to core. For each definition exercise an insert and, where defaults contain a field, a valid responsive property edit; reject an invalid property without mutation, replay history undo/redo and validate revision-aware autosave; assert missing and unknown definitions fail closed. Render a host-mapped EN and VI tree with the same server-side D3 renderer for preview and public input and compare deterministic markup. This is schema/renderer parity evidence, not a claim that the currently starter-only HTTP tree routes accept all 20 types: that separate host API/Next registry wiring must be proven before release.
+
+The new host-gate test in `apps/web/src/modules/blocks/host-schema-gate.test.tsx` passes 21 cases: registry count plus one schema/edit/history/autosave/EN+VI SSR case per definition (40 deterministic preview/public comparisons). The server render mapping is deliberately test-local and prints the validated props, not a replacement for the host's real block components. It proves explicit registry injection and parity of the pure D3 server renderer; it **does not** mark all-20 live HTTP publish or Next display as passing. The existing real HTTP journey continues to cover the starter tree; all-20 live route wiring remains BLOCKED. D5 #200 is carried in this stacked branch, so both lower PRs #199 and #200 require their own acceptance before #202 merges.
+
 - **Dirty-edit protection (separate D5 integration gate):** The host must require explicit confirmation/export before D5 `reload` can replace a dirty local tree. API revision CAS cannot by itself certify browser autosave/reload safety.
 - **Real route journey:** With the server flag enabled and an eligible custom page, activate and save a versioned draft using revision CAS, reject stale/invalid writes, publish only a tree that passes publish and renderability validation, then compare EN/VI version preview/public JSON and Next SSR HTML. A revision-aware historical restore changes the draft (not published pointer), and republish advances the version. Legacy pages and goldens remain unchanged. Keep publish atomic in one host Prisma transaction, including version, pointer, audit and revision CAS; reject future/unknown/lossy versions before writes. Browser tests may drive the builder draft HTTP endpoints until the independently reviewed D5 editor/autosave UI is integrated; do not describe that as D5 client autosave coverage.
 

@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-11: A pure tree editor must receive every host component schema explicitly, including during autosave and history replay; a passing neutral starter-schema test cannot prove portfolio-wide property safety or HTTP renderability.
+- 2026-11-11: A concurrent builder-to-legacy restore must stop autosave with local edits intact; reloading a remote builder tree needs explicit discard acknowledgement, never implicit revision substitution.
+
 - 2026-11-11: A server-only React tree renderer belongs in the Next host; Nest must deliver a strictly validated tree envelope, preserve VI-only custom-page SEO and fail closed on unsupported or untagged tree snapshots rather than coercing them into empty legacy pages. An opt-in route parity fixture alone is not proof of a real publish journey; use revision-checked HTTP publish, restore and browser SSR evidence separately from D5 client autosave.
 - 2026-11-11: Stored tree validation must also reject structurally valid but unrenderable legacy-component nodes before public dispatch; checking only tree schema and returning a renderer warning can turn an invalid published page into HTTP 200.
 - 2026-11-11: A real contact hydration readiness fix, not retries, must gate CMS E2E alongside route parity; merge the focused pre-hydration regression before claiming the full integration gate green.

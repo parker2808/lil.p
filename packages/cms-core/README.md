@@ -29,6 +29,8 @@ An empty tree is valid for `readTree` autosave, but `validateTreeForPublish` ret
 
 The semantic `heading` renderer is core-owned: do not pass `components.heading`. A host override returns `RENDER_FAILED` and a safe warning instead of duplicating responsive heading tags.
 
+D5 adds `applyTreeOperation`, `createTreeHistory`/`commitTreeHistory`/`undoTreeHistory`/`redoTreeHistory` and `DraftAutosave` to `./tree`. Supply the host's explicit D1 component registry for edits, history and autosave; core never imports host definitions. Autosave uses decimal-string D2 revisions, keeps local edits through 409 and uncertain saves, and treats a legacy-mode `tree: null` as blocked review rather than an empty builder. Remote reload requires explicit `discardLocalEdits: true`. D6's 20-definition gate is described in [the D6 spec](../../docs/specs/2026-11-11-cms-d6-route-parity.md); see also [D5 core logic](../../docs/specs/2026-11-11-cms-d5-core-logic.md).
+
 Build and check the browser gzip budgets with `pnpm --filter @parker2808/cms-core test` (which builds and checks the D1 combined cap).
 The build runs `scripts/measure-cms-core.mjs` and fails above 60 KiB combined
 contracts+engine or 35 KiB combined `./react` + `./react/server`. These are **minified ESM artifact gzip sums**
