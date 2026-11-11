@@ -67,8 +67,8 @@ export function DropdownMenuItem({
       data-inset={inset}
       data-variant={variant}
       className={cn(
-        'text-ui relative flex cursor-default items-center gap-2 rounded-md px-2 py-1.5 outline-none select-none',
-        'focus:bg-accent focus:text-accent-foreground',
+        'text-ui relative flex min-h-11 cursor-default items-center gap-2 rounded-md px-2 py-2 outline-none select-none',
+        'focus:bg-accent focus:text-accent-foreground focus-visible:ring-ring focus-visible:ring-2',
         'data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive-subtle',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className,
@@ -88,7 +88,7 @@ export function DropdownMenuCheckboxItem({
     <DropdownMenuPrimitive.CheckboxItem
       data-slot="dropdown-menu-checkbox-item"
       className={cn(
-        'text-ui relative flex cursor-default items-center gap-2 rounded-md py-1.5 pr-2 pl-8 outline-none select-none',
+        'text-ui focus-visible:ring-ring relative flex min-h-11 cursor-default items-center gap-2 rounded-md py-2 pr-2 pl-8 outline-none select-none focus-visible:ring-2',
         'focus:bg-accent focus:text-accent-foreground',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className,
@@ -115,7 +115,7 @@ export function DropdownMenuRadioItem({
     <DropdownMenuPrimitive.RadioItem
       data-slot="dropdown-menu-radio-item"
       className={cn(
-        'text-ui relative flex cursor-default items-center gap-2 rounded-md py-1.5 pr-2 pl-8 outline-none select-none',
+        'text-ui focus-visible:ring-ring relative flex min-h-11 cursor-default items-center gap-2 rounded-md py-2 pr-2 pl-8 outline-none select-none focus-visible:ring-2',
         'focus:bg-accent focus:text-accent-foreground',
         'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
         className,

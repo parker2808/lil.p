@@ -12,6 +12,7 @@ export const SPECS = [
   'admin-pages.spec.ts',
   'admin-save-status.spec.ts',
   'a11y.spec.ts',
+  'cms-u1-controls.spec.ts',
   'lighthouse.spec.ts',
   'ux-overlay.spec.ts',
   'admin-scroll.spec.ts',
@@ -60,6 +61,7 @@ export const SPECS = [
   'public-shell-indexes.spec.ts',
   'copy-email.spec.ts',
   'public-details-states.spec.ts',
+  'u0-capture.spec.ts',
 ] as const;
 
 /** Specs that must run together in shard 1 (pixel baselines, Lighthouse scores). */

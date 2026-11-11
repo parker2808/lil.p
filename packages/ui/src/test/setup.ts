@@ -32,3 +32,8 @@ class MockResizeObserver {
 
 vi.stubGlobal('ResizeObserver', MockResizeObserver);
 HTMLElement.prototype.scrollIntoView = vi.fn();
+if (!HTMLElement.prototype.hasPointerCapture) {
+  HTMLElement.prototype.hasPointerCapture = () => false;
+  HTMLElement.prototype.setPointerCapture = () => {};
+  HTMLElement.prototype.releasePointerCapture = () => {};
+}
