@@ -1,0 +1,281 @@
+import { expect, test } from '@playwright/test';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+import { signIn } from './helpers/auth';
+
+test('empty page composes two sections and nested components with mouse', async ({ page }) => {
+  await signIn(page);
+  await page.goto('/admin/builder/home');
+  await expect(page.getByRole('region', { name: 'Page builder' })).toBeVisible();
+  await page
+    .getByRole('complementary', { name: 'Components' })
+    .getByRole('button', { name: 'Section', exact: true })
+    .click();
+  await page
+    .getByRole('complementary', { name: 'Components' })
+    .getByRole('button', { name: 'Columns', exact: true })
+    .click();
+  await page
+    .getByRole('complementary', { name: 'Components' })
+    .getByRole('button', { name: 'Heading', exact: true })
+    .click();
+  await page
+    .getByRole('complementary', { name: 'Components' })
+    .getByRole('button', { name: 'Section' })
+    .click();
+  await expect(page.locator('[data-node-type]')).toHaveCount(7);
+  await expect(page.locator('[data-node-type="column"] [data-node-type="component"]')).toHaveCount(
+    1,
+  );
+  const tree = page.getByRole('complementary', { name: 'Layers' }).getByRole('tree');
+  await tree
+    .getByRole('treeitem', { name: /Heading/ })
+    .dragTo(tree.getByRole('treeitem', { name: /Section/ }).nth(1));
+  await expect(
+    page.locator('[data-node-type="section"]').nth(1).locator('[data-node-type="component"]'),
+  ).toHaveCount(1);
+  await expect(page.getByRole('button', { name: 'Publish' })).toBeDisabled();
+});
+
+test('mobile sheets contain focus, restore it, and retain a full canvas', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await signIn(page);
+  await page.goto('/admin/builder/home');
+  const layers = page
+    .getByRole('navigation', { name: 'Page builder' })
+    .getByRole('button', { name: 'Layers' });
+  await layers.click();
+  const sheet = page.getByRole('dialog', { name: 'Layers' });
+  await expect(sheet).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(sheet).toBeHidden();
+  await expect(layers).toBeFocused();
+  await expect(page.getByRole('button', { name: '390 px' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await expect(page.getByRole('region', { name: 'Page canvas' })).toBeVisible();
+});
+
+test('tablet Properties sheet contains its panel and restores keyboard focus', async ({ page }) => {
+  await page.setViewportSize({ width: 768, height: 900 });
+  await signIn(page);
+  await page.goto('/admin/builder/properties-preview');
+  const trigger = page
+    .getByRole('navigation', { name: 'Page builder' })
+    .getByRole('button', { name: 'Properties' });
+  await trigger.click();
+  const sheet = page.getByRole('dialog', { name: 'Properties' });
+  await expect(sheet.getByRole('heading', { name: 'Properties' })).toBeVisible();
+  await expect(sheet.getByRole('textbox', { name: 'Selected item ID' })).toHaveValue('page');
+  await expect(
+    sheet.getByText('Publish needs a heading. Draft composition remains available.'),
+  ).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(sheet).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await page.setViewportSize({ width: 1100, height: 900 });
+  await trigger.click();
+  await expect(
+    page
+      .getByRole('dialog', { name: 'Properties' })
+      .getByRole('textbox', { name: 'Selected item ID' }),
+  ).toBeVisible();
+  await page.keyboard.press('Escape');
+  await page.setViewportSize({ width: 1101, height: 900 });
+  await expect(
+    page
+      .getByRole('complementary', { name: 'Properties' })
+      .getByRole('textbox', { name: 'Selected item ID' }),
+  ).toBeVisible();
+  await expect(page.getByRole('dialog', { name: 'Properties' })).toHaveCount(0);
+});
+
+test('Properties stays single-mounted across 768, 1100 and desktop in both directions', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 768, height: 900 });
+  await signIn(page);
+  for (const locale of ['en', 'vi'] as const) {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.getByRole('combobox', { name: 'Language' }).selectOption(locale);
+    await page.setViewportSize({ width: 768, height: 900 });
+    await page.goto('/admin/builder/properties-preview');
+    await expect(page.locator('html')).toHaveAttribute('lang', locale);
+    const name = locale === 'vi' ? 'Thuộc tính' : 'Properties';
+    const field = locale === 'vi' ? 'ID mục đã chọn' : 'Selected item ID';
+    const trigger = page
+      .getByRole('navigation', { name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder' })
+      .getByRole('button', { name });
+    for (const theme of ['light', 'dark'] as const) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      if (
+        !(await page
+          .locator('html')
+          .evaluate((element, value) => element.classList.contains(value), theme))
+      )
+        await page
+          .getByRole('button', {
+            name: locale === 'vi' ? 'Đổi giao diện' : 'Toggle theme',
+            exact: true,
+          })
+          .click();
+      await expect(page.locator('html')).toHaveClass(new RegExp(theme));
+      await page.setViewportSize({ width: 768, height: 900 });
+      await trigger.click();
+      for (const width of [1100, 1440, 1100, 768] as const) {
+        await page.setViewportSize({ width, height: 900 });
+        const dialog = page.getByRole('dialog', { name });
+        const inspector = page.getByRole('complementary', { name });
+        if (width === 1440) {
+          await expect(dialog).toHaveCount(0);
+          await expect(inspector.getByRole('textbox', { name: field })).toHaveCount(1);
+          await expect(inspector).toBeFocused();
+        } else {
+          await expect(inspector).toHaveCount(0);
+          if (await dialog.count()) {
+            await expect(dialog.getByRole('textbox', { name: field })).toHaveCount(1);
+          } else {
+            await expect(trigger).toBeFocused();
+            await trigger.click();
+            await expect(dialog.getByRole('textbox', { name: field })).toHaveCount(1);
+          }
+        }
+        await expect(page.getByRole('textbox', { name: field })).toHaveCount(1);
+      }
+      await page.keyboard.press('Escape');
+      await expect(page.getByRole('dialog', { name })).toHaveCount(0);
+      await expect(trigger).toBeFocused();
+    }
+  }
+});
+
+test('reviewed visual matrix', async ({ page }) => {
+  test.skip(process.env.D4_CAPTURE !== '1', 'Only capture during the serialized visual gate');
+  test.setTimeout(360_000);
+  const directory = resolve(import.meta.dirname, '../../../docs/specs/assets/cms-d4');
+  mkdirSync(directory, { recursive: true });
+  const captures: string[] = [];
+  await signIn(page);
+  for (const locale of ['en', 'vi'] as const) {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.getByRole('combobox', { name: 'Language' }).selectOption(locale);
+    if (locale === 'vi') {
+      await expect
+        .poll(
+          async () =>
+            (await page.context().cookies()).find((cookie) => cookie.name === 'NEXT_LOCALE')?.value,
+        )
+        .toBe(locale);
+    }
+    await page.goto('/admin/builder/home');
+    await expect(page.locator('html')).toHaveAttribute('lang', locale);
+    for (const theme of ['light', 'dark'] as const) {
+      await page.setViewportSize({ width: 1440, height: 900 });
+      if (
+        !(await page
+          .locator('html')
+          .evaluate((element, name) => element.classList.contains(name), theme))
+      )
+        await page
+          .getByRole('button', {
+            name: locale === 'vi' ? 'Đổi giao diện' : 'Toggle theme',
+            exact: true,
+          })
+          .click();
+      await expect(page.locator('html')).toHaveClass(new RegExp(theme));
+      await expect(
+        page.getByRole('region', { name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder' }),
+      ).toHaveAttribute('data-theme', theme);
+      for (const width of [1440, 768, 390] as const) {
+        await page.setViewportSize({ width, height: width === 390 ? 844 : 900 });
+        for (const brand of ['neutral', 'lilp'] as const) {
+          await page.goto('/admin/builder/home');
+          const builder = page.getByRole('region', {
+            name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder',
+          });
+          await expect(builder).toHaveAttribute('data-theme', theme);
+          if (brand === 'lilp')
+            await builder.getByRole('button', { name: /Switch neutral|Đổi giao diện/ }).click();
+          const prefix = `${locale}-${theme}-${brand}-${width}`;
+          async function capture(state: string) {
+            const name = `${prefix}-${state}.png`;
+            await page.screenshot({ path: resolve(directory, name), animations: 'disabled' });
+            captures.push(name);
+          }
+          await capture('empty');
+          const palette =
+            width !== 1440
+              ? page
+                  .getByRole('navigation', { name: /Page builder|Trình dựng trang/ })
+                  .getByRole('button', { name: locale === 'vi' ? 'Thành phần' : 'Components' })
+              : null;
+          if (palette) await palette.click();
+          const container =
+            width !== 1440
+              ? page.getByRole('dialog', { name: locale === 'vi' ? 'Thành phần' : 'Components' })
+              : page.getByRole('complementary', {
+                  name: locale === 'vi' ? 'Thành phần' : 'Components',
+                });
+          await container
+            .getByRole('button', { name: locale === 'vi' ? 'Phần' : 'Section', exact: true })
+            .click();
+          if (palette) await palette.click();
+          const components =
+            width !== 1440
+              ? page.getByRole('dialog', { name: locale === 'vi' ? 'Thành phần' : 'Components' })
+              : page.getByRole('complementary', {
+                  name: locale === 'vi' ? 'Thành phần' : 'Components',
+                });
+          await components
+            .getByRole('button', { name: locale === 'vi' ? 'Tiêu đề' : 'Heading' })
+            .click();
+          if (width === 390) await capture('canvas');
+          else await capture('nested');
+          if (width === 390) {
+            await page
+              .getByRole('navigation', { name: /Page builder|Trình dựng trang/ })
+              .getByRole('button', { name: locale === 'vi' ? 'Lớp' : 'Layers' })
+              .click();
+            await capture('layers-sheet');
+            await page.keyboard.press('Escape');
+          }
+          if (width === 768) {
+            await page.goto('/admin/builder/properties-preview');
+            const previewBuilder = page.getByRole('region', {
+              name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder',
+            });
+            if (brand === 'lilp')
+              await previewBuilder
+                .getByRole('button', { name: /Switch neutral|Đổi giao diện/ })
+                .click();
+            await page
+              .getByRole('navigation', { name: /Page builder|Trình dựng trang/ })
+              .getByRole('button', { name: locale === 'vi' ? 'Thuộc tính' : 'Properties' })
+              .click();
+            const properties = page.getByRole('dialog', {
+              name: locale === 'vi' ? 'Thuộc tính' : 'Properties',
+            });
+            await expect(
+              properties.getByRole('heading', {
+                name: locale === 'vi' ? 'Thuộc tính' : 'Properties',
+              }),
+            ).toBeVisible();
+            const selectedId = properties.getByRole('textbox', {
+              name: locale === 'vi' ? 'ID mục đã chọn' : 'Selected item ID',
+            });
+            await expect(selectedId).toHaveValue('page');
+            await selectedId.scrollIntoViewIfNeeded();
+            const inputBounds = await selectedId.boundingBox();
+            expect(inputBounds).not.toBeNull();
+            expect(inputBounds!.y + inputBounds!.height).toBeLessThanOrEqual(900);
+            await capture('properties-sheet');
+            await page.keyboard.press('Escape');
+          }
+        }
+      }
+    }
+  }
+  writeFileSync(resolve(directory, 'manifest.json'), `${JSON.stringify({ captures }, null, 2)}\n`);
+});

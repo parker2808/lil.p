@@ -69,6 +69,8 @@ The [CMS B1 golden HTTP suite](./docs/specs/2026-11-10-cms-b1-golden-http.md) fr
 
 [D integration base](./docs/specs/2026-11-11-cms-d-integration-base.md) carries both B7's neutral theme/fixture and D1's typed tree on a stacked draft branch; lil.p's live routes and data remain unchanged.
 
+[D4 canvas study](./docs/specs/2026-11-11-cms-d4-canvas.md) adds an admin-only, `R3_E2E_STATES=1` gated `/admin/builder/[key]` composition route with a controlled local-only draft, atomic slot-validated commands, drag-insert/keyboard palette, Layers outline and compact mobile/tablet sheets sized beneath host navigation. Properties mounts once in the desktop inspector or compact sheet; an open compact sheet closes on transition above 1100px, and focus moves to a visible control when crossing back. D5 adapts successful commands to its history/autosave operations. It imports the core neutral theme and optionally applies token-only lil.p colors. **It cannot save, publish, restore or preview public content**; D2/D3/D5/D6 integrate those capabilities later. With the flag off the route returns not found; the legacy editor stays unchanged.
+
 ### Real content seed verification
 
 The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires private source evidence for every factual claim and project cover. Keep source paths, source text, and contact details out of git and logs. The staged migration check is `env -u DATABASE_URL bash apps/api/prisma/seed/migration-gate.sh`; it creates a random, tmpfs-only MySQL container, compares the five built-in page rows across the old and current migrations, checks page constraints and Prisma schema drift, then removes the container. It refuses to run when `DATABASE_URL` is already set.
