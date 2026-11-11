@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-10: Extract page/block mechanics behind a host-provided registry and persistence/auth ports; leave portfolio block definitions, domain pickers, routes and deployment adapters in the application until a neutral standalone fixture proves reuse.
+- 2026-11-10: A reusable CMS block engine is a foundation for a visual page builder, not the builder itself; keep behavior-preserving extraction separate from a versioned layout tree and its additive, independently approved storage migration.
 - 2026-11-10: A public monorepo can document the approved private package name and repository link without exposing its content or credentials; keep the exception scoped to one package and keep all other private repository identities hidden.
 - 2026-11-10: A real stacked PR targeting the branch that contains a workflow trigger change can exercise `pull_request` on that non-main base before the change merges; capture both failing and passing `context` job URLs rather than inferring coverage from a main-target PR.
 
@@ -125,4 +127,6 @@
 - 2026-11-03: A screenshot matrix leaves Playwright at its last mobile viewport, so restore desktop width before testing desktop-only header links; assert mobile control boxes directly because one inherited 40px button escaped earlier route checks.
 - 2026-11-03: Record behavior and route changes in the root README in the same PR; this repo keeps current changelog entries in `PROJECT_CONTEXT.md` §9 and reserves `docs/CHANGELOG_ARCHIVE.md` for older history.
 - 2026-11-03: When stacked branches both refresh the tracked Graphify report, regenerate it after merging the base instead of combining generated report lines by hand.
+- 2026-11-10: Capture a route-complete behavior and control baseline before UI standardization, then extract its stable interfaces before building a new page tree; a code-only Graphify report cannot establish documentation or visual coverage.
+- 2026-11-10: A reusable CMS needs a finished default theme without host styling; screenshot-backed design review of individual components and assembled pages must gate completion alongside functional tests.
 - 2026-11-10: A `pull_request.branches: [main]` workflow filter skips the entire job for stacked PRs targeting feature branches, even if the diff script would have caught a missing context update; use the PR's actual base for policy, not a trigger restricted to main.
