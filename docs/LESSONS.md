@@ -155,3 +155,5 @@
 - 2026-11-11: When a stacked design branch meets a reviewed base update, preserve both branches' documented lessons and regenerate generated graph reports rather than hand-merging graph data.
 - 2026-11-11: A builder nested inside an admin flex layout must size against the host main content box, not subtract guessed pixels from 100dvh; a fixed page-node minimum can hide builder navigation behind the host mobile bar.
 - 2026-11-11: Keep one owner of builder document/selection and dispatch validated atomic operations, so history/autosave can wrap edits; after deletion, announce only the actual result and focus a surviving node rather than a detached trigger.
+- 2026-11-11: Match a responsive editor's JS mount boundary to the CSS visibility breakpoint; a 768px tablet can hide the desktop inspector while a device classification still reports “tablet,” leaving a modal sheet empty.
+- 2026-11-11: Capture a destructive confirmation's target ID at the initiating keyboard/pointer event, rather than reading a selected ID that may lag focus after a batched state update.

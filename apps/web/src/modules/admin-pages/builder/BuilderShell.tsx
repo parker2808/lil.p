@@ -166,6 +166,10 @@ function viewportDevice(): 'mobile' | 'tablet' | 'desktop' {
   return window.innerWidth < 600 ? 'mobile' : window.innerWidth < 1700 ? 'tablet' : 'desktop';
 }
 
+function compactWorkspace(): boolean {
+  return window.innerWidth <= 1100;
+}
+
 function subscribeTheme(onChange: () => void) {
   const observer = new MutationObserver(onChange);
   observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
@@ -214,6 +218,7 @@ export function BuilderShell({
   const [focusId, setFocusId] = useState('page');
   const [expanded, setExpanded] = useState<Set<string>>(new Set(['page']));
   const viewport = useSyncExternalStore(subscribeViewport, viewportDevice, () => 'mobile');
+  const compact = useSyncExternalStore(subscribeViewport, compactWorkspace, () => true);
   const [chosenDevice, setChosenDevice] = useState<'mobile' | 'tablet' | 'desktop' | null>(null);
   const device = chosenDevice ?? viewport;
   const [brand, setBrand] = useState<'neutral' | 'lilp'>('neutral');
@@ -221,6 +226,7 @@ export function BuilderShell({
   const sheetRef = useRef<HTMLDivElement | null>(null);
   const confirmRef = useRef<HTMLDivElement | null>(null);
   const deleteTriggerRef = useRef<HTMLElement | null>(null);
+  const deleteTargetRef = useRef<string | null>(null);
   const treeRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLElement | null>(null);
 
@@ -472,6 +478,7 @@ export function BuilderShell({
     } else if (event.key === 'Delete' && id !== 'page') {
       event.preventDefault();
       apply({ type: 'select', id });
+      deleteTargetRef.current = id;
       deleteTriggerRef.current = event.target as HTMLElement;
       setConfirmDelete(true);
     }
@@ -704,6 +711,7 @@ export function BuilderShell({
               <button
                 type="button"
                 onClick={(event) => {
+                  deleteTargetRef.current = node.id;
                   deleteTriggerRef.current = event.currentTarget;
                   setConfirmDelete(true);
                 }}
@@ -841,7 +849,7 @@ export function BuilderShell({
             </div>
           </div>
         </section>
-        {viewport !== 'mobile' && renderProperties && (
+        {!compact && renderProperties && (
           <aside className={`${styles.sidebar} ${styles.inspector}`} aria-label={text.properties}>
             <h2>{text.properties}</h2>
             {panel('properties')}
@@ -873,6 +881,7 @@ export function BuilderShell({
             <button
               type="button"
               onClick={(event) => {
+                deleteTargetRef.current = selectedId;
                 deleteTriggerRef.current = event.currentTarget;
                 setConfirmDelete(true);
               }}
@@ -944,9 +953,7 @@ export function BuilderShell({
                 ×
               </button>
             </div>
-            {sheet === 'properties' && viewport !== 'mobile' && renderProperties
-              ? null
-              : panel(sheet)}
+            {sheet === 'properties' && !compact && renderProperties ? null : panel(sheet)}
           </div>
         </div>
       )}
@@ -988,7 +995,10 @@ export function BuilderShell({
                 type="button"
                 onClick={() => {
                   const wasInTree = !!deleteTriggerRef.current?.closest('[role="tree"]');
-                  const result = apply({ type: 'remove', id: selectedId });
+                  const result = apply({
+                    type: 'remove',
+                    id: deleteTargetRef.current ?? selectedId,
+                  });
                   closeConfirmation(!result.ok);
                   if (result.ok) {
                     setAnnouncement(text.removed);
@@ -1019,6 +1029,7 @@ export function BuilderShell({
 }
 
 export function BuilderStudy({ pageKey }: { pageKey: string }) {
+  const locale = useLocale() === 'vi' ? 'vi' : 'en';
   const [state, setState] = useState<BuilderState>({ document: initial, selectedId: 'page' });
   const current = useRef(state);
   const onDispatch = (command: BuilderCommand): CompositionResult => {
@@ -1029,5 +1040,21 @@ export function BuilderStudy({ pageKey }: { pageKey: string }) {
     }
     return result;
   };
-  return <BuilderShell pageKey={pageKey} state={state} onDispatch={onDispatch} />;
+  return (
+    <BuilderShell
+      pageKey={pageKey}
+      state={state}
+      onDispatch={onDispatch}
+      renderProperties={
+        pageKey === 'properties-preview'
+          ? ({ state: currentState }) => (
+              <label className={styles.field}>
+                {locale === 'vi' ? 'ID mục đã chọn' : 'Selected item ID'}
+                <input value={currentState.selectedId} readOnly />
+              </label>
+            )
+          : undefined
+      }
+    />
+  );
 }

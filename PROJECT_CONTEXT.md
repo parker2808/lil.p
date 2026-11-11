@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
-- CMS D4 canvas (stacked on D base `3bbd1b2`): `/admin/builder/[key]` is a flag-gated, authenticated in-memory study with a slot-validated D1 tree, controlled atomic dispatch, searchable drag/keyboard palette, nested Layers outline and host-nav-safe mobile sheets. Properties mounts once; D5 must own document/history/autosave through the frozen dispatch interface rather than a raw document setter. The sibling D5 draft spec on #180 still describes the old provisional callback and needs its owner's update. Core CSS supplies neutral defaults; lil.p branding changes tokens only. D2/D3/D6 still own persistence, public rendering and journey registration. No live save/publish/restore or legacy editor change. See `docs/specs/2026-11-11-cms-d4-canvas.md`.
+- CMS D4 canvas (stacked on D base `3bbd1b2`): `/admin/builder/[key]` is a flag-gated, authenticated in-memory study with a slot-validated D1 tree, controlled atomic dispatch, searchable drag/keyboard palette, nested Layers outline and host-nav-safe mobile/tablet sheets. Properties mounts once in the visible desktop inspector or compact sheet at ≤1100px, including 768px; D5 must own document/history/autosave through the frozen dispatch interface rather than a raw document setter. The sibling D5 draft spec on #180 still describes the old provisional callback and needs its owner's update. Core CSS supplies neutral defaults; lil.p branding changes tokens only. D2/D3/D6 still own persistence, public rendering and journey registration. No live save/publish/restore or legacy editor change. See `docs/specs/2026-11-11-cms-d4-canvas.md`.
 
 - D integration base (draft, B7 `2307b54` + D1 `2b50dbc`): carries the reviewed neutral fixture/theme and typed tree with its empty-publish H1 gate; no API, database, runtime route or golden contract change. `./theme.css` and `./tree` exports both remain. See `docs/specs/2026-11-11-cms-d-integration-base.md`.
 
@@ -163,6 +163,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: D4 Properties mounts in the compact tablet sheet rather than a CSS-hidden desktop inspector; a 768px unit and eight browser captures protect the one-mount, modal keyboard and EN/VI/light/dark contract (64 captures total). Keyboard/pointer delete confirmations pin their trigger ID to avoid stale selection. Documented the D4 command to D5 operation adapter; locked disposable-MySQL check:all --e2e passed 11/11. No API, DB or public change.
 
 - 2026-11-11: D4 review follow-up replaced internal document state/raw Properties setter with a controlled atomic command contract and single Properties mount; guarded required-column deletion with typed EN/VI feedback and surviving-parent focus, added palette drag-insert, fit shell under host navigation, and covered 390/768/1440 captures, target sizes and keyboard focus. This provisional editor changes no API, database, legacy goldens or public content; browser/visual evidence is recorded in the D4 spec.
 - 2026-11-11: Added a gated D4 canvas route and pure tree composition/keyboard models, with EN/VI palette and Layers, mobile sheet access and D5 callback handoff. This provisional editor changes no API, database, legacy goldens or public content; browser/visual evidence is recorded in the D4 spec.
