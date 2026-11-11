@@ -12,12 +12,13 @@ services:
     dockerContext: .
     healthCheckPath: /api/health
     # Deploy only when the API image can change. The API depends on
-    # @portfolio/contracts only (`pnpm --filter @portfolio/api... ls`); web-only
-    # and packages/ui changes do not trigger a Render deploy.
+    # @portfolio/contracts and @parker2808/cms-core; web-only and packages/ui
+    # changes do not trigger a Render deploy.
     buildFilter:
       paths:
         - apps/api/**
         - packages/contracts/**
+        - packages/cms-core/**
         - package.json
         - pnpm-lock.yaml
         - pnpm-workspace.yaml
