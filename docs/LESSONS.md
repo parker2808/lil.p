@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-11: A stacked route-parity PR can inherit an unmerged migration; verify ancestry and run its behavior in an isolated candidate for pre-migration evidence, then land the migration only after full verification and restack the route PR onto the merged parent.
+
 - 2026-11-11: When restacking a long docs-only child after a squashed parent, reconstruct only the reviewed child diff on the current `main` and preserve prior release notes; earlier no-approval language needs a dated superseding record once a conditional owner grant arrives.
 - 2026-11-10: A public monorepo can document the approved private package name and repository link without exposing its content or credentials; keep the exception scoped to one package and keep all other private repository identities hidden.
 - 2026-11-10: A real stacked PR targeting the branch that contains a workflow trigger change can exercise `pull_request` on that non-main base before the change merges; capture both failing and passing `context` job URLs rather than inferring coverage from a main-target PR.
