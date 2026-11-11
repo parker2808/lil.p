@@ -55,8 +55,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: pnpm --filter @portfolio/contracts build
-      - run: pnpm -r --parallel --if-present test
+      - run: pnpm --filter @portfolio/contracts... build
+      - run: pnpm -r --if-present test
 
   build:
     needs: changes
@@ -122,7 +122,7 @@ jobs:
           echo "JWT_ACCESS_SECRET=${access_a}-${access_b}!!" >> "$GITHUB_ENV"
           echo "JWT_REFRESH_SECRET=${refresh_a}-${refresh_b}!" >> "$GITHUB_ENV"
       - uses: ./.github/actions/setup
-      - run: pnpm --filter @portfolio/contracts build
+      - run: pnpm --filter @portfolio/contracts... build
       - run: pnpm --filter @portfolio/api test:e2e
 
   build-e2e:
@@ -152,7 +152,7 @@ jobs:
           key: next-${{ runner.os }}-e2e-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('apps/web/**/*.ts', 'apps/web/**/*.tsx', 'apps/web/**/*.css', 'packages/**/*.ts', 'packages/**/*.tsx', 'packages/**/*.css') }}
           restore-keys: |
             next-${{ runner.os }}-e2e-${{ hashFiles('pnpm-lock.yaml') }}-
-      - run: pnpm --filter @portfolio/contracts build
+      - run: pnpm --filter @portfolio/contracts... build
       - run: pnpm --filter @portfolio/api build
         env:
           NODE_ENV: test
@@ -162,7 +162,7 @@ jobs:
         run: >-
           tar -I 'zstd -1 -T0' -cf e2e-build.tar.zst
           --exclude=apps/web/.next/cache --exclude=apps/web/.next/standalone
-          packages/contracts/dist apps/api/dist apps/web/.next
+          packages/cms-core/dist packages/contracts/dist apps/api/dist apps/web/.next
       - uses: actions/upload-artifact@v4
         with:
           name: e2e-build

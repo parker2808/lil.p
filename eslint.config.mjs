@@ -37,6 +37,22 @@ export default tseslint.config(
     },
   },
   {
+    files: ['packages/cms-core/src/**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@portfolio/*', '@/modules/*'],
+              message: 'cms-core must not import host modules',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: [
       'packages/ui/src/components/**/*.{js,jsx,ts,tsx}',
       'src/components/**/*.{js,jsx,ts,tsx}',

@@ -48,6 +48,18 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-11 11:13 ICT: #185 B4 is merged as `89b9312`; the #203 C1 document templates remain drafts for the final verified package. Prior dated ledger entries describe their historical snapshots, not current merge status. Package extraction, migration and production access remain separate gated work.
+
+- 2026-11-11 B4 integration with merged B3: preserve the host's 20-definition registry and built-in/custom allowance while moving generic contracts into core. The merged package retains B3's 60/35 KiB gzip gates and adds peer validation and ESM/CJS exports. The B1 golden HTTP expectations stay unchanged; final-head PR CI and independent conflict review gate #185.
+
+- CMS B4 contracts/registry (stacked on accepted B3 `814afcf`): generic Zod page/block/locale/snapshot schemas, `defineBlock`, allowance and duplicate-rejecting `createRegistry` live in `@parker2808/cms-core/contracts`. The host retains its 20 definitions, copy and finite HTTP block enum; browser gzip is 864/61,440 bytes and React 34/35,840. All three subpaths resolve ESM and CJS; React 19, React DOM 19 and Zod 4 are declared peers excluded from browser bundles. Core-only imports load no host definitions; lint/dependency checks reject host imports, including side-effect imports and re-exports. No runtime route, EN/VI locale or admin table Shortcuts dialog change, migrations or new external packages. U2/U3 are accepted on separate unmerged branches; B6 follows B4 approval, D follows B7. See `docs/specs/2026-11-10-cms-b4-contracts-registry.md`.
+
+- Out of B4 scope: the locked local macOS web E2E failed its existing VI public-shell axe contrast check (`#414248` on `#ff8f74`, measured 4.49:1 vs required 4.5:1). All other `check:all --e2e` stages passed on disposable MySQL. This UI palette issue requires separate review; B4 does not change UI, tests or production code. See the B4 spec for evidence and the Linux CI result for platform coverage.
+
+- B4 peer-audit local gate: package tests and seven non-E2E stages pass; a separate locked disposable-MySQL `check:all --e2e` attempt omitted required `API_PORT` and `WEB_ORIGIN` and failed API config validation, two web draft-preview checks and the known macOS contrast check. A corrected locked API E2E rerun passes 23 files/113 tests. The full local gate is not green; use full Linux CI for this change and do not infer a product regression from the misconfigured preview run.
+
+- B4 pre-review gate (2026-11-11): with explicit test ports/origin, the locked disposable-MySQL `pnpm check:all --e2e` passes eight of nine stages, including API E2E. Only macOS web E2E fails existing EN/VI shell axe contrast (`#3f4046` on `#fa896e`, 4.36:1 versus required 4.5:1 at `public-shell-indexes.spec.ts:73`). No UI changes in B4; await Linux PR CI for the complete gate.
+
 - C1 standalone README/changelog/LICENSE text is drafted in the extraction runbook only; review it against the final integrated export map, source history and third-party license notices before authorized private extraction. No package, credential or repository is created in this docs PR.
 
 - 2026-11-11 10:20 ICT reconciliation: main has merged #184 `85f95f1`, #171 `7b85d71`, #172 `c127e7b`, #180 `ae6df9d`, #175 `c22eb93`, #174 `9fe18b7`, #176 `cd6d77e`, #177 `a6d11a1`, #181 `f328b3c` and #182 `0a9416b`; #185 remains next. This docs-only branch rehearses C1 from the pushed D5 UI head without creating a repository or changing package source. See the [live ledger](./docs/specs/2026-11-10-cms-stack-integration-plan.md#live-merge-ledger-2026-11-11-after-182).
@@ -198,6 +210,14 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Restacked B4 over merged B3; retained B3 budgets and B4 host-composed registry, peer validation, CJS resolution and host compatibility, regenerated the lockfile and Graphify, and kept B1 goldens unchanged.
+
+- 2026-11-10: Hardened B4 package boundary: every subpath now has a tested CJS require condition; dependency checks cover side-effect imports and re-exports, and core-only imports prove no host definitions load. Corrected B3/B4 milestones and admin Shortcuts/SEO handoff docs; measured browser caps unchanged.
+
+- 2026-11-10: Corrected B4 peer declarations for React 19, React DOM 19 and Zod 4 while retaining local development dependencies; budget measurement now verifies declared peers before accepting externalized imports. Same gzip caps, API/EN–VI behavior and host ownership.
+
+- 2026-11-10: Extracted generic B4 CMS contracts and host-composed registry; duplicate type values now fail construction, unknown types remain undefined. Retained host HTTP schemas, 20 host definitions and page allowance; added import-boundary lint/deps checks and measured 864-byte gzip contracts+engine surface under the 60 KiB cap. No migrations, routes or admin table Shortcuts dialog changes.
 
 - 2026-11-11: Drafted standalone README, unreleased changelog and proprietary LICENSE templates in the C1 extraction runbook, pending final integrated SHA and rights review; docs-only, no package, repository, credential or release created.
 

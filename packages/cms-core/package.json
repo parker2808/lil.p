@@ -6,15 +6,31 @@
   "exports": {
     "./contracts": {
       "types": "./dist/contracts.d.ts",
-      "import": "./dist/contracts.js"
+      "import": "./dist/contracts.js",
+      "require": "./dist/contracts.cjs"
     },
     "./engine": {
       "types": "./dist/engine.d.ts",
-      "import": "./dist/engine.js"
+      "import": "./dist/engine.js",
+      "require": "./dist/engine.cjs"
     },
     "./react": {
       "types": "./dist/react.d.ts",
-      "import": "./dist/react.js"
+      "import": "./dist/react.js",
+      "require": "./dist/react.cjs"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "contracts": [
+        "dist/contracts.d.ts"
+      ],
+      "engine": [
+        "dist/engine.d.ts"
+      ],
+      "react": [
+        "dist/react.d.ts"
+      ]
     }
   },
   "scripts": {
@@ -23,8 +39,16 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "pnpm build && node --test test/*.test.mjs ../../scripts/measure-cms-core.test.mjs"
   },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^4.0.0"
+  },
   "devDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "tsup": "^8.5.0",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "zod": "^4.0.0"
   }
 }
