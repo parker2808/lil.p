@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-11: A clean integration merge can still carry a Graphify header naming its pre-merge parent; regenerate from the merged commit and check for duplicated changelog entries before requesting final-head review.
+
 - 2026-11-11: When a scaffold package and its extracted-contract branch both add the same files, retain the extracted contracts and host adapter while testing the scaffold's original gzip caps against the merged built artifacts; do not resolve a lockfile or generated graph by hand.
 
 - 2026-11-10: A bundle budget that excludes peers must validate the package's peer declarations; externalizing imports in tsup alone does not guarantee a valid consumer contract.
