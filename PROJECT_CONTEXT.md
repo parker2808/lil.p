@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- CMS B1 golden HTTP suite is test-only and may proceed alongside U2/U3 per coordinator amendment; B2–B7 remain behind the Phase U gate. ADR #172 and U0 #175 remain separate review branches; PR #174's missing duplicate-block `BLOCK_LIMIT` is an upstream dependency, not a runtime fix in B1. PR #177 review adds observable restore/discard snapshot assertions, missing-version 404 and EN/VI published preview/public parity; the VI-only SEO bug has its own named case. See `docs/specs/2026-11-10-cms-b1-golden-http.md`.
+- CMS B1 observed baseline bug (not fixed here): a VI-created custom page with VI-only SEO title publishes with public `seo.title: null`, `seo.lang: en` even on `?locale=vi`; it needs a separately reviewed API fix, not a silent golden rewrite.
 - CMS U1 (stacked on U0): shared Select replaces native contact, create-page, audit and desktop admin locale controls; RadioGroup replaces the true exclusive layout/surface/hue choices. Shared checkbox, switch and menu expose consistent focus/disabled/state styles and 44px hit areas, while density/range/editor formatting remain ToggleGroup. A3's localized names are included without merging its draft branch. The contact form now preserves input before hydration, optional topic can be cleared, and radio focus does not select by itself. A radio variant of an existing test-only fixture returns 404 outside `R3_E2E_STATES=1`. CI revealed four About/Notes Linux baselines captured after other tests polluted the local demo seed; U1 restores the U0 images and guards clean seed counts before visual assertions. CI unit also found that the 20-block SchemaForm loop could exceed one test timeout; equal-host U0/U1 timing was comparable, so coverage is now split per block, pending CI verification. No public API/DB/deploy changes; see the U1 spec.
 - CMS core A2: page block duplication now checks the registry limit before mutating order or inserting a block. This is a separate bug fix; broader policy extraction remains gated on Parker's ADR approval. No DB schema or deployment change is included.
 
@@ -188,6 +190,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-10: Strengthened deterministic CMS B1 HTTP goldens with structural v1 draft restore/discard checks, public-content invariance, missing-version 404, EN/VI published preview/public block parity, and a separately named VI-only custom SEO bug baseline. B1 sequencing exception does not lift the U gate for the rest of B. No runtime, schema, or migration changes.
 - 2026-11-10: CMS U1 splits the SchemaForm all-block render assertion into 20 independently timed cases after the combined case crossed the CI unit timeout; local U0/U1 measurements showed no consistent rendering regression, and the spec records both local and CI evidence.
 
 - 2026-11-10: CMS U1 review hardens contact hydration, preserves optional-topic clearing, tests empty/selected radio keyboard focus in a gated browser fixture, and checks create-page/localized editor field retention. The original U1 run passed nine disposable-MySQL gates; the updated spec records the new validation separately and keeps sampled WCAG coverage limitations explicit.
