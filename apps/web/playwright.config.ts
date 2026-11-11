@@ -22,6 +22,7 @@ const revalidateSecret = process.env.REVALIDATE_SECRET ?? testRevalidateSecret()
 
 const sharedEnv = {
   ...process.env,
+  CMS_TREE_ROUTES: '1',
   API_HOST: '127.0.0.1',
   API_PORT: apiPort,
   API_URL: apiOrigin,

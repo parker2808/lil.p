@@ -1,4 +1,4 @@
-import { readTree, type TreeDocument } from '@parker2808/cms-core/tree';
+import { readTree, type TreeDocument, type TreeNode } from '@parker2808/cms-core/tree';
 import {
   BLOCK_REGISTRY,
   type BlockType,
@@ -50,7 +50,20 @@ export function readTreeVersionSnapshot(value: unknown): TreeVersionSnapshot | n
   const parsed = treeVersionSnapshotSchema.safeParse(value);
   if (!parsed.success) return null;
   const tree = readTree(parsed.data.tree);
-  return tree.ok ? { ...parsed.data, tree: tree.value } : null;
+  return tree.ok && isTreeRenderable(tree.value) ? { ...parsed.data, tree: tree.value } : null;
+}
+
+export function isTreeRenderable(tree: TreeDocument): boolean {
+  const pending: TreeNode[] = [tree.root];
+  while (pending.length) {
+    const node = pending.pop()!;
+    if (node.type === 'legacy-component') return false;
+    if (node.type === 'page') pending.push(...node.sections);
+    else if (node.type === 'section' || node.type === 'column') pending.push(...node.content);
+    else if (node.type === 'row') pending.push(...node.columns);
+    else if (node.type === 'grid') pending.push(...node.items);
+  }
+  return true;
 }
 
 export type InvalidSnapshotBlock = {

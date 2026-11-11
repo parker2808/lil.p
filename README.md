@@ -79,7 +79,7 @@ D2's legacy restore now takes a revision-and-mode compare-and-swap lock before t
 
 Core owns semantic headings in D3: a host `components.heading` override fails with a typed result instead of emitting duplicate responsive H1s.
 
-[CMS D6 guarded route integration](./docs/specs/2026-11-11-cms-d6-route-parity.md) combines D2 and D3: `CMS_TREE_ROUTES=1` enables strict tree snapshot JSON on authenticated preview and published public routes, rendered by the same server-only D3 tree renderer in Next. The default legacy API and UI stay unchanged; tree publishing remains disabled pending the full D6 journey gate. A disposable-MySQL route parity test covers EN/VI, and the production public chunk check rejects builder/editor bytes. The stacked contact hydration readiness fix preserves input entered before client mount; the complete locked local gate passes 13/13.
+[CMS D6 guarded route integration](./docs/specs/2026-11-11-cms-d6-route-parity.md) combines D2 and D3: `CMS_TREE_ROUTES=1` enables strict tree snapshot JSON on authenticated preview and public routes, rendered by the same server-only D3 renderer in Next. Opt-in publish uses a version-checked host transaction; the disposable-MySQL API/browser journey covers EN/VI save, publish, preview/public SSR, restore and republish. Legacy routes remain unchanged; D5 client autosave and dirty-reload acceptance remain separate gates. The required CI build step checks zero builder/editor bytes in public chunks. The stacked #201 contact hydration fix preserves pre-mount input. This stacked D6 PR must not merge before D2 #199's final gate.
 
 ### Real content seed verification
 

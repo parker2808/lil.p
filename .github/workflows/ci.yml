@@ -73,6 +73,8 @@ jobs:
           restore-keys: |
             next-${{ runner.os }}-build-${{ hashFiles('pnpm-lock.yaml') }}-
       - run: pnpm build
+      - name: Require zero builder bytes on public routes
+        run: node scripts/check-public-builder-bytes.mjs
       - name: Build Storybook (only when packages/ui changes)
         if: needs.changes.outputs.ui == 'true' || github.event_name != 'pull_request'
         run: pnpm --filter @portfolio/ui build-storybook

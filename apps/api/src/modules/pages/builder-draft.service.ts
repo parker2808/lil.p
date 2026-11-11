@@ -4,12 +4,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { readTree, validateTreeForPublish } from '@parker2808/cms-core/tree';
+import { readTree } from '@parker2808/cms-core/tree';
 import { corePageKeySchema, toPrismaPageKey } from '@portfolio/contracts';
 
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import type { BuilderDraftInput, BuilderPublishInput } from './dto/builder-draft.dto';
+import type { BuilderDraftInput } from './dto/builder-draft.dto';
 import { parsePageKey } from './pages-rules.util';
 
 const MAX_REVISION = 9223372036854775807n;
@@ -45,20 +45,6 @@ export class BuilderDraftService {
 
   async save(rawKey: string, input: BuilderDraftInput) {
     return this.write(rawKey, input, 'tree');
-  }
-
-  async publish(rawKey: string, input: BuilderPublishInput) {
-    const page = await this.requirePage(rawKey);
-    this.assertRevision(page, input.expectedRevision, 'tree');
-    this.toDraft(page);
-    const parsed = validateTreeForPublish(page.draftTree);
-    if (!parsed.ok) throw treeValidationError(parsed.code, parsed.nodeId);
-    throw new ConflictException({
-      code: 'CONFLICT',
-      message: 'Tree publishing is not enabled',
-      mode: 'tree',
-      revision: page.draftTreeRevision.toString(),
-    });
   }
 
   private async write(rawKey: string, input: BuilderDraftInput, mode: 'legacy' | 'tree') {

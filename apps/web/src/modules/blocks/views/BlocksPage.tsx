@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import type { Locale, PageKey, PublicPagePreview } from '@portfolio/contracts';
 import { renderTree } from '@parker2808/cms-core/react/server';
 import { draftMode } from 'next/headers';
+import { notFound } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { createElement } from 'react';
 
@@ -39,6 +40,7 @@ export async function BlocksPage({
       createElement,
       labels: { unsupported: t('error') },
     });
+    if (!result.ok) notFound();
     return <main className="cms-core">{result.content}</main>;
   }
   // Resolve async blocks before writing their wrappers. This also preserves a complete

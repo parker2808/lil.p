@@ -6,7 +6,7 @@ import {
   Optional,
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { readTree } from '@parker2808/cms-core/tree';
+import { readTree, validateTreeForPublish } from '@parker2808/cms-core/tree';
 import {
   BLOCK_REGISTRY,
   type CorePageKey,
@@ -31,7 +31,8 @@ import {
 } from '../publishing/publish-rules.util';
 import { PublishingService } from '../publishing/publishing.service';
 import { pageTags, SITE_TAGS } from '../publishing/tags.util';
-import { storedTreeError } from './builder-draft.service';
+import { storedTreeError, treeValidationError } from './builder-draft.service';
+import type { BuilderPublishInput } from './dto/builder-draft.dto';
 import type { PageWithAllBlocks } from './entities/page.entity';
 import { pageWithAllBlocksInclude } from './entities/page.entity';
 import { toAdminPage } from './entities/page.mapper';
@@ -39,6 +40,7 @@ import {
   draftToPublicBlocks,
   hasSnapshotFormat,
   type InvalidSnapshotBlock,
+  isTreeRenderable,
   lintSnapshotFields,
   readPageSnapshot,
   readRestorablePageSnapshot,
@@ -171,6 +173,102 @@ export class PageVersionsService {
       });
       return toAdminPage(await this.requirePage(tx, key));
     });
+    this.events?.emit('content.published', { entity: 'page', key });
+    void this.publishing?.revalidate([...pageTags(key), ...SITE_TAGS]);
+    return result;
+  }
+
+  async publishBuilder(rawKey: string, input: BuilderPublishInput, actorId: number | null) {
+    const key = parsePageKey(rawKey);
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        const page = await this.requirePage(tx, key);
+        if (
+          corePageKeySchema.safeParse(key).success ||
+          page.draftTree === null ||
+          page.draftTreeRevision.toString() !== input.expectedRevision
+        ) {
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Builder draft changed; reload before publishing',
+            mode: page.draftTree === null ? 'legacy' : 'tree',
+            revision: page.draftTreeRevision.toString(),
+          });
+        }
+        const parsed = validateTreeForPublish(page.draftTree);
+        if (!parsed.ok) throw treeValidationError(parsed.code, parsed.nodeId);
+        if (!isTreeRenderable(parsed.value)) throw treeValidationError('UNKNOWN_TYPE');
+        if (!treeRoutesEnabled()) {
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Tree publishing is not enabled',
+            mode: 'tree',
+            revision: page.draftTreeRevision.toString(),
+          });
+        }
+        if (page.draftTreeRevision === 9223372036854775807n) {
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Builder revision limit reached',
+          });
+        }
+        const claimed = await tx.page.updateMany({
+          where: {
+            id: page.id,
+            draftTreeRevision: page.draftTreeRevision,
+            draftTree: { not: PrismaValue.DbNull },
+          },
+          data: { draftTreeRevision: { increment: 1 } },
+        });
+        if (claimed.count !== 1) {
+          const current = await this.requirePage(tx, key);
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Builder draft changed; reload before publishing',
+            mode: current.draftTree === null ? 'legacy' : 'tree',
+            revision: current.draftTreeRevision.toString(),
+          });
+        }
+        const latest = await tx.pageVersion.aggregate({
+          where: { pageId: page.id },
+          _max: { version: true },
+        });
+        const version = (latest._max.version ?? 0) + 1;
+        const created = await tx.pageVersion.create({
+          data: {
+            pageId: page.id,
+            version,
+            snapshot: {
+              format: 'tree',
+              snapshotVersion: 1,
+              seo: {
+                seoTitleEn: page.seoTitleEn,
+                seoTitleVi: page.seoTitleVi,
+                seoDescriptionEn: page.seoDescriptionEn,
+                seoDescriptionVi: page.seoDescriptionVi,
+              },
+              tree: parsed.value,
+            } as Prisma.InputJsonValue,
+            note: input.note,
+            createdById: actorId,
+          },
+        });
+        const now = new Date();
+        await tx.page.update({
+          where: { id: page.id },
+          data: { publishedVersionId: created.id, publishedAt: now, updatedAt: now },
+        });
+        await this.audit?.record(tx, {
+          userId: actorId,
+          action: 'PUBLISH',
+          entityType: 'page',
+          entityId: key,
+          summary: `Published ${key} v${version}`,
+        });
+        return toAdminPage(await this.requirePage(tx, key));
+      },
+      { isolationLevel: PrismaValue.TransactionIsolationLevel.ReadCommitted },
+    );
     this.events?.emit('content.published', { entity: 'page', key });
     void this.publishing?.revalidate([...pageTags(key), ...SITE_TAGS]);
     return result;
