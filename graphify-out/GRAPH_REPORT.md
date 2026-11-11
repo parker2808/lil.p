@@ -1,17 +1,17 @@
 # Graph Report - feat-cms-d5-ui  (2026-11-11)
 
 ## Corpus Check
-- 1562 files · ~556,029 words
+- 1562 files · ~556,289 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 37 file(s) not represented in the graph (top: (none) 17, .css 16, .example 1)
 
 ## Summary
-- 7392 nodes · 23271 edges · 311 communities (276 shown, 35 thin omitted)
+- 7392 nodes · 23272 edges · 310 communities (275 shown, 35 thin omitted)
 - Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 1866 edges (avg confidence: 0.92)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ba8bba2a`
+- Built from commit: `1ae0b31f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -65,7 +65,6 @@
 - cms-core-fixture/package.json
 - AdminDomain
 - .record
-- readTree
 - BlockRenderer.tsx
 - ProfileStatsService
 - AdminTag
@@ -348,7 +347,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (311 total, 35 thin omitted)
+## Communities (310 total, 35 thin omitted)
 
 ### Community 0 - "AdminPostsIndex.tsx"
 Cohesion: 0.12
@@ -546,10 +545,6 @@ Nodes (5): AdminDomainsController, DomainsService, toAdminDto(), AdminDomain, Do
 Cohesion: 0.33
 Nodes (4): toAdminDto(), PostsService, AdminPost, PostCreateInput
 
-### Community 49 - "readTree"
-Cohesion: 0.10
-Nodes (22): LegacyConversion, ColumnNode, ComponentNode, ContentNode, GridNode, LegacyComponentNode, NodeBase, PageNode (+14 more)
-
 ### Community 50 - "BlockRenderer.tsx"
 Cohesion: 0.24
 Nodes (5): context, labels, UnknownBlockNotice(), BlockRenderers, InvalidPreviewBlock
@@ -607,8 +602,8 @@ Cohesion: 0.12
 Nodes (27): toIsoDate(), EnViKey, hasText(), pickGroup(), row, EducationRow, toPublicEducation(), TRANSLATED (+19 more)
 
 ### Community 64 - "readTree"
-Cohesion: 0.10
-Nodes (36): readRecovery(), recoveryKey(), tree, writeRecovery(), Contract, Contract and safety, Scope and boundaries, CMS core package scaffold (+28 more)
+Cohesion: 0.06
+Nodes (53): Contract, Contract and safety, Scope and boundaries, CMS core package scaffold, Neutral default theme, convertLegacySnapshot(), LegacyConversion, migrateTree() (+45 more)
 
 ### Community 65 - ".record"
 Cohesion: 0.15
@@ -1283,8 +1278,8 @@ Cohesion: 0.33
 Nodes (4): Default, meta, ROWS, Story
 
 ### Community 245 - "BuilderHost.tsx"
-Cohesion: 0.12
-Nodes (31): BuilderPage(), metadata, clearRecovery(), activateBuilderDraft(), BuilderDraftResponse, readActiveBuilderDraft(), readBuilderDraft(), saveBuilderDraft() (+23 more)
+Cohesion: 0.10
+Nodes (36): BuilderPage(), metadata, clearRecovery(), readRecovery(), recoveryKey(), tree, writeRecovery(), activateBuilderDraft() (+28 more)
 
 ### Community 247 - "FeatureCard.stories.tsx"
 Cohesion: 0.40
