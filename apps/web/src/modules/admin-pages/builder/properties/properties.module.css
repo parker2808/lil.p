@@ -1,0 +1,78 @@
+.panel {
+  display: grid;
+  gap: 16px;
+  color: var(--builder-text);
+}
+.breakpoints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.breakpoint {
+  min-height: 44px;
+  flex: 1;
+  min-width: 68px;
+}
+.breakpoint[aria-pressed='true'] {
+  background: var(--builder-accent);
+  color: var(--builder-accent-text);
+  border-color: var(--builder-accent);
+}
+.breakpoint[aria-pressed='false'] {
+  background: var(--builder-raised);
+  color: var(--builder-text);
+  border-color: var(--builder-border);
+}
+.heading {
+  font-weight: 700;
+  font-size: 16px;
+  text-transform: capitalize;
+}
+.helper,
+.source {
+  color: var(--builder-muted);
+  font-size: 12px;
+}
+.field {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 1px solid var(--builder-border);
+  border-radius: var(--builder-radius-sm);
+  background: var(--builder-surface);
+}
+.fieldHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.fieldHead label {
+  font-weight: 650;
+}
+.source {
+  font-weight: 550;
+}
+.control {
+  min-height: 44px;
+  background: var(--builder-raised);
+  color: var(--builder-text);
+  border-color: var(--builder-border);
+}
+.switch {
+  min-width: 44px;
+  min-height: 44px;
+}
+.switch[data-state='checked'] {
+  background: var(--builder-accent);
+}
+.clear {
+  min-height: 44px;
+  justify-self: start;
+  color: var(--builder-accent);
+}
+.error {
+  color: var(--builder-danger);
+  font-size: 12px;
+}

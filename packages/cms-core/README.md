@@ -25,6 +25,10 @@ D1's opt-in `./tree` entry exports `treeDocumentSchema`, `legacyTreeDocumentSche
 
 An empty tree is valid for `readTree` autosave, but `validateTreeForPublish` returns `HEADING_RULE` until exactly one H1 exists. Multiple H1s also fail; the host must not substitute the draft reader for publication.
 
+D5 adds `applyTreeOperation`, `createTreeHistory`/`commitTreeHistory`/`undoTreeHistory`/`redoTreeHistory` and `DraftAutosave` to `./tree`. Supply an explicit D1 component registry to operation, history and autosave APIs for strict property validation; duplicate operations need a host ID allocator. History coalesces typing on one node/breakpoint/key only within 600ms and retains at most 50 operations by default. Autosave accepts a D2 transport (`save({tree, expectedRevision})` and `read()`) and an injected timer; revisions are decimal strings. `review()` reads the remote draft after a conflict or uncertain save but never overwrites local state. A valid legacy-mode `{tree: null}` response enters `legacy` review status and blocks further saves, retaining the local tree for host export/recovery. `resolveReviewed('acknowledge')` requires a matching builder tree; `resolveReviewed('reload', { discardLocalEdits: true })` requires the host's explicit confirmation and cannot load a null tree. There is no browser storage or live UI wiring in this package change; see the [D5 spec](../../docs/specs/2026-11-11-cms-d5-core-logic.md). D6 must supply all 20 host block schemas and test each type; the neutral core does not import portfolio definitions.
+
+Call `endTreeTyping(history)` on blur/explicit commit to close the current coalescing window; editing after that boundary starts a separate undo entry.
+
 Build and check the browser gzip budgets with `pnpm --filter @parker2808/cms-core test` (which builds and checks the D1 combined cap).
 The build runs `scripts/measure-cms-core.mjs` and fails above 60 KiB combined
 contracts+engine or 35 KiB combined `./react` + `./react/server`. These are **minified ESM artifact gzip sums**
