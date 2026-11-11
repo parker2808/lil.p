@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-11: Treat a concurrent restore from a builder tree to legacy mode as a distinct autosave conflict, preserving local unsaved content; a reload must require explicit discard acknowledgement and cannot interpret a null tree as an empty page.
 - 2026-11-11: A lazy editor can leave a valid-looking screenshot of its loading fallback; wait for an editor-specific visible element before capturing the visual matrix. Vite's `pnpm preview -- --port` forwards the extra `--` to Vite and silently serves its default port; invoke `pnpm exec vite preview --port` instead.
 
 - 2026-11-10: A bundle budget that excludes peers must validate the package's peer declarations; externalizing imports in tsup alone does not guarantee a valid consumer contract.
@@ -150,3 +151,4 @@
 - 2026-11-11: Check exactly-one-H1 for every publish attempt, including a zero-component tree; draft permissiveness must not bypass publish policy.
 - 2026-11-11: A browser contrast test hidden behind an opt-in environment flag does not protect the visual gate; require Chromium in local/CI E2E and assert each rendered text, feedback border and indicator against its adjacent surface in both palettes.
 - 2026-11-11: An editor-only axe check misses route-specific gallery and unknown-content regressions; assert every fixture route and focused state across locale, theme, brand and viewport, and measure effective mobile hit areas, including labels wrapping checkboxes.
+- 2026-11-11: A timed-out CAS save may already have committed; keep the attempted tree and newer local edits separately, read the remote revision before retry and require explicit review rather than blindly replaying with a new revision.

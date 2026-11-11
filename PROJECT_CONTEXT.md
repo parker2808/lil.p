@@ -48,6 +48,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- D5 framework-neutral builder state (stacked on D integration base): `./tree` gains atomic validated edits, responsive override clearing, bounded/coalesced history, and decimal-string CAS autosave. The host still needs D4 controlled dispatch, D2 approved persistence and an explicit unsaved-edits recovery/export UX; no live UI/API/DB or golden changes. See `docs/specs/2026-11-11-cms-d5-core-logic.md`.
+- D5 review follow-up: pass a host schema registry explicitly to tree edits/history/autosave (D6 verifies all 20 block definitions). A concurrent legacy restore returns `{tree: null}` and pauses autosave in a typed `legacy` review state without discarding local edits; reload of a builder draft needs an explicit discard confirmation. D2/D4 host wiring remains pending.
+
 - D integration base (draft, B7 `2307b54` + D1 `2b50dbc`): carries the reviewed neutral fixture/theme and typed tree with its empty-publish H1 gate; no API, database, runtime route or golden contract change. `./theme.css` and `./tree` exports both remain. See `docs/specs/2026-11-11-cms-d-integration-base.md`.
 
 - D1 publish follow-up: `readTree` continues to accept empty drafts; `validateTreeForPublish` now rejects an empty tree with typed `HEADING_RULE` and requires exactly one H1. D2 must keep the structural draft and publish checks separate; no DB/API/golden change.
@@ -161,6 +164,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-11: Added D5 pure builder operations, property overrides, undo/redo and conflict-safe autosave to the existing tree subpath. Incomplete drafts remain structurally validated; only the separate publish gate enforces H1. No live route, HTTP, database, migration, EN/VI message or B1 golden change.
+- 2026-11-11: Strengthened D5 draft recovery for a concurrent legacy-mode restore, required explicit reload discard acknowledgement and host component schema registry, with D6 to verify all 20 host definitions. No live route, API, database, migration or golden change.
 
 - 2026-11-11: Stacked D1's validated tree on B7's neutral standalone fixture, retaining `./tree` and `./theme.css` without altering runtime routes, persistence, API, goldens or visual output. Regenerated Graphify after resolving the overlapping docs.
 - 2026-11-11: B7 design review integrates accepted B6b #193, enlarges fixture logo/brand controls and two editor buttons to ≥44px, gates every fixture route and focused gallery with 80 axe states and mobile target checks, and recaptures provenance-tagged screenshots. No app, DB or API changes.
