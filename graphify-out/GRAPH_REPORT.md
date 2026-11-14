@@ -276,6 +276,7 @@
 - admin-dashboard.spec.ts
 - admin-pages.spec.ts
 - admin-table-styles.spec.ts
+- case-study-layout.spec.ts
 - navigation-progress.spec.ts
 - web/eslint.config.mjs
 - Accessibility and performance audit — 26 Oct 2026
@@ -292,7 +293,6 @@
 - R3-09: Admin collections
 - R3-11 — Real content seed
 - R3-12: Integrated real-flow audit
-- Private CMS core naming exception
 - CMS B1 — golden HTTP contracts
 - CMS B2 — one block page-allowance source
 - CMS core full verification — D6 → C gate
@@ -314,8 +314,6 @@
 - admin-table-filters.spec.ts
 - 2026-11-11-cms-b5-snapshot-review.md
 - backup.sh
-- lint-staged
-- restore.sh
 - docker-entrypoint.sh
 - experience/loading.tsx
 - inbox/[id]/loading.tsx
@@ -335,16 +333,54 @@
 - visual-update.sh
 - postcss.config.mjs
 - web/scripts/vercel-ignore-build.sh
+- admin-chrome.js
 - 2026-11-01-admin-ia.md
 - 2026-11-01-case-study-layout.md
 - 2026-11-01-p5-4-project-cards.md
 - context-check.sh
 - 01-dev-grants.sh
-- engines
-- pnpm
 - pnpm-workspace.yaml
 - generate-brand-icons.sh
 - scripts/vercel-ignore-build.sh
+- .hasPointerCapture
+- .releasePointerCapture
+- .scrollIntoView
+- .setPointerCapture
+- commitlint.config.mjs
+- chrome.js
+- mock.js
+- .hasPointerCapture
+- .releasePointerCapture
+- .setPointerCapture
+- TakeawaysCard.stories.tsx
+- VersionTag.stories.tsx
+- about/experience/[id]/page.tsx
+- about/experience/new/page.tsx
+- r3-locale-error-test/page.tsx
+- case-study-end.spec.ts
+- move-ids.util.test.ts
+- P5-6 T29: New About page
+- backup.sh
+- restore.sh
+- docker-entrypoint.sh
+- split-js.spec.ts
+- visual-update.sh
+- web/scripts/vercel-ignore-build.sh
+- admin-chrome.js
+- 2026-11-01-admin-ia.md
+- 2026-11-01-case-study-layout.md
+- context-check.sh
+- 01-dev-grants.sh
+- pnpm-workspace.yaml
+- generate-brand-icons.sh
+- .hasPointerCapture
+- .releasePointerCapture
+- .scrollIntoView
+- .setPointerCapture
+- commitlint.config.mjs
+- chrome.js
+- mock.js
+- .hasPointerCapture
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 273 edges
@@ -985,7 +1021,7 @@ Nodes (12): collectHits(), findMarkers(), formatHits(), LIVE_PUBLIC, loadMariadb
 
 ### Community 153 - "compilerOptions"
 Cohesion: 0.13
-Nodes (14): compilerOptions, declaration, emitDecoratorMetadata, experimentalDecorators, module, moduleResolution, noEmit, outDir (+6 more)
+Nodes (10): args, parallelResults, parallelSteps, steps, CONTENT_ROOTS, DENYLIST, failures, files (+2 more)
 
 ### Community 154 - "devDependencies"
 Cohesion: 0.13
@@ -1049,7 +1085,7 @@ Nodes (8): startHeroShader(), draw(), resume(), startShader(), colors(), frame()
 
 ### Community 170 - "compilerOptions"
 Cohesion: 0.15
-Nodes (12): compilerOptions, incremental, jsx, lib, paths, plugins, exclude, extends (+4 more)
+Nodes (9): ColorBook, ColorModes, colorsPath, cssPath, here, hexToRgba(), parseColor(), Rgba (+1 more)
 
 ### Community 171 - "web-e2e-shard"
 Cohesion: 0.15
