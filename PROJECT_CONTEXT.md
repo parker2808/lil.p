@@ -171,6 +171,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-14: Verified D6's all-20 host API/Next EN/VI gate on fresh disposable MySQL: focused browser 1/1 and unchanged full `check:all --e2e` 13/13. An initial unrelated admin-scroll pixel assertion failed once (182 web passes); no scroll behavior was changed, and the retry passed. D4/D5 editor integration and dirty-reload release proof remain separate.
+
 - 2026-11-11: Extend the guarded D6 tree routes with host-owned 20-type property validation across save, publish and read, plus matching Next SSR host components and a real bilingual HTTP/browser parity regression; core stays neutral and legacy goldens stay unchanged.
 
 - 2026-11-11: Carried D5 pure operations/history/autosave into D6 to verify explicit host registration for all 20 block definitions and bilingual test-local renderer parity; corrected the fixture typing and passed the locked disposable-MySQL `check:all --e2e` 13/13 gate. Editor UI and all-20 HTTP registration remain separate gates.
