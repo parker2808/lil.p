@@ -13,6 +13,7 @@
     "test:visual:update": "sh e2e/visual-update.sh"
   },
   "dependencies": {
+    "@parker2808/cms-core": "workspace:*",
     "@portfolio/contracts": "workspace:*",
     "@portfolio/ui": "workspace:*",
     "@tanstack/react-form": "^1.33.5",

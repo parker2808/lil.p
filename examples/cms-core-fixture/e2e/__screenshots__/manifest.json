@@ -1,0 +1,802 @@
+[
+  {
+    "file": "en-neutral-light-1440-home.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-light-1440-components.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-light-1440-components-focus.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-light-1440-editor.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-light-1440-unknown.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-light-390-home.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 390,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-light-390-components.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 390,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-light-390-components-focus.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 390,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-light-390-editor.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 390,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-light-390-unknown.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 390,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-dark-1440-home.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-dark-1440-components.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-dark-1440-components-focus.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-dark-1440-editor.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-dark-1440-unknown.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-dark-390-home.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 390,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-dark-390-components.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 390,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-dark-390-components-focus.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 390,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-dark-390-editor.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 390,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-neutral-dark-390-unknown.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 390,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-light-1440-home.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-light-1440-components.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-light-1440-components-focus.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-light-1440-editor.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-light-1440-unknown.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-light-390-home.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 390,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-light-390-components.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 390,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-light-390-components-focus.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 390,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-light-390-editor.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 390,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-light-390-unknown.png",
+    "locale": "en",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 390,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-dark-1440-home.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-dark-1440-components.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-dark-1440-components-focus.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-dark-1440-editor.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-dark-1440-unknown.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-dark-390-home.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 390,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-dark-390-components.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 390,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-dark-390-components-focus.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 390,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-dark-390-editor.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 390,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "en-lilp-dark-390-unknown.png",
+    "locale": "en",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 390,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-light-1440-home.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-light-1440-components.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-light-1440-components-focus.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-light-1440-editor.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-light-1440-unknown.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-light-390-home.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 390,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-light-390-components.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 390,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-light-390-components-focus.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 390,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-light-390-editor.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 390,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-light-390-unknown.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "neutral",
+    "width": 390,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-dark-1440-home.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-dark-1440-components.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-dark-1440-components-focus.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-dark-1440-editor.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-dark-1440-unknown.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 1440,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-dark-390-home.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 390,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-dark-390-components.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 390,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-dark-390-components-focus.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 390,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-dark-390-editor.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 390,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-neutral-dark-390-unknown.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "neutral",
+    "width": 390,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-light-1440-home.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-light-1440-components.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-light-1440-components-focus.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-light-1440-editor.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-light-1440-unknown.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-light-390-home.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 390,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-light-390-components.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 390,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-light-390-components-focus.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 390,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-light-390-editor.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 390,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-light-390-unknown.png",
+    "locale": "vi",
+    "theme": "light",
+    "brand": "lilp",
+    "width": 390,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-dark-1440-home.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-dark-1440-components.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-dark-1440-components-focus.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-dark-1440-editor.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-dark-1440-unknown.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 1440,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-dark-390-home.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 390,
+    "route": "home",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-dark-390-components.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 390,
+    "route": "components",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-dark-390-components-focus.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 390,
+    "route": "components-focus",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-dark-390-editor.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 390,
+    "route": "editor",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  },
+  {
+    "file": "vi-lilp-dark-390-unknown.png",
+    "locale": "vi",
+    "theme": "dark",
+    "brand": "lilp",
+    "width": 390,
+    "route": "unknown",
+    "head": "35e5267d8e107ebbf58d59f4c8dac7965c537e92",
+    "captureCommand": "FIXTURE_CAPTURE=1 pnpm --filter @parker2808/cms-core-fixture test:e2e"
+  }
+]

@@ -24,6 +24,7 @@ test.describe('contact', () => {
   test('submits a message from the public form', async ({ page }) => {
     await page.goto('/en/contact');
     await expect(page.getByRole('heading', { name: /talk about your product/i })).toBeVisible();
+    await expect(page.locator('form[data-interactive="true"]')).toBeVisible();
     await page.locator('#name').fill(E2E_VISITOR.name);
     await page.locator('#email').fill(E2E_VISITOR.email);
     await expect(page.locator('#topic')).toBeVisible();
@@ -39,31 +40,56 @@ test.describe('contact', () => {
   test('preserves typing before hydration and submits it', async ({ page }) => {
     test.setTimeout(60_000);
     let payload: Record<string, string> | undefined;
+    const requests: string[] = [];
+    page.on('request', (request) => {
+      if (request.method() === 'POST') requests.push(new URL(request.url()).pathname);
+    });
     await page.route('**/api/public/contact', async (route) => {
       payload = route.request().postDataJSON() as Record<string, string>;
       await route.fulfill({ status: 201, body: '{}' });
     });
+    let releaseScripts: () => void = () => {};
+    const heldScripts = new Promise<void>((resolve) => {
+      releaseScripts = resolve;
+    });
     await page.route('**/_next/static/**/*.js', async (route) => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await heldScripts;
       await route.continue();
     });
-    await page.goto('/en/contact', { waitUntil: 'commit' });
-    await page.locator('#name').fill(E2E_VISITOR.name);
-    await page.locator('#email').fill(E2E_VISITOR.email);
+    try {
+      await page.goto('/en/contact', { waitUntil: 'commit' });
+      await expect(page.locator('form')).not.toHaveAttribute('data-interactive', 'true');
+      await page.locator('#name').fill(E2E_VISITOR.name);
+      await page.locator('#email').fill(E2E_VISITOR.email);
+      await page.locator('#message').fill('Pre-hydration message');
+    } finally {
+      releaseScripts();
+    }
     await page.waitForLoadState('load');
+    await expect(page.locator('form[data-interactive="true"]')).toBeVisible();
     await expect(page.locator('#name')).toHaveValue(E2E_VISITOR.name);
     await expect(page.locator('#email')).toHaveValue(E2E_VISITOR.email);
-    await page.locator('#message').fill('I would like to talk about a migration.');
+    await expect(page.locator('#message')).toHaveValue('Pre-hydration message');
+    expect(
+      await page.locator('form').evaluate((form) => ({
+        noValidate: (form as HTMLFormElement).noValidate,
+        values: Object.fromEntries(new FormData(form as HTMLFormElement)),
+      })),
+    ).toMatchObject({
+      noValidate: true,
+      values: { name: E2E_VISITOR.name, email: E2E_VISITOR.email },
+    });
     await page
       .locator('form')
       .getByRole('button', { name: /send message/i })
       .click();
+    await expect.poll(() => requests).toEqual(['/api/public/contact']);
     await expect(page.getByText('Message sent')).toBeVisible();
     expect(payload).toMatchObject({
       name: E2E_VISITOR.name,
       email: E2E_VISITOR.email,
       topic: '',
-      message: 'I would like to talk about a migration.',
+      message: 'Pre-hydration message',
     });
   });
 
@@ -74,6 +100,7 @@ test.describe('contact', () => {
       await route.fulfill({ status: 201, body: '{}' });
     });
     await page.goto('/en/contact');
+    await expect(page.locator('form[data-interactive="true"]')).toBeVisible();
     await page.locator('#name').fill(E2E_VISITOR.name);
     await page.locator('#email').fill(E2E_VISITOR.email);
     await selectChoice(page, page.locator('#topic'), 'A role');

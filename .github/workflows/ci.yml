@@ -18,11 +18,12 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ci-${{ github.event.pull_request.number || github.ref }}
+  group: ci-${{ github.event.pull_request.number || github.ref }}-${{ github.event.action == 'labeled' && github.event.label.name || 'code' }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   changes:
+    if: github.event.action != 'labeled'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -38,14 +39,17 @@ jobs:
               - 'pnpm-lock.yaml'
 
   lint-typecheck:
+    if: github.event.action != 'labeled'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm check:all --static
+      - run: pnpm --filter @parker2808/cms-core check:deps
 
   unit:
+    if: github.event.action != 'labeled'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -77,6 +81,7 @@ jobs:
 
   vercel-build:
     name: vercel-build
+    if: github.event.action != 'labeled'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -85,7 +90,7 @@ jobs:
       - run: node scripts/check-vercel-build.mjs
 
   api-e2e:
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e')
+    if: (github.event.action != 'labeled' || github.event.label.name == 'ready-e2e') && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     services:
@@ -135,7 +140,7 @@ jobs:
   build-e2e:
     # Builds contracts, api and web once for every web-e2e shard.
     name: web-e2e build
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e')
+    if: (github.event.action != 'labeled' || github.event.label.name == 'ready-e2e') && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
@@ -182,7 +187,7 @@ jobs:
     # listing artifacts early does not guarantee download-artifact can read one.
     name: web-e2e shard ${{ matrix.shard }}/4
     needs: build-e2e
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e')
+    if: (github.event.action != 'labeled' || github.event.label.name == 'ready-e2e') && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e'))
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -254,9 +259,17 @@ jobs:
           while [ ! -f /tmp/pw-install.done ]; do sleep 1; done
           cat /tmp/pw-install.log | tail -5
           test "$(cat /tmp/pw-install.done)" = 0
+      - name: Required CMS theme computed AA matrix
+        if: matrix.shard == 1
+        run: CMS_THEME_BROWSER=1 node --test packages/cms-core/test/theme.test.mjs
       - run: pnpm --filter @portfolio/web test:e2e
         env:
           E2E_SHARD: ${{ matrix.shard }}
+      - name: Fixture route and WCAG matrix
+        if: matrix.shard == 1
+        run: |
+          pnpm --filter @parker2808/cms-core-fixture build
+          pnpm --filter @parker2808/cms-core-fixture test:e2e
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -268,7 +281,7 @@ jobs:
     # Stable check name: green only when the build and every shard passed, or e2e was
     # skipped (PR without the ready-e2e label). Also merges the reports.
     needs: [build-e2e, web-e2e-shard]
-    if: always()
+    if: always() && (github.event.action != 'labeled' || github.event.label.name == 'ready-e2e')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
