@@ -2,6 +2,9 @@
 
 ## Main integration gate (2026-11-15)
 
+Main subsequently gained the independent VI-only SEO correction #186; B6 carries its API snapshot mapping and newly updated B1 golden assertion verbatim, without introducing further changes to that contract.
+After that merge, a fresh Node 22 frozen install and `check:all` pass 7/7; the shared-lock disposable-MySQL `check:all --e2e` passes 9/9 (including the corrected golden suite), and clean-build Linux visual verification passes 14/14. No image baselines were rewritten.
+
 After the initial B5/B5b integration gate, main gained CI throughput and U2 #179. The final head preserves U2's updated controls and Linux visual baselines. Frozen install, `check:all` (7/7), the locked disposable-MySQL `check:all --e2e` (9/9) and clean-build Linux pixel verification (14/14) pass after integrating U2, with no screenshot or B1 golden edits.
 
 Merged B5/B5b's engine, strict snapshot reader and Nest adapters from main while retaining B6's server-safe React export and U1's labelled localized form controls. Both API and web keep direct core dependencies; the shared export test exercises both engine and React in ESM/CJS. The B1 golden contracts and visual baselines are unchanged. Frozen install and `pnpm check:all` pass (7/7); the locked disposable-MySQL `check:all --e2e` passes (9/9, including API and web E2E). An initial isolated Linux visual verification found six stale public renders from the earlier E2E run's test-mutated Next cache. Removing only generated `.next` before the locked visual run restored the clean demo seed: 14/14 Linux pixel comparisons pass without screenshot updates. The merged bundle measures 2,433/61,440 B contracts+engine and 1,621/35,840 B combined React. Graphify was refreshed from the merged code tree in code-only mode.

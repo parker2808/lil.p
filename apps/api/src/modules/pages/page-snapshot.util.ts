@@ -2,6 +2,7 @@ import { buildSnapshot, orderBlocks, readSnapshot } from '@parker2808/cms-core/e
 import {
   BLOCK_REGISTRY,
   type BlockType,
+  corePageKeySchema,
   isLocalizedPair,
   type Locale,
   type PageKey,
@@ -102,7 +103,19 @@ export function snapshotToPublicPage(
   locale: Locale,
   onDropped: (info: { blockId: number; type: string; reason: string }) => void,
 ): PublicPage {
-  const { values, lang } = pickGroup(snapshot.seo, ['seoTitle', 'seoDescription'] as const, locale);
+  const viOnlyCustomTitle =
+    !corePageKeySchema.safeParse(key).success &&
+    !snapshot.seo.seoTitleEn?.trim() &&
+    Boolean(snapshot.seo.seoTitleVi?.trim());
+  const { values, lang } = viOnlyCustomTitle
+    ? {
+        values: {
+          seoTitle: snapshot.seo.seoTitleVi,
+          seoDescription: snapshot.seo.seoDescriptionVi,
+        },
+        lang: 'vi' as const,
+      }
+    : pickGroup(snapshot.seo, ['seoTitle', 'seoDescription'] as const, locale);
   const blocks: PublicBlock[] = [];
   const visible = orderBlocks(snapshot.blocks.filter((block) => block.isVisible));
 
