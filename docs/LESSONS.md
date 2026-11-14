@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A manual CI dispatch does not trigger PR-only context and ci-ok checks; after retargeting a draft, synchronize the branch with a substantive in-scope change and verify all required checks on its final head. For ordinary contact form tests, wait for the mounted interaction marker before filling, while preserving the separate pre-hydration regression.
+
 - 2026-11-15: Moving a bundle measurement script inside an extractable package also requires repointing test imports; run the package dependency guard, unit tests and browser theme job against the combined tree.
 - 2026-11-15: An integration merge can land U2's Radix topic picker before the contact-hydration PR; keep the accessible Select and its empty sentinel while holding scripts to assert pre-hydration name/email/message and exactly one client POST.
 

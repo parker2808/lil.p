@@ -24,6 +24,7 @@ test.describe('contact', () => {
   test('submits a message from the public form', async ({ page }) => {
     await page.goto('/en/contact');
     await expect(page.getByRole('heading', { name: /talk about your product/i })).toBeVisible();
+    await expect(page.locator('form[data-interactive="true"]')).toBeVisible();
     await page.locator('#name').fill(E2E_VISITOR.name);
     await page.locator('#email').fill(E2E_VISITOR.email);
     await expect(page.locator('#topic')).toBeVisible();
@@ -99,6 +100,7 @@ test.describe('contact', () => {
       await route.fulfill({ status: 201, body: '{}' });
     });
     await page.goto('/en/contact');
+    await expect(page.locator('form[data-interactive="true"]')).toBeVisible();
     await page.locator('#name').fill(E2E_VISITOR.name);
     await page.locator('#email').fill(E2E_VISITOR.email);
     await selectChoice(page, page.locator('#topic'), 'A role');
