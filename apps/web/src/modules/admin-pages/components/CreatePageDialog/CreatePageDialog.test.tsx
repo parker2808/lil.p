@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, cleanup } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { NextIntlClientProvider } from 'next-intl';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -46,11 +47,16 @@ describe('CreatePageDialog', () => {
   });
 
   it('posts the selected locale/template and navigates only after success', async () => {
+    const user = userEvent.setup();
     createAdminPage.mockResolvedValue({ key: 'ideas' });
     show();
     fireEvent.change(screen.getByLabelText('Page title'), { target: { value: 'Ideas' } });
-    fireEvent.change(screen.getByLabelText('Language'), { target: { value: 'vi' } });
-    fireEvent.change(screen.getByLabelText('Start with'), { target: { value: 'empty' } });
+    await user.click(screen.getByLabelText('Language'));
+    await user.click(screen.getByRole('option', { name: 'Vietnamese' }));
+    await user.click(screen.getByLabelText('Start with'));
+    await user.click(screen.getByRole('option', { name: 'Empty blocks' }));
+    expect(screen.getByLabelText('Page title')).toHaveValue('Ideas');
+    expect(screen.getByLabelText('Slug')).toHaveValue('ideas');
     fireEvent.click(screen.getByRole('button', { name: 'Create page' }));
     await waitFor(() =>
       expect(createAdminPage).toHaveBeenCalledWith({
@@ -111,18 +117,21 @@ describe('CreatePageDialog', () => {
   });
 
   it('keeps the form and choices available after a request fails', async () => {
+    const user = userEvent.setup();
     createAdminPage.mockRejectedValue(new Error('Temporary failure'));
     show();
     fireEvent.change(screen.getByLabelText('Page title'), { target: { value: 'Ideas' } });
-    fireEvent.change(screen.getByLabelText('Language'), { target: { value: 'vi' } });
-    fireEvent.change(screen.getByLabelText('Start with'), { target: { value: 'empty' } });
+    await user.click(screen.getByLabelText('Language'));
+    await user.click(screen.getByRole('option', { name: 'Vietnamese' }));
+    await user.click(screen.getByLabelText('Start with'));
+    await user.click(screen.getByRole('option', { name: 'Empty blocks' }));
     fireEvent.click(screen.getByRole('button', { name: 'Create page' }));
     expect(
       await screen.findByText('The page could not be created. Try again.'),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Page title')).toHaveValue('Ideas');
-    expect(screen.getByLabelText('Language')).toHaveValue('vi');
-    expect(screen.getByLabelText('Start with')).toHaveValue('empty');
+    expect(screen.getByLabelText('Language')).toHaveTextContent('Vietnamese');
+    expect(screen.getByLabelText('Start with')).toHaveTextContent('Empty blocks');
     expect(push).not.toHaveBeenCalled();
   });
 });

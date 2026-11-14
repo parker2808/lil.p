@@ -8,7 +8,7 @@ host-keyed page-allowance predicate through `./contracts`. The host keeps all
 `./engine` provides B5's pure registry-injected policy findings, stable ordering,
 strict snapshots and version migrations, plus typed host ports; it does not
 start transactions or call ports. The Nest adapter remains host-owned and is
-not wired by B5 pending approval for the direct API production dependency.
+not wired by B5; the direct API production dependency is provided by #189.
 `./react` remains empty until B6 and preserves the `"use client"` directive.
 All three subpaths publish CommonJS and legacy TypeScript subpath resolution.
 React 19, React DOM 19 and Zod 4 are peers (also local development dependencies for package tests).

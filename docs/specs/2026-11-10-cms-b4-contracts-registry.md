@@ -12,6 +12,16 @@ Status: implementation proposal · 2026-11-10 · stacked on accepted B3 `814afcf
 6. Measure gzip size, refresh Graphify and docs.
 7. Run locked disposable-MySQL gates; open draft stacked PR.
 
+## Main integration plan (2026-11-11)
+
+1. Retain B4's host-composed registry and B2's exact page-allowance behavior.
+2. Keep B3's 60/35 KiB gzip caps; retain B4's stricter peer checks and ESM/CJS exports.
+3. Preserve both histories in docs; regenerate Graphify and frozen-install the lockfile.
+4. Run export/budget tests and `check:all`; rely on final-head CI for E2E.
+5. Record conflict resolutions in this spec and the PR for independent review.
+
+Integration resolution: B3's empty scaffold and B4's extracted contracts overlapped in `packages/cms-core` and the host block utility. Keep B4's generic Zod contracts, duplicate-rejecting registry and adapter so B2's built-in/custom allowance and the 20 host definitions stay intact. Retain the B3 60/35 KiB gzip caps and artifact measurement, layering B4's peer-manifest gate and CJS exports/tests on top. Combine the B3 and B4 documentation histories, regenerate the graph from the merged tree, and resolve the lockfile through pnpm. B1's HTTP golden expectations are not changed by this integration.
+
 ## Boundary and compatibility
 
 The coordinator accepted B3 PR #182 at `814afcf`, without merge authorization. U2/U3 are accepted on separate unmerged branches. B2–B5 may proceed alongside U because they do not freeze UI controls; B6 React extraction follows B4 approval and D follows B7. B4 exports **generic** `BlockDefinition`, `defineBlock`, `createRegistry`, locale/page/block/snapshot Zod schemas and types, `LayoutPreset`, `BlockSurface`, and allowance from `@parker2808/cms-core/contracts`. The host supplies page keys for distinguishing built-in from custom pages; no portfolio-specific routes, copy, types or twenty definitions are bundled by importing core. The host's existing `@portfolio/contracts` paths and exact HTTP schemas (including finite block-type enum and uppercase/lowercase page-key mapping) stay compatible: host files re-export generic schemas when identical and specialize any host-only schemas. All twenty definitions compose one host registry from a list; duplicates throw during construction, unknown lookups stay undefined and are rejected by the existing API mapper. Role, pages, customPage, layouts, limits, defaults and locale fallback remain unchanged. B5 still owns pure engine extraction; B4 does not alter Nest/Prisma/Next behavior, DB schema, migrations or the admin table Shortcuts dialog (there is no `/help` route).
