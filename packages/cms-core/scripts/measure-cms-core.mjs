@@ -41,6 +41,7 @@ export function measure({
 
   const sizes = {};
   const entries = ['contracts', 'engine', 'react'];
+  if (packageExports['./tree']) entries.push('tree');
   if (packageExports['./react/server']) entries.push('react/server');
   for (const name of entries) {
     const code = readFileSync(join(distDir, `${name}.js`));
@@ -55,9 +56,13 @@ export function measure({
   }
 
   const totals = {
-    browser: sizes.contracts + sizes.engine,
+    browser: sizes.contracts + sizes.engine + (sizes.tree ?? 0),
     react: sizes.react + (sizes['react/server'] ?? 0),
   };
+  if (packageExports['./theme.css']) {
+    const css = readFileSync(join(distDir, 'theme.css'));
+    sizes.css = gzipSync(css, { level: 9, mtime: 0 }).byteLength;
+  }
   for (const [surface, bytes] of Object.entries(totals)) {
     if (bytes > limits[surface]) {
       throw new Error(`${surface} exceeds ${limits[surface]} bytes gzip: ${bytes} bytes`);
@@ -73,6 +78,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     console.log(`cms-core react: ${result.totals.react}/${caps.react} bytes gzip`);
     if (result.sizes['react/server'] !== undefined) {
       console.log(`cms-core react/server: ${result.sizes['react/server']} bytes gzip`);
+    }
+    if (result.sizes.css !== undefined) {
+      console.log(`cms-core theme.css: ${result.sizes.css} bytes gzip (separate from JS caps)`);
     }
   } catch (error) {
     console.error(error);

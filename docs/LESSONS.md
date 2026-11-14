@@ -1,5 +1,17 @@
 # Lessons
 
+- 2026-11-15: A bilingual fixture must keep even its registry fallback links within declared locale routes; testing only the generated block path can hide an invalid default.
+
+- 2026-11-15: Restacking a fixture after theme and tree changes must preserve its explicit CI/browser shard and lock-backed visual matrix while keeping core package build/measurement and host adapters independent.
+
+- 2026-11-15: A publish rule for exactly one H1 must count resolved nodes independently per breakpoint; checking whether a heading is H1 at any viewport misses both missing and duplicate headings at specific widths.
+
+- 2026-11-15: When a tree entry joins the theme and C1 package tooling, include its built bytes in the package-local browser cap and exercise tree resolution in both ESM/CJS; auto-merging exports alone does not enforce the cap.
+
+- 2026-11-15: ESLint invoked from lint-staged discovers the nearest config separately for root, web and package files; when multiple configs use the TypeScript parser, pin `tsconfigRootDir` in each rather than only in the root config.
+
+- 2026-11-15: A stacked theme merge after package tooling moves must retain the CSS export, build copy, local budget measurement and browser gate together; an automatic main-preferred merge can silently drop all four while leaving the theme source intact.
+
 - 2026-11-15: Package-local C1 tooling moves the measurement entrypoint; update B6's export-test import to the package script instead of retaining a monorepo-root path that breaks standalone extraction.
 
 - 2026-11-15: A full E2E run can leave mutated public ISR output in Next's generated `.next` cache; verify Linux pixel baselines against a fresh build directory and a disposable clean demo seed before changing screenshots.
@@ -181,6 +193,10 @@
 - 2026-11-11: A server-rendered React surface cannot consume a client-marked package entry without changing its public boundary; publish and measure a separate server-safe entry, and verify both built formats keep client directives only on client output.
 - 2026-11-11: A pnpm workspace host must declare its core dependency directly even when a sibling package already depends on it; verify Docker copies the package manifest before frozen install and builds its dependency closure before the host.
 - 2026-11-11: Generic schema field extraction should require a host-localized label resolver and accept host widget registrations; inferring labels from a fixed English schema property can leak copy into Vietnamese UI.
+- 2026-11-15: A stacked D integration branch may merge its restacked B7 base cleanly in code while conflicting throughout accumulated documentation; preserve current base facts and D-only acceptance details, then regenerate Graphify instead of selecting a historical report.
+- 2026-11-11: A tree converter can keep unknown legacy block types losslessly only by carrying the entire validated JSON block as opaque data rather than reparsing it into the registered builder component shape; gate builder use separately from opt-in conversion.
+- 2026-11-11: Validate untrusted tree depth/count iteratively before recursive Zod parsing; keep incomplete draft validation separate from publish-only H1/required-component policy and ensure slot rules leave room for content at the deepest allowed layout.
+- 2026-11-11: Check exactly-one-H1 for every publish attempt, including a zero-component tree; draft permissiveness must not bypass publish policy.
 - 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
 - 2026-11-11: When merging parallel API packaging and pure engine branches, retain both documentation changes but regenerate Graphify; production CJS smoke must load the compiled host adapter, not just resolve the core subpath.
 - 2026-11-11: In a legacy snapshot compatibility reader, `?? {}` conflates an absent SEO object with an explicitly persisted null; check property presence before filling only absent keys, then reject malformed supplied data before transaction writes.

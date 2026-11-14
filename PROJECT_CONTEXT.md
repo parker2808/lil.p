@@ -48,7 +48,17 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- CI label hygiene: `ready-e2e` added just after PR creation previously cancelled the same-head code-check workflow because `labeled` shared its concurrency group. Split label-triggered E2E from code checks; verify the new behavior on a draft PR. A label added after creation still generates a separate E2E-only run, and later code pushes continue cancelling stale code runs. After #206, label events must also skip the clean `vercel-build` check while code events retain it; web E2E shards still wait for the finalized build artifact. Lock-holder validation of the `ready-e2e` label path remains outstanding.
+- 2026-11-15: D integration base #196 incorporates B7's restacked #195 head (including current main, B6b and D1) while retaining its opt-in typed tree, empty-publish H1 gate, neutral fixture and package-local C1 tooling. D3 and later builder work remain separate; no production route, database, migration or B1 golden change. See `docs/specs/2026-11-11-cms-d-integration-base.md`.
+- 2026-11-15: #195 B7 fixture defaults and sampled EN/VI homepage actions now target declared locale-prefixed component routes; fixture assertions guard the destination. Its CI browser/visual matrix remains the release gate; no production route or golden contract changes.
+
+- 2026-11-15: B7 #195 restacks on D1 #194 and B6b #193, with a stand-alone Vite fixture consuming core's opt-in theme, React subpaths and host-registered localized controls. Its 80-state browser/visual matrix remains the release gate, while D1 tree validation remains opt-in. No production API, database, migrations, host UI or B1 golden changes.
+
+- 2026-11-15: #194 D1 publish validation now counts effective H1s independently at mobile, tablet and desktop; draft acceptance and the unchanged B1 goldens remain separate. B7 integration and the remaining D stack still depend on the ordered merge gate.
+
+- 2026-11-15: D1 #194 restacks on B6b #193 and merged B6 #191. Its opt-in tree entry and separate draft/publish validation share the package-local 60 KiB contracts+engine+tree budget; retain the neutral theme export and C1 isolated tooling. B7 acceptance remains a gate; no API, migration, UI or B1 golden change.
+
+- 2026-11-15: B6b #193 restacks on merged B6 #191 and preserves C1 package-local build/dependency gates alongside the opt-in neutral `theme.css` export, its 224-pair browser check and separately reported CSS gzip. Root, web and package ESLint configs pin their parser roots so commit hooks can lint with all three configs present. B7 must consume the theme in its neutral fixture; no host UI, API, database or B1 golden change.
+- CI label hygiene: `ready-e2e` added just after PR creation previously cancelled the same-head code-check workflow because `labeled` shared its concurrency group. Label-triggered E2E now runs separately from code checks: #188's labeled run 43638435227 passed API and all web E2E shards while skipping static and Vercel build, and the preceding code run 43633111844 remained successful. Later code pushes still cancel stale code runs; web E2E shards wait for the finalized build artifact.
 - 2026-11-15: C1 prep #207 is now part of B6 #191's main ancestry: preserve its package-local eslint, dependency and moved measurement gates while measuring both React subpaths under the unchanged cap. Its standalone extraction remains out of scope for B6.
 
 - 2026-11-15: B6 #191 folds in main's VI-only SEO fix #186 without altering its new golden expectation or production snapshot mapping; this is upstream behavior, not B6's contract change. Final-head verification includes the updated golden suite.
@@ -215,8 +225,19 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Synced draft U3 #178 with main `0be13f4` (B6b neutral theme, D1 tree and B7 fixture), retaining its approved gated design study and main's theme/fixture E2E jobs. Refreshed Graphify and documentation without modifying golden contracts or authorizing a merge.
+- 2026-11-15: Restacked D integration base #196 onto B7 #195 and merged main #191, preserving the D1 tree validation, the neutral theme/fixture and package-local checks without changing golden HTTP responses or persisted data.
+- 2026-11-15: Corrected B7's fallback homepage action from an unrecognized bare `/components` path to `/en/components`; both EN and VI rendered actions resolve to their localized gallery routes.
+
+- 2026-11-15: Integrated B7's independent fixture, screenshot/axe gate and workspace lockfile with the theme, D1 tree and C1 package-local tooling; no golden HTTP or production data changes.
+
+- 2026-11-15: Rejected D1 tree publication when an H1 exists only at one viewport or duplicates another only at an override viewport; regression tests cover base inheritance and registered H1 roles.
+
+- 2026-11-15: Integrated D1's versioned tree export and strict bounded validator with B6b neutral CSS and package-local C1 build/measurement; preserved independent ESM/CJS smoke and 60/35 KiB JS caps.
+
+- 2026-11-15: Restacked B6b #193 on merged B6 #191, preserving the neutral CSS public export, build copy, package-local measurement, 224-pair Chromium gate and C1 standalone package checks. Existing HTTP goldens and host styling remain unchanged.
+- 2026-11-15: Reconciled label-triggered CI with merged #206: code events keep the bounded parallel static checks, clean Vercel build and all required checks; label events run only `ready-e2e` E2E jobs, with shards dependent on the finalized build artifact. #188's labeled-event run passed without cancelling its code-event run.
 - 2026-11-15: Synced draft U3 #178 with main `9ee0056` without rewriting the published branch, retaining the isolated `ready-e2e` workflow and the independently gated static design study. Refreshed the code graph and reconfirmed the root/web README and U3 spec; final-head CI remains the merge gate. No builder mutation, DB change, deployment or merge.
-- 2026-11-15: Reconciled label-triggered CI with merged #206: code events keep the bounded parallel static checks, clean Vercel build and all required checks; label events run only `ready-e2e` E2E jobs, with shards dependent on the finalized build artifact. Lock-holder validation of that label event is pending.
 - 2026-11-10: Isolated `ready-e2e` label-triggered CI into its own concurrency lane and E2E-only jobs, retaining cancellation of superseded code runs; unrelated labels no longer rerun code or E2E jobs.
 - 2026-11-15: Reconciled C1 package-local tooling and pack allowlist with the B6 React server export and combined gzip measurement; no private release or golden changes.
 
