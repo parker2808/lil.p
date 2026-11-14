@@ -1,7 +1,7 @@
 'use client';
 
 import { LAYOUT_PRESETS, type LayoutPreset } from '@portfolio/contracts';
-import { ToggleGroup, ToggleGroupItem } from '@portfolio/ui/components/ui/toggle-group';
+import { RadioGroup, RadioGroupItem } from '@portfolio/ui/components/ui/radio-group';
 
 function columns(preset: LayoutPreset) {
   const rule = LAYOUT_PRESETS[preset];
@@ -24,20 +24,17 @@ export function LayoutPresetPicker({
   const rule = LAYOUT_PRESETS[value];
   return (
     <div className="flex flex-col gap-2">
-      <p className="text-ui">{labels.layout}</p>
-      <ToggleGroup
-        type="single"
+      <RadioGroup
+        aria-label={labels.layout}
         value={value}
         disabled={readOnly}
         onValueChange={(next) => {
-          if (next) {
-            onChange(next as LayoutPreset);
-          }
+          onChange(next as LayoutPreset);
         }}
         className="flex flex-wrap gap-1 border-0"
       >
         {options.map((preset) => (
-          <ToggleGroupItem
+          <RadioGroupItem
             key={preset}
             value={preset}
             aria-label={preset}
@@ -49,9 +46,9 @@ export function LayoutPresetPicker({
               ))}
             </span>
             <span className="text-ui-meta">{preset}</span>
-          </ToggleGroupItem>
+          </RadioGroupItem>
         ))}
-      </ToggleGroup>
+      </RadioGroup>
       <p className="text-ui-meta text-muted-foreground">
         {labels.responsive
           .replace('{sm}', String(rule.sm))

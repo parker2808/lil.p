@@ -95,7 +95,7 @@ export function SidebarMenuButton({
       data-active={active ? 'true' : 'false'}
       className={cn(
         'redesign-sidebar-menu-button',
-        'text-ui flex h-8 items-center gap-2 rounded-md border-l-2 px-2',
+        'text-ui focus-visible:ring-ring flex min-h-11 items-center gap-2 rounded-md border-l-2 px-2 focus-visible:ring-2 focus-visible:outline-none',
         active
           ? 'bg-sidebar-accent text-sidebar-accent-foreground border-sidebar-primary'
           : 'hover:bg-sidebar-accent/80 border-transparent',

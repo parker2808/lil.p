@@ -5,9 +5,9 @@ import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const source = join(root, 'packages/cms-core/src');
-const dist = join(root, 'packages/cms-core/dist');
-const packageFile = join(root, 'packages/cms-core/package.json');
+const source = join(root, 'src');
+const dist = join(root, 'dist');
+const packageFile = join(root, 'package.json');
 const caps = { browser: 60 * 1024, react: 35 * 1024 };
 
 export function measure({
@@ -58,6 +58,10 @@ export function measure({
     browser: sizes.contracts + sizes.engine,
     react: sizes.react + (sizes['react/server'] ?? 0),
   };
+  if (packageExports['./theme.css']) {
+    const css = readFileSync(join(distDir, 'theme.css'));
+    sizes.css = gzipSync(css, { level: 9, mtime: 0 }).byteLength;
+  }
   for (const [surface, bytes] of Object.entries(totals)) {
     if (bytes > limits[surface]) {
       throw new Error(`${surface} exceeds ${limits[surface]} bytes gzip: ${bytes} bytes`);
@@ -73,6 +77,9 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     console.log(`cms-core react: ${result.totals.react}/${caps.react} bytes gzip`);
     if (result.sizes['react/server'] !== undefined) {
       console.log(`cms-core react/server: ${result.sizes['react/server']} bytes gzip`);
+    }
+    if (result.sizes.css !== undefined) {
+      console.log(`cms-core theme.css: ${result.sizes.css} bytes gzip (separate from JS caps)`);
     }
   } catch (error) {
     console.error(error);

@@ -1,5 +1,15 @@
 # B5 — pure page engine and host ports
 
+Integration update (2026-11-14): merged current `main` after #189. The merge
+retains B5's non-empty `./engine`, ESM/CJS export assertions, strict snapshot
+reader and host ports, while preserving the merged B4 contracts, Docker
+dependency closure and Vercel build graph. Only B5 adds the pure engine;
+the Nest adapter remains unwired for B5b. B1 HTTP goldens are unchanged.
+The integrated frozen install and `pnpm check:all` pass 7/7 on Node 22;
+full final-head E2E remains a PR CI gate. Graphify was regenerated from the
+combined source; its code graph does not cover SQL or replace manual review
+of the merged documentation and package export map.
+
 Status: implementation spec, stacked on accepted B4 `8c448ea` (draft PR #185); no merge or deployment. This supersedes the stale B4 note in the B5 draft (`docs/cms-prep-nonE2E:docs/specs/2026-11-10-cms-core-b5-engine-draft.md`): **all three subpaths already expose tested ESM and CJS**, and B4 measures **864 B contracts+engine / 60 KiB** and **34 B React / 35 KiB**. The ADR (`docs/cms-core-adr:docs/specs/2026-11-10-cms-core-adr.md`) governs the extraction; B2–B5 can proceed alongside the U gate because no UI controls are frozen into core. B6 owns React in parallel, and D waits for B7.
 
 ## Plan (8 steps)

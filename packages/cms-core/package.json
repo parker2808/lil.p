@@ -2,6 +2,16 @@
   "name": "@parker2808/cms-core",
   "version": "0.0.0",
   "private": true,
+  "packageManager": "pnpm@10.34.9",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "dist/**",
+    "README.md",
+    "LICENSE"
+  ],
   "type": "module",
   "exports": {
     "./contracts": {
@@ -28,8 +38,12 @@
       "types": "./dist/react/server.d.ts",
       "import": "./dist/react/server.js",
       "require": "./dist/react/server.cjs"
-    }
+    },
+    "./theme.css": "./dist/theme.css"
   },
+  "sideEffects": [
+    "./dist/theme.css"
+  ],
   "typesVersions": {
     "*": {
       "contracts": [
@@ -50,10 +64,11 @@
     }
   },
   "scripts": {
-    "build": "tsup && node ../../scripts/measure-cms-core.mjs",
+    "build": "tsup && node scripts/measure-cms-core.mjs",
     "lint": "eslint .",
+    "check:deps": "node scripts/check-deps.mjs && node --test scripts/check-deps.test.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "test": "pnpm build && node --test test/*.test.mjs ../../scripts/measure-cms-core.test.mjs"
+    "test": "pnpm build && node --test test/*.test.mjs scripts/*.test.mjs"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -61,10 +76,15 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tsup": "^8.5.0",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.72.0",
     "zod": "^4.0.0"
   }
 }

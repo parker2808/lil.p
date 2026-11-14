@@ -65,7 +65,7 @@ async function captureFetchStates(
   routeName: string,
   locale: Locale,
   requestPattern: RegExp,
-  loadingText: string,
+  loadingText: string | null,
   errorText: string,
   readySelector: string,
 ) {
@@ -78,7 +78,11 @@ async function captureFetchStates(
     await route.continue();
   });
   await page.reload();
-  await expect(page.getByText(loadingText)).toBeVisible();
+  if (loadingText) {
+    await expect(page.getByText(loadingText)).toBeVisible();
+  } else {
+    await expect(page.locator('[data-slot="page-skeleton"]')).toBeVisible();
+  }
   await capture(page, entries, routeName, locale, 'loading');
   releaseLoading();
   await expect(page.locator(readySelector)).toBeVisible();
@@ -100,7 +104,8 @@ for (const uiLocale of ['en', 'vi'] as const) {
       const entries: Capture[] = [];
       await signIn(page);
       if (uiLocale === 'vi') {
-        await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+        await page.getByRole('combobox', { name: 'Language' }).click();
+        await page.getByRole('option', { name: 'VI' }).click();
         await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
       }
       const origin = new URL(page.url()).origin;
@@ -213,7 +218,8 @@ for (const uiLocale of ['en', 'vi'] as const) {
     const entries: Capture[] = [];
     await signIn(page);
     if (uiLocale === 'vi') {
-      await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+      await page.getByRole('combobox', { name: 'Language' }).click();
+      await page.getByRole('option', { name: 'VI' }).click();
       await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
     }
     const origin = new URL(page.url()).origin;
@@ -306,7 +312,8 @@ for (const uiLocale of ['en', 'vi'] as const) {
     const entries: Capture[] = [];
     await signIn(page);
     if (uiLocale === 'vi') {
-      await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+      await page.getByRole('combobox', { name: 'Language' }).click();
+      await page.getByRole('option', { name: 'VI' }).click();
       await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
     }
     await page.goto('/admin/experience/new');
@@ -408,7 +415,8 @@ for (const uiLocale of ['en', 'vi'] as const) {
     const entries: Capture[] = [];
     await signIn(page);
     if (uiLocale === 'vi') {
-      await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+      await page.getByRole('combobox', { name: 'Language' }).click();
+      await page.getByRole('option', { name: 'VI' }).click();
       await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
     }
     const origin = new URL(page.url()).origin;
@@ -571,7 +579,7 @@ for (const uiLocale of ['en', 'vi'] as const) {
       'profile',
       uiLocale,
       /\/api\/admin\/profile$/,
-      uiLocale === 'en' ? 'Loading profile' : 'Đang tải hồ sơ',
+      null,
       uiLocale === 'en' ? 'The profile could not be loaded.' : 'Không tải được hồ sơ.',
       '[data-slot="editor-shell"]',
     );

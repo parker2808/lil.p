@@ -41,7 +41,7 @@ describe('Topbar', () => {
     renderTopbar();
     const collapse = screen.getByRole('button', { name: 'Collapse sidebar' });
 
-    expect(collapse).toHaveClass('redesign-button', 'size-8', 'p-0');
+    expect(collapse).toHaveClass('redesign-button', 'size-11', 'p-0');
     expect(collapse).toHaveAttribute('aria-expanded', 'true');
     expect(collapse).toHaveTextContent('');
     expect(collapse.querySelector('svg')).not.toBeNull();
@@ -58,6 +58,6 @@ describe('Topbar', () => {
 
     expect(screen.getByRole('button', { name: /^Account/ })).toHaveClass('h-7');
     const language = screen.getByRole('combobox', { name: 'Language' });
-    expect(language).toHaveClass('border-input', 'h-8', 'rounded-md');
+    expect(language).toHaveClass('border-input', 'min-h-11', 'rounded-md');
   });
 });
