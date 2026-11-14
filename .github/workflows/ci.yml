@@ -55,8 +55,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: pnpm --filter @portfolio/contracts build
-      - run: pnpm -r --parallel --if-present test
+      - run: pnpm --filter @portfolio/contracts... build
+      - run: pnpm -r --if-present test
 
   build:
     needs: changes
@@ -76,6 +76,15 @@ jobs:
       - name: Build Storybook (only when packages/ui changes)
         if: needs.changes.outputs.ui == 'true' || github.event_name != 'pull_request'
         run: pnpm --filter @portfolio/ui build-storybook
+
+  vercel-build:
+    name: vercel-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: node scripts/check-vercel-build.mjs
 
   api-e2e:
     if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e')
@@ -122,7 +131,7 @@ jobs:
           echo "JWT_ACCESS_SECRET=${access_a}-${access_b}!!" >> "$GITHUB_ENV"
           echo "JWT_REFRESH_SECRET=${refresh_a}-${refresh_b}!" >> "$GITHUB_ENV"
       - uses: ./.github/actions/setup
-      - run: pnpm --filter @portfolio/contracts build
+      - run: pnpm --filter @portfolio/contracts... build
       - run: pnpm --filter @portfolio/api test:e2e
 
   build-e2e:
@@ -152,7 +161,7 @@ jobs:
           key: next-${{ runner.os }}-e2e-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('apps/web/**/*.ts', 'apps/web/**/*.tsx', 'apps/web/**/*.css', 'packages/**/*.ts', 'packages/**/*.tsx', 'packages/**/*.css') }}
           restore-keys: |
             next-${{ runner.os }}-e2e-${{ hashFiles('pnpm-lock.yaml') }}-
-      - run: pnpm --filter @portfolio/contracts build
+      - run: pnpm --filter @portfolio/contracts... build
       - run: pnpm --filter @portfolio/api build
         env:
           NODE_ENV: test
@@ -162,7 +171,7 @@ jobs:
         run: >-
           tar -I 'zstd -1 -T0' -cf e2e-build.tar.zst
           --exclude=apps/web/.next/cache --exclude=apps/web/.next/standalone
-          packages/contracts/dist apps/api/dist apps/web/.next
+          packages/cms-core/dist packages/contracts/dist apps/api/dist apps/web/.next
       - uses: actions/upload-artifact@v4
         with:
           name: e2e-build
@@ -171,9 +180,10 @@ jobs:
           retention-days: 1
 
   web-e2e-shard:
-    # Starts right away (no `needs`): MySQL, pnpm install and browser deps run
-    # while build-e2e builds, then the shard waits for the e2e-build artifact.
+    # Download only after upload-artifact has finalized in the build job;
+    # listing artifacts early does not guarantee download-artifact can read one.
     name: web-e2e shard ${{ matrix.shard }}/4
+    needs: build-e2e
     if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e')
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -219,18 +229,6 @@ jobs:
             cmd="install --with-deps chromium"
           fi
           (cd apps/web && pnpm exec playwright $cmd > /tmp/pw-install.log 2>&1; echo $? > /tmp/pw-install.done) > /dev/null 2>&1 &
-      - name: Wait for the e2e-build artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          for i in $(seq 1 150); do
-            n=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" \
-              --jq '[.artifacts[] | select(.name == "e2e-build")] | length')
-            [ "$n" = 1 ] && exit 0
-            sleep 2
-          done
-          echo "e2e-build artifact did not appear (did the web-e2e build job fail?)"
-          exit 1
       - uses: actions/download-artifact@v4
         with:
           name: e2e-build

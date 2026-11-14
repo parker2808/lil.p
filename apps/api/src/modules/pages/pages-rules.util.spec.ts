@@ -9,6 +9,7 @@ import {
   assertInsertKeepsH1First,
   assertLayoutAllowed,
   assertWithinLimit,
+  definitionOf,
   nextBlockKey,
 } from './pages-rules.util';
 
@@ -23,12 +24,59 @@ function codeOf(error: unknown): string | undefined {
 }
 
 describe('pages-rules.util', () => {
+  it('keeps the exact Nest status, body and field path when mapping core findings', () => {
+    expect(definitionOf('hero')).toBe(BLOCK_REGISTRY.hero);
+    expect(definitionOf('__proto__')).toBeUndefined();
+    expect(() => assertAllowedOnPage(BLOCK_REGISTRY.hero, 'about')).toThrowError(
+      BadRequestException,
+    );
+    try {
+      assertAllowedOnPage(BLOCK_REGISTRY.hero, 'about');
+    } catch (error) {
+      expect((error as BadRequestException).getResponse()).toEqual({
+        code: 'BLOCK_NOT_ALLOWED',
+        message: 'hero is not allowed on about',
+      });
+    }
+    try {
+      assertWithinLimit(BLOCK_REGISTRY.hero, 1);
+    } catch (error) {
+      expect((error as ConflictException).getResponse()).toEqual({
+        code: 'BLOCK_LIMIT',
+        message: 'hero is limited to 1 per page',
+      });
+    }
+    try {
+      assertLayoutAllowed(BLOCK_REGISTRY.hero, 'THREE');
+    } catch (error) {
+      expect((error as BadRequestException).getResponse()).toEqual({
+        code: 'VALIDATION_FAILED',
+        message: 'Validation failed',
+        fieldErrors: { layout: ['Not a layout for this block type'] },
+      });
+    }
+  });
+
   it('rejects a type that is not allowed on the page', () => {
     try {
       assertAllowedOnPage(BLOCK_REGISTRY.hero, 'about');
       throw new Error('expected throw');
     } catch (error) {
       expect(codeOf(error)).toBe('BLOCK_NOT_ALLOWED');
+    }
+  });
+
+  it('uses the shared allowance for custom keys without changing BLOCK_NOT_ALLOWED', () => {
+    for (const type of ['page-header', 'prose', 'cta-band'] as const) {
+      expect(() => assertAllowedOnPage(BLOCK_REGISTRY[type], 'ideas')).not.toThrow();
+    }
+    for (const type of ['hero', 'about-intro'] as const) {
+      try {
+        assertAllowedOnPage(BLOCK_REGISTRY[type], 'ideas');
+        throw new Error('expected throw');
+      } catch (error) {
+        expect(codeOf(error)).toBe('BLOCK_NOT_ALLOWED');
+      }
     }
   });
 

@@ -13,6 +13,7 @@ export function LocalizedWidget({
   value,
   readOnly,
   label,
+  localeNames,
   message,
   editorLabels,
   previewLabels,
@@ -20,22 +21,22 @@ export function LocalizedWidget({
 }: LocalizedWidgetProps) {
   const enPath = `${field.path}.en`;
   const viPath = `${field.path}.vi`;
+  const enLabel = `${label} (${localeNames.en})`;
+  const viLabel = `${label} (${localeNames.vi})`;
+  const viStatus = (
+    <span
+      aria-hidden
+      className={value.vi ? 'bg-success size-1.5 rounded-full' : 'bg-warning size-1.5 rounded-full'}
+    />
+  );
 
   return (
     <Field>
-      <div className="flex items-center gap-2">
-        <FieldLabel htmlFor={enPath}>{label}</FieldLabel>
-        <span
-          aria-hidden
-          className={
-            value.vi ? 'bg-success size-1.5 rounded-full' : 'bg-warning size-1.5 rounded-full'
-          }
-        />
-      </div>
       {field.kind === 'markdown' ? (
         <div className="grid gap-3">
+          <span className="text-ui font-medium">{enLabel}</span>
           <MarkdownField
-            ariaLabel={`${label} (English)`}
+            ariaLabel={enLabel}
             value={value.en ?? ''}
             onChange={(markdown) => onChange('en', markdown)}
             labels={editorLabels}
@@ -43,8 +44,12 @@ export function LocalizedWidget({
             readOnly={readOnly}
             variant="compact"
           />
+          <span className="text-ui flex items-center gap-2 font-medium">
+            {viLabel}
+            {viStatus}
+          </span>
           <MarkdownField
-            ariaLabel={`${label} (Vietnamese)`}
+            ariaLabel={viLabel}
             value={value.vi ?? ''}
             onChange={(markdown) => onChange('vi', markdown)}
             labels={editorLabels}
@@ -55,33 +60,51 @@ export function LocalizedWidget({
         </div>
       ) : field.kind === 'localized-textarea' ? (
         <div className="grid gap-2 sm:grid-cols-2">
-          <Textarea
-            id={enPath}
-            value={value.en ?? ''}
-            disabled={readOnly}
-            onChange={(event) => onChange('en', event.target.value)}
-          />
-          <Textarea
-            id={viPath}
-            value={value.vi ?? ''}
-            disabled={readOnly}
-            onChange={(event) => onChange('vi', event.target.value)}
-          />
+          <div className="grid gap-2">
+            <FieldLabel htmlFor={enPath}>{enLabel}</FieldLabel>
+            <Textarea
+              id={enPath}
+              value={value.en ?? ''}
+              disabled={readOnly}
+              onChange={(event) => onChange('en', event.target.value)}
+            />
+          </div>
+          <div className="grid gap-2">
+            <FieldLabel htmlFor={viPath} className="flex items-center gap-2">
+              {viLabel}
+              {viStatus}
+            </FieldLabel>
+            <Textarea
+              id={viPath}
+              value={value.vi ?? ''}
+              disabled={readOnly}
+              onChange={(event) => onChange('vi', event.target.value)}
+            />
+          </div>
         </div>
       ) : (
         <div className="grid gap-2 sm:grid-cols-2">
-          <Input
-            id={enPath}
-            value={value.en ?? ''}
-            disabled={readOnly}
-            onChange={(event) => onChange('en', event.target.value)}
-          />
-          <Input
-            id={viPath}
-            value={value.vi ?? ''}
-            disabled={readOnly}
-            onChange={(event) => onChange('vi', event.target.value)}
-          />
+          <div className="grid gap-2">
+            <FieldLabel htmlFor={enPath}>{enLabel}</FieldLabel>
+            <Input
+              id={enPath}
+              value={value.en ?? ''}
+              disabled={readOnly}
+              onChange={(event) => onChange('en', event.target.value)}
+            />
+          </div>
+          <div className="grid gap-2">
+            <FieldLabel htmlFor={viPath} className="flex items-center gap-2">
+              {viLabel}
+              {viStatus}
+            </FieldLabel>
+            <Input
+              id={viPath}
+              value={value.vi ?? ''}
+              disabled={readOnly}
+              onChange={(event) => onChange('vi', event.target.value)}
+            />
+          </div>
         </div>
       )}
       <FieldError>{message}</FieldError>

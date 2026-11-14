@@ -20,6 +20,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@parker2808/cms-core": "workspace:*",
     "zod": "^4.1.12"
   },
   "devDependencies": {

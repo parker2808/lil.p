@@ -9,6 +9,23 @@ const heroProps = {
 };
 
 describe('PagesService', () => {
+  it('rejects duplicating a limit-one block before any write', async () => {
+    const block = { id: 42, type: 'hero', key: 'hero', sortOrder: 0 };
+    const tx = {
+      page: { findUnique: vi.fn().mockResolvedValue({ id: 1, key: 'HOME', blocks: [block] }) },
+      pageBlock: { updateMany: vi.fn(), create: vi.fn() },
+    };
+    const prisma = { $transaction: vi.fn((work: (db: typeof tx) => unknown) => work(tx)) };
+    const service = new PagesService(prisma as never);
+
+    await expect(service.duplicateBlock('home', block.id)).rejects.toMatchObject({
+      status: 409,
+      response: { code: 'BLOCK_LIMIT' },
+    });
+    expect(tx.pageBlock.updateMany).not.toHaveBeenCalled();
+    expect(tx.pageBlock.create).not.toHaveBeenCalled();
+  });
+
   function createHarness(existing: boolean, race = false) {
     const row = {
       id: 12,

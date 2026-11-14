@@ -88,7 +88,7 @@ export default defineConfig({
       url: `${webOrigin}/admin/login`,
       reuseExistingServer: false,
       timeout: 120_000,
-      env: { ...sharedEnv, NODE_ENV: 'production' },
+      env: { ...sharedEnv, NODE_ENV: 'production', R3_E2E_STATES: '1' },
     },
   ],
 });
