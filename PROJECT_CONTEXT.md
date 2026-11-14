@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15: D integration base #196 incorporates B7's restacked #195 head (including current main, B6b and D1) while retaining its opt-in typed tree, empty-publish H1 gate, neutral fixture and package-local C1 tooling. D3 and later builder work remain separate; no production route, database, migration or B1 golden change. See `docs/specs/2026-11-11-cms-d-integration-base.md`.
 - 2026-11-15: #195 B7 fixture defaults and sampled EN/VI homepage actions now target declared locale-prefixed component routes; fixture assertions guard the destination. Its CI browser/visual matrix remains the release gate; no production route or golden contract changes.
 
 - 2026-11-15: B7 #195 restacks on D1 #194 and B6b #193, with a stand-alone Vite fixture consuming core's opt-in theme, React subpaths and host-registered localized controls. Its 80-state browser/visual matrix remains the release gate, while D1 tree validation remains opt-in. No production API, database, migrations, host UI or B1 golden changes.
@@ -223,6 +224,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Restacked D integration base #196 onto B7 #195 and merged main #191, preserving the D1 tree validation, the neutral theme/fixture and package-local checks without changing golden HTTP responses or persisted data.
 - 2026-11-15: Corrected B7's fallback homepage action from an unrecognized bare `/components` path to `/en/components`; both EN and VI rendered actions resolve to their localized gallery routes.
 
 - 2026-11-15: Integrated B7's independent fixture, screenshot/axe gate and workspace lockfile with the theme, D1 tree and C1 package-local tooling; no golden HTTP or production data changes.

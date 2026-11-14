@@ -6,7 +6,8 @@ page/block/locale/snapshot contracts, `defineBlock`, `createRegistry`, and the
 host-keyed page-allowance predicate through `./contracts`. The host keeps all
 20 block definitions and composes its finite block-type schema from them.
 `./engine` provides B5's pure registry-injected policy, stable ordering,
-strict snapshots and version migrations. The Nest adapter remains host-owned.
+strict snapshots, version migrations and typed host ports. The Nest adapter
+remains host-owned; B5b wires it through a direct API production dependency.
 B6's `./react/server` contains headless ordered
 block dispatch with host-supplied renderers, grouping, wrappers, and draft-only
 unknown notices; it imports no client form/widget code. `./react` exposes Zod
