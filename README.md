@@ -4,6 +4,8 @@ The stacked [CMS U2 site/admin pattern spec](./docs/specs/2026-11-10-cms-u2-site
 
 The [CMS U0 route/control baseline](./docs/audits/2026-11-10-cms-u0-route-control-baseline.md) maps the current public/admin routes, redirect and role boundaries, control ownership, and existing behavior/visual tests before UI standardization. It records uncovered live/visual states separately from executed focused tests; U0 changes no runtime behavior.
 
+The [CMS core package](./packages/cms-core/README.md) runs its own dependency-boundary check in CI, independent of the monorepo root check, so extraction cannot silently drop this gate. C1 prep does not include the later tree, theme or server exports; the [C1 runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md) retains the final integration and authorization requirements.
+
 ### CMS U1 shared controls
 
 The stacked [CMS U1 shared-controls spec](./docs/specs/2026-11-10-cms-u1-shared-controls.md) tracks the shadcn Select/RadioGroup migration, normalized checkbox/switch/menu states, EN/VI field labels, behavior tests, and the comparison against U0. Its review fixes preserve contact fields typed before hydration, keep the optional topic clearable to an empty payload, and test radio Tab/focus without changing selection. SchemaForm's registry coverage runs once per block, making slow editor forms identifiable without raising test timeouts. The existing test-only loading fixture serves a radio variant only with `R3_E2E_STATES=1` and otherwise returns 404. U0 stays the before reference; U1 does not change the API or database.

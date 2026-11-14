@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- CMS C1 prep main refresh (2026-11-15): merged main `bdfaaf8` (U2/static CI), added a package-local dependency-boundary check with focused tests, and wired it into the existing CI static job. Main still lacks B6b theme, D1 tree and B6 React/server exports; final integrated extraction, sensitive-history audit and private repo authorization remain blocked gates. No runtime or golden-contract change.
 - CMS C1 prep (2026-11-15, based on `48c62cf`): keep the package-local build/lint/tests, private `UNLICENSED` manifest and pack allowlist through the ordered merges; the base has only contracts/engine/empty React exports, not B6b theme or D1 tree. Rehearse again from the final integrated SHA, audit all retained history/metadata/licenses and packed files, generate the standalone lockfile in the filtered private tree, and obtain separate authorization before creating/pushing the private repository. No runtime or golden contract change here.
 
 - C1 prep local proof: filtered `7012c46` into an 18-file standalone tree (`6cbc49d`); frozen Node 22/pnpm 10 install, types, lint, build and 10/10 tests pass. The 15-file tarball loads ESM/CJS from a frozen consumer, and a disposable lil.p checkout built core → contracts → web using the tarball for both contracts and API. The seven non-e2e root gates pass; final integrated source and sensitive-history audit remain blocked gates, no e2e or repository creation was attempted.
@@ -197,6 +198,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Merged the latest main into C1 prep and made the standalone CMS core dependency boundary explicit in package scripts, focused tests and CI; kept the initial three exports unchanged pending later integration.
 - 2026-11-15: Prepared cms-core's standalone TypeScript/ESLint/build/test configuration and package manifest/archive policy on the C1 prep branch; documented isolated lockfile strategy and post-approval private create/push commands without creating a repository or changing runtime behavior.
 
 - 2026-11-15: Overlapped the two independent read-only static checks (format and lint) in the local check orchestrator and existing CI job without adding runners, changing test coverage or touching E2E/visual/Docker logic. Documented measured main baseline and the E2E critical-path caveat.

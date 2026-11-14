@@ -39,6 +39,16 @@ Evidence came from a **throwaway `git clone --no-local` of lil.p**, checking out
 
 **Exact future C1–C3 command sequence (only after approval and verification; replace non-secret example paths/SHA first; no credential values in commands):**
 
+**C1 prep refresh after merging `bdfaaf8` (2026-11-15):** the standalone
+`pnpm check:deps` gate now scans package-local manifests and source/test/scripts
+for host/other-package imports, workspace dependencies and relative imports
+escaping the package. Its focused tests and the CI static job run independently
+of the monorepo root check. This merged main tip adds U2 and static CI overlap,
+**not** the later B6b theme, D1 tree or B6 React/server exports; the original
+three public subpaths remain the only available package exports. Repeat the
+standalone rehearsal and all sensitive-history checks from the actual final
+integrated SHA. No private repository is created by this refresh.
+
 **C1 prep on `chore/cms-core-c1-prep` (2026-11-15):** the package now carries its
 own TypeScript/ESLint config and generic budget script/test, declares Node 22,
 pnpm 10.34.9 and `UNLICENSED`, and packs only built output plus notices. Its

@@ -15,6 +15,11 @@ React 19, React DOM 19 and Zod 4 are peers (also local development dependencies 
 
 Build and check the browser gzip budgets with `pnpm build` from this package (or
 `pnpm --filter @parker2808/cms-core build` from the monorepo).
+Run `pnpm check:deps` in either location to reject workspace/host dependencies
+and imports from outside this package; CI runs this package-local gate after
+the monorepo static checks. Its focused tests cover static imports, re-exports,
+type imports, literal dynamic imports and CommonJS imports. Nonliteral computed
+imports still require manual review during extraction.
 The build runs `scripts/measure-cms-core.mjs` and fails above 60 KiB combined
 contracts+engine or 35 KiB React. These are **minified ESM artifact gzip sums**
 (excluding only declared React/React DOM/Zod peer imports), not a claim about
