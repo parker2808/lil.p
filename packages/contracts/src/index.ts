@@ -43,7 +43,7 @@ export type { AdminBlock, PublicBlock } from './blocks/block.type';
 export { BLOCK_SURFACES, LAYOUT_PRESETS } from './blocks/block-layout.constant';
 export type { BlockType } from './blocks/block-registry.constant';
 export { BLOCK_REGISTRY, blockTypeSchema } from './blocks/block-registry.constant';
-export { defineBlock } from './blocks/define-block.util';
+export { defineBlock, isBlockAllowedOnPage } from './blocks/define-block.util';
 export type { ParseBlockResult, ParseBlockRow } from './blocks/resolve-block.util';
 export { isLocalizedPair, parseBlock, resolveBlockLocale } from './blocks/resolve-block.util';
 export type { ApiErrorBody, ErrorCode } from './common/api-error.schema';

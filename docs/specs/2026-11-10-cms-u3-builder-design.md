@@ -2,6 +2,8 @@
 
 Status: coordinator design-approved (recorded 2026-11-10 21:56 ICT at head `818dbac`); PR #178 remains draft. Source: CMS-core ADR PR #172, Phase U3 / Phase D. This is a **visual study, not a builder**. No tree storage, drag engine, publish API, migration, or production route is introduced.
 
+Main reconciliation (2026-11-15): U2 was integrated into main as `bdfaaf8`; this study's page, unit/E2E cases, spec and reviewed captures are absent from both main and D5 UI #204. D5 implements a live builder, not this independent flag-gated design reference. PR #178 is therefore retained and restacked on current main, keeping main's clean-seed Linux pixel baselines, U2 audit and CI build graph. The U3 shard entry retains the separate mutating editor spec outside the visual shard. This is not a merge or deployment authorization.
+
 ## Plan (8 steps, revised after coordinator review)
 
 1. Read U1 baseline, ADR, Graphify and route guards.

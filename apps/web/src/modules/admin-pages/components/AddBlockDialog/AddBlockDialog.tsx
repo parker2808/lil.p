@@ -2,7 +2,7 @@
 
 import {
   BLOCK_REGISTRY,
-  corePageKeySchema,
+  isBlockAllowedOnPage,
   type BlockType,
   type PageKey,
 } from '@portfolio/contracts';
@@ -39,11 +39,8 @@ export function AddBlockDialog({
 }) {
   const t = useTranslations();
   const [open, setOpen] = useState(false);
-  const corePage = corePageKeySchema.safeParse(pageKey).success;
   const types = (Object.keys(BLOCK_REGISTRY) as BlockType[]).filter((type) =>
-    corePage
-      ? BLOCK_REGISTRY[type].pages.includes(pageKey)
-      : ['page-header', 'prose', 'cta-band'].includes(type),
+    isBlockAllowedOnPage(BLOCK_REGISTRY[type], pageKey),
   );
 
   if (readOnly) {
