@@ -349,8 +349,10 @@ test(
             assert.equal(gridColumns, width === 390 ? 1 : 2);
             assert.equal(await page.locator('h1').count(), 1);
             assert.equal(await page.locator('h2').count(), 0);
+            const visibleHeading = page.locator('h1 .cms-tree__heading-text:visible');
+            assert.equal(await visibleHeading.count(), 1);
             assert.equal(
-              await page.locator('h1').textContent(),
+              await visibleHeading.textContent(),
               `${locale}-${width === 390 ? 'mobile' : width === 768 ? 'tablet' : 'desktop'}`,
             );
             assert.equal(await page.locator('script').count(), 0);

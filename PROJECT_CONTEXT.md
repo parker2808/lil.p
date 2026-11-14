@@ -234,6 +234,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Corrected D3's browser matrix to assert the one visible heading span at each viewport rather than `textContent()` of the entire H1, which includes hidden responsive spans; locked local 390/768/1440 browser test passes.
 - 2026-11-15: Rejected breakpoint-changing heading levels in the publish and SSR contracts so a single heading tag cannot turn a valid mobile/desktop H1 swap into two H1 elements; draft reading remains permissive. Added 390/768/1440 browser assertions.
 - 2026-11-15: Integrated the D3 opt-in SSR tree renderer with main's D1 publish rules and C1 package-local measurement; kept legacy route dispatch, host-owned headings safety and existing golden contracts unchanged. Added the computed responsive matrix to shard-1 CI and locked local E2E.
 - 2026-11-15: Reconciled #203 with main through #201; updated the live ordered ledger, retained both documentation histories, and regenerated Graphify. No authored runtime code, migration or E2E.

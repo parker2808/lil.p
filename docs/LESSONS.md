@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-15: DOM `textContent()` includes display-none responsive heading variants, so a viewport regression must assert the single CSS-visible variant (and heading count) instead of comparing the whole heading's raw text.
 - 2026-11-15: Per-breakpoint H1 counting alone is insufficient for a one-element SSR heading renderer: reject responsive level changes at publish and render time, but continue allowing incomplete draft editing; assert the visible heading at mobile, tablet and desktop.
 - 2026-11-15: Integrating a server-only CMS tree renderer after package tooling moved requires updating its measurement import to the package-local script and gating computed breakpoint behavior in both CI and local E2E. Preserve legacy route dispatch until the D2 snapshot contract is wired.
 

@@ -1,7 +1,7 @@
 # Graph Report - feat-cms-d3-renderer  (2026-11-15)
 
 ## Corpus Check
-- 1568 files · ~614,468 words
+- 1568 files · ~614,542 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 36 file(s) not represented in the graph (top: (none) 18, .css 14, .example 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `bc2fa146`
+- Built from commit: `8a259638`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
