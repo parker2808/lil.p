@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- D6 CI scheduling follow-up: the first Linux run at `d6374c5` failed web shard 1 after a 120-second weight for the new all-20 spec reassigned existing tests ahead of visual captures. The test-only correction preserves every old shard assignment and appends the host spec last on shard 2; rerun CI before calling #202 green. No pixel baseline, route or golden change.
+
 - CMS D6 guarded route integration (draft): D2 and D3 merge with both histories preserved, along with #201's contact hydration fix and D5's pure tree logic (#200), not its UI. With `CMS_TREE_ROUTES=1`, authenticated tree draft/version preview and published tree JSON share strict D1 validation and the Next server renders both with D3; default legacy block-list contracts remain unchanged. An opt-in revision-checked host publish transaction and disposable-MySQL API/browser journey cover save, publish, EN/VI SSR, restore and republish. The post-D5 locked `check:all --e2e` passed 13/13 on disposable tmpfs MySQL. The 21-case host gate checks all 20 schemas through D5 edit/history/autosave; the follow-up passes their host-owned schemas to live API validation and maps their real components into Next preview/public SSR, with a separate all-20 HTTP/browser gate. D5 UI autosave, dirty-reload protection, full keyboard/visual journeys, migration approval and release remain BLOCKED. #202 must not merge before #199 and #200's final gates. See `docs/specs/2026-11-11-cms-d6-route-parity.md` and the [partial live-route manifest](docs/specs/2026-11-14-cms-d6-live-route-evidence.md).
 - Contact hydration: a local macOS 11/12 contact E2E run exposed input timing before the client form was interactive. The form now preserves and synchronizes pre-hydration DOM text and marks readiness on mount; browser tests enter text before hydration and verify a single client POST, while ordinary submit tests await readiness. No CMS goldens, API or DB changes; see `docs/specs/2026-11-11-contact-hydration-readiness.md`.
 
@@ -170,6 +172,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-14: Stabilized web E2E scheduling for the all-20 D6 browser gate by preserving all old shard assignments and running the new publishing spec last; CI rerun pending, without changing production behavior or visual baselines.
 
 - 2026-11-14: Instantiated a partial D6 evidence manifest with source/base hashes, the 13/13 locked disposable-MySQL retry, the live 20-definition EN/VI parity count and explicit blocked UI/visual/migration gates; no release or merge claim.
 

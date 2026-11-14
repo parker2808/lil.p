@@ -43,6 +43,8 @@ On 2026-11-14, the final full locked disposable-MySQL gate first passed 12/13: a
 
 The partial [live-route evidence manifest](./2026-11-14-cms-d6-live-route-evidence.md) records exact source/base heads, commands, CI link and distinct PASS/BLOCKED release gates. It is not migration, visual or merge approval.
 
+The first Linux CI on the manifest head failed web shard 1: assigning the new all-20 spec a 120-second weight rebalanced every existing shard. Previously shard 1 ran Lighthouse, visual and four fixed companion specs; the new map moved eleven different specs into shard 1, several before the visual captures. Seven public/admin screenshots drifted, and one table-density token probe flaked. Keep the old spec-to-shard mapping stable, append the new host test after existing specs, and rerun CI; do not update unrelated pixel baselines or weaken their assertions. This test-only scheduling fix changes no route behavior or B1 golden.
+
 The first post-merge locked full gate caught a test-fixture TypeScript annotation (`Record<string, unknown>` versus JSON-compatible responsive props): typecheck/build/web E2E failed as a consequence, while the 21 focused tests passed. The fixture type was corrected to D1 `ResponsiveProps['base']`; focused web typecheck passed, followed by a fresh complete `pnpm check:all --e2e` gate passing **13/13** on disposable tmpfs MySQL under the shared lock. The failed attempt is not counted as green; the successful gate released its lock and container.
 
 - **Dirty-edit protection (separate D5 integration gate):** The host must require explicit confirmation/export before D5 `reload` can replace a dirty local tree. API revision CAS cannot by itself certify browser autosave/reload safety.

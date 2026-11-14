@@ -171,3 +171,4 @@
 - 2026-11-11: Test-local tree renderer mappings cannot certify deployed host pages; inject the same explicit host registry into draft, publish and snapshot reads, and verify actual Next components through the live API in both locales.
 - 2026-11-14: A full browser gate can expose an unrelated exact-scroll-pixel variance; preserve the failing evidence, leave out-of-scope layout code untouched, and require a fresh locked full-gate pass before calling the CMS route change green.
 - 2026-11-14: Record partial release evidence in a separate manifest with exact source, commands and blocked rows; a green live route gate must not silently become editor, migration or accessibility approval.
+- 2026-11-14: Weighted E2E sharding can reshuffle unrelated test order and pollute visual baselines; preserve existing file assignments when adding a publishing test, then place the new case last in its shard.
