@@ -10,7 +10,7 @@ export const buttonVariants = cva(
     'redesign-button relative inline-flex items-center justify-center gap-2 rounded-md font-medium',
     'text-ui whitespace-nowrap transition-colors',
     'disabled:pointer-events-none disabled:opacity-50',
-    'pointer-coarse:min-h-11 pointer-coarse:min-w-11',
+    'min-h-11 min-w-11',
   ].join(' '),
   {
     variants: {
@@ -29,7 +29,7 @@ export const buttonVariants = cva(
       },
       surface: {
         default: '',
-        public: 'min-h-10 motion-safe:hover:-translate-y-0.5',
+        public: 'min-h-11 motion-safe:hover:-translate-y-0.5',
       },
     },
     defaultVariants: {
