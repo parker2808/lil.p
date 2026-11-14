@@ -169,7 +169,6 @@
 - verified-owner.data.ts
 - StatsRange
 - api-e2e
-- MediaLibrary.test.tsx
 - globals.test.ts
 - ActivityCard.tsx
 - MockIntersectionObserver
@@ -197,7 +196,7 @@
 - with
 - exports
 - peerDependencies
-- education.type.ts
+- ReorderInput
 - lighthouse.ts
 - visual.spec.ts
 - scripts
@@ -213,7 +212,7 @@
 - CMS core C1–C3 extraction runbook
 - eslint.config.mjs
 - on
-- fields.ts
+- react.ts
 - AuditRow.stories.tsx
 - RequirementColumns
 - Colors.stories.tsx
@@ -276,6 +275,7 @@
 - R3-09: Admin collections
 - R3-11 — Real content seed
 - R3-12: Integrated real-flow audit
+- Private CMS core naming exception
 - CMS B1 — golden HTTP contracts
 - CMS B2 — one block page-allowance source
 - B5 — pure page engine and host ports
@@ -302,6 +302,8 @@
 - 03-1-audit.md
 - UI redesign plan — public site + admin CMS (frontend only)
 - backup.sh
+- lint-staged
+- restore.sh
 - docker-entrypoint.sh
 - SkillsModule
 - visual-update.sh
@@ -315,48 +317,11 @@
 - 2026-11-01-p5-4-project-cards.md
 - context-check.sh
 - 01-dev-grants.sh
+- engines
+- pnpm
 - pnpm-workspace.yaml
 - generate-brand-icons.sh
 - scripts/vercel-ignore-build.sh
-- .hasPointerCapture
-- .releasePointerCapture
-- .scrollIntoView
-- .setPointerCapture
-- commitlint.config.mjs
-- chrome.js
-- mock.js
-- .hasPointerCapture
-- .releasePointerCapture
-- .setPointerCapture
-- TakeawaysCard.stories.tsx
-- VersionTag.stories.tsx
-- about/experience/[id]/page.tsx
-- about/experience/new/page.tsx
-- r3-locale-error-test/page.tsx
-- case-study-end.spec.ts
-- move-ids.util.test.ts
-- P5-6 T29: New About page
-- backup.sh
-- restore.sh
-- docker-entrypoint.sh
-- split-js.spec.ts
-- visual-update.sh
-- web/scripts/vercel-ignore-build.sh
-- admin-chrome.js
-- 2026-11-01-admin-ia.md
-- 2026-11-01-case-study-layout.md
-- context-check.sh
-- 01-dev-grants.sh
-- pnpm-workspace.yaml
-- generate-brand-icons.sh
-- .hasPointerCapture
-- .releasePointerCapture
-- .scrollIntoView
-- .setPointerCapture
-- commitlint.config.mjs
-- chrome.js
-- mock.js
-- .hasPointerCapture
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 273 edges
@@ -373,14 +338,14 @@
 ## Surprising Connections (you probably didn't know these)
 - `Highlights authored by Parker` --references--> `text()`  [INFERRED]
   docs/case-studies/cfw-backoffice-portal.md → apps/api/prisma/seed/data/portfolio.mapper.ts
+- `T30 · Write API: posts, experience, education, principles, stats, process` --references--> `readingMinutes()`  [INFERRED]
+  docs/archive/plan/09-7-tasks-t26-projects-list.md → apps/api/src/common/utils/reading-time.util.ts
+- `T30 · Write API: post, experience, education, principle, stat, process` --references--> `readingMinutes()`  [INFERRED]
+  docs/archive/plan-vi/10-7-cac-task-m3-phia-ghi.md → apps/api/src/common/utils/reading-time.util.ts
 - `Contract and acceptance` --references--> `pickGroup()`  [INFERRED]
   docs/specs/2026-11-10-custom-page-locale-seo.md → apps/api/src/i18n/pick-locale.util.ts
 - `T50 · Media API: upload, variants, relations` --references--> `MediaService`  [INFERRED]
   docs/archive/plan/12-7-tasks-t46-users-admin-admin-only-change-own-pass.md → apps/api/src/modules/media/media.service.ts
-- `T50 · API media: upload, variant, quan hệ` --references--> `MediaService`  [INFERRED]
-  docs/archive/plan-vi/14-7-cac-task-m5-realtime-media-publish.md → apps/api/src/modules/media/media.service.ts
-- `Model, conversion, and persistence` --references--> `readPageSnapshot()`  [INFERRED]
-  docs/specs/2026-11-10-cms-core-adr.md → apps/api/src/modules/pages/page-snapshot.util.ts
 
 ## Import Cycles
 - None detected.
@@ -685,7 +650,7 @@ Nodes (25): AdminProjectsPage(), firstSearchParam(), useBulkArchiveProjects(), u
 
 ### Community 74 - "web/package.json"
 Cohesion: 0.09
-Nodes (32): devDependencies, @axe-core/playwright@^4.14.0, eslint@^9.39.1, jsdom@^27.2.0, @playwright/test@^1.56.1, @tailwindcss/postcss@^4.1.18, @testing-library/jest-dom@^6.9.1, @testing-library/react@^16.3.0 (+24 more)
+Nodes (30): devDependencies, @axe-core/playwright@^4.14.0, eslint@^9.39.1, jsdom@^27.2.0, @playwright/test@^1.56.1, @tailwindcss/postcss@^4.1.18, @testing-library/jest-dom@^6.9.1, @testing-library/react@^16.3.0 (+22 more)
 
 ### Community 75 - "defineBlock"
 Cohesion: 0.10
@@ -957,7 +922,7 @@ Nodes (9): toAdminAuditLog(), useAdminAuditInfinite(), useBulkArchivePosts(), bu
 
 ### Community 143 - "compilerOptions"
 Cohesion: 0.13
-Nodes (10): args, parallelResults, parallelSteps, steps, CONTENT_ROOTS, DENYLIST, failures, files (+2 more)
+Nodes (14): compilerOptions, declaration, emitDecoratorMetadata, experimentalDecorators, module, moduleResolution, noEmit, outDir (+6 more)
 
 ### Community 144 - "AdminDashboardIndex.test.tsx"
 Cohesion: 0.20
@@ -1009,7 +974,7 @@ Nodes (8): ActivityCard(), ActivityCardView(), item, useAdminAudit(), ActivityFe
 
 ### Community 157 - "compilerOptions"
 Cohesion: 0.15
-Nodes (9): ColorBook, ColorModes, colorsPath, cssPath, here, hexToRgba(), parseColor(), Rgba (+1 more)
+Nodes (12): compilerOptions, incremental, jsx, lib, paths, plugins, exclude, extends (+4 more)
 
 ### Community 158 - "web-e2e-shard"
 Cohesion: 0.15
