@@ -1,4 +1,4 @@
-# CMS core package scaffold
+# CMS core
 
 `@parker2808/cms-core` exports three independently built ESM subpaths:
 `./contracts`, `./engine`, and `./react`. B4 provides generic Zod
@@ -13,10 +13,17 @@ wired by B5b through the direct API production dependency provided by #189.
 All three subpaths publish CommonJS and legacy TypeScript subpath resolution.
 React 19, React DOM 19 and Zod 4 are peers (also local development dependencies for package tests).
 
-Build and check the browser gzip budgets with `pnpm --filter @parker2808/cms-core build`.
+Build and check the browser gzip budgets with `pnpm build` from this package (or
+`pnpm --filter @parker2808/cms-core build` from the monorepo).
 The build runs `scripts/measure-cms-core.mjs` and fails above 60 KiB combined
 contracts+engine or 35 KiB React. These are **minified ESM artifact gzip sums**
 (excluding only declared React/React DOM/Zod peer imports), not a claim about
-downstream app tree-shaking. See the [B4 spec](../../docs/specs/2026-11-10-cms-b4-contracts-registry.md)
-for the measured extraction baseline and rollback. All block definitions, host
-policy, API routes and EN/VI UI remain in lil.p.
+downstream app tree-shaking. The package is private and `UNLICENSED`; only
+`dist/**`, this README, the license notice and the manifest belong in its archive.
+All block definitions, host policy, API routes and EN/VI UI remain in lil.p.
+
+For a standalone extraction, run `pnpm install --lockfile-only` once with pnpm
+10.34.9, commit the resulting package-root `pnpm-lock.yaml` in the private
+repository, then require `pnpm install --frozen-lockfile` in CI. The monorepo
+uses its root lockfile instead; do not copy that workspace lockfile into this
+package or add a second lockfile to the public monorepo.

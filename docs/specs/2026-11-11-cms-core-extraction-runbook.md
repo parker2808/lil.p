@@ -39,6 +39,16 @@ Evidence came from a **throwaway `git clone --no-local` of lil.p**, checking out
 
 **Exact future C1–C3 command sequence (only after approval and verification; replace non-secret example paths/SHA first; no credential values in commands):**
 
+**C1 prep on `chore/cms-core-c1-prep` (2026-11-15):** the package now carries its
+own TypeScript/ESLint config and generic budget script/test, declares Node 22,
+pnpm 10.34.9 and `UNLICENSED`, and packs only built output plus notices. Its
+existing three public subpaths remain unchanged on the `48c62cf` base; this
+branch does **not** include the later B6b theme or D1 tree and cannot stand in
+for a final integrated SHA. The public monorepo retains the root pnpm lockfile;
+generate and commit a separate package-root lockfile _only in the filtered
+private tree_, then demand frozen installs there. Do not accidentally stage a
+second lockfile under `packages/cms-core` in lil.p.
+
 ```sh
 # C1: authorized local extraction from an approved, integrated source SHA.
 SOURCE_CHECKOUT=/path/to/approved/local/lilp
@@ -49,7 +59,7 @@ git -C "$SCRATCH_DIR/source" fetch "$SOURCE_CHECKOUT" "$APPROVED_SHA"
 git -C "$SCRATCH_DIR/source" checkout --detach "$APPROVED_SHA"
 git -C "$SCRATCH_DIR/source" subtree split --quiet --prefix=packages/cms-core --branch extracted HEAD
 git clone --no-local --branch extracted "$SCRATCH_DIR/source" "$SCRATCH_DIR/core"
-# Adapt only the reviewed isolated-package config/scripts/tests/README/LICENSE below; do not change lil.p here.
+# Verify the filtered tree contains the integrated, package-local config/scripts/tests/README/LICENSE.
 cd "$SCRATCH_DIR/core"
 pnpm install --lockfile-only
 pnpm install --frozen-lockfile
@@ -57,6 +67,13 @@ pnpm run typecheck && pnpm run lint && pnpm run check:deps && pnpm run test
 pnpm pack --dry-run --json
 pnpm pack --pack-destination "$SCRATCH_DIR"
 gitleaks git --redact --log-opts=HEAD --report-format json --report-path="$SCRATCH_DIR/history-scan.json"
+
+# ONLY AFTER the full-history/metadata/license/artifact audit and Parker's
+# separate authorization to create and push. No credentials in commands.
+git add pnpm-lock.yaml
+git commit -m "chore: pin standalone cms-core dependencies"
+gh repo create parker2808/cms-core --private --source=. --remote=origin
+git push -u origin HEAD:main
 
 # C2: in the separately authorized private destination, after full-history/metadata/license review.
 pnpm install --frozen-lockfile

@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- CMS C1 prep (2026-11-15, based on `48c62cf`): keep the package-local build/lint/tests, private `UNLICENSED` manifest and pack allowlist through the ordered merges; the base has only contracts/engine/empty React exports, not B6b theme or D1 tree. Rehearse again from the final integrated SHA, audit all retained history/metadata/licenses and packed files, generate the standalone lockfile in the filtered private tree, and obtain separate authorization before creating/pushing the private repository. No runtime or golden contract change here.
+
 - B5b main integration (2026-11-14): #190 merged as `f3a62c2` after #189 `f73072e`; retain the B5b Nest policy/snapshot adapters, exact host HTTP errors, legacy missing-SEO compatibility, and the production CJS adapter smoke on the merged Docker baseline. No new migrations or golden changes; final-head CI and post-merge deploy remain gates.
 
 - B5b #192 P2/P3 follow-up: restorable legacy snapshots may omit SEO fields, but an explicit `seo: null` must fail as 400 `INVALID_BLOCKS` before any delete/audit; existing historical read/EN–VI preview remains unchanged. Focused restore-refusal test covers the exact error shape and no writes. Graphify refreshed on the B5b worktree after the adapter change; no schema/migration/DB read, B1 golden or host route change. See `docs/specs/2026-11-11-cms-b5b-nest-engine-wiring.md`.
@@ -190,6 +192,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Prepared cms-core's standalone TypeScript/ESLint/build/test configuration and package manifest/archive policy on the C1 prep branch; documented isolated lockfile strategy and post-approval private create/push commands without creating a repository or changing runtime behavior.
 
 - 2026-11-14: Restacked B5b onto merged B5, keeping core policy delegation and strict restore while preserving #189 API production packaging and #205 Vercel build checks.
 
