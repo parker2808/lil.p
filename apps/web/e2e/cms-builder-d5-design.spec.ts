@@ -109,6 +109,16 @@ async function capture(
     expect(pairs[name], `${options.theme}/${options.brand}/${name}`).toBeGreaterThanOrEqual(4.5);
   for (const name of ['selectionSurface', 'focusSurface'] as const)
     expect(pairs[name], `${options.theme}/${options.brand}/${name}`).toBeGreaterThanOrEqual(3);
+  if (options.width <= 1100 && !options.sheet) {
+    const navigation = page.getByRole('navigation', {
+      name: options.locale === 'vi' ? 'Trình dựng trang' : 'Page builder',
+    });
+    for (const button of await navigation.getByRole('button').all()) {
+      const target = await button.boundingBox();
+      expect(target?.width).toBeGreaterThanOrEqual(44);
+      expect(target?.height).toBeGreaterThanOrEqual(44);
+    }
+  }
   const file = `${options.locale}-${options.theme}-${options.brand}-${options.width}-${options.state}.png`;
   await page.screenshot({ path: join(directory, file), animations: 'disabled' });
   entries.push({
@@ -276,6 +286,39 @@ test('EN/VI core and token-only lil.p builder states are visually and accessibly
         }
       }
     }
+    await page.setViewportSize({ width: 1440, height: 900 });
+    let releaseSave: (() => void) | undefined;
+    const heldSave = new Promise<void>((resolveSave) => {
+      releaseSave = resolveSave;
+    });
+    const draftRoute = `**/admin/pages/${key}/builder/draft`;
+    await page.route(draftRoute, async (route) => {
+      if (route.request().method() === 'PUT') await heldSave;
+      await route.continue();
+    });
+    try {
+      await palette
+        .getByRole('button', { name: locale === 'vi' ? 'Đoạn văn' : 'Paragraph', exact: true })
+        .click();
+      await expect(
+        page.getByText(locale === 'vi' ? 'Đang lưu bản nháp' : 'Saving draft'),
+      ).toBeVisible({ timeout: 15_000 });
+      await page.setViewportSize({ width: 390, height: 900 });
+      await capture(page, {
+        key,
+        locale,
+        theme: 'dark',
+        brand: 'lilp',
+        width: 390,
+        state: 'saving',
+      });
+    } finally {
+      releaseSave?.();
+      await page.unroute(draftRoute);
+    }
+    await expect(page.getByText(locale === 'vi' ? 'Đã lưu bản nháp' : 'Draft saved')).toBeVisible({
+      timeout: 15_000,
+    });
     const remote = await (await page.request.get(`/api/admin/pages/${key}/builder/draft`)).json();
     remote.tree.root.sections[0].content[0].responsive.base.text = `Concurrent ${locale} heading`;
     const concurrent = await page.request.put(`/api/admin/pages/${key}/builder/draft`, {
