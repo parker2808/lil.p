@@ -1,17 +1,17 @@
-# Graph Report - cms-pre-191-195  (2026-11-15)
+# Graph Report - cms-pre-191-p2-195  (2026-11-15)
 
 ## Corpus Check
-- 1562 files · ~603,247 words
+- 1562 files · ~603,664 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 36 file(s) not represented in the graph (top: (none) 18, .css 14, .example 1)
 
 ## Summary
-- 7446 nodes · 23189 edges · 329 communities (278 shown, 51 thin omitted)
+- 7446 nodes · 23190 edges · 329 communities (278 shown, 51 thin omitted)
 - Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 2110 edges (avg confidence: 0.93)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c0ed1d6b`
+- Built from commit: `c6935ad4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -31,8 +31,8 @@
 - ref_vitest
 - ref_node_path
 - block-renderers.constant.ts
-- readTree
 - api/package.json
+- readTree
 - analytics.service.ts
 - portfolio.mapper.ts
 - ui/package.json
@@ -85,13 +85,13 @@
 - AdminSiteIndex.tsx
 - AdminInboxDetail.test.tsx
 - apiClient
+- defineBlock
 - devDependencies
 - qk
 - portfolio-design-system.md
 - NotesDetail.tsx
 - react.ts
 - MediaService
-- defineBlock
 - PageKey
 - projects.schema.ts
 - AdminExperience
@@ -348,14 +348,14 @@
 ## Surprising Connections (you probably didn't know these)
 - `Highlights authored by Parker` --references--> `text()`  [INFERRED]
   docs/case-studies/cfw-backoffice-portal.md → apps/api/prisma/seed/data/portfolio.mapper.ts
+- `T30 · Write API: posts, experience, education, principles, stats, process` --references--> `readingMinutes()`  [INFERRED]
+  docs/archive/plan/09-7-tasks-t26-projects-list.md → apps/api/src/common/utils/reading-time.util.ts
+- `T30 · Write API: post, experience, education, principle, stat, process` --references--> `readingMinutes()`  [INFERRED]
+  docs/archive/plan-vi/10-7-cac-task-m3-phia-ghi.md → apps/api/src/common/utils/reading-time.util.ts
 - `Contract and acceptance` --references--> `pickGroup()`  [INFERRED]
   docs/specs/2026-11-10-custom-page-locale-seo.md → apps/api/src/i18n/pick-locale.util.ts
 - `T50 · Media API: upload, variants, relations` --references--> `MediaService`  [INFERRED]
   docs/archive/plan/12-7-tasks-t46-users-admin-admin-only-change-own-pass.md → apps/api/src/modules/media/media.service.ts
-- `T50 · API media: upload, variant, quan hệ` --references--> `MediaService`  [INFERRED]
-  docs/archive/plan-vi/14-7-cac-task-m5-realtime-media-publish.md → apps/api/src/modules/media/media.service.ts
-- `Model, conversion, and persistence` --references--> `readPageSnapshot()`  [INFERRED]
-  docs/specs/2026-11-10-cms-core-adr.md → apps/api/src/modules/pages/page-snapshot.util.ts
 
 ## Import Cycles
 - None detected.
@@ -422,13 +422,13 @@ Nodes (45): dataDir, esbuild, outDir, require, root, Capture, Locale, OUTPUT (+3
 Cohesion: 0.10
 Nodes (59): listEducation(), listPrinciples(), AboutIntroSkeleton(), BlockHeading(), CaseGridBlock(), CaseGridSkeleton(), ContactFormSkeleton(), CtaBandSkeleton() (+51 more)
 
-### Community 15 - "readTree"
-Cohesion: 0.05
-Nodes (78): CMS core full verification — D6 → C gate, Composed-page review and decision, Design-review checklist (each starter component), Evidence layout and execution (future implementation only), Post-D6 execution checklist (future authorized threads only), Parker approvals needed, D1–D6 four-lane implementation briefs, Contract (+70 more)
-
-### Community 16 - "api/package.json"
+### Community 15 - "api/package.json"
 Cohesion: 0.03
 Nodes (78): dependencies, cloudinary@^2.11.0, cookie-parser@^1.4.7, dotenv@^18.0.9, multer@^2.5.0, @nestjs/common@^11.1.9, @nestjs/core@^11.1.9, @nestjs/jwt@^12.0.3 (+70 more)
+
+### Community 16 - "readTree"
+Cohesion: 0.05
+Nodes (76): CMS core full verification — D6 → C gate, Composed-page review and decision, Design-review checklist (each starter component), Evidence layout and execution (future implementation only), Post-D6 execution checklist (future authorized threads only), Parker approvals needed, D1–D6 four-lane implementation briefs, Contract (+68 more)
 
 ### Community 17 - "analytics.service.ts"
 Cohesion: 0.04
@@ -638,33 +638,33 @@ Nodes (23): admin, renderBell(), user, admin, FakeEventSource, push, refreshOnce
 Cohesion: 0.13
 Nodes (22): login(), useAdminSite(), useSaveAdminSite(), getAdminSite(), updateAdminSite(), useAdminUsers(), useUserMutations(), createAdminUser() (+14 more)
 
-### Community 69 - "devDependencies"
+### Community 69 - "defineBlock"
+Cohesion: 0.09
+Nodes (34): Boundary and compatibility, CMS B4 — host-composed contracts and registry, Main integration plan (2026-11-11), Plan, Rollback and measurement, Validation and budget, D1 — tree contracts, conversion, fixtures, D2 — additive persistence and builder API (+26 more)
+
+### Community 70 - "devDependencies"
 Cohesion: 0.06
 Nodes (34): devDependencies, @fontsource/be-vietnam-pro@^5.2.8, @fontsource/jetbrains-mono@^5.2.8, @fontsource-variable/inter@^5.2.8, jsdom@^27.4.0, storybook@^10.0.0, @storybook/addon-a11y@^10.0.0, @storybook/addon-themes@^10.0.0 (+26 more)
 
-### Community 70 - "qk"
+### Community 71 - "qk"
 Cohesion: 0.13
 Nodes (21): AdminProjectsPage(), firstSearchParam(), adminListTableLabels(), item, page, params, useAdminProjects(), useArchiveAdminProject() (+13 more)
 
-### Community 71 - "portfolio-design-system.md"
+### Community 72 - "portfolio-design-system.md"
 Cohesion: 0.14
 Nodes (7): Contents, 5. Design map, 6. Task overview, M2 — Content graph, M4 — Auth + admin CMS, Portfolio design system and UI spec (Parker), Hệ thống thiết kế portfolio và UI spec (Parker)
 
-### Community 72 - "NotesDetail.tsx"
+### Community 73 - "NotesDetail.tsx"
 Cohesion: 0.12
 Nodes (22): generateMetadata, Page(), revalidate, generateMetadata, Page(), revalidate, AboutIndex(), extractToc() (+14 more)
 
-### Community 73 - "react.ts"
+### Community 74 - "react.ts"
 Cohesion: 0.13
 Nodes (24): LocalizedWidgetProps, PreviewLabels, WidgetLabels, editorLabelsFromMessages(), schemaToFields(), WIDGET_KINDS, Lane A, second assignment — D5 properties/history/autosave, Lane C — D3 shared SSR renderer (+16 more)
 
-### Community 74 - "MediaService"
+### Community 75 - "MediaService"
 Cohesion: 0.08
 Nodes (8): AdminMediaController, MediaService, 0. How to use this plan, 1. Sources of truth, 2. Ground rules and Definition of Done, 8. Owner tasks and out of scope, Portfolio implementation plan, UpdateMediaInput
-
-### Community 75 - "defineBlock"
-Cohesion: 0.10
-Nodes (32): Boundary and compatibility, CMS B4 — host-composed contracts and registry, Main integration plan (2026-11-11), Plan, Rollback and measurement, Validation and budget, D1 — tree contracts, conversion, fixtures, D2 — additive persistence and builder API (+24 more)
 
 ### Community 76 - "PageKey"
 Cohesion: 0.10
