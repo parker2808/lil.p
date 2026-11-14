@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-15: When parallel branches both regenerate Graphify reports, resolve the generated-report conflict by rebuilding from the combined tree rather than mixing incompatible community sections.
+- 2026-11-15: A monorepo-only dependency guard disappears in a path-filtered package repository; add a package-local manifest/import boundary check and run it explicitly in CI before extraction.
+- 2026-11-15: An extraction-ready workspace package must carry its own build/lint/test tools, while its frozen standalone lockfile is generated from the filtered package tree rather than copied from the monorepo root.
 - 2026-11-15: When U2 visual changes meet a later main, keep the clean Vercel build and artifact dependency, combine the route audit with U0's capture-baseline override, and recapture conflicting Linux PNGs from the integrated app on a clean disposable seed.
 - 2026-11-15: CI job parallelism alone does not shorten a long critical-path shard; overlap only independent, read-only static checks with bounded local concurrency and compare actual final-head timings before claiming a wall-time gain.
 
