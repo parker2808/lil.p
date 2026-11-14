@@ -49,6 +49,25 @@ generate and commit a separate package-root lockfile _only in the filtered
 private tree_, then demand frozen installs there. Do not accidentally stage a
 second lockfile under `packages/cms-core` in lil.p.
 
+**C1 prep rehearsal on `7012c46` (local only):** a throwaway `git clone --no-local`
+and `git subtree split --prefix=packages/cms-core` produced an 18-file filtered
+tree (`6cbc49d`); Node 22.21.1/pnpm 10.34.9 generated a standalone lockfile,
+then a frozen install, typecheck, lint, build and all **10/10 tests passed**.
+The original gzip limits still pass (browser 2,433/61,440 B, React 34/35,840
+B). `pnpm pack --dry-run --json` listed **15 files**: 12 built JS/type entries
+and README, LICENSE and package.json; no source, scripts, tests or lockfile.
+A consumer installed the tarball with a frozen pnpm 10 reinstall and loaded all
+three subpaths through both ESM and CJS. In a separate throwaway lil.p checkout,
+the contracts and API manifests referenced that tarball rather than the
+workspace package (verified installed symlink); a frozen pnpm 10 install and
+explicit **cms-core → contracts → web** builds passed. The public worktree's
+seven non-e2e `pnpm check:all` gates also passed. None of this proves future
+B6b/D1/D2–D6 exports, hosted auth, full-history clearance or deploy readiness;
+repeat from the final integrated SHA before any private push.
+The redacted Gitleaks scan of this retained rehearsal history reported zero
+findings; author metadata and the later integrated history still need private
+manual review before any push.
+
 ```sh
 # C1: authorized local extraction from an approved, integrated source SHA.
 SOURCE_CHECKOUT=/path/to/approved/local/lilp
