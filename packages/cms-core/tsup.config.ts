@@ -1,3 +1,5 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
@@ -5,6 +7,7 @@ export default defineConfig({
     contracts: 'src/contracts.ts',
     engine: 'src/engine.ts',
     react: 'src/react.ts',
+    'react/server': 'src/react/server.ts',
   },
   format: ['esm', 'cjs'],
   dts: true,
@@ -12,4 +15,11 @@ export default defineConfig({
   minify: true,
   splitting: false,
   external: ['react', 'react-dom', 'zod'],
+  onSuccess: async () => {
+    const file = 'dist/react.cjs';
+    const output = readFileSync(file, 'utf8');
+    if (output.startsWith('"use strict";"use client";')) {
+      writeFileSync(file, `"use client";${output.replace('"use client";', '')}`);
+    }
+  },
 });
