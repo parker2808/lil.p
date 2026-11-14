@@ -419,8 +419,7 @@ describe('CMS golden HTTP contracts', () => {
     ).toEqual([]);
   });
 
-  it('KNOWN BUG baseline: VI-only custom page SEO falls back to EN', async () => {
-    // See docs/specs/2026-11-10-cms-b1-golden-http.md §Observed baseline discrepancies.
+  it('preserves VI-only custom page SEO in both published locales and saved previews', async () => {
     const admin = await adminAgent(app);
     const created = await admin
       .post('/api/admin/pages')
@@ -437,21 +436,30 @@ describe('CMS golden HTTP contracts', () => {
       })
       .expect(200);
     await admin.post('/api/admin/pages/studio-vi/publish').send({}).expect(200);
-    const publicPage = await request(app.getHttpServer())
-      .get('/api/public/pages/studio-vi?locale=vi')
-      .expect(200);
-    expect(publicPage.body).toMatchObject({
-      key: 'studio-vi',
-      seo: { title: null, lang: 'en' },
-    });
-    expect(publicPage.body.blocks.map((block: { type: string }) => block.type)).toEqual([
-      'page-header',
-      'prose',
-    ]);
-    expect(
-      (await admin.get('/api/admin/preview/pages/studio-vi?locale=vi').expect(200)).body
-        .invalidBlocks,
-    ).toEqual([]);
+    for (const locale of ['en', 'vi']) {
+      const publicPage = await request(app.getHttpServer())
+        .get(`/api/public/pages/studio-vi?locale=${locale}`)
+        .expect(200);
+      expect(publicPage.body).toMatchObject({
+        key: 'studio-vi',
+        seo: { title: 'Ghi chú xưởng', lang: 'vi' },
+      });
+      expect(publicPage.body.blocks.map((block: { type: string }) => block.type)).toEqual([
+        'page-header',
+        'prose',
+      ]);
+      const draft = await admin
+        .get(`/api/admin/preview/pages/studio-vi?locale=${locale}`)
+        .expect(200);
+      expect(draft.body).toMatchObject({
+        seo: { title: 'Ghi chú xưởng', lang: 'vi' },
+        invalidBlocks: [],
+      });
+      const saved = await admin
+        .get(`/api/admin/preview/pages/studio-vi?locale=${locale}&version=1`)
+        .expect(200);
+      expect(saved.body.seo).toMatchObject({ title: 'Ghi chú xưởng', lang: 'vi' });
+    }
   });
 
   it('freezes error envelopes, settings, media and auth status/shape', async () => {
