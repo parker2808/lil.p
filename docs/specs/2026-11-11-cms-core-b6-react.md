@@ -2,6 +2,9 @@
 
 ## Main integration gate (2026-11-15)
 
+The later C1 prep #207 moves the size script and adds package-local lint/dependency gates. B6 keeps its four public subpaths, shared React cap and host label contract while adopting the package-local tooling; no private extraction or release is part of this PR.
+On that combined tree, the corrected B6 package export test passes 18/18, package-local dependency checks pass 3/3, frozen install and `check:all` pass 7/7, the shared-lock disposable-MySQL `check:all --e2e` passes 9/9, and clean-build Linux pixel verification passes 14/14 without baseline rewrites.
+
 Main subsequently gained the independent VI-only SEO correction #186; B6 carries its API snapshot mapping and newly updated B1 golden assertion verbatim, without introducing further changes to that contract.
 After that merge, a fresh Node 22 frozen install and `check:all` pass 7/7; the shared-lock disposable-MySQL `check:all --e2e` passes 9/9 (including the corrected golden suite), and clean-build Linux visual verification passes 14/14. No image baselines were rewritten.
 

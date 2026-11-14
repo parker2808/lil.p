@@ -5,9 +5,9 @@ import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const source = join(root, 'packages/cms-core/src');
-const dist = join(root, 'packages/cms-core/dist');
-const packageFile = join(root, 'packages/cms-core/package.json');
+const source = join(root, 'src');
+const dist = join(root, 'dist');
+const packageFile = join(root, 'package.json');
 const caps = { browser: 60 * 1024, react: 35 * 1024 };
 
 export function measure({
