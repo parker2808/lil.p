@@ -43,11 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: pnpm format:check
-      - run: pnpm lint
-      - run: pnpm typecheck
-      - run: pnpm check:content
-      - run: pnpm check:deps
+      - run: pnpm check:all --static
 
   unit:
     runs-on: ubuntu-latest

@@ -1,6 +1,7 @@
 # Lessons
 
 - 2026-11-15: When U2 visual changes meet a later main, keep the clean Vercel build and artifact dependency, combine the route audit with U0's capture-baseline override, and recapture conflicting Linux PNGs from the integrated app on a clean disposable seed.
+- 2026-11-15: CI job parallelism alone does not shorten a long critical-path shard; overlap only independent, read-only static checks with bounded local concurrency and compare actual final-head timings before claiming a wall-time gain.
 
 - 2026-11-14: When a pure engine is wired into a host, preserve the host's exact error mapping and verify compiled adapters inside the already-pruned production image; a passing package CJS smoke alone does not prove runtime integration.
 
