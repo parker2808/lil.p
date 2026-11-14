@@ -364,7 +364,7 @@ export function DataTable<TData>({
                     {header.isPlaceholder ? null : (
                       <button
                         type="button"
-                        className="text-ui-meta inline-flex items-center gap-1"
+                        className="text-ui-meta focus-visible:ring-ring inline-flex min-h-11 min-w-11 items-center gap-1 rounded-md focus-visible:ring-2 focus-visible:outline-none"
                         onClick={header.column.getToggleSortingHandler()}
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}

@@ -2,19 +2,22 @@
 // Pre-PR check: runs the repo checks in order and prints one line per step.
 // Only a failing step prints its output (last 40 lines), to keep agent context small.
 // Usage: pnpm check:all [--e2e] [--no-build]
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 
 const args = new Set(process.argv.slice(2));
-const steps = [
+if (args.has('--static') && args.has('--e2e')) {
+  console.error('--static cannot be combined with --e2e');
+  process.exit(2);
+}
+const parallelSteps = [
   ['format', 'pnpm format:check'],
   ['lint', 'pnpm lint'],
-  ['typecheck', 'pnpm typecheck'],
-  ['test', 'pnpm test'],
-  ['content', 'pnpm check:content'],
-  ['deps', 'pnpm check:deps'],
 ];
-if (!args.has('--no-build')) steps.push(['build', 'pnpm build']);
-if (args.has('--e2e')) {
+const steps = [['typecheck', 'pnpm typecheck']];
+if (!args.has('--static')) steps.push(['test', 'pnpm test']);
+steps.push(['content', 'pnpm check:content'], ['deps', 'pnpm check:deps']);
+if (!args.has('--static') && !args.has('--no-build')) steps.push(['build', 'pnpm build']);
+if (!args.has('--static') && args.has('--e2e')) {
   steps.push([
     'cms-theme-browser',
     'CMS_THEME_BROWSER=1 node --test packages/cms-core/test/theme.test.mjs',
@@ -25,19 +28,45 @@ if (args.has('--e2e')) {
 }
 
 let failed = 0;
-for (const [name, cmd] of steps) {
-  const start = Date.now();
-  const res = spawnSync(cmd, { shell: true, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
+function report(name, cmd, start, res) {
   const secs = ((Date.now() - start) / 1000).toFixed(0);
   if (res.status === 0) {
     console.log(`PASS ${name} (${secs}s)`);
-    continue;
+    return;
   }
   failed += 1;
-  const out = `${res.stdout ?? ''}${res.stderr ?? ''}`.trimEnd().split('\n').slice(-40).join('\n');
+  const out = `${res.stdout ?? ''}${res.stderr ?? ''}${res.error ?? ''}`
+    .trimEnd()
+    .split('\n')
+    .slice(-40)
+    .join('\n');
   console.log(`FAIL ${name} (${secs}s): ${cmd}\n${out}\n`);
 }
+
+const parallelResults = parallelSteps.map(([name, cmd]) => {
+  const start = Date.now();
+  const child = spawn(cmd, { shell: true, stdio: ['ignore', 'pipe', 'pipe'] });
+  let stdout = '';
+  let stderr = '';
+  let error = '';
+  child.stdout.on('data', (chunk) => (stdout += chunk));
+  child.stderr.on('data', (chunk) => (stderr += chunk));
+  child.on('error', (cause) => (error = cause.message));
+  return new Promise((resolve) => {
+    child.on('close', (status) => resolve({ name, cmd, start, status, stdout, stderr, error }));
+  });
+});
+for (const result of await Promise.all(parallelResults)) {
+  report(result.name, result.cmd, result.start, result);
+}
+for (const [name, cmd] of steps) {
+  const start = Date.now();
+  const res = spawnSync(cmd, { shell: true, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
+  report(name, cmd, start, res);
+}
 console.log(
-  failed ? `${failed} of ${steps.length} checks failed` : `All ${steps.length} checks passed`,
+  failed
+    ? `${failed} of ${parallelSteps.length + steps.length} checks failed`
+    : `All ${parallelSteps.length + steps.length} checks passed`,
 );
 process.exit(failed ? 1 : 0);

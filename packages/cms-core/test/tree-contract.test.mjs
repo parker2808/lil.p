@@ -223,6 +223,44 @@ test('publish requires exactly one H1 even for an empty draft', () => {
   );
 });
 
+test('publish requires exactly one effective H1 at every breakpoint', () => {
+  const mobileOnly = {
+    ...heading,
+    responsive: { base: { text: 'Hello', level: 2 }, mobile: { level: 1 } },
+  };
+  assert.equal(readTree(page([mobileOnly])).ok, true);
+  errorCode(page([mobileOnly]), 'HEADING_RULE', undefined, validateTreeForPublish);
+
+  const desktopMissing = {
+    ...heading,
+    responsive: { base: { text: 'Hello', level: 1 }, desktop: { level: 2 } },
+  };
+  errorCode(page([desktopMissing]), 'HEADING_RULE', undefined, validateTreeForPublish);
+
+  const mobileDuplicate = {
+    ...heading,
+    id: 'second',
+    responsive: { base: { text: 'Second', level: 2 }, mobile: { level: 1 } },
+  };
+  errorCode(page([heading, mobileDuplicate]), 'HEADING_RULE', undefined, validateTreeForPublish);
+  assert.equal(
+    validateTreeForPublish(
+      page([heading, { ...mobileDuplicate, responsive: { base: { text: 'Second', level: 2 } } }]),
+    ).ok,
+    true,
+  );
+
+  const roleRegistry = { banner: { props: z.strictObject({ text: z.string() }), role: 'h1' } };
+  const banner = {
+    id: 'banner',
+    type: 'component',
+    componentType: 'banner',
+    responsive: responsive({ text: 'Title' }),
+  };
+  assert.equal(validateTreeForPublish(page([banner]), roleRegistry).ok, true);
+  errorCode(page([banner, heading]), 'HEADING_RULE', roleRegistry, validateTreeForPublish);
+});
+
 test('bounded depth/count/bytes, including multibyte payloads', () => {
   const grid = {
     id: 'grid',

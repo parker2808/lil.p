@@ -1,6 +1,6 @@
 # D integration base — B7 + D1
 
-**Status:** draft integration only. Stack D1 `d21c71d` on B7 `68a388a` without changing the public CMS/API, persistence, snapshots or existing visual routes. No merge to main or deployment.
+**Status:** integrated B7 and D1; merge to main only under the approved per-final-head CI and production health gates. This branch changes no public CMS/API, persistence, snapshots or existing visual routes.
 
 ## Contract
 
@@ -18,4 +18,4 @@
 
 **Rollback:** revert the integration merge on this branch; B7 and D1 source PRs stay unchanged.
 
-**Follow-up integration:** D1 `2b50dbc` now rejects publish of an empty H1-less tree while accepting an empty draft. Merge B7's later design-review head `2307b54` without discarding its axe/44px fixture gates or screenshot provenance. Preserve both documentation histories and regenerate Graphify; no runtime route, database or legacy golden change.
+**Follow-up integration (2026-11-15):** D1 `2b50dbc` rejects publish of an empty H1-less tree while accepting an empty draft. B7's restacked head `d1cd402` now includes current `main`, B6b and the D1 entry, so the D base merges that head rather than replaying older ancestors. Preserve its axe/44px fixture gates, screenshot provenance, package-local checks and D-only documentation; regenerate Graphify. No runtime route, database or legacy golden change.
