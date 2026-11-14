@@ -18,4 +18,4 @@
 
 **Rollback:** revert the integration merge on this branch; B7 and D1 source PRs stay unchanged.
 
-**Follow-up integration:** D1 `2b50dbc` now rejects publish of an empty H1-less tree while accepting an empty draft. Merge B7's later design-review head `2307b54` without discarding its axe/44px fixture gates or screenshot provenance. Preserve both documentation histories and regenerate Graphify; no runtime route, database or legacy golden change.
+**Follow-up integration (2026-11-15):** D1 `2b50dbc` rejects publish of an empty H1-less tree while accepting an empty draft. B7's restacked head `d1cd402` now includes current `main`, B6b and the D1 entry, so the D base merges that head rather than replaying older ancestors. Preserve its axe/44px fixture gates, screenshot provenance, package-local checks and D-only documentation; regenerate Graphify. No runtime route, database or legacy golden change.

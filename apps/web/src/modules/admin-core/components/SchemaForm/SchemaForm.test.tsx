@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import en from '../../../../../i18n/locales/en.json';
+import viMessages from '../../../../../i18n/locales/vi.json';
 
 vi.mock('@/modules/admin-core/components/MarkdownField/MarkdownField', () => ({
   MarkdownField: () => null,
@@ -34,13 +35,13 @@ describe('SchemaForm', () => {
     cleanup();
   });
 
-  it('renders a form for every block type', () => {
-    for (const type of Object.keys(BLOCK_REGISTRY) as (keyof typeof BLOCK_REGISTRY)[]) {
+  it.each(Object.keys(BLOCK_REGISTRY) as (keyof typeof BLOCK_REGISTRY)[])(
+    'renders a form for the %s block',
+    (type) => {
       const view = renderForm(type);
       expect(view.container.querySelector('[data-slot="field"]')).not.toBeNull();
-      view.unmount();
-    }
-  });
+    },
+  );
 
   it('shows a zod message when the English CTA label is empty', async () => {
     renderForm('hero');
@@ -63,6 +64,38 @@ describe('SchemaForm', () => {
       </NextIntlClientProvider>,
     );
     expect(screen.getByText('Server said no')).toBeInTheDocument();
+  });
+
+  it('names both localized fields separately', () => {
+    renderForm('hero');
+    expect(screen.getAllByRole('textbox', { name: /English/ }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('textbox', { name: /Vietnamese/ }).length).toBeGreaterThan(0);
+  });
+
+  it('preserves both localized values while neighboring fields update', async () => {
+    const user = userEvent.setup();
+    renderForm('hero');
+    const english = document.getElementById('primaryCta.label.en') as HTMLInputElement;
+    const vietnamese = document.getElementById('primaryCta.label.vi') as HTMLInputElement;
+    await user.clear(english);
+    await user.type(english, 'Contact me');
+    await user.clear(vietnamese);
+    await user.type(vietnamese, 'Liên hệ');
+    expect(english).toHaveValue('Contact me');
+    expect(vietnamese).toHaveValue('Liên hệ');
+  });
+
+  it('translates distinct accessible names for Vietnamese editors', () => {
+    render(
+      <NextIntlClientProvider locale="vi" messages={viMessages}>
+        <SchemaForm
+          schema={BLOCK_REGISTRY.hero.props}
+          defaultValues={BLOCK_REGISTRY.hero.defaults as Record<string, unknown>}
+        />
+      </NextIntlClientProvider>,
+    );
+    expect(screen.getAllByRole('textbox', { name: /Tiếng Anh/ }).length).toBeGreaterThan(0);
+    expect(screen.getAllByRole('textbox', { name: /Tiếng Việt/ }).length).toBeGreaterThan(0);
   });
 
   it('disables every input when readOnly', () => {
