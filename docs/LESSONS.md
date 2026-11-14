@@ -1,5 +1,9 @@
 # Lessons
 
+- 2026-11-15: ESLint invoked from lint-staged discovers the nearest config separately for root, web and package files; when multiple configs use the TypeScript parser, pin `tsconfigRootDir` in each rather than only in the root config.
+
+- 2026-11-15: A stacked theme merge after package tooling moves must retain the CSS export, build copy, local budget measurement and browser gate together; an automatic main-preferred merge can silently drop all four while leaving the theme source intact.
+
 - 2026-11-15: Package-local C1 tooling moves the measurement entrypoint; update B6's export-test import to the package script instead of retaining a monorepo-root path that breaks standalone extraction.
 
 - 2026-11-15: A full E2E run can leave mutated public ISR output in Next's generated `.next` cache; verify Linux pixel baselines against a fresh build directory and a disposable clean demo seed before changing screenshots.
