@@ -1,6 +1,10 @@
 # Lessons
 
+- 2026-11-15: A bilingual fixture must keep even its registry fallback links within declared locale routes; testing only the generated block path can hide an invalid default.
+
 - 2026-11-15: Restacking a fixture after theme and tree changes must preserve its explicit CI/browser shard and lock-backed visual matrix while keeping core package build/measurement and host adapters independent.
+
+- 2026-11-15: A publish rule for exactly one H1 must count resolved nodes independently per breakpoint; checking whether a heading is H1 at any viewport misses both missing and duplicate headings at specific widths.
 
 - 2026-11-15: When a tree entry joins the theme and C1 package tooling, include its built bytes in the package-local browser cap and exercise tree resolution in both ESM/CJS; auto-merging exports alone does not enforce the cap.
 
@@ -167,8 +171,12 @@
 - 2026-11-03: A screenshot matrix leaves Playwright at its last mobile viewport, so restore desktop width before testing desktop-only header links; assert mobile control boxes directly because one inherited 40px button escaped earlier route checks.
 - 2026-11-03: Record behavior and route changes in the root README in the same PR; this repo keeps current changelog entries in `PROJECT_CONTEXT.md` §9 and reserves `docs/CHANGELOG_ARCHIVE.md` for older history.
 - 2026-11-03: When stacked branches both refresh the tracked Graphify report, regenerate it after merging the base instead of combining generated report lines by hand.
+- 2026-11-10: A `labeled` workflow sharing PR-number concurrency with `opened`/`synchronize` can cancel checks on the same commit; split label-only E2E from code checks and keep stale code-commit cancellation.
+- 2026-11-15: When rebasing a label-only workflow on a new CI job, gate the new job on code events too; preserve the E2E shard's `needs: build-e2e` so download waits for upload finalization.
 - 2026-11-10: Page snapshots omit the original page locale; custom pages with no English SEO title but a Vietnamese title need the draft-preview VI fallback in both public snapshot and version-preview resolution, without changing built-in `pickGroup` behavior.
 - 2026-11-15: After merging B5b, the host-owned published snapshot SEO resolver remains outside the pure engine; update the isolated B1 known-bug golden for EN/VI and version previews instead of changing the engine or unrelated golden contracts.
+- 2026-11-15: A conflicting PR has no merge ref, so its `pull_request` labeled workflow cannot start; reconcile main before using a label event as E2E-path proof.
+- 2026-11-15: During a CI workflow merge, compare the result against current main as well as the branch; an otherwise clean merge can silently drop a new main-only dependency gate.
 - 2026-11-10: Keep CMS HTTP goldens structural and seed-isolated: assert semantic status/code/locale fields, not dynamic IDs, timestamps, cookie values or snapshots; B1 can freeze API behavior before U2/U3 while implementation B remains gated.
 - 2026-11-10: Public SEO resolves a group of localized fields together: a VI title with a missing VI description falls back to EN for both; seed both locales' descriptions when asserting VI SEO and record VI-only custom-page fallback separately.
 - 2026-11-10: A restore/discard HTTP golden must first diverge the draft from the published snapshot, then compare normalized block/SEO state and confirm public content stays fixed; response status alone cannot detect a no-op.

@@ -1,6 +1,6 @@
 # D integration base — B7 + D1
 
-**Status:** draft integration only. Stack D1 `d21c71d` on B7 `68a388a` without changing the public CMS/API, persistence, snapshots or existing visual routes. No merge to main or deployment.
+**Status:** integrated B7 and D1; merge to main only under the approved per-final-head CI and production health gates. This branch changes no public CMS/API, persistence, snapshots or existing visual routes.
 
 ## Contract
 
