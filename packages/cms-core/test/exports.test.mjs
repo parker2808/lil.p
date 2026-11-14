@@ -18,6 +18,11 @@ test('built subpaths resolve independently and only contracts exports runtime va
       assert.equal(typeof required.createRegistry, 'function');
       assert.deepEqual(Object.keys(entry.createRegistry([])), []);
       assert.deepEqual(Object.keys(required.createRegistry([])), []);
+    } else if (subpath === 'engine') {
+      assert.equal(typeof entry.readSnapshot, 'function');
+      assert.equal(typeof required.readSnapshot, 'function');
+      assert.equal(typeof entry.checkPageAllowance, 'function');
+      assert.equal(typeof required.checkPageAllowance, 'function');
     } else {
       assert.deepEqual(Object.keys(entry), []);
       assert.deepEqual(Object.keys(required), []);
