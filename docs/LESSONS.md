@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Restacking a fixture after theme and tree changes must preserve its explicit CI/browser shard and lock-backed visual matrix while keeping core package build/measurement and host adapters independent.
+
 - 2026-11-15: When a tree entry joins the theme and C1 package tooling, include its built bytes in the package-local browser cap and exercise tree resolution in both ESM/CJS; auto-merging exports alone does not enforce the cap.
 
 - 2026-11-15: ESLint invoked from lint-staged discovers the nearest config separately for root, web and package files; when multiple configs use the TypeScript parser, pin `tsconfigRootDir` in each rather than only in the root config.
@@ -181,7 +183,6 @@
 - 2026-11-10: When publishing separate ESM/CJS subpaths, test both import and require for every entry and guard side-effect imports/re-exports, not only named imports.
 - 2026-11-11: A server-rendered React surface cannot consume a client-marked package entry without changing its public boundary; publish and measure a separate server-safe entry, and verify both built formats keep client directives only on client output.
 - 2026-11-11: A pnpm workspace host must declare its core dependency directly even when a sibling package already depends on it; verify Docker copies the package manifest before frozen install and builds its dependency closure before the host.
-- 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
 - 2026-11-11: Generic schema field extraction should require a host-localized label resolver and accept host widget registrations; inferring labels from a fixed English schema property can leak copy into Vietnamese UI.
 - 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
 - 2026-11-11: When merging parallel API packaging and pure engine branches, retain both documentation changes but regenerate Graphify; production CJS smoke must load the compiled host adapter, not just resolve the core subpath.

@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15: B7 #195 restacks on D1 #194 and B6b #193, with a stand-alone Vite fixture consuming core's opt-in theme, React subpaths and host-registered localized controls. Its 80-state browser/visual matrix remains the release gate, while D1 tree validation remains opt-in. No production API, database, migrations, host UI or B1 golden changes.
+
 - 2026-11-15: D1 #194 restacks on B6b #193 and merged B6 #191. Its opt-in tree entry and separate draft/publish validation share the package-local 60 KiB contracts+engine+tree budget; retain the neutral theme export and C1 isolated tooling. B7 acceptance remains a gate; no API, migration, UI or B1 golden change.
 
 - 2026-11-15: B6b #193 restacks on merged B6 #191 and preserves C1 package-local build/dependency gates alongside the opt-in neutral `theme.css` export, its 224-pair browser check and separately reported CSS gzip. Root, web and package ESLint configs pin their parser roots so commit hooks can lint with all three configs present. B7 must consume the theme in its neutral fixture; no host UI, API, database or B1 golden change.
@@ -216,6 +218,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Integrated B7's independent fixture, screenshot/axe gate and workspace lockfile with the theme, D1 tree and C1 package-local tooling; no golden HTTP or production data changes.
 
 - 2026-11-15: Integrated D1's versioned tree export and strict bounded validator with B6b neutral CSS and package-local C1 build/measurement; preserved independent ESM/CJS smoke and 60/35 KiB JS caps.
 
