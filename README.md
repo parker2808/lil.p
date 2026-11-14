@@ -69,6 +69,11 @@ Vercel's repository-owned build command builds the CMS-core dependency before
 contracts' declaration output and then the web app. The `vercel-build` CI job
 reproduces that command without prebuilt core artifacts.
 
+The opt-in CMS tree publish validator requires exactly one effective H1 at each
+mobile, tablet and desktop breakpoint; draft validation permits incomplete headings.
+The standalone fixture's default homepage action points to `/en/components`;
+sampled EN/VI pages resolve their own locale-prefixed component links.
+
 ### Public site
 
 The EN/VI home, projects, notes, about, and contact routes share the round 3 public shell and index styling. They continue to read CMS content through the public API; project and note filters stay in the URL across reloads, and the contact form keeps its server submission. `/[locale]/craft` is a localized, static interaction study linked from the public header. Its presentation and the index styles are scoped to public routes, so project and note details and admin screens keep their own layouts. See the [R3-05 spec](./docs/specs/2026-11-03-r3-05-public-shell-indexes.md) for the route, accessibility, and capture checks.
@@ -114,6 +119,15 @@ The [CMS B1 golden HTTP suite](./docs/specs/2026-11-10-cms-b1-golden-http.md) fr
 
 [CMS B4 contracts and registry](./docs/specs/2026-11-10-cms-b4-contracts-registry.md) moves generic locale/page/block/snapshot contracts, `defineBlock`, duplicate-rejecting `createRegistry` and page allowance into `./contracts`, with all 20 definitions and their copy still [host-owned](./packages/contracts/README.md). Every core subpath supports ESM and CJS; React 19, React DOM 19 and Zod 4 remain declared, externalized peers. Browser gzip measures 864 bytes contracts+engine against 60 KiB and 34 bytes React against 35 KiB. Existing API contracts, locale behavior and the admin table Shortcuts dialog stay unchanged; B6 follows B4 approval, D follows B7.
 
+[CMS B6 React extraction](./docs/specs/2026-11-11-cms-core-b6-react.md) adds a server-safe `./react/server` subpath for public block dispatch and a separate client-marked `./react` subpath for schema fields and host-supplied widget controls. The web adapter retains its 20 portfolio components, section wrappers, error boundaries, TanStack form, EN/VI copy and theme styling. It registers portfolio widget mappings and provides required translated field labels; core has neither portfolio widget names nor an English label fallback. The public renderer does not import the inspector or widget code; no builder, storage, API contract or page content changes in B6. Both React entry sizes share the original 35 KiB gzip cap. The web Docker build copies the core manifest before frozen install and builds the contracts dependency closure before Next.
+[CMS D1 versioned tree](./docs/specs/2026-11-11-cms-d1-versioned-tree.md) adds a pure `./tree` ESM/CJS/types subpath for bounded, strictly validated page→section→row/grid/column→component documents. `readTree` accepts structurally valid incomplete drafts, including empty pages; `validateTreeForPublish` requires exactly one H1 at each breakpoint even on otherwise empty pages, plus registered required content before publishing. It exports v0→v1 migration, breakpoint prop resolution, starter schemas and an opt-in lossless legacy snapshot converter. D1 changes no API, page data, migrations, EN/VI UI or B1 goldens; its bundle counts toward the unchanged 60 KiB contracts+engine+tree cap.
+
+[CMS B6b neutral theme](./docs/specs/2026-11-11-cms-b6b-core-theme.md) adds opt-in `@parker2808/cms-core/theme.css`: scoped light/dark tokens and reusable surface/control states, including success/warning/danger/info feedback borders, with token-only host overrides. The required Chromium gate checks 224 computed WCAG AA pairs at desktop/mobile widths in both themes; it fails if Chromium is unavailable. The portfolio does not import this CSS, so existing visuals, API and B1 goldens remain unchanged. CSS gzip is measured separately from JS budgets.
+
+[CMS B7 neutral fixture](./docs/specs/2026-11-11-cms-core-b7-fixture.md) adds an independent React/Vite consumer in [`examples/cms-core-fixture`](./examples/cms-core-fixture/README.md). It exercises EN/VI public and in-memory editor flows, legacy/unknown snapshots and the core-owned light/dark theme with token-only host overrides. Its Playwright route/contrast and visual matrix runs under the shared E2E lock; it does not save to production or alter the portfolio API, UI or B1 goldens.
+[D integration base](./docs/specs/2026-11-11-cms-d-integration-base.md) records the reviewed B7 fixture and opt-in D1 tree together for downstream D work. It changes no production API, page data or B1 golden contract.
+
+On the combined B5/B6 tree, both the API engine and web React adapters consume their own direct CMS-core dependencies. The merged ESM/CJS bundle gate measures 2,433/61,440 B for contracts+engine and 1,621/35,840 B for the two React entries; the B1 golden HTTP contracts are unchanged.
 [CMS B5 pure engine](./docs/specs/2026-11-11-cms-b5-pure-engine.md), accepted at `71e9ce4`, introduced host-injected page policy, stable block ordering, strict snapshot/version checks and typed host ports in `./engine`. The [B5 snapshot review](./docs/specs/2026-11-11-cms-b5-snapshot-review.md) rejects unsupported root versions and unknown fields before Zod can strip them; older/current block versions remain readable. B5 alone left the Nest adapter unwired pending a direct API dependency. [B5b Nest wiring](./docs/specs/2026-11-11-cms-b5b-nest-engine-wiring.md) integrates those helpers through host-owned exception and snapshot adapters after the accepted #189 packaging prerequisite, retaining legacy missing-SEO compatibility for preview and restore. The restacked core measures 2,433/61,440 B gzip contracts+engine and 34/35,840 B React. Existing API/EN–VI HTTP behavior and B1 goldens remain unchanged; unsafe restore refuses to delete blocks. B6 owns React separately and D waits for B7.
 
 B5b's restore reader fills **absent** legacy SEO keys but rejects an explicitly present `seo: null` as `400 INVALID_BLOCKS` before deleting blocks or writing audit. The published historical read/EN–VI preview path remains unchanged; see the P2 follow-up in the [B5b spec](./docs/specs/2026-11-11-cms-b5b-nest-engine-wiring.md).
@@ -275,6 +289,7 @@ Live hosting is **Vercel (web) + Render (API) + TiDB Cloud (MySQL) + Cloudinary 
 ### How a change reaches production
 
 1. Open a PR (or push) to `main`. CI runs format, lint, typecheck, tests, content checks, build, and API e2e.
+   On a PR without `ready-e2e`, API/web E2E is skipped. Adding that label later starts E2E-only CI without cancelling the original code-check run; further code pushes still cancel stale code-check runs. Unrelated labels do not rerun expensive checks.
 2. Vercel and Render auto-deploy `main`.
 3. On boot, the API image runs `prisma migrate deploy` — it applies committed migrations only, never creates new ones, never resets data.
 

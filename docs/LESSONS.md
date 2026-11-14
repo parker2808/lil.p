@@ -3,6 +3,24 @@
 - 2026-11-15: Moving a bundle measurement script inside an extractable package also requires repointing test imports; run the package dependency guard, unit tests and browser theme job against the combined tree.
 - 2026-11-15: An integration merge can land U2's Radix topic picker before the contact-hydration PR; keep the accessible Select and its empty sentinel while holding scripts to assert pre-hydration name/email/message and exactly one client POST.
 
+- 2026-11-15: A bilingual fixture must keep even its registry fallback links within declared locale routes; testing only the generated block path can hide an invalid default.
+
+- 2026-11-15: Restacking a fixture after theme and tree changes must preserve its explicit CI/browser shard and lock-backed visual matrix while keeping core package build/measurement and host adapters independent.
+
+- 2026-11-15: A publish rule for exactly one H1 must count resolved nodes independently per breakpoint; checking whether a heading is H1 at any viewport misses both missing and duplicate headings at specific widths.
+
+- 2026-11-15: When a tree entry joins the theme and C1 package tooling, include its built bytes in the package-local browser cap and exercise tree resolution in both ESM/CJS; auto-merging exports alone does not enforce the cap.
+
+- 2026-11-15: ESLint invoked from lint-staged discovers the nearest config separately for root, web and package files; when multiple configs use the TypeScript parser, pin `tsconfigRootDir` in each rather than only in the root config.
+
+- 2026-11-15: A stacked theme merge after package tooling moves must retain the CSS export, build copy, local budget measurement and browser gate together; an automatic main-preferred merge can silently drop all four while leaving the theme source intact.
+
+- 2026-11-15: Package-local C1 tooling moves the measurement entrypoint; update B6's export-test import to the package script instead of retaining a monorepo-root path that breaks standalone extraction.
+
+- 2026-11-15: A full E2E run can leave mutated public ISR output in Next's generated `.next` cache; verify Linux pixel baselines against a fresh build directory and a disposable clean demo seed before changing screenshots.
+
+- 2026-11-15: Merging B6 React extraction onto B5b and U1 requires preserving the engine exports and labelled localized controls alongside headless form dispatch; regenerate the core bundle and graph from the combined tree.
+
 - 2026-11-15: When parallel branches both regenerate Graphify reports, resolve the generated-report conflict by rebuilding from the combined tree rather than mixing incompatible community sections.
 - 2026-11-15: A monorepo-only dependency guard disappears in a path-filtered package repository; add a package-local manifest/import boundary check and run it explicitly in CI before extraction.
 - 2026-11-15: An extraction-ready workspace package must carry its own build/lint/test tools, while its frozen standalone lockfile is generated from the filtered package tree rather than copied from the monorepo root.
@@ -155,8 +173,12 @@
 - 2026-11-03: A screenshot matrix leaves Playwright at its last mobile viewport, so restore desktop width before testing desktop-only header links; assert mobile control boxes directly because one inherited 40px button escaped earlier route checks.
 - 2026-11-03: Record behavior and route changes in the root README in the same PR; this repo keeps current changelog entries in `PROJECT_CONTEXT.md` §9 and reserves `docs/CHANGELOG_ARCHIVE.md` for older history.
 - 2026-11-03: When stacked branches both refresh the tracked Graphify report, regenerate it after merging the base instead of combining generated report lines by hand.
+- 2026-11-10: A `labeled` workflow sharing PR-number concurrency with `opened`/`synchronize` can cancel checks on the same commit; split label-only E2E from code checks and keep stale code-commit cancellation.
+- 2026-11-15: When rebasing a label-only workflow on a new CI job, gate the new job on code events too; preserve the E2E shard's `needs: build-e2e` so download waits for upload finalization.
 - 2026-11-10: Page snapshots omit the original page locale; custom pages with no English SEO title but a Vietnamese title need the draft-preview VI fallback in both public snapshot and version-preview resolution, without changing built-in `pickGroup` behavior.
 - 2026-11-15: After merging B5b, the host-owned published snapshot SEO resolver remains outside the pure engine; update the isolated B1 known-bug golden for EN/VI and version previews instead of changing the engine or unrelated golden contracts.
+- 2026-11-15: A conflicting PR has no merge ref, so its `pull_request` labeled workflow cannot start; reconcile main before using a label event as E2E-path proof.
+- 2026-11-15: During a CI workflow merge, compare the result against current main as well as the branch; an otherwise clean merge can silently drop a new main-only dependency gate.
 - 2026-11-10: Keep CMS HTTP goldens structural and seed-isolated: assert semantic status/code/locale fields, not dynamic IDs, timestamps, cookie values or snapshots; B1 can freeze API behavior before U2/U3 while implementation B remains gated.
 - 2026-11-10: Public SEO resolves a group of localized fields together: a VI title with a missing VI description falls back to EN for both; seed both locales' descriptions when asserting VI SEO and record VI-only custom-page fallback separately.
 - 2026-11-10: A restore/discard HTTP golden must first diverge the draft from the published snapshot, then compare normalized block/SEO state and confirm public content stays fixed; response status alone cannot detect a no-op.
@@ -169,6 +191,13 @@
 - 2026-11-10: A sharded E2E archive must carry the transitive workspace package's `dist/`, not just the host and app bundles; otherwise the test runner's fresh checkout resolves the symlink but has no built subpath target.
 - 2026-11-10: A pre-existing contrast ratio of 4.49:1 can fail macOS axe even when unrelated CMS contracts are the only runtime change; record the exact colors, affected test and platform rather than masking the failure or changing out-of-scope UI.
 - 2026-11-10: When publishing separate ESM/CJS subpaths, test both import and require for every entry and guard side-effect imports/re-exports, not only named imports.
+- 2026-11-11: A server-rendered React surface cannot consume a client-marked package entry without changing its public boundary; publish and measure a separate server-safe entry, and verify both built formats keep client directives only on client output.
+- 2026-11-11: A pnpm workspace host must declare its core dependency directly even when a sibling package already depends on it; verify Docker copies the package manifest before frozen install and builds its dependency closure before the host.
+- 2026-11-11: Generic schema field extraction should require a host-localized label resolver and accept host widget registrations; inferring labels from a fixed English schema property can leak copy into Vietnamese UI.
+- 2026-11-15: A stacked D integration branch may merge its restacked B7 base cleanly in code while conflicting throughout accumulated documentation; preserve current base facts and D-only acceptance details, then regenerate Graphify instead of selecting a historical report.
+- 2026-11-11: A tree converter can keep unknown legacy block types losslessly only by carrying the entire validated JSON block as opaque data rather than reparsing it into the registered builder component shape; gate builder use separately from opt-in conversion.
+- 2026-11-11: Validate untrusted tree depth/count iteratively before recursive Zod parsing; keep incomplete draft validation separate from publish-only H1/required-component policy and ensure slot rules leave room for content at the deepest allowed layout.
+- 2026-11-11: Check exactly-one-H1 for every publish attempt, including a zero-component tree; draft permissiveness must not bypass publish policy.
 - 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
 - 2026-11-11: When merging parallel API packaging and pure engine branches, retain both documentation changes but regenerate Graphify; production CJS smoke must load the compiled host adapter, not just resolve the core subpath.
 - 2026-11-11: In a legacy snapshot compatibility reader, `?? {}` conflates an absent SEO object with an explicitly persisted null; check property presence before filling only absent keys, then reject malformed supplied data before transaction writes.
