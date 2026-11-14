@@ -81,6 +81,14 @@ export function resolveResponsive(
   return { ...props.base, ...props[breakpoint] };
 }
 
+export function hasStableHeadingLevel(props: ResponsiveProps): boolean {
+  const mobileLevel = resolveResponsive(props, 'mobile').level;
+  return (
+    resolveResponsive(props, 'tablet').level === mobileLevel &&
+    resolveResponsive(props, 'desktop').level === mobileLevel
+  );
+}
+
 export function serializedBytes(value: unknown): number | undefined {
   try {
     const json = JSON.stringify(value);
@@ -231,6 +239,8 @@ export function validateTreeForPublish(
   while (stack.length) {
     const node = stack.pop()!;
     if (node.type === 'component') {
+      if (node.componentType === 'heading' && !hasStableHeadingLevel(node.responsive))
+        return { ok: false, code: 'HEADING_RULE', input, nodeId: node.id };
       builderComponents += 1;
       present.add(node.componentType);
       for (const breakpoint of ['mobile', 'tablet', 'desktop'] as const) {
