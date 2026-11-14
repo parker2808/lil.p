@@ -1,0 +1,23 @@
+.cms-core[data-brand='lilp'] {
+  --builder-accent: #a94623;
+  --builder-accent-text: #fff;
+  --builder-accent-soft: #fff0e8;
+  --builder-focus: #a94623;
+  --builder-selection: #a94623;
+  --builder-drop: #a94623;
+  --builder-success: #146749;
+  --builder-art: #e5f0df;
+  --builder-art-ink: #24684b;
+}
+
+:where([data-theme='dark']) .cms-core[data-brand='lilp'] {
+  --builder-accent: #ffb694;
+  --builder-accent-text: #312019;
+  --builder-accent-soft: #473026;
+  --builder-focus: #ffb694;
+  --builder-selection: #ffb694;
+  --builder-drop: #ffb694;
+  --builder-success: #9bdfb2;
+  --builder-art: #293c32;
+  --builder-art-ink: #a8dfb7;
+}

@@ -1,0 +1,20 @@
+{
+  "seo": {
+    "seoTitleEn": "A quiet page",
+    "seoTitleVi": "Một trang tĩnh lặng",
+    "seoDescriptionEn": "Sample",
+    "seoDescriptionVi": "Bản mẫu"
+  },
+  "blocks": [
+    {
+      "type": "paragraph",
+      "key": "paragraph-1",
+      "schemaVersion": 1,
+      "props": { "body": { "en": "New text", "vi": "Văn bản mới" } },
+      "layout": "ONE",
+      "surface": "PLAIN",
+      "isVisible": true,
+      "sortOrder": 0
+    }
+  ]
+}

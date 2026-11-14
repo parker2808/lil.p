@@ -24,6 +24,7 @@ if (!args.has('--static') && args.has('--e2e')) {
   ]);
   steps.push(['api-e2e', 'pnpm --filter @portfolio/api test:e2e']);
   steps.push(['web-e2e', 'pnpm --filter @portfolio/web test:e2e']);
+  steps.push(['fixture-e2e', 'pnpm --filter @parker2808/cms-core-fixture test:e2e']);
 }
 
 let failed = 0;
