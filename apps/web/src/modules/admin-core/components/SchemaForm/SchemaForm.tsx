@@ -143,7 +143,6 @@ function SchemaFieldControl({
   editorLabels,
   previewLabels,
   widgetLabels,
-  localeLabels,
   onChange,
 }: {
   field: SchemaField;
@@ -156,7 +155,6 @@ function SchemaFieldControl({
   editorLabels: ReturnType<typeof editorLabelsFromMessages>;
   previewLabels: PreviewLabels;
   widgetLabels: WidgetLabels;
-  localeLabels: { en: string; vi: string };
   onChange: (value: unknown) => void;
 }) {
   return (

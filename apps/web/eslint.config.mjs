@@ -8,6 +8,11 @@ export default defineConfig([
   ...nextVitals,
   ...nextTs,
   {
+    languageOptions: {
+      parserOptions: { tsconfigRootDir: import.meta.dirname },
+    },
+  },
+  {
     files: [
       'app/**/*.{js,jsx,ts,tsx}',
       'src/modules/**/components/**/*.{js,jsx,ts,tsx}',
