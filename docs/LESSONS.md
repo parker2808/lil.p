@@ -1,5 +1,9 @@
 # Lessons
 
+- 2026-11-15: A focused stacked-editor rehearsal should test both saved hard reload and an interrupted PUT: the former proves server persistence, while the latter proves local recovery keeps unsaved content until explicit restoration. A browser unload guard can be conditional on recovery storage failure, so report that narrower guarantee instead of claiming every dirty navigation is blocked.
+
+- 2026-11-15: An explicit Playwright spec allowlist can make a focused browser command report green while silently discovering fewer files than requested; check the discovered test count and register each scratch integration spec before treating the journey as verified.
+
 - 2026-11-11: A pure tree editor must receive every host component schema explicitly, including during autosave and history replay; a passing neutral starter-schema test cannot prove portfolio-wide property safety or HTTP renderability.
 - 2026-11-11: A concurrent builder-to-legacy restore must stop autosave with local edits intact; reloading a remote builder tree needs explicit discard acknowledgement, never implicit revision substitution.
 

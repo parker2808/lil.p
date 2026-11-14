@@ -87,7 +87,7 @@ The all-20 D6 live route gate passes on disposable MySQL in both locales; the co
 
 The [partial D6 live-route manifest](./docs/specs/2026-11-14-cms-d6-live-route-evidence.md) separates verified route behavior from blocked editor, visual and migration release gates.
 
-The D6 all-20 browser spec runs last on an existing web E2E shard; adding it does not reshuffle earlier tests or contaminate visual baselines with newly published test pages.
+The D6 all-20 browser spec runs last on an existing web E2E shard; adding it does not reshuffle earlier tests or contaminate visual baselines with newly published test pages. A throwaway D4+D5+D6 scratch merge passes non-browser checks (8/8), the all-20 live route case (1/1) and focused editor autosave/reload, navigation-failure guard and restore cases (3/3) on disposable MySQL. Full J01–J09, all-20 editor interaction, visual/a11y and migration release gates remain blocked in the D6 evidence manifest.
 
 ### Real content seed verification
 
