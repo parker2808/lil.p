@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- CMS #201 integration CI follow-up (2026-11-15): the merged C1 package-local measurement script must also be imported locally by React/theme tests; root-relative imports fail both standalone dependency scanning and the Linux unit/theme-browser jobs. The package boundary and bundle caps remain unchanged.
 - Contact hydration (#201 on integrated U2): SSR name/email/message values survive hydration and synchronize with form state at mount; a locked browser regression holds scripts, enters all three fields, then verifies one client POST. U2's optional topic Select and empty-topic behavior remain intact. No CMS golden, API, DB, or locale text changes; see `docs/specs/2026-11-11-contact-hydration-readiness.md`.
 - CMS C1 prep conflict refresh (2026-11-15): merged current main `0cf481a` (#186 VI-only SEO fix) into #207, retaining the package-local dependency boundary and the host's corrected golden test. Regenerated the code graph after reconciling its report; the standalone extraction proof remains from the prior head, and final integrated extraction still waits for the later exports and history/license audit.
 - CMS C1 prep main refresh (2026-11-15): merged main `bdfaaf8` (U2/static CI), added a package-local dependency-boundary check with focused tests, and wired it into the existing CI static job. A scratch local-bare `subtree split` of `882668f` produced 20 files at `89160f4`; frozen Node 22/pnpm 10 standalone install, dependency gate (3/3), lint, types, build and core unit tests (13/13) pass, with a 15-file pack and redacted Gitleaks history scan reporting zero findings. A second scratch lil.p checkout installs the tarball for contracts/API and builds core → contracts → web; the original three ESM/CJS subpaths resolve. `git filter-repo` is unavailable; main still lacks B6b theme, D1 tree and B6 React/server exports. Final integrated extraction, sensitive-history/metadata/license audit and private repo authorization remain blocked gates. No runtime or golden-contract change.
@@ -200,6 +201,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Point CMS React/theme tests to the package-local bundle measurement script after integrating C1 prep into #201; preserve the existing measurement assertions and contact hydration behavior.
 
 - 2026-11-15: Reconciled contact hydration readiness (#201, covering #183) with merged U2: kept the shared topic Select and optional-empty payload, restored the stronger pre-hydration name/email/message and one-POST regression, and retained the CMS core/tree integration without changing goldens.
 - 2026-11-15: Reconciled #207 with main's VI-only SEO correction without changing the CMS core boundary gate or package exports; refreshed the generated code graph and repeated package checks on Node 22.

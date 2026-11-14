@@ -5,7 +5,7 @@ import process from 'node:process';
 import { test } from 'node:test';
 import { URL } from 'node:url';
 
-import { measure } from '../../../scripts/measure-cms-core.mjs';
+import { measure } from '../scripts/measure-cms-core.mjs';
 
 const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const theme = readFileSync(new URL('../dist/theme.css', import.meta.url), 'utf8');
