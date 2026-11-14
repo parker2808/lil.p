@@ -2,6 +2,8 @@
 
 - 2026-11-15: Restacking a fixture after theme and tree changes must preserve its explicit CI/browser shard and lock-backed visual matrix while keeping core package build/measurement and host adapters independent.
 
+- 2026-11-15: A publish rule for exactly one H1 must count resolved nodes independently per breakpoint; checking whether a heading is H1 at any viewport misses both missing and duplicate headings at specific widths.
+
 - 2026-11-15: When a tree entry joins the theme and C1 package tooling, include its built bytes in the package-local browser cap and exercise tree resolution in both ESM/CJS; auto-merging exports alone does not enforce the cap.
 
 - 2026-11-15: ESLint invoked from lint-staged discovers the nearest config separately for root, web and package files; when multiple configs use the TypeScript parser, pin `tsconfigRootDir` in each rather than only in the root config.
