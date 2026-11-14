@@ -76,6 +76,8 @@ mobile, tablet and desktop breakpoint; draft validation permits incomplete headi
 The standalone fixture's default homepage action points to `/en/components`;
 sampled EN/VI pages resolve their own locale-prefixed component links.
 
+[CMS D3 shared SSR renderer](./docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md) adds opt-in `renderTree` to the core's server-only React entry. Breakpoint-specific row spans and one semantic heading per node are covered by a required browser matrix; heading levels must stay stable across breakpoints at publish/SSR, while drafts may vary. Host `components.heading` overrides return a typed failure. Existing routes remain legacy until D2 authorizes tree dispatch and publish validation; D6 owns route parity.
+
 ### Public site
 
 The EN/VI home, projects, notes, about, and contact routes share the round 3 public shell and index styling. They continue to read CMS content through the public API; project and note filters stay in the URL across reloads, and the contact form keeps its server submission. `/[locale]/craft` is a localized, static interaction study linked from the public header. Its presentation and the index styles are scoped to public routes, so project and note details and admin screens keep their own layouts. See the [R3-05 spec](./docs/specs/2026-11-03-r3-05-public-shell-indexes.md) for the route, accessibility, and capture checks.

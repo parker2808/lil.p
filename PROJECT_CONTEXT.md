@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- CMS D3 integration (2026-11-15): the opt-in `./react/server` tree renderer shares bounded draft validation for SSR and preview, renders a localized typed fallback for unknown or future trees, and leaves legacy routes as default pending D2 dispatch and D6 route parity. Breakpoint-specific row spans and one semantic heading per node are browser-gated; host `components.heading` overrides return typed `RENDER_FAILED`. Heading levels must stay stable at mobile/tablet/desktop for publish and SSR; drafts may still vary. See `docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md`.
 - 2026-11-15 #203 live reconciliation: main now includes #188, #207, #191, #193, #194, #195, #196 and #201 after #206/#179/#186. The remaining ordered candidates are #197 → #198 → #200 → #204 → #199 → #202, conditional on reviewed final heads and the D2 migration gate. #204 currently carries D2 migration ancestry, so it cannot precede #199 without an owner-controlled restack removing that ancestry. #178 remains an independent static study pending its own disposition; #173/#183 are superseded by #176/#201. Docs only; no migration, browser, DB, deployment or E2E in this branch.
 - 2026-11-15 stack reconciliation: #206 `54eb889`, #179 `bdfaaf8` and #186 `0cf481a` are merged. Earlier planned positions for #178/#191 have been superseded by main's actual merge history. Documentation only; no authored code, migration or local E2E.
 - 2026-11-15 stack update: #206 merged as `54eb889` immediately after #192. Static CI throughput changes leave the clean Vercel build and E2E aggregate intact; #188 later merged independently after label-trigger workflow reconciliation. #204 carries D2's migration in its ancestry: remove it from any pre-verification merge candidate or defer until the D2 gate passes.
@@ -233,6 +234,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Corrected D3's browser matrix to assert the one visible heading span at each viewport rather than `textContent()` of the entire H1, which includes hidden responsive spans; locked local 390/768/1440 browser test passes.
+- 2026-11-15: Rejected breakpoint-changing heading levels in the publish and SSR contracts so a single heading tag cannot turn a valid mobile/desktop H1 swap into two H1 elements; draft reading remains permissive. Added 390/768/1440 browser assertions.
+- 2026-11-15: Integrated the D3 opt-in SSR tree renderer with main's D1 publish rules and C1 package-local measurement; kept legacy route dispatch, host-owned headings safety and existing golden contracts unchanged. Added the computed responsive matrix to shard-1 CI and locked local E2E.
 - 2026-11-15: Reconciled #203 with main through #201; updated the live ordered ledger, retained both documentation histories, and regenerated Graphify. No authored runtime code, migration or E2E.
 - 2026-11-15: Reconciled #203 with merged #179/#186, preserving U2, VI-only SEO, and documentation histories. Updated the ordered ledger and regenerated Graphify; no authored code or E2E work.
 - 2026-11-15: Updated the CMS stack ledger after #206 merged as `54eb889`; #188 required a final-head workflow reconciliation, and #204 could not carry D2's migration into main ahead of the verification gate. Documentation only.

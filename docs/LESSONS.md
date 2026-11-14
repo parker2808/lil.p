@@ -1,5 +1,10 @@
 # Lessons
 
+- 2026-11-15: DOM `textContent()` includes display-none responsive heading variants, so a viewport regression must assert the single CSS-visible variant (and heading count) instead of comparing the whole heading's raw text.
+- 2026-11-15: Per-breakpoint H1 counting alone is insufficient for a one-element SSR heading renderer: reject responsive level changes at publish and render time, but continue allowing incomplete draft editing; assert the visible heading at mobile, tablet and desktop.
+- 2026-11-15: Integrating a server-only CMS tree renderer after package tooling moved requires updating its measurement import to the package-local script and gating computed breakpoint behavior in both CI and local E2E. Preserve legacy route dispatch until the D2 snapshot contract is wired.
+
+- 2026-11-11: A server renderer's semantic invariant must include host extension points; routing built-ins through a single-heading path is insufficient if a host override can still create breakpoint-specific H1 elements.
 - 2026-11-15: When a docs branch meets independently merged UI, SEO, core and contact fixes, preserve distinct README/context/lesson histories, deduplicate inherited entries, and regenerate Graphify rather than combining generated-report conflicts.
 - 2026-11-15: A feature PR can carry an additive migration through an ancestor branch even when its own UI diff does not edit Prisma; check full PR ancestry before scheduling a migration-last merge.
 - 2026-11-15: Keep the live stack ledger separate from dated historical snapshots; update merged SHAs and the final-head gate after every main integration without rewriting prior evidence.
