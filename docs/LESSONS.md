@@ -1,5 +1,12 @@
 # Lessons
 
+- 2026-11-15: Package-local C1 tooling moves the measurement entrypoint; update B6's export-test import to the package script instead of retaining a monorepo-root path that breaks standalone extraction.
+
+- 2026-11-15: A full E2E run can leave mutated public ISR output in Next's generated `.next` cache; verify Linux pixel baselines against a fresh build directory and a disposable clean demo seed before changing screenshots.
+
+- 2026-11-15: Merging B6 React extraction onto B5b and U1 requires preserving the engine exports and labelled localized controls alongside headless form dispatch; regenerate the core bundle and graph from the combined tree.
+
+- 2026-11-10: A bundle budget that excludes peers must validate the package's peer declarations; externalizing imports in tsup alone does not guarantee a valid consumer contract.
 - 2026-11-15: When parallel branches both regenerate Graphify reports, resolve the generated-report conflict by rebuilding from the combined tree rather than mixing incompatible community sections.
 - 2026-11-15: A monorepo-only dependency guard disappears in a path-filtered package repository; add a package-local manifest/import boundary check and run it explicitly in CI before extraction.
 - 2026-11-15: An extraction-ready workspace package must carry its own build/lint/test tools, while its frozen standalone lockfile is generated from the filtered package tree rather than copied from the monorepo root.
@@ -166,6 +173,9 @@
 - 2026-11-10: A sharded E2E archive must carry the transitive workspace package's `dist/`, not just the host and app bundles; otherwise the test runner's fresh checkout resolves the symlink but has no built subpath target.
 - 2026-11-10: A pre-existing contrast ratio of 4.49:1 can fail macOS axe even when unrelated CMS contracts are the only runtime change; record the exact colors, affected test and platform rather than masking the failure or changing out-of-scope UI.
 - 2026-11-10: When publishing separate ESM/CJS subpaths, test both import and require for every entry and guard side-effect imports/re-exports, not only named imports.
+- 2026-11-11: A server-rendered React surface cannot consume a client-marked package entry without changing its public boundary; publish and measure a separate server-safe entry, and verify both built formats keep client directives only on client output.
+- 2026-11-11: A pnpm workspace host must declare its core dependency directly even when a sibling package already depends on it; verify Docker copies the package manifest before frozen install and builds its dependency closure before the host.
+- 2026-11-11: Generic schema field extraction should require a host-localized label resolver and accept host widget registrations; inferring labels from a fixed English schema property can leak copy into Vietnamese UI.
 - 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
 - 2026-11-11: When merging parallel API packaging and pure engine branches, retain both documentation changes but regenerate Graphify; production CJS smoke must load the compiled host adapter, not just resolve the core subpath.
 - 2026-11-11: In a legacy snapshot compatibility reader, `?? {}` conflates an absent SEO object with an explicitly persisted null; check property presence before filling only absent keys, then reject malformed supplied data before transaction writes.

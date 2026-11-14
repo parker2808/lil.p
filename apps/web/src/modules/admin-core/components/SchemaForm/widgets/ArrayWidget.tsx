@@ -28,7 +28,7 @@ export function ArrayWidget({ field, value, readOnly, onChange, labels }: Scalar
     onChange(copy);
   }
 
-  if (field.kind === 'projects' || field.kind === 'stats') {
+  if (field.widget === 'projectIds' || field.widget === 'statIds') {
     return (
       <Input
         id={field.path}
