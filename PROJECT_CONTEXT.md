@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- CI label hygiene: `ready-e2e` added just after PR creation previously cancelled the same-head code-check workflow because `labeled` shared its concurrency group. Split label-triggered E2E from code checks; verify the new behavior on a draft PR. A label added after creation still generates a separate E2E-only run, and later code pushes continue cancelling stale code runs. After #206, label events must also skip the clean `vercel-build` check while code events retain it; web E2E shards still wait for the finalized build artifact. Lock-holder validation of the `ready-e2e` label path remains outstanding.
 - 2026-11-15: C1 prep #207 is now part of B6 #191's main ancestry: preserve its package-local eslint, dependency and moved measurement gates while measuring both React subpaths under the unchanged cap. Its standalone extraction remains out of scope for B6.
 
 - 2026-11-15: B6 #191 folds in main's VI-only SEO fix #186 without altering its new golden expectation or production snapshot mapping; this is upstream behavior, not B6's contract change. Final-head verification includes the updated golden suite.
@@ -214,6 +215,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Reconciled label-triggered CI with merged #206: code events keep the bounded parallel static checks, clean Vercel build and all required checks; label events run only `ready-e2e` E2E jobs, with shards dependent on the finalized build artifact. Lock-holder validation of that label event is pending.
+- 2026-11-10: Isolated `ready-e2e` label-triggered CI into its own concurrency lane and E2E-only jobs, retaining cancellation of superseded code runs; unrelated labels no longer rerun code or E2E jobs.
 - 2026-11-15: Reconciled C1 package-local tooling and pack allowlist with the B6 React server export and combined gzip measurement; no private release or golden changes.
 
 - 2026-11-15: Incorporated main's separate VI-only custom-page SEO correction and golden assertion into the B6 merge head without changing their expected values or scope.
