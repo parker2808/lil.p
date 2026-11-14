@@ -11,6 +11,7 @@ export default defineConfig({
     'cms-builder-canvas.spec.ts',
     'cms-builder-keyboard.spec.ts',
     'cms-builder-d5-ui.spec.ts',
+    'cms-builder-d5-design.spec.ts',
   ],
   globalSetup: resolve(import.meta.dirname, '../../../../e2e/global-setup.ts'),
   webServer: (Array.isArray(shared.webServer)

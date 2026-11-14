@@ -61,6 +61,7 @@ export const SPECS = [
   'copy-email.spec.ts',
   'public-details-states.spec.ts',
   'cms-builder-d5-ui.spec.ts',
+  'cms-builder-d5-design.spec.ts',
 ] as const;
 
 /** Specs that must run together in shard 1 (pixel baselines, Lighthouse scores). */
