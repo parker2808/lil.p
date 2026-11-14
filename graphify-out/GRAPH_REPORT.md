@@ -1,7 +1,7 @@
 # Graph Report - feat-cms-u2-site-admin-patterns  (2026-11-15)
 
 ## Corpus Check
-- 1521 files · ~581,251 words
+- 1521 files · ~580,881 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 32 file(s) not represented in the graph (top: (none) 17, .css 11, .example 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7fa5711e`
+- Built from commit: `5c4fa3c3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1394,7 +1394,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `@nestjs/common` be split into smaller, more focused modules?**
   _Cohesion score 0.030758714969241284 - nodes in this community are weakly interconnected._
 - **Why does `next` connect `next` to `getQueryClient`, `Button`, `AdminAboutExperienceIndex.tsx`, `AdminAboutExperienceEditor.tsx`, `proxy.ts`, `useIsAdmin`, `Button`, `EditorShell`, `ProjectsDetail.tsx`, `admin-pages.service.ts`, `block-renderers.constant.ts`, `Locale`, `ref_node_path`, `ContentHealthCard.tsx`, `DataTable`, `services/posts.service.ts`, `Input`, `posts.schema.ts`, `SiteHeader.tsx`, `AdminPagesEditor.tsx`, `Locale`, `ref_lucide_react`, `next-intl`, `Providers`, `AdminPostsEditor.tsx`, `dependencies`, `web/package.json`, `qk`, `next`, `ProjectsBrowser.tsx`, `PublicRouteSkeleton`, `AdminProjectsEditor.tsx`, `Badge`, `craft/page.tsx`, `services/posts.service.ts`, `AdminAuthLogin.tsx`, `ActionCards.tsx`, `contact.action.ts`?**
-  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **Are the 11 inferred relationships involving `Button()` (e.g. with `4. Architecture at a glance` and `T12 · UI primitives matching Figma component sets`) actually correct?**
   _`Button()` has 11 INFERRED edges - model-reasoned connections that need verification._
 - **Should `pages/pages.service.ts` be split into smaller, more focused modules?**
