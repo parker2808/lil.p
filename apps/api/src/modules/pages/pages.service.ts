@@ -433,6 +433,11 @@ export class PagesService {
       const page = await this.requirePage(tx, key);
       this.assertLegacyDraft(page);
       const current = this.requireBlock(page, id);
+      const definition = definitionOf(current.type);
+      if (definition) {
+        const count = page.blocks.filter((block) => block.type === definition.type).length;
+        assertWithinLimit(definition, count);
+      }
       const sortOrder = current.sortOrder + 1;
       assertInsertKeepsH1First(sortOrder, page.blocks);
 

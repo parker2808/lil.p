@@ -1,5 +1,17 @@
 # B6 — host-configurable React extraction
 
+## Main integration gate (2026-11-15)
+
+The later C1 prep #207 moves the size script and adds package-local lint/dependency gates. B6 keeps its four public subpaths, shared React cap and host label contract while adopting the package-local tooling; no private extraction or release is part of this PR.
+On that combined tree, the corrected B6 package export test passes 18/18, package-local dependency checks pass 3/3, frozen install and `check:all` pass 7/7, the shared-lock disposable-MySQL `check:all --e2e` passes 9/9, and clean-build Linux pixel verification passes 14/14 without baseline rewrites.
+
+Main subsequently gained the independent VI-only SEO correction #186; B6 carries its API snapshot mapping and newly updated B1 golden assertion verbatim, without introducing further changes to that contract.
+After that merge, a fresh Node 22 frozen install and `check:all` pass 7/7; the shared-lock disposable-MySQL `check:all --e2e` passes 9/9 (including the corrected golden suite), and clean-build Linux visual verification passes 14/14. No image baselines were rewritten.
+
+After the initial B5/B5b integration gate, main gained CI throughput and U2 #179. The final head preserves U2's updated controls and Linux visual baselines. Frozen install, `check:all` (7/7), the locked disposable-MySQL `check:all --e2e` (9/9) and clean-build Linux pixel verification (14/14) pass after integrating U2, with no screenshot or B1 golden edits.
+
+Merged B5/B5b's engine, strict snapshot reader and Nest adapters from main while retaining B6's server-safe React export and U1's labelled localized form controls. Both API and web keep direct core dependencies; the shared export test exercises both engine and React in ESM/CJS. The B1 golden contracts and visual baselines are unchanged. Frozen install and `pnpm check:all` pass (7/7); the locked disposable-MySQL `check:all --e2e` passes (9/9, including API and web E2E). An initial isolated Linux visual verification found six stale public renders from the earlier E2E run's test-mutated Next cache. Removing only generated `.next` before the locked visual run restored the clean demo seed: 14/14 Linux pixel comparisons pass without screenshot updates. The merged bundle measures 2,433/61,440 B contracts+engine and 1,621/35,840 B combined React. Graphify was refreshed from the merged code tree in code-only mode.
+
 **Status: implementation approved; B6 owns server topology and web dependency (2026-11-11 ICT).** Baseline: accepted B4 `8c448ea2`, alongside the B6 draft (`docs/specs/2026-11-10-cms-core-b6-react-draft.md` on `docs/cms-prep-nonE2E`), the CMS-core ADR on `docs/cms-core-adr`, and accepted U3 design on `feat/cms-u3-builder-design`. This branch does not implement a builder, persist changes, or change the database.
 
 ## Plan

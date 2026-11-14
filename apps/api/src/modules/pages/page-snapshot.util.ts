@@ -1,7 +1,9 @@
+import { buildSnapshot, orderBlocks, readSnapshot } from '@parker2808/cms-core/engine';
 import { readTree, type TreeDocument } from '@parker2808/cms-core/tree';
 import {
   BLOCK_REGISTRY,
   type BlockType,
+  corePageKeySchema,
   isLocalizedPair,
   type Locale,
   type PageKey,
@@ -61,14 +63,14 @@ export type InvalidSnapshotBlock = {
 };
 
 export function buildPageSnapshot(page: PageWithAllBlocks): PageSnapshot {
-  return {
-    seo: {
+  return buildSnapshot(
+    {
       seoTitleEn: page.seoTitleEn,
       seoTitleVi: page.seoTitleVi,
       seoDescriptionEn: page.seoDescriptionEn,
       seoDescriptionVi: page.seoDescriptionVi,
     },
-    blocks: page.blocks.map((block) => ({
+    page.blocks.map((block) => ({
       type: block.type,
       key: block.key,
       schemaVersion: block.schemaVersion,
@@ -78,7 +80,21 @@ export function buildPageSnapshot(page: PageWithAllBlocks): PageSnapshot {
       isVisible: block.isVisible,
       sortOrder: block.sortOrder,
     })),
-  };
+  );
+}
+
+export function readRestorableSnapshot(value: unknown): PageSnapshot | null {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  const raw = value as { seo?: unknown };
+  const seo = Object.hasOwn(raw, 'seo') ? raw.seo : {};
+  if (!seo || typeof seo !== 'object' || Array.isArray(seo)) return null;
+  const missingSeo = Object.fromEntries(
+    ['seoTitleEn', 'seoTitleVi', 'seoDescriptionEn', 'seoDescriptionVi']
+      .filter((key) => !Object.hasOwn(seo, key))
+      .map((key) => [key, null]),
+  );
+  const result = readSnapshot({ ...value, seo: { ...missingSeo, ...seo } }, BLOCK_REGISTRY);
+  return result.ok ? result.snapshot : null;
 }
 
 export function readPageSnapshot(value: unknown): PageSnapshot | null {
@@ -107,29 +123,8 @@ export function readPageSnapshot(value: unknown): PageSnapshot | null {
 }
 
 export function readRestorablePageSnapshot(value: unknown): PageSnapshot | null {
-  if (!value || typeof value !== 'object' || hasSnapshotFormat(value)) return null;
-  const raw = value as { seo?: unknown; blocks?: unknown };
-  const seoKeys = ['seoTitleEn', 'seoTitleVi', 'seoDescriptionEn', 'seoDescriptionVi'];
-  if (
-    Object.keys(raw).some((key) => key !== 'seo' && key !== 'blocks') ||
-    (raw.seo !== undefined &&
-      (raw.seo === null ||
-        typeof raw.seo !== 'object' ||
-        Array.isArray(raw.seo) ||
-        Object.entries(raw.seo).some(
-          ([key, entry]) => !seoKeys.includes(key) || (entry !== null && typeof entry !== 'string'),
-        )))
-  ) {
-    return null;
-  }
-  if (
-    !Array.isArray(raw.blocks) ||
-    raw.blocks.some((block) => !pageSnapshotBlockSchema.strict().safeParse(block).success)
-  ) {
-    return null;
-  }
-  const snapshot = readPageSnapshot(value);
-  return snapshot?.blocks.length === raw.blocks.length ? snapshot : null;
+  if (hasSnapshotFormat(value)) return null;
+  return readRestorableSnapshot(value);
 }
 
 function asNullableString(source: unknown, key: string): string | null {
@@ -146,12 +141,21 @@ export function snapshotToPublicPage(
   locale: Locale,
   onDropped: (info: { blockId: number; type: string; reason: string }) => void,
 ): PublicPage {
-  const { values, lang } = pickGroup(snapshot.seo, ['seoTitle', 'seoDescription'] as const, locale);
+  const viOnlyCustomTitle =
+    !corePageKeySchema.safeParse(key).success &&
+    !snapshot.seo.seoTitleEn?.trim() &&
+    Boolean(snapshot.seo.seoTitleVi?.trim());
+  const { values, lang } = viOnlyCustomTitle
+    ? {
+        values: {
+          seoTitle: snapshot.seo.seoTitleVi,
+          seoDescription: snapshot.seo.seoDescriptionVi,
+        },
+        lang: 'vi' as const,
+      }
+    : pickGroup(snapshot.seo, ['seoTitle', 'seoDescription'] as const, locale);
   const blocks: PublicBlock[] = [];
-  const visible = snapshot.blocks
-    .filter((block) => block.isVisible)
-    .slice()
-    .sort((a, b) => a.sortOrder - b.sortOrder);
+  const visible = orderBlocks(snapshot.blocks.filter((block) => block.isVisible));
 
   for (const [index, block] of visible.entries()) {
     const parsed = parseBlock({
@@ -196,7 +200,7 @@ export function draftToPublicBlocks(
 ): { blocks: PublicBlock[]; invalidBlocks: InvalidSnapshotBlock[] } {
   const publicBlocks: PublicBlock[] = [];
   const invalidBlocks: InvalidSnapshotBlock[] = [];
-  const ordered = blocks.slice().sort((a, b) => a.sortOrder - b.sortOrder);
+  const ordered = orderBlocks(blocks);
 
   for (const block of ordered) {
     const parsed = parseBlock({

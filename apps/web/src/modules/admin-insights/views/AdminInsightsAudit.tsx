@@ -15,8 +15,13 @@ import {
 } from '@portfolio/ui/components/AuditRow/relative-time.util';
 import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
 import { Button } from '@portfolio/ui/components/ui/button';
-import { inputClassName } from '@portfolio/ui/components/ui/input';
-import { cn } from '@portfolio/ui/lib/utils';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@portfolio/ui/components/ui/select';
 import { useQuery } from '@tanstack/react-query';
 import { useLocale, useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -48,36 +53,44 @@ export function AdminInsightsAudit() {
     <div className="flex flex-col gap-4">
       <h1 className="text-ui-title font-semibold">{t('title')}</h1>
       <div className="flex flex-wrap items-end gap-3">
-        <label className="text-ui flex flex-col gap-1">
-          {t('entityType')}
-          <select
-            className={cn(inputClassName, 'w-auto px-2')}
-            value={entityType}
-            onChange={(event) => setEntityType(event.target.value)}
+        <div className="text-ui flex flex-col gap-1">
+          <label htmlFor="audit-entity-type">{t('entityType')}</label>
+          <Select
+            value={entityType || 'all'}
+            onValueChange={(next) => setEntityType(next === 'all' ? '' : next)}
           >
-            <option value="">{t('allEntities')}</option>
-            {AUDIT_ENTITY_TYPES.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="text-ui flex flex-col gap-1">
-          {t('user')}
-          <select
-            className={cn(inputClassName, 'w-auto px-2')}
-            value={userId}
-            onChange={(event) => setUserId(event.target.value)}
+            <SelectTrigger id="audit-entity-type" className="w-auto min-w-36">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('allEntities')}</SelectItem>
+              {AUDIT_ENTITY_TYPES.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="text-ui flex flex-col gap-1">
+          <label htmlFor="audit-user">{t('user')}</label>
+          <Select
+            value={userId || 'all'}
+            onValueChange={(next) => setUserId(next === 'all' ? '' : next)}
           >
-            <option value="">{t('allUsers')}</option>
-            {(users.data?.items ?? []).map((user: AdminUser) => (
-              <option key={user.id} value={String(user.id)}>
-                {user.name}
-              </option>
-            ))}
-          </select>
-        </label>
+            <SelectTrigger id="audit-user" className="w-auto min-w-36">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('allUsers')}</SelectItem>
+              {(users.data?.items ?? []).map((user: AdminUser) => (
+                <SelectItem key={user.id} value={String(user.id)}>
+                  {user.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         {entityType || userId ? (
           <Button
             type="button"

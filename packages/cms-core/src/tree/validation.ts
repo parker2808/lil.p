@@ -225,7 +225,7 @@ export function validateTreeForPublish(
   const draft = readTree(input, registry);
   if (!draft.ok) return draft;
   const present = new Set<string>();
-  let headings = 0;
+  const headingCounts = { mobile: 0, tablet: 0, desktop: 0 };
   let builderComponents = 0;
   const stack: TreeNode[] = [draft.value.root];
   while (stack.length) {
@@ -233,16 +233,14 @@ export function validateTreeForPublish(
     if (node.type === 'component') {
       builderComponents += 1;
       present.add(node.componentType);
-      if (
-        registry[node.componentType]?.role === 'h1' ||
-        (node.componentType === 'heading' &&
-          ['base', 'mobile', 'tablet', 'desktop'].some(
-            (breakpoint) =>
-              ({ ...node.responsive.base, ...node.responsive[breakpoint as keyof ResponsiveProps] })
-                .level === 1,
-          ))
-      )
-        headings += 1;
+      for (const breakpoint of ['mobile', 'tablet', 'desktop'] as const) {
+        if (
+          registry[node.componentType]?.role === 'h1' ||
+          (node.componentType === 'heading' &&
+            resolveResponsive(node.responsive, breakpoint).level === 1)
+        )
+          headingCounts[breakpoint] += 1;
+      }
     } else if (node.type === 'page') stack.push(...node.sections);
     else if (node.type === 'section' || node.type === 'column') stack.push(...node.content);
     else if (node.type === 'row') stack.push(...node.columns);
@@ -251,7 +249,10 @@ export function validateTreeForPublish(
   const required = Object.entries(registry)
     .filter(([, item]) => item.role === 'required')
     .map(([type]) => type);
-  if (headings !== 1 || (builderComponents > 0 && required.some((type) => !present.has(type))))
+  if (
+    Object.values(headingCounts).some((count) => count !== 1) ||
+    (builderComponents > 0 && required.some((type) => !present.has(type)))
+  )
     return { ok: false, code: 'HEADING_RULE', input };
   return draft;
 }
