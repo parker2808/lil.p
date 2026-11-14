@@ -314,11 +314,11 @@ test('EN/VI core and token-only lil.p builder states are visually and accessibly
       });
     } finally {
       releaseSave?.();
-      await page.unroute(draftRoute);
     }
     await expect(page.getByText(locale === 'vi' ? 'Đã lưu bản nháp' : 'Draft saved')).toBeVisible({
       timeout: 15_000,
     });
+    await page.unroute(draftRoute);
     const remote = await (await page.request.get(`/api/admin/pages/${key}/builder/draft`)).json();
     remote.tree.root.sections[0].content[0].responsive.base.text = `Concurrent ${locale} heading`;
     const concurrent = await page.request.put(`/api/admin/pages/${key}/builder/draft`, {
