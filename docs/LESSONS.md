@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A named screenshot width does not prove its viewport: set the Playwright viewport immediately before a standalone capture and verify image dimensions alongside the manifest, especially when the project default differs from the visual matrix.
+
 - 2026-11-11: When a stacked feature branch diverges from main through many unmerged parents, cherry-pick the approved isolated hotfix rather than merging all older main history into the feature stack; verify the focused CI-listed browser case against the integrated host, not only the upstream study route.
 
 - 2026-11-11: A contrast scan immediately after toggling the public theme can sample transitional foreground against settled background; wait for finite CSS transitions before running axe, rather than disabling contrast checks or changing production colors.

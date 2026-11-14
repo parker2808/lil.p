@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 7. Open items
 
+- D5 design/a11y evidence: 99 captured EN/VI × light/dark × neutral/lil.p responsive and editor states, a keyboard edit/history/focus path, zero axe violations and measured AA token contrasts are recorded in `docs/specs/2026-11-14-cms-d5-design-evidence.md`. This passes the gated D5 editor review only; D6 still owns the combined journey, all 20 definitions, preview/public parity and release approvals.
+
 - Vercel build-graph hotfix from `main` `f751e8b`: build cms-core before contracts DTS and web; the clean `vercel-build` CI job checks that ordering. Web-E2E shards wait for the build job's artifact upload to finish. Production deployment remains gated on READY and health checks. See `docs/specs/2026-11-11-vercel-cms-core-build-graph.md`.
 
 - CMS D5 UI (draft integration): the gated D4 builder now hosts one schema-derived Properties panel with base/tablet/mobile override clearing, bounded undo/redo and D2 custom-page revision-checked activation/autosave. The D4 `9e458a2` fix closes an open tablet Properties sheet on desktop transition without double mounting; the D5 CI browser suite covers the activated-draft 768→1100→1440→768 focus/Escape path. `home` remains local-only. Conflict/offline/ambiguous saves retain edits and require explicit review/retry/export/reload; refresh recovery is scoped to the authenticated user/page, including during failed remote reads and in-flight activation. D4 composition maps to one D5 history commit per accepted operation. Tree publish stays disabled. D6 owns the complete journey registration and production enablement is not authorized. See `docs/specs/2026-11-11-cms-d5-ui.md`.
@@ -171,6 +173,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Captured and reviewed 99 D5 builder states at 390/768/1440 with a D6-format manifest, axe A/AA and measured token contrast; corrected the keyboard-focus capture to its named 1440×900 viewport. The keyboard journey covers nested add/move/delete, undo/redo and focus restoration. The route remains flag gated with Publish disabled; D6 release proof remains pending.
 
 - 2026-11-14: The D4-merged D5 branch passed a focused activated-draft breakpoint browser test and all 11 disposable-MySQL `check:all --e2e` gates under the released shared lock; reviewed captures were refreshed, including a losslessly recompressed PNG to avoid a content-scanner false positive. No public, API, migration or golden behavior changed.
 

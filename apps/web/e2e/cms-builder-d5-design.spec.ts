@@ -178,6 +178,7 @@ test('active builder supports a keyboard-only nested edit, history and focus jou
     page.locator('[data-node-type="column"]').nth(1).locator('[data-node-type="component"]'),
   ).toHaveCount(1);
   await expect(tree.getByRole('treeitem', { name: /Heading/ })).toBeFocused();
+  await page.setViewportSize({ width: 1440, height: 900 });
   await capture(page, {
     key,
     locale: 'en',
