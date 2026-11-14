@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-14: An all-definitions live route test does not prove publish policy if its injected registry erases required roles or page allowances; assert those negative cases as well as successful SSR parity.
+
 - 2026-11-11: For every stacked CMS merge, verify the READY production Vercel deployment and three public/health HTTP 200 responses on the merged SHA; green PR CI proves only its own build, not the live site or a future private-package consumer.
 - 2026-11-11: A transitive workspace package added after Docker's manifest-copy stage can break frozen install, and its build output can be missing even when TypeScript compiles; list every runtime workspace manifest before install and smoke-test CJS exports from the pruned final image.
 - 2026-11-11: A green monorepo build can hide a deployment-only DTS failure when a provider's isolated build command skips a new workspace dependency; pin the provider command in the repository and run it from a clean checkout in CI.
@@ -161,6 +163,15 @@
 - 2026-11-10: A restore/discard HTTP golden must first diverge the draft from the published snapshot, then compare normalized block/SEO state and confirm public content stays fixed; response status alone cannot detect a no-op.
 - 2026-11-10: A shared page-allowance predicate should read each definition's built-in pages and explicit custom-page flag; freeze the full built-in/custom matrix and both EN/VI picker options so Nest and the editor cannot drift.
 - 2026-11-10: A new core package's empty entry points are only a measurable size floor; build each public ESM subpath, gzip its output deterministically, sum contracts+engine, and enforce approved caps on every build rather than treating empty scaffold size as an extraction forecast.
+- 2026-11-10: Keep a generic CMS registry independent of host block definitions and pass built-in page keys to allowance; compose host definitions once and specialize the finite public block schema at the host boundary to preserve HTTP validation.
+- 2026-11-10: TypeScript's legacy `moduleResolution: node` ignores package subpath `exports` in transitive declarations; publish `typesVersions` alongside ESM subpath exports so the Nest consumer retains inferred locale, snapshot and block-ref types.
+- 2026-11-10: A host compiled to CommonJS needs a `require` condition for a newly extracted package subpath even when TypeScript accepts the ESM `import` types; exercise both resolution modes before E2E.
+- 2026-11-10: Local installed package `dist/` can hide a clean-CI failure; when host declarations import a new workspace package, build via pnpm's dependency-closure filter (`package...`) before compiling the host in every job.
+- 2026-11-10: A sharded E2E archive must carry the transitive workspace package's `dist/`, not just the host and app bundles; otherwise the test runner's fresh checkout resolves the symlink but has no built subpath target.
+- 2026-11-10: A pre-existing contrast ratio of 4.49:1 can fail macOS axe even when unrelated CMS contracts are the only runtime change; record the exact colors, affected test and platform rather than masking the failure or changing out-of-scope UI.
+- 2026-11-10: When publishing separate ESM/CJS subpaths, test both import and require for every entry and guard side-effect imports/re-exports, not only named imports.
+- 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
+- 2026-11-11: Zod object parsing strips unknown keys by default; reject unsupported snapshot versions and unexpected persisted keys before parsing so a strict reader cannot silently lose stored data.
 - 2026-11-10: A form wrapper that clones an input cannot safely wrap a composite Radix Select: bind the label, error attributes and name to the actual trigger/root instead; a Select portal inside a modal must stack above the dialog, and repeated E2E sign-in redirects away from its login form.
 - 2026-11-10: Waiting for a client-only control before filling a public form hid pre-hydration data loss; test input before hydration instead. Visual hashes also change with seeded data, so review images instead of treating every changed hash as a UI regression.
 - 2026-11-10: Radix RadioGroup can move focus on a fast arrow key without selecting because its roving-focus timer runs after keyup; verify both a quick Playwright keypress and the checked state, not just focus movement.
