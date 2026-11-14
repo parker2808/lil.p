@@ -48,6 +48,13 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #203 live reconciliation: main now includes #188, #207, #191, #193, #194, #195, #196 and #201 after #206/#179/#186. The remaining ordered candidates are #197 → #198 → #200 → #204 → #199 → #202, conditional on reviewed final heads and the D2 migration gate. #204 currently carries D2 migration ancestry, so it cannot precede #199 without an owner-controlled restack removing that ancestry. #178 remains an independent static study pending its own disposition; #173/#183 are superseded by #176/#201. Docs only; no migration, browser, DB, deployment or E2E in this branch.
+- 2026-11-15 stack reconciliation: #206 `54eb889`, #179 `bdfaaf8` and #186 `0cf481a` are merged. Earlier planned positions for #178/#191 have been superseded by main's actual merge history. Documentation only; no authored code, migration or local E2E.
+- 2026-11-15 stack update: #206 merged as `54eb889` immediately after #192. Static CI throughput changes leave the clean Vercel build and E2E aggregate intact; #188 later merged independently after label-trigger workflow reconciliation. #204 carries D2's migration in its ancestry: remove it from any pre-verification merge candidate or defer until the D2 gate passes.
+- 2026-11-14 stack reconciliation: #190 merged as `f3a62c2` after #189; #192 then merged as `48c62cf`. #202's all-20 live route review found that the host tree registry drops `required` roles and bypasses page-restricted allowances; keep that PR blocked until validation and CI are green. See the live stack ledger.
+- 2026-11-11 12:15 ICT reconciliation: #185 merged as `89b9312` and #205 as `f751e8b`. Before each further merge, the authorized owner requires final-head checks, a READY Vercel production deployment for that merge commit and HTTP 200 on `/`, `/vi` and `/api/health`; PR CI alone is not Vercel evidence. The pinned core → contracts → web build graph belongs in C1 consumer verification.
+- 2026-11-11 11:13 ICT: #185 B4 is merged as `89b9312`; #203 C1 document templates remain drafts for the final verified package. Prior dated ledger entries describe historical snapshots, not current merge status.
+
 - CMS #201 integration CI follow-up (2026-11-15): the merged C1 package-local measurement script must also be imported locally by React/theme tests; root-relative imports fail both standalone dependency scanning and the Linux unit/theme-browser jobs. The package boundary and bundle caps remain unchanged.
 - Contact hydration (#201 on integrated U2): SSR name/email/message values survive hydration and synchronize with form state at mount; a locked browser regression holds scripts, enters all three fields, then verifies one client POST. U2's optional topic Select and empty-topic behavior remain intact. No CMS golden, API, DB, or locale text changes; see `docs/specs/2026-11-11-contact-hydration-readiness.md`.
 - 2026-11-15: D integration base #196 incorporates B7's restacked #195 head (including current main, B6b and D1) while retaining its opt-in typed tree, empty-publish H1 gate, neutral fixture and package-local C1 tooling. D3 and later builder work remain separate; no production route, database, migration or B1 golden change. See `docs/specs/2026-11-11-cms-d-integration-base.md`.
@@ -225,6 +232,12 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Reconciled #203 with main through #201; updated the live ordered ledger, retained both documentation histories, and regenerated Graphify. No authored runtime code, migration or E2E.
+- 2026-11-15: Reconciled #203 with merged #179/#186, preserving U2, VI-only SEO, and documentation histories. Updated the ordered ledger and regenerated Graphify; no authored code or E2E work.
+- 2026-11-15: Updated the CMS stack ledger after #206 merged as `54eb889`; #188 required a final-head workflow reconciliation, and #204 could not carry D2's migration into main ahead of the verification gate. Documentation only.
+- 2026-11-14: Reconciled the CMS stack plan with merged B5/#190 and recorded the #202 host publish-validation gate; documentation only, no E2E or deployment.
+- 2026-11-11: Reconciled the CMS stack ledger with merged B4/#185 and Vercel hotfix/#205; pinned READY production and three-route HTTP gates per merge plus C1 consumer build-order evidence. Documentation only; no deployment or E2E run.
 
 - 2026-11-15: Point CMS React/theme tests to the package-local bundle measurement script after integrating C1 prep into #201; preserve the existing measurement assertions and contact hydration behavior.
 

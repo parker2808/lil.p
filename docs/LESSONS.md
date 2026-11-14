@@ -1,5 +1,9 @@
 # Lessons
 
+- 2026-11-15: When a docs branch meets independently merged UI, SEO, core and contact fixes, preserve distinct README/context/lesson histories, deduplicate inherited entries, and regenerate Graphify rather than combining generated-report conflicts.
+- 2026-11-15: A feature PR can carry an additive migration through an ancestor branch even when its own UI diff does not edit Prisma; check full PR ancestry before scheduling a migration-last merge.
+- 2026-11-15: Keep the live stack ledger separate from dated historical snapshots; update merged SHAs and the final-head gate after every main integration without rewriting prior evidence.
+
 - 2026-11-15: A manual CI dispatch does not trigger PR-only context and ci-ok checks; after retargeting a draft, synchronize the branch with a substantive in-scope change and verify all required checks on its final head. For ordinary contact form tests, wait for the mounted interaction marker before filling, while preserving the separate pre-hydration regression.
 
 - 2026-11-15: Moving a bundle measurement script inside an extractable package also requires repointing test imports; run the package dependency guard, unit tests and browser theme job against the combined tree.
