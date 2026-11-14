@@ -471,7 +471,7 @@
         "select": "Select the active row",
         "open": "Open the active row",
         "edit": "Edit the active row",
-        "remove": "Archive the selection",
+        "remove": "Archive or delete selected rows, or the active row if none are selected.",
         "help": "Open this help"
       },
       "keys": {

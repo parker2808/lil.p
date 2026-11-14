@@ -9,10 +9,10 @@ export function Toggle({ className, ...props }: ComponentProps<typeof TogglePrim
     <TogglePrimitive.Root
       data-slot="toggle"
       className={cn(
-        'text-ui inline-flex size-7 items-center justify-center rounded-md',
+        'text-ui inline-flex size-11 items-center justify-center rounded-md',
         'hover:bg-accent hover:text-accent-foreground',
         'data-[state=on]:bg-accent data-[state=on]:text-accent-foreground',
-        'disabled:pointer-events-none disabled:opacity-50',
+        'focus-visible:ring-ring focus-visible:ring-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50',
         className,
       )}
       {...props}
