@@ -76,7 +76,7 @@ mobile, tablet and desktop breakpoint; draft validation permits incomplete headi
 The standalone fixture's default homepage action points to `/en/components`;
 sampled EN/VI pages resolve their own locale-prefixed component links.
 
-[CMS D3 shared SSR renderer](./docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md) adds opt-in `renderTree` to the core's server-only React entry. Breakpoint-specific row spans and one semantic heading per node are covered by a required browser matrix; host `components.heading` overrides return a typed failure. Existing routes remain legacy until D2 authorizes tree dispatch and publish validation; D6 owns route parity.
+[CMS D3 shared SSR renderer](./docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md) adds opt-in `renderTree` to the core's server-only React entry. Breakpoint-specific row spans and one semantic heading per node are covered by a required browser matrix; heading levels must stay stable across breakpoints at publish/SSR, while drafts may vary. Host `components.heading` overrides return a typed failure. Existing routes remain legacy until D2 authorizes tree dispatch and publish validation; D6 owns route parity.
 
 ### Public site
 

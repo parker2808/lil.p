@@ -16,6 +16,7 @@
 - 2026-11-11: When a theme changes across full navigation, read the document class for the builder's CSS-token mode rather than assuming a provider snapshot matches the actual HTML theme; close mobile sheets and reset the viewport before toggling topbar controls in a visual matrix.
 - 2026-11-11: When integrating sibling core exports, keep both theme CSS and tree JS declarations in the manifest and rebuild Graphify after a docs-only merge conflict instead of combining generated graph reports by hand.
 
+- 2026-11-15: Per-breakpoint H1 counting alone is insufficient for a one-element SSR heading renderer: reject responsive level changes at publish and render time, but continue allowing incomplete draft editing; assert the visible heading at mobile, tablet and desktop.
 - 2026-11-15: Integrating a server-only CMS tree renderer after package tooling moved requires updating its measurement import to the package-local script and gating computed breakpoint behavior in both CI and local E2E. Preserve legacy route dispatch until the D2 snapshot contract is wired.
 
 - 2026-11-11: A server renderer's semantic invariant must include host extension points; routing built-ins through a single-heading path is insufficient if a host override can still create breakpoint-specific H1 elements.
