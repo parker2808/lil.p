@@ -6,6 +6,8 @@ Main reconciliation (2026-11-15): U2 was integrated into main as `bdfaaf8`; this
 
 Final pre-merge sync (2026-11-15): merged main `9ee0056` into this draft branch, retaining its isolated `ready-e2e` label workflow and preserving the U3 study unchanged. `PROJECT_CONTEXT.md` §9 is the active changelog; the root README and web-host README still describe the gated, non-persistent study. Graphify was regenerated from the integrated code tree. Final-head CI, including the labeled E2E shards and visual gate, must pass before merge-chain handoff; neither this sync nor the earlier design approval authorizes a merge.
 
+Later main sync (2026-11-15): integrated `0be13f4` with the core-owned neutral CSS, strict D1 tree and standalone B7 fixture. The U3 route remains an independent flagged visual study, not the fixture's editor or the D4/D5 builder. The combined CI retains shard 1's theme computed-AA matrix, fixture route/WCAG matrix and web visual baseline; no U3 page behavior or B1 golden was changed. Final-head GitHub Actions provides the e2e/visual proof.
+
 ## Plan (8 steps, revised after coordinator review)
 
 1. Read U1 baseline, ADR, Graphify and route guards.

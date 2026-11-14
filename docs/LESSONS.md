@@ -177,6 +177,7 @@
 - 2026-11-15: After merging B5b, the host-owned published snapshot SEO resolver remains outside the pure engine; update the isolated B1 known-bug golden for EN/VI and version previews instead of changing the engine or unrelated golden contracts.
 - 2026-11-15: A conflicting PR has no merge ref, so its `pull_request` labeled workflow cannot start; reconcile main before using a label event as E2E-path proof.
 - 2026-11-15: During a CI workflow merge, compare the result against current main as well as the branch; an otherwise clean merge can silently drop a new main-only dependency gate.
+- 2026-11-15: A design-study PR merged after the core theme and standalone fixture must retain both shard-1 computed-theme and fixture WCAG browser jobs alongside the existing web visual baseline; regenerate Graphify rather than merging generated report conflicts.
 - 2026-11-15: `git fetch origin main` can refresh only `FETCH_HEAD` without advancing `origin/main`; use an explicit remote-tracking refspec and compare it with GitHub's branch SHA before claiming a PR is synced.
 - 2026-11-10: Keep CMS HTTP goldens structural and seed-isolated: assert semantic status/code/locale fields, not dynamic IDs, timestamps, cookie values or snapshots; B1 can freeze API behavior before U2/U3 while implementation B remains gated.
 - 2026-11-10: Public SEO resolves a group of localized fields together: a VI title with a missing VI description falls back to EN for both; seed both locales' descriptions when asserting VI SEO and record VI-only custom-page fallback separately.
