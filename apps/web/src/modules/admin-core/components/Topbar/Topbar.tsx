@@ -13,9 +13,14 @@ import {
   DropdownMenuTrigger,
 } from '@portfolio/ui/components/ui/dropdown-menu';
 import { IconButton } from '@portfolio/ui/components/ui/icon-button';
-import { inputClassName } from '@portfolio/ui/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@portfolio/ui/components/ui/select';
 import { TooltipProvider } from '@portfolio/ui/components/ui/tooltip';
-import { cn } from '@portfolio/ui/lib/utils';
 import { ArrowLeft, Ellipsis, PanelLeftClose, PanelLeftOpen, SunMoon } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTheme } from 'next-themes';
@@ -99,18 +104,18 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
             <SunMoon aria-hidden className="size-4" />
           </IconButton>
         </TooltipProvider>
-        <label className="text-ui-meta text-muted-foreground hidden items-center gap-1 lg:flex">
-          {t('language')}
-          <select
-            aria-label={t('language')}
-            className={cn(inputClassName, 'text-foreground w-auto px-2')}
-            value={locale}
-            onChange={(event) => switchLocale(event.target.value)}
-          >
-            <option value="en">{t('localeEn')}</option>
-            <option value="vi">{t('localeVi')}</option>
-          </select>
-        </label>
+        <div className="text-ui-meta text-muted-foreground hidden items-center gap-1 lg:flex">
+          <label htmlFor="admin-locale">{t('language')}</label>
+          <Select value={locale} onValueChange={switchLocale}>
+            <SelectTrigger id="admin-locale" className="w-auto min-w-16" aria-label={t('language')}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="en">{t('localeEn')}</SelectItem>
+              <SelectItem value="vi">{t('localeVi')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm" className="min-h-11 min-w-11 lg:min-h-0 lg:min-w-0">

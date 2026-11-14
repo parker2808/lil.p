@@ -1,5 +1,12 @@
 # B5b — Nest page adapters for the pure engine
 
+Integration update (2026-11-14): merged `main` through #190 (`f3a62c2`),
+retaining #189's API production dependency, Docker CJS baseline, #205's
+Vercel clean-build gate, and B5b's compiled adapter smoke assertions. The
+host's `BLOCK_NOT_ALLOWED`/limit/layout error shapes and B1 goldens remain
+unchanged; the Nest adapter delegates policy to `./engine` while the host keeps
+its transactions and authorization. No migration or production DB action.
+
 Status: stacked on accepted B5 draft PR #190 at `71e9ce4` (14/14 CI green). Merge prerequisite: accepted #189 `2de602e` contributes the direct API production dependency, lockfile, Docker/Render build order and CJS smoke. The merge commits `066e12b` and `dcc1ca9` retained **both** sides of README, PROJECT_CONTEXT §7/§9 and LESSONS conflicts; the generated Graphify report was temporarily taken from B5b and must be regenerated after the adapter changes. #189's Dockerfile/render/lockfile changes belong to that prerequisite, not B5b edits.
 
 ## Plan (8 steps)

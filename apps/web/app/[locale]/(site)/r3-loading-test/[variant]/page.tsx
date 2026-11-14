@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 
 import { PublicRouteSkeleton } from '@/modules/core/components/PublicRouteSkeleton/PublicRouteSkeleton';
+import { RadioKeyboardFixture } from '@/modules/admin-core/components/RadioKeyboardFixture/RadioKeyboardFixture';
 
 import ProjectsLoading from '../../projects/loading';
 
@@ -15,6 +16,7 @@ const variants = [
   'craft',
   'project',
   'note',
+  'radio',
 ] as const;
 
 export default async function LoadingFixture({ params }: { params: Promise<{ variant: string }> }) {
@@ -22,6 +24,7 @@ export default async function LoadingFixture({ params }: { params: Promise<{ var
   const { variant } = await params;
   const selected = variants.find((item) => item === variant);
   if (!selected) notFound();
+  if (selected === 'radio') return <RadioKeyboardFixture />;
   if (selected === 'projects') return <ProjectsLoading />;
   return <PublicRouteSkeleton variant={selected} />;
 }

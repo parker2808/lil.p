@@ -24,3 +24,8 @@ B4 (`8c448ea`) makes `@parker2808/cms-core` a runtime `workspace:*` dependency o
 - Frozen workspace install, core build, contracts build and the local CJS subpath smoke test pass with Node 22. The first `check:all` attempt passed 6/7: API lint correctly rejected a raw `require()` in a `.cjs` smoke script. Its replacement `.mjs` harness uses Node `createRequire` from the API production `package.json`, still tests the **CJS** `require` conditions, and passes API lint.
 - Two real local `docker build -f apps/api/Dockerfile` runs under the shared lock passed. The final run built image `ef8d340e40fc`: the frozen-install stage, core → contracts → API build, production prune, and `RUN node /tmp/smoke-cms-core.mjs /app` all completed. The smoke script was removed before the final image layer. The runner is non-root `nestjs`; no DB, image push or deployment occurred.
 - The final `pnpm check:all` and PR CI results are recorded in the PR body; E2E is provided by CI only.
+- Integrated both merged B4 and hotfix #205 into the branch with only documentation
+  and generated-graph conflicts; retained both histories and regenerated Graphify.
+  The final integrated Node 22 frozen install and non-E2E `pnpm check:all`
+  passed 7/7. The Vercel-equivalent clean build now runs in CI, but Vercel
+  previews are disabled outside `main`; READY production remains a post-merge gate.
