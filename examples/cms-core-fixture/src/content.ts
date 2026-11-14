@@ -40,7 +40,7 @@ export const definitions = [
     props: z.object({ label: localized, href: z.string().startsWith('/') }),
     defaults: {
       label: { en: 'Explore components', vi: 'Khám phá thành phần' },
-      href: '/components',
+      href: '/en/components',
     },
     pages: ['sample'],
     layouts: ['ONE'],

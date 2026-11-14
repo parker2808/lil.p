@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A bilingual fixture must keep even its registry fallback links within declared locale routes; testing only the generated block path can hide an invalid default.
+
 - 2026-11-15: Restacking a fixture after theme and tree changes must preserve its explicit CI/browser shard and lock-backed visual matrix while keeping core package build/measurement and host adapters independent.
 
 - 2026-11-15: A publish rule for exactly one H1 must count resolved nodes independently per breakpoint; checking whether a heading is H1 at any viewport misses both missing and duplicate headings at specific widths.

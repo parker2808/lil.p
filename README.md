@@ -69,6 +69,8 @@ reproduces that command without prebuilt core artifacts.
 
 The opt-in CMS tree publish validator requires exactly one effective H1 at each
 mobile, tablet and desktop breakpoint; draft validation permits incomplete headings.
+The standalone fixture's default homepage action points to `/en/components`;
+sampled EN/VI pages resolve their own locale-prefixed component links.
 
 ### Public site
 

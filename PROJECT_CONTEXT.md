@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15: #195 B7 fixture defaults and sampled EN/VI homepage actions now target declared locale-prefixed component routes; fixture assertions guard the destination. Its CI browser/visual matrix remains the release gate; no production route or golden contract changes.
+
 - 2026-11-15: B7 #195 restacks on D1 #194 and B6b #193, with a stand-alone Vite fixture consuming core's opt-in theme, React subpaths and host-registered localized controls. Its 80-state browser/visual matrix remains the release gate, while D1 tree validation remains opt-in. No production API, database, migrations, host UI or B1 golden changes.
 
 - 2026-11-15: #194 D1 publish validation now counts effective H1s independently at mobile, tablet and desktop; draft acceptance and the unchanged B1 goldens remain separate. B7 integration and the remaining D stack still depend on the ordered merge gate.
@@ -220,6 +222,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Corrected B7's fallback homepage action from an unrecognized bare `/components` path to `/en/components`; both EN and VI rendered actions resolve to their localized gallery routes.
 
 - 2026-11-15: Integrated B7's independent fixture, screenshot/axe gate and workspace lockfile with the theme, D1 tree and C1 package-local tooling; no golden HTTP or production data changes.
 
