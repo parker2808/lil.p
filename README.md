@@ -285,7 +285,7 @@ Only `main` (production) and `hotfix/*` branches deploy on Vercel; every other b
 - Never run `pnpm db:migrate`, `pnpm db:reset`, or `pnpm db:seed` with `DATABASE_URL` pointing at TiDB. `migrate dev` / `reset` can drop data, and the seed overwrites content rows.
 - New migrations are created locally (see [Changing the database schema](#changing-the-database-schema)) and reach production through `main`.
 - `infra/mysql/init/` and `docker-compose.yml` are local-only; production never uses them.
-- Before pushing: `pnpm check:all` (format, lint, typecheck, test, content, deps, build; prints only failures, `--e2e` adds E2E). The pre-push hook runs `typecheck`.
+- Before pushing: `pnpm check:all` (format and lint overlap, capped at two processes; then typecheck, test, content, deps, build; prints only failures, `--e2e` adds E2E). CI uses `pnpm check:all --static` for the same format, lint, typecheck, content and dependency gates. The pre-push hook runs `typecheck`.
 
 ## Production-like stack on your machine
 
