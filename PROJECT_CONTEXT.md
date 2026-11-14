@@ -172,6 +172,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR to `main` (doc
 
 ## 9. Changelog
 
+- 2026-11-14: The D4-merged D5 branch passed a focused activated-draft breakpoint browser test and all 11 disposable-MySQL `check:all --e2e` gates under the released shared lock; reviewed captures were refreshed, including a losslessly recompressed PNG to avoid a content-scanner false positive. No public, API, migration or golden behavior changed.
+
 - 2026-11-11: Integrated reviewed D4 `9e458a2` into D5 and added a CI-listed activated-draft browser regression for the open Properties sheet crossing 768→1100→1440→768, including one editor mount, selection value, focus and Escape. Cherry-picked `main` #205's build/artifact ordering without pulling the unrelated older main history into the D stack; no persistence or public behavior changed.
 
 - 2026-11-11: Cherry-picked `main` #205's topological Vercel core→contracts→web build and serialized web-E2E artifact consumption onto the D5 stack; no E2E test retries, HTTP, DB or package-export changes.
