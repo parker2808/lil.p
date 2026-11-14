@@ -1,259 +1,280 @@
-# Graph Report - feat-cms-b5b-nest-wiring  (2026-11-14)
+# Graph Report - perf-ci-speedup  (2026-11-15)
 
 ## Corpus Check
-- 1516 files · ~575,133 words
+- 1517 files · ~575,795 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 32 file(s) not represented in the graph (top: (none) 17, .css 11, .example 1)
 
 ## Summary
-- 7126 nodes · 22417 edges · 307 communities (267 shown, 40 thin omitted)
+- 7134 nodes · 22424 edges · 339 communities (287 shown, 52 thin omitted)
 - Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 1975 edges (avg confidence: 0.93)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ceff26bd`
+- Built from commit: `9669bfe9`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- Locale
+- Input
 - @nestjs/common
-- AppConfigService
-- MediaLibrary.test.tsx
 - cn
-- Button
-- analytics.service.ts
-- useIsAdmin
-- posts.schema.ts
-- CaseCard
-- Modules
-- ref_zod
-- PrismaService
-- block-renderers.constant.ts
-- api/package.json
-- next
-- NotesDetail.tsx
-- portfolio.mapper.ts
-- ui/package.json
-- @tanstack/react-query
-- contracts.ts
-- AdminProjectsIndex.tsx
-- apiServer
-- PageSkeleton
-- createRegistry
-- AdminPagesEditor.tsx
-- PostList.tsx
-- small-entity.service.ts
-- copy-email.util.test.ts
-- Topbar.tsx
-- AdminPostsEditor.test.tsx
-- next-intl
-- portfolio-design-system.md
-- .recordNow
-- AdminDomain
-- admin-users.controller.ts
-- ProjectsDetail.tsx
-- tags/tags.service.ts
-- site-settings.service.ts
-- @playwright/test
-- next
-- contracts.test.mjs
-- HeroBlock.test.tsx
-- contact.schema.ts
-- use-admin-events.hook.ts
-- hast-to-react.util.ts
-- ui-redesign.md
-- CMS open-stack integration plan (DRAFT — merge only with Parker's OK)
-- AdminPrinciple
-- ref_node_fs
-- .record
-- site-settings.schema.ts
-- admin-pages.service.ts
-- cms-core/package.json
-- posts/posts.service.ts
-- SiteShell.tsx
-- create-markdown-extensions.ts
-- StatBand.tsx
-- AdminExperience
-- pages/pages.service.ts
-- BlockInspector.tsx
-- notes/[slug]/opengraph-image.tsx
-- PrismaModule
-- dependencies
-- db-test
-- AdminSocialLink
-- dashboard/dashboard.service.ts
-- ProjectsService
-- devDependencies
-- pages.data.ts
-- media.service.ts
-- [locale]/layout.tsx
-- web/package.json
-- owner-copy.data.ts
-- education.type.ts
-- AdminEducation
-- admin-tags.controller.ts
-- AdminProcessStep
+- apps_api_src_generated_prisma_client
 - index.ts
-- EventsService
-- public-site.schema.ts
-- ProfileStatsService
-- Spec: public pages static/ISR + API latency (2026-10-31)
-- AdminContactTopic
-- ref_react
-- 9. Implementation plan (stacked PRs)
-- AdminNavItem
-- AdminPage
-- AdminInboxDetail.test.tsx
-- AdminListTable.test.tsx
-- scripts
-- dashboard-views.util.ts
-- contracts/package.json
-- principles.type.ts
-- projects.schema.ts
-- posts.data.ts
-- MigrationDiagram.stories.tsx
-- @tanstack/react-query
-- hero-stats.spec.ts
-- apiClient
-- Interview Senior FE (personal project) | 09/2026 – Present
-- .record
-- page-versions.service.ts
-- D2 persistence and builder API — DRAFT, Parker DDL approval pending
-- markdown-to-hast.ts
-- environment
-- AdminProjectsEditor
-- slash-command.extension.ts
-- PublicRouteSkeleton
-- profile/profile.service.ts
-- API module conventions (NestJS + Prisma)
-- UI module conventions (Next.js)
-- ContentHealthCard.tsx
-- CMS B2 — one block page-allowance source
-- public-shell-indexes.spec.ts
-- ActionCards.tsx
-- steps
-- .file
-- web/components.json
-- all-exceptions.filter.ts
-- CaseCard.tsx
+- Modules
+- next-intl
+- Button
+- ref_vitest
+- pages/pages.service.ts
+- Public
+- portfolio-design-system.md
+- block-registry.constant.ts
+- block-renderers.constant.ts
+- ui/package.json
+- apiServer
+- portfolio.mapper.ts
+- ref_testing_library_react
+- Roles
+- DataTable
 - PageKey
-- ui/components.json
+- app.module.ts
+- useIsAdmin
+- apiClient
+- AdminPagesEditor.tsx
+- pickGroup
+- Lane A, first assignment — D1 tree contract
+- contracts.ts
+- PageSkeleton
+- ref_node_path
+- ActionCards.tsx
+- 04-4-components-and-layout.md
+- AdminProjectsIndex.tsx
+- Topbar.tsx
+- CaseCard.tsx
+- AdminPostsEditor.tsx
+- pages.data.ts
+- domains/domains.service.ts
+- posts.schema.ts
+- tags/tags.service.ts
+- .recordNow
+- media.type.ts
+- CaseCard
+- dashboard/dashboard.service.ts
+- projects.schema.ts
+- ProfileService
+- AppConfigService
+- @playwright/test
+- ui-redesign.md
+- ProjectsDetail.tsx
+- PostsService
+- AdminAboutExperienceEditor.tsx
+- ApiError
+- seo.util.test.ts
+- next
+- cms-core/package.json
+- pages.http.spec.ts
+- HeroBlock.tsx
+- posts/posts.service.ts
+- locale.schema.ts
+- real.seed.ts
+- ProjectsService
+- db-test
+- public-site.schema.ts
+- Locale
+- admin-users.controller.ts
+- AdminProjectsEditor.tsx
+- dependencies
+- devDependencies
+- dropdown-menu.tsx
+- notes/[slug]/opengraph-image.tsx
+- web/package.json
+- NotesDetail.tsx
+- credentials.ts
+- AdminAboutExperienceIndex.tsx
+- contracts.test.mjs
+- principles.type.ts
+- MeProvider
+- create-markdown-extensions.ts
+- @storybook/react
+- API module conventions (NestJS + Prisma)
+- EventsService
+- AdminContactTopic
+- AdminPage
+- AdminPrinciple
+- AdminProcessStep
+- use-admin-events.hook.ts
+- analytics.service.ts
+- AdminEducation
+- ref_zod
+- ProfileStatsService
+- AdminSocialLink
+- use-public-cache-sync.hook.ts
+- EmptyState
+- Deploy (Vercel + Render + TiDB + Cloudinary)
+- MigrationDiagram.stories.tsx
+- ContactService
+- AdminNavItem
+- scripts
+- AdminExperience
+- IconPicker.tsx
+- contracts/package.json
+- Timeline
 - lil.p
-- SortableList.tsx
-- about/services/skills.service.ts
+- posts.data.ts
+- AdminSiteIndex.tsx
+- PublicRouteSkeleton
+- hero-stats.spec.ts
+- markdown-to-hast.ts
+- ProjectsBrowser.tsx
+- Interview Senior FE (personal project) | 09/2026 – Present
+- [locale]/layout.tsx
+- redesign/screenshot.mjs
+- small-entity.service.ts
+- environment
+- jobs
+- public-shell-indexes.spec.ts
+- EditorShell
+- 9. Implementation plan (stacked PRs)
+- JwtAuthGuard
+- public-contact.controller.ts
+- media-storage.ts
+- web/components.json
+- admin-inbox.service.ts
+- ContactFormBlock.tsx
+- CaseCard.stories.tsx
+- steps
+- ui/components.json
+- CMS open-stack integration plan (DRAFT — merge only with Parker's OK)
+- use-admin-audit.hook.ts
 - Even the Stars Know Your Name
 - scripts
-- publishLint
-- AdminDashboardIndex.tsx
-- ProjectsBrowser.tsx
-- jobs
+- contact-topics/contact-topics.service.ts
 - uses
 - check-placeholders.mjs
+- API image prerequisite for CMS core
 - compilerOptions
-- Deploy (Vercel + Render + TiDB + Cloudinary)
+- ProfileStat
 - devDependencies
-- AccentHeadline
+- check-content.mjs
 - services
 - r3-12-e2e-gate.sh
 - compilerOptions
-- navigation.schema.ts
-- use-admin-audit.hook.ts
 - api-e2e
 - package.json
-- media.type.ts
+- MediaLibrary.test.tsx
 - globals.test.ts
-- API image prerequisite for CMS core
-- Portfolio implementation plan
-- toc.util.ts
+- .submit
+- AdminMedia
+- contact.action.ts
 - startShader
+- MockIntersectionObserver
 - compilerOptions
-- @storybook/react
-- steps
 - web-e2e-shard
-- ci-ok
-- Timeline.tsx
-- CMS U1 — shared controls
+- StatBand.tsx
+- skills.module.ts
+- toc.util.ts
 - proxy.ts
-- schema-to-fields.util.ts
+- steps
+- ci-ok
+- resolve-block.util.ts
+- brand-foundation.spec.ts
+- about/services/skills.service.ts
+- BlockRenderer.tsx
 - environment
-- README.md
-- admin-core/utils/shortcut.util.ts
+- D2 persistence and builder API — DRAFT, Parker DDL approval pending
 - eslint.config.mjs
-- u0-capture.spec.ts
-- AdminSiteProfile.test.tsx
 - compilerOptions
-- PagePreview.tsx
+- health.controller.ts
+- MediaService
+- isReservedPublicPageSlug
+- services/projects.service.ts
+- build-post-metadata.util.ts
 - api
-- AuditRow.stories.tsx
-- CaseStudyHeader.tsx
-- M0 — Nền tảng
-- Deploy (Vercel + Render + TiDB + Cloudinary)
+- M6 — Quality
 - Deploying main to Vercel and re-running CI
 - env
 - with
-- domains.schema.ts
+- slash-command.extension.ts
 - lighthouse.ts
 - scripts
-- admin-inbox.service.ts
+- schema-to-fields.util.ts
+- UI module conventions (Next.js)
 - services
-- PROJECT_CONTEXT — lil.p (portfolio)
+- CMS U1 — shared controls
 - AGENTS.md — lil.p rules
-- CMS core C1–C3 extraction runbook
-- Vercel CMS-core build graph hotfix
+- P4-6 T24: hero stats from site settings
+- u0-capture.spec.ts
+- visual.spec.ts
 - args
 - web
 - caddy
 - Ctrack Crystal | 01/2026 – Present
 - on
+- create-lowlight.ts
+- @tiptap/react
+- AuditRow.stories.tsx
 - SaveStatus.stories.tsx
 - Colors.stories.tsx
 - Spacing.stories.tsx
+- PROJECT_CONTEXT — lil.p (portfolio)
+- vercel.json
 - migration-gate.sh
-- craft/page.tsx
-- 7. Per-page designs
-- visual.spec.ts
+- content-migration.e2e-spec.ts
+- custom-public-pages.spec.ts
 - healthcheck
 - backup
 - db
+- M0 — Groundwork
+- M0 — Nền tảng
 - CMS B3 — package skeleton and measured browser budgets
+- CMS core C1–C3 extraction runbook
+- Vercel CMS-core build graph hotfix
 - build-e2e
 - react
-- SectionBoundary.tsx
-- vercel.json
+- PrincipleList.tsx
+- SectionBoundary.stories.tsx
+- SkillGroup.tsx
+- SortableList.stories.tsx
+- compare-cms-captures.mjs
 - nest-cli.json
-- Monorepo conventions
-- HeroStage
+- contact-message.mapper.ts
+- .list
+- media.module.ts
+- PublicErrorState.tsx
+- craft/page.tsx
 - admin-editors-r3.spec.ts
-- 4. Tokens
-- Ink & Signal implementation review — 29 October 2026
-- Kế hoạch triển khai portfolio
+- ux-overlay.spec.ts
 - first-h1.util.ts
-- SiteShell
+- Accessibility and performance audit — 26 Oct 2026
 - Portfolio notes — CFW Back Office Portal (cfw-backoffice-portal)
+- Deploy (Vercel + Render + TiDB + Cloudinary)
+- Portfolio implementation plan
+- Kế hoạch triển khai portfolio
 - R3-05 public shell and indexes
 - R3-10 — Admin editors and settings
 - Round 3 stack integration PR
+- D6 — journey and release evidence manifest template
 - collapsible.tsx
 - exports
 - scripts
-- Icon
+- Foundations.stories.tsx
 - StatCard.stories.tsx
 - button.stories.tsx
 - Motion.stories.tsx
 - Typography.stories.tsx
-- MockIntersectionObserver
-- 01-tom-tat-tieng-viet.md
-- MeProvider
-- BlockRenderer.test.tsx
-- D6 — journey and release evidence manifest template
-- Round 3 PR 01 — brand foundation
+- media.service.ts
+- page-versions.service.spec.ts
+- admin-components.spec.ts
+- admin-dashboard.spec.ts
+- admin-pages.spec.ts
+- admin-table-styles.spec.ts
+- navigation-progress.spec.ts
 - web/eslint.config.mjs
+- BlockRenderer.test.tsx
 - Portfolio notes — Central Food Wholesale CRM Portal (cfw-sales-crm-portal)
 - Portfolio notes — lil.p (this site)
 - Portfolio notes — Particula (particula-fe)
-- PublicErrorState
-- use-small-entity.hook.test.tsx
+- Round 3 PR 01 — brand foundation
 - R3-02 — Custom page creation API
 - R3-03 — Published custom pages
 - R3-04 — Create a page in the real admin
@@ -263,39 +284,48 @@
 - R3-09: Admin collections
 - R3-11 — Real content seed
 - R3-12: Integrated real-flow audit
-- CMS B1 — golden HTTP contracts
-- B5 — pure page engine and host ports
-- changes
 - Private CMS core naming exception
+- CMS B1 — golden HTTP contracts
+- CMS B2 — one block page-allowance source
+- B5 — pure page engine and host ports
+- CMS core full verification — D6 → C gate
+- Duplicate block limit
+- B5 — pure page engine and host ports
+- CI static-check throughput — 2026-11-15
+- changes
 - AccentHeadline.stories.tsx
 - Atmosphere.stories.tsx
-- B5 — pure page engine and host ports
-- DiffStat
+- Callout.stories.tsx
+- DiffStat.stories.tsx
 - FeatureCard.stories.tsx
 - KickerPill.stories.tsx
 - MediaUploader.stories.tsx
 - Prose.stories.tsx
-- CMS core full verification — D6 → C gate
+- RequirementColumns.stories.tsx
 - StatusPill.stories.tsx
-- TechMarquee.stories.tsx
 - badge.stories.tsx
-- Duplicate block limit
 - tsconfig.build.json
+- admin-page-create.spec.ts
+- editor-split.spec.ts
 - ResizeObserverStub
-- cms-core/tsconfig.json
-- contracts/tsconfig.json
 - Phase C — private CMS core distribution (draft-ahead specification)
 - build
-- Eyebrow.stories.tsx
-- DecisionCard.stories.tsx
+- cms-core/tsconfig.json
+- contracts/tsconfig.json
+- CtaBand.stories.tsx
 - ResizeObserverStub
-- 2026-11-11-cms-b5-snapshot-review.md
+- ProcessFlow.stories.tsx
+- SectionHeader.stories.tsx
 - SectionNav.stories.tsx
-- preview.tsx
+- VersionTag.stories.tsx
+- admin-table-filters.spec.ts
+- move-ids.util.test.ts
+- 2026-11-11-cms-b5-snapshot-review.md
 - backup.sh
 - restore.sh
 - docker-entrypoint.sh
 - visual-update.sh
+- rehype-slug
 - postcss.config.mjs
 - web/scripts/vercel-ignore-build.sh
 - 2026-11-01-admin-ia.md
@@ -306,9 +336,6 @@
 - pnpm-workspace.yaml
 - generate-brand-icons.sh
 - scripts/vercel-ignore-build.sh
-- move-ids.util.test.ts
-- UI redesign plan — public site + admin CMS (frontend only)
-- 8. Showcase techniques → FE skills, budgets
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 273 edges
@@ -325,1107 +352,1187 @@
 ## Surprising Connections (you probably didn't know these)
 - `Highlights authored by Parker` --references--> `text()`  [INFERRED]
   docs/case-studies/cfw-backoffice-portal.md → apps/api/prisma/seed/data/portfolio.mapper.ts
-- `T30 · Write API: posts, experience, education, principles, stats, process` --references--> `readingMinutes()`  [INFERRED]
-  docs/archive/plan/09-7-tasks-t26-projects-list.md → apps/api/src/common/utils/reading-time.util.ts
-- `T30 · Write API: post, experience, education, principle, stat, process` --references--> `readingMinutes()`  [INFERRED]
-  docs/archive/plan-vi/10-7-cac-task-m3-phia-ghi.md → apps/api/src/common/utils/reading-time.util.ts
 - `T50 · Media API: upload, variants, relations` --references--> `MediaService`  [INFERRED]
   docs/archive/plan/12-7-tasks-t46-users-admin-admin-only-change-own-pass.md → apps/api/src/modules/media/media.service.ts
 - `T50 · API media: upload, variant, quan hệ` --references--> `MediaService`  [INFERRED]
   docs/archive/plan-vi/14-7-cac-task-m5-realtime-media-publish.md → apps/api/src/modules/media/media.service.ts
+- `8. Owner tasks and out of scope` --references--> `MediaService`  [INFERRED]
+  docs/PLAN.md → apps/api/src/modules/media/media.service.ts
+- `8. Việc của owner và ngoài phạm vi` --references--> `MediaService`  [INFERRED]
+  docs/PLAN.vi.md → apps/api/src/modules/media/media.service.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (307 total, 40 thin omitted)
+## Communities (339 total, 52 thin omitted)
 
-### Community 0 - "Locale"
-Cohesion: 0.03
-Nodes (51): main(), seedAdmin(), seedBaseline(), main(), NotSeededException, applyReorder(), assertSameIds(), reorder() (+43 more)
+### Community 0 - "Input"
+Cohesion: 0.06
+Nodes (96): CardActions, EntityForm(), SmallEntityRow, SmallField, ExperienceForm(), AdminPasswordInput(), LoginForm(), MarkdownEditor (+88 more)
 
 ### Community 1 - "@nestjs/common"
 Cohesion: 0.03
-Nodes (54): IS_PUBLIC_KEY, Public(), Roles(), ROLES_KEY, LoggingInterceptor, RequestWithId, RequestIdMiddleware, RequestWithId (+46 more)
+Nodes (88): dependencies, argon2@^0.45.1, cloudinary@^2.11.0, cookie-parser@^1.4.7, dotenv@^18.0.9, multer@^2.5.0, @nestjs/common@^11.1.9, @nestjs/config@^4.0.2 (+80 more)
 
-### Community 2 - "AppConfigService"
-Cohesion: 0.02
-Nodes (62): argon2@^0.45.1, @nestjs/config@^4.0.2, JwtAuthGuard, JwtRefreshGuard, isSameOrigin(), MUTATING, OriginGuard, AppConfigService (+54 more)
-
-### Community 3 - "MediaLibrary.test.tsx"
-Cohesion: 0.14
-Nodes (9): MediaLibraryItem, Empty, Grid, items, meta, Story, clientHeightDesc, clientWidthDesc (+1 more)
-
-### Community 4 - "cn"
-Cohesion: 0.03
-Nodes (129): EditorShell(), labels, subscribe(), TOPBAR_STATUS_ID, useTopbarStatusSlot(), visibleSlot(), InboxList(), InboxListLabels (+121 more)
-
-### Community 5 - "Button"
-Cohesion: 0.06
-Nodes (104): AdminMediaPage(), dynamic, CardActions, EducationEntityIndex(), EntityForm(), pickFields(), SmallEntityRow, SmallField (+96 more)
-
-### Community 6 - "analytics.service.ts"
-Cohesion: 0.05
-Nodes (33): ContactThrottleGuard, LoginThrottleGuard, RateLimitGuard, ViewsThrottleGuard, hashIp(), requestIp(), utcDayKey(), deviceFromUa() (+25 more)
-
-### Community 7 - "useIsAdmin"
-Cohesion: 0.13
-Nodes (36): AdminDomainsPage(), AdminEducationPage(), AdminPrinciplesPage(), AdminProcessPage(), AdminSitePage(), AdminSkillsPage(), AdminStatsPage(), AdminTagsPage() (+28 more)
-
-### Community 8 - "posts.schema.ts"
-Cohesion: 0.07
-Nodes (30): posts, tags, postFixture, postFixtures, viPostFixture, adminPostInputSchema, adminPostListItemSchema, adminPostListParamsSchema (+22 more)
-
-### Community 9 - "CaseCard"
-Cohesion: 0.11
-Nodes (48): input(), dialog(), BlockRenderer(), renderEntry(), CtaBandBlock(), PageHeaderBlock(), UnknownBlockNotice(), BlockRenderers (+40 more)
-
-### Community 10 - "Modules"
+### Community 2 - "cn"
 Cohesion: 0.04
-Nodes (78): AdminInboxPage(), AdminCmsLayout(), NotFound(), ChangePasswordDialog(), AdminBottomBar(), CONTENT_HREFS, keyboardOpen(), subscribeViewport() (+70 more)
+Nodes (64): NotFound(), RangeToggle(), CollectionMediaLibrary(), MediaLibraryItem, subscribeViewport(), viewportWidth(), OPEN_COMMAND_PALETTE, openCommandPalette() (+56 more)
 
-### Community 11 - "ref_zod"
-Cohesion: 0.07
-Nodes (50): defineBlock(), aboutIntroBlock, aboutIntroPropsSchema, caseGridBlock, caseGridPropsSchema, contactFormBlock, contactFormPropsSchema, ctaBandBlock (+42 more)
+### Community 3 - "apps_api_src_generated_prisma_client"
+Cohesion: 0.03
+Nodes (38): NotSeededException, applyReorder(), assertSameIds(), reorder(), ReorderDelegate, Transactional, AdminAuditController, AuditClient (+30 more)
 
-### Community 12 - "PrismaService"
-Cohesion: 0.10
+### Community 4 - "index.ts"
+Cohesion: 0.04
+Nodes (86): adminViewsSchema, topPageSchema, topReferrerSchema, trackViewSchema, viewDeviceSchema, viewsByDaySchema, TopPage, TopReferrer (+78 more)
+
+### Community 5 - "Modules"
+Cohesion: 0.06
+Nodes (68): AdminMediaPage(), dynamic, SiteLayout(), blocks(), getPathname, Link, redirect, usePathname (+60 more)
+
+### Community 6 - "next-intl"
+Cohesion: 0.04
+Nodes (58): routing, APP_TIME_ZONE, ChangePasswordDialog(), AdminCommandPalette(), PaletteItem, SEQUENCES, switchAdminLocale(), normalizeSearch() (+50 more)
+
+### Community 7 - "Button"
+Cohesion: 0.06
+Nodes (57): ExperienceTable(), item, labels, renderTable(), AdminListTable(), AdminListTableLabels, labels, renderTable() (+49 more)
+
+### Community 8 - "ref_vitest"
+Cohesion: 0.11
 Nodes (31): contactTopicsData, navItemsData, profileData, siteSettingsData, socialLinksData, adminEmail, UsersService, PrismaService (+23 more)
 
-### Community 13 - "block-renderers.constant.ts"
-Cohesion: 0.09
-Nodes (60): Loading(), listPrinciples(), AboutIntroBlock(), AboutIntroSkeleton(), BlockHeading(), CaseGridBlock(), CaseGridSkeleton(), ContactFormBlock() (+52 more)
+### Community 9 - "pages/pages.service.ts"
+Cohesion: 0.07
+Nodes (51): flattenZodError(), PageWithAllBlocks, pageWithAllBlocksInclude, PageWithBlocks, pageWithBlocksInclude, hasUnpublishedChanges(), toAdminBlock(), toAdminPage() (+43 more)
 
-### Community 14 - "api/package.json"
-Cohesion: 0.03
-Nodes (76): dependencies, cloudinary@^2.11.0, cookie-parser@^1.4.7, dotenv@^18.0.9, multer@^2.5.0, @nestjs/common@^11.1.9, @nestjs/core@^11.1.9, @nestjs/jwt@^12.0.3 (+68 more)
-
-### Community 15 - "next"
+### Community 10 - "Public"
 Cohesion: 0.05
-Nodes (44): GET(), dynamic, generateMetadata, Page(), revalidate, dynamic, generateMetadata, Page() (+36 more)
+Nodes (21): Public(), Locale(), PublicEducationController, PublicExperienceController, PublicPagesController, RequestWithId, PublicPostsController, PublicPrinciplesController (+13 more)
 
-### Community 16 - "NotesDetail.tsx"
-Cohesion: 0.09
-Nodes (26): generateMetadata, Page(), revalidate, AboutIndex(), getSite, HomeIndex(), PostHeader(), NotesDetail() (+18 more)
-
-### Community 17 - "portfolio.mapper.ts"
-Cohesion: 0.08
-Nodes (63): IDENTIFIERS, withOwnerAboutBlocks(), pagesData, buildUnmappedNote(), dataFile(), loadPortfolioData(), LocalizedPair, LocalizedProp (+55 more)
-
-### Community 18 - "ui/package.json"
+### Community 11 - "portfolio-design-system.md"
 Cohesion: 0.04
-Nodes (72): dependencies, class-variance-authority@^0.7.1, clsx@^2.1.1, cmdk@^1.1.1, @floating-ui/dom@^1.8.0, lowlight@^3.3.0, lucide-react@^0.553.0, @portfolio/contracts@workspace:* (+64 more)
+Nodes (46): AdminProfilePage(), message(), AdminSiteProfile(), Contents, 5. Design map, 6. Task overview, 7. Tasks, M1 — First API (+38 more)
 
-### Community 19 - "@tanstack/react-query"
-Cohesion: 0.11
-Nodes (31): AdminExperiencePage(), firstSearchParam(), useAdminExperienceRow(), useCreateAdminExperience(), useDeleteAdminExperience(), useSaveAdminExperience(), item, page (+23 more)
-
-### Community 20 - "contracts.ts"
+### Community 12 - "block-registry.constant.ts"
 Cohesion: 0.06
-Nodes (44): AdminBlock, adminBlockSchema, blockKeySchema, BlockRef, BlockRole, blockSurfaceSchema, InvalidPreviewBlock, invalidPreviewBlockSchema (+36 more)
+Nodes (52): CMS core package scaffold, defineBlock(), isBlockAllowedOnPage(), Portfolio host contracts, isBlockAllowedOnPage(), aboutIntroBlock, aboutIntroPropsSchema, caseGridBlock (+44 more)
 
-### Community 21 - "AdminProjectsIndex.tsx"
+### Community 13 - "block-renderers.constant.ts"
 Cohesion: 0.12
-Nodes (26): useCreateAdminProject(), usePublishAdminProject(), useUnpublishAdminProject(), item, page, params, useAdminProjects(), useArchiveAdminProject() (+18 more)
+Nodes (49): listPrinciples(), AboutIntroSkeleton(), BlockHeading(), CaseGridBlock(), CaseGridSkeleton(), ContactFormSkeleton(), CtaBandSkeleton(), CvDownloadBlock() (+41 more)
 
-### Community 22 - "apiServer"
-Cohesion: 0.11
-Nodes (24): AdminAuditPage(), listEducation(), listExperience(), ProjectsBrowserBlock(), listContactTopics(), PUBLIC_CACHE_TAG, PUBLIC_REVALIDATE_SECONDS, apiServer() (+16 more)
+### Community 14 - "ui/package.json"
+Cohesion: 0.04
+Nodes (73): dependencies, class-variance-authority@^0.7.1, clsx@^2.1.1, cmdk@^1.1.1, @dnd-kit/core@^6.3.1, @dnd-kit/modifiers@^9.0.0, @dnd-kit/sortable@^10.0.0, @dnd-kit/utilities@^3.2.2 (+65 more)
 
-### Community 23 - "PageSkeleton"
+### Community 15 - "apiServer"
+Cohesion: 0.07
+Nodes (38): AdminAnalyticsPage(), firstSearchParam(), AdminAuditPage(), AdminExperiencePage(), firstSearchParam(), AdminInboxDetailPage(), AdminHomePage(), firstSearchParam() (+30 more)
+
+### Community 16 - "portfolio.mapper.ts"
+Cohesion: 0.09
+Nodes (55): IDENTIFIERS, buildUnmappedNote(), dataFile(), loadPortfolioData(), LocalizedPair, LocalizedProp, mapContactTopics(), mapDomains() (+47 more)
+
+### Community 17 - "ref_testing_library_react"
+Cohesion: 0.05
+Nodes (39): labels, Markdown(), renderMarkdown(), labels, hastToReact(), heading(), MarkdownLabels, T42 · Editor shell + Tiptap MarkdownEditor + autosave (+31 more)
+
+### Community 18 - "Roles"
+Cohesion: 0.08
+Nodes (24): CurrentUser, Roles(), ZodValidationPipe, AuthController, AuthedRequest, ACCESS_COOKIE, ACCESS_COOKIE_PATH, authCookieFlags() (+16 more)
+
+### Community 19 - "DataTable"
+Cohesion: 0.06
+Nodes (48): AdminInboxPage(), createSequenceListener(), KeySequence, SEQUENCE_TIMEOUT_MS, SEQUENCES, setup(), AdminInboxIndex(), T46 · Users admin (admin only) + change own password (+40 more)
+
+### Community 20 - "PageKey"
+Cohesion: 0.05
+Nodes (55): T08 · Prisma: site layout models, first migration, seed profiles, T10a · Block registry contracts + `GET /api/public/pages/:key`, T08 · Prisma: model layout site, migration đầu tiên, seed profile, T10a · Contracts cho block registry + `GET /api/public/pages/:key`, Boundary and compatibility, CMS B4 — host-composed contracts and registry, Main integration plan (2026-11-11), Plan (+47 more)
+
+### Community 21 - "app.module.ts"
+Cohesion: 0.05
+Nodes (21): LoggingInterceptor, RequestIdMiddleware, ConfigModule, AuditModule, AuthModule, ContactModule, DashboardModule, EducationModule (+13 more)
+
+### Community 22 - "useIsAdmin"
+Cohesion: 0.13
+Nodes (35): AdminDomainsPage(), AdminEducationPage(), AdminPrinciplesPage(), AdminProcessPage(), AdminSkillsPage(), AdminStatsPage(), AdminTagsPage(), AdminEducationIndex() (+27 more)
+
+### Community 23 - "apiClient"
+Cohesion: 0.07
+Nodes (46): login(), useAdminMediaMutations(), listAdminMedia(), removeAdminMedia(), updateAdminMedia(), useAdminPage(), page, reorder (+38 more)
+
+### Community 24 - "AdminPagesEditor.tsx"
+Cohesion: 0.09
+Nodes (44): usePublishAction(), inspectorFieldErrors(), BlockList(), BlockRow(), PagePreview(), PublishBar(), VersionHistory(), useDiscardPage() (+36 more)
+
+### Community 25 - "pickGroup"
+Cohesion: 0.07
+Nodes (46): toIsoDate(), EnViKey, hasText(), pickGroup(), row, EducationRow, toPublicEducation(), TRANSLATED (+38 more)
+
+### Community 26 - "Lane A, first assignment — D1 tree contract"
+Cohesion: 0.10
+Nodes (55): buildPageSnapshot(), readRestorableSnapshot(), firstIssueMessage(), SchemaFieldControl(), SchemaForm(), renderForm(), SchemaField, SchemaFieldKind (+47 more)
+
+### Community 27 - "contracts.ts"
+Cohesion: 0.06
+Nodes (49): AdminBlock, adminBlockSchema, blockKeySchema, BlockRef, BlockRole, blockSurfaceSchema, InvalidPreviewBlock, invalidPreviewBlockSchema (+41 more)
+
+### Community 28 - "PageSkeleton"
 Cohesion: 0.07
 Nodes (30): Loading(), Loading(), Loading(), Loading(), Loading(), Loading(), Loading(), Loading() (+22 more)
 
-### Community 24 - "createRegistry"
-Cohesion: 0.07
-Nodes (42): T08 · Prisma: site layout models, first migration, seed profiles, T08 · Prisma: model layout site, migration đầu tiên, seed profile, Boundary and compatibility, CMS B4 — host-composed contracts and registry, Main integration plan (2026-11-11), Plan, Rollback and measurement, Validation and budget (+34 more)
+### Community 29 - "ref_node_path"
+Cohesion: 0.05
+Nodes (33): esbuild@^0.27.7, dataDir, esbuild, outDir, require, root, captureDir, captures (+25 more)
 
-### Community 25 - "AdminPagesEditor.tsx"
-Cohesion: 0.18
-Nodes (26): RoleGate(), admin, user, inspectorFieldErrors(), PublishBar(), VersionHistory(), AdminPagesEditor(), bumpPreview() (+18 more)
+### Community 30 - "ActionCards.tsx"
+Cohesion: 0.08
+Nodes (40): CardEmpty(), DashboardCard(), DELTA_ICON, DraftsCard(), DraftsCardView(), UnreadCard(), UnreadCardView(), ViewsCard() (+32 more)
 
-### Community 26 - "PostList.tsx"
+### Community 31 - "04-4-components-and-layout.md"
 Cohesion: 0.14
-Nodes (22): useRouter, NotesBrowser(), NotesBrowserContent(), NotesSearch(), formatDate(), PostList(), labels, renderEmpty() (+14 more)
+Nodes (46): input(), dialog(), NotesSearch(), Components: where they go, 4. Architecture at a glance, T12 · UI primitives matching Figma component sets, T13 · States + atmosphere components, T21 · Rich sections: StatBand, TechMarquee, ProcessFlow, PrincipleList, FeatureCard, SkillGroup (+38 more)
 
-### Community 27 - "small-entity.service.ts"
-Cohesion: 0.13
-Nodes (12): educationApi, principlesApi, processStepsApi, profileStatsApi, AdminEntityApi, createAdminEntityApi(), contactTopicsApi, socialLinksApi (+4 more)
+### Community 32 - "AdminProjectsIndex.tsx"
+Cohesion: 0.08
+Nodes (39): SetParamsOptions, replace, useListParams(), DEFAULTS, paramsFromSearch(), searchFromParams(), QuerySnapshot, restoreQueries() (+31 more)
 
-### Community 29 - "Topbar.tsx"
-Cohesion: 0.06
-Nodes (55): AdminInboxRouteLayout(), usePathname, ExperienceTable(), item, labels, renderTable(), AdminListTable(), AdminListTableLabels (+47 more)
+### Community 33 - "Topbar.tsx"
+Cohesion: 0.10
+Nodes (41): AdminLiveEvents(), AdminShell(), AdminSidebar(), NAV_ICONS, NotificationBell(), RoleGate(), admin, CollapsedState() (+33 more)
 
-### Community 30 - "AdminPostsEditor.test.tsx"
+### Community 34 - "CaseCard.tsx"
+Cohesion: 0.10
+Nodes (32): NotesBrowser(), NotesBrowserContent(), formatDate(), PostList(), labels, renderEmpty(), TagFilter(), firstSearchParam() (+24 more)
+
+### Community 35 - "AdminPostsEditor.tsx"
+Cohesion: 0.08
+Nodes (36): AdminPostEditorPage(), AdminNewPostPage(), PublishActions(), editorLabelsFromMessages(), mapFieldErrors(), useAdminPost(), useCreateAdminPost(), usePublishAdminPost() (+28 more)
+
+### Community 36 - "pages.data.ts"
 Cohesion: 0.07
-Nodes (32): AdminPostEditorPage(), AdminNewPostPage(), useAdminPost(), useCreateAdminPost(), usePublishAdminPost(), useSaveAdminPost(), useUnpublishAdminPost(), item (+24 more)
+Nodes (35): prisma@^7.10.1, main(), educationData, experienceData, principleData, processStepData, profileStatData, seedAbout() (+27 more)
 
-### Community 31 - "next-intl"
-Cohesion: 0.04
-Nodes (72): missingKeys(), ExperienceFormValues, experienceToForm(), ExperienceEditorForm(), AdminLoadError(), PublishActions(), useAdminBack(), AutosaveStatus (+64 more)
-
-### Community 32 - "portfolio-design-system.md"
-Cohesion: 0.12
-Nodes (8): Contents, 5. Design map, 6. Task overview, Mục lục, 5. Bản đồ thiết kế, 6. Tổng quan task, Portfolio design system and UI spec (Parker), Hệ thống thiết kế portfolio và UI spec (Parker)
-
-### Community 33 - ".recordNow"
-Cohesion: 0.11
-Nodes (11): AdminSkillCategoriesController, AdminSkillsController, toAdminCategory(), toAdminSkill(), SkillsService, AdminSkill, AdminSkillCategory, SkillCategoryCreateInput (+3 more)
-
-### Community 34 - "AdminDomain"
+### Community 37 - "domains/domains.service.ts"
 Cohesion: 0.09
 Nodes (14): AdminDomainsController, DomainsModule, DomainsService, DomainRow, domainSelect, toAdminDto(), toPublicDomain(), TRANSLATED (+6 more)
 
-### Community 35 - "admin-users.controller.ts"
-Cohesion: 0.11
-Nodes (12): CurrentUser, withAuditTx(), RequestUser, AdminUsersController, toAdminUser(), UsersModule, AdminUser, AdminUserListPage (+4 more)
+### Community 38 - "posts.schema.ts"
+Cohesion: 0.07
+Nodes (32): postFixture, postFixtures, viPostFixture, adminPostInputSchema, adminPostListItemSchema, adminPostListPageSchema, adminPostListParamsSchema, adminPostListTagSchema (+24 more)
 
-### Community 36 - "ProjectsDetail.tsx"
+### Community 39 - "tags/tags.service.ts"
 Cohesion: 0.09
-Nodes (31): generateMetadata, generateStaticParams(), Page(), revalidate, getPathname, Link, redirect, MarkdownSection (+23 more)
+Nodes (13): slugify(), AdminTagsController, TagRow, tagSelect, toAdminDto(), toPublicTag(), PublicTagsController, TagsModule (+5 more)
 
-### Community 37 - "tags/tags.service.ts"
-Cohesion: 0.15
-Nodes (4): AdminTagsController, toAdminDto(), TagsService, AdminTag
-
-### Community 38 - "site-settings.service.ts"
-Cohesion: 0.08
-Nodes (16): PublicSiteService, AdminSiteController, SiteSettingsRow, siteSettingsSelect, parseHeroStats(), toAdminDto(), toPublicHeroStats(), toPublicSiteSettings() (+8 more)
-
-### Community 39 - "@playwright/test"
-Cohesion: 0.03
-Nodes (52): Entry, Locale, OUTPUT, ROUTES, chromeStyles(), PROPERTIES, styleOf(), Box (+44 more)
-
-### Community 40 - "next"
+### Community 40 - ".recordNow"
 Cohesion: 0.12
-Nodes (28): generateStaticParams, GET(), revalidate, robots(), revalidate, sitemap(), isBuildPhase(), getSitemap() (+20 more)
+Nodes (7): AdminSkillCategoriesController, AdminSkillsController, toAdminCategory(), toAdminSkill(), SkillsService, AdminSkill, AdminSkillCategory
 
-### Community 41 - "contracts.test.mjs"
+### Community 41 - "media.type.ts"
+Cohesion: 0.07
+Nodes (35): imageLoader(), nearestVariantWidth(), WIDTHS, adminMediaListPageSchema, adminMediaListParamsSchema, adminMediaSchema, adminProjectImageInputSchema, adminProjectImageSchema (+27 more)
+
+### Community 42 - "CaseCard"
 Cohesion: 0.10
-Nodes (5): captures, copy, folder, newerCopy, definition
+Nodes (34): RolesGuard, takeaways(), Page(), BlocksPage(), ContactIndex(), source(), renderLink(), T20 · Cards: DiffStat, CaseCard, DomainCard, PostCard (+26 more)
 
-### Community 42 - "HeroBlock.test.tsx"
-Cohesion: 0.29
-Nodes (4): block, getSite, renderHero(), site()
+### Community 43 - "dashboard/dashboard.service.ts"
+Cohesion: 0.08
+Nodes (27): AdminDashboardController, lintFieldNames(), missingViFieldNames(), POST_LOCALE_FIELDS, PROJECT_LOCALE_FIELDS, splitFactLines(), statsRangeDays(), statsRangeWindow() (+19 more)
 
-### Community 43 - "contact.schema.ts"
+### Community 44 - "projects.schema.ts"
+Cohesion: 0.07
+Nodes (31): hueSchema, adminDomainSchema, domainCreateSchema, domainUpdateSchema, publicDomainSchema, publicProjectDomainSchema, PublicProjectDomain, adminProjectListDomainSchema (+23 more)
+
+### Community 45 - "ProfileService"
+Cohesion: 0.07
+Nodes (12): AdminProfileController, toAdminDto(), ProfileModule, ProfileService, PublicSiteService, AdminSiteController, SiteSettingsService, serviceWith() (+4 more)
+
+### Community 46 - "AppConfigService"
+Cohesion: 0.05
+Nodes (12): AppModule, AppConfigService, Env, envSchema, optionalSecret, optionalText, optionalUrl, valid (+4 more)
+
+### Community 47 - "@playwright/test"
 Cohesion: 0.09
-Nodes (25): T19 · List query contract (page, sort, search), T19 · Contract cho list query (page, sort, search), roleSchema, changePasswordSchema, loginSchema, meSchema, LoginInput, listParamsSchema() (+17 more)
+Nodes (12): aboutTabs, legacy, openPalette(), palette(), editors, LISTS, signIn(), E2E_ADMIN (+4 more)
 
-### Community 44 - "use-admin-events.hook.ts"
+### Community 48 - "ui-redesign.md"
+Cohesion: 0.07
+Nodes (28): Tóm tắt (Tiếng Việt), Contents, 1.2 Admin CMS (code review + the live sign-in screen), 1. Audit, 2. Design direction, 3. Parker's layout rules → how each surface complies, 4.1 Color, 4.2 Type: IBM Plex Sans + IBM Plex Mono (+20 more)
+
+### Community 49 - "ProjectsDetail.tsx"
+Cohesion: 0.10
+Nodes (24): generateMetadata, Page(), revalidate, MarkdownSection, splitMarkdownSections(), CaseStudyMeta(), CaseStudySections(), caseStudyToc() (+16 more)
+
+### Community 50 - "PostsService"
 Cohesion: 0.13
-Nodes (20): AdminLoginPage(), dynamic, ADMIN_LOGIN_AUTO_REDIRECT_KEY, clientHasAdminSession(), hasAdminLoginAutoRedirected(), markAdminLoginAutoRedirected(), { refreshOnce }, safeAdminNext() (+12 more)
+Nodes (10): AdminPostsController, toAdminDto(), toAdminListItem(), PostsService, BulkStatusInput, AdminPost, AdminPostListPage, AdminPostListParams (+2 more)
 
-### Community 45 - "hast-to-react.util.ts"
-Cohesion: 0.12
-Nodes (17): hast-util-to-jsx-runtime@^2.3.6, labels, renderMarkdown(), labels, hastToReact(), heading(), MarkdownLabels, markdownKitchenSink (+9 more)
+### Community 51 - "AdminAboutExperienceEditor.tsx"
+Cohesion: 0.10
+Nodes (24): AdminExperienceEditorPage(), AdminNewExperiencePage(), emptyExperienceForm(), ExperienceFormValues, experienceToForm(), toExperienceCreateInput(), AdminAboutExperienceEditor(), ExperienceEditorForm() (+16 more)
 
-### Community 46 - "ui-redesign.md"
-Cohesion: 0.27
-Nodes (5): Contents, 1. Audit, 2. Design direction, 5. Grid and breakpoints, 10. i18n
-
-### Community 47 - "CMS open-stack integration plan (DRAFT — merge only with Parker's OK)"
-Cohesion: 0.15
-Nodes (16): context(), Bottom-stack readiness at `main` `d0d474b` (2026-11-10), Checks, evidence, and rollback, CMS open-stack integration plan (DRAFT — merge only with Parker's OK), Current open-PR merge snapshot (2026-11-11 05:05 ICT), Exact B4 ↔ U2 CI resolution, Local-gate known issues (read-only investigation, 2026-11-11 06:14 ICT), Merge execution checklist (future authorized owner only) (+8 more)
-
-### Community 48 - "AdminPrinciple"
-Cohesion: 0.14
-Nodes (5): AdminPrinciplesController, toAdminDto(), PrinciplesService, AdminPrinciple, PrincipleCreateInput
-
-### Community 49 - "ref_node_fs"
-Cohesion: 0.03
-Nodes (55): esbuild@^0.27.7, dataDir, esbuild, outDir, require, root, apiRoot, engine (+47 more)
-
-### Community 50 - ".record"
-Cohesion: 0.12
-Nodes (9): AdminPostsController, toAdminDto(), PostsService, BulkStatusInput, AdminPost, AdminPostListPage, AdminPostListParams, PostCreateInput (+1 more)
-
-### Community 51 - "site-settings.schema.ts"
-Cohesion: 0.19
-Nodes (12): availabilitySchema, adminSiteSettingsSchema, HERO_STAT_LIMITS, heroStatSchema, heroStatsSchema, publicHeroStatSchema, publicSiteSettingsSchema, siteSettingsUpdateSchema (+4 more)
-
-### Community 52 - "admin-pages.service.ts"
+### Community 52 - "ApiError"
 Cohesion: 0.09
-Nodes (33): keyMessage(), submit(), titleMessage(), useAdminPage(), useAdminPages(), page, reorder, useBlockMutations() (+25 more)
+Nodes (24): AdminCmsLayout(), AutosaveStatus, useAutosave(), render(), wrapper(), useSaveStatus(), useAdminProfile(), useSaveAdminProfile() (+16 more)
 
-### Community 53 - "cms-core/package.json"
+### Community 53 - "seo.util.test.ts"
+Cohesion: 0.14
+Nodes (21): generateStaticParams, GET(), revalidate, robots(), revalidate, sitemap(), isBuildPhase(), listPosts() (+13 more)
+
+### Community 54 - "next"
+Cohesion: 0.11
+Nodes (18): dynamic, dynamic, aboutMetadata(), buildAboutMetadata(), buildPageMetadata(), buildContactMetadata(), contactMetadata(), buildHomeMetadata() (+10 more)
+
+### Community 55 - "cms-core/package.json"
 Cohesion: 0.06
 Nodes (38): import, require, types, devDependencies, react@^19.0.0, react-dom@^19.0.0, tsup@^8.5.0, typescript@^5.9.3 (+30 more)
 
-### Community 54 - "posts/posts.service.ts"
-Cohesion: 0.04
-Nodes (63): toIsoDate(), paginate(), assertFresh(), EnViKey, hasText(), pickGroup(), row, EducationModule (+55 more)
+### Community 56 - "pages.http.spec.ts"
+Cohesion: 0.08
+Nodes (23): @nestjs/testing@^11.1.9, IS_PUBLIC_KEY, ROLES_KEY, AdapterCause, AllExceptionsFilter, RequestWithId, uniqueFieldFromPrisma(), controllerTag() (+15 more)
 
-### Community 55 - "SiteShell.tsx"
-Cohesion: 0.20
-Nodes (9): DraftBanner(), DraftBannerView(), isDismissed(), LocaleSuggestBanner(), preferredLocale(), subscribe(), PreviewBridge(), refresh (+1 more)
-
-### Community 56 - "create-markdown-extensions.ts"
-Cohesion: 0.06
-Nodes (41): T23 · Markdown pipeline + Prose + CodeBlock + reading aids, isAllowedImageSrc(), isAllowedMarkdownUrl(), MARKDOWN_CODE_LANGUAGES, highlight.js@^11.12.0, @tiptap/core@3.32.0, @tiptap/extension-code-block-lowlight@3.32.0, @tiptap/extension-file-handler@3.32.0 (+33 more)
-
-### Community 57 - "StatBand.tsx"
-Cohesion: 0.19
-Nodes (7): profileStatFixtures, StatItem(), Compact, Default, meta, Story, parseStatValue()
-
-### Community 58 - "AdminExperience"
+### Community 57 - "HeroBlock.tsx"
 Cohesion: 0.10
-Nodes (10): AdminExperienceController, toAdminDto(), ExperienceService, emptyExperienceForm(), toExperienceCreateInput(), persist(), AdminExperience, AdminExperienceListPage (+2 more)
+Nodes (22): aboutAvatar, MOCK_AVATAR_SRC, AboutIntroBlock(), CtaBandBlock(), Cta, HeroBlock(), HeroStatItem, selectHeroStats() (+14 more)
 
-### Community 59 - "pages/pages.service.ts"
-Cohesion: 0.10
-Nodes (53): flattenZodError(), assertAllowedOnPage(), assertCanDelete(), assertCanHide(), assertInsertKeepsH1First(), assertLayoutAllowed(), assertWithinLimit(), PageBlockLike (+45 more)
+### Community 58 - "posts/posts.service.ts"
+Cohesion: 0.11
+Nodes (22): paginate(), assertFresh(), visitorEmail, PostRow, postSelect, postTagSelect, published, projectDomainSelect (+14 more)
 
-### Community 60 - "BlockInspector.tsx"
-Cohesion: 0.14
-Nodes (28): names, BlockInspector(), BlockList(), columns(), LayoutPresetPicker(), AdminPostsTabs(), T45b · Page builder: blocks, drag and drop, layouts, T45b · Page builder: block, drag and drop, layout (+20 more)
+### Community 59 - "locale.schema.ts"
+Cohesion: 0.09
+Nodes (22): localeQuerySchema, localeSchema, Entity, adminContactTopicSchema, contactTopicCreateSchema, contactTopicUpdateSchema, publicContactTopicSchema, ContactTopicUpdateInput (+14 more)
 
-### Community 61 - "notes/[slug]/opengraph-image.tsx"
-Cohesion: 0.07
-Nodes (33): contentType, generateStaticParams(), Image(), revalidate, size, generateMetadata, generateStaticParams(), Page() (+25 more)
+### Community 60 - "real.seed.ts"
+Cohesion: 0.09
+Nodes (32): ABOUT_ORDER, AI_AGENTS_BLOCK_KEY, applyOwnerCopy(), EXPERIENCE, patchRow(), PROFILE, PROJECTS, proseBlock() (+24 more)
 
-### Community 63 - "dependencies"
-Cohesion: 0.06
-Nodes (34): dependencies, lucide-react@^0.553.0, next@16.4.3, next-intl@^4.14.9, next-themes@^0.4.6, @portfolio/contracts@workspace:*, @portfolio/ui@workspace:*, react@19.3.0 (+26 more)
+### Community 61 - "ProjectsService"
+Cohesion: 0.15
+Nodes (6): withAuditTx(), AdminProjectsController, toAdminDto(), ProjectsService, AdminProject, AdminProjectListItem
 
-### Community 64 - "db-test"
+### Community 62 - "db-test"
 Cohesion: 0.07
 Nodes (35): depends_on, environment, image, ports, command, condition, environment, healthcheck (+27 more)
 
-### Community 65 - "AdminSocialLink"
-Cohesion: 0.16
-Nodes (4): AdminSocialLinksController, toAdminDto(), SocialLinksService, AdminSocialLink
+### Community 63 - "public-site.schema.ts"
+Cohesion: 0.09
+Nodes (22): profileStatFixtures, navLocationSchema, adminNavItemSchema, navHrefSchema, navItemCreateSchema, navItemUpdateSchema, publicNavItemSchema, NavItemCreateInput (+14 more)
 
-### Community 66 - "dashboard/dashboard.service.ts"
+### Community 64 - "Locale"
 Cohesion: 0.10
-Nodes (20): AdminDashboardController, lintFieldNames(), missingViFieldNames(), POST_LOCALE_FIELDS, PROJECT_LOCALE_FIELDS, splitFactLines(), statsRangeDays(), statsRangeWindow() (+12 more)
+Nodes (19): generateMetadata, revalidate, dynamic, generateMetadata, Page(), generateMetadata, Page(), revalidate (+11 more)
 
-### Community 67 - "ProjectsService"
-Cohesion: 0.15
-Nodes (4): AdminProjectsController, toAdminDto(), ProjectsService, AdminProject
+### Community 65 - "admin-users.controller.ts"
+Cohesion: 0.13
+Nodes (14): AdminUsersController, toAdminUser(), adminUserListPageSchema, adminUserListParamsSchema, adminUserSchema, createUserSchema, setPasswordSchema, updateUserSchema (+6 more)
+
+### Community 66 - "AdminProjectsEditor.tsx"
+Cohesion: 0.12
+Nodes (25): AdminProjectEditorPage(), AdminNewProjectPage(), useAdminProject(), useCreateAdminProject(), usePublishAdminProject(), useSaveAdminProject(), useUnpublishAdminProject(), createAdminProject() (+17 more)
+
+### Community 67 - "dependencies"
+Cohesion: 0.06
+Nodes (34): dependencies, hast-util-to-jsx-runtime@^2.3.6, lucide-react@^0.553.0, next@16.4.3, next-intl@^4.14.9, next-themes@^0.4.6, @portfolio/contracts@workspace:*, @portfolio/ui@workspace:* (+26 more)
 
 ### Community 68 - "devDependencies"
 Cohesion: 0.06
 Nodes (34): devDependencies, @fontsource/be-vietnam-pro@^5.2.8, @fontsource/jetbrains-mono@^5.2.8, @fontsource-variable/inter@^5.2.8, jsdom@^27.4.0, storybook@^10.0.0, @storybook/addon-a11y@^10.0.0, @storybook/addon-themes@^10.0.0 (+26 more)
 
-### Community 69 - "pages.data.ts"
-Cohesion: 0.08
-Nodes (26): educationData, experienceData, principleData, processStepData, profileStatData, seedAbout(), heading(), Localized (+18 more)
+### Community 69 - "dropdown-menu.tsx"
+Cohesion: 0.12
+Nodes (22): AdminInboxRouteLayout(), useAdminMessages(), AdminInboxLayout(), BLOCK_EDITOR_META, ThemeMenu(), T39 · DataTable + admin projects list, T39 · DataTable + list project của admin, BlockType (+14 more)
 
-### Community 70 - "media.service.ts"
-Cohesion: 0.05
-Nodes (22): AdminMediaController, DetectedMedia, detectMediaKind(), MEDIA_MAX_BYTES, toAdminMedia(), toPublicImage(), MediaModule, MediaService (+14 more)
+### Community 70 - "notes/[slug]/opengraph-image.tsx"
+Cohesion: 0.10
+Nodes (28): contentType, generateStaticParams(), Image(), revalidate, size, generateStaticParams(), contentType, generateStaticParams (+20 more)
 
-### Community 71 - "[locale]/layout.tsx"
-Cohesion: 0.11
-Nodes (19): AdminRootLayout(), dynamic, metadata, viewport, generateStaticParams, metadata, routing, APP_TIME_ZONE (+11 more)
-
-### Community 72 - "web/package.json"
+### Community 71 - "web/package.json"
 Cohesion: 0.09
 Nodes (32): devDependencies, @axe-core/playwright@^4.14.0, eslint@^9.39.1, jsdom@^27.2.0, @playwright/test@^1.56.1, @tailwindcss/postcss@^4.1.18, @testing-library/jest-dom@^6.9.1, @testing-library/react@^16.3.0 (+24 more)
 
-### Community 73 - "owner-copy.data.ts"
+### Community 72 - "NotesDetail.tsx"
+Cohesion: 0.13
+Nodes (22): generateMetadata, Page(), revalidate, generateMetadata, Page(), revalidate, generateMetadata, Page() (+14 more)
+
+### Community 73 - "credentials.ts"
 Cohesion: 0.09
-Nodes (31): ABOUT_ORDER, AI_AGENTS_BLOCK_KEY, applyOwnerCopy(), EXPERIENCE, patchRow(), PROFILE, PROJECTS, proseBlock() (+23 more)
+Nodes (18): Entry, Locale, OUTPUT, ROUTES, messageList(), row(), Capture, Locale (+10 more)
 
-### Community 74 - "education.type.ts"
-Cohesion: 0.33
-Nodes (6): adminEducationSchema, educationCreateSchema, educationUpdateSchema, publicEducationSchema, EducationCreateInput, EducationUpdateInput
-
-### Community 75 - "AdminEducation"
-Cohesion: 0.15
-Nodes (4): AdminEducationController, EducationService, toAdminDto(), AdminEducation
-
-### Community 76 - "admin-tags.controller.ts"
-Cohesion: 0.35
-Nodes (6): adminTagSchema, publicTagSchema, tagCreateSchema, tagUpdateSchema, TagCreateInput, TagUpdateInput
-
-### Community 77 - "AdminProcessStep"
+### Community 74 - "AdminAboutExperienceIndex.tsx"
 Cohesion: 0.14
-Nodes (5): AdminProcessStepsController, toAdminDto(), ProcessStepsService, AdminProcessStep, ProcessStepCreateInput
+Nodes (25): useAdminExperienceRow(), useCreateAdminExperience(), useDeleteAdminExperience(), useSaveAdminExperience(), item, page, params, useAdminExperience() (+17 more)
 
-### Community 78 - "index.ts"
-Cohesion: 0.05
-Nodes (68): adminViewsSchema, topPageSchema, topReferrerSchema, trackViewSchema, viewDeviceSchema, viewsByDaySchema, TopPage, TopReferrer (+60 more)
+### Community 75 - "contracts.test.mjs"
+Cohesion: 0.08
+Nodes (12): apiRoot, engine, requireFromApi, rules, snapshots, definition, caps, dist (+4 more)
 
-### Community 79 - "EventsService"
-Cohesion: 0.07
-Nodes (14): @nestjs/event-emitter@^12.0.1, rxjs@^7.8.2, ContactModule, ContactService, visitorEmail, contactMessageSelect, PublicContactController, AdminEventsController (+6 more)
-
-### Community 80 - "public-site.schema.ts"
-Cohesion: 0.18
-Nodes (11): publicSitemapEntrySchema, publicSitemapSchema, publicSiteSchema, PublicSitemapEntry, socialKindSchema, adminSocialLinkSchema, publicSocialLinkSchema, socialLinkCreateSchema (+3 more)
-
-### Community 81 - "ProfileStatsService"
+### Community 76 - "principles.type.ts"
 Cohesion: 0.10
-Nodes (10): AdminProfileStatsController, ProfileStatRow, profileStatSelect, toAdminDto(), toPublicProfileStat(), ProfileStatsService, resolveStatValue(), yearsSince() (+2 more)
+Nodes (16): toPublicPrinciple(), ICON_KEYS, iconKeySchema, principleFixtures, adminPrincipleSchema, principleCreateSchema, principleUpdateSchema, publicPrincipleSchema (+8 more)
 
-### Community 82 - "Spec: public pages static/ISR + API latency (2026-10-31)"
-Cohesion: 0.18
-Nodes (10): Acceptance criteria, After: production (to fill in after deploy), Before: production (2026-10-31, from Vietnam), CSP trade-off (AC5), Local before vs after (same machine, LOCAL ONLY, not comparable to production), Out of scope / follow-ups, Plan, Problem (measured in production, 2026-10-31, from Vietnam) (+2 more)
+### Community 77 - "MeProvider"
+Cohesion: 0.07
+Nodes (20): admin, renderBell(), user, admin, user, admin, FakeEventSource, push (+12 more)
 
-### Community 83 - "AdminContactTopic"
-Cohesion: 0.14
-Nodes (5): AdminContactTopicsController, ContactTopicsService, toAdminDto(), AdminContactTopic, ContactTopicUpdateInput
+### Community 78 - "create-markdown-extensions.ts"
+Cohesion: 0.08
+Nodes (26): @tiptap/core@3.32.0, @tiptap/extension-code-block-lowlight@3.32.0, @tiptap/extension-file-handler@3.32.0, @tiptap/extension-heading@3.32.0, @tiptap/extension-image@3.32.0, @tiptap/extension-link@3.32.0, @tiptap/extension-table@3.32.0, @tiptap/extensions@3.32.0 (+18 more)
 
-### Community 84 - "ref_react"
-Cohesion: 0.12
-Nodes (35): AddBlockDialog(), TagPicker(), TechFilterMenu(), Lessons, isBlockAllowedOnPage(), IconPicker(), EditorToolbar(), markValue() (+27 more)
+### Community 79 - "@storybook/react"
+Cohesion: 0.06
+Nodes (22): Default, meta, Story, Amber, Blue, meta, Story, Violet (+14 more)
 
-### Community 85 - "9. Implementation plan (stacked PRs)"
-Cohesion: 0.18
-Nodes (11): 9. Implementation plan (stacked PRs), R10 — About / CV + contact, R11 — Notes list + post reader, R13 — Admin tables + dashboard, R15 — Hardening and docs, R16 — Figma library (optional), R1 — Tokens, fonts, radius ladder, R2 — Public data-quality guards (client-only) (+3 more)
+### Community 80 - "API module conventions (NestJS + Prisma)"
+Cohesion: 0.08
+Nodes (19): API module conventions (NestJS + Prisma), Auth (JWT), Folders, explained, How a request flows, Module layout, Modules, New API module, Overview (+11 more)
 
-### Community 86 - "AdminNavItem"
-Cohesion: 0.16
-Nodes (5): AdminNavigationController, toAdminDto(), NavigationService, AdminNavItem, NavItemCreateInput
+### Community 81 - "EventsService"
+Cohesion: 0.10
+Nodes (9): AuditActorInterceptor, auditActor, AuditActorStore, currentAuditUserId(), AdminEventsController, EventsModule, ContactCreatedEvent, EventsService (+1 more)
 
-### Community 87 - "AdminPage"
-Cohesion: 0.19
+### Community 82 - "AdminContactTopic"
+Cohesion: 0.15
+Nodes (5): AdminContactTopicsController, ContactTopicsService, toAdminDto(), AdminContactTopic, ContactTopicCreateInput
+
+### Community 83 - "AdminPage"
+Cohesion: 0.17
 Nodes (4): AdminPagesController, AdminBlock, AdminPage, AdminPageListItem
 
-### Community 88 - "AdminInboxDetail.test.tsx"
-Cohesion: 0.12
-Nodes (18): sonner@^2.0.8, isListedStatus(), useInboxMutations(), getAdminMessage(), listAdminMessages(), queryString(), updateAdminMessage(), archive() (+10 more)
+### Community 84 - "AdminPrinciple"
+Cohesion: 0.16
+Nodes (5): AdminPrinciplesController, toAdminDto(), PrinciplesService, AdminPrinciple, PrincipleCreateInput
 
-### Community 89 - "AdminListTable.test.tsx"
-Cohesion: 0.21
-Nodes (11): labels, renderTable(), Row, rows, listeners, readDensity(), serverDensity(), subscribe() (+3 more)
+### Community 85 - "AdminProcessStep"
+Cohesion: 0.15
+Nodes (4): AdminProcessStepsController, toAdminDto(), ProcessStepsService, AdminProcessStep
 
-### Community 90 - "scripts"
+### Community 86 - "use-admin-events.hook.ts"
+Cohesion: 0.15
+Nodes (18): AdminLoginPage(), dynamic, ADMIN_LOGIN_AUTO_REDIRECT_KEY, clientHasAdminSession(), hasAdminLoginAutoRedirected(), markAdminLoginAutoRedirected(), { refreshOnce }, safeAdminNext() (+10 more)
+
+### Community 87 - "analytics.service.ts"
+Cohesion: 0.14
+Nodes (11): AnalyticsModule, AnalyticsService, deviceFromUa(), isBotUa(), isPublicViewPath(), referrerHost(), visitorHash(), PublicViewsController (+3 more)
+
+### Community 88 - "AdminEducation"
+Cohesion: 0.16
+Nodes (4): AdminEducationController, EducationService, toAdminDto(), AdminEducation
+
+### Community 89 - "ref_zod"
+Cohesion: 0.13
+Nodes (16): listParamsSchema(), Paginated, paginatedSchema(), parseSort(), schema, employmentTypeSchema, adminExperienceListPageSchema, adminExperienceListParamsSchema (+8 more)
+
+### Community 90 - "ProfileStatsService"
+Cohesion: 0.16
+Nodes (4): AdminProfileStatsController, toAdminDto(), ProfileStatsService, AdminProfileStat
+
+### Community 91 - "AdminSocialLink"
+Cohesion: 0.16
+Nodes (4): AdminSocialLinksController, toAdminDto(), SocialLinksService, AdminSocialLink
+
+### Community 92 - "use-public-cache-sync.hook.ts"
+Cohesion: 0.10
+Nodes (23): revalidatePublicContent(), changesPublicContent(), isDraft(), PUBLIC_CACHE_SYNC_DEBOUNCE_MS, revalidatePublicContent, setup(), usePublicCacheSync(), PublicCacheMode (+15 more)
+
+### Community 93 - "EmptyState"
+Cohesion: 0.10
+Nodes (21): ActivityCard(), ActivityCardView(), item, 7.2 Projects list — `projects.html`, 7.3 Case study — `case-study.html`, 7.4 About / CV — `about.html`, 7.5 Contact — `contact.html`, 7.6 Notes list — `notes.html` (+13 more)
+
+### Community 94 - "Deploy (Vercel + Render + TiDB + Cloudinary)"
+Cohesion: 0.08
+Nodes (22): 1. TiDB Cloud Serverless, 2. Cloudinary, 3. Render (API), 4. Vercel (web), 5. After go-live, Deploy (Vercel + Render + TiDB + Cloudinary), Local vs production, Launch checklist (T61) (+14 more)
+
+### Community 95 - "MigrationDiagram.stories.tsx"
+Cohesion: 0.08
+Nodes (16): skillChipFixtures, Default, meta, Story, SKILL_SLOTS, FallbackChain, FewerSkills, Full (+8 more)
+
+### Community 96 - "ContactService"
+Cohesion: 0.14
+Nodes (7): AdminContactController, ContactService, AdminContactMessage, AdminContactMessageListPage, AdminContactMessageListParams, UnreadCount, UpdateContactMessageInput
+
+### Community 97 - "AdminNavItem"
+Cohesion: 0.16
+Nodes (4): AdminNavigationController, toAdminDto(), NavigationService, AdminNavItem
+
+### Community 98 - "scripts"
 Cohesion: 0.07
 Nodes (27): scripts, build, check:all, check:content, check:deps, check:placeholders, db:down, db:logs (+19 more)
 
-### Community 91 - "dashboard-views.util.ts"
-Cohesion: 0.38
-Nodes (8): asDay(), asInt(), daysBetween(), emptyViews(), mergeViewsByDay(), utcDateKey(), AdminViews, ViewsByDay
+### Community 99 - "AdminExperience"
+Cohesion: 0.16
+Nodes (4): AdminExperienceController, toAdminDto(), ExperienceService, AdminExperience
 
-### Community 92 - "contracts/package.json"
+### Community 100 - "IconPicker.tsx"
+Cohesion: 0.28
+Nodes (16): useRouter, TagPicker(), TechFilterMenu(), T41 · Admin lists: small entities + icon/hue pickers, T41 · List admin: entity nhỏ + picker icon/hue, IconPicker(), LinkPopover(), SlashMenu (+8 more)
+
+### Community 101 - "contracts/package.json"
 Cohesion: 0.09
 Nodes (25): dependencies, @parker2808/cms-core@workspace:*, zod@^4.1.12, devDependencies, tsup@^8.5.0, typescript@^5.9.3, vitest@^3.2.4, exports (+17 more)
 
-### Community 93 - "principles.type.ts"
-Cohesion: 0.11
-Nodes (19): localeQuerySchema, localeSchema, ICON_KEYS, iconKeySchema, adminContactTopicSchema, contactTopicCreateSchema, contactTopicUpdateSchema, publicContactTopicSchema (+11 more)
-
-### Community 94 - "projects.schema.ts"
-Cohesion: 0.04
-Nodes (48): SetParamsOptions, replace, DEFAULTS, paramsFromSearch(), searchFromParams(), labels, labels, bulkStatusSchema (+40 more)
-
-### Community 95 - "posts.data.ts"
-Cohesion: 0.14
-Nodes (15): POST(), M3 — Write side, T29 · Admin write API on projects + test DB, T30 · Write API: posts, experience, education, principles, stats, process, T31 · Write API: skills, categories, tags, domains, T32 · Write API: site, profile, nav, social, contact topics, T33 · Transactional reorder + tag replace, T34 · Indexes + EXPLAIN (+7 more)
-
-### Community 96 - "MigrationDiagram.stories.tsx"
-Cohesion: 0.15
-Nodes (8): processStepFixtures, skillChipFixtures, FallbackChain, FewerSkills, Full, meta, Story, labels
-
-### Community 97 - "@tanstack/react-query"
-Cohesion: 0.07
-Nodes (32): AdminAnalyticsPage(), firstSearchParam(), AdminInboxDetailPage(), AdminHomePage(), firstSearchParam(), serverRenderTime(), AdminPageEditorPage(), AdminPagesPage() (+24 more)
-
-### Community 98 - "hero-stats.spec.ts"
-Cohesion: 0.10
-Nodes (23): secret, localDatabaseUrl(), testAnalyticsSalt(), testJwtAccess(), testJwtRefresh(), testRevalidateSecret(), heroStats(), revalidateSite() (+15 more)
-
-### Community 99 - "apiClient"
+### Community 102 - "Timeline"
 Cohesion: 0.12
-Nodes (26): useAdminMediaMutations(), listAdminMedia(), removeAdminMedia(), updateAdminMedia(), useAdminSite(), useSaveAdminSite(), getAdminSite(), updateAdminSite() (+18 more)
+Nodes (22): achievementItems(), ExperienceGroup, groupExperience(), highlightItems(), MAX_ACHIEVEMENTS, groupYears(), monthLabel(), Default (+14 more)
 
-### Community 100 - "Interview Senior FE (personal project) | 09/2026 – Present"
+### Community 103 - "lil.p"
+Cohesion: 0.08
+Nodes (26): Background notes, Brand assets, Changing the database schema, CMS U0 pre-change baseline, CMS U0 pre-change baseline, CMS U1 shared controls, Commands, Daily workflow (+18 more)
+
+### Community 104 - "posts.data.ts"
+Cohesion: 0.10
+Nodes (20): posts, tags, readingMinutes(), POST(), M3 — Write side, T29 · Admin write API on projects + test DB, T30 · Write API: posts, experience, education, principles, stats, process, T31 · Write API: skills, categories, tags, domains (+12 more)
+
+### Community 105 - "AdminSiteIndex.tsx"
+Cohesion: 0.22
+Nodes (15): AdminSitePage(), AdminPostsTabs(), useAdminSite(), useSaveAdminSite(), getAdminSite(), updateAdminSite(), AdminSiteIndex(), TABS (+7 more)
+
+### Community 106 - "PublicRouteSkeleton"
+Cohesion: 0.15
+Nodes (13): Loading(), Loading(), Loading(), Loading(), Loading(), Loading(), Loading(), Loading() (+5 more)
+
+### Community 107 - "hero-stats.spec.ts"
+Cohesion: 0.13
+Nodes (17): secret, signOut(), localDatabaseUrl(), testAnalyticsSalt(), testJwtAccess(), testJwtRefresh(), testRevalidateSecret(), revalidateSite() (+9 more)
+
+### Community 108 - "markdown-to-hast.ts"
+Cohesion: 0.17
+Nodes (19): shiki@^4.5.0, previewMarkdown(), SHIKI_THEME_NAME, shikiCssTheme, ALLOWED_LANGS, classNameOf(), filenameOf(), getHighlighter() (+11 more)
+
+### Community 109 - "ProjectsBrowser.tsx"
+Cohesion: 0.15
+Nodes (17): DomainFilter(), Labels, ProjectsBrowser(), ProjectsBrowserIsland(), ProjectsBrowserProps, ProjectsBrowserView(), parseView(), ProjectsView() (+9 more)
+
+### Community 110 - "Interview Senior FE (personal project) | 09/2026 – Present"
 Cohesion: 0.09
 Nodes (22): AI-assisted workflow (honest), Architecture, Bài học, Bài toán, Case study (EN), Case study (VI), Constraints, Data repo (<private-data-repo>) (+14 more)
 
-### Community 101 - ".record"
+### Community 111 - "[locale]/layout.tsx"
 Cohesion: 0.13
-Nodes (13): toAdminBlock(), toAdminPage(), readPageSnapshot(), snapshotBlockCount(), PageVersionsService, definitionOf(), parsePageKey(), findRefPath() (+5 more)
+Nodes (14): AdminRootLayout(), dynamic, metadata, viewport, generateStaticParams, LocaleLayout(), metadata, missingKeys() (+6 more)
 
-### Community 102 - "page-versions.service.ts"
-Cohesion: 0.08
-Nodes (40): PageWithAllBlocks, pageWithAllBlocksInclude, PageWithBlocks, pageWithBlocksInclude, toAdminPageListItem(), toPublicPage(), asNullableString(), buildPageSnapshot() (+32 more)
+### Community 112 - "redesign/screenshot.mjs"
+Cohesion: 0.10
+Nodes (13): readPage(), versions, mime, root, server, ALL, DESK, mime (+5 more)
 
-### Community 103 - "D2 persistence and builder API — DRAFT, Parker DDL approval pending"
-Cohesion: 0.12
-Nodes (14): blocks(), readPage(), versions, Authority, readers and data safety, Contract and gates, D1 validation decisions blocking D2 wiring, D2 implementation checklist (handoff; no migration authored here), D2 persistence and builder API — DRAFT, Parker DDL approval pending (+6 more)
+### Community 113 - "small-entity.service.ts"
+Cohesion: 0.13
+Nodes (12): educationApi, principlesApi, processStepsApi, profileStatsApi, AdminEntityApi, createAdminEntityApi(), contactTopicsApi, navigationApi (+4 more)
 
-### Community 104 - "markdown-to-hast.ts"
-Cohesion: 0.19
-Nodes (18): previewMarkdown(), SHIKI_THEME_NAME, shikiCssTheme, ALLOWED_LANGS, classNameOf(), filenameOf(), getHighlighter(), isElement() (+10 more)
-
-### Community 105 - "environment"
+### Community 114 - "environment"
 Cohesion: 0.10
 Nodes (22): environment, ADMIN_EMAIL, ADMIN_NAME, ADMIN_PASSWORD, ANALYTICS_SALT_SECRET, API_HOST, API_PORT, API_URL (+14 more)
 
-### Community 106 - "AdminProjectsEditor"
-Cohesion: 0.24
-Nodes (6): AdminProjectEditorPage(), AdminNewProjectPage(), useAdminProject(), AdminProjectsEditor(), T43 · Project editor, T43 · Editor project
-
-### Community 107 - "slash-command.extension.ts"
-Cohesion: 0.24
-Nodes (9): @tiptap/pm@3.32.0, @tiptap/suggestion@3.32.0, SlashItem, runSlashCommand(), SlashCommand, slashItems(), slashPluginKey, @tiptap/pm (+1 more)
-
-### Community 108 - "PublicRouteSkeleton"
-Cohesion: 0.16
-Nodes (13): Loading(), Loading(), Loading(), Loading(), Loading(), Loading(), Loading(), dynamic (+5 more)
-
-### Community 109 - "profile/profile.service.ts"
-Cohesion: 0.06
-Nodes (14): AdminProfileController, ProfileRow, profileSelect, row, toAdminDto(), toPublicProfile(), TRANSLATED, ProfileService (+6 more)
-
-### Community 110 - "API module conventions (NestJS + Prisma)"
-Cohesion: 0.12
-Nodes (10): Modules, CMS U0 — route/control inventory and pre-change baseline, Pre-change behavior and visual evidence, Reviewed screenshot reference, Route source of truth, Acceptance, Plan, U0 — route/control inventory and behavior baseline (+2 more)
-
-### Community 111 - "UI module conventions (Next.js)"
-Cohesion: 0.25
-Nodes (8): Data: services, hooks, actions, i18n, Module layout, Naming, New UI module, Overview, Routes ↔ views, UI module conventions (Next.js)
-
-### Community 112 - "ContentHealthCard.tsx"
-Cohesion: 0.22
-Nodes (15): ContentHealthCardView(), issueDetail(), issueKey(), issueTitle(), AdminHealthIssue, Card(), CardContent(), CardDescription() (+7 more)
-
-### Community 113 - "CMS B2 — one block page-allowance source"
-Cohesion: 0.40
-Nodes (4): Acceptance, CMS B2 — one block page-allowance source, Decision and invariants, Plan
-
-### Community 114 - "public-shell-indexes.spec.ts"
-Cohesion: 0.08
-Nodes (17): adminRoutes, editorRoutes, inlineListRoutes, publicScreens, adminDir, captures, publicDir, source (+9 more)
-
-### Community 115 - "ActionCards.tsx"
-Cohesion: 0.16
-Nodes (18): CardEmpty(), DashboardCard(), DELTA_ICON, DraftsCard(), DraftsCardView(), UnreadCard(), UnreadCardView(), ViewsCard() (+10 more)
-
-### Community 116 - "steps"
-Cohesion: 0.11
-Nodes (17): if, runs-on, steps, BASE, HEAD, jobs, context, name (+9 more)
-
-### Community 117 - ".file"
-Cohesion: 0.10
-Nodes (9): PublicMediaController, args, steps, CONTENT_ROOTS, DENYLIST, failures, files, { buildCommand } (+1 more)
-
-### Community 118 - "web/components.json"
-Cohesion: 0.11
-Nodes (17): aliases, components, hooks, lib, ui, utils, iconLibrary, rsc (+9 more)
-
-### Community 119 - "all-exceptions.filter.ts"
-Cohesion: 0.29
-Nodes (5): AdapterCause, AllExceptionsFilter, RequestWithId, uniqueFieldFromPrisma(), ApiErrorBody
-
-### Community 120 - "CaseCard.tsx"
-Cohesion: 0.15
-Nodes (13): renderAppLink(), formatDate(), PostPrevNext(), CARD_ARROW, CARD_INTERACTIVE, CARD_TITLE_LINK, cloudinaryPreview(), HUE_TILE (+5 more)
-
-### Community 121 - "PageKey"
-Cohesion: 0.09
-Nodes (23): ADR: extract a reusable CMS core from lil.p, Block inventory (all 20 current definitions), Components, editing, and rendering, Current boundary and proposed ownership, Deployment checks for C3, FE, BE, DB acceptance, Model, conversion, and persistence, Package API and dependency limits (+15 more)
-
-### Community 122 - "ui/components.json"
-Cohesion: 0.11
-Nodes (17): aliases, components, hooks, lib, ui, utils, iconLibrary, rsc (+9 more)
-
-### Community 123 - "lil.p"
-Cohesion: 0.06
-Nodes (39): revalidatePublicContent(), changesPublicContent(), isDraft(), PUBLIC_CACHE_SYNC_DEBOUNCE_MS, revalidatePublicContent, setup(), usePublicCacheSync(), PublicCacheMode (+31 more)
-
-### Community 124 - "SortableList.tsx"
-Cohesion: 0.09
-Nodes (21): @dnd-kit/core@^6.3.1, @dnd-kit/modifiers@^9.0.0, @dnd-kit/sortable@^10.0.0, @dnd-kit/utilities@^3.2.2, applySortableReorder(), SortableItem, SortableList(), onDragEnd() (+13 more)
-
-### Community 125 - "about/services/skills.service.ts"
-Cohesion: 0.08
-Nodes (26): toPublicSkill(), listMarqueeSkills(), listSkillsGrouped(), guardExperience(), guardSkillGroups(), guardSkills(), experience, skill (+18 more)
-
-### Community 126 - "Even the Stars Know Your Name"
-Cohesion: 0.12
-Nodes (16): Appendix: README, Challenges and solutions, `?dev=1`, Editing the story, Even the Stars Know Your Name, Even the Stars Know Your Name, Not merged yet, Not Parker's (+8 more)
-
-### Community 127 - "scripts"
-Cohesion: 0.12
-Nodes (16): scripts, build, content:migration, db:migrate, db:reset, db:seed, db:studio, dev (+8 more)
-
-### Community 128 - "publishLint"
-Cohesion: 0.05
-Nodes (44): hasUnpublishedChanges(), AdminExperienceEditorPage(), AdminNewExperiencePage(), AdminAboutExperienceEditor(), message(), 7. Tasks, M0 — Groundwork, M1 — First API (+36 more)
-
-### Community 129 - "AdminDashboardIndex.tsx"
-Cohesion: 0.18
-Nodes (15): ContentHealthCard(), useAdminHealth(), fetchAdminHealth(), fetchAdminStats(), AdminDashboardIndex(), DashboardCell(), admin, fetchHealth (+7 more)
-
-### Community 130 - "ProjectsBrowser.tsx"
-Cohesion: 0.14
-Nodes (19): DomainFilter(), Labels, ProjectsBrowser(), ProjectsBrowserIsland(), ProjectsBrowserProps, ProjectsBrowserView(), parseView(), ProjectsView() (+11 more)
-
-### Community 131 - "jobs"
+### Community 115 - "jobs"
 Cohesion: 0.10
 Nodes (20): concurrency, cancel-in-progress, group, jobs, lint-typecheck, unit, vercel-build, web-e2e (+12 more)
 
-### Community 132 - "uses"
+### Community 116 - "public-shell-indexes.spec.ts"
+Cohesion: 0.13
+Nodes (13): adminRoutes, editorRoutes, inlineListRoutes, publicScreens, copy, expectNoSeriousAxeIssues(), Capture, sizes (+5 more)
+
+### Community 117 - "EditorShell"
+Cohesion: 0.19
+Nodes (14): EditorShell(), labels, subscribe(), TOPBAR_STATUS_ID, useTopbarStatusSlot(), visibleSlot(), T43 · Editor project, Drawer() (+6 more)
+
+### Community 118 - "9. Implementation plan (stacked PRs)"
+Cohesion: 0.12
+Nodes (16): HeroStage(), shader, 7.1 Home — `home.html`, 9. Implementation plan (stacked PRs), R10 — About / CV + contact, R13 — Admin tables + dashboard, R15 — Hardening and docs, R16 — Figma library (optional) (+8 more)
+
+### Community 119 - "JwtAuthGuard"
+Cohesion: 0.12
+Nodes (9): JwtAuthGuard, JwtRefreshGuard, isSameOrigin(), OriginGuard, T35 · Users, argon2, JWT access + refresh cookies, T36 · Global JWT guard, roles (admin/user), Origin check, throttle, M4 — Auth + CMS admin, T35 · User, argon2, cookie JWT access + refresh (+1 more)
+
+### Community 120 - "public-contact.controller.ts"
+Cohesion: 0.22
+Nodes (8): ContactThrottleGuard, LoginThrottleGuard, RateLimitGuard, ViewsThrottleGuard, hashIp(), requestIp(), utcDayKey(), @nestjs/throttler
+
+### Community 121 - "media-storage.ts"
+Cohesion: 0.16
+Nodes (7): DetectedMedia, CloudinaryMediaStorage, createMediaStorage(), MEDIA_STORAGE, MediaStorage, MemoryMediaStorage, StoredUpload
+
+### Community 122 - "web/components.json"
+Cohesion: 0.11
+Nodes (17): aliases, components, hooks, lib, ui, utils, iconLibrary, rsc (+9 more)
+
+### Community 123 - "admin-inbox.service.ts"
+Cohesion: 0.20
+Nodes (14): listAdminMessages(), queryString(), adminContactMessageListPageSchema, adminContactMessageListParamsSchema, adminContactMessageSchema, adminContactMessageTopicSchema, CONTACT_MESSAGE_MAX, CONTACT_MESSAGE_STATUSES (+6 more)
+
+### Community 124 - "ContactFormBlock.tsx"
+Cohesion: 0.19
+Nodes (11): ContactFormBlock(), PageHeaderBlock(), ChannelCards(), ChannelCardsView(), address, LazyContactForm, listContactTopics(), Eyebrow() (+3 more)
+
+### Community 125 - "CaseCard.stories.tsx"
+Cohesion: 0.14
+Nodes (13): labels, confidentialProjectFixture, overflowProjectFixture, projectFixture, projectFixtures, skills, PublicProjectListItem, Default (+5 more)
+
+### Community 127 - "steps"
+Cohesion: 0.11
+Nodes (17): if, runs-on, steps, BASE, HEAD, jobs, context, name (+9 more)
+
+### Community 128 - "ui/components.json"
+Cohesion: 0.11
+Nodes (17): aliases, components, hooks, lib, ui, utils, iconLibrary, rsc (+9 more)
+
+### Community 129 - "CMS open-stack integration plan (DRAFT — merge only with Parker's OK)"
+Cohesion: 0.15
+Nodes (16): context(), Bottom-stack readiness at `main` `d0d474b` (2026-11-10), Checks, evidence, and rollback, CMS open-stack integration plan (DRAFT — merge only with Parker's OK), Current open-PR merge snapshot (2026-11-11 05:05 ICT), Exact B4 ↔ U2 CI resolution, Local-gate known issues (read-only investigation, 2026-11-11 06:14 ICT), Merge execution checklist (future authorized owner only) (+8 more)
+
+### Community 130 - "use-admin-audit.hook.ts"
+Cohesion: 0.21
+Nodes (11): toAdminAuditLog(), useAdminAudit(), useAdminAuditInfinite(), useBulkArchivePosts(), useBulkArchiveProjects(), bulkAdminPosts(), bulkAdminProjects(), listAdminAudit() (+3 more)
+
+### Community 131 - "Even the Stars Know Your Name"
+Cohesion: 0.12
+Nodes (16): Appendix: README, Challenges and solutions, `?dev=1`, Editing the story, Even the Stars Know Your Name, Even the Stars Know Your Name, Not merged yet, Not Parker's (+8 more)
+
+### Community 132 - "scripts"
+Cohesion: 0.12
+Nodes (16): scripts, build, content:migration, db:migrate, db:reset, db:seed, db:studio, dev (+8 more)
+
+### Community 133 - "contact-topics/contact-topics.service.ts"
+Cohesion: 0.19
+Nodes (6): ContactTopicsModule, ContactTopicRow, contactTopicSelect, toPublicContactTopic(), PublicContactTopicsController, PublicContactTopic
+
+### Community 134 - "uses"
 Cohesion: 0.26
 Nodes (16): steps, steps, steps, steps, E2E_SHARD, steps, env, id (+8 more)
 
-### Community 133 - "check-placeholders.mjs"
+### Community 135 - "check-placeholders.mjs"
 Cohesion: 0.22
 Nodes (12): collectHits(), findMarkers(), formatHits(), LIVE_PUBLIC, loadMariadb(), MARKERS, parseMysqlUrl(), queryAll() (+4 more)
 
-### Community 134 - "compilerOptions"
-Cohesion: 0.13
-Nodes (14): compilerOptions, declaration, emitDecoratorMetadata, experimentalDecorators, module, moduleResolution, noEmit, outDir (+6 more)
-
-### Community 135 - "Deploy (Vercel + Render + TiDB + Cloudinary)"
-Cohesion: 0.09
-Nodes (21): 1. TiDB Cloud Serverless, 2. Cloudinary, 3. Render (API), 4. Vercel (web), 5. Sau khi lên production, Deploy (Vercel + Render + TiDB + Cloudinary), Launch checklist (T61), Before you start (+13 more)
-
-### Community 136 - "devDependencies"
-Cohesion: 0.13
-Nodes (15): devDependencies, @commitlint/cli@^21.2.4, @commitlint/config-conventional@^21.2.4, eslint@^10.13.0, husky@^9.1.7, prettier@^3.9.10, prettier-plugin-tailwindcss@^0.8.1, typescript@^5.9.3 (+7 more)
-
-### Community 137 - "AccentHeadline"
-Cohesion: 0.31
-Nodes (5): AdminProfilePage(), AdminSiteProfile(), T45 · Site settings + profile admin, T45 · Admin cho site settings + profile, AccentHeadline()
-
-### Community 138 - "services"
-Cohesion: 0.13
-Nodes (14): paths, key, sync, value, services, buildFilter, dockerContext, dockerfilePath (+6 more)
-
-### Community 139 - "r3-12-e2e-gate.sh"
-Cohesion: 0.14
-Nodes (13): ANALYTICS_SALT_SECRET, API_PORT, API_URL, assert_target(), DATABASE_URL, DATABASE_URL_TEST, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET (+5 more)
-
-### Community 140 - "compilerOptions"
-Cohesion: 0.13
-Nodes (14): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, isolatedModules, lib, module, moduleResolution, noEmit (+6 more)
-
-### Community 141 - "navigation.schema.ts"
-Cohesion: 0.15
-Nodes (10): navigationApi, footerSitemap(), navLocationSchema, adminNavItemSchema, navHrefSchema, navItemCreateSchema, navItemUpdateSchema, publicNavItemSchema (+2 more)
-
-### Community 142 - "use-admin-audit.hook.ts"
-Cohesion: 0.10
-Nodes (21): toAdminAuditLog(), ActivityCard(), ActivityCardView(), item, useAdminAudit(), useBulkArchivePosts(), bulkAdminPosts(), bulkAdminProjects() (+13 more)
-
-### Community 143 - "api-e2e"
-Cohesion: 0.14
-Nodes (14): if, runs-on, services, timeout-minutes, MYSQL_DATABASE, MYSQL_PASSWORD, MYSQL_ROOT_PASSWORD, MYSQL_USER (+6 more)
-
-### Community 144 - "package.json"
-Cohesion: 0.14
-Nodes (13): lint-staged@^17.6.0, engines, node, lint-staged, *.{json,md,css,yml,yaml}, *.{ts,tsx,js,jsx,mjs,cjs}, name, packageManager (+5 more)
-
-### Community 145 - "media.type.ts"
-Cohesion: 0.12
-Nodes (21): imageLoader(), nearestVariantWidth(), WIDTHS, adminMediaListPageSchema, adminMediaListParamsSchema, adminMediaSchema, adminProjectImageInputSchema, adminProjectImageSchema (+13 more)
-
-### Community 146 - "globals.test.ts"
-Cohesion: 0.15
-Nodes (9): ColorBook, ColorModes, colorsPath, cssPath, here, hexToRgba(), parseColor(), Rgba (+1 more)
-
-### Community 147 - "API image prerequisite for CMS core"
+### Community 136 - "API image prerequisite for CMS core"
 Cohesion: 0.13
 Nodes (12): API image and CMS core, Acceptance, API image prerequisite for CMS core, Evidence and scope, Plan (five steps), Verification evidence, B5b — Nest page adapters for the pure engine, Contract (+4 more)
 
-### Community 148 - "Portfolio implementation plan"
-Cohesion: 0.33
-Nodes (6): 0. How to use this plan, 1. Sources of truth, 2. Ground rules and Definition of Done, 8. Owner tasks and out of scope, 9. Open questions, Portfolio implementation plan
+### Community 137 - "compilerOptions"
+Cohesion: 0.13
+Nodes (14): compilerOptions, declaration, emitDecoratorMetadata, experimentalDecorators, module, moduleResolution, noEmit, outDir (+6 more)
 
-### Community 149 - "toc.util.ts"
-Cohesion: 0.22
-Nodes (9): github-slugger@^2.0.0, remark-parse@^11.0.0, unified@^11.0.5, extractToc(), MdastNode, nodeText(), github-slugger, remark-parse (+1 more)
+### Community 138 - "ProfileStat"
+Cohesion: 0.15
+Nodes (13): ProfileStat, 3. Decisions, M2 — Content graph, T15 · About content models + endpoints, M2 — Đồ thị nội dung, T15 · Model nội dung About + endpoint, T16 · Domain + project + metric (one-to-many), T17 · Skill (many-to-many) + filter project (+5 more)
 
-### Community 150 - "startShader"
-Cohesion: 0.32
-Nodes (5): startShader(), colors(), frame(), resume(), rgb()
+### Community 139 - "devDependencies"
+Cohesion: 0.13
+Nodes (15): devDependencies, @commitlint/cli@^21.2.4, @commitlint/config-conventional@^21.2.4, eslint@^10.13.0, husky@^9.1.7, prettier@^3.9.10, prettier-plugin-tailwindcss@^0.8.1, typescript@^5.9.3 (+7 more)
 
-### Community 151 - "compilerOptions"
+### Community 140 - "check-content.mjs"
+Cohesion: 0.13
+Nodes (10): args, parallelResults, parallelSteps, steps, CONTENT_ROOTS, DENYLIST, failures, files (+2 more)
+
+### Community 141 - "services"
+Cohesion: 0.13
+Nodes (14): paths, key, sync, value, services, buildFilter, dockerContext, dockerfilePath (+6 more)
+
+### Community 142 - "r3-12-e2e-gate.sh"
+Cohesion: 0.14
+Nodes (13): ANALYTICS_SALT_SECRET, API_PORT, API_URL, assert_target(), DATABASE_URL, DATABASE_URL_TEST, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET (+5 more)
+
+### Community 143 - "compilerOptions"
+Cohesion: 0.13
+Nodes (14): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, isolatedModules, lib, module, moduleResolution, noEmit (+6 more)
+
+### Community 144 - "api-e2e"
+Cohesion: 0.14
+Nodes (14): if, runs-on, services, timeout-minutes, MYSQL_DATABASE, MYSQL_PASSWORD, MYSQL_ROOT_PASSWORD, MYSQL_USER (+6 more)
+
+### Community 145 - "package.json"
+Cohesion: 0.14
+Nodes (13): lint-staged@^17.6.0, engines, node, lint-staged, *.{json,md,css,yml,yaml}, *.{ts,tsx,js,jsx,mjs,cjs}, name, packageManager (+5 more)
+
+### Community 146 - "MediaLibrary.test.tsx"
+Cohesion: 0.14
+Nodes (9): MediaLibraryItem, Empty, Grid, items, meta, Story, clientHeightDesc, clientWidthDesc (+1 more)
+
+### Community 147 - "globals.test.ts"
+Cohesion: 0.15
+Nodes (9): ColorBook, ColorModes, colorsPath, cssPath, here, hexToRgba(), parseColor(), Rgba (+1 more)
+
+### Community 148 - ".submit"
+Cohesion: 0.18
+Nodes (3): PublicContactController, ContactInput, ContactSubmitResult
+
+### Community 149 - "AdminMedia"
+Cohesion: 0.19
+Nodes (3): AdminMediaController, AdminMedia, UpdateMediaInput
+
+### Community 150 - "contact.action.ts"
+Cohesion: 0.27
+Nodes (10): flattenIssues(), fromFormData(), postContact(), requestOrigin(), submitContact(), submitContactForm(), flattenIssues(), postContact() (+2 more)
+
+### Community 151 - "startShader"
+Cohesion: 0.19
+Nodes (8): startHeroShader(), draw(), resume(), startShader(), colors(), frame(), resume(), rgb()
+
+### Community 153 - "compilerOptions"
 Cohesion: 0.15
 Nodes (12): compilerOptions, incremental, jsx, lib, paths, plugins, exclude, extends (+4 more)
-
-### Community 152 - "@storybook/react"
-Cohesion: 0.22
-Nodes (7): Default, meta, Story, meta, States, Story, @storybook/react
-
-### Community 153 - "steps"
-Cohesion: 0.17
-Nodes (11): description, name, runs, steps, using, run, shell, uses (+3 more)
 
 ### Community 154 - "web-e2e-shard"
 Cohesion: 0.15
 Nodes (13): web-e2e-shard, shard, actions, contents, fail-fast, matrix, if, name (+5 more)
 
-### Community 155 - "ci-ok"
-Cohesion: 0.17
-Nodes (11): runs-on, steps, timeout-minutes, jobs, ci-ok, name, on, pull_request (+3 more)
+### Community 155 - "StatBand.tsx"
+Cohesion: 0.18
+Nodes (5): Compact, Default, meta, Story, parseStatValue()
 
-### Community 156 - "Timeline.tsx"
-Cohesion: 0.21
-Nodes (13): achievementItems(), ExperienceGroup, groupExperience(), highlightItems(), MAX_ACHIEVEMENTS, groupYears(), monthLabel(), Default (+5 more)
+### Community 156 - "skills.module.ts"
+Cohesion: 0.18
+Nodes (4): toPublicSkill(), PublicSkillsController, SkillsModule, PublicSkillsGrouped
 
-### Community 157 - "CMS U1 — shared controls"
-Cohesion: 0.22
-Nodes (8): Acceptance, CMS U1 — shared controls, Control decisions, Coordinator review follow-up, Plan, Unit CI timing reconciliation, Verification record, Visual CI reconciliation
+### Community 157 - "toc.util.ts"
+Cohesion: 0.20
+Nodes (10): github-slugger@^2.0.0, remark-parse@^11.0.0, unified@^11.0.5, extractToc(), MdastNode, nodeText(), TocItem, github-slugger (+2 more)
 
 ### Community 158 - "proxy.ts"
 Cohesion: 0.29
 Nodes (9): adminRoutes, applySecurityHeaders(), config, handleI18n, proxy(), requestWithNonce(), buildContentSecurityPolicy(), SECURITY_HEADER_NAMES (+1 more)
 
-### Community 159 - "schema-to-fields.util.ts"
-Cohesion: 0.33
-Nodes (6): isLocalized(), JsonSchema, kindFor(), unwrap(), walk(), WIDGET_KIND
+### Community 159 - "steps"
+Cohesion: 0.17
+Nodes (11): description, name, runs, steps, using, run, shell, uses (+3 more)
 
-### Community 160 - "environment"
+### Community 160 - "ci-ok"
+Cohesion: 0.17
+Nodes (11): runs-on, steps, timeout-minutes, jobs, ci-ok, name, on, pull_request (+3 more)
+
+### Community 161 - "resolve-block.util.ts"
+Cohesion: 0.26
+Nodes (10): hasText(), isLocalizedPair(), mapLocalized(), ParseBlockFail, ParseBlockOk, ParseBlockResult, ParseBlockRow, resolveBlockLocale() (+2 more)
+
+### Community 162 - "brand-foundation.spec.ts"
+Cohesion: 0.18
+Nodes (4): adminDir, captures, publicDir, source
+
+### Community 163 - "about/services/skills.service.ts"
+Cohesion: 0.36
+Nodes (8): listMarqueeSkills(), listSkillsGrouped(), guardExperience(), guardSkillGroups(), guardSkills(), experience, skill, PublicSkill
+
+### Community 164 - "BlockRenderer.tsx"
+Cohesion: 0.24
+Nodes (6): renderEntry(), UnknownBlockNotice(), InvalidPreviewBlock, BoundaryProps, SectionBoundaryLabels, SectionErrorCatcher
+
+### Community 165 - "environment"
 Cohesion: 0.22
 Nodes (11): environment, environment, BACKUP_DIR, MYSQL_DATABASE, MYSQL_HOST, MYSQL_PASSWORD, MYSQL_PORT, MYSQL_ROOT_PASSWORD (+3 more)
 
-### Community 162 - "admin-core/utils/shortcut.util.ts"
-Cohesion: 0.29
-Nodes (8): createSequenceListener(), KeySequence, SEQUENCE_TIMEOUT_MS, SEQUENCES, setup(), onKeyDown(), hasModifier(), ignoresShortcuts()
+### Community 166 - "D2 persistence and builder API — DRAFT, Parker DDL approval pending"
+Cohesion: 0.18
+Nodes (11): Authority, readers and data safety, Contract and gates, D1 validation decisions blocking D2 wiring, D2 implementation checklist (handoff; no migration authored here), D2 persistence and builder API — DRAFT, Parker DDL approval pending, Files and boundaries, Observed baseline and proposed schema, Parker approval request (+3 more)
 
-### Community 163 - "eslint.config.mjs"
+### Community 167 - "eslint.config.mjs"
 Cohesion: 0.18
 Nodes (10): eslint-config-prettier@^10.1.8, @eslint/js@^10.0.1, eslint-plugin-react@^7.37.5, eslint-plugin-simple-import-sort@^14.0.0, typescript-eslint@^8.72.0, eslint-config-prettier, @eslint/js, eslint-plugin-react (+2 more)
 
-### Community 164 - "u0-capture.spec.ts"
-Cohesion: 0.25
-Nodes (7): adminRoutes, Capture, locales, publicRoutes, resourceRoutes, themes, widths
-
-### Community 165 - "AdminSiteProfile.test.tsx"
-Cohesion: 0.29
-Nodes (8): useAdminProfile(), useSaveAdminProfile(), getAdminProfile(), updateAdminProfile(), admin, getProfile, profile, update
-
-### Community 166 - "compilerOptions"
+### Community 168 - "compilerOptions"
 Cohesion: 0.18
 Nodes (10): compilerOptions, baseUrl, jsx, lib, paths, types, extends, include (+2 more)
 
-### Community 167 - "PagePreview.tsx"
-Cohesion: 0.54
-Nodes (5): PagePreview(), draftPreviewSrc(), postPreviewMessage(), PREVIEW_VIEWPORTS, publicPagePath()
+### Community 171 - "isReservedPublicPageSlug"
+Cohesion: 0.29
+Nodes (3): GET(), safeDraftPath(), isReservedPublicPageSlug()
 
-### Community 168 - "api"
+### Community 172 - "services/projects.service.ts"
+Cohesion: 0.38
+Nodes (8): ProjectsBrowserBlock(), listDomains(), getFeaturedProject(), listCaseProjects(), listProjects(), listProjectsPage(), queryString(), listSkillOptions()
+
+### Community 173 - "build-post-metadata.util.ts"
+Cohesion: 0.33
+Nodes (7): getPost(), getPostOrNull(), getProject(), getProjectOrNull(), buildPostMetadata(), buildProjectMetadata(), fallbackMetadata()
+
+### Community 174 - "api"
 Cohesion: 0.20
 Nodes (10): depends_on, image, read_only, restart, tmpfs, volumes, depends_on, condition (+2 more)
 
-### Community 169 - "AuditRow.stories.tsx"
-Cohesion: 0.25
-Nodes (6): @storybook/react-vite@^10.0.0, Create, labels, meta, config, @storybook/react-vite
-
-### Community 170 - "CaseStudyHeader.tsx"
-Cohesion: 0.08
-Nodes (27): CaseStudyHeader(), M6 — Quality, M7 — Ship, T53 · SEO from the CMS, T56 · Tests + CI e2e, T57 · Accessibility + performance audit, T58 · Production Compose, T59 · Hardening + backups (+19 more)
-
-### Community 171 - "M0 — Nền tảng"
+### Community 175 - "M6 — Quality"
 Cohesion: 0.20
-Nodes (10): 7. Các task, M0 — Nền tảng, M1 — API đầu tiên, T01 · Scaffold monorepo, toolchain, CI tối thiểu, T01a · Prettier, Husky, lint-staged, commitlint, T02 · Docker Compose: MySQL 8.4 + Adminer, T03 · Ghi chú SQL viết tay (Parker), T04 · Design token + shadcn theme trong `packages/ui` (+2 more)
+Nodes (9): M6 — Quality, M7 — Ship, T53 · SEO from the CMS, T56 · Tests + CI e2e, T57 · Accessibility + performance audit, T58 · Production Compose, T59 · Hardening + backups, T60 · Production seed cleanup + placeholder check (+1 more)
 
-### Community 172 - "Deploy (Vercel + Render + TiDB + Cloudinary)"
-Cohesion: 0.29
-Nodes (7): 1. TiDB Cloud Serverless, 2. Cloudinary, 3. Render (API), 4. Vercel (web), 5. After go-live, Deploy (Vercel + Render + TiDB + Cloudinary), Local vs production
-
-### Community 173 - "Deploying main to Vercel and re-running CI"
+### Community 176 - "Deploying main to Vercel and re-running CI"
 Cohesion: 0.20
 Nodes (9): 1. Current setup, 2. Before deploying, 3. Deploy main to production, 4. Re-run CI and Vercel checks, 5. Re-enable `hotfix/*` deploys, 6. Verify production, 7. Rollback, 8. When e2e runs (trigger policy) (+1 more)
 
-### Community 174 - "env"
+### Community 177 - "env"
 Cohesion: 0.36
 Nodes (10): env, env, API_HOST, API_PORT, API_URL, NEXT_PUBLIC_SITE_URL, NODE_ENV, WEB_INTERNAL_URL (+2 more)
 
-### Community 175 - "with"
+### Community 178 - "with"
 Cohesion: 0.20
 Nodes (10): with, compression-level, filters, key, merge-multiple, name, path, pattern (+2 more)
 
-### Community 176 - "domains.schema.ts"
-Cohesion: 0.12
-Nodes (14): hueSchema, adminDomainSchema, domainCreateSchema, domainUpdateSchema, publicDomainSchema, publicProjectDomainSchema, PublicProjectDomain, domainFixture (+6 more)
+### Community 179 - "slash-command.extension.ts"
+Cohesion: 0.24
+Nodes (9): @tiptap/pm@3.32.0, @tiptap/suggestion@3.32.0, SlashItem, runSlashCommand(), SlashCommand, slashItems(), slashPluginKey, @tiptap/pm (+1 more)
 
-### Community 177 - "lighthouse.ts"
+### Community 180 - "lighthouse.ts"
 Cohesion: 0.25
 Nodes (7): LighthouseScores, runMobileLighthouse(), pages, chrome-launcher@^1.2.2, lighthouse@^13.5.0, chrome-launcher, lighthouse
 
-### Community 178 - "scripts"
+### Community 181 - "scripts"
 Cohesion: 0.22
 Nodes (9): scripts, build, dev, lint, start, test, test:e2e, test:visual:update (+1 more)
 
-### Community 179 - "admin-inbox.service.ts"
-Cohesion: 0.09
-Nodes (21): AdminContactController, ContactMessageRow, parseLocale(), toAdminContactMessage(), adminContactMessageListPageSchema, adminContactMessageListParamsSchema, adminContactMessageSchema, adminContactMessageTopicSchema (+13 more)
+### Community 182 - "schema-to-fields.util.ts"
+Cohesion: 0.33
+Nodes (6): isLocalized(), JsonSchema, kindFor(), unwrap(), walk(), WIDGET_KIND
 
-### Community 180 - "services"
+### Community 183 - "UI module conventions (Next.js)"
+Cohesion: 0.22
+Nodes (9): Data: services, hooks, actions, i18n, Module layout, Naming, New UI module, Overview, Routes ↔ views, State (+1 more)
+
+### Community 184 - "services"
 Cohesion: 0.22
 Nodes (8): name, services, volumes, backups, caddy-config, caddy-data, db-data, uploads
 
-### Community 181 - "PROJECT_CONTEXT — lil.p (portfolio)"
-Cohesion: 0.25
-Nodes (8): 1. Requirements, 2. Stack (confirmed), 3. Design (confirmed), 4. Forbidden, 5. Workflow, 6. Multi-agent rules, 8. Deferred, PROJECT_CONTEXT — lil.p (portfolio)
+### Community 185 - "CMS U1 — shared controls"
+Cohesion: 0.22
+Nodes (8): Acceptance, CMS U1 — shared controls, Control decisions, Coordinator review follow-up, Plan, Unit CI timing reconciliation, Verification record, Visual CI reconciliation
 
-### Community 182 - "AGENTS.md — lil.p rules"
+### Community 186 - "AGENTS.md — lil.p rules"
 Cohesion: 0.25
 Nodes (5): AGENTS.md — lil.p rules, Checks and PRs, Public repo limits, Stack and content, Start and scope
 
-### Community 183 - "CMS core C1–C3 extraction runbook"
+### Community 187 - "P4-6 T24: hero stats from site settings"
 Cohesion: 0.29
-Nodes (7): C1: distribution and cost/auth decision, C1 dry-run gap closure — proposed files, not applied, C1 readiness refresh at D base `3bbd1b2` (2026-11-11; local only), C2: isolated package release gate, C3: consumer switch and deploy-readiness gate, CMS core C1–C3 extraction runbook, Decision: preserve package history, then select distribution
+Nodes (7): heroStats(), API, Data, Goal, P4-6 T24: hero stats from site settings, Plan, Web
 
-### Community 184 - "Vercel CMS-core build graph hotfix"
-Cohesion: 0.29
-Nodes (6): Acceptance, CI artifact race found on the first hotfix run, Evidence and limits, Failure and contract, Plan (at most 20 lines), Vercel CMS-core build graph hotfix
-
-### Community 185 - "args"
-Cohesion: 0.29
-Nodes (8): build, API_URL, NEXT_PUBLIC_BUILD_SHA, NEXT_PUBLIC_SITE_URL, args, context, dockerfile, build
-
-### Community 186 - "web"
+### Community 188 - "u0-capture.spec.ts"
 Cohesion: 0.25
-Nodes (8): condition, api, web, depends_on, image, read_only, restart, tmpfs
+Nodes (7): adminRoutes, Capture, locales, publicRoutes, resourceRoutes, themes, widths
 
-### Community 187 - "caddy"
-Cohesion: 0.25
-Nodes (8): depends_on, image, ports, read_only, restart, tmpfs, volumes, caddy
-
-### Community 188 - "Ctrack Crystal | 01/2026 – Present"
-Cohesion: 0.25
-Nodes (7): Ctrack Crystal | 01/2026 – Present, Languages, NOT Parker's, Overview, Parker's responsibilities, Tech stack, TODO (confirm with Parker)
-
-### Community 189 - "on"
-Cohesion: 0.25
-Nodes (8): on, pull_request, push, workflow_dispatch, paths-ignore, types, branches, paths-ignore
-
-### Community 190 - "SaveStatus.stories.tsx"
-Cohesion: 0.25
-Nodes (7): Conflict, labels, meta, Offline, Saved, Saving, Story
-
-### Community 191 - "Colors.stories.tsx"
-Cohesion: 0.25
-Nodes (6): CORE, CORE_BG, Default, meta, PAIR_ROWS, Story
-
-### Community 192 - "Spacing.stories.tsx"
-Cohesion: 0.25
-Nodes (6): Default, meta, RADII, SHADOWS, SPACES, Story
-
-### Community 193 - "migration-gate.sh"
-Cohesion: 0.48
-Nodes (5): assert_target(), DATABASE_URL, query(), seed_snapshot(), migration-gate.sh script
-
-### Community 194 - "craft/page.tsx"
-Cohesion: 0.40
-Nodes (5): copy, CraftPage(), generateMetadata(), revalidate, studyLabel()
-
-### Community 195 - "7. Per-page designs"
-Cohesion: 0.25
-Nodes (8): 7.2 Projects list — `projects.html`, 7.3 Case study — `case-study.html`, 7.4 About / CV — `about.html`, 7.5 Contact — `contact.html`, 7.6 Notes list — `notes.html`, 7.7 Post reader — `post.html`, 7.8 Admin — `admin-*.html`, 7. Per-page designs
-
-### Community 196 - "visual.spec.ts"
+### Community 189 - "visual.spec.ts"
 Cohesion: 0.32
 Nodes (6): ADMIN_ROUTES, dynamicParts(), expectScreen(), PUBLIC_ROUTES, settle(), VIEWPORTS
 
-### Community 197 - "healthcheck"
-Cohesion: 0.48
-Nodes (7): healthcheck, healthcheck, interval, retries, start_period, test, timeout
-
-### Community 198 - "backup"
+### Community 190 - "args"
 Cohesion: 0.29
-Nodes (7): entrypoint, image, read_only, restart, tmpfs, volumes, backup
+Nodes (8): build, API_URL, NEXT_PUBLIC_BUILD_SHA, NEXT_PUBLIC_SITE_URL, args, context, dockerfile, build
 
-### Community 199 - "db"
-Cohesion: 0.29
-Nodes (7): command, image, read_only, restart, tmpfs, volumes, db
+### Community 191 - "web"
+Cohesion: 0.25
+Nodes (8): condition, api, web, depends_on, image, read_only, restart, tmpfs
 
-### Community 200 - "CMS B3 — package skeleton and measured browser budgets"
-Cohesion: 0.29
-Nodes (6): Acceptance and rollback, Budget contract, CMS B3 — package skeleton and measured browser budgets, Measured baseline, Plan, Scope and sequencing
+### Community 192 - "caddy"
+Cohesion: 0.25
+Nodes (8): depends_on, image, ports, read_only, restart, tmpfs, volumes, caddy
 
-### Community 201 - "build-e2e"
-Cohesion: 0.29
-Nodes (7): if, name, outputs, runs-on, timeout-minutes, build-e2e, playwright
+### Community 193 - "Ctrack Crystal | 01/2026 – Present"
+Cohesion: 0.25
+Nodes (7): Ctrack Crystal | 01/2026 – Present, Languages, NOT Parker's, Overview, Parker's responsibilities, Tech stack, TODO (confirm with Parker)
 
-### Community 202 - "react"
-Cohesion: 0.29
-Nodes (7): react@19.3.0, react-dom@19.3.0, react, react-dom, peerDependencies, react@^19.0.0, react-dom@^19.0.0
+### Community 194 - "on"
+Cohesion: 0.25
+Nodes (8): on, pull_request, push, workflow_dispatch, paths-ignore, types, branches, paths-ignore
 
-### Community 203 - "SectionBoundary.tsx"
-Cohesion: 0.12
-Nodes (10): BoundaryProps, SectionBoundaryLabels, SectionErrorCatcher, Empty, Failed, LABELS, Loading, meta (+2 more)
+### Community 195 - "create-lowlight.ts"
+Cohesion: 0.25
+Nodes (7): MARKDOWN_CODE_LANGUAGES, highlight.js@^11.12.0, lowlight@^3.3.0, createEditorLowlight(), GRAMMARS, highlight.js, lowlight
 
-### Community 204 - "vercel.json"
+### Community 196 - "@tiptap/react"
+Cohesion: 0.32
+Nodes (6): @tiptap/react@3.32.0, CalloutView(), Callout, Commands, @tiptap/core, @tiptap/react
+
+### Community 197 - "AuditRow.stories.tsx"
+Cohesion: 0.25
+Nodes (6): @storybook/react-vite@^10.0.0, Create, labels, meta, config, @storybook/react-vite
+
+### Community 198 - "SaveStatus.stories.tsx"
+Cohesion: 0.25
+Nodes (7): Conflict, labels, meta, Offline, Saved, Saving, Story
+
+### Community 199 - "Colors.stories.tsx"
+Cohesion: 0.25
+Nodes (6): CORE, CORE_BG, Default, meta, PAIR_ROWS, Story
+
+### Community 200 - "Spacing.stories.tsx"
+Cohesion: 0.25
+Nodes (6): Default, meta, RADII, SHADOWS, SPACES, Story
+
+### Community 201 - "PROJECT_CONTEXT — lil.p (portfolio)"
+Cohesion: 0.25
+Nodes (8): 1. Requirements, 2. Stack (confirmed), 3. Design (confirmed), 4. Forbidden, 5. Workflow, 6. Multi-agent rules, 8. Deferred, PROJECT_CONTEXT — lil.p (portfolio)
+
+### Community 202 - "vercel.json"
 Cohesion: 0.25
 Nodes (7): buildCommand, main, git, deploymentEnabled, ignoreCommand, regions, $schema
 
-### Community 205 - "nest-cli.json"
+### Community 204 - "migration-gate.sh"
+Cohesion: 0.48
+Nodes (5): assert_target(), DATABASE_URL, query(), seed_snapshot(), migration-gate.sh script
+
+### Community 205 - "content-migration.e2e-spec.ts"
+Cohesion: 0.43
+Nodes (6): MIGRATION_SQL_PATH, splitSqlStatements(), applyContentSql(), experienceSkillCount(), joinCount(), projectSkillCount()
+
+### Community 206 - "custom-public-pages.spec.ts"
+Cohesion: 0.29
+Nodes (4): captures, copy, folder, newerCopy
+
+### Community 207 - "healthcheck"
+Cohesion: 0.48
+Nodes (7): healthcheck, healthcheck, interval, retries, start_period, test, timeout
+
+### Community 208 - "backup"
+Cohesion: 0.29
+Nodes (7): entrypoint, image, read_only, restart, tmpfs, volumes, backup
+
+### Community 209 - "db"
+Cohesion: 0.29
+Nodes (7): command, image, read_only, restart, tmpfs, volumes, db
+
+### Community 210 - "M0 — Groundwork"
+Cohesion: 0.29
+Nodes (7): M0 — Groundwork, T01 · Monorepo scaffold, toolchain, minimal CI, T01a · Prettier, Husky, lint-staged, commitlint, T02 · Docker Compose: MySQL 8.4 + Adminer, T03 · SQL by hand notes (Parker), T04 · Design tokens + shadcn theme in `packages/ui`, T06 · Storybook + Foundations stories
+
+### Community 211 - "M0 — Nền tảng"
+Cohesion: 0.29
+Nodes (7): M0 — Nền tảng, T01 · Scaffold monorepo, toolchain, CI tối thiểu, T01a · Prettier, Husky, lint-staged, commitlint, T02 · Docker Compose: MySQL 8.4 + Adminer, T03 · Ghi chú SQL viết tay (Parker), T04 · Design token + shadcn theme trong `packages/ui`, T06 · Storybook + story Foundations
+
+### Community 212 - "CMS B3 — package skeleton and measured browser budgets"
+Cohesion: 0.29
+Nodes (6): Acceptance and rollback, Budget contract, CMS B3 — package skeleton and measured browser budgets, Measured baseline, Plan, Scope and sequencing
+
+### Community 213 - "CMS core C1–C3 extraction runbook"
+Cohesion: 0.29
+Nodes (7): C1: distribution and cost/auth decision, C1 dry-run gap closure — proposed files, not applied, C1 readiness refresh at D base `3bbd1b2` (2026-11-11; local only), C2: isolated package release gate, C3: consumer switch and deploy-readiness gate, CMS core C1–C3 extraction runbook, Decision: preserve package history, then select distribution
+
+### Community 214 - "Vercel CMS-core build graph hotfix"
+Cohesion: 0.29
+Nodes (6): Acceptance, CI artifact race found on the first hotfix run, Evidence and limits, Failure and contract, Plan (at most 20 lines), Vercel CMS-core build graph hotfix
+
+### Community 215 - "build-e2e"
+Cohesion: 0.29
+Nodes (7): if, name, outputs, runs-on, timeout-minutes, build-e2e, playwright
+
+### Community 216 - "react"
+Cohesion: 0.29
+Nodes (7): react@19.3.0, react-dom@19.3.0, react, react-dom, peerDependencies, react@^19.0.0, react-dom@^19.0.0
+
+### Community 217 - "PrincipleList.tsx"
+Cohesion: 0.29
+Nodes (4): principleNumber(), Default, meta, Story
+
+### Community 218 - "SectionBoundary.stories.tsx"
+Cohesion: 0.29
+Nodes (6): Empty, Failed, LABELS, Loading, meta, Story
+
+### Community 219 - "SkillGroup.tsx"
+Cohesion: 0.33
+Nodes (5): groupSkillsByCategory(), SkillCategoryGroup, groups, testing, unnamed
+
+### Community 220 - "SortableList.stories.tsx"
+Cohesion: 0.29
+Nodes (6): Demo(), KeyboardInstructions, labels, meta, Story, Unlocked
+
+### Community 221 - "compare-cms-captures.mjs"
+Cohesion: 0.29
+Nodes (4): added, [beforePath, afterPath], changed, missing
+
+### Community 222 - "nest-cli.json"
 Cohesion: 0.33
 Nodes (5): collection, compilerOptions, deleteOutDir, $schema, sourceRoot
 
-### Community 206 - "Monorepo conventions"
-Cohesion: 0.25
-Nodes (8): Dependency direction, Git hooks (Husky), Monorepo conventions, Naming (whole repo), Overview, Package layout: `packages/contracts`, Root commands, Where does it go?
+### Community 223 - "contact-message.mapper.ts"
+Cohesion: 0.47
+Nodes (4): ContactMessageRow, contactMessageSelect, parseLocale(), toAdminContactMessage()
 
-### Community 207 - "HeroStage"
-Cohesion: 0.21
-Nodes (7): startHeroShader(), draw(), resume(), HeroStage(), shader, 7.1 Home — `home.html`, R6 — Hero shader island
-
-### Community 208 - "admin-editors-r3.spec.ts"
-Cohesion: 0.33
-Nodes (3): Capture, Locale, OUTPUT
-
-### Community 209 - "4. Tokens"
-Cohesion: 0.29
-Nodes (7): 4.1 Color, 4.2 Type: IBM Plex Sans + IBM Plex Mono, 4.3 Spacing, 4.4 Radius: 10px base, Apple-style scale, continuous corners, 4.5 Elevation, 4.6 Motion, 4. Tokens
-
-### Community 210 - "Ink & Signal implementation review — 29 October 2026"
-Cohesion: 0.29
-Nodes (6): Deliberate tradeoffs and remaining proposal work, Design language, Implemented, Ink & Signal implementation review — 29 October 2026, Screenshots, Validation
-
-### Community 211 - "Kế hoạch triển khai portfolio"
-Cohesion: 0.33
-Nodes (6): 0. Cách dùng plan này, 1. Nguồn sự thật (sources of truth), 2. Quy tắc nền và Definition of Done (DoD), 8. Việc của owner và ngoài phạm vi, 9. Câu hỏi mở, Kế hoạch triển khai portfolio
-
-### Community 212 - "first-h1.util.ts"
-Cohesion: 0.73
-Nodes (5): asRecord(), asString(), firstH1(), readIntro(), readTitle()
-
-### Community 213 - "SiteShell"
-Cohesion: 0.18
-Nodes (8): SiteLayout(), SiteShell(), SkipLink(), Accessibility and performance audit — 26 Oct 2026, After, Before, Fixes in this PR, Reduced motion / transparency checklist
-
-### Community 214 - "Portfolio notes — CFW Back Office Portal (cfw-backoffice-portal)"
-Cohesion: 0.33
-Nodes (5): Facts (verified via git), Highlights authored by Bond Tran (from Jun 2026), Highlights authored by Parker, NOT either of them (don't claim), Portfolio notes — CFW Back Office Portal (cfw-backoffice-portal)
-
-### Community 215 - "R3-05 public shell and indexes"
-Cohesion: 0.33
-Nodes (5): Acceptance, Constraints, R3-05 public shell and indexes, Scope, Tests
-
-### Community 216 - "R3-10 — Admin editors and settings"
-Cohesion: 0.33
-Nodes (5): Acceptance, Checks, R3-10 — Admin editors and settings, Scope, Verification
-
-### Community 217 - "Round 3 stack integration PR"
-Cohesion: 0.33
-Nodes (5): Acceptance criteria, Goal, Plan, Release note, Round 3 stack integration PR
-
-### Community 219 - "exports"
-Cohesion: 0.33
-Nodes (6): exports, ./components/*, ./hooks/*, ./lib/utils, ./styles/globals.css, ./utils/*
-
-### Community 220 - "scripts"
-Cohesion: 0.33
-Nodes (6): scripts, build-storybook, lint, storybook, test, typecheck
-
-### Community 221 - "Icon"
-Cohesion: 0.07
-Nodes (28): renderLink(), T20 · Cards: DiffStat, CaseCard, DomainCard, PostCard, T20 · Card: DiffStat, CaseCard, DomainCard, PostCard, IconKey, Callout(), meta, Note, Story (+20 more)
-
-### Community 222 - "StatCard.stories.tsx"
-Cohesion: 0.22
-Nodes (8): DELTA_ICON, StatCard(), StatCardDelta, Down, Flat, meta, Story, Up
-
-### Community 223 - "button.stories.tsx"
-Cohesion: 0.33
-Nodes (5): Loading, meta, SIZES, Story, Variants
-
-### Community 224 - "Motion.stories.tsx"
-Cohesion: 0.33
-Nodes (4): Default, EASINGS, meta, Story
-
-### Community 225 - "Typography.stories.tsx"
-Cohesion: 0.33
-Nodes (4): Default, meta, ROWS, Story
-
-### Community 227 - "01-tom-tat-tieng-viet.md"
-Cohesion: 0.33
-Nodes (3): Tóm tắt (Tiếng Việt), 3. Parker's layout rules → how each surface complies, 11. Future, out of scope (needs backend)
-
-### Community 228 - "MeProvider"
-Cohesion: 0.08
-Nodes (17): admin, renderBell(), user, admin, FakeEventSource, push, refreshOnce, toast (+9 more)
-
-### Community 230 - "D6 — journey and release evidence manifest template"
-Cohesion: 0.33
-Nodes (6): Capture matrix and design review, Commands and owner (replace proposed paths only after they exist), D6 — journey and release evidence manifest template, Journey steps (one row per mouse and keyboard run), Run header (fill every field), Verdict and rollback
-
-### Community 232 - "Round 3 PR 01 — brand foundation"
-Cohesion: 0.40
-Nodes (4): Acceptance, Round 3 PR 01 — brand foundation, Scope, Tests
-
-### Community 233 - "web/eslint.config.mjs"
-Cohesion: 0.40
-Nodes (3): allowedStrings, eslint-config-next@16.4.3, eslint-config-next
-
-### Community 234 - "Portfolio notes — Central Food Wholesale CRM Portal (cfw-sales-crm-portal)"
-Cohesion: 0.40
-Nodes (4): Facts (verified via git), Highlights authored by Parker, NOT Parker's (don't claim), Portfolio notes — Central Food Wholesale CRM Portal (cfw-sales-crm-portal)
-
-### Community 235 - "Portfolio notes — lil.p (this site)"
-Cohesion: 0.40
-Nodes (4): Facts (verified via git / docs), Highlights authored by Parker, NOT Parker's (don't claim), Portfolio notes — lil.p (this site)
-
-### Community 236 - "Portfolio notes — Particula (particula-fe)"
-Cohesion: 0.40
-Nodes (4): Facts (verified via git), Highlights authored by Parker, NOT Parker's (don't claim), Portfolio notes — Particula (particula-fe)
-
-### Community 237 - "PublicErrorState"
+### Community 227 - "PublicErrorState.tsx"
 Cohesion: 0.60
 Nodes (3): LocaleError(), SiteError(), PublicErrorState()
 
-### Community 238 - "use-small-entity.hook.test.tsx"
+### Community 228 - "craft/page.tsx"
 Cohesion: 0.40
-Nodes (3): api, list, reorder
+Nodes (5): copy, CraftPage(), generateMetadata(), revalidate, studyLabel()
 
-### Community 239 - "R3-02 — Custom page creation API"
+### Community 229 - "admin-editors-r3.spec.ts"
+Cohesion: 0.33
+Nodes (3): Capture, Locale, OUTPUT
+
+### Community 231 - "first-h1.util.ts"
+Cohesion: 0.73
+Nodes (5): asRecord(), asString(), firstH1(), readIntro(), readTitle()
+
+### Community 232 - "Accessibility and performance audit — 26 Oct 2026"
+Cohesion: 0.33
+Nodes (5): Accessibility and performance audit — 26 Oct 2026, After, Before, Fixes in this PR, Reduced motion / transparency checklist
+
+### Community 233 - "Portfolio notes — CFW Back Office Portal (cfw-backoffice-portal)"
+Cohesion: 0.33
+Nodes (5): Facts (verified via git), Highlights authored by Bond Tran (from Jun 2026), Highlights authored by Parker, NOT either of them (don't claim), Portfolio notes — CFW Back Office Portal (cfw-backoffice-portal)
+
+### Community 234 - "Deploy (Vercel + Render + TiDB + Cloudinary)"
+Cohesion: 0.33
+Nodes (6): 1. TiDB Cloud Serverless, 2. Cloudinary, 3. Render (API), 4. Vercel (web), 5. Sau khi lên production, Deploy (Vercel + Render + TiDB + Cloudinary)
+
+### Community 235 - "Portfolio implementation plan"
+Cohesion: 0.33
+Nodes (6): 0. How to use this plan, 1. Sources of truth, 2. Ground rules and Definition of Done, 8. Owner tasks and out of scope, 9. Open questions, Portfolio implementation plan
+
+### Community 236 - "Kế hoạch triển khai portfolio"
+Cohesion: 0.33
+Nodes (6): 0. Cách dùng plan này, 1. Nguồn sự thật (sources of truth), 2. Quy tắc nền và Definition of Done (DoD), 8. Việc của owner và ngoài phạm vi, 9. Câu hỏi mở, Kế hoạch triển khai portfolio
+
+### Community 237 - "R3-05 public shell and indexes"
+Cohesion: 0.33
+Nodes (5): Acceptance, Constraints, R3-05 public shell and indexes, Scope, Tests
+
+### Community 238 - "R3-10 — Admin editors and settings"
+Cohesion: 0.33
+Nodes (5): Acceptance, Checks, R3-10 — Admin editors and settings, Scope, Verification
+
+### Community 239 - "Round 3 stack integration PR"
+Cohesion: 0.33
+Nodes (5): Acceptance criteria, Goal, Plan, Release note, Round 3 stack integration PR
+
+### Community 240 - "D6 — journey and release evidence manifest template"
+Cohesion: 0.33
+Nodes (6): Capture matrix and design review, Commands and owner (replace proposed paths only after they exist), D6 — journey and release evidence manifest template, Journey steps (one row per mouse and keyboard run), Run header (fill every field), Verdict and rollback
+
+### Community 242 - "exports"
+Cohesion: 0.33
+Nodes (6): exports, ./components/*, ./hooks/*, ./lib/utils, ./styles/globals.css, ./utils/*
+
+### Community 243 - "scripts"
+Cohesion: 0.33
+Nodes (6): scripts, build-storybook, lint, storybook, test, typecheck
+
+### Community 244 - "Foundations.stories.tsx"
+Cohesion: 0.33
+Nodes (5): Admin, Foundations(), meta, Public, Story
+
+### Community 245 - "StatCard.stories.tsx"
+Cohesion: 0.33
+Nodes (5): Down, Flat, meta, Story, Up
+
+### Community 246 - "button.stories.tsx"
+Cohesion: 0.33
+Nodes (5): Loading, meta, SIZES, Story, Variants
+
+### Community 247 - "Motion.stories.tsx"
+Cohesion: 0.33
+Nodes (4): Default, EASINGS, meta, Story
+
+### Community 248 - "Typography.stories.tsx"
+Cohesion: 0.33
+Nodes (4): Default, meta, ROWS, Story
+
+### Community 250 - "page-versions.service.spec.ts"
+Cohesion: 0.40
+Nodes (3): hero, legacySnapshot, snapshotHero
+
+### Community 251 - "admin-components.spec.ts"
+Cohesion: 0.50
+Nodes (3): chromeStyles(), PROPERTIES, styleOf()
+
+### Community 254 - "admin-table-styles.spec.ts"
+Cohesion: 0.50
+Nodes (3): PROPERTIES, styleOf(), tableStyles()
+
+### Community 256 - "navigation-progress.spec.ts"
+Cohesion: 0.50
+Nodes (3): expectProgressOnClick(), measureProgressDelay(), ProgressWindow
+
+### Community 257 - "web/eslint.config.mjs"
+Cohesion: 0.40
+Nodes (3): allowedStrings, eslint-config-next@16.4.3, eslint-config-next
+
+### Community 259 - "Portfolio notes — Central Food Wholesale CRM Portal (cfw-sales-crm-portal)"
+Cohesion: 0.40
+Nodes (4): Facts (verified via git), Highlights authored by Parker, NOT Parker's (don't claim), Portfolio notes — Central Food Wholesale CRM Portal (cfw-sales-crm-portal)
+
+### Community 260 - "Portfolio notes — lil.p (this site)"
+Cohesion: 0.40
+Nodes (4): Facts (verified via git / docs), Highlights authored by Parker, NOT Parker's (don't claim), Portfolio notes — lil.p (this site)
+
+### Community 261 - "Portfolio notes — Particula (particula-fe)"
+Cohesion: 0.40
+Nodes (4): Facts (verified via git), Highlights authored by Parker, NOT Parker's (don't claim), Portfolio notes — Particula (particula-fe)
+
+### Community 262 - "Round 3 PR 01 — brand foundation"
+Cohesion: 0.40
+Nodes (4): Acceptance, Round 3 PR 01 — brand foundation, Scope, Tests
+
+### Community 263 - "R3-02 — Custom page creation API"
 Cohesion: 0.40
 Nodes (4): Acceptance, R3-02 — Custom page creation API, Scope, Tests and gates
 
-### Community 240 - "R3-03 — Published custom pages"
+### Community 264 - "R3-03 — Published custom pages"
 Cohesion: 0.40
 Nodes (4): Acceptance, R3-03 — Published custom pages, Scope, Tests and captures
 
-### Community 241 - "R3-04 — Create a page in the real admin"
+### Community 265 - "R3-04 — Create a page in the real admin"
 Cohesion: 0.40
 Nodes (4): Acceptance, R3-04 — Create a page in the real admin, Scope, Verification
 
-### Community 242 - "R3-06: reliable public email action"
+### Community 266 - "R3-06: reliable public email action"
 Cohesion: 0.40
 Nodes (4): Acceptance, R3-06: reliable public email action, Scope, Tests and captures
 
-### Community 243 - "R3-07: Public details and states"
+### Community 267 - "R3-07: Public details and states"
 Cohesion: 0.40
 Nodes (4): Acceptance, Checks, R3-07: Public details and states, Scope
 
-### Community 244 - "R3-08 — Admin shell and insights"
+### Community 268 - "R3-08 — Admin shell and insights"
 Cohesion: 0.40
 Nodes (4): Acceptance, R3-08 — Admin shell and insights, Scope, Verification
 
-### Community 245 - "R3-09: Admin collections"
+### Community 269 - "R3-09: Admin collections"
 Cohesion: 0.40
 Nodes (4): Acceptance, R3-09: Admin collections, Scope, Verification
 
-### Community 246 - "R3-11 — Real content seed"
+### Community 270 - "R3-11 — Real content seed"
 Cohesion: 0.40
 Nodes (4): Acceptance, R3-11 — Real content seed, Scope, Verification
 
-### Community 247 - "R3-12: Integrated real-flow audit"
+### Community 271 - "R3-12: Integrated real-flow audit"
 Cohesion: 0.40
 Nodes (4): Acceptance, R3-12: Integrated real-flow audit, Scope, Verification
 
-### Community 248 - "CMS B1 — golden HTTP contracts"
-Cohesion: 0.40
-Nodes (4): CMS B1 — golden HTTP contracts, Observed baseline discrepancies, Plan, Review amendment — PR #177
-
-### Community 249 - "B5 — pure page engine and host ports"
-Cohesion: 0.40
-Nodes (4): B5 — pure page engine and host ports, Boundary and compatibility, Plan (8 steps), Verification and rollback
-
-### Community 250 - "changes"
-Cohesion: 0.40
-Nodes (5): outputs, runs-on, timeout-minutes, changes, ui
-
-### Community 251 - "Private CMS core naming exception"
+### Community 272 - "Private CMS core naming exception"
 Cohesion: 0.40
 Nodes (4): Acceptance and rollback, Decision and scope, Plan, Private CMS core naming exception
 
-### Community 252 - "AccentHeadline.stories.tsx"
+### Community 273 - "CMS B1 — golden HTTP contracts"
 Cohesion: 0.40
-Nodes (4): meta, Plain, Story, WithAccent
+Nodes (4): CMS B1 — golden HTTP contracts, Observed baseline discrepancies, Plan, Review amendment — PR #177
 
-### Community 253 - "Atmosphere.stories.tsx"
+### Community 274 - "CMS B2 — one block page-allowance source"
 Cohesion: 0.40
-Nodes (4): Disabled, Hero, meta, Story
+Nodes (4): Acceptance, CMS B2 — one block page-allowance source, Decision and invariants, Plan
 
-### Community 254 - "B5 — pure page engine and host ports"
+### Community 275 - "B5 — pure page engine and host ports"
 Cohesion: 0.40
 Nodes (5): Acceptance and rollback, API module and production packaging decision (read-only audit), B5 — pure page engine and host ports, Parallel boundary after B4, Plan (8 lines)
 
-### Community 255 - "DiffStat"
-Cohesion: 0.06
-Nodes (28): RolesGuard, readingMinutes(), ProfileStat, M2 — Content graph, T15 · About content models + endpoints, T27 · Project case study, T15 · Model nội dung About + endpoint, T23 · Pipeline markdown + Prose + CodeBlock + công cụ hỗ trợ đọc (+20 more)
-
-### Community 256 - "FeatureCard.stories.tsx"
-Cohesion: 0.15
-Nodes (9): principleFixtures, Default, Grid, meta, Story, principleNumber(), Default, meta (+1 more)
-
-### Community 257 - "KickerPill.stories.tsx"
-Cohesion: 0.40
-Nodes (4): Default, HiddenWhenEmpty, meta, Story
-
-### Community 258 - "MediaUploader.stories.tsx"
-Cohesion: 0.40
-Nodes (4): Idle, InFlight, meta, Story
-
-### Community 259 - "Prose.stories.tsx"
-Cohesion: 0.40
-Nodes (4): Compact, Default, meta, Story
-
-### Community 260 - "CMS core full verification — D6 → C gate"
+### Community 276 - "CMS core full verification — D6 → C gate"
 Cohesion: 0.40
 Nodes (5): CMS core full verification — D6 → C gate, Composed-page review and decision, Design-review checklist (each starter component), Evidence layout and execution (future implementation only), Post-D6 execution checklist (future authorized threads only)
 
-### Community 261 - "StatusPill.stories.tsx"
-Cohesion: 0.40
-Nodes (4): All, LABELS, meta, Story
-
-### Community 262 - "TechMarquee.stories.tsx"
-Cohesion: 0.40
-Nodes (4): Animated, meta, Static, Story
-
-### Community 263 - "badge.stories.tsx"
-Cohesion: 0.40
-Nodes (4): HUES, meta, Story, Variants
-
-### Community 264 - "Duplicate block limit"
+### Community 277 - "Duplicate block limit"
 Cohesion: 0.40
 Nodes (4): Acceptance and rollback, Duplicate block limit, Plan, Problem
 
-### Community 265 - "tsconfig.build.json"
+### Community 278 - "B5 — pure page engine and host ports"
+Cohesion: 0.40
+Nodes (4): B5 — pure page engine and host ports, Boundary and compatibility, Plan (8 steps), Verification and rollback
+
+### Community 279 - "CI static-check throughput — 2026-11-15"
+Cohesion: 0.40
+Nodes (4): Baseline and scope, Change and acceptance, CI static-check throughput — 2026-11-15, Plan (four steps)
+
+### Community 280 - "changes"
+Cohesion: 0.40
+Nodes (5): outputs, runs-on, timeout-minutes, changes, ui
+
+### Community 281 - "AccentHeadline.stories.tsx"
+Cohesion: 0.40
+Nodes (4): meta, Plain, Story, WithAccent
+
+### Community 282 - "Atmosphere.stories.tsx"
+Cohesion: 0.40
+Nodes (4): Disabled, Hero, meta, Story
+
+### Community 283 - "Callout.stories.tsx"
+Cohesion: 0.40
+Nodes (4): meta, Note, Story, Warning
+
+### Community 284 - "DiffStat.stories.tsx"
+Cohesion: 0.40
+Nodes (4): Diff, meta, Story, Value
+
+### Community 285 - "FeatureCard.stories.tsx"
+Cohesion: 0.40
+Nodes (4): Default, Grid, meta, Story
+
+### Community 286 - "KickerPill.stories.tsx"
+Cohesion: 0.40
+Nodes (4): Default, HiddenWhenEmpty, meta, Story
+
+### Community 287 - "MediaUploader.stories.tsx"
+Cohesion: 0.40
+Nodes (4): Idle, InFlight, meta, Story
+
+### Community 288 - "Prose.stories.tsx"
+Cohesion: 0.40
+Nodes (4): Compact, Default, meta, Story
+
+### Community 289 - "RequirementColumns.stories.tsx"
+Cohesion: 0.40
+Nodes (4): meta, Single, Story, TwoColumns
+
+### Community 290 - "StatusPill.stories.tsx"
+Cohesion: 0.40
+Nodes (4): All, LABELS, meta, Story
+
+### Community 291 - "badge.stories.tsx"
+Cohesion: 0.40
+Nodes (4): HUES, meta, Story, Variants
+
+### Community 292 - "tsconfig.build.json"
 Cohesion: 0.50
 Nodes (3): exclude, extends, ./tsconfig.json
 
-### Community 267 - "cms-core/tsconfig.json"
-Cohesion: 0.50
-Nodes (3): extends, include, ../../tsconfig.base.json
-
-### Community 268 - "contracts/tsconfig.json"
-Cohesion: 0.50
-Nodes (3): extends, include, ../../tsconfig.base.json
-
-### Community 269 - "Phase C — private CMS core distribution (draft-ahead specification)"
+### Community 296 - "Phase C — private CMS core distribution (draft-ahead specification)"
 Cohesion: 0.50
 Nodes (4): C1 — distribution decision and authentication matrix, C2 — private package repository preparation, C3 — consumer switch and deployment-readiness design, Phase C — private CMS core distribution (draft-ahead specification)
 
-### Community 270 - "build"
+### Community 297 - "build"
 Cohesion: 0.50
 Nodes (4): needs, runs-on, timeout-minutes, build
 
-### Community 271 - "Eyebrow.stories.tsx"
+### Community 298 - "cms-core/tsconfig.json"
 Cohesion: 0.50
-Nodes (3): meta, Story, Tones
+Nodes (3): extends, include, ../../tsconfig.base.json
 
-### Community 272 - "DecisionCard.stories.tsx"
+### Community 299 - "contracts/tsconfig.json"
+Cohesion: 0.50
+Nodes (3): extends, include, ../../tsconfig.base.json
+
+### Community 300 - "CtaBand.stories.tsx"
 Cohesion: 0.50
 Nodes (3): Default, meta, Story
 
-### Community 277 - "SectionNav.stories.tsx"
+### Community 302 - "ProcessFlow.stories.tsx"
 Cohesion: 0.50
 Nodes (3): Default, meta, Story
 
-### Community 305 - "UI redesign plan — public site + admin CMS (frontend only)"
-Cohesion: 0.67
-Nodes (3): 0. Scope, constraints, how to review, 12. Open questions and risks, UI redesign plan — public site + admin CMS (frontend only)
+### Community 303 - "SectionHeader.stories.tsx"
+Cohesion: 0.50
+Nodes (3): Default, meta, Story
+
+### Community 304 - "SectionNav.stories.tsx"
+Cohesion: 0.50
+Nodes (3): Default, meta, Story
+
+### Community 305 - "VersionTag.stories.tsx"
+Cohesion: 0.50
+Nodes (3): Default, meta, Story
 
 ## Knowledge Gaps
 - **18 isolated node(s):** `DATABASE_URL`, `./tsconfig.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json` (+13 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2109 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **40 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2116 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **52 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `@nestjs/common` connect `@nestjs/common` to `Locale`, `AppConfigService`, `analytics.service.ts`, `PrismaService`, `api/package.json`, `portfolio.mapper.ts`, `.recordNow`, `AdminDomain`, `admin-users.controller.ts`, `site-settings.service.ts`, `.record`, `posts/posts.service.ts`, `pages/pages.service.ts`, `dashboard/dashboard.service.ts`, `media.service.ts`, `admin-tags.controller.ts`, `EventsService`, `projects.schema.ts`, `page-versions.service.ts`, `profile/profile.service.ts`, `all-exceptions.filter.ts`?**
+- **Why does `@nestjs/common` connect `@nestjs/common` to `apps_api_src_generated_prisma_client`, `index.ts`, `contact-topics/contact-topics.service.ts`, `ref_vitest`, `pages/pages.service.ts`, `Public`, `Roles`, `app.module.ts`, `pickGroup`, `contracts.ts`, `skills.module.ts`, `domains/domains.service.ts`, `tags/tags.service.ts`, `health.controller.ts`, `dashboard/dashboard.service.ts`, `ProfileService`, `PostsService`, `pages.http.spec.ts`, `posts/posts.service.ts`, `admin-users.controller.ts`, `content-migration.e2e-spec.ts`, `EventsService`, `analytics.service.ts`, `ContactService`, `media.module.ts`, `public-contact.controller.ts`, `media.service.ts`, `page-versions.service.spec.ts`?**
   _High betweenness centrality (0.048) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `cn()` (e.g. with `T04 · Design tokens + shadcn theme in `packages/ui`` and `T04 · Design token + shadcn theme trong `packages/ui``) actually correct?**
   _`cn()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `DATABASE_URL`, `./tsconfig.json`, `../../tsconfig.base.json` to the rest of the system?**
   _18 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Locale` be split into smaller, more focused modules?**
-  _Cohesion score 0.029065200314218383 - nodes in this community are weakly interconnected._
-- **Why does `@storybook/react` connect `@storybook/react` to `FeatureCard.stories.tsx`, `KickerPill.stories.tsx`, `MediaUploader.stories.tsx`, `MediaLibrary.test.tsx`, `Prose.stories.tsx`, `Button`, `StatusPill.stories.tsx`, `TechMarquee.stories.tsx`, `posts.schema.ts`, `badge.stories.tsx`, `Eyebrow.stories.tsx`, `NotesDetail.tsx`, `DecisionCard.stories.tsx`, `ui/package.json`, `SectionNav.stories.tsx`, `preview.tsx`, `Timeline.tsx`, `ProjectsDetail.tsx`, `CaseStudyHeader.tsx`, `hast-to-react.util.ts`, `domains.schema.ts`, `StatBand.tsx`, `SaveStatus.stories.tsx`, `Colors.stories.tsx`, `Spacing.stories.tsx`, `devDependencies`, `SectionBoundary.tsx`, `ref_react`, `Icon`, `projects.schema.ts`, `StatCard.stories.tsx`, `MigrationDiagram.stories.tsx`, `button.stories.tsx`, `Motion.stories.tsx`, `Typography.stories.tsx`, `SortableList.tsx`, `ContentHealthCard.tsx`, `about/services/skills.service.ts`, `AccentHeadline.stories.tsx`, `Atmosphere.stories.tsx`, `DiffStat`?**
+- **Should `Input` be split into smaller, more focused modules?**
+  _Cohesion score 0.06058165548098434 - nodes in this community are weakly interconnected._
+- **Why does `@storybook/react` connect `@storybook/react` to `Input`, `cn`, `index.ts`, `ui/package.json`, `ref_testing_library_react`, `MediaLibrary.test.tsx`, `AccentHeadline.stories.tsx`, `Atmosphere.stories.tsx`, `Callout.stories.tsx`, `DiffStat.stories.tsx`, `FeatureCard.stories.tsx`, `KickerPill.stories.tsx`, `MediaUploader.stories.tsx`, `Prose.stories.tsx`, `RequirementColumns.stories.tsx`, `CaseCard.tsx`, `StatBand.tsx`, `StatusPill.stories.tsx`, `badge.stories.tsx`, `posts.schema.ts`, `CtaBand.stories.tsx`, `ProcessFlow.stories.tsx`, `SectionHeader.stories.tsx`, `SectionNav.stories.tsx`, `VersionTag.stories.tsx`, `devDependencies`, `SaveStatus.stories.tsx`, `Colors.stories.tsx`, `Spacing.stories.tsx`, `PrincipleList.tsx`, `SectionBoundary.stories.tsx`, `SortableList.stories.tsx`, `MigrationDiagram.stories.tsx`, `Timeline`, `Foundations.stories.tsx`, `StatCard.stories.tsx`, `button.stories.tsx`, `Motion.stories.tsx`, `Typography.stories.tsx`, `ContactFormBlock.tsx`, `CaseCard.stories.tsx`?**
   _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **Are the 11 inferred relationships involving `Button()` (e.g. with `4. Architecture at a glance` and `T12 · UI primitives matching Figma component sets`) actually correct?**
   _`Button()` has 11 INFERRED edges - model-reasoned connections that need verification._
 - **Should `@nestjs/common` be split into smaller, more focused modules?**
-  _Cohesion score 0.03073575411396709 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.02701065891472868 - nodes in this community are weakly interconnected._
