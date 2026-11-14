@@ -4,6 +4,8 @@ Status: coordinator design-approved (recorded 2026-11-10 21:56 ICT at head `818d
 
 Main reconciliation (2026-11-15): U2 was integrated into main as `bdfaaf8`; this study's page, unit/E2E cases, spec and reviewed captures are absent from both main and D5 UI #204. D5 implements a live builder, not this independent flag-gated design reference. PR #178 is therefore retained and restacked on current main, keeping main's clean-seed Linux pixel baselines, U2 audit and CI build graph. The U3 shard entry retains the separate mutating editor spec outside the visual shard. This is not a merge or deployment authorization.
 
+Final pre-merge sync (2026-11-15): merged main `9ee0056` into this draft branch, retaining its isolated `ready-e2e` label workflow and preserving the U3 study unchanged. `PROJECT_CONTEXT.md` §9 is the active changelog; the root README and web-host README still describe the gated, non-persistent study. Graphify was regenerated from the integrated code tree. Final-head CI, including the labeled E2E shards and visual gate, must pass before merge-chain handoff; neither this sync nor the earlier design approval authorizes a merge.
+
 ## Plan (8 steps, revised after coordinator review)
 
 1. Read U1 baseline, ADR, Graphify and route guards.

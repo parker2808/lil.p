@@ -215,6 +215,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Synced draft U3 #178 with main `9ee0056` without rewriting the published branch, retaining the isolated `ready-e2e` workflow and the independently gated static design study. Refreshed the code graph and reconfirmed the root/web README and U3 spec; final-head CI remains the merge gate. No builder mutation, DB change, deployment or merge.
 - 2026-11-15: Reconciled label-triggered CI with merged #206: code events keep the bounded parallel static checks, clean Vercel build and all required checks; label events run only `ready-e2e` E2E jobs, with shards dependent on the finalized build artifact. Lock-holder validation of that label event is pending.
 - 2026-11-10: Isolated `ready-e2e` label-triggered CI into its own concurrency lane and E2E-only jobs, retaining cancellation of superseded code runs; unrelated labels no longer rerun code or E2E jobs.
 - 2026-11-15: Reconciled C1 package-local tooling and pack allowlist with the B6 React server export and combined gzip measurement; no private release or golden changes.
