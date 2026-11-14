@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- CMS #201 integration CI follow-up (2026-11-15): the merged C1 package-local measurement script must also be imported locally by React/theme tests; root-relative imports fail both standalone dependency scanning and the Linux unit/theme-browser jobs. The package boundary and bundle caps remain unchanged.
+- Contact hydration (#201 on integrated U2): SSR name/email/message values survive hydration and synchronize with form state at mount; a locked browser regression holds scripts, enters all three fields, then verifies one client POST. U2's optional topic Select and empty-topic behavior remain intact. No CMS golden, API, DB, or locale text changes; see `docs/specs/2026-11-11-contact-hydration-readiness.md`.
 - 2026-11-15: D integration base #196 incorporates B7's restacked #195 head (including current main, B6b and D1) while retaining its opt-in typed tree, empty-publish H1 gate, neutral fixture and package-local C1 tooling. D3 and later builder work remain separate; no production route, database, migration or B1 golden change. See `docs/specs/2026-11-11-cms-d-integration-base.md`.
 - 2026-11-15: #195 B7 fixture defaults and sampled EN/VI homepage actions now target declared locale-prefixed component routes; fixture assertions guard the destination. Its CI browser/visual matrix remains the release gate; no production route or golden contract changes.
 
@@ -224,6 +226,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Point CMS React/theme tests to the package-local bundle measurement script after integrating C1 prep into #201; preserve the existing measurement assertions and contact hydration behavior.
+
+- 2026-11-15: Reconciled contact hydration readiness (#201, covering #183) with merged U2: kept the shared topic Select and optional-empty payload, restored the stronger pre-hydration name/email/message and one-POST regression, and retained the CMS core/tree integration without changing goldens.
 - 2026-11-15: Restacked D integration base #196 onto B7 #195 and merged main #191, preserving the D1 tree validation, the neutral theme/fixture and package-local checks without changing golden HTTP responses or persisted data.
 - 2026-11-15: Corrected B7's fallback homepage action from an unrecognized bare `/components` path to `/en/components`; both EN and VI rendered actions resolve to their localized gallery routes.
 
