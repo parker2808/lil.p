@@ -6,6 +6,7 @@ export default defineConfig({
   entry: {
     contracts: 'src/contracts.ts',
     engine: 'src/engine.ts',
+    tree: 'src/tree.ts',
     react: 'src/react.ts',
     'react/server': 'src/react/server.ts',
   },

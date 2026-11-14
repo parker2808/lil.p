@@ -80,4 +80,26 @@ describe('AdminSiteProfile', () => {
     expect(await screen.findByText('Must appear in the headline')).toBeInTheDocument();
     expect(update).not.toHaveBeenCalled();
   });
+
+  it('offers a localized retry after the profile fails to load', async () => {
+    getProfile.mockRejectedValueOnce(new Error('offline')).mockResolvedValueOnce(profile);
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const { container } = render(
+      <NextIntlClientProvider locale="en" messages={en}>
+        <QueryClientProvider client={client}>
+          <MeProvider me={admin}>
+            <AdminSiteProfile />
+          </MeProvider>
+        </QueryClientProvider>
+      </NextIntlClientProvider>,
+    );
+
+    expect(container.querySelector('[data-slot="page-skeleton"]')).toHaveAttribute(
+      'aria-busy',
+      'true',
+    );
+    await userEvent.click(await screen.findByRole('button', { name: 'Retry' }));
+    expect(await screen.findByLabelText('Accent')).toBeInTheDocument();
+    expect(getProfile).toHaveBeenCalledTimes(2);
+  });
 });
