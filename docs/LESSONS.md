@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-15: When parallel branches both regenerate Graphify reports, resolve the generated-report conflict by rebuilding from the combined tree rather than mixing incompatible community sections.
 - 2026-11-15: A monorepo-only dependency guard disappears in a path-filtered package repository; add a package-local manifest/import boundary check and run it explicitly in CI before extraction.
 - 2026-11-15: An extraction-ready workspace package must carry its own build/lint/test tools, while its frozen standalone lockfile is generated from the filtered package tree rather than copied from the monorepo root.
 - 2026-11-15: When U2 visual changes meet a later main, keep the clean Vercel build and artifact dependency, combine the route audit with U0's capture-baseline override, and recapture conflicting Linux PNGs from the integrated app on a clean disposable seed.
@@ -151,6 +152,8 @@
 - 2026-11-03: A screenshot matrix leaves Playwright at its last mobile viewport, so restore desktop width before testing desktop-only header links; assert mobile control boxes directly because one inherited 40px button escaped earlier route checks.
 - 2026-11-03: Record behavior and route changes in the root README in the same PR; this repo keeps current changelog entries in `PROJECT_CONTEXT.md` §9 and reserves `docs/CHANGELOG_ARCHIVE.md` for older history.
 - 2026-11-03: When stacked branches both refresh the tracked Graphify report, regenerate it after merging the base instead of combining generated report lines by hand.
+- 2026-11-10: Page snapshots omit the original page locale; custom pages with no English SEO title but a Vietnamese title need the draft-preview VI fallback in both public snapshot and version-preview resolution, without changing built-in `pickGroup` behavior.
+- 2026-11-15: After merging B5b, the host-owned published snapshot SEO resolver remains outside the pure engine; update the isolated B1 known-bug golden for EN/VI and version previews instead of changing the engine or unrelated golden contracts.
 - 2026-11-10: Keep CMS HTTP goldens structural and seed-isolated: assert semantic status/code/locale fields, not dynamic IDs, timestamps, cookie values or snapshots; B1 can freeze API behavior before U2/U3 while implementation B remains gated.
 - 2026-11-10: Public SEO resolves a group of localized fields together: a VI title with a missing VI description falls back to EN for both; seed both locales' descriptions when asserting VI SEO and record VI-only custom-page fallback separately.
 - 2026-11-10: A restore/discard HTTP golden must first diverge the draft from the published snapshot, then compare normalized block/SEO state and confirm public content stays fixed; response status alone cannot detect a no-op.
