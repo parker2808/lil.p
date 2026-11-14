@@ -11,8 +11,8 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6602e2d3`
-- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Built from the integrated U3 code tree at commit: `6602e2d3` (includes main's C1 prep; later report-only commits do not change this code tree).
+- Run `graphify update .` after further code changes; the code tree, not a later report-only commit, determines graph freshness.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
