@@ -1,6 +1,17 @@
 # CMS open-stack integration plan (DRAFT — conditional final-head approval; no merge by this docs PR)
 
-## Live merge ledger (2026-11-14, after #190)
+## Live merge ledger (2026-11-14, after #192)
+
+| Order | PRs                                                                                                                                                      | Current disposition                                                                                                                                          |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1–15  | #184 → #171 → #172 → #180 → #175 → #174 → #176 → #177 → #181 → #182 → #185 `89b9312` → #205 `f751e8b` → #189 `f73072e` → #190 `f3a62c2` → #192 `48c62cf` | Merged into `main` in order; preserve B5b's Nest adapters, legacy missing-SEO read path and exact HTTP error mapping.                                        |
+| 16–19 | #179 → #178 → #186 → #191                                                                                                                                | Restack in order; preserve U2/U3 captures, locale SEO and React exports.                                                                                     |
+| 20–25 | #193 → #195 → #194 → #196 → #201 → #197                                                                                                                  | Preserve neutral theme, fixture, tree, contact readiness and shared SSR.                                                                                     |
+| 26–29 | #198 → #200 → #204 → #199                                                                                                                                | #204 `169d0c4` includes D4 `9e458a2`, has green final-head CI and passed read-only review; #199's migration remains gated until full candidate verification. |
+| 30+   | #202 → full D6 release verification                                                                                                                      | #202 `d6374c5` has live all-20 route evidence, but required-role/page-allowance validation and Linux web-E2E CI remain open; no release sign-off.            |
+| Skip  | #173; #183                                                                                                                                               | Superseded by #176 and #201; close after replacement evidence.                                                                                               |
+
+### Historical ledger after #190
 
 | Order | PRs                                                                                                                    | Current disposition                                                                                                                                                             |
 | ----- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

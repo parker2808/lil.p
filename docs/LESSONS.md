@@ -3,6 +3,8 @@
 - 2026-11-14: An all-definitions live route test does not prove publish policy if its injected registry erases required roles or page allowances; assert those negative cases as well as successful SSR parity.
 
 - 2026-11-11: For every stacked CMS merge, verify the READY production Vercel deployment and three public/health HTTP 200 responses on the merged SHA; green PR CI proves only its own build, not the live site or a future private-package consumer.
+- 2026-11-14: When a pure engine is wired into a host, preserve the host's exact error mapping and verify compiled adapters inside the already-pruned production image; a passing package CJS smoke alone does not prove runtime integration.
+
 - 2026-11-11: A transitive workspace package added after Docker's manifest-copy stage can break frozen install, and its build output can be missing even when TypeScript compiles; list every runtime workspace manifest before install and smoke-test CJS exports from the pruned final image.
 - 2026-11-11: A green monorepo build can hide a deployment-only DTS failure when a provider's isolated build command skips a new workspace dependency; pin the provider command in the repository and run it from a clean checkout in CI.
 - 2026-11-11: Vercel branch previews are disabled outside `main` here, so green PR CI is not Vercel deployment evidence; a clean CI build must execute the full core → contracts → web deployment command, and the next main deploy still needs a READY status and live health checks.
@@ -171,6 +173,9 @@
 - 2026-11-10: A pre-existing contrast ratio of 4.49:1 can fail macOS axe even when unrelated CMS contracts are the only runtime change; record the exact colors, affected test and platform rather than masking the failure or changing out-of-scope UI.
 - 2026-11-10: When publishing separate ESM/CJS subpaths, test both import and require for every entry and guard side-effect imports/re-exports, not only named imports.
 - 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
+- 2026-11-11: When merging parallel API packaging and pure engine branches, retain both documentation changes but regenerate Graphify; production CJS smoke must load the compiled host adapter, not just resolve the core subpath.
+- 2026-11-11: In a legacy snapshot compatibility reader, `?? {}` conflates an absent SEO object with an explicitly persisted null; check property presence before filling only absent keys, then reject malformed supplied data before transaction writes.
+- 2026-11-11: When tightening a shared snapshot reader, normalize only missing legacy fields at the host boundary; rebuild the workspace package before adapter tests so stale dist files cannot hide the new rejection behavior.
 - 2026-11-11: Zod object parsing strips unknown keys by default; reject unsupported snapshot versions and unexpected persisted keys before parsing so a strict reader cannot silently lose stored data.
 - 2026-11-10: A form wrapper that clones an input cannot safely wrap a composite Radix Select: bind the label, error attributes and name to the actual trigger/root instead; a Select portal inside a modal must stack above the dialog, and repeated E2E sign-in redirects away from its login form.
 - 2026-11-10: Waiting for a client-only control before filling a public form hid pre-hydration data loss; test input before hydration instead. Visual hashes also change with seeded data, so review images instead of treating every changed hash as a UI regression.
