@@ -1,17 +1,17 @@
-# Graph Report - cms-pre-191-194  (2026-11-15)
+# Graph Report - cms-pre-191-p2-194  (2026-11-15)
 
 ## Corpus Check
-- 1543 files · ~595,495 words
+- 1543 files · ~595,782 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 34 file(s) not represented in the graph (top: (none) 18, .css 12, .example 1)
 
 ## Summary
-- 7328 nodes · 22918 edges · 317 communities (265 shown, 52 thin omitted)
+- 7328 nodes · 22919 edges · 317 communities (265 shown, 52 thin omitted)
 - Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 2093 edges (avg confidence: 0.93)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3832a798`
+- Built from commit: `940c9d62`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -169,6 +169,7 @@
 - verified-owner.data.ts
 - StatsRange
 - api-e2e
+- MediaLibrary.test.tsx
 - globals.test.ts
 - ActivityCard.tsx
 - MockIntersectionObserver
@@ -196,7 +197,7 @@
 - with
 - exports
 - peerDependencies
-- ReorderInput
+- education.type.ts
 - lighthouse.ts
 - visual.spec.ts
 - scripts
@@ -212,7 +213,7 @@
 - CMS core C1–C3 extraction runbook
 - eslint.config.mjs
 - on
-- react.ts
+- fields.ts
 - AuditRow.stories.tsx
 - RequirementColumns
 - Colors.stories.tsx
@@ -256,7 +257,6 @@
 - admin-dashboard.spec.ts
 - admin-pages.spec.ts
 - admin-table-styles.spec.ts
-- case-study-layout.spec.ts
 - navigation-progress.spec.ts
 - web/eslint.config.mjs
 - FakeEventSource
@@ -338,14 +338,14 @@
 ## Surprising Connections (you probably didn't know these)
 - `Highlights authored by Parker` --references--> `text()`  [INFERRED]
   docs/case-studies/cfw-backoffice-portal.md → apps/api/prisma/seed/data/portfolio.mapper.ts
-- `T30 · Write API: posts, experience, education, principles, stats, process` --references--> `readingMinutes()`  [INFERRED]
-  docs/archive/plan/09-7-tasks-t26-projects-list.md → apps/api/src/common/utils/reading-time.util.ts
-- `T30 · Write API: post, experience, education, principle, stat, process` --references--> `readingMinutes()`  [INFERRED]
-  docs/archive/plan-vi/10-7-cac-task-m3-phia-ghi.md → apps/api/src/common/utils/reading-time.util.ts
 - `Contract and acceptance` --references--> `pickGroup()`  [INFERRED]
   docs/specs/2026-11-10-custom-page-locale-seo.md → apps/api/src/i18n/pick-locale.util.ts
 - `T50 · Media API: upload, variants, relations` --references--> `MediaService`  [INFERRED]
   docs/archive/plan/12-7-tasks-t46-users-admin-admin-only-change-own-pass.md → apps/api/src/modules/media/media.service.ts
+- `T50 · API media: upload, variant, quan hệ` --references--> `MediaService`  [INFERRED]
+  docs/archive/plan-vi/14-7-cac-task-m5-realtime-media-publish.md → apps/api/src/modules/media/media.service.ts
+- `Model, conversion, and persistence` --references--> `readPageSnapshot()`  [INFERRED]
+  docs/specs/2026-11-10-cms-core-adr.md → apps/api/src/modules/pages/page-snapshot.util.ts
 
 ## Import Cycles
 - None detected.
@@ -650,7 +650,7 @@ Nodes (25): AdminProjectsPage(), firstSearchParam(), useBulkArchiveProjects(), u
 
 ### Community 74 - "web/package.json"
 Cohesion: 0.09
-Nodes (30): devDependencies, @axe-core/playwright@^4.14.0, eslint@^9.39.1, jsdom@^27.2.0, @playwright/test@^1.56.1, @tailwindcss/postcss@^4.1.18, @testing-library/jest-dom@^6.9.1, @testing-library/react@^16.3.0 (+22 more)
+Nodes (32): devDependencies, @axe-core/playwright@^4.14.0, eslint@^9.39.1, jsdom@^27.2.0, @playwright/test@^1.56.1, @tailwindcss/postcss@^4.1.18, @testing-library/jest-dom@^6.9.1, @testing-library/react@^16.3.0 (+24 more)
 
 ### Community 75 - "defineBlock"
 Cohesion: 0.10
