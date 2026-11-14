@@ -471,7 +471,7 @@
         "select": "Chọn hàng hiện tại",
         "open": "Mở hàng hiện tại",
         "edit": "Sửa hàng hiện tại",
-        "remove": "Lưu trữ mục đã chọn",
+        "remove": "Lưu trữ hoặc xóa các hàng đã chọn, hoặc hàng hiện tại nếu chưa chọn hàng nào.",
         "help": "Mở trợ giúp này"
       },
       "keys": {

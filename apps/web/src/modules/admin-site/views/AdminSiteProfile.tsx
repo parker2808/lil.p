@@ -1,6 +1,8 @@
 'use client';
 
 import { type AdminProfile, profileUpdateSchema } from '@portfolio/contracts';
+import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
+import { PageSkeleton } from '@portfolio/ui/components/PageSkeleton/PageSkeleton';
 import { useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 
@@ -44,13 +46,20 @@ function toPatch(values: AdminProfile) {
 
 export function AdminSiteProfile() {
   const t = useTranslations('admin.profile');
+  const shell = useTranslations('admin.shell');
   const existing = useAdminProfile();
 
   if (existing.isError) {
-    return <p className="text-destructive">{t('loadError')}</p>;
+    return (
+      <ErrorState
+        message={t('loadError')}
+        retryLabel={shell('retry')}
+        onRetry={() => void existing.refetch()}
+      />
+    );
   }
   if (!existing.data) {
-    return <p>{t('loading')}</p>;
+    return <PageSkeleton variant="editor" />;
   }
 
   return <ProfileEditor key={existing.data.updatedAt} initial={existing.data} />;

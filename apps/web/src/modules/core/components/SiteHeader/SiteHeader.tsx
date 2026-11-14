@@ -81,7 +81,7 @@ export function SiteHeader({
       <div className="site-container mx-auto flex h-16 items-center gap-6">
         <Link
           href="/"
-          className="font-heading text-ui inline-flex items-center gap-3 font-semibold"
+          className="font-heading text-ui inline-flex min-h-11 items-center gap-3 font-semibold"
         >
           <BrandMark />
         </Link>
