@@ -8,7 +8,7 @@ host-keyed page-allowance predicate through `./contracts`. The host keeps all
 `./engine` provides B5's pure registry-injected policy findings, stable ordering,
 strict snapshots and version migrations, plus typed host ports; it does not
 start transactions or call ports. The Nest adapter remains host-owned and is
-not wired by B5 pending approval for the direct API production dependency.
+wired separately by B5b through the API's direct production dependency.
 B6's `./react/server` contains headless ordered
 block dispatch with host-supplied renderers, grouping, wrappers, and draft-only
 unknown notices; it imports no client form/widget code. `./react` exposes Zod
@@ -33,6 +33,18 @@ downstream app tree-shaking. See the [B4 spec](../../docs/specs/2026-11-10-cms-b
 for the measured extraction baseline and rollback. All block definitions, host
 policy, API routes and EN/VI UI remain in lil.p.
 See the [B6 spec](../../docs/specs/2026-11-11-cms-core-b6-react.md) for the split and tests.
+
+The extraction-ready package carries its own build, lint, test, and
+`pnpm check:deps` scripts. Run `pnpm check:deps` from this package or the
+monorepo to reject workspace/host dependencies and imports outside this
+package; CI runs it after the monorepo static checks. The focused guard covers
+static/re-export/type imports, literal dynamic imports, and CommonJS imports;
+review nonliteral computed imports manually. The package is private and
+`UNLICENSED`; only `dist/**`, this README, the license notice, and the
+manifest belong in its archive. For standalone extraction, generate and
+commit a package-root lockfile with pnpm 10.34.9 in the separately authorized
+private repository, then require a frozen install in its CI. The monorepo
+keeps only its root lockfile; do not add a second one here.
 
 ## Neutral default theme
 
