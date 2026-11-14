@@ -41,6 +41,8 @@ The first focused disposable-MySQL browser attempt did not discover the new spec
 
 On 2026-11-14, the final full locked disposable-MySQL gate first passed 12/13: all D6, API and fixture checks passed, while an existing admin-scroll exact-pixel assertion differed by 14px (`1572` versus `1586`) in one of 183 web cases. No unrelated scroll code was changed. The unchanged full gate then passed **13/13** on a fresh disposable MySQL (including web E2E and the all-20 EN/VI route test); both runs released the lock and removed their containers. This is live route evidence, not D4/D5 editor integration or dirty-reload acceptance.
 
+The partial [live-route evidence manifest](./2026-11-14-cms-d6-live-route-evidence.md) records exact source/base heads, commands, CI link and distinct PASS/BLOCKED release gates. It is not migration, visual or merge approval.
+
 The first post-merge locked full gate caught a test-fixture TypeScript annotation (`Record<string, unknown>` versus JSON-compatible responsive props): typecheck/build/web E2E failed as a consequence, while the 21 focused tests passed. The fixture type was corrected to D1 `ResponsiveProps['base']`; focused web typecheck passed, followed by a fresh complete `pnpm check:all --e2e` gate passing **13/13** on disposable tmpfs MySQL under the shared lock. The failed attempt is not counted as green; the successful gate released its lock and container.
 
 - **Dirty-edit protection (separate D5 integration gate):** The host must require explicit confirmation/export before D5 `reload` can replace a dirty local tree. API revision CAS cannot by itself certify browser autosave/reload safety.

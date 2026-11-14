@@ -170,3 +170,4 @@
 - 2026-11-11: When local browser sign-in fails with Prisma pool 45028 while CI is green, validate with a fresh locked tmpfs MySQL and rebuild Next against the same default API port; the isolated D2 full gate passed, but the earlier transient root cause is unproven.
 - 2026-11-11: Test-local tree renderer mappings cannot certify deployed host pages; inject the same explicit host registry into draft, publish and snapshot reads, and verify actual Next components through the live API in both locales.
 - 2026-11-14: A full browser gate can expose an unrelated exact-scroll-pixel variance; preserve the failing evidence, leave out-of-scope layout code untouched, and require a fresh locked full-gate pass before calling the CMS route change green.
+- 2026-11-14: Record partial release evidence in a separate manifest with exact source, commands and blocked rows; a green live route gate must not silently become editor, migration or accessibility approval.
