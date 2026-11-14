@@ -48,6 +48,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 stack update: #206 merged as `54eb889` immediately after #192. Static CI throughput changes leave the clean Vercel build and E2E aggregate intact; #188 remains separate and must reconcile the labeled-event workflow after #206. #207 C1 prep and #204 D5 UI remain draft reviews, not merge approvals. #204 carries D2's migration in its branch ancestry: remove it from any pre-verification merge candidate or defer the whole PR until the D2 gate passes.
+
+- CI static-throughput experiment (2026-11-15): run read-only format and lint together on one runner (two processes maximum) in both `pnpm check:all` and CI's existing `lint-typecheck` job; all other stages, context/secret scans, clean Vercel dependency build and web-E2E artifact/job ordering stay unchanged. Main CI baseline 4m50s–5m47s is E2E-shard dominated, so static overlap may improve fast PR feedback but does not promise a shorter main critical path. See `docs/specs/2026-11-15-ci-static-throughput.md`; future shard changes require a lock-holding owner to validate.
+
 - 2026-11-14 stack reconciliation: #190 merged as `f3a62c2` after #189; #192 then merged as `48c62cf`. #202's all-20 live route review found that the host tree registry drops `required` roles and bypasses page-restricted allowances; keep that PR blocked until validation and CI are green. See the live stack ledger. This docs branch changes no API, package or migration behavior.
 
 - 2026-11-11 12:15 ICT reconciliation: #185 merged as `89b9312` and #205 as `f751e8b`. Before each further merge, the authorized owner requires final-head checks, a READY Vercel production deployment for that merge commit and HTTP 200 on `/`, `/vi` and `/api/health`; PR CI alone is not Vercel evidence. The pinned core → contracts → web build graph belongs in C1 consumer verification. See the live stack ledger and extraction runbook; this docs branch runs no deploy or E2E.
@@ -221,6 +225,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Updated the CMS stack ledger after #206 merged as `54eb889`; #188 still needs a final-head workflow reconciliation, and #204 cannot carry D2's migration into main ahead of the verification gate. Documentation only; no E2E or deployment.
 
 - 2026-11-14: Reconciled the CMS stack plan with merged B5/#190 and recorded the #202 host publish-validation gate; documentation only, no E2E or deployment.
 

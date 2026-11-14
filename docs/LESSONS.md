@@ -1,5 +1,9 @@
 # Lessons
 
+- 2026-11-15: A feature PR can carry an additive migration through an ancestor branch even when its own UI diff does not edit Prisma; check PR file ancestry before scheduling a migration-last merge.
+
+- 2026-11-15: CI job parallelism alone does not shorten a long critical-path shard; overlap only independent, read-only static checks with bounded local concurrency and compare actual final-head timings before claiming a wall-time gain.
+
 - 2026-11-14: An all-definitions live route test does not prove publish policy if its injected registry erases required roles or page allowances; assert those negative cases as well as successful SSR parity.
 
 - 2026-11-11: For every stacked CMS merge, verify the READY production Vercel deployment and three public/health HTTP 200 responses on the merged SHA; green PR CI proves only its own build, not the live site or a future private-package consumer.
