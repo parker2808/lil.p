@@ -18,8 +18,8 @@ describe('redesign variants', () => {
       </>,
     );
 
-    expect(screen.getByRole('button', { name: 'Public' })).toHaveClass('min-h-10');
-    expect(screen.getByRole('button', { name: 'Default' })).not.toHaveClass('min-h-10');
+    expect(screen.getByRole('button', { name: 'Public' })).toHaveClass('min-h-11');
+    expect(screen.getByRole('button', { name: 'Default' })).toHaveClass('min-h-11');
   });
 
   it('uses the admin card surface and header border', () => {
@@ -49,7 +49,7 @@ describe('redesign variants', () => {
     expect(screen.getByRole('tab', { name: 'One' })).toHaveClass('data-[state=active]:bg-card');
   });
 
-  it('keeps the compact sidebar menu button styles in its primitive', () => {
+  it('keeps the sidebar menu hit target and active styles in its primitive', () => {
     render(
       <SidebarMenu>
         <SidebarMenuItem>
@@ -64,12 +64,12 @@ describe('redesign variants', () => {
     );
 
     expect(screen.getByRole('link', { name: 'Active' })).toHaveClass(
-      'h-8',
+      'min-h-11',
       'border-l-2',
       'border-sidebar-primary',
     );
     expect(screen.getByRole('link', { name: 'Idle' })).toHaveClass(
-      'h-8',
+      'min-h-11',
       'border-l-2',
       'border-transparent',
     );
