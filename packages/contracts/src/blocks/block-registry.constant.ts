@@ -1,6 +1,6 @@
+import { createRegistry } from '@parker2808/cms-core/contracts';
 import { z } from 'zod';
 
-import type { BlockDefinition } from './define-block.util';
 import { aboutIntroBlock } from './definitions/about-intro.block';
 import { caseGridBlock } from './definitions/case-grid.block';
 import { contactFormBlock } from './definitions/contact-form.block';
@@ -22,28 +22,28 @@ import { statBandBlock } from './definitions/stat-band.block';
 import { techMarqueeBlock } from './definitions/tech-marquee.block';
 import { timelineBlock } from './definitions/timeline.block';
 
-export const BLOCK_REGISTRY = {
-  hero: heroBlock,
-  'page-header': pageHeaderBlock,
-  'cta-band': ctaBandBlock,
-  'stat-band': statBandBlock,
-  'tech-marquee': techMarqueeBlock,
-  'featured-case': featuredCaseBlock,
-  'domain-grid': domainGridBlock,
-  'case-grid': caseGridBlock,
-  process: processBlock,
-  'skill-groups': skillGroupsBlock,
-  'post-list': postListBlock,
-  'about-intro': aboutIntroBlock,
-  timeline: timelineBlock,
-  'principle-list': principleListBlock,
-  'education-list': educationListBlock,
-  'cv-download': cvDownloadBlock,
-  prose: proseBlock,
-  'projects-browser': projectsBrowserBlock,
-  'notes-browser': notesBrowserBlock,
-  'contact-form': contactFormBlock,
-} as const satisfies Record<string, BlockDefinition>;
+export const BLOCK_REGISTRY = createRegistry([
+  heroBlock,
+  pageHeaderBlock,
+  ctaBandBlock,
+  statBandBlock,
+  techMarqueeBlock,
+  featuredCaseBlock,
+  domainGridBlock,
+  caseGridBlock,
+  processBlock,
+  skillGroupsBlock,
+  postListBlock,
+  aboutIntroBlock,
+  timelineBlock,
+  principleListBlock,
+  educationListBlock,
+  cvDownloadBlock,
+  proseBlock,
+  projectsBrowserBlock,
+  notesBrowserBlock,
+  contactFormBlock,
+]);
 
 export type BlockType = keyof typeof BLOCK_REGISTRY;
 
