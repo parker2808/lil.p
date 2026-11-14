@@ -46,6 +46,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm check:all --static
+      - run: pnpm --filter @parker2808/cms-core check:deps
 
   unit:
     if: github.event.action != 'labeled'
@@ -56,6 +57,8 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm --filter @portfolio/contracts... build
       - run: pnpm -r --if-present test
+      - name: SchemaForm per-case performance evidence
+        run: pnpm --filter @portfolio/web exec vitest run src/modules/admin-core/components/SchemaForm/SchemaForm.test.tsx --reporter=verbose
 
   build:
     needs: changes
