@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- CI static-throughput experiment (2026-11-15): run read-only format and lint together on one runner (two processes maximum) in both `pnpm check:all` and CI's existing `lint-typecheck` job; all other stages, context/secret scans, clean Vercel dependency build and web-E2E artifact/job ordering stay unchanged. Main CI baseline 4m50s–5m47s is E2E-shard dominated, so static overlap may improve fast PR feedback but does not promise a shorter main critical path. See `docs/specs/2026-11-15-ci-static-throughput.md`; future shard changes require a lock-holding owner to validate.
+
 - B5b main integration (2026-11-14): #190 merged as `f3a62c2` after #189 `f73072e`; retain the B5b Nest policy/snapshot adapters, exact host HTTP errors, legacy missing-SEO compatibility, and the production CJS adapter smoke on the merged Docker baseline. No new migrations or golden changes; final-head CI and post-merge deploy remain gates.
 
 - B5b #192 P2/P3 follow-up: restorable legacy snapshots may omit SEO fields, but an explicit `seo: null` must fail as 400 `INVALID_BLOCKS` before any delete/audit; existing historical read/EN–VI preview remains unchanged. Focused restore-refusal test covers the exact error shape and no writes. Graphify refreshed on the B5b worktree after the adapter change; no schema/migration/DB read, B1 golden or host route change. See `docs/specs/2026-11-11-cms-b5b-nest-engine-wiring.md`.
@@ -190,6 +192,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Overlapped the two independent read-only static checks (format and lint) in the local check orchestrator and existing CI job without adding runners, changing test coverage or touching E2E/visual/Docker logic. Documented measured main baseline and the E2E critical-path caveat.
 
 - 2026-11-14: Restacked B5b onto merged B5, keeping core policy delegation and strict restore while preserving #189 API production packaging and #205 Vercel build checks.
 

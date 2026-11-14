@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: CI job parallelism alone does not shorten a long critical-path shard; overlap only independent, read-only static checks with bounded local concurrency and compare actual final-head timings before claiming a wall-time gain.
+
 - 2026-11-14: When a pure engine is wired into a host, preserve the host's exact error mapping and verify compiled adapters inside the already-pruned production image; a passing package CJS smoke alone does not prove runtime integration.
 
 - 2026-11-11: A transitive workspace package added after Docker's manifest-copy stage can break frozen install, and its build output can be missing even when TypeScript compiles; list every runtime workspace manifest before install and smoke-test CJS exports from the pruned final image.
