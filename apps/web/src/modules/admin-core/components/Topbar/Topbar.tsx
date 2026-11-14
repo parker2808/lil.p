@@ -118,7 +118,7 @@ export function Topbar({ crumbs, actions }: { crumbs: { label: string }[]; actio
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="min-h-11 min-w-11 lg:min-h-0 lg:min-w-0">
+            <Button variant="ghost" size="sm" className="min-h-11 min-w-11">
               <Ellipsis className="size-5 lg:hidden" aria-hidden />
               <span className="sr-only lg:hidden">{t('account')}</span>
               <Avatar className="hidden size-6 lg:flex">

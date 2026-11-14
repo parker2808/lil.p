@@ -74,7 +74,11 @@ export function FilterBar({
       {chips.map((chip) => (
         <Badge key={chip.id} variant="outline" className="normal-case">
           {chip.label}
-          <button type="button" className="text-ui-meta ml-1" onClick={() => onRemoveChip(chip.id)}>
+          <button
+            type="button"
+            className="text-ui-meta ml-1 inline-flex min-h-11 min-w-11 items-center justify-center rounded-md"
+            onClick={() => onRemoveChip(chip.id)}
+          >
             {labels.remove}
           </button>
         </Badge>

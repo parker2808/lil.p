@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-15: When U2 visual changes meet a later main, keep the clean Vercel build and artifact dependency, combine the route audit with U0's capture-baseline override, and recapture conflicting Linux PNGs from the integrated app on a clean disposable seed.
+- 2026-11-15: CI job parallelism alone does not shorten a long critical-path shard; overlap only independent, read-only static checks with bounded local concurrency and compare actual final-head timings before claiming a wall-time gain.
+
 - 2026-11-14: When a pure engine is wired into a host, preserve the host's exact error mapping and verify compiled adapters inside the already-pruned production image; a passing package CJS smoke alone does not prove runtime integration.
 
 - 2026-11-11: A transitive workspace package added after Docker's manifest-copy stage can break frozen install, and its build output can be missing even when TypeScript compiles; list every runtime workspace manifest before install and smoke-test CJS exports from the pruned final image.
@@ -23,6 +26,7 @@
 - 2026-11-10: Extract page/block mechanics behind a host-provided registry and persistence/auth ports; leave portfolio block definitions, domain pickers, routes and deployment adapters in the application until a neutral standalone fixture proves reuse.
 - 2026-11-10: A reusable CMS block engine is a foundation for a visual page builder, not the builder itself; keep behavior-preserving extraction separate from a versioned layout tree and its additive, independently approved storage migration.
 
+- 2026-11-10: Regenerate contact sheets only after the final screenshot capture completes, and version a small privacy-redacted review set alongside the spec; a local-only sheet can silently retain a pre-fix skeleton while the individual screenshots are correct.
 - 2026-11-03: A stacked integration PR can branch from the verified top PR tip when every lower branch tip is already an ancestor; this preserves the full stack without modifying or merging the original PRs.
 - 2026-11-03: Production Playwright draft previews must use `localhost` in both the web build and browser origin; a `127.0.0.1` origin loses Next's secure draft cookie after navigation.
 - 2026-11-03: Integrated visual changes require new Linux Chromium baselines; inspect expected and actual images before updating snapshots, and use the app's theme control so capture state matches its provider.
@@ -200,3 +204,8 @@
 - 2026-11-11: A reviewable additive migration checklist must separate disposable-local verification from production deployment, because deploying main executes pending migrations; pin the decimal revision CAS and old snapshot reader before authoring DDL.
 - 2026-11-11: A green stacked integration head can still carry a Graphify freshness header from its parent; review typed draft-versus-publish behavior separately from generated-report provenance, and gate each merge on the final restacked SHA rather than the accepted old head.
 - 2026-11-11: A combined package can build in its monorepo yet fail isolated tests because copied measurement omits a new tree entry and a theme assertion assumes the old bundle total; test the tarball's exact export map and pack contents after each new subpath, without silently inventing a root export.
+- 2026-11-10: A static 43-file route inventory is not a 43-screen accessibility audit: redirect-only files share destination UI and flagged fixtures can lack inherited metadata. Audit real routes on a clean disposable seed, and distinguish visible hit areas from clipped skip links, duplicate aria-hidden links and CSS full-card overlays before classifying size failures.
+- 2026-11-10: A successful 44px shared-control pass can still leave tiny inline links inside the CMS editor title; keep whole-route audits and resolve the final offender at its owning component rather than excluding it. An E2E file must be added to the explicit shard list or CI silently omits it.
+- 2026-11-10: Adding fallback title metadata at a parent layout can silently override the translated 404 title. Scope fixture-only metadata to gated routes; test both fixture document titles and public 404 titles after accessibility changes.
+- 2026-11-10: Disposable MySQL does not imply a clean Next ISR/data cache across repeated visual runs. A direct API clean-seed assertion can pass while the page renders cached records from a prior database; invalidate the existing public tag and route path before visual capture, then compare rendered seeded content without masking or accepting contaminated baselines.
+- 2026-11-10: Check the shared DataTable keyboard handler before describing destructive shortcuts: Backspace/Delete confirms selected rows or falls back to the active row, while the action name depends on the host.
