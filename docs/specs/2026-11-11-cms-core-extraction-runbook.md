@@ -39,6 +39,61 @@ Evidence came from a **throwaway `git clone --no-local` of lil.p**, checking out
 
 **Exact future C1–C3 command sequence (only after approval and verification; replace non-secret example paths/SHA first; no credential values in commands):**
 
+**C1 prep refresh after merging `bdfaaf8` (2026-11-15):** the standalone
+`pnpm check:deps` gate now scans package-local manifests and source/test/scripts
+for host/other-package imports, workspace dependencies and relative imports
+escaping the package. Its focused tests and the CI static job run independently
+of the monorepo root check. This merged main tip adds U2 and static CI overlap,
+**not** the later B6b theme, D1 tree or B6 React/server exports; the original
+three public subpaths remain the only available package exports. Repeat the
+standalone rehearsal and all sensitive-history checks from the actual final
+integrated SHA. No private repository is created by this refresh.
+
+**Merged-main standalone rehearsal (`882668f`, 2026-11-15):** `git filter-repo`
+was unavailable, so a throwaway `git subtree split` of the package path was
+pushed **only** to a local bare Git repository and cloned back. The filtered
+head is `89160f4a16a34a96ea414de54636397c1268e58d` (20 tracked files).
+Node 22.21.1/pnpm 10.34.9 generated a scratch standalone lockfile; frozen
+install, the new dependency gate (3/3 focused tests), lint, typecheck, build and
+package unit tests (13/13) pass. Gzip remains 2,433/61,440 B browser and
+34/35,840 B React; the archive still has only 15 allowlisted files. A redacted
+Gitleaks scan of this retained local history reports zero findings. A separate
+throwaway lil.p checkout installs the tarball for both contracts and API
+(verified tarball-backed paths), then builds core → contracts → web and loads
+all three existing ESM/CJS subpaths. This is **not** `git filter-repo` or a
+final integrated source/history/metadata/license audit. It cannot prove
+tree/server/theme exports, private auth, Docker/API boot or deployment; repeat
+on the reviewed D-series head before any remote push.
+
+**C1 prep on `chore/cms-core-c1-prep` (2026-11-15):** the package now carries its
+own TypeScript/ESLint config and generic budget script/test, declares Node 22,
+pnpm 10.34.9 and `UNLICENSED`, and packs only built output plus notices. Its
+existing three public subpaths remain unchanged on the `48c62cf` base; this
+branch does **not** include the later B6b theme or D1 tree and cannot stand in
+for a final integrated SHA. The public monorepo retains the root pnpm lockfile;
+generate and commit a separate package-root lockfile _only in the filtered
+private tree_, then demand frozen installs there. Do not accidentally stage a
+second lockfile under `packages/cms-core` in lil.p.
+
+**C1 prep rehearsal on `7012c46` (local only):** a throwaway `git clone --no-local`
+and `git subtree split --prefix=packages/cms-core` produced an 18-file filtered
+tree (`6cbc49d`); Node 22.21.1/pnpm 10.34.9 generated a standalone lockfile,
+then a frozen install, typecheck, lint, build and all **10/10 tests passed**.
+The original gzip limits still pass (browser 2,433/61,440 B, React 34/35,840
+B). `pnpm pack --dry-run --json` listed **15 files**: 12 built JS/type entries
+and README, LICENSE and package.json; no source, scripts, tests or lockfile.
+A consumer installed the tarball with a frozen pnpm 10 reinstall and loaded all
+three subpaths through both ESM and CJS. In a separate throwaway lil.p checkout,
+the contracts and API manifests referenced that tarball rather than the
+workspace package (verified installed symlink); a frozen pnpm 10 install and
+explicit **cms-core → contracts → web** builds passed. The public worktree's
+seven non-e2e `pnpm check:all` gates also passed. None of this proves future
+B6b/D1/D2–D6 exports, hosted auth, full-history clearance or deploy readiness;
+repeat from the final integrated SHA before any private push.
+The redacted Gitleaks scan of this retained rehearsal history reported zero
+findings; author metadata and the later integrated history still need private
+manual review before any push.
+
 ```sh
 # C1: authorized local extraction from an approved, integrated source SHA.
 SOURCE_CHECKOUT=/path/to/approved/local/lilp
@@ -49,7 +104,7 @@ git -C "$SCRATCH_DIR/source" fetch "$SOURCE_CHECKOUT" "$APPROVED_SHA"
 git -C "$SCRATCH_DIR/source" checkout --detach "$APPROVED_SHA"
 git -C "$SCRATCH_DIR/source" subtree split --quiet --prefix=packages/cms-core --branch extracted HEAD
 git clone --no-local --branch extracted "$SCRATCH_DIR/source" "$SCRATCH_DIR/core"
-# Adapt only the reviewed isolated-package config/scripts/tests/README/LICENSE below; do not change lil.p here.
+# Verify the filtered tree contains the integrated, package-local config/scripts/tests/README/LICENSE.
 cd "$SCRATCH_DIR/core"
 pnpm install --lockfile-only
 pnpm install --frozen-lockfile
@@ -57,6 +112,13 @@ pnpm run typecheck && pnpm run lint && pnpm run check:deps && pnpm run test
 pnpm pack --dry-run --json
 pnpm pack --pack-destination "$SCRATCH_DIR"
 gitleaks git --redact --log-opts=HEAD --report-format json --report-path="$SCRATCH_DIR/history-scan.json"
+
+# ONLY AFTER the full-history/metadata/license/artifact audit and Parker's
+# separate authorization to create and push. No credentials in commands.
+git add pnpm-lock.yaml
+git commit -m "chore: pin standalone cms-core dependencies"
+gh repo create parker2808/cms-core --private --source=. --remote=origin
+git push -u origin HEAD:main
 
 # C2: in the separately authorized private destination, after full-history/metadata/license review.
 pnpm install --frozen-lockfile
