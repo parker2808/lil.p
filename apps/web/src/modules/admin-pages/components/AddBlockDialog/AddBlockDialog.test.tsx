@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import en from '../../../../../i18n/locales/en.json';
+import viMessages from '../../../../../i18n/locales/vi.json';
 
 import { AddBlockDialog } from './AddBlockDialog';
 
@@ -31,20 +32,28 @@ describe('AddBlockDialog', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Add block' }));
     const hero = await screen.findByRole('option', { name: /Hero/i });
     expect(hero).toHaveAttribute('data-disabled', 'true');
+    expect(screen.queryByRole('option', { name: /Page header/i })).not.toBeInTheDocument();
     await userEvent.click(hero);
     expect(onAdd).not.toHaveBeenCalled();
   });
 
-  it('offers the API-allowed blocks on an empty custom page', async () => {
-    const onAdd = vi.fn();
-    render(
-      <NextIntlClientProvider locale="en" messages={en}>
-        <AddBlockDialog pageKey="ideas" counts={{}} readOnly={false} onAdd={onAdd} />
-      </NextIntlClientProvider>,
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Add block' }));
-    expect(await screen.findByRole('option', { name: /Page header/i })).toBeVisible();
-    expect(screen.getByRole('option', { name: /Prose/i })).toBeVisible();
-    expect(screen.getByRole('option', { name: /CTA band/i })).toBeVisible();
-  });
+  it.each([
+    ['en', en, ['Page header', 'Prose', 'CTA band']],
+    ['vi', viMessages, ['Tiêu đề trang', 'Văn bản', 'Dải kêu gọi hành động']],
+  ] as const)(
+    'offers exactly the shared custom-page types in %s',
+    async (locale, messages, names) => {
+      const onAdd = vi.fn();
+      render(
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <AddBlockDialog pageKey="ideas" counts={{}} readOnly={false} onAdd={onAdd} />
+        </NextIntlClientProvider>,
+      );
+      await userEvent.click(screen.getByRole('button', { name: messages.admin.pages.add }));
+      expect(await screen.findAllByRole('option')).toHaveLength(3);
+      for (const name of names) {
+        expect(screen.getByRole('option', { name: new RegExp(name, 'i') })).toBeVisible();
+      }
+    },
+  );
 });

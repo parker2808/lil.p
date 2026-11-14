@@ -48,7 +48,7 @@ echo 'Disposable MySQL ready; applying schema before Playwright health check.'
 assert_target
 if [[ "${R3_VISUAL_UPDATE:-}" == 1 ]]; then
   pnpm build
-  pnpm --filter @portfolio/web test:visual:update --update-snapshots=all
+  pnpm --filter @portfolio/web test:visual:update
 elif [[ "$#" -gt 0 ]]; then
   pnpm build
   pnpm --filter @portfolio/web exec playwright test "$@"
