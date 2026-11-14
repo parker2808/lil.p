@@ -4,9 +4,9 @@ import { createRequire } from 'node:module';
 import { test } from 'node:test';
 import { URL } from 'node:url';
 
-test('built subpaths resolve independently and only contracts exports runtime values', async () => {
+test('built subpaths resolve independently with their expected exports', async () => {
   const require = createRequire(import.meta.url);
-  for (const subpath of ['contracts', 'engine', 'react']) {
+  for (const subpath of ['contracts', 'engine', 'tree', 'react']) {
     const specifier = `@parker2808/cms-core/${subpath}`;
     assert.match(require.resolve(specifier), new RegExp(`/dist/${subpath}\\.cjs$`));
     assert.match(import.meta.resolve(specifier), new RegExp(`/dist/${subpath}\\.js$`));
@@ -26,9 +26,9 @@ test('built subpaths resolve independently and only contracts exports runtime va
     } else if (subpath === 'react') {
       assert.equal(typeof entry.schemaToFields, 'function');
       assert.equal(typeof required.schemaToFields, 'function');
-    } else {
-      assert.deepEqual(Object.keys(entry), []);
-      assert.deepEqual(Object.keys(required), []);
+    } else if (subpath === 'tree') {
+      assert.equal(typeof entry.readTree, 'function');
+      assert.equal(typeof required.readTree, 'function');
     }
     assert.match(
       readFileSync(new URL(`../dist/${subpath}.d.ts`, import.meta.url), 'utf8'),

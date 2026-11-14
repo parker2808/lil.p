@@ -19,6 +19,14 @@ missing labels are errors. Core maps only generic widget kinds, while hosts
 register domain widgets through `widgetKinds` and supply their own controls.
 React 19, React DOM 19 and Zod 4 are peers (also local development dependencies for package tests).
 
+D1's opt-in `./tree` ESM/CJS/types subpath exports bounded versioned tree
+schemas, `readTree` for incomplete drafts, `validateTreeForPublish` for H1 and
+required content, migration and lossless legacy conversion helpers, responsive
+resolution and typed registry/errors. Depth, size and node limits are checked
+before recursive parsing; mobile grids may have one column. Hosts own persistence
+and must validate drafts separately from publication. See the
+[D1 spec](../../docs/specs/2026-11-11-cms-d1-versioned-tree.md).
+
 Build and check the browser gzip budgets with `pnpm build` from this package (or
 `pnpm --filter @parker2808/cms-core build` from the monorepo).
 Run `pnpm check:deps` in either location to reject workspace/host dependencies
@@ -27,7 +35,7 @@ the monorepo static checks. Its focused tests cover static imports, re-exports,
 type imports, literal dynamic imports and CommonJS imports. Nonliteral computed
 imports still require manual review during extraction.
 The build runs `scripts/measure-cms-core.mjs` and fails above 60 KiB combined
-contracts+engine or 35 KiB combined `./react` + `./react/server`. These are **minified ESM artifact gzip sums**
+contracts+engine+tree or 35 KiB combined `./react` + `./react/server`. These are **minified ESM artifact gzip sums**
 (excluding only declared React/React DOM/Zod peer imports), not a claim about
 downstream app tree-shaking. The package is private and `UNLICENSED`; only
 `dist/**`, this README, the license notice and the manifest belong in its archive.

@@ -64,7 +64,7 @@ test('built stylesheet is exported, preserved, scoped and measured independently
   const { sizes, totals } = measure();
   assert.ok(sizes.css > 0);
   assert.equal(totals.react, sizes.react + sizes['react/server']);
-  assert.equal(totals.browser, sizes.contracts + sizes.engine);
+  assert.equal(totals.browser, sizes.contracts + sizes.engine + sizes.tree);
 });
 
 test('actual light and dark CSS token pairs meet WCAG AA text and focus contrast', () => {
