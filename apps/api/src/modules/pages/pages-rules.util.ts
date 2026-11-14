@@ -1,8 +1,16 @@
 import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
 import {
+  checkBlockLayout,
+  checkBlockLimit,
+  checkBlockRole,
+  checkH1Insert,
+  checkPageAllowance,
+  findBlock,
+} from '@parker2808/cms-core/engine';
+import {
   BLOCK_REGISTRY,
   type BlockType,
-  isBlockAllowedOnPage,
+  corePageKeySchema,
   type PageKey,
   pageKeySchema,
 } from '@portfolio/contracts';
@@ -11,7 +19,7 @@ type RegistryDefinition = (typeof BLOCK_REGISTRY)[BlockType];
 type PageBlockLike = { id: number; type: string; sortOrder: number };
 
 export function definitionOf(type: string): RegistryDefinition | undefined {
-  return BLOCK_REGISTRY[type as BlockType];
+  return findBlock(BLOCK_REGISTRY, type) as RegistryDefinition | undefined;
 }
 
 export function parsePageKey(raw: string): PageKey {
@@ -23,7 +31,7 @@ export function parsePageKey(raw: string): PageKey {
 }
 
 export function assertAllowedOnPage(definition: RegistryDefinition, pageKey: PageKey): void {
-  if (!isBlockAllowedOnPage(definition, pageKey)) {
+  if (checkPageAllowance(definition, pageKey, corePageKeySchema.options)) {
     throw new BadRequestException({
       code: 'BLOCK_NOT_ALLOWED',
       message: `${definition.type} is not allowed on ${pageKey}`,
@@ -32,22 +40,24 @@ export function assertAllowedOnPage(definition: RegistryDefinition, pageKey: Pag
 }
 
 export function assertWithinLimit(definition: RegistryDefinition, currentCount: number): void {
-  if (definition.maxPerPage !== undefined && currentCount >= definition.maxPerPage) {
+  const finding = checkBlockLimit(definition, currentCount);
+  if (finding?.code === 'BLOCK_LIMIT') {
     throw new ConflictException({
       code: 'BLOCK_LIMIT',
-      message: `${definition.type} is limited to ${definition.maxPerPage} per page`,
+      message: `${definition.type} is limited to ${finding.limit} per page`,
     });
   }
 }
 
 export function assertCanDelete(definition: RegistryDefinition): void {
-  if (definition.role === 'h1') {
+  const finding = checkBlockRole(definition, 'delete');
+  if (finding?.code === 'BLOCK_LOCKED') {
     throw new ConflictException({
       code: 'BLOCK_LOCKED',
       message: 'The H1 block cannot be deleted',
     });
   }
-  if (definition.role === 'required') {
+  if (finding?.code === 'BLOCK_REQUIRED') {
     throw new ConflictException({
       code: 'BLOCK_REQUIRED',
       message: 'A required block cannot be deleted',
@@ -56,13 +66,14 @@ export function assertCanDelete(definition: RegistryDefinition): void {
 }
 
 export function assertCanHide(definition: RegistryDefinition): void {
-  if (definition.role === 'h1') {
+  const finding = checkBlockRole(definition, 'hide');
+  if (finding?.code === 'BLOCK_LOCKED') {
     throw new ConflictException({
       code: 'BLOCK_LOCKED',
       message: 'The H1 block cannot be hidden',
     });
   }
-  if (definition.role === 'required') {
+  if (finding?.code === 'BLOCK_REQUIRED') {
     throw new ConflictException({
       code: 'BLOCK_REQUIRED',
       message: 'A required block cannot be hidden',
@@ -71,7 +82,7 @@ export function assertCanHide(definition: RegistryDefinition): void {
 }
 
 export function assertLayoutAllowed(definition: RegistryDefinition, layout: string): void {
-  if (!definition.layouts.includes(layout as (typeof definition.layouts)[number])) {
+  if (checkBlockLayout(definition, layout)) {
     throw new BadRequestException({
       code: 'VALIDATION_FAILED',
       message: 'Validation failed',
@@ -80,35 +91,13 @@ export function assertLayoutAllowed(definition: RegistryDefinition, layout: stri
   }
 }
 
-export function nextBlockKey(type: string, existing: readonly string[]): string {
-  const keys = new Set(existing);
-  if (!keys.has(type)) {
-    return type;
-  }
-  let n = 2;
-  while (keys.has(`${type}-${n}`)) {
-    n += 1;
-  }
-  return `${type}-${n}`;
-}
-
-export function insertSortOrder(
-  after: PageBlockLike | undefined,
-  blocks: readonly PageBlockLike[],
-): number {
-  if (after) {
-    return after.sortOrder + 1;
-  }
-  const last = blocks.reduce((max, block) => Math.max(max, block.sortOrder), -1);
-  return last + 1;
-}
+export { insertSortOrder, nextBlockKey } from '@parker2808/cms-core/engine';
 
 export function assertInsertKeepsH1First(
   targetOrder: number,
   blocks: readonly PageBlockLike[],
 ): void {
-  const h1 = blocks.find((block) => definitionOf(block.type)?.role === 'h1');
-  if (h1 && targetOrder <= h1.sortOrder) {
+  if (checkH1Insert(BLOCK_REGISTRY, targetOrder, blocks)) {
     throw new ConflictException({
       code: 'BLOCK_LOCKED',
       message: 'The H1 block must stay first',
