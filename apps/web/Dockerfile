@@ -13,6 +13,7 @@ COPY apps/api/package.json apps/api/package.json
 COPY apps/web/package.json apps/web/package.json
 COPY packages/ui/package.json packages/ui/package.json
 COPY packages/contracts/package.json packages/contracts/package.json
+COPY packages/cms-core/package.json packages/cms-core/package.json
 COPY apps/api/prisma ./apps/api/prisma
 COPY apps/api/prisma.config.ts ./apps/api/prisma.config.ts
 RUN pnpm install --frozen-lockfile
@@ -26,7 +27,7 @@ ENV NEXT_PUBLIC_BUILD_SHA=$NEXT_PUBLIC_BUILD_SHA
 ENV API_URL=$API_URL
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN pnpm --filter @portfolio/contracts build \
+RUN pnpm --filter '@portfolio/web^...' build \
   && pnpm --filter @portfolio/web build
 
 FROM node:22-alpine AS runner
