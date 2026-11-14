@@ -11,8 +11,8 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7a68301a`
-- Run `git rev-parse HEAD` and compare to check if the graph is stale.
+- Built from the integrated U3 code tree at commit: `d477b33` (the post-commit `graphify update .` found no topology changes).
+- A later documentation-only provenance commit does not alter this code tree; rerun `graphify update .` after further code changes.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
