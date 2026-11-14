@@ -65,7 +65,7 @@ export function ContentHealthCardView({ health }: { health: AdminHealth }) {
               <li key={issueKey(issue)}>
                 <Link
                   href={issue.href}
-                  className="text-ui hover:text-primary flex flex-wrap items-baseline gap-x-2"
+                  className="text-ui hover:text-primary focus-visible:ring-ring flex min-h-11 flex-wrap items-center gap-x-2 rounded-md focus-visible:ring-2 focus-visible:outline-none"
                 >
                   <span className="font-medium">{issueTitle(issue, t)}</span>
                   <span className="text-ui-meta text-muted-foreground">

@@ -9,7 +9,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { z } from 'zod';
 
-import { measure } from '../../../scripts/measure-cms-core.mjs';
+import { measure } from '../scripts/measure-cms-core.mjs';
 
 const require = createRequire(import.meta.url);
 const { renderTree } = await import('@parker2808/cms-core/react/server');

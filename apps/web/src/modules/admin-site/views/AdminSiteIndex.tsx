@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@portfolio/ui/componen
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { ErrorState } from '@portfolio/ui/components/ErrorState/ErrorState';
 
 import { useIsAdmin } from '@/modules/admin-core/hooks/use-me.hook';
 import {
@@ -24,6 +25,7 @@ const TABS = ['settings', 'nav', 'social', 'topics'] as const;
 
 export function AdminSiteIndex() {
   const t = useTranslations('admin.site');
+  const shell = useTranslations('admin.shell');
   const router = useRouter();
   const search = useSearchParams();
   const tab = TABS.includes(search.get('tab') as (typeof TABS)[number])
@@ -45,7 +47,13 @@ export function AdminSiteIndex() {
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-ui-title font-semibold">{t('title')}</h1>
-      {site.isError ? <p className="text-destructive">{t('loadError')}</p> : null}
+      {site.isError ? (
+        <ErrorState
+          message={t('loadError')}
+          retryLabel={shell('retry')}
+          onRetry={() => void site.refetch()}
+        />
+      ) : null}
       <Tabs
         value={tab}
         onValueChange={(value) => {

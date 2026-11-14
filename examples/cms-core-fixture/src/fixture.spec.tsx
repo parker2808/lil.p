@@ -159,6 +159,22 @@ describe('standalone built-package consumer', () => {
 });
 
 describe('bilingual routes and keyboard', () => {
+  it('keeps default and rendered homepage actions on declared localized routes', () => {
+    expect(registry.action.defaults.href).toBe('/en/components');
+    for (const locale of ['en', 'vi'] as const) {
+      const action = block('action', 3, 2, locale);
+      expect(action.props.href).toBe(`/${locale}/components`);
+      expect(routeFor(String(action.props.href))).toEqual({ locale, route: 'components' });
+      const { unmount } = render(<App pathname={`/${locale}/`} />);
+      expect(
+        screen
+          .getByRole('link', { name: /Explore components|Khám phá thành phần/ })
+          .getAttribute('href'),
+      ).toBe(`/${locale}/components`);
+      unmount();
+    }
+  });
+
   it('recognizes only declared EN/VI paths and localizes metadata', () => {
     expect(routeFor('/vi/editor')).toEqual({ locale: 'vi', route: 'editor' });
     expect(routeFor('/en/unknown')).toEqual({ locale: 'en', route: 'unknown' });

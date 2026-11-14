@@ -2,9 +2,14 @@
 
 import { createPageSchema, isReservedPublicPageSlug, qk } from '@portfolio/contracts';
 import { Button } from '@portfolio/ui/components/ui/button';
-import { inputClassName } from '@portfolio/ui/components/ui/input';
 import { Dialog, DialogContent, DialogTitle } from '@portfolio/ui/components/ui/dialog';
-import { cn } from '@portfolio/ui/lib/utils';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@portfolio/ui/components/ui/select';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
@@ -174,29 +179,32 @@ export function CreatePageDialog({
               <label htmlFor="create-page-locale" className="text-ui font-medium">
                 {t('locale')}
               </label>
-              <select
-                id="create-page-locale"
-                value={locale}
-                onChange={(event) => setLocale(event.target.value as 'en' | 'vi')}
-                className={cn(inputClassName, 'h-11 min-w-0')}
-              >
-                <option value="en">{t('english')}</option>
-                <option value="vi">{t('vietnamese')}</option>
-              </select>
+              <Select value={locale} onValueChange={(next) => setLocale(next as 'en' | 'vi')}>
+                <SelectTrigger id="create-page-locale">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">{t('english')}</SelectItem>
+                  <SelectItem value="vi">{t('vietnamese')}</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             <div className="flex flex-col gap-2">
               <label htmlFor="create-page-template" className="text-ui font-medium">
                 {t('startWith')}
               </label>
-              <select
-                id="create-page-template"
+              <Select
                 value={template}
-                onChange={(event) => setTemplate(event.target.value as 'starter' | 'empty')}
-                className={cn(inputClassName, 'h-11 min-w-0')}
+                onValueChange={(next) => setTemplate(next as 'starter' | 'empty')}
               >
-                <option value="starter">{t('starter')}</option>
-                <option value="empty">{t('empty')}</option>
-              </select>
+                <SelectTrigger id="create-page-template">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="starter">{t('starter')}</SelectItem>
+                  <SelectItem value="empty">{t('empty')}</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           {formError ? (
