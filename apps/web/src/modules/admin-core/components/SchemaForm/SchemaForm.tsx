@@ -121,7 +121,7 @@ export function SchemaForm({
                 editorLabels={editorLabels}
                 previewLabels={previewLabels}
                 widgetLabels={widgetLabels}
-                localeLabels={{ en: fieldT('en'), vi: fieldT('vi') }}
+                localeNames={{ en: editorT('languageEnglish'), vi: editorT('languageVietnamese') }}
                 onChange={(next) => api.handleChange(next as never)}
               />
             )}
@@ -139,6 +139,7 @@ function SchemaFieldControl({
   readOnly,
   fieldErrors,
   label,
+  localeNames,
   editorLabels,
   previewLabels,
   widgetLabels,
@@ -151,6 +152,7 @@ function SchemaFieldControl({
   readOnly: boolean;
   fieldErrors: Record<string, string>;
   label: string;
+  localeNames: { en: string; vi: string };
   editorLabels: ReturnType<typeof editorLabelsFromMessages>;
   previewLabels: PreviewLabels;
   widgetLabels: WidgetLabels;
@@ -176,7 +178,7 @@ function SchemaFieldControl({
               readOnly={control.readOnly}
               label={control.label}
               message={control.message}
-              localeLabels={localeLabels}
+              localeNames={localeNames}
               editorLabels={editorLabels}
               previewLabels={previewLabels}
               onChange={(locale, next) => control.onChange({ ...localized, [locale]: next })}

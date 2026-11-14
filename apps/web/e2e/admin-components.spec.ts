@@ -54,7 +54,7 @@ test('admin chrome uses compact shared controls', async ({ page }) => {
   expect(snapshot(await chromeStyles(page))).toMatchSnapshot('admin-chrome.json');
 
   await page.goto('/admin/audit');
-  const filter = await styleOf(page.locator('main select').first());
+  const filter = await styleOf(page.getByRole('combobox', { name: 'Entity' }));
   expect(snapshot(filter)).toMatchSnapshot('admin-audit-filter.json');
 });
 

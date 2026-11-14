@@ -203,6 +203,7 @@ test('real detail content, SEO, public denial and states in EN/VI', async ({ pag
         'note',
       ]) {
         await page.goto(`/${locale}/r3-loading-test/${variant}`);
+        await expect(page).toHaveTitle(/lil\.parker/);
         await expect(page.locator('[aria-busy="true"]').first()).toBeVisible();
         await matrix(
           page,
@@ -212,6 +213,7 @@ test('real detail content, SEO, public denial and states in EN/VI', async ({ pag
         );
       }
       await page.goto(`/${locale}/r3-site-error-test`);
+      await expect(page).toHaveTitle(/lil\.parker/);
       const retry = page.getByRole('button', { name: locale === 'en' ? 'Retry' : 'Thử lại' });
       await expect(retry).toBeVisible();
       await expectNoSeriousAxeIssues(page);
@@ -222,6 +224,7 @@ test('real detail content, SEO, public denial and states in EN/VI', async ({ pag
       ).toBeFocused();
       await matrix(page, 'site-error', locale, 'error');
       await page.goto(`/${locale}/r3-locale-error-test`);
+      await expect(page).toHaveTitle(/lil\.parker/);
       await expect(retry).toBeVisible();
       await expectNoSeriousAxeIssues(page);
       await matrix(page, 'locale-error', locale, 'error');
