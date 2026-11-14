@@ -26,7 +26,7 @@ export function ToolbarIconButton({
           size="sm"
           aria-label={label}
           aria-pressed={pressed}
-          className={cn('size-7 p-0', pressed && 'bg-accent text-accent-foreground', className)}
+          className={cn('size-11 p-0', pressed && 'bg-accent text-accent-foreground', className)}
           {...props}
         />
       </TooltipTrigger>

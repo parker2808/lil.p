@@ -24,11 +24,12 @@ Read `PROJECT_CONTEXT.md` in full and `docs/LESSONS.md` before starting. Append 
 - For docs-only work, run Prettier on changed files and `pnpm check:content`. Report check results in the PR.
 - CI in `.github/workflows/ci.yml` uses `.github/actions/setup`; keep job timeouts and cancellation of stale PR runs.
 - Use a `<type>/<topic>` branch and conventional commits (commitlint). Open one PR and watch CI until green.
-- Every PR to `main` updates `PROJECT_CONTEXT.md` §7 and §9; `context-check` enforces a file change for non-docs PRs. Use `skip-context` only with Parker's OK.
+- Every PR, including stacked PRs, updates `PROJECT_CONTEXT.md` §7 and §9 when changing files outside `docs/`; `context-check` enforces a file change. Use `skip-context` only with Parker's OK.
 - Never merge to `main` without Parker's explicit OK.
 
 ## Public repo limits
 
 - No secrets, tokens, `.env` values, or real contact info in the repo, PRs, logs, or chat. Use `<email>` and `<phone>` placeholders.
-- Never name or link a private repo; use `<private-content-repo>` or `<private-memory-repo>` placeholders.
+- Exception approved by Parker on 2026-11-10: the private repository distributing `@parker2808/cms-core` may be named or linked, and the package may be declared as a dependency in this public repo. This grants no access to that repository and does not authorize creating it, publishing it, or changing credentials.
+- For every other private repo, never name or link it; use `<private-content-repo>` or `<private-memory-repo>` placeholders. Never include private source content, secrets, tokens, credentials, `.env` values, or private data under the CMS core exception.
 - Use free services and free Tiptap extensions only. R16 (Figma) is dropped.

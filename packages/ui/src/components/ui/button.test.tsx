@@ -23,4 +23,10 @@ describe('Button', () => {
     expect(screen.getByRole('link', { name: 'Work' })).toHaveAttribute('href', '/projects');
     expect(screen.queryByRole('button')).toBeNull();
   });
+
+  it('keeps a 44px minimum target for compact actions', () => {
+    render(<Button size="sm">Save</Button>);
+
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveClass('min-h-11', 'min-w-11');
+  });
 });

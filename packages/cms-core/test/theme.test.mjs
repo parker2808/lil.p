@@ -5,7 +5,7 @@ import process from 'node:process';
 import { test } from 'node:test';
 import { URL } from 'node:url';
 
-import { measure } from '../../../scripts/measure-cms-core.mjs';
+import { measure } from '../scripts/measure-cms-core.mjs';
 
 const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 const theme = readFileSync(new URL('../dist/theme.css', import.meta.url), 'utf8');
@@ -64,7 +64,7 @@ test('built stylesheet is exported, preserved, scoped and measured independently
   const { sizes, totals } = measure();
   assert.ok(sizes.css > 0);
   assert.equal(totals.react, sizes.react + sizes['react/server']);
-  assert.equal(totals.browser, sizes.contracts + sizes.engine);
+  assert.equal(totals.browser, sizes.contracts + sizes.engine + sizes.tree);
 });
 
 test('actual light and dark CSS token pairs meet WCAG AA text and focus contrast', () => {

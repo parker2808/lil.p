@@ -5,9 +5,9 @@ import { fileURLToPath } from 'node:url';
 import { gzipSync } from 'node:zlib';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const source = join(root, 'packages/cms-core/src');
-const dist = join(root, 'packages/cms-core/dist');
-const packageFile = join(root, 'packages/cms-core/package.json');
+const source = join(root, 'src');
+const dist = join(root, 'dist');
+const packageFile = join(root, 'package.json');
 const caps = { browser: 60 * 1024, react: 35 * 1024 };
 
 export function measure({
@@ -41,6 +41,7 @@ export function measure({
 
   const sizes = {};
   const entries = ['contracts', 'engine', 'react'];
+  if (packageExports['./tree']) entries.push('tree');
   if (packageExports['./react/server']) entries.push('react/server');
   for (const name of entries) {
     const code = readFileSync(join(distDir, `${name}.js`));
@@ -55,7 +56,7 @@ export function measure({
   }
 
   const totals = {
-    browser: sizes.contracts + sizes.engine,
+    browser: sizes.contracts + sizes.engine + (sizes.tree ?? 0),
     react: sizes.react + (sizes['react/server'] ?? 0),
   };
   if (packageExports['./theme.css']) {
