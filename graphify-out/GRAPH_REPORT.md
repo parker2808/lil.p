@@ -348,14 +348,14 @@
 ## Surprising Connections (you probably didn't know these)
 - `Highlights authored by Parker` --references--> `text()`  [INFERRED]
   docs/case-studies/cfw-backoffice-portal.md → apps/api/prisma/seed/data/portfolio.mapper.ts
-- `T30 · Write API: posts, experience, education, principles, stats, process` --references--> `readingMinutes()`  [INFERRED]
-  docs/archive/plan/09-7-tasks-t26-projects-list.md → apps/api/src/common/utils/reading-time.util.ts
-- `T30 · Write API: post, experience, education, principle, stat, process` --references--> `readingMinutes()`  [INFERRED]
-  docs/archive/plan-vi/10-7-cac-task-m3-phia-ghi.md → apps/api/src/common/utils/reading-time.util.ts
 - `Contract and acceptance` --references--> `pickGroup()`  [INFERRED]
   docs/specs/2026-11-10-custom-page-locale-seo.md → apps/api/src/i18n/pick-locale.util.ts
 - `T50 · Media API: upload, variants, relations` --references--> `MediaService`  [INFERRED]
   docs/archive/plan/12-7-tasks-t46-users-admin-admin-only-change-own-pass.md → apps/api/src/modules/media/media.service.ts
+- `T50 · API media: upload, variant, quan hệ` --references--> `MediaService`  [INFERRED]
+  docs/archive/plan-vi/14-7-cac-task-m5-realtime-media-publish.md → apps/api/src/modules/media/media.service.ts
+- `Model, conversion, and persistence` --references--> `readPageSnapshot()`  [INFERRED]
+  docs/specs/2026-11-10-cms-core-adr.md → apps/api/src/modules/pages/page-snapshot.util.ts
 
 ## Import Cycles
 - None detected.
