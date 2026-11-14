@@ -41,6 +41,7 @@ export function measure({
 
   const sizes = {};
   const entries = ['contracts', 'engine', 'react'];
+  if (packageExports['./tree']) entries.push('tree');
   if (packageExports['./react/server']) entries.push('react/server');
   for (const name of entries) {
     const code = readFileSync(join(distDir, `${name}.js`));
@@ -55,7 +56,7 @@ export function measure({
   }
 
   const totals = {
-    browser: sizes.contracts + sizes.engine,
+    browser: sizes.contracts + sizes.engine + (sizes.tree ?? 0),
     react: sizes.react + (sizes['react/server'] ?? 0),
   };
   if (packageExports['./theme.css']) {
