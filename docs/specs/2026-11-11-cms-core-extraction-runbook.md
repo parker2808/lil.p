@@ -49,6 +49,22 @@ three public subpaths remain the only available package exports. Repeat the
 standalone rehearsal and all sensitive-history checks from the actual final
 integrated SHA. No private repository is created by this refresh.
 
+**Merged-main standalone rehearsal (`882668f`, 2026-11-15):** `git filter-repo`
+was unavailable, so a throwaway `git subtree split` of the package path was
+pushed **only** to a local bare Git repository and cloned back. The filtered
+head is `89160f4a16a34a96ea414de54636397c1268e58d` (20 tracked files).
+Node 22.21.1/pnpm 10.34.9 generated a scratch standalone lockfile; frozen
+install, the new dependency gate (3/3 focused tests), lint, typecheck, build and
+package unit tests (13/13) pass. Gzip remains 2,433/61,440 B browser and
+34/35,840 B React; the archive still has only 15 allowlisted files. A redacted
+Gitleaks scan of this retained local history reports zero findings. A separate
+throwaway lil.p checkout installs the tarball for both contracts and API
+(verified tarball-backed paths), then builds core → contracts → web and loads
+all three existing ESM/CJS subpaths. This is **not** `git filter-repo` or a
+final integrated source/history/metadata/license audit. It cannot prove
+tree/server/theme exports, private auth, Docker/API boot or deployment; repeat
+on the reviewed D-series head before any remote push.
+
 **C1 prep on `chore/cms-core-c1-prep` (2026-11-15):** the package now carries its
 own TypeScript/ESLint config and generic budget script/test, declares Node 22,
 pnpm 10.34.9 and `UNLICENSED`, and packs only built output plus notices. Its
