@@ -53,7 +53,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: D1 #194 restacks on B6b #193 and merged B6 #191. Its opt-in tree entry and separate draft/publish validation share the package-local 60 KiB contracts+engine+tree budget; retain the neutral theme export and C1 isolated tooling. B7 acceptance remains a gate; no API, migration, UI or B1 golden change.
 
 - 2026-11-15: B6b #193 restacks on merged B6 #191 and preserves C1 package-local build/dependency gates alongside the opt-in neutral `theme.css` export, its 224-pair browser check and separately reported CSS gzip. Root, web and package ESLint configs pin their parser roots so commit hooks can lint with all three configs present. B7 must consume the theme in its neutral fixture; no host UI, API, database or B1 golden change.
-
+- CI label hygiene: `ready-e2e` added just after PR creation previously cancelled the same-head code-check workflow because `labeled` shared its concurrency group. Label-triggered E2E now runs separately from code checks: #188's labeled run 43638435227 passed API and all web E2E shards while skipping static and Vercel build, and the preceding code run 43633111844 remained successful. Later code pushes still cancel stale code runs; web E2E shards wait for the finalized build artifact.
 - 2026-11-15: C1 prep #207 is now part of B6 #191's main ancestry: preserve its package-local eslint, dependency and moved measurement gates while measuring both React subpaths under the unchanged cap. Its standalone extraction remains out of scope for B6.
 
 - 2026-11-15: B6 #191 folds in main's VI-only SEO fix #186 without altering its new golden expectation or production snapshot mapping; this is upstream behavior, not B6's contract change. Final-head verification includes the updated golden suite.
@@ -224,7 +224,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Integrated D1's versioned tree export and strict bounded validator with B6b neutral CSS and package-local C1 build/measurement; preserved independent ESM/CJS smoke and 60/35 KiB JS caps.
 
 - 2026-11-15: Restacked B6b #193 on merged B6 #191, preserving the neutral CSS public export, build copy, package-local measurement, 224-pair Chromium gate and C1 standalone package checks. Existing HTTP goldens and host styling remain unchanged.
-
+- 2026-11-15: Reconciled label-triggered CI with merged #206: code events keep the bounded parallel static checks, clean Vercel build and all required checks; label events run only `ready-e2e` E2E jobs, with shards dependent on the finalized build artifact. #188's labeled-event run passed without cancelling its code-event run.
+- 2026-11-10: Isolated `ready-e2e` label-triggered CI into its own concurrency lane and E2E-only jobs, retaining cancellation of superseded code runs; unrelated labels no longer rerun code or E2E jobs.
 - 2026-11-15: Reconciled C1 package-local tooling and pack allowlist with the B6 React server export and combined gzip measurement; no private release or golden changes.
 
 - 2026-11-15: Incorporated main's separate VI-only custom-page SEO correction and golden assertion into the B6 merge head without changing their expected values or scope.

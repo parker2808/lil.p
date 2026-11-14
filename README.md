@@ -122,6 +122,8 @@ The [CMS B1 golden HTTP suite](./docs/specs/2026-11-10-cms-b1-golden-http.md) fr
 
 [CMS B6b neutral theme](./docs/specs/2026-11-11-cms-b6b-core-theme.md) adds opt-in `@parker2808/cms-core/theme.css`: scoped light/dark tokens and reusable surface/control states, including success/warning/danger/info feedback borders, with token-only host overrides. The required Chromium gate checks 224 computed WCAG AA pairs at desktop/mobile widths in both themes; it fails if Chromium is unavailable. The portfolio does not import this CSS, so existing visuals, API and B1 goldens remain unchanged. CSS gzip is measured separately from JS budgets.
 
+[CMS B6b neutral theme](./docs/specs/2026-11-11-cms-b6b-core-theme.md) adds opt-in `@parker2808/cms-core/theme.css`: scoped light/dark tokens and reusable surface/control states, including success/warning/danger/info feedback borders, with token-only host overrides. The required Chromium gate checks 224 computed WCAG AA pairs at desktop/mobile widths in both themes; it fails if Chromium is unavailable. The portfolio does not import this CSS, so existing visuals, API and B1 goldens remain unchanged. CSS gzip is measured separately from JS budgets.
+
 On the combined B5/B6 tree, both the API engine and web React adapters consume their own direct CMS-core dependencies. The merged ESM/CJS bundle gate measures 2,433/61,440 B for contracts+engine and 1,621/35,840 B for the two React entries; the B1 golden HTTP contracts are unchanged.
 [CMS B5 pure engine](./docs/specs/2026-11-11-cms-b5-pure-engine.md), accepted at `71e9ce4`, introduced host-injected page policy, stable block ordering, strict snapshot/version checks and typed host ports in `./engine`. The [B5 snapshot review](./docs/specs/2026-11-11-cms-b5-snapshot-review.md) rejects unsupported root versions and unknown fields before Zod can strip them; older/current block versions remain readable. B5 alone left the Nest adapter unwired pending a direct API dependency. [B5b Nest wiring](./docs/specs/2026-11-11-cms-b5b-nest-engine-wiring.md) integrates those helpers through host-owned exception and snapshot adapters after the accepted #189 packaging prerequisite, retaining legacy missing-SEO compatibility for preview and restore. The restacked core measures 2,433/61,440 B gzip contracts+engine and 34/35,840 B React. Existing API/EN–VI HTTP behavior and B1 goldens remain unchanged; unsafe restore refuses to delete blocks. B6 owns React separately and D waits for B7.
 
@@ -284,6 +286,7 @@ Live hosting is **Vercel (web) + Render (API) + TiDB Cloud (MySQL) + Cloudinary 
 ### How a change reaches production
 
 1. Open a PR (or push) to `main`. CI runs format, lint, typecheck, tests, content checks, build, and API e2e.
+   On a PR without `ready-e2e`, API/web E2E is skipped. Adding that label later starts E2E-only CI without cancelling the original code-check run; further code pushes still cancel stale code-check runs. Unrelated labels do not rerun expensive checks.
 2. Vercel and Render auto-deploy `main`.
 3. On boot, the API image runs `prisma migrate deploy` — it applies committed migrations only, never creates new ones, never resets data.
 
