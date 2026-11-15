@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A tracked seed/SQL inventory is not a production inventory; gate the source-writer list and compare normalized responses with original stored JSON hashes before claiming legacy version safety.
+
 - 2026-11-16: Waiting for theme transitions to settle can conceal a real WCAG contrast failure; switch paired primary CTA foreground/background atomically and sample successive rendered frames before axe instead of changing its threshold.
 
 - 2026-11-15: A screenshot immediately after manually toggling dark mode can leave button `transition-colors` midway through foreground interpolation; require the final computed button palette before axe so transient test timing cannot masquerade as a stable 4.5:1 violation.

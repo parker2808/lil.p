@@ -19,7 +19,7 @@ The [CMS U3 builder design study](./docs/specs/2026-11-10-cms-u3-builder-design.
 
 The [CMS U0 route/control baseline](./docs/audits/2026-11-10-cms-u0-route-control-baseline.md) maps the current public/admin routes, redirect and role boundaries, control ownership, and existing behavior/visual tests before UI standardization. It records uncovered live/visual states separately from executed focused tests; U0 changes no runtime behavior.
 
-The [CMS core package](./packages/cms-core/README.md) runs its own dependency-boundary check in CI, independent of the monorepo root check, so extraction cannot silently drop this gate. Its React and theme tests import the package-local bundle measure, so the same tests run after extraction. The [C1 runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md) retains the final integration and authorization requirements.
+The [CMS core package](./packages/cms-core/README.md) runs its own dependency-boundary check in CI, independent of the monorepo root check, so extraction cannot silently drop this gate. Its React and theme tests import the package-local bundle measure, so the same tests run after extraction. The [C1 runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md) retains the final integration and authorization requirements. The [V17/V21 tracked raw inventory](./docs/specs/2026-11-16-cms-d2-v17-v21-raw-inventory.md) is not a production DB inventory.
 
 ### CMS U1 shared controls
 
