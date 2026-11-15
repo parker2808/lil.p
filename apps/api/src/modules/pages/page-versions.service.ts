@@ -143,6 +143,12 @@ export class PageVersionsService {
           message: 'Tree publishing is not enabled',
         });
       }
+      if (page.draftTreeRevision === 9223372036854775807n) {
+        throw new ConflictException({
+          code: 'CONFLICT',
+          message: 'Builder revision limit reached',
+        });
+      }
       const snapshot = await this.assertPublishable(tx, key, page);
       const latest = await tx.pageVersion.aggregate({
         where: { pageId: page.id },
@@ -159,14 +165,28 @@ export class PageVersionsService {
         },
       });
       const now = new Date();
-      await tx.page.update({
-        where: { id: page.id },
+      const changed = await tx.page.updateMany({
+        where: {
+          id: page.id,
+          draftTreeRevision: page.draftTreeRevision,
+          draftTree: { equals: PrismaValue.DbNull },
+        },
         data: {
           publishedVersionId: created.id,
           publishedAt: now,
           updatedAt: now,
+          draftTreeRevision: { increment: 1 },
         },
       });
+      if (changed.count !== 1) {
+        const current = await this.requirePage(tx, key);
+        throw new ConflictException({
+          code: 'CONFLICT',
+          message: 'Builder draft changed; reload before publishing',
+          mode: current.draftTree == null ? 'legacy' : 'tree',
+          revision: current.draftTreeRevision.toString(),
+        });
+      }
       await this.audit?.record(tx, {
         userId: actorId,
         action: 'PUBLISH',
@@ -305,7 +325,9 @@ export class PageVersionsService {
             message: `Version ${version} was not found`,
           });
         }
-        const snapshot = readRestorablePageSnapshot(row.snapshot);
+        const snapshot = hasSnapshotFormat(row.snapshot)
+          ? null
+          : readRestorablePageSnapshot(row.snapshot);
         if (!snapshot) {
           throw new BadRequestException({
             code: 'INVALID_BLOCKS',
@@ -362,11 +384,12 @@ export class PageVersionsService {
       const row = await tx.pageVersion.findUnique({
         where: { pageId_version: { pageId: page.id, version } },
       });
-      if (!row)
+      if (!row) {
         throw new NotFoundException({
           code: 'NOT_FOUND',
           message: `Version ${version} was not found`,
         });
+      }
       const snapshot = hasSnapshotFormat(row.snapshot)
         ? readTreeVersionSnapshot(row.snapshot)
         : readRestorablePageSnapshot(row.snapshot);

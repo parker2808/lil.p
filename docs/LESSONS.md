@@ -7,6 +7,9 @@
 - 2026-11-11: Test-local tree renderer mappings cannot certify deployed host pages; inject the same explicit host registry into draft, publish and snapshot reads, and verify actual Next components through the live API in both locales.
 
 - 2026-11-15: A forward-compatible additive schema does not make an older writer safe: an old Prisma client can publish a legacy snapshot over a tree publication pointer without changing the draft revision; block release until a write fence or approved no-old-writer rollback is proven against disposable MySQL.
+- 2026-11-15: Checking legacy mode before a transaction's version insert or block mutation does not fence a later tree activation; claim both SQL-NULL mode and monotonic revision in the final page write, and roll back the whole transaction on a lost CAS.
+
+- 2026-11-15: An additive D2 schema lets a pre-D2 Prisma client alter a tree page's published pointer without bumping the draft revision. Parker approved forward-only recovery, not evidence of an old-writer drain; because the `main` API deploy runs the migration on startup, prove the page-write pause and complete Render drain before merging/deploying D2. A MySQL trigger cannot serve as a TiDB fence.
 
 - 2026-11-15: Describe D2 deploy readiness as executable proof of forward-only Stage A write freeze/drain, not rollback-read proof; once migrated, an old API rollback is unsafe and recovery must roll forward.
 - 2026-11-15: Treat a rehearsal's pack count as evidence for that source SHA, not a timeless policy; enumerate the allowlisted paths and review all four direct consumer manifests and their lockfile diff before a C3 pin.
@@ -76,7 +79,6 @@
 - 2026-11-10: Extract page/block mechanics behind a host-provided registry and persistence/auth ports; leave portfolio block definitions, domain pickers, routes and deployment adapters in the application until a neutral standalone fixture proves reuse.
 - 2026-11-10: A reusable CMS block engine is a foundation for a visual page builder, not the builder itself; keep behavior-preserving extraction separate from a versioned layout tree and its additive, independently approved storage migration.
 - 2026-11-10: Regenerate contact sheets only after the final screenshot capture completes, and version a small privacy-redacted review set alongside the spec; a local-only sheet can silently retain a pre-fix skeleton while the individual screenshots are correct.
-
 - 2026-11-10: A `labeled` workflow sharing PR-number concurrency with `opened`/`synchronize` can cancel checks on the same commit; split label-only E2E from code checks and keep stale code-commit cancellation.
 - 2026-11-15: When rebasing a label-only workflow on a new CI job, gate the new job on code events too; preserve the E2E shard's `needs: build-e2e` so download waits for upload finalization.
 - 2026-11-10: Page snapshots omit the original page locale; custom pages with no English SEO title but a Vietnamese title need the draft-preview VI fallback in both public snapshot and version-preview resolution, without changing built-in `pickGroup` behavior.

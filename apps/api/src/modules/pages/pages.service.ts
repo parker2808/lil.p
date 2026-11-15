@@ -256,7 +256,7 @@ export class PagesService {
         });
       }
       await applyReorder(tx.pageBlock, ids, { pageId: page.id });
-      await this.touchPage(tx, page.id);
+      await this.touchPage(tx, page, key);
       await this.audit?.record(tx, {
         action: 'UPDATE',
         entityType: 'page',
@@ -274,15 +274,26 @@ export class PagesService {
       const page = await this.requirePage(tx, key);
       this.assertLegacyDraft(page);
       assertFresh(page.updatedAt, input.updatedAt);
+      if (page.draftTreeRevision === 9223372036854775807n) {
+        throw new ConflictException({
+          code: 'CONFLICT',
+          message: 'Builder revision limit reached',
+        });
+      }
       try {
         await tx.page.update({
-          where: { id: page.id, draftTree: { equals: PrismaValue.DbNull } },
+          where: {
+            id: page.id,
+            draftTreeRevision: page.draftTreeRevision,
+            draftTree: { equals: PrismaValue.DbNull },
+          },
           data: {
             seoTitleEn: input.seoTitleEn,
             seoTitleVi: input.seoTitleVi,
             seoDescriptionEn: input.seoDescriptionEn,
             seoDescriptionVi: input.seoDescriptionVi,
             updatedAt: new Date(),
+            draftTreeRevision: { increment: 1 },
           },
         });
       } catch (error) {
@@ -359,7 +370,7 @@ export class PagesService {
           isVisible: true,
         },
       });
-      await this.touchPage(tx, page.id);
+      await this.touchPage(tx, page, key);
       await this.audit?.record(tx, {
         action: 'CREATE',
         entityType: 'page',
@@ -431,7 +442,7 @@ export class PagesService {
         where: { id: current.id },
         data,
       });
-      await this.touchPage(tx, page.id);
+      await this.touchPage(tx, page, key);
       await this.audit?.record(tx, {
         action: 'UPDATE',
         entityType: 'page',
@@ -478,7 +489,7 @@ export class PagesService {
           isVisible: current.isVisible,
         },
       });
-      await this.touchPage(tx, page.id);
+      await this.touchPage(tx, page, key);
       await this.audit?.record(tx, {
         action: 'CREATE',
         entityType: 'page',
@@ -501,7 +512,7 @@ export class PagesService {
         assertCanDelete(definition);
       }
       await tx.pageBlock.delete({ where: { id: current.id } });
-      await this.touchPage(tx, page.id);
+      await this.touchPage(tx, page, key);
       await this.audit?.record(tx, {
         action: 'ARCHIVE',
         entityType: 'page',
@@ -546,11 +557,31 @@ export class PagesService {
     return block;
   }
 
-  private async touchPage(tx: Tx, pageId: number): Promise<void> {
-    await tx.page.update({
-      where: { id: pageId },
-      data: { updatedAt: new Date() },
+  private async touchPage(
+    tx: Tx,
+    page: Awaited<ReturnType<PagesService['requirePage']>>,
+    key: PageKey,
+  ): Promise<void> {
+    if (page.draftTreeRevision === 9223372036854775807n) {
+      throw new ConflictException({ code: 'CONFLICT', message: 'Builder revision limit reached' });
+    }
+    const changed = await tx.page.updateMany({
+      where: {
+        id: page.id,
+        draftTreeRevision: page.draftTreeRevision,
+        draftTree: { equals: PrismaValue.DbNull },
+      },
+      data: { updatedAt: new Date(), draftTreeRevision: { increment: 1 } },
     });
+    if (changed.count !== 1) {
+      const current = await this.requirePage(tx, key);
+      throw new ConflictException({
+        code: 'CONFLICT',
+        message: 'Builder draft changed; reload before editing',
+        mode: current.draftTree == null ? 'legacy' : 'tree',
+        revision: current.draftTreeRevision.toString(),
+      });
+    }
   }
 
   private async assertRefsExist(
