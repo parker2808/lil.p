@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 
@@ -6,6 +7,18 @@ import { expect, test } from '@playwright/test';
 import { BLOCK_REGISTRY } from '@portfolio/contracts';
 
 import { signIn } from './helpers/auth';
+import { BLOCK_EDITOR_META } from '../src/modules/admin-pages/constants/block-editor-meta.constant';
+
+const labels = Object.fromEntries(
+  (['en', 'vi'] as const).map((locale) => [
+    locale,
+    (
+      JSON.parse(
+        readFileSync(resolve(import.meta.dirname, `../i18n/locales/${locale}.json`), 'utf8'),
+      ) as { admin: { pages: { types: Record<string, string> } } }
+    ).admin.pages.types,
+  ]),
+) as Record<'en' | 'vi', Record<string, string>>;
 
 const captures = resolve(import.meta.dirname, '../../../docs/specs/screenshots/cms-d5-ui');
 const manifest: Array<{
@@ -106,10 +119,15 @@ test('all 20 host Properties are visible through the gated builder in EN/VI and 
     });
     for (const [index, definition] of types.entries()) {
       await layers.locator(`[data-tree-id="block-${index}"]`).click();
+      const labelKey = BLOCK_EDITOR_META[definition.type].labelKey.split('.').at(-1)!;
+      const localized = labels[locale][labelKey];
+      expect(localized, `${locale}/${definition.type} translation`).toBeTruthy();
+      const raw = definition.type.replaceAll('-', ' ');
+      const expected = [localized ?? raw, raw]
+        .map((value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+        .join('|');
       await expect(
-        inspector
-          .getByRole('paragraph')
-          .filter({ hasText: new RegExp(`^${definition.type.replaceAll('-', ' ')}$`) }),
+        inspector.getByRole('paragraph').filter({ hasText: new RegExp(`^(?:${expected})$`) }),
       ).toBeVisible();
       await expect(
         inspector

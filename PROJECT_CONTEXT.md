@@ -48,10 +48,26 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- #221 run `43729842098` reached two deterministic V15 failures: the focus audit moved focus off Heading before keyboard Delete, and the 768px Properties sheet's fixed backdrop was wrongly clipped to the builder parent's overflow boundary. Restore pre-audit focus and stop clipping beyond the fixed backdrop; exact-head five-shard CI and independent review remain OPEN.
+
 - V16 builder automation adds real-API EN/VI accessible-name, live announcement, keyboard focus, reduced-motion and whole-page axe coverage. Manual VoiceOver/NVDA output, public/preview heading order and independent screen-reader review remain OPEN; no release signoff from this subset.
 
 - D5 V07 stale publish CAS: the earlier post-recovery request reused the current revision and may publish successfully after D6 integration. A stacked browser fix performs an intervening real draft PUT, then asserts stale publish 409 and unchanged draft/revision/versions; exact-head CI and combined #208 rerun remain pending.
 
+- #221 V15 run `43727078116` hung in the keyboard-only capture at 10 minutes and cancelled shard 5 during retry. Removed unbounded transition-finished waits in the reduced-motion audit and added a bounded keyboard test/diagnostic markers; exact-head five-shard CI and independent review remain OPEN.
+
+- V15 focus paint: CI `43720573277` found a blue Breakpoint control with an identical blue focus ring on its own surface. A two-tone ring and per-adjacent-surface 3:1 audit need exact-head CI and independent design review before signoff.
+
+- #221 CI 43717611638 repeatedly found `:focus-visible` ordinary host buttons without a computed indicator, despite the core theme fallback. Apply a scoped opaque host ring to all interactive builder controls, retain the ≥3:1 browser assertion, and await exact-head five-shard proof.
+
+- #221 run `43713811749` exposed an unpainted focus indicator on the canvas “Select Page” control; the host canvas now requests an opaque scoped outline and logs its computed style. V15 remains blocked until exact-head browser contrast passes; the separate D4 test owner handles shard 5's obsolete textbox assertions.
+
+- #221 restacked on the D5 five-shard base; the separate D4 test owner is replacing obsolete study-only textbox assertions on the live Properties route. An explicitly opaque host outline remains subject to exact-head computed ≥3:1 focus verification; #204 base CI 43712324642 failed the obsolete D4 test, so neither base nor V15 is accepted yet.
+
+- D5 V15 base sync (2026-11-15): reconcile #221 with the five-shard D base without touching the dirty D5 UI worktree; keep the ≥3:1 rendered-focus gate, including CSS `oklab()` shadow colors, and retain both branches' documentation history. Exact-head CI remains required.
+
+- D5 V15 full-builder gate: the stacked design audit measures visible controls outside `.cms-core` without the previous 43.5px tolerance and checks computed keyboard focus color against painted surfaces at ≥3:1. After two CI runs still saw a translucent ring despite the explicit host outline being present, the audit now establishes keyboard modality with Tab and requires `:focus-visible` on each measured control; exact-head CI must prove the correction. The all-20 fixture accepts the existing raw heading or the #215 translated metadata label during the stacked transition, backed by EN/VI messages. Await ready-e2e CI and independent review before declaring V15 PASS; manual SR and combined D6 proof remain open. See `docs/specs/2026-11-15-cms-d5-v15-target-focus.md`.
+- D5 V07 stale publish CAS: the earlier post-recovery request reused the current revision and may publish successfully after D6 integration. A stacked browser fix performs an intervening real draft PUT, then asserts stale publish 409 and unchanged draft/revision/versions; #237 passed exact-head CI `43721680512`, but combined #208 rerun remains pending.
 - 2026-11-15 D5 builder error localization: D2's English `message` remains in the API response but current D5 builder status/recovery UI uses only typed HTTP outcomes and EN/VI labels. Verify the new D6 publish/version controls independently; other admin/API i18n remains out of scope. See `docs/specs/2026-11-11-cms-d5-ui.md`.
 - D5 shard-5 correction: #204 `6a48a4cc` CI `43712324642` exposed D4 canvas tests targeting a `BuilderStudy`-only Selected item ID textbox after the route switched to real `BuilderHost`/`PropertiesPanel`. A stacked test-only fix verifies a composed heading's real EN/VI Text value across 768/1100/1440, theme changes and sheet focus; #204 head `22b4b1c0` passed CI `43716297284` and ready-e2e `43716429537` (API E2E and five web shards). This does not waive the combined/release gate: #208 run `43717182977` fails V07's historical 409 expectation after D6 enables publishing. No runtime change here.
 
@@ -78,7 +94,6 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - D5 review follow-up: the host passes its component schema registry explicitly to tree edits/history/autosave (D6 verifies all 20 block definitions). A concurrent legacy restore returns `{tree: null}` and pauses autosave in a typed `legacy` review state without discarding local edits; reloading a builder draft requires an explicit discard confirmation.
 
 - E2E registry completeness (2026-11-15): both existing D4 canvas and keyboard browser specs were absent from `SPECS` and silently skipped by the Playwright shard matcher. Register both on the five-shard line and compare the full recursive spec inventory with the manifest in a unit test, rejecting missing, stale and duplicate names. First real CI exposed obsolete native-select interactions; the next run exposed selecting already-active EN without a cookie and intermittent Escape focus restoration. Exercise actual Radix locale transitions and persist the cookie; restore focus in the sheet-close layout effect without competing animation frames. Re-run exact-head `ready-e2e` before claiming J03/J05/V02/V20 coverage; the #217 visual group 4 pin must still move to shard 5 after registration.
-
 - E2E throughput (2026-11-15): web E2E now uses five shards with the same required aggregate `web-e2e` check, per-shard provenance and 20-minute limit. The #217 owner must register D6 visual group 4 in `SPECS` and change its pin from shard 4 to 5 when restacking; missing/out-of-range pins now fail loudly. The #221 focus-ring contrast assertion failure is separate and cannot be solved by sharding. Exact-head five-shard CI remains required; see [measurements](./docs/specs/2026-11-15-cms-e2e-shard-throughput.md).
 
 - CI evidence provenance (2026-11-15): E2E artifacts identify both the PR head and the tested synthetic-merge checkout; the merged report verifies all four shard manifests against both SHAs before recording its provenance. Review screenshots against both SHAs, not only the run number. This does not change which ref runs, any required check or the Vercel build order. Exact-head CI remains the gate.
@@ -286,17 +301,36 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
-- 2026-11-15: Registered a real-browser D5 V16 automated accessibility subset for EN/VI tree-builder announcements, focus, reduced-motion and full-page axe. Manual screen-reader and public/preview checks remain open; no runtime or golden changes.
+- 2026-11-15: Restored V15 keyboard-journey focus after capture and fixed overlay hit-area clipping at the fixed-position backdrop; kept ≥44px targets and ≥3:1 focus contrast, pending exact-head CI.
 
+- 2026-11-15: Bound V15 keyboard browser diagnosis after shard-5's reproducible ten-minute stall, sampling reduced-motion focus paint on frames instead of waiting indefinitely for transition completion; 44px and ≥3:1 assertions unchanged.
+
+- 2026-11-15: Isolated the V15 design matrix from Lighthouse/pixel shard 1 into shard 5 and added per-test CI progress after two 20-minute cancellations; all existing browser assertions remain required and exact-head CI is pending.
+
+- 2026-11-15: Added neutral theme opposite-contrast focus token and two-tone host ring, checking ≥3:1 for each adjacent surface without lowering the target/focus thresholds.
+
+- 2026-11-15: Registered a real-browser D5 V16 automated accessibility subset for EN/VI tree-builder announcements, focus, reduced-motion and full-page axe. Manual screen-reader and public/preview checks remain open; no runtime or golden changes.
 - 2026-11-15: Corrected V07 real-browser publish-conflict setup to use an intervening server revision, retaining offline recovery and adding draft/version invariants; no runtime or golden change.
 
 - 2026-11-15: Recorded #204 exact-head CI `43716297284`/`43716429537`, clarified invalid Properties input survives remount only (not reload), and separated the failing #208 V07 publish expectation from the D5 feature-head evidence. Docs only; no release signoff.
 
+- 2026-11-15: Applied an opaque host focus indicator across interactive builder controls after repeated production-CSS failures on ordinary buttons; expanded failure diagnostics without relaxing V15 contrast or target-size thresholds. Exact-head browser CI remains required.
+
+- 2026-11-15: Scoped the canvas selection focus ring to the host and expanded failed-focus diagnostics after #221 shard 1 detected no painted indicator; the ≥3:1 contrast assertion is unchanged. Await exact-head CI.
+- 2026-11-15: Recorded #204 exact-head CI `43716297284`/`43716429537`, clarified invalid Properties input survives remount only (not reload), and separated the failing #208 V07 publish expectation from the D5 feature-head evidence. Docs only; no release signoff.
 - 2026-11-15: Expanded D5 V07 tests for real-builder insert/edit/duplicate history and failed-save retry, adapter slot/node/history limits, and explicit rejected-publish preservation; kept tree version restore open because the D2 publish API returns 409. No product runtime change.
 - 2026-11-15: Audited D2 builder-draft English error messages against D5 activation, autosave and recovery UI; no verbatim message is displayed. Documented the D6 version-actions follow-up without changing API, runtime, tests, schema or golden contracts.
 - 2026-11-15: Replaced obsolete D4 Properties fixture-textbox expectations with real D5 heading field persistence, responsive single-mount and focus assertions; updated the serialized capture check without changing production behavior. CI evidence pending.
 - 2026-11-15: Synchronized D5 UI with `feat/cms-d-base` after #224, preserving the live D5 host and V07/V15 evidence, D4 sheet-focus handling and locale-safe browser tests. No migration, public route, or golden changes; final-head CI is required.
 
+- 2026-11-15: Follow-up to V15's five-shard CI failure: keep the host Core toggle's opaque focus shadow above competing declarations and measure after a paint frame/finished CSS transitions; matching CSSOM selectors alone did not prove the shadow painted on CI 43708917423. Exact-head CI is pending; no API or golden changes.
+
+- 2026-11-15: Synced the D5 V15 stacked gate with five-shard D base; preserved both context/lessons histories and the U3/D3 additions. Focus audit now recognizes browser-computed `oklab()` shadows without changing the ≥3:1 requirement; CI remains the acceptance gate.
+
+- 2026-11-15: Established actual keyboard modality in the V15 computed-focus audit and asserted `:focus-visible` per control; the Core/brand toggle also keeps an explicit opaque token outline. Previous CI measured a translucent fallback after modifier-only Shift. The ≥3:1 contrast threshold remains unchanged; exact-head browser verification pending.
+
+- 2026-11-15: Expanded D5 capture measurements from core-only to all visible admin-builder controls, enforcing actual 44×44px geometry and computed focus/surface contrast of at least 3:1 with per-capture counts; the 20-block fixture resolves translated EN/VI metadata for #215 compatibility. No tree, API, migration or golden contract change; exact-head CI is required for V15 acceptance.
+- 2026-11-15: Synchronized D5 UI with `feat/cms-d-base` after #224, preserving the live D5 host and V07/V15 evidence, D4 sheet-focus handling and locale-safe browser tests. No migration, public route, or golden changes; final-head CI is required.
 - 2026-11-15: Clarified #228 V07 as PARTIAL after exact-head green CI: duplicate/move history and saved node order are proven, while edit/insertion, text persistence, limits and failed-save/version history boundaries remain open; no product change.
 
 - 2026-11-15: Added deterministic recursive Duplicate to the D5 builder's canvas/selection controls, adapter and atomic history, with a real-browser edit→duplicate→move→undo/redo→save/reload gate. No D2 API, migration or public render change.

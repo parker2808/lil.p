@@ -78,6 +78,7 @@ const PINNED: Record<string, number> = {
   'visual.spec.ts': 1,
   'lighthouse.spec.ts': 1,
   'admin-editors-r3.spec.ts': 4,
+  'cms-builder-d5-design.spec.ts': 5,
 };
 
 export function assertPinnedSpecs(pins: Readonly<Record<string, number>>): void {
