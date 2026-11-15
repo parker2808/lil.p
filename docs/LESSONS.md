@@ -525,3 +525,5 @@
 - 2026-11-15: Merging documentation-only main changes can conflict with active release notes without changing runtime; retain both histories and request exact-head CI rather than treating a single security check as a full gate.
 - 2026-11-15: When rebasing the pre-migration write freeze on five-shard main, preserve both Stage A drain instructions and newly registered keyboard/canvas E2E coverage; a clean merge of runtime files alone does not prove production instances have drained.
 - 2026-11-15: When restacking the Stage A freeze after a docs-only C1 merge, keep both histories; clean HTTP guards and a conflict-free runtime are not evidence that old production writers drained.
+- 2026-11-15: Reconcile stacked D2 safety tests and main's restored browser registry by retaining both documentation histories; green exact-head CI and independent drain proof remain distinct from a clean textual merge.
+- 2026-11-15: A docs-only main sync can conflict with D2 release-gate notes; keep both histories and verify schema/migration diffs before relying on prior disposable-MySQL proof.
