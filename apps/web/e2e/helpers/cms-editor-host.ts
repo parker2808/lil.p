@@ -6,6 +6,7 @@ import { expect, test } from '@playwright/test';
 import viMessages from '../../i18n/locales/vi.json' with { type: 'json' };
 import { BLOCK_EDITOR_META } from '../../src/modules/admin-pages/constants/block-editor-meta.constant';
 import { signIn } from './auth';
+import { captureEditorHostVisuals } from './cms-editor-visual';
 
 export function registerEditorHostJourney(shard: number): void {
   const definitions = Object.values(BLOCK_REGISTRY);
@@ -14,8 +15,8 @@ export function registerEditorHostJourney(shard: number): void {
     test(`${definition.type}: palette, Properties, autosave and EN/VI preview/public parity`, async ({
       page,
       context,
-    }) => {
-      test.setTimeout(180_000);
+    }, testInfo) => {
+      test.setTimeout(360_000);
       await signIn(page);
       const key = `editor-origin-${definition.type}-${Date.now()}`;
       const headers = { Origin: new URL(page.url()).origin };
@@ -109,6 +110,7 @@ export function registerEditorHostJourney(shard: number): void {
         (node: { componentType?: string }) => node.componentType === definition.type,
       );
       expect(savedHost).toBeDefined();
+      await captureEditorHostVisuals(page, context, testInfo, key, definition.type, draft.revision);
       const visibleEdit = [
         'hero',
         'page-header',

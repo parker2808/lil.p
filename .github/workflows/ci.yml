@@ -221,6 +221,7 @@ jobs:
       WEB_ORIGIN: http://localhost:3000
       WEB_INTERNAL_URL: http://localhost:3000
       NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      E2E_SOURCE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v4
       - name: Start MySQL (tmpfs, in background)

@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 D6 editor-origin visual follow-up: after real builder autosave, each of the 20 host cases now attaches EN/VI × light/dark × 1440/390 builder screenshots and scoped axe findings with source-head and screenshot digests in CI Playwright artifacts. This is pending exact-head CI and independent design inspection; neutral-brand host rendering, full accessibility acceptance, D2 operational drain and release remain separate. See `docs/specs/2026-11-15-cms-d6-editor-visual.md`.
+
 - 2026-11-15 D6 all-20 editor-origin extension (#215 follow-up review pending): host palette, Properties and composition/history/recovery use the host registry. Four file-pinned browser groups cover five types each through real palette → applicable EN/VI Properties or numeric/toggle control → server autosave/read → draft preview → publish → EN/VI API and Next route parity. The follow-up checks each host hash against independently resolved locale props, inspector translations, and a two-version historical preview; data-backed/non-JS SSR semantic text, visual/a11y and D2 deployment/drain are separate gates. #208 must incorporate and re-green the final head before closing J04/J07/V05. See `docs/specs/2026-11-15-cms-d6-integrated-gate.md`.
 - 2026-11-15 V19 public-bundle guard on the D6 feature stack: CI builds the PR head, rejects builder/editor client modules and emitted bytes for every production `(site)` route, retains the `r3-loading-test` exclusion and asserts the published-tree catch-all by exact manifest path, enforces a 100 KiB unique-chunk gzip cap against the 90,291-byte #202 baseline, and uploads an exact-head route/chunk JSON artifact with the published-tree subset and gzip total. V19 remains OPEN until exact-head CI proves it; final combined-head and deployed bundle parity remain separate gates. No runtime or golden change. See `docs/specs/2026-11-15-cms-public-bundle-guard.md`.
 
@@ -274,6 +276,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Added per-host editor-origin visual/axe CI attachments for the 20-type D6 browser journey (160 screenshots/audits), recording source SHA, draft revision and PNG digest in each manifest. Existing shard assignments and golden contracts stay unchanged; exact-head CI and design review are pending.
 
 - 2026-11-15: Followed #215's 0bc0a527 exact-head 16/16 CI with independent review fixes: derive all 20 host EN/VI hashes from saved props and D19, localize Properties host headings, and republish a changed hero to distinguish historical version preview from latest public routes. No golden-contract or migration change; follow-up exact-head CI and independent review pending.
 - 2026-11-15: Connected all 20 host definitions to builder palette and validated composition, history, recovery and Properties, including nested bilingual fields and optional heading setup. Added four fixed-shard editor-origin real-API/SSR journey groups, preserving pre-existing shard assignments. Golden contracts unchanged; exact-head CI pending.
