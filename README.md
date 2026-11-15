@@ -11,6 +11,9 @@ The four-shard all-20 published-host matrix now attempts EN/VI, light/dark,
 public/preview screenshots and WCAG axe per tuple. Neutral is selected on the
 real host DOM in a browser fixture, not via a separate published tenant. CI
 and independent visual review remain required before V03/V14 can pass.
+The matrix checks the seeded CV empty state, while education writes invalidate
+the public read cache before returning so published and preview hosts see the
+same collection. Captures exclude fixed site chrome, not block content.
 Async host block wrappers and props are resolved before tree rendering, but
 React may stream nested content after the initial HTML chunk. The current gate
 proves initial block inventory and props, hydrated preview/public parity and

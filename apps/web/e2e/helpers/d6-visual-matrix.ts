@@ -57,6 +57,11 @@ export function registerVisualMatrix(group: number) {
   }, testInfo: TestInfo) => {
     test.setTimeout(16 * 60_000);
     await signIn(page);
+    await page
+      .context()
+      .addCookies([
+        { name: 'locale-suggest-dismissed', value: '1', url: new URL(page.url()).origin },
+      ]);
     const definitions = Object.values(BLOCK_REGISTRY);
     const titles = definitions.filter((definition) => definition.role === 'h1');
     const others = definitions.filter((definition) => definition.role !== 'h1');
@@ -234,7 +239,15 @@ async function capture(
     `${label} SSR/hydration block contract`,
   ).toEqual(serverBlocks.map(({ type, hash }) => ({ type, hash })));
   for (const block of serverBlocks) {
-    expect(block.text, `${label}/${block.type} initial SSR text`).toBeTruthy();
+    if (block.type === 'cv-download') {
+      expect(block.text, `${label}/cv-download initial SSR with no configured resume`).toBe('');
+      expect(
+        hydratedBlocks.find(({ type }) => type === block.type)?.text,
+        `${label}/cv-download hydrated with no configured resume`,
+      ).toBe('');
+    } else {
+      expect(block.text, `${label}/${block.type} initial SSR text`).toBeTruthy();
+    }
   }
   const axe = await new AxeBuilder({ page })
     .include('main.cms-core-host')
@@ -251,7 +264,7 @@ async function capture(
     await expect(locator).toHaveCount(1);
     const image = await locator.screenshot({
       animations: 'disabled',
-      style: '.hero-stage canvas { visibility: hidden !important; }',
+      style: '.hero-stage canvas, .site-header, .locale-toast { visibility: hidden !important; }',
     });
     images.set(definition.type, image);
     await testInfo.attach(

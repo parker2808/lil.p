@@ -29,7 +29,8 @@ The host now awaits the outer block renderers before building the tree; the
 EN/VI unit regression covers those wrappers. The next exact-head run showed
 nested async React children (e.g. fourth statistic, case title, contact fields)
 still arrive in streamed HTML patches. The gate therefore checks SSR block
-inventory and props hashes plus nonempty initial text, and checks hydrated
+inventory and props hashes plus nonempty initial text where the seeded block
+has content, and checks hydrated
 preview/public semantic markup; it does not certify full no-JavaScript content.
 That narrower SSR claim remains a separate GAP until a no-script browser test
 proves all nested content appears without React stream patch scripts.
@@ -40,12 +41,22 @@ four other host types in each page. Each file checks EN/VI × light/dark ×
 neutral/lil.p × 390/768/1440, yielding 24 page tuples and 120 type tuples per
 shard, 480 type tuples and 960 attached public/preview block PNGs overall.
 Every page tuple checks raw initial HTML block type, props hash and nonempty
-text; equal hydrated published/preview block type, props hash and text; paired block PNGs with at most
+text for nonempty fixtures; equal hydrated published/preview block type, props
+hash and text; paired block PNGs with at most
 0.5% differing pixels (per-channel difference >10), allowing rasterization
 noise rather than falsely claiming byte-perfect pixels; and all WCAG
 2/2.1/2.2 AA axe violations (including moderate/minor), without waivers. A
 per-shard manifest records each tuple. The animation-only hero canvas is
 excluded from pixel captures; it is not evidence of canvas parity.
+
+The seeded profile has no resume asset: `cv-download` must remain empty on
+both initial SSR and hydration. This proves the empty-state contract, **not**
+a visible CV download. Admin collection E2E creates education rows before the
+matrix; those writes now expire the `education` public fetch tag before
+returning, preventing a stale public render versus an uncached draft render.
+Block screenshots exclude the fixed site header and locale suggestion overlay
+outside the block (as well as the decorative shader canvas); otherwise those
+overlays can obscure different scrolled portions of the same long block.
 
 The published route serves explicit lil.p host tokens. The **neutral fixture is
 the same real published/preview host page with its root `data-brand` switched
