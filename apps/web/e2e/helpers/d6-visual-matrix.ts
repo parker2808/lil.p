@@ -52,80 +52,83 @@ const themes = ['light', 'dark'] as const;
 const brands = ['neutral', 'lilp'] as const;
 
 export function registerVisualMatrix(group: number) {
-  test(`published host group ${group}: EN/VI, core/brand, light/dark, mobile/tablet/desktop`, async ({
-    page,
-  }, testInfo: TestInfo) => {
-    test.setTimeout(16 * 60_000);
-    await signIn(page);
-    await page
-      .context()
-      .addCookies([
-        { name: 'locale-suggest-dismissed', value: '1', url: new URL(page.url()).origin },
-      ]);
-    const definitions = Object.values(BLOCK_REGISTRY);
-    const titles = definitions.filter((definition) => definition.role === 'h1');
-    const others = definitions.filter((definition) => definition.role !== 'h1');
-    expect(definitions).toHaveLength(20);
-    expect(titles).toHaveLength(4);
-    const blocks = [titles[group]!, ...others.slice(group * 4, group * 4 + 4)];
-    expect(blocks).toHaveLength(5);
-    const pageKey = `d6-matrix-${group}-${Date.now()}-${testInfo.retry}`;
-    const headers = { Origin: new URL(page.url()).origin };
-    const tree = {
-      schemaVersion: 1,
-      root: {
-        id: 'visual-page',
-        type: 'page',
-        responsive: { base: {} },
-        sections: [
-          {
-            id: 'visual-section',
-            type: 'section',
+  for (const locale of locales) {
+    for (const theme of themes) {
+      test(`published host group ${group}: ${locale}, ${theme}, core/brand, mobile/tablet/desktop`, async ({
+        page,
+      }, testInfo: TestInfo) => {
+        test.setTimeout(2 * 60_000);
+        await signIn(page);
+        await page
+          .context()
+          .addCookies([
+            { name: 'locale-suggest-dismissed', value: '1', url: new URL(page.url()).origin },
+          ]);
+        const definitions = Object.values(BLOCK_REGISTRY);
+        const titles = definitions.filter((definition) => definition.role === 'h1');
+        const others = definitions.filter((definition) => definition.role !== 'h1');
+        expect(definitions).toHaveLength(20);
+        expect(titles).toHaveLength(4);
+        const blocks = [titles[group]!, ...others.slice(group * 4, group * 4 + 4)];
+        expect(blocks).toHaveLength(5);
+        const pageKey = `d6-matrix-${group}-${locale}-${theme}-${Date.now()}-${testInfo.retry}`;
+        const headers = { Origin: new URL(page.url()).origin };
+        const tree = {
+          schemaVersion: 1,
+          root: {
+            id: 'visual-page',
+            type: 'page',
             responsive: { base: {} },
-            content: blocks.map((definition) => ({
-              id: `visual-${definition.type}`,
-              type: 'component',
-              componentType: definition.type,
-              responsive: { base: definition.defaults },
-            })),
+            sections: [
+              {
+                id: 'visual-section',
+                type: 'section',
+                responsive: { base: {} },
+                content: blocks.map((definition) => ({
+                  id: `visual-${definition.type}`,
+                  type: 'component',
+                  componentType: definition.type,
+                  responsive: { base: definition.defaults },
+                })),
+              },
+            ],
           },
-        ],
-      },
-    };
-    const created = await page.request.post('/api/admin/pages', {
-      headers,
-      data: { key: pageKey, title: `Visual group ${group}`, locale: 'en', template: 'empty' },
-    });
-    expect(created.status(), await created.text()).toBe(201);
-    const activated = await page.request.post(`/api/admin/pages/${pageKey}/builder/activate`, {
-      headers,
-      data: { expectedRevision: '0', tree },
-    });
-    expect(activated.status(), await activated.text()).toBe(200);
-    const published = await page.request.post(`/api/admin/pages/${pageKey}/builder/publish`, {
-      headers,
-      data: { expectedRevision: '1' },
-    });
-    expect(published.status(), await published.text()).toBe(200);
+        };
+        const created = await page.request.post('/api/admin/pages', {
+          headers,
+          data: { key: pageKey, title: `Visual group ${group}`, locale: 'en', template: 'empty' },
+        });
+        expect(created.status(), await created.text()).toBe(201);
+        const activated = await page.request.post(`/api/admin/pages/${pageKey}/builder/activate`, {
+          headers,
+          data: { expectedRevision: '0', tree },
+        });
+        expect(activated.status(), await activated.text()).toBe(200);
+        const published = await page.request.post(`/api/admin/pages/${pageKey}/builder/publish`, {
+          headers,
+          data: { expectedRevision: '1' },
+        });
+        expect(published.status(), await published.text()).toBe(200);
 
-    const manifest: Array<{
-      locale: string;
-      theme: string;
-      brand: string;
-      width: number;
-      types: string[];
-    }> = [];
-    for (const locale of locales) {
-      const path = `/${locale}/${pageKey}`;
-      const publicData = await page.request.get(`/api/public/pages/${pageKey}?locale=${locale}`);
-      const previewData = await page.request.get(
-        `/api/admin/preview/pages/${pageKey}?locale=${locale}&version=1`,
-      );
-      expect(publicData.status()).toBe(200);
-      expect(previewData.status()).toBe(200);
-      expect(await previewData.json()).toEqual({ ...(await publicData.json()), invalidBlocks: [] });
+        const manifest: Array<{
+          locale: string;
+          theme: string;
+          brand: string;
+          width: number;
+          types: string[];
+        }> = [];
+        const path = `/${locale}/${pageKey}`;
+        const publicData = await page.request.get(`/api/public/pages/${pageKey}?locale=${locale}`);
+        const previewData = await page.request.get(
+          `/api/admin/preview/pages/${pageKey}?locale=${locale}&version=1`,
+        );
+        expect(publicData.status()).toBe(200);
+        expect(previewData.status()).toBe(200);
+        expect(await previewData.json()).toEqual({
+          ...(await publicData.json()),
+          invalidBlocks: [],
+        });
 
-      for (const theme of themes) {
         await page.goto(path);
         await page.evaluate((value) => localStorage.setItem('theme', value), theme);
         for (const brand of brands) {
@@ -162,14 +165,14 @@ export function registerVisualMatrix(group: number) {
             manifest.push({ locale, theme, brand, width, types: blocks.map(({ type }) => type) });
           }
         }
-      }
+        expect(manifest).toHaveLength(6);
+        await testInfo.attach(`d6-group-${group}-${locale}-${theme}-manifest.json`, {
+          body: JSON.stringify({ pageKey, tuples: manifest }),
+          contentType: 'application/json',
+        });
+      });
     }
-    expect(manifest).toHaveLength(24);
-    await testInfo.attach(`d6-group-${group}-manifest.json`, {
-      body: JSON.stringify({ pageKey, tuples: manifest }),
-      contentType: 'application/json',
-    });
-  });
+  }
 }
 
 async function capture(

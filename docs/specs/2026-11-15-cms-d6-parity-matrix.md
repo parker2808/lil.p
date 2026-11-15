@@ -36,8 +36,11 @@ That narrower SSR claim remains a separate GAP until a no-script browser test
 proves all nested content appears without React stream patch scripts.
 
 V03/V14 matrix is **pending exact-head CI and visual review**, not yet PASS.
-Four independent shard files publish one real API page apiece, with one H1 and
-four other host types in each page. Each file checks EN/VI × light/dark ×
+Four independent shard files publish one real API page per locale/theme test,
+with one H1 and four other host types in each page. Splitting each shard into
+four retry-isolated cases bounds a stalled tuple to two minutes per attempt
+instead of exhausting the 20-minute shard job; CI lists each case as it runs.
+Each file checks EN/VI × light/dark ×
 neutral/lil.p × 390/768/1440, yielding 24 page tuples and 120 type tuples per
 shard, 480 type tuples and 960 attached public/preview block PNGs overall.
 Every page tuple checks raw initial HTML block type, props hash and nonempty
@@ -46,7 +49,7 @@ hash and text; paired block PNGs with at most
 0.5% differing pixels (per-channel difference >10), allowing rasterization
 noise rather than falsely claiming byte-perfect pixels; and all WCAG
 2/2.1/2.2 AA axe violations (including moderate/minor), without waivers. A
-per-shard manifest records each tuple. The animation-only hero canvas is
+per-locale/theme manifest records six tuples (four manifests per shard). The animation-only hero canvas is
 excluded from pixel captures; it is not evidence of canvas parity.
 
 The seeded profile has no resume asset: `cv-download` must remain empty on

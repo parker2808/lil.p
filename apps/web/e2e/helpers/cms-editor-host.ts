@@ -6,6 +6,7 @@ import { expect, test } from '@playwright/test';
 import viMessages from '../../i18n/locales/vi.json' with { type: 'json' };
 import { BLOCK_EDITOR_META } from '../../src/modules/admin-pages/constants/block-editor-meta.constant';
 import { signIn } from './auth';
+import { captureEditorHostVisuals } from './cms-editor-visual';
 
 export function registerEditorHostJourney(shard: number): void {
   const definitions = Object.values(BLOCK_REGISTRY);
@@ -14,8 +15,8 @@ export function registerEditorHostJourney(shard: number): void {
     test(`${definition.type}: palette, Properties, autosave and EN/VI preview/public parity`, async ({
       page,
       context,
-    }) => {
-      test.setTimeout(180_000);
+    }, testInfo) => {
+      test.setTimeout(360_000);
       await signIn(page);
       const key = `editor-origin-${definition.type}-${Date.now()}`;
       const headers = { Origin: new URL(page.url()).origin };
@@ -56,30 +57,56 @@ export function registerEditorHostJourney(shard: number): void {
       await expect(
         inspector.getByText(hostName, { exact: true }).and(inspector.locator('p')),
       ).toBeVisible();
-      const addHeading = inspector.getByRole('button', { name: 'Thêm tiêu đề' });
-      if (await addHeading.count()) await addHeading.click();
+      const addHeading = inspector.getByRole('button', {
+        name: /^(?:Thêm tiêu đề|Thêm · Tiêu đề mục)$/,
+      });
+      const headingAdded = (await addHeading.count()) > 0;
+      if (headingAdded) await addHeading.click();
 
       const englishValue = `Edited ${definition.type}`;
       const vietnameseValue = `Sửa ${definition.type}`;
+      const draftPath = `/api/admin/pages/${key}/builder/draft`;
       if (['notes-browser', 'projects-browser'].includes(definition.type)) {
         await inspector.getByRole('switch', { name: 'showFeatured' }).click();
       } else {
-        const englishTitle = inspector.getByRole('textbox', { name: /(?:heading )?title \(EN\)$/ });
-        const english = (await englishTitle.count())
-          ? englishTitle.first()
-          : inspector.getByRole('textbox', { name: /\(EN\)$/ }).first();
-        const vietnameseTitle = inspector.getByRole('textbox', {
-          name: /(?:heading )?title \(VI\)$/,
+        const headingEnglish = inspector.getByRole('textbox', {
+          name: /^(?:heading title \(EN\)|Tiêu đề mục · Tiêu đề · Tiếng Anh)$/,
         });
-        const vietnamese = (await vietnameseTitle.count())
-          ? vietnameseTitle.first()
-          : inspector.getByRole('textbox', { name: /\(VI\)$/ }).first();
+        const headingVietnamese = inspector.getByRole('textbox', {
+          name: /^(?:heading title \(VI\)|Tiêu đề mục · Tiêu đề · Tiếng Việt)$/,
+        });
+        if (headingAdded) {
+          await expect(headingEnglish).toHaveCount(1);
+          await expect(headingVietnamese).toHaveCount(1);
+        }
+        const english = (await headingEnglish.count())
+          ? headingEnglish
+          : inspector.getByRole('textbox', { name: /(?:\(EN\)|· Tiếng Anh)$/ }).first();
+        const vietnamese = (await headingVietnamese.count())
+          ? headingVietnamese
+          : inspector.getByRole('textbox', { name: /(?:\(VI\)|· Tiếng Việt)$/ }).first();
         await expect(english).toBeVisible();
         await english.fill(englishValue);
+        await expect
+          .poll(
+            async () => {
+              const response = await page.request.get(draftPath);
+              if (response.status() !== 200) return false;
+              const body = await response.json();
+              const host = body.tree?.root.sections[0]?.content.find(
+                (node: { componentType?: string }) => node.componentType === definition.type,
+              );
+              return (
+                Number(body.revision) > 1 &&
+                JSON.stringify(host?.responsive.base ?? {}).includes(englishValue)
+              );
+            },
+            { timeout: 30_000 },
+          )
+          .toBe(true);
         await vietnamese.fill(vietnameseValue);
       }
 
-      const draftPath = `/api/admin/pages/${key}/builder/draft`;
       await expect
         .poll(
           async () => {
@@ -107,6 +134,15 @@ export function registerEditorHostJourney(shard: number): void {
         (node: { componentType?: string }) => node.componentType === definition.type,
       );
       expect(savedHost).toBeDefined();
+      await captureEditorHostVisuals(
+        page,
+        context,
+        testInfo,
+        key,
+        definition.type,
+        savedHost.id,
+        draft.revision,
+      );
       const visibleEdit = [
         'hero',
         'page-header',

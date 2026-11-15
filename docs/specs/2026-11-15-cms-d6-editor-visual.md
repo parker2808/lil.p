@@ -1,0 +1,15 @@
+# D6 editor-origin visual and axe matrix
+
+**Scope:** Test-only #202 follow-up. No production rollout, migration, neutral-brand host visual approval or WCAG certification is implied.
+
+The existing four `cms-editor-host-{1,2,3,4}.spec.ts` CI files each cover five of the 20 host definitions. After the real editor inserts a localized palette tile, edits available Properties and the draft API confirms autosave, each case captures the **builder route before publish**. The canvas matrix is EN/VI × light/dark × 1440/390 = eight screenshots and eight scoped WCAG-tag axe audits per host. At 390px, the test also opens the Properties sheet, asserts a field belonging to the saved host, and captures the sheet with a dialog-scoped axe audit for each locale/theme. That is 12 screenshots and audits per host, 240 of each across four CI shards. Browser-only defaults remain toggle edits; no bilingual text edit is claimed for those types.
+
+Each case attaches its PNGs and `<type>-manifest.json` to the merged Playwright HTML artifact. The manifest records the PR source head from the Actions event (`E2E_SOURCE_HEAD_SHA`), the actual checkout SHA (which can be a synthetic PR merge commit), Actions run ID, host type, draft revision, route, canvas/sheet surface for each tuple, screenshot SHA-256 and axe violation ID/impact/targets. `testInfo.attach` keeps the bytes in CI's shard blob and seven-day merged `playwright-report` artifact; no personal fixture data or committed PNG baselines. Missing tuples or serious/critical axe violations fail the case. All violations, including moderate/minor, remain in the manifest for review.
+
+The browser reselects the autosaved host by its persisted node ID after each locale navigation; starter pages may already contain another component, so a total component count is not an identity assertion. The optional heading add control accepts the two exact labels used by the builder versions in the integration stack without skipping localized title editing.
+
+For bilingual Properties fields, the journey waits for the real draft API to persist the EN edit and increment its revision before entering VI. It then requires both EN and VI edits in the draft before capturing any screenshot; rapid adjacent edits must not silently drop a locale.
+
+When a host offers an optional heading, the test requires its bilingual `heading.title` inputs by exact localized accessible name. It does not substitute the first bilingual textbox (which can be an optional eyebrow) for the required title.
+
+**Acceptance:** A green exact-head `ready-e2e` CI with all four shards demonstrates capture and automated blocking-axe coverage only. A design reviewer still needs to inspect all screenshots, verify visible host/Properties and VI wrapping/mobile layout, and disposition nonblocking axe findings. Contrast pairs, focus/keyboard, neutral branding and no-JS semantic content remain separate gates. Record actual CI run, source SHA, artifact and reviewer verdict only after they exist; never mark pending evidence PASS.
