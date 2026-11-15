@@ -6,6 +6,7 @@ import {
   redoTreeHistory,
   undoTreeHistory,
   type AutosaveState,
+  type BuilderDraftSnapshot,
   type TreeDocument,
   type TreeHistory,
   type TreeOperation,
@@ -18,10 +19,13 @@ import { useMe } from '@/modules/admin-core/hooks/use-me.hook';
 
 import { BLOCK_EDITOR_META } from '../constants/block-editor-meta.constant';
 import { BuilderShell } from './BuilderShell';
+import { BuilderVersionActions } from './BuilderVersionActions';
 import {
   activateBuilderDraft,
   readBuilderDraft,
   readActiveBuilderDraft,
+  publishBuilderDraft,
+  restoreBuilderVersion,
   saveBuilderDraft,
 } from './autosave/transport';
 import { clearRecovery, readRecovery, recoveryKey, writeRecovery } from './autosave/recovery';
@@ -61,6 +65,12 @@ const labels = {
     dismiss: 'Dismiss recovery',
     recoveryFailed: 'Local recovery is unavailable. Stay on this page or export your edits.',
     noAccess: 'Draft unavailable · editing locally only',
+    versionFailed: 'Version action uncertain · check the server draft before editing again',
+    versionConflict: 'Server draft changed · reload before trying again',
+    versionInvalid: 'Invalid draft · fix the content before publishing or restoring',
+    published: 'Published · draft is ready for further edits',
+    publishedReview: 'Published · draft reload is required before further edits',
+    restored: 'Version restored to draft · publish separately to make it public',
   },
   vi: {
     undo: 'Hoàn tác',
@@ -85,6 +95,12 @@ const labels = {
     dismiss: 'Bỏ qua bản khôi phục',
     recoveryFailed: 'Không thể khôi phục cục bộ. Hãy ở lại trang hoặc xuất các thay đổi.',
     noAccess: 'Không thể tải bản nháp · chỉ chỉnh sửa cục bộ',
+    versionFailed: 'Chưa rõ kết quả thao tác · kiểm tra bản nháp máy chủ trước khi chỉnh sửa tiếp',
+    versionConflict: 'Bản nháp máy chủ đã thay đổi · tải lại trước khi thử lại',
+    versionInvalid: 'Bản nháp không hợp lệ · sửa nội dung trước khi xuất bản hoặc khôi phục',
+    published: 'Đã xuất bản · bản nháp sẵn sàng để chỉnh sửa tiếp',
+    publishedReview: 'Đã xuất bản · cần tải lại bản nháp trước khi chỉnh sửa tiếp',
+    restored: 'Đã khôi phục vào bản nháp · xuất bản riêng để cập nhật trang công khai',
   },
 } as const;
 
@@ -104,11 +120,20 @@ function subscribeOnline(onChange: () => void) {
   };
 }
 
+const canonicalTree = (tree: TreeDocument) =>
+  JSON.stringify(tree, (_key, value: unknown) =>
+    value && typeof value === 'object' && !Array.isArray(value)
+      ? Object.fromEntries(
+          Object.entries(value).sort(([left], [right]) => left.localeCompare(right)),
+        )
+      : value,
+  );
+
 export function BuilderHost({ pageKey }: { pageKey: string }) {
   const locale = useLocale() === 'vi' ? 'vi' : 'en';
   const translate = useTranslations();
   const text = labels[locale];
-  const { id: userId } = useMe();
+  const { id: userId, role } = useMe();
   const key = recoveryKey(userId, pageKey);
   const history = useRef<TreeHistory>(createTreeHistory(empty, 'page'));
   const [state, setState] = useState({ document: empty, selectedId: 'page' });
@@ -128,6 +153,27 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
   const [reviewOpen, setReviewOpen] = useState(false);
   const [remoteAvailable, setRemoteAvailable] = useState(false);
   const autosave = useRef<DraftAutosave | null>(null);
+  const [versionPending, setVersionPending] = useState(false);
+  const [versionBlocked, setVersionBlocked] = useState(false);
+  const [versionMessage, setVersionMessage] = useState<string | null>(null);
+  const versionInFlight = useRef(false);
+
+  const createAutosave = useCallback(
+    (draft: BuilderDraftSnapshot) =>
+      new DraftAutosave(
+        draft,
+        {
+          save: ({ tree, expectedRevision }) => saveBuilderDraft(pageKey, tree, expectedRevision),
+          read: () => readActiveBuilderDraft(pageKey),
+        },
+        {
+          schedule: (callback, delay) => setTimeout(callback, delay),
+          cancel: (handle) => clearTimeout(handle as ReturnType<typeof setTimeout>),
+        },
+        builderRegistry,
+      ),
+    [pageKey],
+  );
 
   const present = useCallback((next: TreeHistory) => {
     history.current = next;
@@ -143,19 +189,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
         if (cancelled) return;
         if (draft.mode === 'tree' && draft.tree) {
           present(createTreeHistory(draft.tree, 'page'));
-          autosave.current = new DraftAutosave(
-            { tree: draft.tree, revision: draft.revision },
-            {
-              save: ({ tree, expectedRevision }) =>
-                saveBuilderDraft(pageKey, tree, expectedRevision),
-              read: () => readActiveBuilderDraft(pageKey),
-            },
-            {
-              schedule: (callback, delay) => setTimeout(callback, delay),
-              cancel: (handle) => clearTimeout(handle as ReturnType<typeof setTimeout>),
-            },
-            builderRegistry,
-          );
+          autosave.current = createAutosave({ tree: draft.tree, revision: draft.revision });
           setMode('active');
         } else setMode('legacy');
         recoveryBaseline.current = history.current.document;
@@ -173,7 +207,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
       autosave.current?.dispose();
       autosave.current = null;
     };
-  }, [key, pageKey, present]);
+  }, [createAutosave, key, pageKey, present]);
 
   useEffect(() => {
     if (mode !== 'active') return;
@@ -196,6 +230,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
   const changed = useCallback(
     (next: TreeHistory) => {
       present(next);
+      setVersionMessage(null);
       if (pageKey !== 'home') {
         setRecoveryFailed(recovery ? true : !writeRecovery(key, next.document));
         autosave.current?.edit(next.document);
@@ -217,6 +252,8 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
 
   const onDispatch = useCallback(
     (command: BuilderCommand): CompositionResult => {
+      if ((versionInFlight.current || versionBlocked) && command.type !== 'select')
+        return { ok: false, document: history.current.document, reason: 'INVALID_TREE' };
       const update = commitComposition(history.current, command);
       if (update.result.ok) {
         if (command.type === 'select') present(update.history);
@@ -224,25 +261,27 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
       }
       return update.result;
     },
-    [changed, present],
+    [changed, present, versionBlocked],
   );
 
   const onEdit = useCallback(
     (operation: TreeOperation, typing?: boolean) => {
+      if (versionInFlight.current || versionBlocked) return 'INVALID_TREE';
       const update = commitProperty(history.current, operation, typing);
       if (!update.error && update.history !== history.current) changed(update.history);
       return update.error;
     },
-    [changed],
+    [changed, versionBlocked],
   );
 
   const travel = useCallback(
     (direction: 'undo' | 'redo') => {
+      if (versionInFlight.current || versionBlocked) return;
       const next =
         direction === 'undo' ? undoTreeHistory(history.current) : redoTreeHistory(history.current);
       if (next !== history.current) changed(next);
     },
-    [changed],
+    [changed, versionBlocked],
   );
 
   useEffect(() => {
@@ -267,18 +306,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
       }
       const submitted = history.current.document;
       const draft = await activateBuilderDraft(pageKey, submitted, remote.revision);
-      autosave.current = new DraftAutosave(
-        draft,
-        {
-          save: ({ tree, expectedRevision }) => saveBuilderDraft(pageKey, tree, expectedRevision),
-          read: () => readActiveBuilderDraft(pageKey),
-        },
-        {
-          schedule: (callback, delay) => setTimeout(callback, delay),
-          cancel: (handle) => clearTimeout(handle as ReturnType<typeof setTimeout>),
-        },
-        builderRegistry,
-      );
+      autosave.current = createAutosave(draft);
       if (JSON.stringify(history.current.document) !== JSON.stringify(draft.tree)) {
         autosave.current.edit(history.current.document);
         if (!recovery) setRecoveryFailed(!writeRecovery(key, history.current.document));
@@ -338,6 +366,105 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
     setRemoteAvailable(false);
   }
 
+  const canChangeVersion =
+    role === 'admin' &&
+    mode === 'active' &&
+    online &&
+    status === 'saved' &&
+    !recovery &&
+    !recoveryFailed &&
+    !versionPending &&
+    !versionBlocked;
+
+  async function verifiedRevision() {
+    const controller = autosave.current;
+    if (!controller) throw new Error('No active draft');
+    await controller.flush();
+    const snapshot = controller.state;
+    if (
+      snapshot.status !== 'saved' ||
+      canonicalTree(snapshot.local) !== canonicalTree(history.current.document) ||
+      canonicalTree(snapshot.acknowledged.tree) !== canonicalTree(snapshot.local)
+    )
+      throw new Error('Unsaved draft');
+    const remote = await readBuilderDraft(pageKey);
+    if (
+      remote.mode !== 'tree' ||
+      !remote.tree ||
+      remote.revision !== snapshot.acknowledged.revision ||
+      canonicalTree(remote.tree) !== canonicalTree(snapshot.local)
+    )
+      throw new Error('Server draft changed');
+    return snapshot.acknowledged.revision;
+  }
+
+  async function changeVersion(action: 'publish' | 'restore', version?: number): Promise<boolean> {
+    if (!canChangeVersion || versionInFlight.current) return false;
+    versionInFlight.current = true;
+    setVersionPending(true);
+    setVersionMessage(null);
+    let published = false;
+    try {
+      const revision = await verifiedRevision();
+      if (action === 'publish') {
+        await publishBuilderDraft(pageKey, revision);
+        published = true;
+        const remote = await readBuilderDraft(pageKey);
+        if (
+          remote.mode !== 'tree' ||
+          !remote.tree ||
+          !/^(0|[1-9]\d*)$/.test(remote.revision) ||
+          BigInt(remote.revision) <= BigInt(revision) ||
+          canonicalTree(remote.tree) !== canonicalTree(history.current.document)
+        )
+          throw new Error('Published draft needs review');
+        autosave.current?.dispose();
+        autosave.current = createAutosave({ tree: remote.tree, revision: remote.revision });
+        setStatus('saved');
+        setVersionMessage(text.published);
+      } else if (version !== undefined) {
+        const restored = await restoreBuilderVersion(pageKey, version, revision);
+        if (
+          !/^(0|[1-9]\d*)$/.test(restored.revision) ||
+          BigInt(restored.revision) <= BigInt(revision)
+        )
+          throw new Error('Restored draft needs review');
+        if (restored.mode === 'tree' && restored.tree) {
+          const next = createAutosave({ tree: restored.tree, revision: restored.revision });
+          autosave.current?.dispose();
+          autosave.current = next;
+          present(createTreeHistory(restored.tree, 'page'));
+          setStatus('saved');
+        } else if (restored.mode === 'legacy' && restored.tree === null) {
+          autosave.current?.dispose();
+          autosave.current = null;
+          present(createTreeHistory(empty, 'page'));
+          setMode('legacy');
+        } else throw new Error('Invalid restored draft');
+        clearRecovery(key);
+        setRecoveryFailed(false);
+        setVersionMessage(text.restored);
+      }
+      return true;
+    } catch (error) {
+      const errorStatus = (error as { status?: number }).status;
+      if (published || errorStatus !== 400) setVersionBlocked(true);
+      setVersionMessage(
+        published
+          ? text.publishedReview
+          : errorStatus === 400
+            ? text.versionInvalid
+            : errorStatus === 409
+              ? text.versionConflict
+              : text.versionFailed,
+      );
+      return false;
+    } finally {
+      versionInFlight.current = false;
+      setVersionPending(false);
+    }
+  }
+
   const shownStatus =
     mode === 'local'
       ? text.local
@@ -366,7 +493,22 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
         pageKey={pageKey}
         state={state}
         onDispatch={onDispatch}
-        status={shownStatus}
+        status={versionMessage ?? shownStatus}
+        versionPending={versionPending || versionBlocked}
+        versionControls={
+          pageKey !== 'home' ? (
+            <BuilderVersionActions
+              pageKey={pageKey}
+              locale={locale}
+              isAdmin={role === 'admin'}
+              canPublish={canChangeVersion}
+              canRestore={canChangeVersion}
+              pending={versionPending}
+              onPublish={() => changeVersion('publish')}
+              onRestore={(version) => changeVersion('restore', version)}
+            />
+          ) : undefined
+        }
         historyControls={
           <div className={styles.hostActions}>
             <Button

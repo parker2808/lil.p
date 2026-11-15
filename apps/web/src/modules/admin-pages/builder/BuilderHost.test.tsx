@@ -7,19 +7,27 @@ import {
   readActiveBuilderDraft,
   readBuilderDraft,
   saveBuilderDraft,
+  publishBuilderDraft,
+  restoreBuilderVersion,
 } from './autosave/transport';
+import { listAdminPageVersions } from '../services/admin-pages.service';
 
 vi.mock('next-intl', () => ({
   useLocale: () => 'en',
   useTranslations: () => (key: string) => key,
 }));
-vi.mock('@/modules/admin-core/hooks/use-me.hook', () => ({ useMe: () => ({ id: 10 }) }));
+vi.mock('@/modules/admin-core/hooks/use-me.hook', () => ({
+  useMe: () => ({ id: 10, role: 'admin' }),
+}));
 vi.mock('./autosave/transport', () => ({
   readBuilderDraft: vi.fn(),
   readActiveBuilderDraft: vi.fn(),
   activateBuilderDraft: vi.fn(),
   saveBuilderDraft: vi.fn(),
+  publishBuilderDraft: vi.fn(),
+  restoreBuilderVersion: vi.fn(),
 }));
+vi.mock('../services/admin-pages.service', () => ({ listAdminPageVersions: vi.fn() }));
 
 const empty = {
   schemaVersion: 1 as const,
@@ -30,6 +38,92 @@ afterEach(() => {
   cleanup();
   vi.clearAllMocks();
   localStorage.clear();
+});
+
+it('publishes only the acknowledged tree revision and refreshes it before further editing', async () => {
+  vi.mocked(readBuilderDraft)
+    .mockResolvedValueOnce({ mode: 'tree', revision: '8', tree: empty })
+    .mockResolvedValueOnce({ mode: 'tree', revision: '8', tree: empty })
+    .mockResolvedValueOnce({ mode: 'tree', revision: '9', tree: empty });
+  vi.mocked(publishBuilderDraft).mockResolvedValue({} as never);
+  render(<BuilderHost pageKey="ideas" />);
+  await screen.findByText('Draft saved');
+  fireEvent.click(screen.getByRole('button', { name: 'Publish' }));
+  await waitFor(() => expect(publishBuilderDraft).toHaveBeenCalledWith('ideas', '8'));
+  await screen.findByText('Published · draft is ready for further edits');
+  expect(readBuilderDraft).toHaveBeenCalledTimes(3);
+});
+
+it('confirms restore against the saved revision and resets history only after server success', async () => {
+  vi.mocked(readBuilderDraft).mockResolvedValue({ mode: 'tree', revision: '8', tree: empty });
+  vi.mocked(listAdminPageVersions).mockResolvedValue([
+    { version: 2, createdAt: '2026-11-15T00:00:00Z', authorName: null, note: null, blockCount: 1 },
+  ]);
+  let completeRestore: (value: {
+    mode: 'tree';
+    revision: string;
+    tree: typeof empty;
+  }) => void = () => undefined;
+  vi.mocked(restoreBuilderVersion).mockImplementation(
+    () =>
+      new Promise((resolve) => {
+        completeRestore = resolve;
+      }),
+  );
+  render(<BuilderHost pageKey="ideas" />);
+  await screen.findByText('Draft saved');
+  fireEvent.click(screen.getByRole('button', { name: 'Version history' }));
+  fireEvent.click(await screen.findByRole('button', { name: 'Restore draft 2' }));
+  expect(screen.getByRole('alertdialog')).toBeVisible();
+  fireEvent.click(
+    within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Restore draft' }),
+  );
+  await waitFor(() => expect(restoreBuilderVersion).toHaveBeenCalledWith('ideas', 2, '8'));
+  expect(screen.getByRole('alertdialog')).toBeVisible();
+  completeRestore({ mode: 'tree', revision: '9', tree: empty });
+  await screen.findByText('Version restored to draft · publish separately to make it public');
+  await waitFor(() => expect(screen.queryByRole('alertdialog')).toBeNull());
+});
+
+it('blocks version mutations on a stale server draft without dropping local content', async () => {
+  vi.mocked(readBuilderDraft)
+    .mockResolvedValueOnce({ mode: 'tree', revision: '8', tree: empty })
+    .mockResolvedValueOnce({ mode: 'tree', revision: '9', tree: empty });
+  render(<BuilderHost pageKey="ideas" />);
+  await screen.findByText('Draft saved');
+  fireEvent.click(screen.getByRole('button', { name: 'Publish' }));
+  await screen.findByText('Version action uncertain · check the server draft before editing again');
+  expect(publishBuilderDraft).not.toHaveBeenCalled();
+  expect(screen.getByRole('button', { name: 'Publish' })).toBeDisabled();
+});
+
+it('does not allow editing after a successful publish with an unadvanced server revision', async () => {
+  vi.mocked(readBuilderDraft).mockResolvedValue({ mode: 'tree', revision: '8', tree: empty });
+  vi.mocked(publishBuilderDraft).mockResolvedValue({} as never);
+  render(<BuilderHost pageKey="ideas" />);
+  await screen.findByText('Draft saved');
+  fireEvent.click(screen.getByRole('button', { name: 'Publish' }));
+  await screen.findByText('Published · draft reload is required before further edits');
+  expect(screen.getByRole('button', { name: 'Publish' })).toBeDisabled();
+});
+
+it('keeps the confirmation open and hides raw API errors on a failed restore', async () => {
+  vi.mocked(readBuilderDraft).mockResolvedValue({ mode: 'tree', revision: '8', tree: empty });
+  vi.mocked(listAdminPageVersions).mockResolvedValue([
+    { version: 1, createdAt: '2026-11-15T00:00:00Z', authorName: null, note: null, blockCount: 1 },
+  ]);
+  vi.mocked(restoreBuilderVersion).mockRejectedValue({ status: 409, message: 'Raw server error' });
+  render(<BuilderHost pageKey="ideas" />);
+  await screen.findByText('Draft saved');
+  fireEvent.click(screen.getByRole('button', { name: 'Version history' }));
+  fireEvent.click(await screen.findByRole('button', { name: 'Restore draft 1' }));
+  fireEvent.click(
+    within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Restore draft' }),
+  );
+  await screen.findByText('Server draft changed · reload before trying again');
+  expect(screen.getByRole('alertdialog')).toBeVisible();
+  expect(screen.queryByText('Raw server error')).toBeNull();
+  expect(screen.getByText('Publish').closest('button')).toBeDisabled();
 });
 
 it('owns composition and undo/redo without saving local-only studies', async () => {

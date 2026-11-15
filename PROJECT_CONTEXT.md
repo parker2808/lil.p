@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 V10 builder actions: the gated D6 builder now offers admin-only publish, authenticated version list and confirmed revision-aware restore through existing D2 routes. Publication rereads the advanced draft revision; unsuccessful/uncertain actions keep local content, and restoring a legacy snapshot switches the builder to legacy activation rather than silently overwriting. Exact-head ready-e2e V10 journey, review, operational D2 drain and production rollout remain open. See `docs/specs/2026-11-15-cms-builder-version-actions.md`.
+
 - 2026-11-15 V17/V18/V19/V21/V22 focused gates: real API version/public/preview/restore snapshots and future-version typed no-write rejection, five-row old-reader compatibility, core nested-field byte/no-mutation tests, and a post-deploy public-chunk hash verifier with offline fixture. V18 live freeze/drain, V19 deployed run, full V17 site inventory and V21 broader fixture matrix remain open; exact-head CI/review required. See `docs/specs/2026-11-15-cms-v17-v22-evidence-gates.md`.
 
 - 2026-11-15 D6 editor-origin visual follow-up: after real builder autosave, each of the 20 host cases now attaches EN/VI × light/dark × 1440/390 builder screenshots and scoped axe findings with source-head and screenshot digests in CI Playwright artifacts. This is pending exact-head CI and independent design inspection; neutral-brand host rendering, full accessibility acceptance, D2 operational drain and release remain separate. See `docs/specs/2026-11-15-cms-d6-editor-visual.md`.
@@ -287,6 +289,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Wired gated builder publish/history/confirmed restore to existing D2 CAS API without changing golden contracts, schema or migration; added EN/VI status and no-data-loss unit checks. Ready-e2e browser and independent design review remain pending.
 
 - 2026-11-15: Added test-only CMS route/snapshot and old-reader evidence plus build SHA-256/public CDN verifier; retained existing gzip cap, forbidden-module assertions and golden/runtime behavior. Operational gates remain open.
 

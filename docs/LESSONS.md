@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Legacy CMS publish/restore hooks do not carry D2's draft revision; a tree builder must use the dedicated CAS endpoints, verify a fully acknowledged server draft, and reread the revision after publish before allowing another edit. A confirmed restore replaces only the draft, not the published pointer.
+
 - 2026-11-15: An incremental Graphify run can report no topology changes while retaining its earlier built-from SHA; record the verified code head separately rather than presenting the old graph as newly rebuilt.
 
 - 2026-11-15: Derive public-route gzip budgets from the production chunk graph on the owning feature head, count shared chunks once, and attach the exact-head graph with a named published-tree catch-all subset to CI; a green package-size cap alone does not prove the public JS boundary.

@@ -208,6 +208,8 @@ export function BuilderShell({
   renderProperties,
   status,
   historyControls,
+  versionControls,
+  versionPending = false,
 }: {
   pageKey: string;
   state: BuilderState;
@@ -215,6 +217,8 @@ export function BuilderShell({
   renderProperties?: BuilderMount;
   status?: string;
   historyControls?: ReactNode;
+  versionControls?: ReactNode;
+  versionPending?: boolean;
 }) {
   const locale = useLocale() === 'vi' ? 'vi' : 'en';
   const translate = useTranslations();
@@ -855,22 +859,26 @@ export function BuilderShell({
           <span className={styles.status} aria-live="polite">
             {status ?? text.unsaved}
           </span>
-          <button
-            type="button"
-            disabled
-            title={text.publishHint}
-            aria-describedby="builder-publish-reason"
-          >
-            {locale === 'vi' ? 'Xuất bản' : 'Publish'}
-          </button>
-          <span id="builder-publish-reason" className={styles.publishReason}>
-            {text.publishHint}
-          </span>
+          {versionControls ?? (
+            <>
+              <button
+                type="button"
+                disabled
+                title={text.publishHint}
+                aria-describedby="builder-publish-reason"
+              >
+                {locale === 'vi' ? 'Xuất bản' : 'Publish'}
+              </button>
+              <span id="builder-publish-reason" className={styles.publishReason}>
+                {text.publishHint}
+              </span>
+            </>
+          )}
         </div>
       </header>
       <div
         className={`${styles.workspace} ${renderProperties ? styles.withInspector : ''}`}
-        inert={!!visibleSheet || confirmDelete}
+        inert={!!visibleSheet || confirmDelete || versionPending}
       >
         <aside className={styles.sidebar} aria-label={text.components}>
           <h2>{text.components}</h2>

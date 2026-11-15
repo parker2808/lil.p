@@ -5,6 +5,14 @@ add legacy/tree route and missing-SEO snapshot checks, nested-field core
 preservation, and an offline deployed-public-asset parity verifier. They do not
 authorize deployment or close the V18 live drain and V19 CDN parity gates.
 
+The [builder version actions](./docs/specs/2026-11-15-cms-builder-version-actions.md)
+use D2's revision-checked publish and restore endpoints in the gated builder:
+publish requires a fully acknowledged server draft, history lists immutable
+versions, and restoring one requires confirmation before replacing the draft.
+Uncertain writes or CAS conflicts keep local content and block further version
+changes until review; restoration never automatically republishes. This is a
+feature-branch UI gate, not authorization for the D2 production migration.
+
 The D6 host-registry integration is staged on a scratch branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and
 publish, then EN/VI version preview and public SSR. This is route evidence, not
