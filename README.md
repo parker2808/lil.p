@@ -1,5 +1,10 @@
 # lil.p
 
+Public primary buttons switch foreground and background atomically on a theme
+change, while retaining their hover transform. The EN/VI browser gate samples
+contrast during both theme changes before its final-state axe check; its 4.5:1
+WCAG AA threshold and light/dark route captures remain unchanged.
+
 The [D2 V11/V12 safety gate](./docs/specs/2026-11-15-cms-d2-v11-v12-gate.md) extends real-DB negative tree and capability checks. Final integrated D6 publication and authorized production log review remain separate gates.
 
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.

@@ -70,6 +70,76 @@ test('real public indexes, filters, contact and captures in EN/VI', async ({ pag
         for (const width of widths) {
           await capture(page, { route, locale, state: 'normal', theme, width });
         }
+      await page.mouse.move(0, 0);
+      const themeFrames = await page.evaluate(async () => {
+        const buttons = Array.from(
+          document.querySelectorAll<HTMLElement>(
+            '.public-site .bg-primary.text-primary-foreground',
+          ),
+        );
+        const luminance = (color: string) => {
+          const channels = color
+            .match(/[\d.]+/g)
+            ?.slice(0, 3)
+            .map(Number);
+          if (channels?.length !== 3) throw new Error(`Unexpected primary color: ${color}`);
+          return channels.reduce((total, channel, index) => {
+            const value = channel / 255;
+            const linear = value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+            return total + linear * [0.2126, 0.7152, 0.0722][index]!;
+          }, 0);
+        };
+        const frames: { theme: string; frame: number; contrast: number; transition: string }[] = [];
+        for (const theme of ['light', 'dark']) {
+          document.documentElement.classList.toggle('dark', theme === 'dark');
+          for (let frame = 0; frame < 12; frame++) {
+            await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+            for (const button of buttons) {
+              const style = getComputedStyle(button);
+              const foreground = luminance(style.color);
+              const background = luminance(style.backgroundColor);
+              frames.push({
+                theme,
+                frame,
+                contrast:
+                  (Math.max(foreground, background) + 0.05) /
+                  (Math.min(foreground, background) + 0.05),
+                transition: style.transitionProperty,
+              });
+            }
+          }
+        }
+        return frames;
+      });
+      expect(themeFrames.length, `${locale}/${route} primary CTA samples`).toBeGreaterThan(0);
+      for (const sample of themeFrames) {
+        expect(
+          sample.contrast,
+          `${locale}/${route} ${sample.theme} frame ${sample.frame} primary CTA contrast`,
+        ).toBeGreaterThanOrEqual(4.5);
+        expect(
+          sample.transition.split(',').map((property) => property.trim()),
+          `${locale}/${route} primary CTA must not interpolate its palette`,
+        ).not.toContain('background-color');
+      }
+      await expect(page.locator('html')).toHaveClass(/dark/);
+      await expect
+        .poll(
+          () =>
+            page.locator('.public-site .bg-primary.text-primary-foreground').evaluateAll(
+              (buttons) =>
+                buttons.length > 0 &&
+                buttons.every((button) => {
+                  const style = getComputedStyle(button);
+                  return (
+                    style.color === 'rgb(22, 24, 31)' &&
+                    style.backgroundColor === 'rgb(255, 143, 116)'
+                  );
+                }),
+            ),
+          { message: `${locale}/${route} dark primary buttons settle before axe` },
+        )
+        .toBe(true);
       await expectNoSeriousAxeIssues(page);
       if (route === 'projects') {
         const card = page.locator('.projects-results .redesign-case-card').first();

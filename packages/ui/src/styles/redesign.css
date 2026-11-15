@@ -556,6 +556,9 @@ html:root {
   --border: #686b75;
   --accent: #2a2e37;
 }
+.public-site .redesign-button.bg-primary.text-primary-foreground {
+  transition-property: transform;
+}
 .public-site [data-block-type='tech-marquee'] {
   padding-block: 24px;
   border-block: 1px solid var(--border);
