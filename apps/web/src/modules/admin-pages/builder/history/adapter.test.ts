@@ -110,4 +110,54 @@ describe('D4 and D5 history adapter', () => {
     expect(changed.error).toBe('INVALID_SLOT');
     expect(changed.history).toBe(inserted);
   });
+
+  it('duplicates nested nodes with fresh stable IDs as one undoable operation', () => {
+    const initial = createTreeHistory(
+      {
+        ...empty,
+        root: {
+          ...empty.root,
+          sections: [
+            {
+              id: 'section',
+              type: 'section' as const,
+              responsive: { base: {} },
+              content: [
+                {
+                  id: 'heading',
+                  type: 'component' as const,
+                  componentType: 'heading',
+                  responsive: { base: { text: 'Original', level: 1 } },
+                },
+              ],
+            },
+          ],
+        },
+      },
+      'section',
+    );
+    const copied = commitComposition(initial, {
+      type: 'duplicate',
+      id: 'section',
+      ids: ['section-copy', 'heading-copy'],
+    });
+    expect(copied.result.ok).toBe(true);
+    expect(copied.history.past).toHaveLength(1);
+    expect(copied.history.document.root.sections.map((section) => section.id)).toEqual([
+      'section',
+      'section-copy',
+    ]);
+    expect(copied.history.document.root.sections[1]?.content[0]?.id).toBe('heading-copy');
+    expect(undoTreeHistory(copied.history).document).toEqual(initial.document);
+    expect(redoTreeHistory(undoTreeHistory(copied.history)).document).toEqual(
+      copied.history.document,
+    );
+    const rejected = commitComposition(copied.history, {
+      type: 'duplicate',
+      id: 'section-copy',
+      ids: ['section', 'new-heading'],
+    });
+    expect(rejected.result.ok).toBe(false);
+    expect(rejected.history).toBe(copied.history);
+  });
 });

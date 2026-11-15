@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- D5 V07 gate: EN/VI Duplicate uses the core validated operation; exact-head run `43705931696` proves recursive fresh IDs in unit tests and real-browser duplicate/move undo/redo plus saved/reloaded order. **PARTIAL, not V07 PASS:** edit/insertion history, duplicated text persistence, adapter bounds, failed save and version reset are not proven. See `docs/specs/2026-11-15-cms-d5-v07-gate.md`.
+
 - D5 live journeys (stacked test PR): CI-sharded browser cases use actual Next and D2 HTTP for no-H1 save/publish rejection, mouse/keyboard nested layout, invalid drop/delete, undo/redo, responsive draft persistence, divergent CAS conflict and offline recovery. The expanded design case attaches exact-head EN/VI neutral/lil.p light/dark 390/768/1440 empty/error/focus/saved/saving/conflict captures with axe, reduced-motion, 44px all-controls, visible focus and overflow checks. A desktop header action gains a 44px minimum. Only CI-proven assertions can close J/V sub-gates; successful tree publication/public SSR, manual screen reader and all-20 host-type writes remain D6 gaps. See `docs/specs/2026-11-15-cms-d5-live-journeys.md`.
 
 - D5 design P2 follow-up (stacked draft): two equal-width breakpoint columns wrap all four EN/VI labels within their buttons across mobile/desktop; the CI-listed design spec checks text geometry and attaches empty/invalid-field, keyboard-focus and neutral/lil.p comparison captures plus a source-SHA manifest to Playwright's existing report artifact. Existing checked-in 99-image captures predate this fix; review the labeled CI artifact at its exact head before promoting new images or claiming final WCAG AA evidence. No core/history/autosave/API/golden change.
@@ -250,6 +252,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Clarified #228 V07 as PARTIAL after exact-head green CI: duplicate/move history and saved node order are proven, while edit/insertion, text persistence, limits and failed-save/version history boundaries remain open; no product change.
+
+- 2026-11-15: Added deterministic recursive Duplicate to the D5 builder's canvas/selection controls, adapter and atomic history, with a real-browser edit→duplicate→move→undo/redo→save/reload gate. No D2 API, migration or public render change.
 
 - 2026-11-15: Registered real-API D5 Playwright journeys in the four-shard CI list and extended exact-head design attachments to empty/error/focus/saved/saving/conflict states across locale, theme, brand and 390/768/1440 widths. A desktop header 44px minimum and all-controls geometry, focus, reduced-motion and axe assertions accompany structural HTTP/revision checks; no API, golden or migration changes. Exact-head CI evidence is required before assigning PASS to matrix rows.
 
