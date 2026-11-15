@@ -48,6 +48,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #208 D6 #266 integration: preserve the EN/VI keyboard Restore alertdialog/History sheet focus and ARIA gate on D6 `d4cd367b`; Publish remains immediate, and manual VoiceOver/NVDA and public-route V16 are still open. Require fresh combined-head API/five-shard CI before scoring.
+- 2026-11-16 V16 D6 version-dialog gate: register EN/VI × light/dark real-API keyboard publish and Restore confirmation tests (trap, Escape/Cancel/confirm return, ARIA, polite status, unwaived axe). CI `43769180422` found the History sheet missing `aria-modal`; CI `43770356436` found focus was not returned after dismissing the controlled Restore alertdialog. Scope modal semantics and explicit nested-dialog focus return, then rerun. Publish has no confirmation dialog in D6; manual VoiceOver/NVDA and public-route V16 remain GAP even if CI passes. See `docs/specs/2026-11-16-cms-d6-v16-version-dialog.md`.
+
 - 2026-11-16 #208 `5936f75d` / `43772762149` failed only W5: V05's post-reload/mobile textbox checks still used parenthesized language labels after D5 localization. Both assertions now use localized accessible labels, with draft revision, publish snapshot and public/preview comparisons untouched; exact-new-head CI required before rescoring.
 
 - 2026-11-16 #208 current verification cut: D2 `26ace408`, D5 `f8a53d2c`, D6 `26662811` (including #256 and main #265). The V05 locator correction preserves draft/publish/public assertions; all J/V scores require exact combined-head CI and independent evidence. V03/V14 all-host, V06 overrides, V09/V10 broader restore, V16 manual speech and Stage A live drain remain OPEN; #208 DO NOT MERGE.
@@ -471,6 +474,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Normal-merged D6 `d4cd367b` (#266 real-API V16 version actions) into verification-only #208; preserve manual spoken screen-reader/public-route limitations, and await new exact-head CI. No release/deploy.
 - 2026-11-16: Corrected two integration-only V05 post-reload/mobile field locators on #208 after exact-head W5 failure `43772762149`; no runtime, API, schema, or acceptance threshold changed. Await fresh API/five-shard CI; no main merge or deploy.
 - 2026-11-16: Normal-merged D5 `92fb84d4` automated dialog coverage and D6 `dd66938d` V05 revision-chain browser evidence into verification-only #208; no main merge or deploy.
 - 2026-11-16: Normal-merged D6 `3b60df35` (#261 dark banner, #258 restored UI) into verification-only #208 after D5 `aaec9e62` and D2 `26ace408`; preserved both histories and reran 7/7 no-build gates. Exact-head CI still required.
@@ -479,6 +483,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-16: Normal-merged D5 `aaec9e62` (#262 label localization) into verification-only #208, preserving D6 version controls and localized Layers/canvas/Properties; new exact-head CI required. No main merge/deploy.
 - 2026-11-16: Integrated D6 `1b2037d2` (#254 keyboard publish) into verification-only #208 after D2/D5 refresh; exact combined-head CI/review required before V02 scoring. No main merge/deploy.
 - 2026-11-16: Integrated D5 `24fc51b2` and D6 `59af4538` into verification-only #208 after D2 `26ace408`; scoped V13 SSR/validation and J07 no-JS source evidence do not confer full-row PASS before combined CI and review. No main merge/deploy.
+- 2026-11-16: Restore keyboard focus to the originating version-row action after Escape/Cancel and to Version history after successful nested Restore closes the sheet; preserve strict EN/VI dialog browser checks.
+
+- 2026-11-16: Add a sharded D6 real-API version-action keyboard/ARIA/axe browser gate, fix the scoped modal semantics identified by CI, and explicitly preserve manual screen-reader and missing Publish-dialog limitations; no golden, schema or API changes.
+
 - 2026-11-16: Broadened the D6 real-host no-JS nested-tree browser sample to three widths and measured tenant CTA paint (over 2% pixel difference), retaining EN/VI, light/dark and strict public/preview parity; no product or data changes. CI and visual review pending.
 - 2026-11-16: Expanded V05 Properties evidence to include scrolled mobile/tablet title fields; initial run `43759329807` passed 18/18 at `561fe6ed`, and strengthened run `43760729931` passed five shards at `f8d3d14d`. The combined V02 base still needs exact-new-head CI.
 - 2026-11-16: Add CI-uploaded V17/V21 source fixture and disposable-DB version/route hash inventories, including rejected future version routes and before/after canonical byte comparisons; no production DB access, runtime/schema/golden change or V17 operational signoff.
