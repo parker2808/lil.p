@@ -2,7 +2,8 @@
 @source '../src';
 @source '../../../packages/ui/src';
 
-.cms-core-host[data-theme='dark'] {
+.cms-core-host[data-theme='dark'],
+.dark .cms-core-host:not([data-theme]) {
   --subtle-foreground: #b5b1aa;
 }
 
@@ -18,7 +19,8 @@
   --builder-art-ink: #7a4934;
 }
 
-.cms-core-host[data-brand='lilp'][data-theme='dark'] {
+.cms-core-host[data-brand='lilp'][data-theme='dark'],
+.dark .cms-core-host[data-brand='lilp']:not([data-theme]) {
   --builder-accent: #ffb587;
   --builder-accent-text: #392011;
   --builder-accent-soft: #513323;

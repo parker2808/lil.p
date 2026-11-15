@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V09/V10 restore dark-host correction: #258 CI `43759532114` found a real 2.22:1 eyebrow/card contrast failure because the published tree omitted `data-theme` while `html.dark` changed foreground tokens. Scoped implicit `.dark` inheritance to core hosts without explicit theme, retained explicit theme opt-out and unwaived axe; new exact-head five-shard CI/artifact review pending. No API/schema/golden edits; production and all-20 restoration remain GAP.
+
 - 2026-11-16 V09/V10 restore evidence branch: extend the real builder UI restore journey to the missing EN-dark 390/768/1440 tuples; compare actual republished version-3 public/preview content pixels and unwaived axe for all 12 locale/theme/width tuples, plus keyboard 409 no-write, focus and dialog live announcement. Exact-head five-shard CI and independent raw-artifact review pending; all-20 restore and production parity remain GAP.
 
 - 2026-11-16 D6 J07/V06 no-script gate: CI `43748537865` failed all eight new cases because public group-level loading streamed the main into a hidden segment requiring insertion scripts. Move the home skeleton into a dedicated group and remove only the shared fallback. Four five-host groups require EN/VI public v2 versus historical `?v=1` preview visible nested text at 390/768/1440, distinct changed H1-host labels/hashes, unchanged peer-host semantics, except empty CV, no overflow and paired screenshot manifests. This base-only fixture does not prove every host's responsive overrides; existing parity tests cover heading/paragraph overrides, API E2E covers immutable version/pointer invariants. J07/V06 remain GAP until exact-head CI, independent artifact review and remaining responsive coverage. See `docs/specs/2026-11-16-cms-d6-j07-v06-nojs.md`.
@@ -343,6 +345,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Inherit dark core/brand tokens for an otherwise unthemed public tree beneath `html.dark`; assert real public/preview card background and color-scheme in the restore browser matrix without relaxing axe or screenshot thresholds.
 
 - 2026-11-16: Add V09/V10 restored-version EN/VI × light/dark × 390/768/1440 public/preview content-pixel and WCAG-AA evidence, keyboard 409 focus/live/no-write checks; no API/schema/golden changes. Exact-head CI pending.
 

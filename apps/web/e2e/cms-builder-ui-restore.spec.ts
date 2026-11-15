@@ -149,6 +149,12 @@ async function pairedPublishedCapture(
           await expect(page.locator('html')).toHaveClass(new RegExp(`\\b${theme}\\b`));
           await expect(heading).toBeVisible();
         }).toPass({ timeout: 30_000 });
+        const section = page.locator('main.cms-core .cms-tree__section').first();
+        await expect(section).toHaveCSS(
+          'background-color',
+          theme === 'dark' ? 'rgb(32, 39, 53)' : 'rgb(255, 255, 255)',
+        );
+        await expect(page.locator('main.cms-core')).toHaveCSS('color-scheme', theme);
         const publicMarkup = await page.locator('main.cms-core').innerHTML();
         const name = `${locale}-${theme === 'dark' ? 'dark-' : ''}${width}-restored`;
         await attachPaintedPage(page, heading, testInfo, `${name}-public`, theme);
@@ -165,6 +171,11 @@ async function pairedPublishedCapture(
         await expect(page.locator('html')).toHaveAttribute('lang', locale);
         await expect(page.locator('html')).toHaveClass(new RegExp(`\\b${theme}\\b`));
         await expect(heading).toBeVisible();
+        await expect(section).toHaveCSS(
+          'background-color',
+          theme === 'dark' ? 'rgb(32, 39, 53)' : 'rgb(255, 255, 255)',
+        );
+        await expect(page.locator('main.cms-core')).toHaveCSS('color-scheme', theme);
         expect(await page.locator('main.cms-core').innerHTML()).toBe(publicMarkup);
         await attachPaintedPage(page, heading, testInfo, `${name}-preview`, theme);
         await assertAccessible(page, testInfo, 'main.cms-core', `${name}-preview`);

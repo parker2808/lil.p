@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A root dark class does not recolor an independently scoped CMS tree unless it explicitly inherits that theme; assert the computed card background before axe, and preserve a host's explicit light-theme override.
+
 - 2026-11-16: D19 resolves a block's entire localized props to EN when even one populated EN field lacks VI; no-JS version fixtures must localize the page-header title as well as its eyebrow to assert actual VI output.
 
 - 2026-11-16: Moving the home page into a nested route group can remove the inherited file-convention OG image from its metadata; explicitly preserve the home OpenGraph image and gate it in SEO tests.
