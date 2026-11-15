@@ -20,7 +20,7 @@ page-header evidence.
 
 Graphify freshness: after merging D6 base `dd66938d`, `graphify update .`
 reached full AST extraction but did not finish path resolution within 120
-seconds. The retained `graphify-out/GRAPH_REPORT.md` attributes its graph to
-`5681e939`, not to this combined head. Do not present it as a fresh topology
+seconds. The newer report from the merged D6 base attributes its graph to
+`431f4e82`, not to this combined head or the gallery change. Do not present it as a fresh topology
 audit. This gallery remains a scoped hydrated-palette correction; real-tenant
 neutral SSR/no-JS and all-20 brand-difference assertions still gate V03/V14.
