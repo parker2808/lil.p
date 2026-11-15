@@ -295,6 +295,7 @@ export function PropertiesPanel({
         labelFor: (path, key) => {
           if (key?.startsWith('admin.blocks.'))
             return translate(key as Parameters<typeof translate>[0]);
+          if (key) return key;
           const leaf = path.split('.').at(-1)!;
           return leaf in text
             ? text[leaf as keyof typeof text]
@@ -316,7 +317,9 @@ export function PropertiesPanel({
       return (['en', 'vi'] as const).map((language) => ({
         ...field,
         path: `${field.path}.${language}`,
-        label: `${field.label} (${language.toUpperCase()})`,
+        label: field.path.startsWith('heading.')
+          ? `${locale === 'vi' ? 'Tiêu đề mục' : 'Section heading'} · ${field.label} · ${language === 'en' ? (locale === 'vi' ? 'Tiếng Anh' : 'English') : locale === 'vi' ? 'Tiếng Việt' : 'Vietnamese'}`
+          : `${field.label} (${language.toUpperCase()})`,
         kind: field.kind === 'localized-text' ? 'text' : 'textarea',
       }));
     }
