@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A 400 validation response cannot prove exception-filter logging behavior; assert nonempty draft/version/preview read capabilities and reserve log-redaction claims for authorized production log evidence.
+
 - 2026-11-15: Direct and rewritten 503 samples prove only the sampled ingress; a forward-only D2 migration also requires an authenticated active-instance inventory and completed in-flight drain. Keep cold AppModule setup timing separate from the normally timed freeze HTTP assertion when combining branches.
 
 - 2026-11-15: Cross-branch builder E2E selectors must resolve actual localized Properties labels on the combined head; raw component slugs and `(EN)/(VI)` suffixes can pass in isolated branches yet fail after D6 host localization.

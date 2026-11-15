@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- D2 #199 V11/V12 refresh: real MySQL unsafe rich-text rejection and populated draft/version/preview capability checks prove HTTP safety subsets only. HTTP 400 redaction does not prove server log redaction; integrated D6 final publication, authorized production log audit and Stage A live drain remain GAP. See `docs/specs/2026-11-15-cms-d2-v11-v12-gate.md`.
+
 - Stage A #210 refreshed on main `3162b973`: production page/version writes remain frozen with 503 while health and reads remain available; five-shard D4 keyboard/canvas coverage is retained. The direct Render/Vercel 14-mutation probe checklist is read-only preparation, not a production probe or evidence of old-instance drain. A release owner must verify the authoritative active-instance roster and in-flight completion before D2 migration; CI cannot close J09/V18. See `docs/runbooks/stage-a-drain-curl.md`.
 
 - 2026-11-15 #208 `7f9e1cf0` after main #223 passed 17/17 PR checks; CI `43704242728` passed API E2E and five web shards. The SHA-matched public-bundle report confirms V19 build-time subset at 90,266/102,400 gzip bytes, not deployed-asset parity. The five-shard screenshots require independent review; #225 is not integrated and all 31 full J/V gates remain GAP. Stage A live drain and manual a11y/visual signoff remain OPEN; DO NOT MERGE.
@@ -330,6 +332,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Integrated D2 #199 V11/V12 real-DB negative/read cases and main's five-shard registry into #208; preserved D6 host registry imports and tightened claims to HTTP 400 redaction only. No schema/migration/runtime or release authorization change.
 
 - 2026-11-15: Integrated #210's main-synced write freeze and read-only drain checklist into verification-only #208, preserving the real AppModule setup timeout separately from the ordinary 503 request assertion; no production deploy, migration, DB access, or live drain claim.
 
