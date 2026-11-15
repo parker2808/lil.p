@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A 768px CSS desktop breakpoint must match the JavaScript `matchMedia` breakpoint; a desktop header can overflow before the mobile sheet disappears, especially with VI navigation. Gate 768/1024 and the new desktop boundary in both languages and themes with real control bounds, touch sizes and keyboard order.
+
 - 2026-11-15: A painted footer using `color-mix` resolves to `color(srgb …)`, not the raw `rgb()` card token; compare the browser's computed blend against explicit light/dark shell inputs before attributing a screenshot gate failure to an incorrect theme.
 
 - 2026-11-15: A no-script dark CMS tree can still sit between light public header/footer because Next theme classes require JavaScript; test the surrounding shell's computed tokens and painted footer on real hosts, not only the main tree's accent.

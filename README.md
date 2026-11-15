@@ -1,5 +1,10 @@
 # lil.p
 
+The public header keeps compact search and an accessible navigation sheet through
+1024px; full navigation starts at 1280px to leave room for EN/VI labels and
+theme/language controls. The [responsive header gate](./docs/specs/2026-11-16-cms-d6-header-responsive.md)
+checks visible 44px controls, keyboard order and viewport bounds in both themes.
+
 The [D6 SSR/i18n gate](./docs/specs/2026-11-15-cms-d6-ssr-i18n-gate.md)
 selects the configured site host's brand before rendering custom tree HTML;
 other tenant hosts keep neutral core tokens. Custom tree HTML is request-scoped

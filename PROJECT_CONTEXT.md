@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 D6 header tablet overflow: move the shared public desktop-navigation breakpoint from 768px to 1280px, keeping the existing mobile sheet/keyboard flow at 768/1024; add EN/VI light/dark viewport/44px/keyboard screenshot evidence. Exact-head CI and raw image review pending; no broader V09/V10 signoff.
+
 - 2026-11-15 D6 #241 CI 43737085933: dark public footer screenshot scrolls the no-script viewport to the bottom while preview omits that capture; reset to top before strict link geometry comparison. No threshold or runtime changes; new exact-head CI pending.
 
 - 2026-11-15 D6 #241 no-script shell CI follow-up: shard 2 correctly found the footer blends 93% background with 7% green in `public-round3.css`, so an RGB-only assertion was incorrect even though it rendered dark. Assert the exact computed CSS mix from fixed light/dark inputs and keep raw header/footer screenshots, host tokens and parity. Exact-head CI pending.
@@ -333,6 +335,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Keep public header's compact navigation until 1280px and gate 768/1024/1280 EN/VI light/dark viewport bounds, target sizes, keyboard order and screenshots; CI and independent visual review pending.
 
 - 2026-11-15: Restore top-of-page scroll before no-script public/preview link geometry assertions after full-page and footer screenshots; retain strict PNG/geometry checks. CI pending.
 

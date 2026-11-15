@@ -47,7 +47,7 @@ export function SiteHeader({
   const [desktop, setDesktop] = useState(false);
 
   useEffect(() => {
-    const media = matchMedia('(min-width: 768px)');
+    const media = matchMedia('(min-width: 1280px)');
     const update = () => setDesktop(media.matches);
     update();
     media.addEventListener('change', update);
@@ -85,7 +85,7 @@ export function SiteHeader({
         >
           <BrandMark />
         </Link>
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-1 xl:flex">
           {nav.map((item) => (
             <Link
               key={item.id}
@@ -113,12 +113,12 @@ export function SiteHeader({
             </Link>
           ) : null}
         </nav>
-        <div className="ml-auto hidden items-center gap-2 md:flex">
+        <div className="ml-auto hidden items-center gap-2 xl:flex">
           {desktop ? palette : null}
           <LocaleSwitch />
           <ThemeToggle />
         </div>
-        <div className="ml-auto flex items-center gap-2 md:hidden">
+        <div className="ml-auto flex items-center gap-2 xl:hidden">
           {desktop ? null : palette}
           <Sheet open={menu.open} onOpenChange={menu.onOpenChange}>
             <SheetTrigger asChild>
