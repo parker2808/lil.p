@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 D6 header tablet overflow: move the shared public desktop-navigation breakpoint from 768px to 1280px, keeping the existing mobile sheet/keyboard flow at 768/1024; add EN/VI light/dark viewport/44px/keyboard screenshot evidence. Exact-head CI and raw image review pending; no broader V09/V10 signoff.
+
 - 2026-11-15 #234 follow-up: real neutral/lil.p hosts now have a bounded EN/VI × light/dark no-script nested-tree gate with VI-authored copy and scoped dark OS-preference CSS; strict preview geometry/link PNG parity and raw full-page attachments remain. Exact-head CI and independent visual review pending. V03/V14 all-20 neutral dark and full VI content remain GAP; no golden/API/schema changes.
 
 - 2026-11-15 D6 SSR/i18n gate: host-specific custom-tree rendering is request-scoped (no shared HTML ISR), while API fetch tags remain cached. Neutral tenant SSR, no-script nested content, VI contact defaults and translated nested inspector labels require exact-head five-shard CI and review. V03/V14/full VI remain GAP; no golden or V10 files changed. See `docs/specs/2026-11-15-cms-d6-ssr-i18n-gate.md`.
@@ -327,6 +329,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Keep public header's compact navigation until 1280px and gate 768/1024/1280 EN/VI light/dark viewport bounds, target sizes, keyboard order and screenshots; CI and independent visual review pending.
 
 - 2026-11-15: Added no-script OS-dark first-paint host tokens and EN/VI authored nested-tree public/preview sample on real neutral/lil.p hosts; maintained exact link PNG parity and preserved all golden contracts. Full V03/V14 and VI acceptance still need separate evidence.
 

@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A 768px CSS desktop breakpoint must match the JavaScript `matchMedia` breakpoint; a desktop header can overflow before the mobile sheet disappears, especially with VI navigation. Gate 768/1024 and the new desktop boundary in both languages and themes with real control bounds, touch sizes and keyboard order.
+
 - 2026-11-15: A post-hydration brand toggle cannot prove real-host dark first paint; with scripts disabled, use the OS color preference and assert computed host tokens, raw public/preview captures, and genuinely VI-authored tree copy instead of English text on a VI route.
 
 - 2026-11-15: The admin topbar locale combobox is desktop-only; change language before resizing to 390px (or use the actual mobile account menu) so a browser gate tests the responsive journey rather than waiting indefinitely on a hidden control.
