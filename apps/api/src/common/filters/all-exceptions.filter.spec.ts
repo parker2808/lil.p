@@ -104,6 +104,23 @@ describe('AllExceptionsFilter', () => {
     expect(body.fieldErrors?.file).toEqual(['Must be 10 MB or smaller']);
   });
 
+  it('maps only body-parser oversized JSON errors to a redacted 413 on body', () => {
+    const error = Object.assign(new Error('private request payload'), {
+      type: 'entity.too.large',
+      status: 413,
+    });
+    expect(filter.toBody(error, 'req-body')).toEqual({
+      statusCode: 413,
+      code: 'VALIDATION_FAILED',
+      message: 'Request body too large',
+      requestId: 'req-body',
+      fieldErrors: { body: ['Request body too large'] },
+    });
+    expect(
+      filter.toBody(Object.assign(new Error('different'), { type: 'entity.too.large' }), 'req'),
+    ).toMatchObject({ statusCode: 500, code: 'INTERNAL' });
+  });
+
   it('maps a 403 without a code to FORBIDDEN and 429 to RATE_LIMITED', () => {
     expect(filter.toBody(new HttpException('no', HttpStatus.FORBIDDEN), 'req-8').code).toBe(
       'FORBIDDEN',

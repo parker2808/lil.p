@@ -188,6 +188,7 @@ main().catch((error: unknown) => {
     expect(reader.snapshot).toMatchObject({ format: 'tree', snapshotVersion: 1, tree });
     expect(reader.pageFields).not.toContain('draftTree');
     expect(reader.pageFields).not.toContain('draftTreeRevision');
+    const rawTreeSnapshot = JSON.stringify(published.snapshot);
 
     runOldReader('legacy-write');
     const edited = await prisma.page.findUniqueOrThrow({ where: { id: page.id } });
@@ -220,5 +221,13 @@ main().catch((error: unknown) => {
         })
       ).id,
     );
+    expect(
+      JSON.stringify(
+        (await prisma.pageVersion.findUniqueOrThrow({ where: { id: published.id } })).snapshot,
+      ),
+    ).toBe(rawTreeSnapshot);
+    expect(
+      await prisma.auditLog.count({ where: { entityType: 'page', entityId: 'rollback-reader' } }),
+    ).toBe(0);
   });
 });

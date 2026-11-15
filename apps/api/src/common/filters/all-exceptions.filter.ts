@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import {
   type ArgumentsHost,
   Catch,
@@ -62,7 +64,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<RequestWithId>();
-    const requestId = request.requestId ?? 'unknown';
+    const requestId = request.requestId ?? randomUUID();
+    if (!request.requestId) response.setHeader('x-request-id', requestId);
 
     const body = this.toBody(exception, requestId);
 
@@ -79,6 +82,22 @@ export class AllExceptionsFilter implements ExceptionFilter {
   toBody(exception: unknown, requestId: string): ApiErrorBody {
     if (exception instanceof HttpException) {
       return this.fromHttp(exception, requestId);
+    }
+
+    if (
+      exception instanceof Error &&
+      'type' in exception &&
+      exception.type === 'entity.too.large' &&
+      'status' in exception &&
+      exception.status === HttpStatus.PAYLOAD_TOO_LARGE
+    ) {
+      return {
+        statusCode: HttpStatus.PAYLOAD_TOO_LARGE,
+        code: 'VALIDATION_FAILED',
+        message: 'Request body too large',
+        requestId,
+        fieldErrors: { body: ['Request body too large'] },
+      };
     }
 
     if (

@@ -1,5 +1,9 @@
 # Lessons
 
+- 2026-11-15: Express body-parser reports oversized JSON as a typed `entity.too.large` error rather than Nest's `PayloadTooLargeException`; map it centrally to a redacted 413 body error and create a trace ID before middleware runs, while preserving the existing file-upload 400 contract.
+
+- 2026-11-15: A green disposable-DB safety matrix does not prove a live old-instance drain: preserve the pre-D2 pointer-clobber reproduction as a failure boundary, and require independent authenticated inventory plus read-only DB evidence before forward-only migration.
+
 - 2026-11-15: Restacking a forward-only D2 migration onto the public freeze-probe kit requires carrying both documentation histories and distinguishing anonymous 503 evidence from authenticated instance drain and schema proof; keep the #210 → #199 → approved reopen → #204 → #202 release order separate from PR merges.
 
 - 2026-11-15: Audit every transaction that can lose a page revision CAS, not just the first reproduced route: default repeatable-read can make SEO, block writes and builder restore return an obsolete revision after a real concurrent winner. A read-committed reread plus real-DB interleaving proves both the conflict envelope and transaction rollback.

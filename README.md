@@ -305,6 +305,9 @@ Live hosting is **Vercel (web) + Render (API) + TiDB Cloud (MySQL) + Cloudinary 
 
 The exceptional Stage A → D2 forward-only rollout uses the [release-owner probe and drain checklist](./docs/runbooks/deploy.md#stage-a--d2-page-write-rollout-release-owner-only). `scripts/probe-stage-a-d2.mjs` checks public health and unauthenticated page-write freeze across direct Render and Vercel ingress; it cannot certify old-instance drain or migration by itself. Never run it against production without release-owner authorization.
 
+The [stacked D2 safety matrix](./docs/specs/2026-11-15-cms-d2-safety-matrix.md) pairs disposable-MySQL rejection/no-write and missing-SEO snapshot-hash checks with a forward-only release protocol. Its old-client pointer-clobber reproduction is a **known unsafe** writer, not a passing rollback test. J09/V18 cannot pass on CI alone; the release owner must prove the live Stage A freeze and drain before D2 migration.
+Oversized JSON builder requests return a redacted `413 VALIDATION_FAILED` response with a `body` field error and request ID; this does not change the existing upload-size response.
+
 ### How a change reaches production
 
 1. Open a PR (or push) to `main`. CI runs format, lint, typecheck, tests, content checks, build, and API e2e.
