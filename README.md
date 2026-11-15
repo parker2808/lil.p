@@ -5,6 +5,14 @@ add legacy/tree route and missing-SEO snapshot checks, nested-field core
 preservation, and an offline deployed-public-asset parity verifier. They do not
 authorize deployment or close the V18 live drain and V19 CDN parity gates.
 
+The [builder version actions](./docs/specs/2026-11-15-cms-builder-version-actions.md)
+use D2's revision-checked publish and restore endpoints in the gated builder:
+publish requires a fully acknowledged server draft, history lists immutable
+versions, and restoring one requires confirmation before replacing the draft.
+Uncertain writes or CAS conflicts keep local content and block further version
+changes until review; restoration never automatically republishes. This is a
+feature-branch UI gate, not authorization for the D2 production migration.
+
 The D6 host-registry integration is staged on a scratch branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and
 publish, then EN/VI version preview and public SSR. This is route evidence, not
@@ -344,7 +352,7 @@ The exceptional Stage A → D2 forward-only rollout uses the [release-owner prob
 
 1. Open a PR (or push) to `main`. CI runs format, lint, typecheck, tests, content checks, build, and API e2e.
    On a PR without `ready-e2e`, API/web E2E is skipped. Adding that label later starts E2E-only CI without cancelling the original code-check run; further code pushes still cancel stale code-check runs. Unrelated labels do not rerun expensive checks.
-   E2E build, shard and merged-report artifact names and provenance JSON record both the PR head SHA and the tested checkout SHA (the synthetic merge SHA on PR runs); the merged report verifies all five shard manifests. Match both SHAs before attributing screenshots to a head. [Shard throughput measurements](./docs/specs/2026-11-15-cms-e2e-shard-throughput.md) explain the fifth runner.
+   E2E build, shard and merged-report artifact names and provenance JSON record both the PR head SHA and the tested checkout SHA (the synthetic merge SHA on PR runs); the merged report verifies all five shard manifests. Match both SHAs before attributing screenshots to a head. Every `apps/web/e2e/**/*.spec.ts` must appear exactly once in `apps/web/e2e/shards.ts`; the unit test rejects missing, stale and duplicate entries. [Shard throughput measurements](./docs/specs/2026-11-15-cms-e2e-shard-throughput.md) explain the fifth runner.
 2. Vercel and Render auto-deploy `main`.
 3. On boot, the API image runs `prisma migrate deploy` — it applies committed migrations only, never creates new ones, never resets data.
 

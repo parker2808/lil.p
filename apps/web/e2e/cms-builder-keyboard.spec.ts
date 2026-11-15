@@ -2,6 +2,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
+import { switchBuilderLocale } from './helpers/builder-locale';
 
 test('keyboard navigation, pickup, reorder and cancellation preserve selection', async ({
   page,
@@ -147,14 +148,7 @@ test('builder chrome and mobile sheets pass WCAG AA checks', async ({ page }) =>
   await signIn(page);
   for (const locale of ['en', 'vi'] as const) {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.getByRole('combobox', { name: 'Language' }).selectOption(locale);
-    if (locale === 'vi')
-      await expect
-        .poll(
-          async () =>
-            (await page.context().cookies()).find((cookie) => cookie.name === 'NEXT_LOCALE')?.value,
-        )
-        .toBe(locale);
+    await switchBuilderLocale(page, locale);
     await page.goto('/admin/builder/home');
     for (const theme of ['light', 'dark'] as const) {
       await page.setViewportSize({ width: 1440, height: 900 });
