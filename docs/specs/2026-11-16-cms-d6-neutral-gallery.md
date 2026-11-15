@@ -14,8 +14,9 @@ assert the whole document fits the viewport rather than relying on cropped
 block screenshots; retain strict public/version-preview pixel parity and
 unwaived axe checks.
 Neutral SSR on a real tenant and review of the raw CI images remain separate
-release gates. V03 starter-component coverage and V05 Properties validation
-are not inferred from this gallery.
+release gates. V03 starter-component coverage and V05 full-schema Properties
+validation are not inferred from this gallery; D6 base has separate scoped V05
+page-header evidence.
 
 Graphify freshness: `graphify update .` was attempted twice in the isolated
 worktree. Both scans reached full AST extraction, then stalled in path

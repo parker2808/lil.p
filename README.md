@@ -25,7 +25,9 @@ The real-host no-script sample also checks OS-driven dark first paint and
 separately authored VI tree copy on both neutral and branded tenants; it does
 not certify all-20 dark neutral SSR or fully localized site content. A scoped
 no-script OS-dark shell rule keeps the public header/footer dark alongside the
-CMS tree; CI attaches raw header/footer captures on both real tenant hosts.
+CMS tree and pairs the preview banner with a dark warning surface; CI checks
+its computed text/background contrast at 4.5:1 and attaches raw captures on
+both real tenant hosts.
 The footer assertion preserves its existing 93% background/7% green blend
 rather than expecting the unmixed card color.
 
@@ -55,6 +57,13 @@ Async host block wrappers and props are resolved before tree rendering, but
 React may stream nested content after the initial HTML chunk. The combined
 gate checks nested no-JavaScript text on the real neutral and branded hosts;
 its exact-head CI and visual review remain pending.
+The all-20 no-script public/version-preview gate removes the public route-group
+loading fallback that hid custom-page content behind React insertion scripts;
+home retains its skeleton in a dedicated route group, and route-level loading
+states remain. Its visible nested-text EN/VI three-width public-v2/historical-v1
+base-props captures and no-overflow
+assertions complement explicit heading/paragraph breakpoint-override tests, not
+all-20 responsive override or human visual approval.
 The [V17–V22 focused evidence gates](./docs/specs/2026-11-15-cms-v17-v22-evidence-gates.md)
 add legacy/tree route and missing-SEO snapshot checks, nested-field core
 preservation, and an offline deployed-public-asset parity verifier. They do not
@@ -112,6 +121,8 @@ The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.
 The [D2 persistence draft](./docs/specs/2026-11-11-cms-d2-persistence-design.md#d1-validation-decisions-blocking-d2-wiring) and [D2–D6 lane briefs](./docs/specs/2026-11-11-cms-builder-d-lane-briefs.md) distinguish autosave-safe structural draft validation from H1/required-content publish validation. They require pre-Zod depth/count/byte bounds, a valid one-column mobile grid and typed HTTP rejection without data loss; the historical D1 #194 findings are tracked in the dated stack snapshot. The [stack plan](./docs/specs/2026-11-10-cms-stack-integration-plan.md#parker-approvals-needed) records Parker's conditional merge approval separately from production DB access, secrets and private repository creation.
 
 The [CMS core ADR](./docs/specs/2026-11-10-cms-core-adr.md) defines U → B → D → verification → C, the neutral default theme and screenshot-backed design gates. The [D1–D6 builder](./docs/specs/2026-11-10-cms-builder-phase-d-draft.md) and [C1–C3 distribution](./docs/specs/2026-11-10-cms-core-distribution-c-draft.md) handoffs remain draft implementation plans. Parker approved naming or linking the private `@parker2808/cms-core` repository and declaring it as a dependency; see the [narrow public-repo exception](./docs/specs/2026-11-10-agents-private-cms-core-exception.md). Private source and credentials remain excluded from this public repository.
+
+Published CMS tree hosts without an explicit `data-theme` inherit the site root's dark class; a host's explicit theme takes precedence. The [V09/V10 restore gate](./docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md) checks public/preview painted content and WCAG AA in both modes; production parity still requires separate evidence.
 
 CMS draft handoff update (2026-11-11): B6b #193 `e12774e` exposes the opt-in neutral `@parker2808/cms-core/theme.css` with light/dark `--builder-*` tokens; D1 #194 `5c31773` exposes the typed `./tree` entry (`readTree`, `migrateTree`, `convertLegacySnapshot`) for the D2–D6 draft briefs. The [stack plan](./docs/specs/2026-11-10-cms-stack-integration-plan.md) preserves both manifest/tsup changes; B7 and D1 acceptance remain pending. This docs update neither imports the theme into the live app nor approves the D2 migration.
 
@@ -241,11 +252,13 @@ D2's legacy restore now takes a revision-and-mode compare-and-swap lock before t
 
 Core owns semantic headings in D3: a host `components.heading` override fails with a typed result instead of emitting duplicate responsive H1s.
 
-[CMS D6 guarded route integration](./docs/specs/2026-11-11-cms-d6-route-parity.md) combines D2 and D3: `CMS_TREE_ROUTES=1` enables strict tree snapshot JSON on authenticated preview and public routes, rendered by the same server-only D3 renderer in Next. Opt-in publish uses a version-checked host transaction; the disposable-MySQL API/browser journey covers EN/VI save, publish, preview/public SSR, restore and republish. Legacy routes remain unchanged; D5 client autosave and dirty-reload acceptance remain separate gates. The required CI build step checks zero builder/editor bytes in public chunks. The stacked #201 contact hydration fix preserves pre-mount input. This stacked D6 PR must not merge before D2 #199's final gate.
+[CMS D6 guarded route integration](./docs/specs/2026-11-11-cms-d6-route-parity.md) combines D2 and D3: `CMS_TREE_ROUTES=1` enables strict tree snapshot JSON on authenticated preview and public routes, rendered by the same server-only D3 renderer in Next. Opt-in publish uses a version-checked host transaction; the disposable-MySQL API/browser journey covers EN/VI save, publish, preview/public SSR, restore and republish. The V02 browser gate separately tests keyboard-only EN/VI edit, reorder, publish and reload against the saved version and public tree; spoken screen-reader audio remains a manual check. Legacy routes remain unchanged; D5 client autosave and dirty-reload acceptance remain separate gates. The required CI build step checks zero builder/editor bytes in public chunks. The stacked #201 contact hydration fix preserves pre-mount input. This stacked D6 PR must not merge before D2 #199's final gate.
 
 [D5 pure tree logic](./docs/specs/2026-11-11-cms-d5-core-logic.md) adds explicit-registry atomic edits, responsive overrides, bounded history and CAS autosave to `./tree` without shipping its editor UI. D6's release-gate extension checks all 20 host schemas and EN/VI SSR parity using test-local host render mappings; its follow-up injects the host-owned registry into live API draft/publish/snapshot validation and Next SSR with an all-20 browser parity gate. Dirty-reload UI remains blocked. #202 now carries #200 and must wait for both #199 and #200 approvals.
 
 The all-20 D6 live route gate passes on disposable MySQL in both locales; the complete locked `check:all --e2e` passes 13/13 after one unrelated admin-scroll exact-pixel variance on the first run. D4/D5 editor integration and reload safety still require their own release evidence.
+
+The [V09/V10 restored-version browser gate](./docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md) adds paired EN/VI light/dark mobile/tablet/desktop public and version-preview captures, content axe results and a keyboard-operated, localized 409/no-write confirmation. CI and independent review must pass before crediting these specific restore tuples; this does not prove the all-20 restore matrix or production parity.
 
 The [partial D6 live-route manifest](./docs/specs/2026-11-14-cms-d6-live-route-evidence.md) separates verified route behavior from blocked editor, visual and migration release gates.
 
@@ -256,8 +269,11 @@ The D6 all-20 browser spec runs last on an existing web E2E shard; adding it doe
 The [D6 integrated gate plan](./docs/specs/2026-11-15-cms-d6-integrated-gate.md) adds 20 real-API host activation/save/read/publish and bilingual preview/public cycles, plus an editor-origin H1 journey and four CI-sharded editor-origin host journeys (five types each). Each exercises palette insertion, applicable Properties editing, real draft autosave/read, publish and EN/VI preview/public API and SSR parity. Notes/projects browsers have numeric/toggle Properties but no localized fields; every other type exercises EN/VI text. Exact-head CI is required before these become evidence; migration/drain, visual/a11y and release approval remain separate.
 
 The [D6 editor-origin visual matrix](./docs/specs/2026-11-15-cms-d6-editor-visual.md) attaches all 20 builder-origin hosts at EN/VI × light/dark × 390/1440, with screenshot digests and axe findings tied to the exact CI source head. Captures need independent design review; they do not substitute for deployment or full WCAG approval.
+The [V05 revision chain](./docs/specs/2026-11-16-cms-d6-v05-revision-chain.md) separately exercises localized nested page-header Properties through real autosave, UI publish, immutable snapshot and EN/VI preview/public captures at 390/768/1440; full-schema error coverage and review remain open.
 
 The [D6 published/preview parity matrix](./docs/specs/2026-11-15-cms-d6-parity-matrix.md) pairs all 20 host blocks across EN/VI, light/dark, core/brand and 390/768/1440 with semantic, screenshot and unwaived axe checks. Notes fallback links provide 24px targets, and contact forms must hydrate before capture; exact-head CI and visual review still gate V03/V14 acceptance.
+
+The [D6 J07/V06 no-script gate](./docs/specs/2026-11-16-cms-d6-j07-v06-nojs.md) exercises all 20 published hosts in EN/VI public and authenticated preview with JavaScript disabled at 390/768/1440. It asserts nested text (except the explicitly empty CV), matching host semantics, no horizontal overflow and attaches source-head-linked captures; exact-head CI and independent visual review must pass before J07/V06 signoff.
 
 The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires private source evidence for every factual claim and project cover. Keep source paths, source text, and contact details out of git and logs. The staged migration check is `env -u DATABASE_URL bash apps/api/prisma/seed/migration-gate.sh`; it creates a random, tmpfs-only MySQL container, compares the five built-in page rows across the old and current migrations, checks page constraints and Prisma schema drift, then removes the container. It refuses to run when `DATABASE_URL` is already set.
 
