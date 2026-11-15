@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- #221 V15 run `43727078116` hung in the keyboard-only capture at 10 minutes and cancelled shard 5 during retry. Removed unbounded transition-finished waits in the reduced-motion audit and added a bounded keyboard test/diagnostic markers; exact-head five-shard CI and independent review remain OPEN.
+
 - V15 focus paint: CI `43720573277` found a blue Breakpoint control with an identical blue focus ring on its own surface. A two-tone ring and per-adjacent-surface 3:1 audit need exact-head CI and independent design review before signoff.
 
 - #221 CI 43717611638 repeatedly found `:focus-visible` ordinary host buttons without a computed indicator, despite the core theme fallback. Apply a scoped opaque host ring to all interactive builder controls, retain the ≥3:1 browser assertion, and await exact-head five-shard proof.
@@ -292,6 +294,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Bound V15 keyboard browser diagnosis after shard-5's reproducible ten-minute stall, sampling reduced-motion focus paint on frames instead of waiting indefinitely for transition completion; 44px and ≥3:1 assertions unchanged.
 
 - 2026-11-15: Isolated the V15 design matrix from Lighthouse/pixel shard 1 into shard 5 and added per-test CI progress after two 20-minute cancellations; all existing browser assertions remain required and exact-head CI is pending.
 

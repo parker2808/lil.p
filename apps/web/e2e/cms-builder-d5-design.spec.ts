@@ -95,14 +95,10 @@ async function capture(
   expect(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(
     true,
   );
-  await page.evaluate(async () => {
-    await Promise.all(
-      document
-        .getAnimations()
-        .filter((animation) => animation instanceof CSSTransition)
-        .map((animation) => animation.finished.catch(() => undefined)),
-    );
-  });
+  await page.evaluate(
+    () =>
+      new Promise<void>((done) => requestAnimationFrame(() => requestAnimationFrame(() => done()))),
+  );
   const audit = new AxeBuilder({ page })
     .include(options.sheet ? '[role="dialog"]' : '.cms-core')
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']);
@@ -301,12 +297,7 @@ async function capture(
         continue;
       control.focus({ preventScroll: true });
       await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-      await Promise.all(
-        control
-          .getAnimations()
-          .filter((animation) => animation instanceof CSSTransition)
-          .map((animation) => animation.finished.catch(() => undefined)),
-      );
+      await new Promise<void>((done) => requestAnimationFrame(() => done()));
       if (document.activeElement !== control) {
         results.push({
           name: control.getAttribute('aria-label') ?? control.textContent?.trim(),
@@ -556,6 +547,7 @@ test.setTimeout(600_000);
 test('active builder supports a keyboard-only nested edit, history and focus journey', async ({
   page,
 }) => {
+  test.setTimeout(120_000);
   await signIn(page);
   const { key } = await createActivePage(page, 'en');
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -577,6 +569,7 @@ test('active builder supports a keyboard-only nested edit, history and focus jou
   ).toHaveCount(1);
   await expect(tree.getByRole('treeitem', { name: /Heading/ })).toBeFocused();
   await page.setViewportSize({ width: 1440, height: 900 });
+  console.log('V15 keyboard: entering painted-focus capture');
   await capture(page, {
     key,
     locale: 'en',
@@ -586,6 +579,7 @@ test('active builder supports a keyboard-only nested edit, history and focus jou
     state: 'keyboard-focus',
     input: 'keyboard',
   });
+  console.log('V15 keyboard: painted-focus capture complete');
   await page.keyboard.press('Delete');
   const confirm = page.getByRole('alertdialog').getByRole('button', { name: 'Delete' });
   await confirm.focus();
