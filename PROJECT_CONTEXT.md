@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 D5 builder error localization: D2's English `message` remains in the API response but current D5 builder status/recovery UI uses only typed HTTP outcomes and EN/VI labels. Verify the new D6 publish/version controls independently; other admin/API i18n remains out of scope. See `docs/specs/2026-11-11-cms-d5-ui.md`.
+
 - 2026-11-15 D5 base synchronization: merge current D base into the isolated D5 integration branch without replacing D5's host, V07 duplicate/history coverage or V15 design assertions. Preserve D4 focus restoration and locale helper fixes; #221's separate focus-ring audit remains blocked pending its own exact-head CI.
 
 - D5 V07 gate: EN/VI Duplicate uses the core validated operation; exact-head run `43705931696` proves recursive fresh IDs in unit tests and real-browser duplicate/move undo/redo plus saved/reloaded order. **PARTIAL, not V07 PASS:** edit/insertion history, duplicated text persistence, adapter bounds, failed save and version reset are not proven. See `docs/specs/2026-11-15-cms-d5-v07-gate.md`.
@@ -278,6 +280,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Audited D2 builder-draft English error messages against D5 activation, autosave and recovery UI; no verbatim message is displayed. Documented the D6 version-actions follow-up without changing API, runtime, tests, schema or golden contracts.
 
 - 2026-11-15: Synchronized D5 UI with `feat/cms-d-base` after #224, preserving the live D5 host and V07/V15 evidence, D4 sheet-focus handling and locale-safe browser tests. No migration, public route, or golden changes; final-head CI is required.
 
