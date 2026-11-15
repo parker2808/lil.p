@@ -82,7 +82,7 @@ jobs:
             next-${{ runner.os }}-build-${{ hashFiles('pnpm-lock.yaml') }}-
       - run: pnpm build
       - name: Test public bundle guard
-        run: node --test scripts/check-public-builder-bytes.test.mjs
+        run: node --test scripts/check-public-builder-bytes.test.mjs scripts/check-deployed-public-assets.test.mjs
       - name: Check exact-head public bundle bytes and gzip cap
         run: node scripts/check-public-builder-bytes.mjs
         env:

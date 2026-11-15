@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { appendFileSync, existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -61,7 +62,11 @@ export function inspectPublicBundles(buildRoot, maxGzipBytes = MAX_GZIP_BYTES) {
     assert.ok(existsSync(file), `Missing public client chunk ${chunk}`);
     const contents = readFileSync(file);
     assert.doesNotMatch(contents.toString('utf8'), forbidden, `Builder/editor bytes in ${chunk}`);
-    chunks.push({ path: chunk, gzipBytes: gzipSync(contents, { mtime: 0 }).byteLength });
+    chunks.push({
+      path: chunk,
+      sha256: createHash('sha256').update(contents).digest('hex'),
+      gzipBytes: gzipSync(contents, { mtime: 0 }).byteLength,
+    });
   }
   const gzipBytes = chunks.reduce((total, chunk) => total + chunk.gzipBytes, 0);
   const publishedTreeRoute = routes.find((route) => route.manifest === PUBLISHED_TREE_MANIFEST);
