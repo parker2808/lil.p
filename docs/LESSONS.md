@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A merged C1 package-boundary test can make a green combined verification branch dirty without changing its D2 runtime; preserve the new test and documentation, then regenerate Graphify and require a new exact-head CI run.
+
 - 2026-11-15: Separate mocked all-20 Properties editing from live all-20 route validation; neither alone proves editor-to-persisted-publish parity, and CI-generated images need attachment plus current-head visual review before design signoff.
 
 - 2026-11-15: A green labeled combined-head CI run establishes its actual API/web/visual/axe test cases, not the full D6 J01–J09/V01–V22 acceptance matrix; keep each incomplete journey open and distinguish approved forward-only policy from unproven live instance-drain execution.
