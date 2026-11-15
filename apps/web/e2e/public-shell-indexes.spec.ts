@@ -70,6 +70,25 @@ test('real public indexes, filters, contact and captures in EN/VI', async ({ pag
         for (const width of widths) {
           await capture(page, { route, locale, state: 'normal', theme, width });
         }
+      await page.mouse.move(0, 0);
+      await expect(page.locator('html')).toHaveClass(/dark/);
+      await expect
+        .poll(
+          () =>
+            page.locator('.public-site .bg-primary.text-primary-foreground').evaluateAll(
+              (buttons) =>
+                buttons.length > 0 &&
+                buttons.every((button) => {
+                  const style = getComputedStyle(button);
+                  return (
+                    style.color === 'rgb(22, 24, 31)' &&
+                    style.backgroundColor === 'rgb(255, 143, 116)'
+                  );
+                }),
+            ),
+          { message: `${locale}/${route} dark primary buttons settle before axe` },
+        )
+        .toBe(true);
       await expectNoSeriousAxeIssues(page);
       if (route === 'projects') {
         const card = page.locator('.projects-results .redesign-case-card').first();

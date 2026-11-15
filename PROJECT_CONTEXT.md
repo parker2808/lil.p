@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- D2 #199 exact-head CI follow-up (2026-11-15): shard 5 on `8a800999` measured a transitional primary CTA text color during the public test's manual light→dark switch (4.11/3.69:1). Await every public primary button's final dark computed foreground/background before running the unchanged axe gate; exact-head CI still required. No schema/migration/production change.
+
 - D2 write-reopen bootstrap follow-up (2026-11-15): a deferred entrypoint test proves `app.init()` precedes the read-only migration query and `listen()` waits for it; a failed query still listens with writes frozen. This does not replace the live old-instance drain and separate rollout approval.
 
 - 2026-11-15 D2 V11/V12 gate: expand the real MySQL save/activation/publish negative matrix with unsafe rich text and nonempty draft/version/preview read capabilities; assert HTTP-body redaction only. A 400 does not exercise error logging; D6 final-head publication and production log audit remain GAP. See `docs/specs/2026-11-15-cms-d2-v11-v12-gate.md`.
@@ -269,6 +271,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Stabilize the #199 public accessibility gate after theme transitions by asserting the dark class and final computed foreground/background on every primary public button before axe. Preserve WCAG 4.5:1, all routes and screenshots; exact-head five-shard CI pending.
 
 - 2026-11-15: Added a D2 entrypoint bootstrap-order regression test for init → migration verification → listen, including fail-closed writes on a rejected schema query; no runtime behavior or release authorization changed.
 
