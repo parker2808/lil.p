@@ -37,6 +37,7 @@ for (const locale of ['en', 'vi'] as const) {
             paragraph: 'Paragraph',
             inspector: 'Properties',
             text: 'Text',
+            level: 'Heading level',
             layers: 'Layers',
             selected: 'Selected: Paragraph',
             saved: 'Draft saved',
@@ -53,6 +54,7 @@ for (const locale of ['en', 'vi'] as const) {
             paragraph: 'Đoạn văn',
             inspector: 'Thuộc tính',
             text: 'Văn bản',
+            level: 'Cấp tiêu đề',
             layers: 'Lớp',
             selected: 'Đã chọn: Đoạn văn',
             saved: 'Đã lưu bản nháp',
@@ -81,6 +83,12 @@ for (const locale of ['en', 'vi'] as const) {
     await page.keyboard.press('ControlOrMeta+A');
     await page.keyboard.type(editedText);
     await page.keyboard.press('Tab');
+    const headingLevel = inspector.getByRole('spinbutton', { name: copy.level });
+    await headingLevel.focus();
+    await expect(headingLevel).toBeFocused();
+    await page.keyboard.press('ControlOrMeta+A');
+    await page.keyboard.press('1');
+    await page.keyboard.press('Tab');
 
     const paragraphButton = palette.getByRole('button', {
       name: copy.paragraph,
@@ -106,6 +114,7 @@ for (const locale of ['en', 'vi'] as const) {
         const content = draft.tree?.root.sections[0]?.content;
         return content?.[0]?.componentType === 'heading' &&
           content?.[0]?.responsive.base.text === editedText &&
+          content?.[0]?.responsive.base.level === 1 &&
           content?.[1]?.componentType === 'paragraph'
           ? draft
           : null;
