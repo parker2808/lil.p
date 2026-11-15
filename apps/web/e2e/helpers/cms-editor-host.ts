@@ -56,7 +56,7 @@ export function registerEditorHostJourney(shard: number): void {
       await expect(
         inspector.getByText(hostName, { exact: true }).and(inspector.locator('p')),
       ).toBeVisible();
-      const addHeading = inspector.getByRole('button', { name: 'Thêm tiêu đề' });
+      const addHeading = inspector.getByRole('button', { name: 'Thêm · Tiêu đề mục' });
       if (await addHeading.count()) await addHeading.click();
 
       const englishValue = `Edited ${definition.type}`;

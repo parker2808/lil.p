@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #208 `0c6ba96a` CI `43694304354` shards 1/3 also exposed six optional-heading host journeys: the VI Properties control is named `Thêm · Tiêu đề mục`, but the D6 test helper searched `Thêm tiêu đề`, so it skipped the group and failed on the required EN textbox. Corrected the exact UI label on the combined branch and notified the D6/#222 owner to propagate to its source; exact-head CI remains required. No runtime or public/preview assertions changed. DO NOT MERGE.
+
 - 2026-11-15 #208 `0c6ba96a` CI `43694304354` unit job timed out at the default five seconds while booting the full AppModule in the Stage A middleware registration test; the integration branch gives only that test a 20-second budget, retaining the 503-before-service assertions. The #217 visual parity failures remain owned by its separate branch. Exact-head CI still required; DO NOT MERGE.
 
 - 2026-11-15 #208 exact-head `72573ed8` CI `43692772530` exposed a cross-branch test mismatch: D6 localizes the Properties host heading, while D5's all-host assertion expected raw `hero`; D6 editor-origin VI locators also still expect `(EN)/(VI)` rather than `Tiếng Anh/Tiếng Việt`. The D5 assertion now derives the EN/VI label from metadata and translations; the D6 owner supplied a separate correction. New exact-head CI is required; J04/J07/V05 remain GAP. DO NOT MERGE.
@@ -313,6 +315,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Aligned the combined real-editor optional-heading test helper with the VI Properties add-group button's actual accessible name; kept the bilingual textbox and live API assertions intact. Exact-head CI required.
 
 - 2026-11-15: Scoped the full-AppModule Stage A registration test timeout to 20 seconds after combined CI exceeded the default five seconds under concurrent jobs; no guard/runtime or assertion changes. Verification-only #208 requires new exact-head CI.
 
