@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: When a gallery PR restacks over new D6 no-JS and revision tests, preserve both histories and the narrow hydrated-palette evidence claim; an AST-complete Graphify attempt that stalls before report generation is not a fresh provenance claim.
+
 - 2026-11-16: A `--builder-accent` value change can pass while 476/480 neutral/branded host screenshots remain identical: host block renderers consume site palette tokens, so test computed painted text and actual image differences, not token presence alone.
 - 2026-11-16: A base can advance again during a V05 restack; compare the remote feature SHA immediately before push and require combined-head CI instead of trusting the previous successful test-head run.
 

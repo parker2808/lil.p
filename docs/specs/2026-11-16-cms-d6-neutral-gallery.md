@@ -18,9 +18,9 @@ release gates. V03 starter-component coverage and V05 full-schema Properties
 validation are not inferred from this gallery; D6 base has separate scoped V05
 page-header evidence.
 
-Graphify freshness: `graphify update .` was attempted twice in the isolated
-worktree. Both scans reached full AST extraction, then stalled in path
-resolution; the local runs were interrupted without changing the tracked
-report. After synchronizing with D6 base `6b09962f`, the retained
-`graphify-out/GRAPH_REPORT.md` attributes its graph to `69a025f7`, not to
-this fix. Do not present it as a fresh topology audit.
+Graphify freshness: after merging D6 base `dd66938d`, `graphify update .`
+reached full AST extraction but did not finish path resolution within 120
+seconds. The retained `graphify-out/GRAPH_REPORT.md` attributes its graph to
+`5681e939`, not to this combined head. Do not present it as a fresh topology
+audit. This gallery remains a scoped hydrated-palette correction; real-tenant
+neutral SSR/no-JS and all-20 brand-difference assertions still gate V03/V14.
