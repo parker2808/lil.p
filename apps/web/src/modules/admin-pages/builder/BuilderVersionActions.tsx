@@ -29,6 +29,7 @@ const copy = {
     restore: 'Restore draft',
     confirm: 'Restore this version to the draft?',
     warning: 'This replaces the current server draft. It does not publish or delete any version.',
+    restoreFailed: 'Could not restore the draft. Check the server draft before trying again.',
     cancel: 'Cancel',
     pending: 'Working…',
   },
@@ -43,6 +44,7 @@ const copy = {
     restore: 'Khôi phục bản nháp',
     confirm: 'Khôi phục phiên bản này vào bản nháp?',
     warning: 'Thao tác này thay thế bản nháp trên máy chủ, không xuất bản hoặc xóa phiên bản.',
+    restoreFailed: 'Không thể khôi phục bản nháp. Kiểm tra bản nháp máy chủ trước khi thử lại.',
     cancel: 'Hủy',
     pending: 'Đang xử lý…',
   },
@@ -55,6 +57,7 @@ export function BuilderVersionActions({
   canRestore,
   isAdmin,
   pending,
+  restoreError,
   onPublish,
   onRestore,
 }: {
@@ -64,12 +67,14 @@ export function BuilderVersionActions({
   canRestore: boolean;
   isAdmin: boolean;
   pending: boolean;
+  restoreError: string | null;
   onPublish: () => Promise<boolean>;
   onRestore: (version: number) => Promise<boolean>;
 }) {
   const text = copy[locale];
   const [open, setOpen] = useState(false);
   const [restoreVersion, setRestoreVersion] = useState<number | null>(null);
+  const [restoreFailed, setRestoreFailed] = useState(false);
   const [versions, setVersions] = useState<AdminPageVersionListItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -158,7 +163,10 @@ export function BuilderVersionActions({
                       variant="outline"
                       className="mt-2"
                       disabled={!canRestore || pending}
-                      onClick={() => setRestoreVersion(row.version)}
+                      onClick={() => {
+                        setRestoreFailed(false);
+                        setRestoreVersion(row.version);
+                      }}
                     >
                       {text.restore} {row.version}
                     </Button>
@@ -172,7 +180,10 @@ export function BuilderVersionActions({
       <AlertDialog
         open={restoreVersion !== null}
         onOpenChange={(next) => {
-          if (!next && !pending) setRestoreVersion(null);
+          if (!next && !pending) {
+            setRestoreVersion(null);
+            setRestoreFailed(false);
+          }
         }}
       >
         <AlertDialogContent>
@@ -180,6 +191,11 @@ export function BuilderVersionActions({
             <AlertDialogTitle>{text.confirm}</AlertDialogTitle>
             <AlertDialogDescription>{text.warning}</AlertDialogDescription>
           </AlertDialogHeader>
+          {restoreFailed && (
+            <p role="alert" aria-live="assertive">
+              {restoreError ?? text.restoreFailed}
+            </p>
+          )}
           <AlertDialogFooter>
             <AlertDialogCancel disabled={pending}>{text.cancel}</AlertDialogCancel>
             <AlertDialogAction
@@ -191,7 +207,7 @@ export function BuilderVersionActions({
                   if (success) {
                     setRestoreVersion(null);
                     setOpen(false);
-                  }
+                  } else setRestoreFailed(true);
                 });
               }}
             >

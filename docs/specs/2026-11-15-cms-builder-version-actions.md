@@ -19,6 +19,8 @@ local history only after explicit confirmation. Unsaved, uncertain, offline,
 recovery-pending or unauthorized states cannot mutate versions. A server CAS
 conflict retains the local document and requires review/reload. These controls
 remain behind the existing builder route gate; this is not deployment approval.
+Restore failures remain inside the focused confirmation dialog as a localized
+live alert; the header alone is not visible to keyboard users behind the modal.
 
 Acceptance: real API V10 journey, EN/VI labels and announcements, light/dark,
 390/1440 responsive controls, WCAG AA focus/keyboard confirmation, no lost

@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 V10 review follow-up: show localized restore failures within the focused confirmation dialog, rather than only the header behind the modal. #232 exact-head 5-shard CI and real browser V10 journey remain open until the D4 canvas fix from #231 reaches the D6 base; no rollout approval.
+
 - 2026-11-15 V10 builder actions: the gated D6 builder now offers admin-only publish, authenticated version list and confirmed revision-aware restore through existing D2 routes. Publication rereads the advanced draft revision; unsuccessful/uncertain actions keep local content, and restoring a legacy snapshot switches the builder to legacy activation rather than silently overwriting. Exact-head ready-e2e V10 journey, review, operational D2 drain and production rollout remain open. See `docs/specs/2026-11-15-cms-builder-version-actions.md`.
 
 - 2026-11-15 D6 base reconciliation: keep D6 V04/V06/V09/V10 and editor-origin histories alongside the five-shard D4 canvas/keyboard registry and focus/locale fixes from #224; the combined branch requires exact-new-head `ready-e2e` before treating the auto-merged tests as evidence. Release and integrated D5 publish/restore remain separate gates.
@@ -295,6 +297,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Announce failed revision-aware restore inside the active EN/VI confirmation dialog, retaining focus, local edits and blocked uncertain state; add dialog-scoped tests without changing API contracts.
 
 - 2026-11-15: Wired gated builder publish/history/confirmed restore to existing D2 CAS API without changing golden contracts, schema or migration; added EN/VI status and no-data-loss unit checks. Ready-e2e browser and independent design review remain pending.
 

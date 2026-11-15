@@ -504,6 +504,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
               canPublish={canChangeVersion}
               canRestore={canChangeVersion}
               pending={versionPending}
+              restoreError={versionMessage}
               onPublish={() => changeVersion('publish')}
               onRestore={(version) => changeVersion('restore', version)}
             />
