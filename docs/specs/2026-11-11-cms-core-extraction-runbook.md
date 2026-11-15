@@ -258,16 +258,18 @@ non-noreply consumer-email identity; in 15, the author uses a GitHub noreply
 address while the distinct committer uses a GitHub service address. These are
 counts and categories only: do not publish names, addresses or a raw metadata
 dump in issues, PRs, CI artifacts or the package. A zero-finding redacted
-Gitleaks scan does **not** clear Git author/committer PII. Recommend a private
-owner review of the final filtered history and an explicit keep-or-normalize
-decision **before any private push**. A `.mailmap` changes display attribution
-but leaves original commit objects intact, so it cannot sanitize an address.
-If the owner requires removal, seek separate approval for a controlled local
-history rewrite (author and committer), keep the original-to-new provenance
-mapping outside the repo, and rerun the complete metadata, secrets, license
-and artifact audit on the rewritten final tree. No normalization or rewrite
-was performed in this rehearsal; a private destination alone is not PII
-clearance.
+Gitleaks scan does **not** clear Git author/committer PII. **Decision —
+2026-11-15 20:46 ICT:** the coordinator, under Parker's C1 approval `t250u`
+and delegated decision rule `12:26`, confirmed that both reviewed pairs are
+Parker's own author/GitHub-service identities. **Keep existing commit metadata
+unchanged; do not rewrite history or add a `.mailmap`.** The approved target is
+Parker's own private repo; rewriting would add risk and break provenance with
+lil.p. This decision covers only these reviewed pairs, not unknown identities
+in the final integrated history. Before any private push, compare the final
+filtered identities to this inventory, stop and review any new pair, and rerun
+the complete metadata, secrets, license and artifact audit. Limit access to
+the private destination; do not publish raw metadata in public evidence. No
+normalization, rewrite or private push occurred in this rehearsal.
 
 ```sh
 # C1: authorized local extraction from an approved, integrated source SHA.

@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- C1 retained-history identity review (2026-11-15): the local #208 `4df25c52` filtered rehearsal has 86 commits across two anonymized author/committer pairs; one pair includes a non-noreply consumer-email address. Decide privately whether to retain or explicitly authorize a controlled rewrite before any private push; `.mailmap` alone does not remove Git object metadata. Re-audit the final integrated tree, not this preview; see the C1 runbook.
+- C1 retained-history identity review (2026-11-15): the local #208 `4df25c52` filtered rehearsal has 86 commits across two anonymized author/committer pairs. At 20:46 ICT, the coordinator under Parker approval `t250u` and delegated rule `12:26` decided to keep both reviewed identities unchanged: no rewrite or `.mailmap`, preserving provenance in Parker's own private destination. Re-audit the final integrated tree and stop on any new pair before a private push; see the C1 runbook.
 
 - E2E registry completeness (2026-11-15): both existing D4 canvas and keyboard browser specs were absent from `SPECS` and silently skipped by the Playwright shard matcher. Register both on the five-shard line and compare the full recursive spec inventory with the manifest in a unit test, rejecting missing, stale and duplicate names. First real CI exposed obsolete native-select interactions; the next run exposed selecting already-active EN without a cookie and intermittent Escape focus restoration. Exercise actual Radix locale transitions and persist the cookie; restore focus in the sheet-close layout effect without competing animation frames. Re-run exact-head `ready-e2e` before claiming J03/J05/V02/V20 coverage; the #217 visual group 4 pin must still move to shard 5 after registration.
 
@@ -258,6 +258,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Recorded the coordinator's 20:46 ICT C1 decision to retain the two reviewed identity pairs without a rewrite or `.mailmap`; final-history audit remains required. Docs only, no private push.
 
 - 2026-11-15: Documented anonymized C1 rehearsal identity categories and the owner-only keep-or-normalize gate; no metadata rewrite, private repository creation or release.
 
