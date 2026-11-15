@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #234 follow-up: real neutral/lil.p hosts now have a bounded EN/VI × light/dark no-script nested-tree gate with VI-authored copy and scoped dark OS-preference CSS; strict preview geometry/link PNG parity and raw full-page attachments remain. Exact-head CI and independent visual review pending. V03/V14 all-20 neutral dark and full VI content remain GAP; no golden/API/schema changes.
+
 - 2026-11-15 D6 SSR/i18n gate: host-specific custom-tree rendering is request-scoped (no shared HTML ISR), while API fetch tags remain cached. Neutral tenant SSR, no-script nested content, VI contact defaults and translated nested inspector labels require exact-head five-shard CI and review. V03/V14/full VI remain GAP; no golden or V10 files changed. See `docs/specs/2026-11-15-cms-d6-ssr-i18n-gate.md`.
 - 2026-11-15 D6 SSR capture correction: CI 43719165429 exposed repeatable 20-pixel rounded-corner raster differences in preview link captures shifted by the 60px preview banner. Preserve unmodified full-page artifacts, hide only the banner for the strict content crop, and require matching bounding boxes and PNG bytes; new exact-head CI and visual review remain pending.
 - 2026-11-15 D6 all-20 editor-origin compatibility: the same CI shard 4 timed out locating the untranslated `showFeatured` switch after nested Properties labels were localized. Use the VI message label; keep the persisted toggle assertion and rerun all five shards on the new head.
@@ -325,6 +327,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Added no-script OS-dark first-paint host tokens and EN/VI authored nested-tree public/preview sample on real neutral/lil.p hosts; maintained exact link PNG parity and preserved all golden contracts. Full V03/V14 and VI acceptance still need separate evidence.
 
 - 2026-11-15: Staged D6 tenant-host SSR brand selection and neutral/lil.p token separation with no-script nested route and VI contact/Properties regressions; golden contracts unchanged, exact-head CI pending.
 - 2026-11-15: Aligned no-script public/preview content screenshot coordinates by hiding only preview chrome after capturing its original full-page artifact; retained strict PNG equality and added exact geometry assertion. V03/V14 and full VI remain GAP.

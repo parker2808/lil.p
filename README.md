@@ -6,6 +6,9 @@ other tenant hosts keep neutral core tokens. Custom tree HTML is request-scoped
 (tagged API reads remain cacheable). It also checks nested no-script SSR, VI
 contact defaults and translated Properties labels; this does not by itself close
 the full V03/V14 visual matrix.
+The real-host no-script sample also checks OS-driven dark first paint and
+separately authored VI tree copy on both neutral and branded tenants; it does
+not certify all-20 dark neutral SSR or fully localized site content.
 
 The [D6 parity matrix](./docs/specs/2026-11-15-cms-d6-parity-matrix.md) adds
 lossless nested-tree migration fixtures, real-API legacy/tree snapshot and route
