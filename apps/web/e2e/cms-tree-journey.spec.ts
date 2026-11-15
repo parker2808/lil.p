@@ -101,6 +101,13 @@ test('real tree save, publish, EN/VI SSR parity and revision-aware restore', asy
   });
   expect(restore.status(), await restore.text()).toBe(200);
   expect((await restore.json()).tree).toEqual(firstTree);
+  await page.goto(`/admin/builder/${key}`);
+  await expect(
+    page.getByRole('region', { name: 'Page canvas' }).getByText('First tree heading'),
+  ).toBeVisible();
+  expect(
+    (await (await page.request.get(`/api/admin/pages/${key}/builder/draft`)).json()).tree,
+  ).toEqual(firstTree);
   expect((await (await page.request.get(`/api/public/pages/${key}`)).json()).tree).toEqual(
     firstTree,
   );
@@ -114,6 +121,9 @@ test('real tree save, publish, EN/VI SSR parity and revision-aware restore', asy
     data: { expectedRevision: '6' },
   });
   expect(republished.status(), await republished.text()).toBe(200);
+  const versionTwo = await page.request.get(`/api/admin/pages/${key}/versions/2`);
+  expect(versionTwo.status(), await versionTwo.text()).toBe(200);
+  expect((await versionTwo.json()).snapshot.tree).toEqual(secondTree);
   for (const locale of ['en', 'vi']) {
     const publicPage = await page.request.get(`/api/public/pages/${key}?locale=${locale}`);
     const preview = await page.request.get(
@@ -128,4 +138,88 @@ test('real tree save, publish, EN/VI SSR parity and revision-aware restore', asy
     }).toPass({ timeout: 30_000 });
     expect(await page.locator('main.cms-core').innerHTML()).not.toBe(htmlByLocale[locale]);
   }
+});
+
+test('preview and public tree render paired EN/VI breakpoint markup and screenshots', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(180_000);
+  const hydrationErrors: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error' && /hydration|mismatch/i.test(message.text())) {
+      hydrationErrors.push(message.text());
+    }
+  });
+  page.on('pageerror', (error) => {
+    if (/hydration|mismatch/i.test(error.message)) hydrationErrors.push(error.message);
+  });
+  await signIn(page);
+  const key = `builder-parity-${Date.now()}`;
+  const headers = { Origin: new URL(page.url()).origin };
+  const tree = structuredClone(firstTree);
+  const responsive = tree.root.sections[0]!.content[0]!.responsive as {
+    base: { text: string; level: number };
+    mobile?: { text: string };
+    tablet?: { text: string };
+    desktop?: { text: string };
+  };
+  responsive.mobile = { text: 'Mobile tree heading' };
+  responsive.tablet = { text: 'Tablet tree heading' };
+  responsive.desktop = { text: 'Desktop tree heading' };
+  expect(
+    (
+      await page.request.post('/api/admin/pages', {
+        headers,
+        data: { key, title: 'Tree parity', locale: 'en', template: 'empty' },
+      })
+    ).status(),
+  ).toBe(201);
+  const activated = await page.request.post(`/api/admin/pages/${key}/builder/activate`, {
+    headers,
+    data: { expectedRevision: '0', tree },
+  });
+  expect(activated.status(), await activated.text()).toBe(200);
+  expect((await activated.json()).tree).toEqual(tree);
+  const published = await page.request.post(`/api/admin/pages/${key}/builder/publish`, {
+    headers,
+    data: { expectedRevision: '1' },
+  });
+  expect(published.status(), await published.text()).toBe(200);
+  for (const locale of ['en', 'vi']) {
+    const preview = await page.request.get(
+      `/api/admin/preview/pages/${key}?locale=${locale}&version=1`,
+    );
+    const publicPage = await page.request.get(`/api/public/pages/${key}?locale=${locale}`);
+    expect(preview.status()).toBe(200);
+    expect(publicPage.status()).toBe(200);
+    expect(await preview.json()).toEqual({ ...(await publicPage.json()), invalidBlocks: [] });
+    for (const [width, text] of [
+      [390, 'Mobile tree heading'],
+      [768, 'Tablet tree heading'],
+      [1440, 'Desktop tree heading'],
+    ] as const) {
+      await page.setViewportSize({ width, height: 900 });
+      const path = `/${locale}/${key}`;
+      const ssr = await page.request.get(path);
+      expect(ssr.status()).toBe(200);
+      expect(await ssr.text()).toContain('main');
+      await page.goto(path);
+      await expect(page.getByRole('heading', { level: 1, name: text })).toBeVisible();
+      const publicMarkup = await page.locator('main.cms-core').innerHTML();
+      await testInfo.attach(`${locale}-${width}-public`, {
+        body: await page.locator('main.cms-core').screenshot({ animations: 'disabled' }),
+        contentType: 'image/png',
+      });
+      await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
+      await page.goto(`${path}?v=1`);
+      await expect(page.getByRole('heading', { level: 1, name: text })).toBeVisible();
+      expect(await page.locator('main.cms-core').innerHTML()).toBe(publicMarkup);
+      await testInfo.attach(`${locale}-${width}-preview`, {
+        body: await page.locator('main.cms-core').screenshot({ animations: 'disabled' }),
+        contentType: 'image/png',
+      });
+      await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
+    }
+  }
+  expect(hydrationErrors).toEqual([]);
 });
