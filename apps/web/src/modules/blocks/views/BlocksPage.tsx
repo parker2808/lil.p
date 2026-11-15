@@ -46,11 +46,14 @@ export async function BlocksPage({
   const t = await getTranslations('states');
   const preview = page as PublicPagePreview;
   if ('tree' in page) {
+    const pending: Array<Promise<void>> = [];
+    const rendered = new Map<string, ReactNode>();
     const components = Object.fromEntries(
       Object.entries(BLOCK_RENDERERS).map(([type, entry]) => [
         type,
         (node: { id: string }, props: Record<string, unknown>) => {
           const resolved = resolveBlockLocale(props, locale);
+          const renderKey = JSON.stringify([node.id, type, resolved.props, resolved.lang]);
           const block: PublicBlock = {
             id: 0,
             key: node.id,
@@ -60,25 +63,48 @@ export async function BlocksPage({
             props: resolved.props,
             lang: resolved.lang,
           };
-          return createElement(
-            'div',
-            {
-              'data-host-block-type': type,
-              'data-host-props-hash': createHash('sha256')
-                .update(JSON.stringify({ props: resolved.props, lang: resolved.lang }))
-                .digest('hex'),
-            },
-            createElement(entry.component, { block, context: { locale, searchParams } }),
+          pending.push(
+            Promise.resolve(entry.component({ block, context: { locale, searchParams } })).then(
+              (content) => {
+                rendered.set(renderKey, content);
+              },
+            ),
           );
+          return null;
         },
       ]),
     );
-    const result = renderTree({
+    const options = {
       input: page.tree,
       registry: HOST_TREE_REGISTRY,
-      components,
       createElement,
       labels: { unsupported: t('error') },
+    };
+    const collected = renderTree({ ...options, components });
+    if (!collected.ok) notFound();
+    await Promise.all(pending);
+    const result = renderTree({
+      ...options,
+      components: Object.fromEntries(
+        Object.keys(BLOCK_RENDERERS).map((type) => [
+          type,
+          (node: { id: string }, props: Record<string, unknown>) => {
+            const resolved = resolveBlockLocale(props, locale);
+            const renderKey = JSON.stringify([node.id, type, resolved.props, resolved.lang]);
+            if (!rendered.has(renderKey)) throw new Error('Missing resolved host block');
+            return createElement(
+              'div',
+              {
+                'data-host-block-type': type,
+                'data-host-props-hash': createHash('sha256')
+                  .update(JSON.stringify({ props: resolved.props, lang: resolved.lang }))
+                  .digest('hex'),
+              },
+              rendered.get(renderKey),
+            );
+          },
+        ]),
+      ),
     });
     if (!result.ok) notFound();
     return (

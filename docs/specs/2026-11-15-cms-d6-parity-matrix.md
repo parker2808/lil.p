@@ -24,6 +24,13 @@ exact PR head; attachments are generated in the Playwright report, not a
 committed platform-specific pixel baseline. This slice does not close J06/J08,
 V11/V12/V21/V22, all-20 editor-origin, design review or rollout gates.
 
+The initial all-20 CI run exposed incomplete no-JavaScript HTML for async host
+blocks: the tree renderer left their content in streamed React patches, unlike
+the existing legacy block path. The host now resolves those block components
+before producing the tree HTML. A unit regression covers EN/VI initial markup;
+the four real-route shards must still pass on the corrected exact head before
+any visual/SSR tuple is marked passed.
+
 V03/V14 matrix is **pending exact-head CI and visual review**, not yet PASS.
 Four independent shard files publish one real API page apiece, with one H1 and
 four other host types in each page. Each file checks EN/VI × light/dark ×

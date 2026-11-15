@@ -275,6 +275,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Fixed tree-route initial HTML for async host components by resolving them before rendering, preserving complete no-JavaScript SSR for EN/VI and the existing legacy path. Added focused unit regression after #217's all-20 CI exposed empty streamed block content; full visual/axe evidence and V03/V14 remain pending corrected exact-head CI and independent review.
+
 - 2026-11-15: Expanded D6 real-host visual parity to four pinned CI shards for all 20 types × EN/VI × light/dark × neutral/lil.p × 390/768/1440, paired published/preview pixels, semantic SSR/hydration and unwaived WCAG axe. Added host lil.p CSS token override, with neutral selectable as a browser fixture; separate neutral SSR tenant and manual pixel approval remain GAP pending exact-head CI. Golden contracts, migration and production untouched.
 
 - 2026-11-15: Added bounded real-API all-20 EN/VI host-default light 1440 public/version-preview screenshot, SSR/hydration and axe evidence to D6 parity; V03/V14 remain GAP outside the measured tuples, with neutral and branded hosts still unverified. No runtime, golden, migration or production change.
