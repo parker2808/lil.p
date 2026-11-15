@@ -1,5 +1,12 @@
 # Deploy (Vercel + Render + TiDB + Cloudinary)
 
+Before a D2 `Page.draftTree` deploy, follow the separately approved
+[pre-D2 write-freeze and instance-drain gate](./specs/2026-11-15-cms-pre-d2-write-freeze.md).
+The entrypoint migrates **before** the new API is healthy while the old instance
+still serves; neither a healthy replacement nor free-tier maintenance mode
+proves that the old writer has stopped. Do not run the seed/one-off commands
+below during the page-write freeze.
+
 Long-term **free** hosting (PLAN D28). The public site and admin run on
 Vercel. The Nest API runs on a Render free web service. MySQL lives on
 **TiDB Cloud Serverless**. Images live on Cloudinary (T50). Local Docker

@@ -373,3 +373,5 @@
 - 2026-11-11: Test responsive sheet ownership while its dialog remains open across a breakpoint; closing the sheet before resizing hides stale-modal and focus-restoration failures.
 - 2026-11-11: A browser regression that changes locale/theme after shrinking to tablet can time out on desktop-only topbar controls; perform topbar setup at desktop width before exercising responsive transitions.
 - 2026-11-15: A disposable forward-migration/drift pass does not prove downgrade-reader compatibility or a combined UI/API release; pin the exact integrated head before claiming J07 or visual parity.
+- 2026-11-15: Zero-downtime deploy health cannot prove all pre-migration writers are gone; freeze page mutations in a separate pre-schema release, enumerate old instances until drained, and retain a fail-closed guard across the migrating release.
+- 2026-11-15: A bespoke HTTP test module can pass even if the production AppModule drops a middleware; boot real module wiring with stubbed services and assert 503 before page publish access.
