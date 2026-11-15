@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A `?v=1` preview test against a page published only once cannot distinguish a historical version from the current page; publish a second distinct visible version and require both DOM and API to differ.
+
 - 2026-11-16: A shared route-group loading fallback can break no-script custom pages, while deleting it also removes the home skeleton; give home a nested route-group loading boundary and gate visible painted text rather than raw `textContent` in no-script browser tests.
 
 - 2026-11-16: A route-group `loading.tsx` can stream custom page content into a hidden React segment only revealed by client insertion scripts; no-JavaScript checks must require the actual visible main, not a matching hidden wrapper. Three-width base-only fixtures do not establish breakpoint override semantics for every host.

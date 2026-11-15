@@ -53,7 +53,8 @@ its exact-head CI and visual review remain pending.
 The all-20 no-script public/version-preview gate removes the public route-group
 loading fallback that hid custom-page content behind React insertion scripts;
 home retains its skeleton in a dedicated route group, and route-level loading
-states remain. Its visible nested-text EN/VI three-width base-props captures and no-overflow
+states remain. Its visible nested-text EN/VI three-width public-v2/historical-v1
+base-props captures and no-overflow
 assertions complement explicit heading/paragraph breakpoint-override tests, not
 all-20 responsive override or human visual approval.
 The [V17–V22 focused evidence gates](./docs/specs/2026-11-15-cms-v17-v22-evidence-gates.md)

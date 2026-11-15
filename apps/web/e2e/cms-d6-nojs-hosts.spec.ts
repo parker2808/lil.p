@@ -26,6 +26,47 @@ for (const group of [0, 1, 2, 3]) {
       const key = `d6-nojs-${group}-${locale}-${Date.now()}-${testInfo.retry}`;
       const route = `/${locale}/${key}`;
       const headers = { Origin: new URL(page.url()).origin };
+      const headingType = headings[group]!.type;
+      const versionLabel = (version: number) =>
+        locale === 'vi'
+          ? `Phiên bản ${version} ${headingType}`
+          : `Version ${version} ${headingType}`;
+      const tree = {
+        schemaVersion: 1,
+        root: {
+          id: 'nojs-page',
+          type: 'page',
+          responsive: { base: {} },
+          sections: [
+            {
+              id: 'nojs-section',
+              type: 'section',
+              responsive: { base: {} },
+              content: blocks.map((definition) => ({
+                id: `nojs-${definition.type}`,
+                type: 'component',
+                componentType: definition.type,
+                responsive: {
+                  base: structuredClone(definition.defaults) as Record<string, unknown>,
+                },
+              })),
+            },
+          ],
+        },
+      };
+      const setHeadingVersion = (version: number, target: typeof tree) => {
+        const props = target.root.sections[0]!.content[0]!.responsive.base;
+        const label = {
+          en: `Version ${version} ${headingType}`,
+          vi: `Phiên bản ${version} ${headingType}`,
+        };
+        if (headingType === 'hero') {
+          (props.primaryCta as { label: typeof label }).label = label;
+        } else {
+          props.eyebrow = label;
+        }
+      };
+      setHeadingVersion(1, tree);
       const created = await page.request.post('/api/admin/pages', {
         headers,
         data: { key, title: 'No-script host coverage', locale: 'en', template: 'empty' },
@@ -35,27 +76,7 @@ for (const group of [0, 1, 2, 3]) {
         headers,
         data: {
           expectedRevision: '0',
-          tree: {
-            schemaVersion: 1,
-            root: {
-              id: 'nojs-page',
-              type: 'page',
-              responsive: { base: {} },
-              sections: [
-                {
-                  id: 'nojs-section',
-                  type: 'section',
-                  responsive: { base: {} },
-                  content: blocks.map((definition) => ({
-                    id: `nojs-${definition.type}`,
-                    type: 'component',
-                    componentType: definition.type,
-                    responsive: { base: definition.defaults },
-                  })),
-                },
-              ],
-            },
-          },
+          tree,
         },
       });
       expect(activated.status(), await activated.text()).toBe(200);
@@ -64,6 +85,31 @@ for (const group of [0, 1, 2, 3]) {
         data: { expectedRevision: (await activated.json()).revision },
       });
       expect(published.status(), await published.text()).toBe(200);
+      expect((await published.json()).publishedVersion).toBe(1);
+      const secondTree = structuredClone(tree);
+      setHeadingVersion(2, secondTree);
+      const draftPath = `/api/admin/pages/${key}/builder/draft`;
+      const draft = await page.request.get(draftPath);
+      expect(draft.status(), await draft.text()).toBe(200);
+      const updated = await page.request.put(draftPath, {
+        headers,
+        data: { expectedRevision: (await draft.json()).revision, tree: secondTree },
+      });
+      expect(updated.status(), await updated.text()).toBe(200);
+      const secondPublish = await page.request.post(`/api/admin/pages/${key}/builder/publish`, {
+        headers,
+        data: { expectedRevision: (await updated.json()).revision },
+      });
+      expect(secondPublish.status(), await secondPublish.text()).toBe(200);
+      expect((await secondPublish.json()).publishedVersion).toBe(2);
+      const currentPublic = await page.request.get(`/api/public/pages/${key}?locale=${locale}`);
+      const oldPreview = await page.request.get(
+        `/api/admin/preview/pages/${key}?locale=${locale}&version=1`,
+      );
+      expect(currentPublic.status()).toBe(200);
+      expect(oldPreview.status()).toBe(200);
+      expect((await currentPublic.json()).tree).toEqual(secondTree);
+      expect((await oldPreview.json()).tree).toEqual(tree);
 
       const origin = new URL(baseURL!);
       const cookies = await page.context().cookies();
@@ -125,6 +171,10 @@ for (const group of [0, 1, 2, 3]) {
               }),
             );
             expect(snapshot.map(({ type }) => type)).toEqual(blocks.map(({ type }) => type));
+            expect(snapshot[0]?.text, `${locale}/${width} rendered version`).toContain(
+              versionLabel(preview ? 1 : 2),
+            );
+            expect(snapshot[0]?.text).not.toContain(versionLabel(preview ? 2 : 1));
             for (const [index, block] of snapshot.entries()) {
               expect(block.hash, `${locale}/${width}/${block.type} SSR props`).toMatch(
                 /^[a-f0-9]{64}$/,
@@ -159,7 +209,8 @@ for (const group of [0, 1, 2, 3]) {
             manifest.push({
               width,
               preview,
-              route,
+              route: requestedRoute,
+              version: preview ? 1 : 2,
               types: snapshot.map(({ type }) => type),
               screenshot: name,
               sha256: createHash('sha256').update(screenshot).digest('hex'),
@@ -169,8 +220,14 @@ for (const group of [0, 1, 2, 3]) {
             await context.close();
           }
         }
-        expect(snapshots[1], `${locale}/${width} no-script preview/public semantics`).toEqual(
-          snapshots[0],
+        expect(snapshots[1]![0]!.hash, `${locale}/${width} historical props`).not.toBe(
+          snapshots[0]![0]!.hash,
+        );
+        expect(snapshots[1]![0]!.text, `${locale}/${width} historical text`).not.toBe(
+          snapshots[0]![0]!.text,
+        );
+        expect(snapshots[1]!.slice(1), `${locale}/${width} unchanged host semantics`).toEqual(
+          snapshots[0]!.slice(1),
         );
       }
       expect(manifest).toHaveLength(6);
