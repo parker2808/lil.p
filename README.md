@@ -1,12 +1,16 @@
 # lil.p
 
+The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
+
+The contact form retains name, email, and message typed before hydration, synchronizes them on mount, and sends one client request. The server action remains available without JavaScript; see the [hydration regression spec](./docs/specs/2026-11-11-contact-hydration-readiness.md).
+
 The stacked [CMS U2 site/admin pattern spec](./docs/specs/2026-11-10-cms-u2-site-admin-patterns.md) and [43-route ledger](./docs/audits/2026-11-10-cms-u2-route-pattern-ledger.md) track shared navigation, forms, tables, feedback, loading/error/empty states, 44px target sizes, focus styles and EN/VI light/dark screenshot/a11y reviews. A clean disposable-MySQL run passed all 336 route/theme/viewport captures with no tagged WCAG A/AA or undersized-target findings; eight [privacy-safe reviewed screenshots](./docs/specs/assets/cms-u2/) complement the full local matrices. U2 adds retry to existing admin load errors and icon spacing to status badges while keeping API/database behavior unchanged. [Shared UI](./packages/ui/README.md) documents host-owned controls and table chrome; the EN/VI table shortcut help reflects selection-first archive/delete and active-row fallback.
 
 The [CMS U3 builder design study](./docs/specs/2026-11-10-cms-u3-builder-design.md) specifies a neutral design reference, token-only lil.p override, page/slot composition and keyboard path. Its static `/en/cms-u3-study` and `/vi/cms-u3-study` samples show empty, nested and responsive pages; they return not found unless `R3_E2E_STATES=1`. On mobile the canvas owns the viewport and Components, Layers and Properties open from an accessible bottom dock; the screenshot matrices and measured contrast table are in the spec. The study does not edit, save or publish. The [web host README](./apps/web/README.md) documents this gated fixture separately from the live Phase D builder.
 
 The [CMS U0 route/control baseline](./docs/audits/2026-11-10-cms-u0-route-control-baseline.md) maps the current public/admin routes, redirect and role boundaries, control ownership, and existing behavior/visual tests before UI standardization. It records uncovered live/visual states separately from executed focused tests; U0 changes no runtime behavior.
 
-The [CMS core package](./packages/cms-core/README.md) runs its own dependency-boundary check in CI, independent of the monorepo root check, so extraction cannot silently drop this gate. C1 prep does not include the later tree, theme or server exports; the [C1 runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md) retains the final integration and authorization requirements.
+The [CMS core package](./packages/cms-core/README.md) runs its own dependency-boundary check in CI, independent of the monorepo root check, so extraction cannot silently drop this gate. Its React and theme tests import the package-local bundle measure, so the same tests run after extraction. The [C1 runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md) retains the final integration and authorization requirements.
 
 ### CMS U1 shared controls
 
@@ -73,6 +77,8 @@ The opt-in CMS tree publish validator requires exactly one effective H1 at each
 mobile, tablet and desktop breakpoint; draft validation permits incomplete headings.
 The standalone fixture's default homepage action points to `/en/components`;
 sampled EN/VI pages resolve their own locale-prefixed component links.
+
+[CMS D3 shared SSR renderer](./docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md) adds opt-in `renderTree` to the core's server-only React entry. Breakpoint-specific row spans and one semantic heading per node are covered by a required browser matrix; heading levels must stay stable across breakpoints at publish/SSR, while drafts may vary. Host `components.heading` overrides return a typed failure. Existing routes remain legacy until D2 authorizes tree dispatch and publish validation; D6 owns route parity.
 
 ### Public site
 
