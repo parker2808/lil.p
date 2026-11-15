@@ -139,6 +139,12 @@ export class PageVersionsService {
           message: 'Tree publishing is not enabled',
         });
       }
+      if (page.draftTreeRevision === 9223372036854775807n) {
+        throw new ConflictException({
+          code: 'CONFLICT',
+          message: 'Builder revision limit reached',
+        });
+      }
       const snapshot = await this.assertPublishable(tx, key, page);
       const latest = await tx.pageVersion.aggregate({
         where: { pageId: page.id },
@@ -155,14 +161,28 @@ export class PageVersionsService {
         },
       });
       const now = new Date();
-      await tx.page.update({
-        where: { id: page.id },
+      const changed = await tx.page.updateMany({
+        where: {
+          id: page.id,
+          draftTreeRevision: page.draftTreeRevision,
+          draftTree: { equals: PrismaValue.DbNull },
+        },
         data: {
           publishedVersionId: created.id,
           publishedAt: now,
           updatedAt: now,
+          draftTreeRevision: { increment: 1 },
         },
       });
+      if (changed.count !== 1) {
+        const current = await this.requirePage(tx, key);
+        throw new ConflictException({
+          code: 'CONFLICT',
+          message: 'Builder draft changed; reload before publishing',
+          mode: current.draftTree == null ? 'legacy' : 'tree',
+          revision: current.draftTreeRevision.toString(),
+        });
+      }
       await this.audit?.record(tx, {
         userId: actorId,
         action: 'PUBLISH',

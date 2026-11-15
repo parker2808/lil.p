@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- D2 #199 P1 legacy writer race: publish, SEO and block mutations now use the observed revision and SQL-NULL mode for conditional writes; losing a tree activation returns 409 and rolls back the transaction. The pre-D2 instance-drain gate below remains open; no schema or migration changed in this follow-up.
+
 - D2 rollback-reader gate (2026-11-15): Parker approved the forward-only policy at 08:54 ICT, **not** a demonstrated Render page-write pause/drain or production migration. The pre-D2 Prisma reproduction `350ac169` can change `publishedVersionId` without claiming `draftTreeRevision`; no TiDB trigger fence exists. Before the `main` deploy runs `Page.draftTree` migration, prove page/version writes are paused and all old API instances drained; verify D2-aware instances before resuming. If unverifiable, block #199; write-freeze implementation is owned separately. See `docs/specs/2026-11-11-cms-d2-persistence.md`.
 
 - C1 #209 P3 docs follow-up (2026-11-15): the #208 26-file tarball is evidence for that source SHA, not a fixed count for later integration; the allowlist is `dist/**`, README, LICENSE and package.json. The coordinator C3 command sheet must review all four direct consumer manifests (contracts, API, web, neutral fixture) alongside the root lockfile. No package/runtime/golden changes; final integrated audit and authorization remain open.
@@ -250,6 +252,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Hardened D2 legacy publish's published-pointer CAS and audited sibling SEO and five block mutations; deterministic activation-race unit coverage covers publish and delete rollback. Merged main `69f4806` preserving both documentation histories; no migration or production action in this change.
 
 - 2026-11-15: Reconciled #199 D2 persistence onto main, retaining main's CMS engine, VI-only SEO golden and both documentation histories. Recorded Parker's forward-only approval separately from the outstanding Render drain gate; preserved the pre-D2 rollback-reader reproduction as a known unsafe-writer test. The `main` API deploy runs the additive migration on startup, so no merge/deploy until the no-overlap gate is verified.
 

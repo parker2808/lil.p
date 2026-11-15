@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Checking legacy mode before a transaction's version insert or block mutation does not fence a later tree activation; claim both SQL-NULL mode and monotonic revision in the final page write, and roll back the whole transaction on a lost CAS.
+
 - 2026-11-15: An additive D2 schema lets a pre-D2 Prisma client alter a tree page's published pointer without bumping the draft revision. Parker approved forward-only recovery, not evidence of an old-writer drain; because the `main` API deploy runs the migration on startup, prove the page-write pause and complete Render drain before merging/deploying D2. A MySQL trigger cannot serve as a TiDB fence.
 
 - 2026-11-15: Describe D2 deploy readiness as executable proof of forward-only Stage A write freeze/drain, not rollback-read proof; once migrated, an old API rollback is unsafe and recovery must roll forward.
