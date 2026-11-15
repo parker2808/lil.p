@@ -49,6 +49,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - 2026-11-16 V17/V21 raw inventory: tracked migration/seed page writers and raw fixture variants are gated in tests; V17 still requires authorized read-only production inventory and final-head route/golden comparison. V21 requires final integrated-head evidence; see `docs/specs/2026-11-16-cms-d2-v17-v21-raw-inventory.md`.
+- 2026-11-16 V17/V21 combined artifact follow-up: unit/API CI emit source-byte and canonical disposable-DB JSON byte/hash manifests with head/merge provenance. Review these on the integrated #208 head and final main before closing the code evidence; production inventory stays deferred. No runtime/schema/golden change.
 - 2026-11-16 V12 split: pre-deploy route-template logging, request-ID fingerprinting, stack-free 500 logging and retry-exhausted revalidation warning redaction now have unit tests; disposable-DB populated draft/version/preview and denied-mutation tests capture and reject content/token/PII markers in logs. New exact-head CI and independent review pending. Authorized read-only Render log audit is DEFERRED until after deploy; no operational signoff or production calls here.
 
 - 2026-11-16 D2 reopen decision: #210 pre-D2 remains always frozen. D2 opens writes by default only after read-only startup verification of the applied migration and both columns; explicit `CMS_PAGE_WRITE_FREEZE=1` or failed check freezes. No Render env change is assumed or available. **Complete Stage A instance/in-flight-request drain before D2 deploy**, because a successful D2 startup can open writes automatically. The coordinator owns authorized Render inventory, migration verification and authenticated ingress write checks; CI cannot certify production drain or approval.
@@ -279,6 +280,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Add CI-uploaded V17/V21 source fixture and disposable-DB version/route hash inventories, including rejected future version routes and before/after canonical byte comparisons; no production DB access, runtime/schema/golden change or V17 operational signoff.
 
 - 2026-11-16: Added tracked pre-D2 migration/seed writer inventory gate, package-local nested/unknown/future snapshot hash fixtures, and disposable-DB historical version response versus stored JSON comparison. No runtime, schema or golden contract changes.
 - 2026-11-16: Redact HTTP request logs (route template and request-ID fingerprint only), omit raw exception stacks and invalid published-block identifiers, and assert real populated CMS reads and denied mutations never log synthetic content/token/PII markers. No schema/golden changes; production log audit remains deferred.
