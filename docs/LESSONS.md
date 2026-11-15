@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: When D2 raw legacy and D6 current nested-field tests overlap in core, retain both before graph regeneration; source-head success alone cannot prove combined host registry, restored snapshots or public bundle parity.
+
 - 2026-11-15: A 400 validation response cannot prove exception-filter logging behavior; assert nonempty draft/version/preview read capabilities and reserve log-redaction claims for authorized production log evidence.
 
 - 2026-11-15: Direct and rewritten 503 samples prove only the sampled ingress; a forward-only D2 migration also requires an authenticated active-instance inventory and completed in-flight drain. Keep cold AppModule setup timing separate from the normally timed freeze HTTP assertion when combining branches.

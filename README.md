@@ -4,6 +4,11 @@ The [D5 live journey spec](./docs/specs/2026-11-15-cms-d5-live-journeys.md) regi
 
 The stacked [D5 all-block Properties spec](./docs/specs/2026-11-15-cms-d5-all-block-properties.md) registers all 20 host block contracts in the gated builder. Its EN/VI editor derives nested/localized, numeric, array, optional-group and responsive controls from the host schemas; invalid partial edits remain local across node, breakpoint and sheet changes. D6's editor-origin suite now exercises all 20 through the real draft API and SSR; integrated exact-head CI, remaining semantic/visual review and forward-only rollout evidence remain open. This draft verification branch must not merge.
 
+The [V17–V22 focused evidence gates](./docs/specs/2026-11-15-cms-v17-v22-evidence-gates.md)
+add legacy/tree route and missing-SEO snapshot checks, nested-field core
+preservation, and an offline deployed-public-asset parity verifier. They do not
+authorize deployment or close the V18 live drain and V19 CDN parity gates.
+
 The D6 host-registry integration is staged on this verification branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and
 publish, then EN/VI version preview and public SSR. Its separate four-shard editor-origin
@@ -16,6 +21,7 @@ after republishing. Dynamic hosts compare stable props and API data rather than
 transient HTML; data-dependent/empty-default hosts do not prove nonblank semantic
 text solely through this suite.
 The [D2 V11/V12 safety gate](./docs/specs/2026-11-15-cms-d2-v11-v12-gate.md) extends real-DB negative tree and capability checks. Final integrated D6 publication and authorized production log review remain separate gates.
+The [D6 tree parity gate](./docs/specs/2026-11-15-cms-d6-v04-v06-v09-v10-gate.md) adds serialized legacy/override assertions and paired EN/VI public/preview captures at three widths; visual review and the integrated UI restore path remain open.
 
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 

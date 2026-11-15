@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -36,6 +37,10 @@ test('deduplicates public route chunks, excludes only the gated fixture, and enf
     assert.equal(result.routes.length, 2);
     assert.equal(result.chunks.length, 1);
     assert.equal(result.gzipBytes, bytes);
+    assert.equal(
+      result.chunks[0].sha256,
+      createHash('sha256').update('console.log("public")').digest('hex'),
+    );
     assert.equal(
       result.publishedTreeRoute.manifest,
       '[locale]/(site)/[...rest]/page_client-reference-manifest.js',

@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- D6 feature refresh (`e4e80da3`) contributes V04/V06/V09/V10 converter and EN/VI real-tree public/preview subset, plus V17–V22 route snapshots, nested raw-field tests and an offline CDN verifier. The D6 i18n audit still finds raw VI nested Properties labels, incomplete VI contact/site-settings fallback and no neutral-tenant SSR adapter. V03/V14, integrated UI publish/version/restore V10, live V18 drain, deployed V19 parity and final full VI remain GAP pending independent signoff. See `docs/specs/2026-11-15-cms-d6-v04-v06-v09-v10-gate.md` and `docs/specs/2026-11-15-cms-v17-v22-evidence-gates.md`.
+
 - D2 #199 V11/V12 refresh: real MySQL unsafe rich-text rejection and populated draft/version/preview capability checks prove HTTP safety subsets only. HTTP 400 redaction does not prove server log redaction; integrated D6 final publication, authorized production log audit and Stage A live drain remain GAP. See `docs/specs/2026-11-15-cms-d2-v11-v12-gate.md`.
 
 - Stage A #210 refreshed on main `3162b973`: production page/version writes remain frozen with 503 while health and reads remain available; five-shard D4 keyboard/canvas coverage is retained. The direct Render/Vercel 14-mutation probe checklist is read-only preparation, not a production probe or evidence of old-instance drain. A release owner must verify the authoritative active-instance roster and in-flight completion before D2 migration; CI cannot close J09/V18. See `docs/runbooks/stage-a-drain-curl.md`.
@@ -332,6 +334,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Integrated D6 `e4e80da3` converter, route-snapshot, editor and public-bundle guard tests into #208 alongside D2/Stage A; retained both independent core raw-preservation cases. No golden, schema, migration, production deploy or release authorization change; exact combined-head CI required.
 
 - 2026-11-15: Integrated D2 #199 V11/V12 real-DB negative/read cases and main's five-shard registry into #208; preserved D6 host registry imports and tightened claims to HTTP 400 redaction only. No schema/migration/runtime or release authorization change.
 

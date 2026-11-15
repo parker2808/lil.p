@@ -82,7 +82,7 @@ const legacySnapshot = ${JSON.stringify(legacySnapshot)};
 async function main() {
 const prisma = new PrismaClient({ adapter: new PrismaMariaDb(process.env.DATABASE_URL_TEST!) });
 try {
-  const page = await prisma.page.findUniqueOrThrow({ where: { key: 'rollback-reader' } });
+  const page = await prisma.page.findUniqueOrThrow({ where: { key: process.argv[3] ?? 'rollback-reader' } });
   const version = page.publishedVersionId
     ? await prisma.pageVersion.findUniqueOrThrow({ where: { id: page.publishedVersionId } })
     : null;
@@ -133,13 +133,20 @@ main().catch((error: unknown) => {
     await truncateTables(prisma);
   });
 
-  function runOldReader(action: 'read' | 'legacy-write' | 'legacy-publish-write'): OldReaderResult {
-    const output = execFileSync('pnpm', ['exec', 'tsx', join(fixtureDir, 'reader.ts'), action], {
-      cwd: apiRoot,
-      env: { ...process.env, DATABASE_URL_TEST: databaseUrl },
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-    });
+  function runOldReader(
+    action: 'read' | 'legacy-write' | 'legacy-publish-write',
+    key = 'rollback-reader',
+  ): OldReaderResult {
+    const output = execFileSync(
+      'pnpm',
+      ['exec', 'tsx', join(fixtureDir, 'reader.ts'), action, key],
+      {
+        cwd: apiRoot,
+        env: { ...process.env, DATABASE_URL_TEST: databaseUrl },
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'pipe'],
+      },
+    );
     return JSON.parse(output) as OldReaderResult;
   }
 
@@ -156,6 +163,39 @@ main().catch((error: unknown) => {
       draftTree: null,
       draftTreeRevision: 0n,
     });
+  });
+
+  it('reads five distinct published rows with the pre-D2 client without changing snapshots or pointers', async () => {
+    for (let index = 0; index < 5; index += 1) {
+      const key = `rollback-row-${index}`;
+      const page = await prisma.page.create({ data: { key, title: key } });
+      const snapshot =
+        index === 4
+          ? { format: 'tree', snapshotVersion: 1, seo: { seoTitleEn: key }, tree }
+          : { ...legacySnapshot, seo: { ...legacySnapshot.seo, seoTitleEn: key } };
+      const version = await prisma.pageVersion.create({
+        data: { pageId: page.id, version: 1, snapshot },
+      });
+      await prisma.page.update({
+        where: { id: page.id },
+        data: { publishedVersionId: version.id },
+      });
+      const before = JSON.stringify(version.snapshot);
+      const read = runOldReader('read', key);
+      expect(read.pageFields).not.toContain('draftTree');
+      expect(read.pageFields).not.toContain('draftTreeRevision');
+      expect(read.publishedVersionId).toBe(version.id);
+      expect(read.snapshot).toEqual(snapshot);
+      expect(
+        JSON.stringify(
+          (await prisma.pageVersion.findUniqueOrThrow({ where: { id: version.id } })).snapshot,
+        ),
+      ).toBe(before);
+      expect(
+        (await prisma.page.findUniqueOrThrow({ where: { id: page.id } })).publishedVersionId,
+      ).toBe(version.id);
+    }
+    expect(await prisma.page.count()).toBe(5);
   });
 
   it('documents the forward-only policy: a pre-D2 writer can replace a tree published pointer without revision CAS', async () => {
