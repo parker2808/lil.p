@@ -275,6 +275,17 @@ The [D4 main reconciliation notes](./docs/specs/2026-11-15-cms-d4-main-reconcili
 The host must pass its component schema registry explicitly. A concurrent restore to legacy mode (`tree: null`) pauses autosave without losing local edits; reloading another builder draft requires explicit discard confirmation. The D6 integration gate must exercise all 20 host block definitions.
 
 [D5 design and accessibility evidence](./docs/specs/2026-11-14-cms-d5-design-evidence.md) retains its historical 99-image manifest; accepted #213 adds two-column wrapping EN/VI breakpoint controls and CI-attached exact-head empty/error, keyboard-focus and neutral/lil.p captures. The separate D6 release journey and all-20 editor-origin parity remain gated.
+Core owns semantic headings in D3: a host `components.heading` override fails with a typed result instead of emitting duplicate responsive H1s.
+
+[CMS D6 guarded route integration](./docs/specs/2026-11-11-cms-d6-route-parity.md) combines D2 and D3: `CMS_TREE_ROUTES=1` enables strict tree snapshot JSON on authenticated preview and public routes, rendered by the same server-only D3 renderer in Next. Opt-in publish uses a version-checked host transaction; the disposable-MySQL API/browser journey covers EN/VI save, publish, preview/public SSR, restore and republish. The V02 browser gate separately tests keyboard-only EN/VI edit, reorder, publish and reload against the saved version and public tree; spoken screen-reader audio remains a manual check. Legacy routes remain unchanged; D5 client autosave and dirty-reload acceptance remain separate gates. The required CI build step checks zero builder/editor bytes in public chunks. The stacked #201 contact hydration fix preserves pre-mount input. This stacked D6 PR must not merge before D2 #199's final gate.
+
+[D5 pure tree logic](./docs/specs/2026-11-11-cms-d5-core-logic.md) adds explicit-registry atomic edits, responsive overrides, bounded history and CAS autosave to `./tree` without shipping its editor UI. D6's release-gate extension checks all 20 host schemas and EN/VI SSR parity using test-local host render mappings; its follow-up injects the host-owned registry into live API draft/publish/snapshot validation and Next SSR with an all-20 browser parity gate. Dirty-reload UI remains blocked. #202 now carries #200 and must wait for both #199 and #200 approvals.
+
+The all-20 D6 live route gate passes on disposable MySQL in both locales; the complete locked `check:all --e2e` passes 13/13 after one unrelated admin-scroll exact-pixel variance on the first run. D4/D5 editor integration and reload safety still require their own release evidence.
+
+The [partial D6 live-route manifest](./docs/specs/2026-11-14-cms-d6-live-route-evidence.md) separates verified route behavior from blocked editor, visual and migration release gates.
+
+The D6 all-20 browser spec runs last on an existing web E2E shard; adding it does not reshuffle earlier tests or contaminate visual baselines with newly published test pages. A throwaway D4+D5+D6 scratch merge passes non-browser checks (8/8), the all-20 live route case (1/1) and focused editor autosave/reload, navigation-failure guard and restore cases (3/3) on disposable MySQL. Full J01–J09, all-20 editor interaction, visual/a11y and migration release gates remain blocked in the D6 evidence manifest.
 
 ### Real content seed verification
 
