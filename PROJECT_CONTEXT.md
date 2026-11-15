@@ -48,7 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- 2026-11-16 V05: A focused D6 editor-origin page-header test edits nested EN/VI title and eyebrow in Properties, waits for each real autosaved draft value, then pairs the saved revision with version snapshot and EN/VI public/version-preview render captures at 390/768/1440. Exact-head CI and independent screenshot review are pending; full 20-schema validation/errors remain GAP. See `docs/specs/2026-11-16-cms-d6-v05-revision-chain.md`.
+- 2026-11-16 V05: A focused D6 editor-origin page-header test edits nested EN/VI title and eyebrow in Properties, waits for each real autosaved draft value, then pairs the saved revision with version snapshot and EN/VI public/version-preview render captures at 390/768/1440. Prior head `f8d3d14d` passed run `43760729931` (5/5 web shards); merged V02 base requires new exact-head CI and independent screenshot review. Full 20-schema validation/errors remain GAP. See `docs/specs/2026-11-16-cms-d6-v05-revision-chain.md`.
+- 2026-11-16 V02: D5 #248 covers EN/VI keyboard invalid drop but intentionally disables publish. A separate D6 real-browser gate now exercises keyboard-only edit/reorder, live status/focus order, publish and reload with the published version/public tree; exact-head ready-e2e CI and manual screen-reader audio remain pending. No runtime, API, schema or production change.
 
 - 2026-11-16 D6 J07/V06 no-script gate: CI `43748537865` failed all eight new cases because public group-level loading streamed the main into a hidden segment requiring insertion scripts. Move the home skeleton into a dedicated group and remove only the shared fallback. Four five-host groups require EN/VI public v2 versus historical `?v=1` preview visible nested text at 390/768/1440, distinct changed H1-host labels/hashes, unchanged peer-host semantics, except empty CV, no overflow and paired screenshot manifests. This base-only fixture does not prove every host's responsive overrides; existing parity tests cover heading/paragraph overrides, API E2E covers immutable version/pointer invariants. J07/V06 remain GAP until exact-head CI, independent artifact review and remaining responsive coverage. See `docs/specs/2026-11-16-cms-d6-j07-v06-nojs.md`.
 - 2026-11-16 V13: D6 historical draft SEO title/description previously read the current draft while `?v=N` rendered a versioned tree. Shared metadata now uses the validated draft-only version for core and custom page routes; browser evidence must verify EN/VI old body/SEO versus current public body/SEO. Full V13 route/state localization remains GAP.
@@ -344,9 +345,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
-- 2026-11-16: Expanded V05 Properties evidence to include scrolled mobile/tablet title fields; the initial exact-head CI passed 18/18 at `561fe6ed` (run `43759329807`), but the strengthened evidence needs its own new-head CI.
+- 2026-11-16: Expanded V05 Properties evidence to include scrolled mobile/tablet title fields; initial run `43759329807` passed 18/18 at `561fe6ed`, and strengthened run `43760729931` passed five shards at `f8d3d14d`. The combined V02 base still needs exact-new-head CI.
 
 - 2026-11-16: Registered a V05 browser gate for nested bilingual Properties → revisioned draft → UI publish → immutable snapshot → paired preview/public text and viewport captures; no runtime or golden contract change.
+- 2026-11-16: Register the D6 EN/VI keyboard-only publish browser test in the five-shard manifest; compare saved draft, version snapshot and public tree after reload while recording zero pointer events. CI pending; no V02 full PASS until exact-head evidence and independent review.
 
 - 2026-11-16: #249 CI `43754309959` found page-header VI test content falling back to EN because the default title.vi is empty; fill both heading fields in the version fixture so the no-JS assertion proves VI rendering. Same run confirmed home OG metadata missing; fix committed before rerun.
 
