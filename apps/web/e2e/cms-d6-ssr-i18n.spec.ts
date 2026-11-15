@@ -127,9 +127,18 @@ test('nested tree keeps EN/VI SSR without scripts and selects brand by real host
           const action = root.getByRole('link', { name: 'Nested SSR action' });
           await expect(action).toBeVisible();
           const screenshot = await action.screenshot({ animations: 'disabled' });
+          const tuple = `${locale}-${brand}-${preview ? 'preview' : 'public'}`;
+          await testInfo.attach(`${tuple}-link.png`, {
+            body: screenshot,
+            contentType: 'image/png',
+          });
+          await testInfo.attach(`${tuple}-page.png`, {
+            body: await visitor.screenshot({ fullPage: true, animations: 'disabled' }),
+            contentType: 'image/png',
+          });
           captures.set(`${locale}/${brand}/${preview}`, screenshot);
           if (preview) {
-            expect(screenshot.equals(captures.get(`${locale}/${brand}/false`)!)).toBe(true);
+            expect(screenshot.equals(captures.get(`${locale}/${brand}/false`)!), tuple).toBe(true);
           }
         }
       } finally {
