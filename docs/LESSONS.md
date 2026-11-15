@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: When D5 label localization and D6 restore/dark-banner work merge cleanly in runtime, retain both documentation histories and rerun the combined gates; separate source-green visual subsets are not a combined-head row verdict.
+
 - 2026-11-16: A combined D2/D6 historical metadata fixture must read the persisted builder revision after legacy publish and SEO edits before activation; a hardcoded zero masks the correct CAS boundary and fails exact-head CI.
 
 - 2026-11-16: A D5 keyboard navigation branch can miss a newly required D6 localized host-label callback; run combined typecheck before push and keep live announcement assertions intact.
