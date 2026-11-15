@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #208 rebuilt verification: main `69f48064` + Stage A `65ace7d0` + D2 `bf34af6d` + D5 UI/all-20 `227e6f7e` + D6 scratch `7c4d0675` are combined for CI evidence only. D6 live host-registry tests and #211 all-20 Properties tests are distinct, not one editor-to-publish journey. Independent #204 design review still has P2 clipped VI breakpoint labels at 390/1440 and absent uploaded current-head empty/error/focus/token-override captures. Forward-only policy is approved; Render drain, final-head CI and release signoff remain open. DO NOT MERGE.
+
 - 2026-11-15 #202 integrated gate preparation: D2-free live publish/preview parity is infeasible because Page draft and revision columns back CAS and transactionally published snapshots. Local D6 scratch `e960c117` includes D2 and main `98f045f` but not #204 UI. A locked, disposable migration-only forward/drift gate passed; rollback-reader and combined J01–J09, visual/SSR, final-head CI remain blocked. See `docs/specs/2026-11-15-cms-d6-integrated-gate-prep.md`.
 
 - D6 #202 scratch reconciliation against main after #198: preserve the opt-in tree publish/preview/public parity guard, all 20 host schemas, D4/D5 state and legacy readers. The branch carries D2's additive migration, so a clean static gate alone cannot authorize merging before #199's migration gate; full J01–J09 and migration release remain blocked. See `docs/specs/2026-11-11-cms-d6-route-parity.md` and `docs/specs/2026-11-14-cms-d6-live-route-evidence.md`.
@@ -272,6 +274,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Rebuilt verification-only #208 with Stage A, D2 CAS, #211 all-20 D5 UI and D6 host-registry test heads; preserved lossless snapshot restore and both documentation histories. Recorded design P2 and distinct editor/live route gaps; no production DDL, deploy or merge.
 
 - 2026-11-15: Recorded Parker's 08:54 ICT forward-only D2 rollout approval and known old-writer regression `350ac169`; documented the pending Render no-overlap proof, the explicitly blocked all-20 D5 Properties gate and no old-binary rollback. Verification-only #208 remains DO NOT MERGE; no production migration or deployment was run.
 - 2026-11-15: Prepared #199 → #204 → #202 disposable-only integrated gate commands and recorded the scratch D2 forward/drift PASS with explicit rollback-reader and visual/J01–J09 gaps; no PR push, production DB, or release claim.

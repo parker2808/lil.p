@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Separate mocked all-20 Properties editing from live all-20 route validation; neither alone proves editor-to-persisted-publish parity, and CI-generated images need attachment plus current-head visual review before design signoff.
+
 - 2026-11-15: A green labeled combined-head CI run establishes its actual API/web/visual/axe test cases, not the full D6 J01–J09/V01–V22 acceptance matrix; keep each incomplete journey open and distinguish approved forward-only policy from unproven live instance-drain execution.
 - 2026-11-15: Approval of forward-only D2 deployment is not proof of safe deployment: Render's startup migrator can race an old serving API. Preserve the failing old-client regression as a known limitation and require verifiable write pause, full old-instance drain before migration, new-instance verification and fix-forward-only rollback.
 - 2026-11-15: An inherited D2 migration can survive a D6 merge even when D6's runtime parity tests pass; reconcile D4/D5 and docs in scratch, but gate any PR update on the approved migration ordering and final-head CI.
