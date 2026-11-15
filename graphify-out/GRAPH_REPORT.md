@@ -1,7 +1,9 @@
 # Graph Report - fix-cms-d5-v15-target-focus  (2026-11-15)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 1616 files · ~656,126 words
+- Verdict: corpus is large enough that graph structure adds value.
+- Unclassified: 39 file(s) not represented in the graph (top: (none) 18, .css 16, .example 1)
 
 ## Summary
 - 7783 nodes · 24260 edges · 357 communities (295 shown, 62 thin omitted)
@@ -9,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `dd3b4a31`
+- Built from commit: `dc2d5a07`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -371,16 +373,16 @@
 10. `apiServer()` - 81 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `Highlights authored by Parker` --references--> `text()`  [INFERRED]
+  docs/case-studies/cfw-backoffice-portal.md → apps/api/prisma/seed/data/portfolio.mapper.ts
+- `T30 · Write API: posts, experience, education, principles, stats, process` --references--> `readingMinutes()`  [INFERRED]
+  docs/archive/plan/09-7-tasks-t26-projects-list.md → apps/api/src/common/utils/reading-time.util.ts
+- `T30 · Write API: post, experience, education, principle, stat, process` --references--> `readingMinutes()`  [INFERRED]
+  docs/archive/plan-vi/10-7-cac-task-m3-phia-ghi.md → apps/api/src/common/utils/reading-time.util.ts
+- `Contract and acceptance` --references--> `pickGroup()`  [INFERRED]
+  docs/specs/2026-11-10-custom-page-locale-seo.md → apps/api/src/i18n/pick-locale.util.ts
 - `T50 · Media API: upload, variants, relations` --references--> `MediaService`  [INFERRED]
   docs/archive/plan/12-7-tasks-t46-users-admin-admin-only-change-own-pass.md → apps/api/src/modules/media/media.service.ts
-- `T50 · API media: upload, variant, quan hệ` --references--> `MediaService`  [INFERRED]
-  docs/archive/plan-vi/14-7-cac-task-m5-realtime-media-publish.md → apps/api/src/modules/media/media.service.ts
-- `8. Owner tasks and out of scope` --references--> `MediaService`  [INFERRED]
-  docs/PLAN.md → apps/api/src/modules/media/media.service.ts
-- `8. Việc của owner và ngoài phạm vi` --references--> `MediaService`  [INFERRED]
-  docs/PLAN.vi.md → apps/api/src/modules/media/media.service.ts
-- `T16 · Domains + projects + metrics (one-to-many)` --references--> `Hue`  [INFERRED]
-  docs/archive/plan/08-7-tasks-t16-domains-projects-metrics-one-to-many.md → packages/contracts/src/domains/domains.enum.ts
 
 ## Import Cycles
 - None detected.
@@ -1568,23 +1570,23 @@ Cohesion: 0.50
 Nodes (3): Default, meta, Story
 
 ## Knowledge Gaps
-- **17 isolated node(s):** `../../tsconfig.base.json`, `ANALYTICS_SALT_SECRET`, `API_PORT`, `API_URL`, `DATABASE_URL` (+12 more)
+- **17 isolated node(s):** `DATABASE_URL`, `./tsconfig.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json` (+12 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2332 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **62 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Button()` connect `Button` to `next-intl`, `EditorShell`, `AddBlockDialog.tsx`, `PublicErrorState.tsx`, `Badge`, `Input`, `04-4-components-and-layout.md`, `AdminSiteIndex.tsx`, `block-renderers.constant.ts`, `Modules`, `cn`, `use-me.hook.tsx`, `ProjectsDetail.tsx`, `AdminPostsEditor.test.tsx`, `BuilderHost.tsx`, `SortableList.tsx`, `@tanstack/react-query`, `qk`, `PropertiesPanel.tsx`, `AdminInboxDetail.test.tsx`, `Topbar.tsx`, `Foundations.stories.tsx`, `button.stories.tsx`, `Modules`, `apiClient`?**
-  _High betweenness centrality (0.035) - this node is a cross-community bridge._
+- **Why does `@nestjs/common` connect `@nestjs/common` to `Locale`, `fixture.spec.tsx`, `ref_vitest`, `api/package.json`, `admin-pages.controller.ts`, `auth.controller.ts`, `page-versions.service.ts`, `.recordNow`, `posts/posts.service.ts`, `JwtAuthGuard`, `AuditService`, `analytics.service.ts`, `media.service.ts`, `posts.schema.ts`, `skills/skills.service.ts`, `dashboard/dashboard.service.ts`, `AppConfigService`, `health.controller.ts`, `Roles`, `EventsService`, `AdminExperience`, `AdminEducation`, `AdminPrinciple`, `AdminContactTopic`, `AdminProcessStep`, `AdminDomain`, `AdminTag`, `Public`, `contact.schema.ts`?**
+  _High betweenness centrality (0.043) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `cn()` (e.g. with `T04 · Design tokens + shadcn theme in `packages/ui`` and `T04 · Design token + shadcn theme trong `packages/ui``) actually correct?**
   _`cn()` has 2 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `../../tsconfig.base.json`, `ANALYTICS_SALT_SECRET`, `API_PORT` to the rest of the system?**
+- **What connects `DATABASE_URL`, `./tsconfig.json`, `../../tsconfig.base.json` to the rest of the system?**
   _17 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `next-intl` be split into smaller, more focused modules?**
   _Cohesion score 0.04674163392494242 - nodes in this community are weakly interconnected._
-- **Why does `next-intl` connect `next-intl` to `ActivityCard.tsx`, `PublicErrorState.tsx`, `AddBlockDialog.tsx`, `Badge`, `Input`, `AdminSiteIndex.tsx`, `block-renderers.constant.ts`, `CaseCard.tsx`, `Modules`, `craft/page.tsx`, `Prose`, `cn`, `BuilderShell.tsx`, `use-me.hook.tsx`, `next`, `apps_web_i18n_locales_en`, `BlockInspector.tsx`, `Providers`, `ProjectsDetail.tsx`, `ActionCards.tsx`, `AdminPostsEditor.test.tsx`, `BuilderHost.tsx`, `NotesDetail.tsx`, `@tanstack/react-query`, `dependencies`, `notes/[slug]/page.tsx`, `web/package.json`, `qk`, `[locale]/layout.tsx`, `AdminDashboardIndex.tsx`, `Button`, `AdminInboxDetail.test.tsx`, `ContentHealthCard.tsx`, `page-metadata.util.ts`, `ref_node_path`, `proxy.ts`, `AdminAuthLogin.tsx`, `Topbar.tsx`, `Modules`, `apiClient`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+- **Why does `@storybook/react` connect `@storybook/react` to `Input`, `MediaLibrary.test.tsx`, `CaseCard.tsx`, `Prose`, `CaseCard.stories.tsx`, `ui/package.json`, `CoverPlaceholder.stories.tsx`, `MarkdownEditor.test.tsx`, `MediaUploader.stories.tsx`, `Motion.stories.tsx`, `AccentHeadline.stories.tsx`, `Atmosphere.stories.tsx`, `PostCard.stories.tsx`, `Callout.stories.tsx`, `DiffStat.stories.tsx`, `FeatureCard.stories.tsx`, `KickerPill.stories.tsx`, `Prose.stories.tsx`, `SortableList.tsx`, `StatusPill.stories.tsx`, `skills.type.ts`, `SaveStatus.stories.tsx`, `devDependencies`, `Colors.stories.tsx`, `Spacing.stories.tsx`, `Button`, `Typography.stories.tsx`, `ContentHealthCard.tsx`, `locale.schema.ts`, `TechMarquee.stories.tsx`, `badge.stories.tsx`, `SectionBoundary.stories.tsx`, `ContentProgress.stories.tsx`, `DecisionCard.stories.tsx`, `FactChips.stories.tsx`, `SectionNav.stories.tsx`, `SectionHeader.stories.tsx`, `TakeawaysCard.stories.tsx`, `experience.schema.ts`, `Topbar.tsx`, `Foundations.stories.tsx`, `StatCard.stories.tsx`, `ref_testing_library_react`, `button.stories.tsx`, `VersionTag.stories.tsx`, `preview.tsx`?**
+  _High betweenness centrality (0.026) - this node is a cross-community bridge._
 - **Are the 12 inferred relationships involving `Button()` (e.g. with `4. Architecture at a glance` and `T12 · UI primitives matching Figma component sets`) actually correct?**
   _`Button()` has 12 INFERRED edges - model-reasoned connections that need verification._
 - **Should `EditorShell` be split into smaller, more focused modules?**
