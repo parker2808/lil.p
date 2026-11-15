@@ -251,6 +251,26 @@ This head is not the final merged source. Manual retained-history metadata,
 dependency rights/notices, trusted installer auth, browser visual/E2E, Docker
 and deployment verification remain separate gates; no remote repo was created.
 
+**Retained-identity disposition (local #208 `4df25c52` rehearsal; not final C1):**
+the 86 filtered commits at `19dc846c` contain two distinct author/committer
+identity pairs. In 71 commits, author and committer match and both use the same
+non-noreply consumer-email identity; in 15, the author uses a GitHub noreply
+address while the distinct committer uses a GitHub service address. These are
+counts and categories only: do not publish names, addresses or a raw metadata
+dump in issues, PRs, CI artifacts or the package. A zero-finding redacted
+Gitleaks scan does **not** clear Git author/committer PII. **Decision —
+2026-11-15 20:46 ICT:** the coordinator, under Parker's C1 approval `t250u`
+and delegated decision rule `12:26`, confirmed that both reviewed pairs are
+Parker's own author/GitHub-service identities. **Keep existing commit metadata
+unchanged; do not rewrite history or add a `.mailmap`.** The approved target is
+Parker's own private repo; rewriting would add risk and break provenance with
+lil.p. This decision covers only these reviewed pairs, not unknown identities
+in the final integrated history. Before any private push, compare the final
+filtered identities to this inventory, stop and review any new pair, and rerun
+the complete metadata, secrets, license and artifact audit. Limit access to
+the private destination; do not publish raw metadata in public evidence. No
+normalization, rewrite or private push occurred in this rehearsal.
+
 ```sh
 # C1: authorized local extraction from an approved, integrated source SHA.
 SOURCE_CHECKOUT=/path/to/approved/local/lilp
