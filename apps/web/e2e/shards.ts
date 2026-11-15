@@ -65,6 +65,7 @@ export const SPECS = [
   'cms-tree-journey.spec.ts',
   'cms-builder-ui-restore.spec.ts',
   'cms-d6-v16-version-dialog.spec.ts',
+  'cms-d6-v05-revision-chain.spec.ts',
   'admin-page-create.spec.ts',
   'public-shell-indexes.spec.ts',
   'copy-email.spec.ts',
