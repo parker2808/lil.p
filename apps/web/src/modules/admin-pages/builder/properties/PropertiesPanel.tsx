@@ -7,6 +7,7 @@ import {
   type TreeNode,
   type TreeOperation,
 } from '@parker2808/cms-core/tree';
+import { BLOCK_REGISTRY, type BlockType } from '@portfolio/contracts';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Input } from '@portfolio/ui/components/ui/input';
 import {
@@ -379,12 +380,14 @@ export function PropertiesPanel({
   onEdit,
   pageKey = '',
   propertyDrafts,
+  hostLabel,
 }: {
   state: BuilderState;
   locale: 'en' | 'vi';
   onEdit: (operation: TreeOperation, typing?: boolean) => string | undefined;
   pageKey?: string;
   propertyDrafts?: Map<string, PropertyDraft>;
+  hostLabel?: (type: BlockType) => string;
 }) {
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('base');
   const [localDrafts] = useState(() => new Map<string, PropertyDraft>());
@@ -414,7 +417,10 @@ export function PropertiesPanel({
       <p className={styles.heading}>
         {node
           ? node.type === 'component'
-            ? node.componentType.replaceAll('-', ' ')
+            ? node.componentType in BLOCK_REGISTRY
+              ? (hostLabel?.(node.componentType as BlockType) ??
+                node.componentType.replaceAll('-', ' '))
+              : node.componentType.replaceAll('-', ' ')
             : node.type
           : text.empty}
       </p>

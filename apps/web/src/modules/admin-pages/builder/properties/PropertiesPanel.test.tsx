@@ -11,6 +11,7 @@ import { BLOCK_REGISTRY } from '@portfolio/contracts';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 import type { BuilderState } from '../canvas/commands';
+import { newNode } from '../palette/catalog';
 import { propertyFields } from './editor-model';
 import { PropertiesPanel, type PropertyDraft } from './PropertiesPanel';
 import { builderRegistry } from './registry';
@@ -49,6 +50,121 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   Element.prototype.scrollIntoView = scrollIntoView;
+});
+
+it.each(Object.keys(BLOCK_REGISTRY))('renders Properties for host component %s', (kind) => {
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [
+          {
+            ...state.document.root.sections[0]!,
+            content: [
+              newNode(kind as Parameters<typeof newNode>[0], () => 'host') as Extract<
+                TreeNode,
+                { type: 'component' }
+              >,
+            ],
+          },
+        ],
+      },
+    },
+  };
+  render(<PropertiesPanel state={hostState} locale="en" onEdit={vi.fn()} />);
+  expect(screen.getByRole('group', { name: 'Breakpoint' })).toBeInTheDocument();
+  cleanup();
+});
+
+it('shows the translated host name in the Properties heading', () => {
+  const host = newNode('page-header', () => 'host') as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(
+    <PropertiesPanel
+      state={hostState}
+      locale="vi"
+      onEdit={vi.fn()}
+      hostLabel={() => 'Đầu trang'}
+    />,
+  );
+  expect(screen.getByText('Đầu trang')).toBeInTheDocument();
+  expect(screen.queryByText('page-header')).toBeNull();
+});
+
+it('submits bilingual nested host values as one validated root property', () => {
+  const onEdit = vi.fn();
+  const host = newNode('hero', () => 'host') as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(<PropertiesPanel state={hostState} locale="en" onEdit={onEdit} />);
+  fireEvent.change(screen.getByRole('textbox', { name: 'Primary action · Label · Vietnamese' }), {
+    target: { value: 'Dự án' },
+  });
+  expect(onEdit).toHaveBeenCalledWith(
+    expect.objectContaining({
+      key: 'primaryCta',
+      value: { label: { en: 'View case studies', vi: 'Dự án' }, href: '/projects' },
+    }),
+    true,
+  );
+});
+
+it('offers valid optional bilingual heading for a host with empty defaults', () => {
+  let updated: BuilderState;
+  const onEdit = vi.fn((operation: TreeOperation) => {
+    const result = applyTreeOperation(updated.document, operation, builderRegistry);
+    if (!result.ok) return result.code;
+    updated = { ...updated, document: result.value };
+    return undefined;
+  });
+  const host = newNode('cv-download', () => 'host') as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  updated = hostState;
+  const { rerender } = render(<PropertiesPanel state={updated} locale="en" onEdit={onEdit} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Add · Heading' }));
+  expect(onEdit).not.toHaveBeenCalled();
+  fireEvent.change(screen.getByRole('textbox', { name: 'Heading · Title · English' }), {
+    target: { value: 'Section heading' },
+  });
+  rerender(<PropertiesPanel state={updated} locale="en" onEdit={onEdit} />);
+  fireEvent.change(screen.getByRole('textbox', { name: 'Heading · Title · Vietnamese' }), {
+    target: { value: 'Tiêu đề mục' },
+  });
+  expect(onEdit).toHaveBeenCalledWith(
+    expect.objectContaining({
+      key: 'heading',
+      value: { title: { en: 'Section heading', vi: 'Tiêu đề mục' } },
+    }),
+    true,
+  );
 });
 
 it('uses localized labels and submits base, mobile and clear-override operations', () => {

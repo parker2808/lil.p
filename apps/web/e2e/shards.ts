@@ -69,6 +69,17 @@ export const SPECS = [
   'cms-builder-d5-design.spec.ts',
   'cms-tree-host-blocks.spec.ts',
   'u0-capture.spec.ts',
+  'cms-editor-host-1.spec.ts',
+  'cms-editor-host-2.spec.ts',
+  'cms-editor-host-3.spec.ts',
+  'cms-editor-host-4.spec.ts',
+] as const;
+
+const EDITOR_HOST_SPECS = [
+  'cms-editor-host-1.spec.ts',
+  'cms-editor-host-2.spec.ts',
+  'cms-editor-host-3.spec.ts',
+  'cms-editor-host-4.spec.ts',
 ] as const;
 
 /** Specs that must run together in shard 1 (pixel baselines, Lighthouse scores). */
@@ -106,14 +117,15 @@ function assign(): Map<string, number> {
     out.set(file, shard);
     load[shard - 1] = (load[shard - 1] ?? 0) + (WEIGHT[file] ?? 4);
   }
-  const rest = SPECS.filter((f) => !out.has(f)).sort(
-    (a, b) => (WEIGHT[b] ?? 4) - (WEIGHT[a] ?? 4) || SPECS.indexOf(a) - SPECS.indexOf(b),
-  );
+  const rest = SPECS.filter(
+    (f) => !out.has(f) && !EDITOR_HOST_SPECS.includes(f as (typeof EDITOR_HOST_SPECS)[number]),
+  ).sort((a, b) => (WEIGHT[b] ?? 4) - (WEIGHT[a] ?? 4) || SPECS.indexOf(a) - SPECS.indexOf(b));
   for (const file of rest) {
     const shard = load.indexOf(Math.min(...load)) + 1;
     out.set(file, shard);
     load[shard - 1] = (load[shard - 1] ?? 0) + (WEIGHT[file] ?? 4);
   }
+  EDITOR_HOST_SPECS.forEach((file, index) => out.set(file, index + 1));
   return out;
 }
 

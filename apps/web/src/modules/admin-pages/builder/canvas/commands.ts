@@ -9,6 +9,7 @@ import {
   type CompositionResult,
   type Destination,
 } from './model';
+import { builderRegistry } from '../properties/registry';
 
 export type BuilderState = { document: TreeDocument; selectedId: string };
 export type BuilderCommand =
@@ -26,19 +27,19 @@ export function reduceBuilderCommand(
   const { document } = state;
   switch (command.type) {
     case 'insert':
-      return insertNode(document, command.node, command.destination);
+      return insertNode(document, command.node, command.destination, builderRegistry);
     case 'move':
-      return moveNode(document, command.id, command.destination);
+      return moveNode(document, command.id, command.destination, builderRegistry);
     case 'remove':
-      return removeNode(document, command.id);
+      return removeNode(document, command.id, builderRegistry);
     case 'reorder':
-      return reorderNode(document, command.id, command.direction);
+      return reorderNode(document, command.id, command.direction, builderRegistry);
     case 'select':
       return findNode(document, command.id)
         ? { ok: true, document, selectedId: command.id }
         : { ok: false, document, reason: 'NOT_FOUND' };
     case 'replace': {
-      const draft = readTree(command.document);
+      const draft = readTree(command.document, builderRegistry);
       return draft.ok && findNode(draft.value, command.selectedId)
         ? { ok: true, document: draft.value, selectedId: command.selectedId }
         : { ok: false, document, reason: 'INVALID_TREE' };

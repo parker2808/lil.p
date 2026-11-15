@@ -11,11 +11,12 @@ import {
   type TreeOperation,
 } from '@parker2808/cms-core/tree';
 import { Button } from '@portfolio/ui/components/ui/button';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 import { useMe } from '@/modules/admin-core/hooks/use-me.hook';
 
+import { BLOCK_EDITOR_META } from '../constants/block-editor-meta.constant';
 import { BuilderShell } from './BuilderShell';
 import type { PropertyDraft } from './properties/PropertiesPanel';
 import {
@@ -106,6 +107,7 @@ function subscribeOnline(onChange: () => void) {
 
 export function BuilderHost({ pageKey }: { pageKey: string }) {
   const locale = useLocale() === 'vi' ? 'vi' : 'en';
+  const translate = useTranslations();
   const text = labels[locale];
   const { id: userId } = useMe();
   const key = recoveryKey(userId, pageKey);
@@ -411,6 +413,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
             onEdit={onEdit}
             pageKey={pageKey}
             propertyDrafts={propertyDrafts}
+            hostLabel={(type) => translate(BLOCK_EDITOR_META[type].labelKey)}
           />
         )}
       />
