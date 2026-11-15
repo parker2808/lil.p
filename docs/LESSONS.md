@@ -649,3 +649,5 @@
 
 - 2026-11-16 V02: Alt+ArrowDown trên sibling cuối là no-op; phải assert order trước/sau một Alt+ArrowUp thật, dùng Tab/Shift+Tab thay Playwright `.focus()` để chứng minh keyboard reachability.
 - 2026-11-16: Khi tích hợp gate keyboard publish D6 vào #208, giữ cả lịch sử D5/D6 nhưng chỉ chấm V02 trên exact combined head; source-green không đủ chứng minh tương tác kết hợp.
+- 2026-11-16: A translated property field does not imply its component heading is translated; test canvas, Layers and Properties labels against host metadata and reject raw type fallbacks in Vietnamese captures.
+- 2026-11-16: D5 host-label props must be shared across D6 version-enabled shell, canvas, Layers and Properties when normal-merging; preserve both localization and publish controls, then run exact combined-head CI.

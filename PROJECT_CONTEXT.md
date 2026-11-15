@@ -48,8 +48,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #208 current D5 sync: #262 localized host/starter labels now need combined D6 keyboard-publish and Properties exact-head proof; no source-only matrix promotion.
 - 2026-11-16 #208 D6 V02 refresh: integrate reviewed #254 from D6 `1b2037d2`; source keyboard-publish CI is not combined proof. Await exact-head #208 API/five-shard run; manual spoken SR remains a documented V16 limitation.
 - 2026-11-16 #208 combined-only wiring: D5 keyboard Home-root announcement calls the D6 three-argument localized node-label helper with the existing `hostLabel`; pre-push typecheck caught the missing argument before any remote push. Keep the negative-drop status/focus/no-write assertions unchanged; exact-head CI pending.
+- D5 design review at `24fc51b2` / CI `43759739138`: 197 captures across 24 EN/VI × light/dark × neutral/lil.p × 390/768/1440 combinations show raw English component names in the Vietnamese Properties inspector. The small label fix derives all 20 host names from existing translation metadata and shares them with canvas/Layers. Await exact-head CI and a refreshed visual review; D5 intentionally disables publish, so publish/restore dialog evidence belongs to combined D6. Manual V16 screen-reader review remains open.
 - V05 remains GAP on D5: 768px EN/VI light/dark editor images and an API revision attachment are only partial evidence; the same-revision public/preview chain requires D6 tree publishing (D5 explicitly returns CONFLICT). V13 full route/state review and manual V16 screen-reader signoff remain open after the focused metadata/error-language correction.
 
 - V02 D5 keyboard negative path: EN/VI real-draft browser coverage exercises keyboard-only insertion, Page-root invalid drop, polite live-region rejection, focus restoration and identical saved revision/tree after reload. Await exact-head CI and independent review; D5 cannot complete successful publish, and manual spoken screen-reader verification remains V16 GAP.
@@ -449,10 +451,12 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Normal-merged D5 `aaec9e62` (#262 label localization) into verification-only #208, preserving D6 version controls and localized Layers/canvas/Properties; new exact-head CI required. No main merge/deploy.
 - 2026-11-16: Integrated D6 `1b2037d2` (#254 keyboard publish) into verification-only #208 after D2/D5 refresh; exact combined-head CI/review required before V02 scoring. No main merge/deploy.
 - 2026-11-16: Integrated D5 `24fc51b2` and D6 `59af4538` into verification-only #208 after D2 `26ace408`; scoped V13 SSR/validation and J07 no-JS source evidence do not confer full-row PASS before combined CI and review. No main merge/deploy.
 
 - 2026-11-16: Merged D2 `26ace408` (#253 manifests) into verification-only #208, preserving source and disposable-DB raw hashes alongside D5/D6 checks; exact-head CI and artifact comparison required before V17/V21 scoring. No main merge or deploy.
+- 2026-11-16: Localize builder canvas/Layers/Properties component names through existing host metadata keys and starter field labels; tighten EN/VI browser assertions to reject raw type fallbacks. Scope and evidence: `docs/specs/2026-11-16-cms-d5-design-labels.md`.
 - 2026-11-16: D5 V13 admin metadata and schema/API validation localization (EN/VI), preserving field paths and drafts; real-API 768px editor revision capture for V05 only. Spec: `docs/specs/2026-11-16-cms-d5-v13-v05.md`.
 
 - 2026-11-16: Added keyboard Home root-drop attempt with localized rejection and EN/VI browser assertions for focus, live status and unchanged persisted tree/revision; full V02 publish remains pending integrated D6 evidence.

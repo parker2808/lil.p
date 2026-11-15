@@ -1,7 +1,6 @@
 'use client';
 
 import type { TreeDocument, TreeNode } from '@parker2808/cms-core/tree';
-import { BLOCK_REGISTRY, type BlockType } from '@portfolio/contracts';
 import { useLocale, useTranslations } from 'next-intl';
 import {
   useEffect,
@@ -161,6 +160,10 @@ const copy: Record<'en' | 'vi', Copy> = {
   },
 };
 
+export function builderNodeLabels(locale: 'en' | 'vi') {
+  return copy[locale].labels;
+}
+
 const initial: TreeDocument = {
   schemaVersion: 1,
   root: {
@@ -193,11 +196,11 @@ function documentTheme(): 'light' | 'dark' {
   return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 }
 
-function label(node: TreeNode, text: Copy, hostLabel: (type: BlockType) => string) {
+function label(node: TreeNode, text: Copy, componentLabels?: Record<string, string>) {
   return node.type === 'component'
-    ? node.componentType in BLOCK_REGISTRY
-      ? hostLabel(node.componentType as BlockType)
-      : (text.labels[node.componentType as keyof typeof text.labels] ?? node.componentType)
+    ? (componentLabels?.[node.componentType] ??
+        text.labels[node.componentType as keyof typeof text.labels] ??
+        node.componentType)
     : text.labels[node.type];
 }
 
@@ -215,6 +218,7 @@ export function BuilderShell({
   historyControls,
   versionControls,
   versionPending = false,
+  componentLabels,
 }: {
   pageKey: string;
   state: BuilderState;
@@ -224,16 +228,23 @@ export function BuilderShell({
   historyControls?: ReactNode;
   versionControls?: ReactNode;
   versionPending?: boolean;
+  componentLabels?: Record<string, string>;
 }) {
   const locale = useLocale() === 'vi' ? 'vi' : 'en';
   const translate = useTranslations();
-  const hostLabel = (type: BlockType) => translate(BLOCK_EDITOR_META[type].labelKey);
   const theme = useSyncExternalStore(subscribeTheme, documentTheme, () => 'light');
   const text = copy[locale];
+  const resolvedLabels = {
+    ...builderNodeLabels(locale),
+    ...Object.fromEntries(
+      Object.entries(BLOCK_EDITOR_META).map(([type, meta]) => [type, translate(meta.labelKey)]),
+    ),
+    ...componentLabels,
+  };
   const paletteLabel = (kind: PaletteKind) =>
-    kind in BLOCK_REGISTRY
-      ? hostLabel(kind as BlockType)
-      : text.labels[kind as keyof typeof text.labels];
+    resolvedLabels[kind as keyof typeof resolvedLabels] ??
+    text.labels[kind as keyof typeof text.labels];
+  const localizedLabel = (node: TreeNode) => label(node, text, resolvedLabels);
   const { document, selectedId } = state;
   const [sheet, setSheet] = useState<'components' | 'layers' | 'properties' | null>(null);
   const [query, setQuery] = useState('');
@@ -333,7 +344,7 @@ export function BuilderShell({
         }
       setExpanded(nextExpanded);
       setAnnouncement(
-        `${text.selected}: ${label(findNode(result.document, result.selectedId)!, text, hostLabel)}`,
+        `${text.selected}: ${localizedLabel(findNode(result.document, result.selectedId)!)}`,
       );
     } else
       setAnnouncement(result.reason === 'REQUIRED_COLUMN' ? text.requiredColumn : text.invalid);
@@ -407,7 +418,7 @@ export function BuilderShell({
         siblings && siblings.length > 1
           ? ` ${siblings.findIndex((sibling) => sibling.id === item!.id) + 1}`
           : '';
-      names.unshift(`${label(item.node, text, hostLabel)}${ordinal}`);
+      names.unshift(`${localizedLabel(item.node)}${ordinal}`);
       item = path.find((entry) => entry.id === item!.parentId);
     }
     return `${names.join(' / ')} · ${text.position} ${destination.index + 1}`;
@@ -496,7 +507,7 @@ export function BuilderShell({
         event.preventDefault();
         setPickup({ ...pickup, targetId: 'page' });
         focusTree('page');
-        setAnnouncement(`${text.target}: ${label(document.root, text, hostLabel)}`);
+        setAnnouncement(`${text.target}: ${localizedLabel(document.root)}`);
         return;
       }
       if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
@@ -552,7 +563,7 @@ export function BuilderShell({
     } else if (event.key === 'Enter') {
       event.preventDefault();
       apply({ type: 'select', id });
-      setAnnouncement(`${text.selected}: ${label(current.node, text, hostLabel)}`);
+      setAnnouncement(`${text.selected}: ${localizedLabel(current.node)}`);
     } else if (event.key === ' ' && id !== 'page') {
       event.preventDefault();
       const destinations = validDestinations(document, id, builderRegistry);
@@ -672,7 +683,7 @@ export function BuilderShell({
       return (
         <div className={styles.panelBody}>
           <p className={styles.eyebrow}>{text.selected}</p>
-          <h3>{label(findNode(document, selectedId) ?? document.root, text, hostLabel)}</h3>
+          <h3>{localizedLabel(findNode(document, selectedId) ?? document.root)}</h3>
           <p className={styles.hint}>{text.publishHint}</p>
           {renderProperties?.({ state, onDispatch })}
         </div>
@@ -724,7 +735,7 @@ export function BuilderShell({
               <span aria-hidden="true" className={styles.treeGuide}>
                 └
               </span>
-              <span className={styles.treeLabel}>{label(item.node, text, hostLabel)}</span>
+              <span className={styles.treeLabel}>{localizedLabel(item.node)}</span>
               <small>{item.id === 'page' ? pageKey : item.id.slice(0, 6)}</small>
             </div>
           ))}
@@ -767,16 +778,16 @@ export function BuilderShell({
             type="button"
             data-canvas-id={node.id}
             onClick={() => apply({ type: 'select', id: node.id })}
-            aria-label={`${text.select} ${label(node, text, hostLabel)}`}
+            aria-label={`${text.select} ${localizedLabel(node)}`}
           >
-            {label(node, text, hostLabel)}
+            {localizedLabel(node)}
           </button>
           {selected && node.id !== 'page' && (
             <>
               <button
                 type="button"
                 onClick={() => duplicate(node.id)}
-                aria-label={`${text.duplicate} ${label(node, text, hostLabel)}`}
+                aria-label={`${text.duplicate} ${localizedLabel(node)}`}
               >
                 ⧉
               </button>
@@ -805,7 +816,7 @@ export function BuilderShell({
                   deleteTriggerRef.current = event.currentTarget;
                   setConfirmDelete(true);
                 }}
-                aria-label={`${text.remove} ${label(node, text, hostLabel)}`}
+                aria-label={`${text.remove} ${localizedLabel(node)}`}
               >
                 ×
               </button>
@@ -853,7 +864,7 @@ export function BuilderShell({
   while (currentId) {
     const item = path.find((entry) => entry.id === currentId);
     if (!item) break;
-    selectedPath.unshift(label(item.node, text, hostLabel));
+    selectedPath.unshift(localizedLabel(item.node));
     currentId = item.parentId;
   }
 

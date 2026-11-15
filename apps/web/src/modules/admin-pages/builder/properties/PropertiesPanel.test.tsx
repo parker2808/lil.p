@@ -112,7 +112,7 @@ it('shows the translated host name in the Properties heading', () => {
       state={hostState}
       locale="vi"
       onEdit={vi.fn()}
-      hostLabel={() => 'Đầu trang'}
+      componentLabels={{ 'page-header': 'Đầu trang' }}
     />,
   );
   expect(screen.getByText('Đầu trang')).toBeInTheDocument();
@@ -400,6 +400,30 @@ it('registers exactly the twenty host definitions and derives editable EN/VI con
       expect(fields.every((field) => field.label.length > 0)).toBe(true);
     }
   }
+});
+
+it('localizes starter component headings and uses host metadata labels without changing stored types', () => {
+  const onEdit = vi.fn();
+  const view = render(
+    <PropertiesPanel
+      state={state}
+      locale="vi"
+      onEdit={onEdit}
+      componentLabels={{ heading: 'Tiêu đề' }}
+    />,
+  );
+  expect(screen.getByText('Tiêu đề')).toBeInTheDocument();
+  const hero = BLOCK_REGISTRY.hero;
+  view.rerender(
+    <PropertiesPanel
+      state={hostState(hero.type, hero.props.parse(hero.defaults) as Record<string, unknown>)}
+      locale="vi"
+      onEdit={onEdit}
+      componentLabels={{ hero: 'Đầu trang' }}
+    />,
+  );
+  expect(screen.getByText('Đầu trang')).toBeInTheDocument();
+  expect(screen.queryByText('hero')).not.toBeInTheDocument();
 });
 
 it.each(
