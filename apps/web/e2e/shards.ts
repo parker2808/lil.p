@@ -63,6 +63,7 @@ export const SPECS = [
   'copy-email.spec.ts',
   'public-details-states.spec.ts',
   'cms-builder-d5-ui.spec.ts',
+  'cms-builder-live-journeys.spec.ts',
   'cms-builder-d5-design.spec.ts',
   'u0-capture.spec.ts',
 ] as const;

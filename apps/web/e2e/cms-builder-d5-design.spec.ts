@@ -29,6 +29,7 @@ const entries: Array<{
   file: string;
   axe: { serious: number; critical: number; other: number };
   contrast: Record<string, number>;
+  checkedTargets: number;
 }> = [];
 
 function contrast(foreground: string, background: string): number {
@@ -64,6 +65,9 @@ async function capture(
   const shell = page.locator('.cms-core');
   await expect(shell).toHaveAttribute('data-theme', options.theme);
   await expect(shell).toHaveAttribute('data-brand', options.brand);
+  expect(await page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(
+    true,
+  );
   await page.evaluate(async () => {
     await Promise.all(
       document
@@ -116,15 +120,57 @@ async function capture(
     expect(pairs[name], `${options.theme}/${options.brand}/${name}`).toBeGreaterThanOrEqual(4.5);
   for (const name of ['selectionSurface', 'focusSurface'] as const)
     expect(pairs[name], `${options.theme}/${options.brand}/${name}`).toBeGreaterThanOrEqual(3);
-  if (options.width <= 1100 && !options.sheet) {
-    const navigation = page.getByRole('navigation', {
-      name: options.locale === 'vi' ? 'Trình dựng trang' : 'Page builder',
+  const targetGeometry = await page.locator('.cms-core').evaluate((root) => {
+    const controls = Array.from(
+      root.querySelectorAll<HTMLElement>(
+        'button, a[href], input, select, textarea, [role="treeitem"], [role="button"]',
+      ),
+    );
+    const visible = controls.filter((control) => {
+      const style = getComputedStyle(control);
+      return (
+        control.getClientRects().length > 0 &&
+        style.visibility !== 'hidden' &&
+        style.display !== 'none' &&
+        !control.hasAttribute('disabled') &&
+        control.getAttribute('aria-disabled') !== 'true'
+      );
     });
-    for (const button of await navigation.getByRole('button').all()) {
-      const target = await button.boundingBox();
-      expect(target?.width).toBeGreaterThanOrEqual(44);
-      expect(target?.height).toBeGreaterThanOrEqual(44);
-    }
+    return visible.map((control) => {
+      const rect = control.getBoundingClientRect();
+      return {
+        name: control.getAttribute('aria-label') ?? control.textContent?.trim().slice(0, 70),
+        width: rect.width,
+        height: rect.height,
+      };
+    });
+  });
+  expect(targetGeometry.length, `${options.state} has visible controls`).toBeGreaterThan(0);
+  expect(
+    targetGeometry.filter((target) => target.width < 43.5 || target.height < 43.5),
+    `${options.locale}/${options.theme}/${options.brand}/${options.width}/${options.state} undersized targets`,
+  ).toEqual([]);
+  const overflow = await (options.sheet ? page.getByRole('dialog') : shell).evaluate(
+    (element) => element.scrollWidth - element.clientWidth,
+  );
+  expect(
+    overflow,
+    `${options.locale}/${options.width}/${options.state} horizontal overflow`,
+  ).toBeLessThanOrEqual(1);
+  if (options.input === 'keyboard') {
+    const focus = await page.evaluate(() => {
+      const active = document.activeElement;
+      if (!(active instanceof HTMLElement)) return null;
+      const style = getComputedStyle(active);
+      return {
+        visible: active.getClientRects().length > 0,
+        outline: style.outlineStyle,
+        width: style.outlineWidth,
+      };
+    });
+    expect(focus?.visible, `${options.state} keyboard focus is visible`).toBe(true);
+    expect(focus?.outline, `${options.state} focus indicator`).not.toBe('none');
+    expect(focus?.width, `${options.state} focus indicator width`).not.toBe('0px');
   }
   if (
     options.state === 'properties' ||
@@ -171,6 +217,7 @@ async function capture(
     file,
     axe: { serious, critical, other: violations.length - serious - critical },
     contrast: pairs,
+    checkedTargets: targetGeometry.length,
   });
 }
 
@@ -271,14 +318,6 @@ test('EN/VI core and token-only lil.p builder states are visually and accessibly
           : 'This component has no editable properties.',
       ),
     ).toBeVisible();
-    await capture(page, {
-      key,
-      locale,
-      theme: 'light',
-      brand: 'neutral',
-      width: 1440,
-      state: 'empty',
-    });
     await page.setViewportSize({ width: 390, height: 900 });
     const emptyTrigger = page
       .getByRole('navigation', {
@@ -295,18 +334,44 @@ test('EN/VI core and token-only lil.p builder states are visually and accessibly
             : 'This component has no editable properties.',
         ),
     ).toBeVisible();
-    await capture(page, {
-      key,
-      locale,
-      theme: 'light',
-      brand: 'neutral',
-      width: 390,
-      state: 'empty',
-      sheet: true,
-    });
     await page.keyboard.press('Escape');
     await expect(emptyTrigger).toBeFocused();
+    for (const theme of ['light', 'dark'] as const) {
+      await page.evaluate(
+        (value) => document.documentElement.classList.toggle('dark', value === 'dark'),
+        theme,
+      );
+      for (const brand of ['neutral', 'lilp'] as const) {
+        if ((await shell.getAttribute('data-brand')) !== brand)
+          await shell
+            .getByRole('button', {
+              name: /Switch neutral and lil\.p theme|Đổi giao diện lõi và lil\.p/,
+            })
+            .click();
+        for (const width of [1440, 768, 390]) {
+          await page.setViewportSize({ width, height: 900 });
+          if (width <= 1100) {
+            const trigger = page
+              .getByRole('navigation', {
+                name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder',
+              })
+              .getByRole('button', { name: locale === 'vi' ? 'Thuộc tính' : 'Properties' });
+            await trigger.click();
+            await capture(page, { key, locale, theme, brand, width, state: 'empty', sheet: true });
+            await page.keyboard.press('Escape');
+            await expect(trigger).toBeFocused();
+          } else await capture(page, { key, locale, theme, brand, width, state: 'empty' });
+        }
+      }
+    }
     await page.setViewportSize({ width: 1440, height: 900 });
+    await page.evaluate(() => document.documentElement.classList.remove('dark'));
+    if ((await shell.getAttribute('data-brand')) !== 'neutral')
+      await shell
+        .getByRole('button', {
+          name: /Switch neutral and lil\.p theme|Đổi giao diện lõi và lil\.p/,
+        })
+        .click();
     const palette = page.getByRole('complementary', {
       name: locale === 'vi' ? 'Thành phần' : 'Components',
     });
@@ -341,6 +406,24 @@ test('EN/VI core and token-only lil.p builder states are visually and accessibly
           await page.setViewportSize({ width, height: 900 });
           const options = { key, locale, theme, brand, width };
           await capture(page, { ...options, state: 'canvas-saved' });
+          const focusTarget =
+            width <= 1100
+              ? page
+                  .getByRole('navigation', {
+                    name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder',
+                  })
+                  .getByRole('button', { name: locale === 'vi' ? 'Thuộc tính' : 'Properties' })
+              : page
+                  .getByRole('complementary', {
+                    name: locale === 'vi' ? 'Thuộc tính' : 'Properties',
+                  })
+                  .getByRole('spinbutton', {
+                    name: locale === 'vi' ? 'Cấp tiêu đề' : 'Heading level',
+                  });
+          await page.keyboard.press('Tab');
+          await focusTarget.focus();
+          await expect(focusTarget).toBeFocused();
+          await capture(page, { ...options, state: 'keyboard-focus', input: 'keyboard' });
           if (width <= 1100) {
             const navigation = page.getByRole('navigation', {
               name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder',
@@ -353,6 +436,16 @@ test('EN/VI core and token-only lil.p builder states are visually and accessibly
               const trigger = navigation.getByRole('button', { name });
               await trigger.click();
               await capture(page, { ...options, state, sheet: true });
+              if (state === 'properties') {
+                const field = page.getByRole('dialog', { name }).getByRole('spinbutton', {
+                  name: locale === 'vi' ? 'Cấp tiêu đề' : 'Heading level',
+                });
+                await field.fill('99');
+                await expect(field).toHaveAttribute('aria-invalid', 'true');
+                await capture(page, { ...options, state: 'field-error', sheet: true });
+                await field.fill('2');
+                await expect(field).toHaveAttribute('aria-invalid', 'false');
+              }
               await page.keyboard.press('Escape');
               await expect(trigger).toBeFocused();
             }
@@ -365,6 +458,18 @@ test('EN/VI core and token-only lil.p builder states are visually and accessibly
             await expect(
               page.getByRole('complementary', { name: locale === 'vi' ? 'Lớp' : 'Layers' }),
             ).toBeVisible();
+            const field = page
+              .getByRole('complementary', {
+                name: locale === 'vi' ? 'Thuộc tính' : 'Properties',
+              })
+              .getByRole('spinbutton', {
+                name: locale === 'vi' ? 'Cấp tiêu đề' : 'Heading level',
+              });
+            await field.fill('99');
+            await expect(field).toHaveAttribute('aria-invalid', 'true');
+            await capture(page, { ...options, state: 'field-error' });
+            await field.fill('2');
+            await expect(field).toHaveAttribute('aria-invalid', 'false');
           }
         }
       }
@@ -440,15 +545,24 @@ test('EN/VI core and token-only lil.p builder states are visually and accessibly
       await expect(
         page.getByText(locale === 'vi' ? 'Đang lưu bản nháp' : 'Saving draft'),
       ).toBeVisible({ timeout: 15_000 });
-      await page.setViewportSize({ width: 390, height: 900 });
-      await capture(page, {
-        key,
-        locale,
-        theme: 'dark',
-        brand: 'lilp',
-        width: 390,
-        state: 'saving',
-      });
+      for (const theme of ['light', 'dark'] as const) {
+        await page.evaluate(
+          (value) => document.documentElement.classList.toggle('dark', value === 'dark'),
+          theme,
+        );
+        for (const brand of ['neutral', 'lilp'] as const) {
+          if ((await shell.getAttribute('data-brand')) !== brand)
+            await shell
+              .getByRole('button', {
+                name: /(?:Switch neutral and lil\.p theme|Đổi giao diện lõi và lil\.p)/,
+              })
+              .click();
+          for (const width of [1440, 768, 390]) {
+            await page.setViewportSize({ width, height: 900 });
+            await capture(page, { key, locale, theme, brand, width, state: 'saving' });
+          }
+        }
+      }
     } finally {
       releaseSave?.();
     }

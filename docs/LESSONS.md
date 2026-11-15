@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Audit every visible enabled builder control at desktop as well as compact widths; padding does not guarantee a 44px target, and a screenshot is not proof of focus visibility or absence of dialog overflow.
+
 - 2026-11-15: A green browser test does not make screenshots reviewable from CI when captures remain only in the checkout; attach the exact-head manifest and PNGs to the existing Playwright blob report, and assert localized glyph bounds instead of inferring fit from button widths.
 
 - 2026-11-15: Restacking D5 UI on a newer core/main must carry both the D2 revision-aware restore and the pure engine's lossless legacy snapshot reader; update legacy restore test transactions to model the conditional revision claim, and verify the host Docker build order and CI shard lists together.
@@ -285,3 +287,4 @@
 
 - 2026-11-15: Scope Playwright text assertions to the intended semantic element when a host inspector and embedded schema panel display the same component type; an unscoped exact-text locator fails strict mode despite correct UI behavior.
 - 2026-11-15: Keep invalid property inputs in a builder-lifetime, page/node/breakpoint-keyed draft rather than a keyed field subtree; otherwise switching selections or mounting a responsive sheet silently discards edits before schema validation.
+- 2026-11-15: A D5 browser journey must assert actual D2 draft revisions and tree contents after reload or failed publish; mocked draft GETs and canvas-only checks cannot prove live persistence or public SSR parity.

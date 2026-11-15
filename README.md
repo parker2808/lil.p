@@ -1,5 +1,7 @@
 # lil.p
 
+The [D5 live journey spec](./docs/specs/2026-11-15-cms-d5-live-journeys.md) registers CI-sharded browser tests against the real D2 draft API for composition, keyboard navigation, reload, responsive properties and conflict/offline recovery. The exact-head design artifact spans EN/VI, light/dark, neutral/lil.p and mobile/tablet/desktop empty/error/focus/saved/saving/conflict states, measuring 44px targets, focus, overflow and axe. Incomplete publication is rejected; successful publish/public SSR parity and manual screen-reader review remain separate gates.
+
 The stacked [D5 all-block Properties spec](./docs/specs/2026-11-15-cms-d5-all-block-properties.md) registers all 20 host block contracts in the gated builder. Its EN/VI editor derives nested/localized, numeric, array, optional-group and responsive controls from the host schemas; invalid partial edits remain local across node, breakpoint and sheet changes. This is draft-only: D2's API currently rejects host types without a registry, so D6's live-API all-20 release gate and approval remain blocked.
 
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
