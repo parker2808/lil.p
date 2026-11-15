@@ -294,3 +294,4 @@
 - 2026-11-15: A stacked fixture that asserts raw block type headings can fail when another branch localizes host labels; derive expected labels from the shared editor metadata and the EN/VI message catalog before combining stacks.
 - 2026-11-15: CSS computed focus colors need not be hex or `rgb()` (modern color syntax is possible); measure supported colors through browser Canvas and fail explicitly on invalid/translucent colors rather than silently skipping contrast.
 - 2026-11-15: A computed box-shadow can end with a transparent placeholder; choose a visibly painted outline/ring and composite its adjacent painted backgrounds before comparing 3:1. Programmatic focus alone cannot prove Tab reachability or clipped touch size.
+- 2026-11-15: V15 target audits must distinguish intrinsically small controls from full-size controls partly exposed by nested scrollers; scroll into view, measure the clipped hit area, then restore scroll before screenshots.

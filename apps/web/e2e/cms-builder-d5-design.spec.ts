@@ -188,7 +188,29 @@ async function capture(
       );
     });
     return visible.map((control) => {
-      const rect = visibleRect(control);
+      let rect = visibleRect(control);
+      if (
+        (rect.width < 44 || rect.height < 44) &&
+        control.getBoundingClientRect().width >= 44 &&
+        control.getBoundingClientRect().height >= 44
+      ) {
+        const ancestors: Element[] = [];
+        for (let parent = control.parentElement; parent; parent = parent.parentElement)
+          ancestors.push(parent);
+        const scrollPositions = [document.scrollingElement, ...ancestors]
+          .filter((element): element is Element =>
+            Boolean(
+              element &&
+              (element.scrollWidth > element.clientWidth ||
+                element.scrollHeight > element.clientHeight),
+            ),
+          )
+          .map((element) => ({ element, left: element.scrollLeft, top: element.scrollTop }));
+        control.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' });
+        rect = visibleRect(control);
+        for (const { element, left, top } of scrollPositions)
+          element.scrollTo({ left, top, behavior: 'instant' });
+      }
       return {
         name:
           control.getAttribute('aria-label') ??
