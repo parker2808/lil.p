@@ -17,6 +17,7 @@
   --builder-selection: #346ddd;
   --builder-drop: #3461b5;
   --builder-focus: #255cce;
+  --builder-focus-contrast: #fff;
   --builder-art: #dae8f3;
   --builder-art-ink: #37547e;
   --builder-font-body:
@@ -62,6 +63,7 @@
   --builder-selection: #9bbaff;
   --builder-drop: #9bbaff;
   --builder-focus: #b4ccff;
+  --builder-focus-contrast: #0b1220;
   --builder-art: #293e58;
   --builder-art-ink: #9cbbe1;
   --builder-shadow: 0 22px 65px rgb(0 0 0 / 25%);

@@ -1,5 +1,7 @@
 # D5 V15 full-builder target and focus audit
 
+CI `43720573277` exposed a real paint mismatch on the primary Breakpoint button: the blue focus ring was identical to the blue control background despite contrasting with the outer white panel. Use two opaque, 3px-or-wider focus stripes (theme focus color and opposite-contrast color) so the indicator remains distinguishable at ≥3:1 against _each_ adjacent painted surface. The browser audit requires at least one visibly painted stripe above 3:1 on each measured adjacent surface; no tolerance or per-surface threshold reduction. This is not a V15 PASS until exact-head five-shard CI is green and captures are reviewed.
+
 Stack on the accepted D5 live journeys; do not change tree, HTTP or golden contracts. The prior capture only measured `.cms-core` and tolerated 43.5px, leaving admin chrome and focus-ring contrast unproven.
 
 ## Plan

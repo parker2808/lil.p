@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- V15 focus paint: CI `43720573277` found a blue Breakpoint control with an identical blue focus ring on its own surface. A two-tone ring and per-adjacent-surface 3:1 audit need exact-head CI and independent design review before signoff.
+
 - #221 CI 43717611638 repeatedly found `:focus-visible` ordinary host buttons without a computed indicator, despite the core theme fallback. Apply a scoped opaque host ring to all interactive builder controls, retain the ≥3:1 browser assertion, and await exact-head five-shard proof.
 
 - #221 run `43713811749` exposed an unpainted focus indicator on the canvas “Select Page” control; the host canvas now requests an opaque scoped outline and logs its computed style. V15 remains blocked until exact-head browser contrast passes; the separate D4 test owner handles shard 5's obsolete textbox assertions.
@@ -294,6 +296,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Added neutral theme opposite-contrast focus token and two-tone host ring, checking ≥3:1 for each adjacent surface without lowering the target/focus thresholds.
 
 - 2026-11-15: Applied an opaque host focus indicator across interactive builder controls after repeated production-CSS failures on ordinary buttons; expanded failure diagnostics without relaxing V15 contrast or target-size thresholds. Exact-head browser CI remains required.
 

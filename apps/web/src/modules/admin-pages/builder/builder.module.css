@@ -42,7 +42,7 @@
 .shell :where(button, a[href], input, textarea, select, [tabindex]):focus-visible {
   outline: 3px solid var(--builder-focus) !important;
   outline-offset: 2px;
-  box-shadow: 0 0 0 3px var(--builder-focus) !important;
+  box-shadow: 0 0 0 6px var(--builder-focus-contrast) !important;
 }
 .header {
   display: flex;
@@ -99,7 +99,7 @@
 .headerActions .brandButton:focus-visible {
   outline: 3px solid var(--builder-focus) !important;
   outline-offset: 2px;
-  box-shadow: 0 0 0 3px var(--builder-focus) !important;
+  box-shadow: 0 0 0 6px var(--builder-focus-contrast) !important;
 }
 .headerActions .propertiesTrigger {
   min-height: 44px;

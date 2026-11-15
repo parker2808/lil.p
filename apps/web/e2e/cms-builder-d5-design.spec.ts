@@ -404,9 +404,9 @@ async function capture(
       0,
     );
     expect(
-      focus.colors.some((color, colorIndex) =>
-        focus.surfaces.every(
-          (_, surfaceIndex) => (focusContrast[`${index}/${colorIndex}/${surfaceIndex}`] ?? 0) >= 3,
+      focus.surfaces.every((_, surfaceIndex) =>
+        focus.colors.some(
+          (_, colorIndex) => (focusContrast[`${index}/${colorIndex}/${surfaceIndex}`] ?? 0) >= 3,
         ),
       ),
       `${options.state}/${focus.name} ${JSON.stringify(focus.diagnostic)} painted focus rings ${focus.colors
