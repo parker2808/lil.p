@@ -8,6 +8,8 @@ import {
 import type { Request, Response } from 'express';
 import { finalize, type Observable } from 'rxjs';
 
+import { requestLogContext } from '../utils/request-log.util';
+
 type RequestWithId = Request & { requestId?: string };
 
 /**
@@ -27,9 +29,7 @@ export class LoggingInterceptor implements NestInterceptor {
     return next.handle().pipe(
       finalize(() => {
         const ms = Date.now() - started;
-        this.logger.log(
-          `${request.method} ${request.url} ${response.statusCode} ${ms}ms ${request.requestId ?? '-'}`,
-        );
+        this.logger.log(`${requestLogContext(request)} ${response.statusCode} ${ms}ms`);
       }),
     );
   }

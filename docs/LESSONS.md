@@ -1,6 +1,10 @@
 # Lessons
 
 - 2026-11-16: A tracked seed/SQL inventory is not a production inventory; gate the source-writer list and compare normalized responses with original stored JSON hashes before claiming legacy version safety.
+- 2026-11-16: Revalidation failure logs must omit both caller-derived cache tags and upstream error strings; custom page keys and transport errors can carry private data even when HTTP request logs are redacted.
+
+- 2026-11-16: A redacted HTTP response does not imply safe server logs: avoid raw request URLs, caller-supplied trace IDs, exception stacks and stored block identifiers; assert actual populated reads plus capability denials against captured logger calls, then review production logs separately after deployment.
+
 - 2026-11-16: Search every general deployment checklist for an obsolete separate-unfreeze step when changing D2 startup defaults; a correct phase-specific runbook alone can leave unsafe contradictory instructions.
 
 - 2026-11-16: A D2 reopening plan dependent on a Render env edit is not executable without authorized write access; gate writes on read-only startup migration verification, reserve exact `CMS_PAGE_WRITE_FREEZE=1` as an explicit kill-switch, and prove all pre-D2 writers drained before deploying an image that may automatically reopen.
