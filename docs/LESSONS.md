@@ -37,6 +37,8 @@
 - 2026-11-15: Restacking D5 UI on a newer core/main must carry both the D2 revision-aware restore and the pure engine's lossless legacy snapshot reader; update legacy restore test transactions to model the conditional revision claim, and verify the host Docker build order and CI shard lists together.
 
 - 2026-11-15: Restacking pure D5 tree state on the integrated D base requires preserving host-registry validation and the typed legacy restore/reload protections alongside main's independent fixture and package-local gates.
+- 2026-11-16: When several editors schedule independent preview timers, waiting for one rendered preview does not prove the others have completed; await all three rendered bodies and retain the exact callback-count assertion.
+
 - 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
 
 - 2026-11-15: Checkout self-resolution can pass when a distributable tarball is broken; install the packed package in a scratch consumer and assert both ESM/CJS subpath and root behavior in the regular CI unit job.
@@ -442,3 +444,5 @@
 - 2026-11-16: Layers reinitializes with only the Page expanded after a builder reload; expand each nested ancestor by keyboard before checking a reloaded heading in the accessible tree, while separately comparing the saved draft and revision.
 - 2026-11-16: A translated property field does not imply its component heading is translated; test canvas, Layers and Properties labels against host metadata and reject raw type fallbacks in Vietnamese captures.
 - 2026-11-16: Test actual keyboard Tab/Shift+Tab boundaries and focus return in existing dialogs, but never claim D5 publish/restore-version dialogs or manual spoken screen-reader acceptance when that UI exists only on the integrated D6 branch.
+- 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
+- 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.

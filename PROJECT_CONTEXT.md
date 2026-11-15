@@ -49,6 +49,11 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - D5 V16 automated follow-up checks EN/VI keyboard trap/return for the delete dialog and compact Properties sheet, live deletion/local-draft status, and the disabled Publish reason. D5 has no publish/restore-version dialog; its integrated D6 dialog capture/a11y review and manual spoken VoiceOver/NVDA check remain GAP.
+- 2026-11-16: The shared MarkdownEditor preview callback uses an independent 500ms timer per editor. #260's unit run `43767645840` observed only two callbacks when the test waited for the second body; a focused test fix waits for all three rendered bodies and all three callback invocations without relaxing the count. The fix is based on `main`, with no V06 runtime changes; exact-head CI remains the merge gate.
+
+- C1 retained-history identity review (2026-11-15): the local #208 `4df25c52` filtered rehearsal has 86 commits across two anonymized author/committer pairs. At 20:46 ICT, the coordinator under Parker approval `t250u` and delegated rule `12:26` decided to keep both reviewed identities unchanged: no rewrite or `.mailmap`, preserving provenance in Parker's own private destination. Re-audit the final integrated tree and stop on any new pair before a private push; see the C1 runbook.
+
+- E2E registry completeness (2026-11-15): both existing D4 canvas and keyboard browser specs were absent from `SPECS` and silently skipped by the Playwright shard matcher. Register both on the five-shard line and compare the full recursive spec inventory with the manifest in a unit test, rejecting missing, stale and duplicate names. First real CI exposed obsolete native-select interactions; the next run exposed selecting already-active EN without a cookie and intermittent Escape focus restoration. Exercise actual Radix locale transitions and persist the cookie; restore focus in the sheet-close layout effect without competing animation frames. Re-run exact-head `ready-e2e` before claiming J03/J05/V02/V20 coverage; the #217 visual group 4 pin must still move to shard 5 after registration.
 
 - D5 design review at `24fc51b2` / CI `43759739138`: 197 captures across 24 EN/VI × light/dark × neutral/lil.p × 390/768/1440 combinations show raw English component names in the Vietnamese Properties inspector. The small label fix derives all 20 host names from existing translation metadata and shares them with canvas/Layers. Await exact-head CI and a refreshed visual review; D5 intentionally disables publish, so publish/restore dialog evidence belongs to combined D6. Manual V16 screen-reader review remains open.
 
@@ -378,6 +383,12 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-11: D5 maps D4's validated composition commands to one core tree-operation history commit with matching synchronous selection/result, preserving typed rejection and avoiding duplicate application; `select` has no history and whole-document `replace` is a validated snapshot boundary. The 1100/1101px tablet-to-desktop panel transition is merged from D4; no public, API or DB change.
 
 - 2026-11-11: Integrated D5 Properties, history shortcuts and draft autosave into the gated D4 host, with explicit custom-page activation and local recovery. No public page, legacy editor, tree publish, production DB, migration or golden behavior changed.
+- 2026-11-16: Make the three-editor Write/Preview unit test await every debounced preview and retain its exact three-call assertion; no editor behavior, API, or threshold changes.
+
+- 2026-11-15: Recorded the coordinator's 20:46 ICT C1 decision to retain the two reviewed identity pairs without a rewrite or `.mailmap`; final-history audit remains required. Docs only, no private push.
+
+- 2026-11-15: Documented anonymized C1 rehearsal identity categories and the owner-only keep-or-normalize gate; no metadata rewrite, private repository creation or release.
+
 - 2026-11-15: Registered the existing canvas and keyboard D4 browser specs across five shards and added a filesystem-to-manifest completeness check; repaired their stale native-select interaction to use Radix options and assert cookie persistence after the first real CI exposed the failure. No product, golden contract or threshold change.
 - 2026-11-15: Balanced the web E2E suite across five free CI shards, documented the #217 group-4 move to shard 5, rejected missing/invalid pins with a unit regression, and extended exact-head artifact provenance checks to five without increasing timeouts or changing the aggregate required check.
 - 2026-11-15: Added PR-head and tested-merge SHAs to E2E build, shard and merged-report artifact names and provenance JSON, with four-shard verification before report attestation; no changes to test refs, checks, runtime or deployment.
