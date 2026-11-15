@@ -1,5 +1,7 @@
 # CMS core
 
+The package has no root `"."` export; import documented subpaths instead.
+
 `@parker2808/cms-core` exports independently built ESM/CJS subpaths:
 `./contracts`, `./engine`, `./react`, and `./react/server`. B4 provides generic Zod
 page/block/locale/snapshot contracts, `defineBlock`, `createRegistry`, and the
