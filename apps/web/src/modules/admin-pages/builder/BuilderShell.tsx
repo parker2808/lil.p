@@ -89,7 +89,7 @@ const copy: Record<'en' | 'vi', Copy> = {
     addSectionFirst: 'Add a section first',
     invalid: 'This slot does not accept this item or is at its limit',
     picked:
-      'Picked up item. Use arrow keys to choose a destination; Enter to place or Escape to cancel.',
+      'Picked up item. Use arrow keys to choose a destination, Home to try the page root; Enter to place or Escape to cancel.',
     target: 'Destination',
     position: 'position',
     placed: 'Item placed',
@@ -133,7 +133,8 @@ const copy: Record<'en' | 'vi', Copy> = {
     unavailable: 'Hãy chọn vùng phù hợp trước',
     addSectionFirst: 'Thêm một phần trước',
     invalid: 'Vùng này không nhận mục này hoặc đã đạt giới hạn',
-    picked: 'Đã nhấc mục. Dùng phím mũi tên chọn vị trí; Enter để đặt hoặc Escape để hủy.',
+    picked:
+      'Đã nhấc mục. Dùng phím mũi tên chọn vị trí, Home để thử trang gốc; Enter để đặt hoặc Escape để hủy.',
     target: 'Vị trí',
     position: 'thứ tự',
     placed: 'Đã đặt mục',
@@ -242,6 +243,7 @@ export function BuilderShell({
     source: string;
     destinations: Destination[];
     index: number;
+    targetId?: string;
   } | null>(null);
   const [focusId, setFocusId] = useState('page');
   const [expanded, setExpanded] = useState<Set<string>>(new Set(['page']));
@@ -414,12 +416,12 @@ export function BuilderShell({
     const target = findNode(document, targetId);
     if (!target || source === targetId) {
       setAnnouncement(text.invalid);
-      return;
+      return false;
     }
     const paletteKind = source.startsWith('palette:') ? source.slice(8) : null;
     if (paletteKind && !paletteKinds.includes(paletteKind as PaletteKind)) {
       setAnnouncement(text.invalid);
-      return;
+      return false;
     }
     const node = paletteKind
       ? newNode(paletteKind as PaletteKind, () => crypto.randomUUID(), locale)
@@ -445,14 +447,13 @@ export function BuilderShell({
             : 'columns';
     const inside = { parentId: targetId, slot, index: children(target).length } as Destination;
     if (valid(inside)) {
-      apply(commandFor(inside));
-      return;
+      return apply(commandFor(inside)).ok;
     }
     const parentId = outline(document).find((item) => item.id === targetId)?.parentId;
     const parent = parentId && findNode(document, parentId);
     if (!parent) {
       setAnnouncement(text.invalid);
-      return;
+      return false;
     }
     const siblingSlot =
       parent.type === 'page'
@@ -467,8 +468,9 @@ export function BuilderShell({
       slot: siblingSlot,
       index: children(parent).findIndex((item) => item.id === targetId),
     } as Destination;
-    if (valid(sibling)) apply(commandFor(sibling));
-    else setAnnouncement(text.invalid);
+    if (valid(sibling)) return apply(commandFor(sibling)).ok;
+    setAnnouncement(text.invalid);
+    return false;
   }
   function focusTree(id: string) {
     setFocusId(id);
@@ -490,23 +492,33 @@ export function BuilderShell({
         setAnnouncement(text.cancel);
         return;
       }
+      if (event.key === 'Home') {
+        event.preventDefault();
+        setPickup({ ...pickup, targetId: 'page' });
+        focusTree('page');
+        setAnnouncement(`${text.target}: ${label(document.root, text)}`);
+        return;
+      }
       if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
         event.preventDefault();
         const next =
           (pickup.index + (event.key === 'ArrowDown' ? 1 : -1) + pickup.destinations.length) %
           pickup.destinations.length;
-        setPickup({ ...pickup, index: next });
+        setPickup({ ...pickup, index: next, targetId: undefined });
+        focusTree(pickup.source);
         setAnnouncement(`${text.target}: ${destinationName(pickup.destinations[next]!)}`);
         return;
       }
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         const source = pickup.source;
-        const placed = apply({
-          type: 'move',
-          id: source,
-          destination: pickup.destinations[pickup.index]!,
-        }).ok;
+        const placed = pickup.targetId
+          ? dropOn(source, pickup.targetId)
+          : apply({
+              type: 'move',
+              id: source,
+              destination: pickup.destinations[pickup.index]!,
+            }).ok;
         setPickup(null);
         focusTree(source);
         if (placed) setAnnouncement(text.placed);

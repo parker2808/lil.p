@@ -19,6 +19,7 @@
 - 2026-11-15: Test bootstrap-order migration verification separately from a middleware-only fixture: prevent HTTP listening before read-only schema checks and keep writes frozen when verification fails.
 - 2026-11-15: A D2 image must not inherit an always-frozen guard without a reviewed reopening mechanism; require migration history and physical columns, default to frozen, and reserve the explicit production reopen setting for after old frozen instances drain.
 - 2026-11-15: Auth rejection alone does not establish version/preview read capability or production log redaction; verify populated reads and retain a distinct log audit gate.
+- 2026-11-16: Filtering keyboard move destinations to valid slots prevents testing or announcing a rejected drop; expose an explicit Page-root attempt while retaining normal valid Arrow destinations, then verify unchanged server revision and restored keyboard focus.
 - 2026-11-15: Graphify freshness must name the integrated code head, not an intermediate branch commit; a docs-only report commit changes HEAD again, so document its exact source SHA and keep manual V16 screen-reader signoff separate from green automated V15 evidence.
 
 - 2026-11-15: A design capture that tabs through controls must restore its entry focus before continuing a keyboard-only edit; a fixed overlay escapes non-containing-block ancestor overflow, so stop clipping at the fixed backdrop while keeping strict 44px checks.
@@ -614,3 +615,4 @@
 - 2026-11-15: For D19 whole-block localization, setting only `page-header.title.vi` leaves the block in English if its default `eyebrow.vi` is empty. A bilingual browser fixture must populate and verify every localized field with an English value before asserting a VI rendered H1.
 - 2026-11-15: Locale-specific visual evidence needs a bilingual block fixture and an assertion on painted localized text on both public and preview routes; merely switching the page locale with a shared heading string proves neither localized content nor dark-mode rendering.
 - 2026-11-16: A green source-branch restore journey can fail after D5/D6 integration when accessible Properties labels change; use exact labels from the failed CI accessibility snapshot and retain the saved-tree and painted-page assertions.
+- 2026-11-16: Layers reinitializes with only the Page expanded after a builder reload; expand each nested ancestor by keyboard before checking a reloaded heading in the accessible tree, while separately comparing the saved draft and revision.
