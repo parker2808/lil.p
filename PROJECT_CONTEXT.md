@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V02: D5 #248 covers EN/VI keyboard invalid drop but intentionally disables publish. A separate D6 real-browser gate now exercises keyboard-only edit/reorder, live status/focus order, publish and reload with the published version/public tree; exact-head ready-e2e CI and manual screen-reader audio remain pending. No runtime, API, schema or production change.
+
 - 2026-11-16 V13: D6 historical draft SEO title/description previously read the current draft while `?v=N` rendered a versioned tree. Shared metadata now uses the validated draft-only version for core and custom page routes; browser evidence must verify EN/VI old body/SEO versus current public body/SEO. Full V13 route/state localization remains GAP.
 
 - 2026-11-15 V09/V10 #239 first CI `43730577307` failed only shard 2: the page-header's actual Properties title labels are `Properties (EN)`/`Properties (VI)` (verified from Playwright error-context), not `title (EN)`/`title (VI)`. Fixture locators now assert the exact accessible names; new-head CI/visual evidence still pending, no assertion/threshold removed.
@@ -341,6 +343,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Register the D6 EN/VI keyboard-only publish browser test in the five-shard manifest; compare saved draft, version snapshot and public tree after reload while recording zero pointer events. CI pending; no V02 full PASS until exact-head evidence and independent review.
 
 - 2026-11-16: V13 browser fixture follows the supported D2 transition (legacy publish → legacy SEO edit → tree activate/publish); prior exact-head run `43748389414` caught an invalid legacy PATCH after tree activation (409). Runtime version guard unchanged; next CI pending.
 
