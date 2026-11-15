@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- D5 V15 full-builder gate: the stacked design audit now measures visible controls outside `.cms-core` in the admin shell without the previous 43.5px tolerance and checks computed keyboard focus color against adjacent painted surfaces at ≥3:1. Await exact-head ready-e2e CI and independent review before declaring V15 PASS; manual SR and combined D6 proof remain open. See `docs/specs/2026-11-15-cms-d5-v15-target-focus.md`.
+- D5 V15 full-builder gate: the stacked design audit now measures visible controls outside `.cms-core` in the admin shell without the previous 43.5px tolerance and checks computed keyboard focus color against adjacent painted surfaces at ≥3:1. The all-20 fixture accepts the existing raw heading or the #215 translated metadata label during the stacked transition, backed by EN/VI messages. Await exact-head ready-e2e CI and independent review before declaring V15 PASS; manual SR and combined D6 proof remain open. See `docs/specs/2026-11-15-cms-d5-v15-target-focus.md`.
 
 - D5 live journeys (stacked test PR): CI-sharded browser cases use actual Next and D2 HTTP for no-H1 save/publish rejection, mouse/keyboard nested layout, invalid drop/delete, undo/redo, responsive draft persistence, divergent CAS conflict and offline recovery. The expanded design case attaches exact-head EN/VI neutral/lil.p light/dark 390/768/1440 empty/error/focus/saved/saving/conflict captures with axe, reduced-motion, 44px all-controls, visible focus and overflow checks. A desktop header action gains a 44px minimum. Only CI-proven assertions can close J/V sub-gates; successful tree publication/public SSR, manual screen reader and all-20 host-type writes remain D6 gaps. See `docs/specs/2026-11-15-cms-d5-live-journeys.md`.
 
@@ -253,7 +253,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
-- 2026-11-15: Expanded D5 capture measurements from core-only to all visible admin-builder controls, enforcing actual 44×44px geometry and computed focus/surface contrast of at least 3:1 with per-capture counts. No tree, API, migration or golden contract change; exact-head CI is required for V15 acceptance.
+- 2026-11-15: Expanded D5 capture measurements from core-only to all visible admin-builder controls, enforcing actual 44×44px geometry and computed focus/surface contrast of at least 3:1 with per-capture counts; the 20-block fixture resolves translated EN/VI metadata for #215 compatibility. No tree, API, migration or golden contract change; exact-head CI is required for V15 acceptance.
 
 - 2026-11-15: Registered real-API D5 Playwright journeys in the four-shard CI list and extended exact-head design attachments to empty/error/focus/saved/saving/conflict states across locale, theme, brand and 390/768/1440 widths. A desktop header 44px minimum and all-controls geometry, focus, reduced-motion and axe assertions accompany structural HTTP/revision checks; no API, golden or migration changes. Exact-head CI evidence is required before assigning PASS to matrix rows.
 

@@ -10,3 +10,7 @@ Stack on the accepted D5 live journeys; do not change tree, HTTP or golden contr
 4. Refresh Graphify and project docs; run local checks and the ready-e2e CI gate. Manual screen-reader V16 and combined D6 acceptance remain open.
 
 The measurement reports each undersized control and each failing focus color/surface pair, not just an aggregate count. An invisible/disabled control is excluded; a keyboard-focusable active control without a visible outline or ring fails. No screenshot or token-only contrast is accepted as proof of a computed focus pair.
+
+The stacked #204 all-20 fixture also resolves `BLOCK_EDITOR_META.labelKey` against the real EN/VI messages. Until the separate host-label change from #215 is in this branch, its heading assertion accepts either the current raw type text or its translated label; once combined, both languages must continue finding all 20 controls without assuming a raw `hero` label.
+
+Compute color contrast from browser Canvas sRGB pixels for CSS-computed colors rather than parsing only `rgb()` and hex; invalid or translucent measurements fail explicitly, without lowering the focus 3:1 threshold.

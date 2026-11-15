@@ -33,26 +33,37 @@ const entries: Array<{
   checkedFocus: number;
 }> = [];
 
-function contrast(foreground: string, background: string): number {
-  function luminance(color: string): number {
-    const hex = color.replace('#', '');
-    const channels = (
-      color.startsWith('#')
-        ? hex.length === 3
-          ? hex.split('').map((value) => Number.parseInt(value.repeat(2), 16))
-          : (hex.match(/.{2}/g) ?? []).map((value) => Number.parseInt(value, 16))
-        : (color.match(/rgba?\(([^)]+)\)/)?.[1]?.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number)
-    )
-      .map((value) => value / 255)
-      .map((value) => (value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4));
-    expect(channels).toHaveLength(3);
-    return channels[0]! * 0.2126 + channels[1]! * 0.7152 + channels[2]! * 0.0722;
-  }
-  const first = luminance(foreground);
-  const second = luminance(background);
-  return (
-    Math.round(((Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05)) * 100) / 100
-  );
+async function contrastPairs(page: Page, pairs: Record<string, [string, string]>) {
+  return page.evaluate((colors) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 1;
+    const context = canvas.getContext('2d', { willReadFrequently: true });
+    if (!context) throw new Error('Canvas color measurement unavailable');
+    function luminance(color: string): number {
+      if (!CSS.supports('color', color)) throw new Error(`Invalid measured color: ${color}`);
+      context!.clearRect(0, 0, 1, 1);
+      context!.fillStyle = color;
+      context!.fillRect(0, 0, 1, 1);
+      const [red, green, blue, alpha] = context!.getImageData(0, 0, 1, 1).data;
+      if (alpha !== 255) throw new Error(`Non-opaque measured color: ${color}`);
+      const channel = (value: number) => {
+        const normalized = value / 255;
+        return normalized <= 0.04045 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+      };
+      return channel(red!) * 0.2126 + channel(green!) * 0.7152 + channel(blue!) * 0.0722;
+    }
+    return Object.fromEntries(
+      Object.entries(colors).map(([name, [foreground, background]]) => {
+        const first = luminance(foreground);
+        const second = luminance(background);
+        return [
+          name,
+          Math.round(((Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05)) * 100) /
+            100,
+        ];
+      }),
+    );
+  }, pairs);
 }
 
 async function capture(
@@ -107,15 +118,15 @@ async function capture(
       ].map((name) => [name, style.getPropertyValue(`--builder-${name}`).trim()]),
     );
   });
-  const pairs = {
-    textSurface: contrast(tokens.text!, tokens.surface!),
-    mutedSurface: contrast(tokens.muted!, tokens.surface!),
-    accentSoft: contrast(tokens.accent!, tokens['accent-soft']!),
-    accentButton: contrast(tokens['accent-text']!, tokens.accent!),
-    successSurface: contrast(tokens.success!, tokens.surface!),
-    selectionSurface: contrast(tokens.selection!, tokens.surface!),
-    focusSurface: contrast(tokens.focus!, tokens.surface!),
-  };
+  const pairs = await contrastPairs(page, {
+    textSurface: [tokens.text!, tokens.surface!],
+    mutedSurface: [tokens.muted!, tokens.surface!],
+    accentSoft: [tokens.accent!, tokens['accent-soft']!],
+    accentButton: [tokens['accent-text']!, tokens.accent!],
+    successSurface: [tokens.success!, tokens.surface!],
+    selectionSurface: [tokens.selection!, tokens.surface!],
+    focusSurface: [tokens.focus!, tokens.surface!],
+  });
   for (const name of [
     'textSurface',
     'mutedSurface',
@@ -223,14 +234,23 @@ async function capture(
     return results;
   });
   expect(focusIndicators.length, `${options.state} keyboard-focusable controls`).toBeGreaterThan(0);
-  for (const focus of focusIndicators) {
+  const focusPairs = Object.fromEntries(
+    focusIndicators.flatMap((focus, index) =>
+      focus.surfaces.map((surface, surfaceIndex) => [
+        `${index}/${surfaceIndex}`,
+        [focus.color!, surface] as [string, string],
+      ]),
+    ),
+  );
+  const focusContrast = await contrastPairs(page, focusPairs);
+  for (const [index, focus] of focusIndicators.entries()) {
     expect(focus.color, `${options.state}/${focus.name} focus indicator`).toBeTruthy();
     expect(focus.surfaces.length, `${options.state}/${focus.name} painted surface`).toBeGreaterThan(
       0,
     );
-    for (const surface of focus.surfaces)
+    for (const [surfaceIndex, surface] of focus.surfaces.entries())
       expect(
-        contrast(focus.color!, surface),
+        focusContrast[`${index}/${surfaceIndex}`],
         `${options.state}/${focus.name} focus ${focus.color} against ${surface}`,
       ).toBeGreaterThanOrEqual(3);
   }
