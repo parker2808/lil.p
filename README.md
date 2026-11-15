@@ -71,7 +71,9 @@ is a separate, production-default API guard; it does not ship D2 storage or
 authorize a deploy. Release owners must verify every old writer has drained
 before the later D2 migration, and keep the freeze until D2-aware unfreeze.
 The API test boots the production `AppModule` with stubbed services to catch a
-missing middleware registration; this is not proof of live Render drain.
+missing middleware registration. Its cold module bootstrap is a separate setup
+step; the 503 HTTP assertion retains the normal per-test timeout. This is not
+proof of live Render drain.
 
 The Round 3 integration branch contains the verified PR #169 head and all eleven earlier Round 3 branch tips. It is a review PR to `main`; the stacked PRs remain open. See the [integration handoff](./docs/specs/2026-11-03-r3-stack-integration.md) and [Round 3 audit](./docs/specs/2026-11-03-r3-12-real-flow-audit.md) for scope and checks.
 
@@ -339,7 +341,7 @@ After `git pull`, run `pnpm install`, `pnpm --filter @portfolio/contracts build`
 
 Live hosting is **Vercel (web) + Render (API) + TiDB Cloud (MySQL) + Cloudinary (media)**. First-time provisioning, every env var, and the admin bootstrap are in [docs/DEPLOY.md](./docs/DEPLOY.md) ([Tiếng Việt](./docs/DEPLOY.vi.md)). Rollback and secret rotation: [docs/runbooks/deploy.md](./docs/runbooks/deploy.md), [docs/runbooks/secrets.md](./docs/runbooks/secrets.md).
 
-The exceptional Stage A → D2 forward-only rollout uses the [release-owner probe and drain checklist](./docs/runbooks/deploy.md#stage-a--d2-page-write-rollout-release-owner-only). `scripts/probe-stage-a-d2.mjs` checks public health and unauthenticated page-write freeze across direct Render and Vercel ingress; it cannot certify old-instance drain or migration by itself. Never run it against production without release-owner authorization.
+The exceptional Stage A → D2 forward-only rollout uses the [release-owner probe and drain checklist](./docs/runbooks/deploy.md#stage-a--d2-page-write-rollout-release-owner-only) and its [curl-only ingress/instance evidence sheet](./docs/runbooks/stage-a-drain-curl.md). `scripts/probe-stage-a-d2.mjs` checks public health and unauthenticated page-write freeze across direct Render and Vercel ingress; neither probe can certify old-instance drain or migration by itself. Never run either against production without release-owner authorization.
 
 The [stacked D2 safety matrix](./docs/specs/2026-11-15-cms-d2-safety-matrix.md) pairs disposable-MySQL rejection/no-write and missing-SEO snapshot-hash checks with a forward-only release protocol. Its old-client pointer-clobber reproduction is a **known unsafe** writer, not a passing rollback test. J09/V18 cannot pass on CI alone; the release owner must prove the live Stage A freeze and drain before D2 migration.
 Oversized JSON builder requests return a redacted `413 VALIDATION_FAILED` response with a `body` field error and request ID; this does not change the existing upload-size response.

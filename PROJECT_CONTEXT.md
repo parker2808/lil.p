@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- Stage A #210 refreshed on main `3162b973`: production page/version writes remain frozen with 503 while health and reads remain available; five-shard D4 keyboard/canvas coverage is retained. The direct Render/Vercel 14-mutation probe checklist is read-only preparation, not a production probe or evidence of old-instance drain. A release owner must verify the authoritative active-instance roster and in-flight completion before D2 migration; CI cannot close J09/V18. See `docs/runbooks/stage-a-drain-curl.md`.
+
 - 2026-11-15 #208 `7f9e1cf0` after main #223 passed 17/17 PR checks; CI `43704242728` passed API E2E and five web shards. The SHA-matched public-bundle report confirms V19 build-time subset at 90,266/102,400 gzip bytes, not deployed-asset parity. The five-shard screenshots require independent review; #225 is not integrated and all 31 full J/V gates remain GAP. Stage A live drain and manual a11y/visual signoff remain OPEN; DO NOT MERGE.
 
 - 2026-11-15 #208 integrates #222 `b4dcf2a7` (real editor-origin 160 builder PNG/axe attachments, validated EN→VI draft persistence and exact required-title labels) as verification-only evidence. Run `43696818345` at previous combined `9ec563c8` passed API E2E, unit, build and shards 1–3 but failed shard 4: the real VI switch is labeled `Hiện mục nổi bật`, not `showFeatured`. The merged helper now targets that exact localized control. New combined-head CI and design acceptance remain OPEN; Stage A live drain and public/preview neutral visual proof remain separate. DO NOT MERGE.
@@ -328,6 +330,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Integrated #210's main-synced write freeze and read-only drain checklist into verification-only #208, preserving the real AppModule setup timeout separately from the ordinary 503 request assertion; no production deploy, migration, DB access, or live drain claim.
 
 - 2026-11-15: Recorded #208 five-shard exact-head CI `43704242728` and refreshed V19's build-time-only SHA-matched evidence; retained 0 full PASS / 31 GAP and the independent signoff requirement.
 

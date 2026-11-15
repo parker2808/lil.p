@@ -4,7 +4,7 @@
 2. Deny all non-read `/api/admin/pages` requests, including unknown future routes and method-override attempts, before controller/DB writes; return 503 with `Retry-After`.
 3. Keep GET/HEAD reads, public routes and `/api/health` available; expose only nonsecret deployment identity and freeze state.
 4. Test every current page/version mutation, prospective builder paths, alternate ingress and override headers; assert no writes reach services.
-   Also boot the real `AppModule` with stubbed services so removing its middleware registration fails the HTTP gate.
+   Also boot the real `AppModule` with stubbed services so removing its middleware registration fails the HTTP gate. Keep cold import/compile/init in a bounded setup hook, separate from the normally timed 503 request assertion.
 5. Keep auto-deploy off and deploy a pinned Stage A commit only with the release owner's separate approval.
 6. Verify that every pre-freeze instance has terminated, not merely that Stage A is Live; then permit D2's startup migration with freeze still enabled.
 7. Keep freeze throughout D2 and D6 validation; unfreeze only via a later D2-aware deploy after all old instances drain.
@@ -62,6 +62,10 @@ malformed identity is a **stop**, not evidence of drain. The HTTP tests simulate
 direct and Vercel-forwarded ingress; they are not a live CDN proof.
 
 ## Forward-only deployment checklist (release owner, separate authorization)
+
+The [curl-only ingress and read-only Render drain checklist](../runbooks/stage-a-drain-curl.md)
+is prepared for the release owner. Its probes cannot substitute for complete
+authenticated instance inventory or separate deploy/migration approval.
 
 1. Disable API auto-deploy and pin the exact approved Stage A commit; inventory
    every existing API service/instance ID and commit before deploying. Confirm
