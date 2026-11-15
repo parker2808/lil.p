@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #208 next verification cut: D2 `e4863639` (#247/#250), D5 `bebb9555` (#248) and D6 `ed099954` (#251) normal-merged in isolation. Source heads each passed 17/17, but source CI does not confer combined PASS. Keep prior 15/28 A PASS, 13 A GAP, 3 B DEFERRED as the **last scored cut** until the new exact-head CI and bounded independent review. V02 keyboard invalid-drop negative path is reviewed; successful keyboard publish needs an integrated D6 browser gate because D5 Publish is disabled. V13 historical SEO/body and V17/V21 tracked raw inventory are scoped source evidence, not full-row acceptance. No #208 merge, production action or migration.
+
 - 2026-11-16 #208 current integration: D2 `67c4d1c6`, D5 `7e91f613`, D6 `6b09962f` merged into verification-only head `dc505019`. Run `43748043927` shard 4 exposed D5/D6 Properties accessible-label drift; combined-only exact-locator correction passed API + 5/5 web shards on `43749231048`. This cut scores 15/28 pre-merge PASS, 13 GAP; #247/#248/#249/#250/#251 source follow-ups do not confer full combined PASS. J09/V18/V19 remain post-deploy; manual SR V16 remains documented limitation. DO NOT MERGE.
 
 - 2026-11-16 #208 final-cut verification: code head `e13790ae` includes D2 `15a4a3a`, D5 `7e91f61`, D6 `ba2fe0e`; exact-head CI `43742443333` passed API/unit/build and all five web shards. Scored pre-merge 15/28 PASS, 13/28 GAP; J09/V18/V19 deferred to the approved rollout's live gates. V16's automated subset is the approved gate; manual SR remains documented limitation, not WCAG certification. #239 is not integrated; #208 DO NOT MERGE. See combined matrix spec for row IDs/owners.
@@ -437,6 +439,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Integrated D2 log/inventory, D5 keyboard negative path and D6 historical preview SEO into verification-only #208 without removing tree API or legacy raw-hash tests; new exact-head CI pending, release matrix unchanged until reviewed. No main merge/deploy.
 
 - 2026-11-16: Scored verification-only #208 at `dc505019` against exact-head CI `43749231048` (17/17, API + all five web shards), source/merge artifact provenance and bounded independent reviews; V09/V10/full visual, V12/V13, J07/V06 and raw inventory gaps remain. No main merge/deploy or production action.
 

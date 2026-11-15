@@ -1,6 +1,6 @@
 # D2 → D5 UI → D6 combined verification (DO NOT MERGE)
 
-**Current cut (2026-11-16):** #208 `e13790ae`, exact-head run `43742443333` green API + five web shards; the final-cut matrix at the end of this document scores 15/28 class-A PASS, 13/28 GAP and 3/3 class-B DEFERRED-post-deploy. Older dated cut scores below are historical, not current authorization. V16's PASS is an automated gate with manual SR limitations, not full WCAG signoff.
+**Latest scored cut (2026-11-16):** #208 code `dc505019`, run `43749231048` green API + five web shards; docs head `53e5a27c` run `43750653955` succeeded. The matrix at the end scores 15/28 class-A PASS, 13/28 GAP and 3/3 class-B DEFERRED-post-deploy. D2 `e4863639`, D5 `bebb9555`, D6 `ed099954` were subsequently normal-merged into this verification worktree; they require their own pushed exact-head CI and review before any rescore. V16's PASS is an automated gate with manual SR limitations, not full WCAG signoff.
 
 ## 2026-11-15 exact-head integration cut — reviewed CI checkpoint
 
