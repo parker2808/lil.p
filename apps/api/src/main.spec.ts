@@ -21,7 +21,7 @@ describe('API bootstrap migration gate', () => {
 
   it('initializes before checking migration and listens only after a failed check leaves writes frozen', async () => {
     vi.stubEnv('NODE_ENV', 'production');
-    vi.stubEnv('CMS_PAGE_WRITE_FREEZE', '0');
+    vi.stubEnv('CMS_PAGE_WRITE_FREEZE', undefined);
 
     const events: string[] = [];
     let finishInit!: () => void;

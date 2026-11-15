@@ -37,7 +37,7 @@ export function pageWritesFrozen(): boolean {
   if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     return process.env.CMS_PAGE_WRITE_FREEZE === '1';
   }
-  return process.env.CMS_PAGE_WRITE_FREEZE !== '0' || !migrationReady;
+  return process.env.CMS_PAGE_WRITE_FREEZE === '1' || !migrationReady;
 }
 
 function isPageAdminPath(rawUrl: string): boolean {

@@ -43,7 +43,7 @@ describe('D2 write reopening', () => {
 
   beforeAll(async () => {
     vi.stubEnv('NODE_ENV', 'production');
-    vi.stubEnv('CMS_PAGE_WRITE_FREEZE', '0');
+    vi.stubEnv('CMS_PAGE_WRITE_FREEZE', undefined);
     const module = await Test.createTestingModule({ imports: [ProbeModule] }).compile();
     app = module.createNestApplication();
     app.setGlobalPrefix('api');
@@ -101,13 +101,11 @@ describe('D2 write reopening', () => {
     await request(app.getHttpServer())[method.toLowerCase() as 'post'](path).send({}).expect(503);
   });
 
-  it('keeps production frozen when the reopen flag is missing', async () => {
-    vi.stubEnv('CMS_PAGE_WRITE_FREEZE', undefined);
+  it('keeps production frozen until startup verification without a kill-switch', async () => {
     await expectFrozen();
-    vi.stubEnv('CMS_PAGE_WRITE_FREEZE', '0');
   });
 
-  it('stays frozen before startup verification, even with the reopen setting', async () => {
+  it('stays frozen before startup verification with an unset kill-switch', async () => {
     expect(pageWritesFrozen()).toBe(true);
     await expectFrozen();
   });
@@ -127,7 +125,7 @@ describe('D2 write reopening', () => {
     await expectFrozen();
   });
 
-  it('opens only after both migration history and physical columns check', async () => {
+  it('opens by default only after both migration history and physical columns check', async () => {
     database.$queryRaw.mockResolvedValueOnce([{ migration_name: migrationName }]);
     database.$queryRaw.mockResolvedValueOnce(columns as never);
     await verifyPageDraftMigration(database as never);
@@ -144,7 +142,16 @@ describe('D2 write reopening', () => {
   it('explicit kill-switch closes writes again without weakening reads', async () => {
     vi.stubEnv('CMS_PAGE_WRITE_FREEZE', '1');
     await expectFrozen();
-    vi.stubEnv('CMS_PAGE_WRITE_FREEZE', '0');
+    vi.stubEnv('CMS_PAGE_WRITE_FREEZE', undefined);
+    expect(pageWritesFrozen()).toBe(false);
+  });
+
+  it('treats other kill-switch values as open only after verification', async () => {
+    for (const value of ['0', 'false', 'unexpected']) {
+      vi.stubEnv('CMS_PAGE_WRITE_FREEZE', value);
+      expect(pageWritesFrozen()).toBe(false);
+    }
+    vi.stubEnv('CMS_PAGE_WRITE_FREEZE', undefined);
   });
 
   it('uses the real AppModule middleware before auth and service access', async () => {
