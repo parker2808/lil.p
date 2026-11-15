@@ -6,13 +6,13 @@ Next.js App Router host for the EN/VI public site and role-guarded admin CMS. Pu
 
 `/en/cms-u3-study` and `/vi/cms-u3-study` are **static-content design samples**, not a working builder. They return not found unless the server has `R3_E2E_STATES=1`. The route also gates localized, noindex EN/VI metadata. The sample shows empty, nested and responsive compositions, with a desktop palette/Layers/inspector and a mobile canvas with bottom sheets; its theme, scene, viewport and status choices only change the sample presentation. No editor logic, persistence, API call, save or publish operation is provided. Do not enable the fixture flag in production.
 
-## D4 composition canvas
+## D4 canvas and D5 host
 
 The legacy page editor continues to own live block editing and publication.
 
-The D4 builder at `/admin/builder/[key]` is a provisional, authenticated composition surface only when `R3_E2E_STATES=1`. A single in-memory host owns its tree and selection, dispatching atomic commands validated by the built `@parker2808/cms-core/tree` package; the route cannot save, publish, restore or change public pages. Components and Layers have mobile sheets and desktop rails; drag-insert and keyboard insertion share validation. The Properties region mounts once as a D5 callback, not a working inspector yet. Without the flag, the builder URL returns not found. Its neutral styling comes from `@parker2808/cms-core/theme.css`, and lil.p branding changes token values only.
+The builder at `/admin/builder/[key]` remains an authenticated, `R3_E2E_STATES=1`-gated integration route. The D5 host owns the validated tree, one Properties editor, base/tablet/mobile overrides, undo/redo and draft status. Only eligible custom pages explicitly activate a revision-checked D2 tree draft and autosave it; built-in keys stay local-only. Conflicts or ambiguous saves retain local edits for review, retry or explicit export/reload, and an unacknowledged local copy can be restored after refresh. **Publishing stays disabled in this editor**; the legacy editor and public pages are unchanged. Without the flag the builder route returns not found. Neutral CSS comes from `@parker2808/cms-core/theme.css`; lil.p branding changes tokens only.
 
-See the [D4 interaction and verification spec](../../docs/specs/2026-11-11-cms-d4-canvas.md). Browser coverage is in the standalone D4 Playwright config; D6 owns registration in the shared CI shards.
+See the [D4 canvas spec](../../docs/specs/2026-11-11-cms-d4-canvas.md) and [D5 UI spec](../../docs/specs/2026-11-11-cms-d5-ui.md). D5 browser coverage runs in shared CI shards and the standalone builder Playwright config; D6 owns the full journey.
 
 ## Local checks
 

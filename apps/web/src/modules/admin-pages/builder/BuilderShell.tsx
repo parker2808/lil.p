@@ -84,7 +84,7 @@ const copy: Record<'en' | 'vi', Copy> = {
     selected: 'Selected',
     removed: 'Item deleted',
     requiredColumn: 'Keep at least two columns in a row. Delete the row instead.',
-    publishHint: 'Publish needs a heading. Draft composition remains available.',
+    publishHint: 'Tree publishing is not enabled. Draft changes can still be saved.',
     empty: 'Empty page',
     choose: 'Add a section to start your page',
     labels: {
@@ -127,7 +127,7 @@ const copy: Record<'en' | 'vi', Copy> = {
     selected: 'Đã chọn',
     removed: 'Đã xóa mục',
     requiredColumn: 'Hàng cần ít nhất hai cột. Hãy xóa cả hàng thay vì cột.',
-    publishHint: 'Cần tiêu đề để xuất bản. Bạn vẫn có thể soạn bản nháp.',
+    publishHint: 'Chưa hỗ trợ xuất bản cây nội dung. Bạn vẫn có thể lưu bản nháp.',
     empty: 'Trang trống',
     choose: 'Thêm một phần để bắt đầu trang',
     labels: {
@@ -165,7 +165,6 @@ function subscribeViewport(onChange: () => void) {
 function viewportDevice(): 'mobile' | 'tablet' | 'desktop' {
   return window.innerWidth < 600 ? 'mobile' : window.innerWidth < 1700 ? 'tablet' : 'desktop';
 }
-
 function compactWorkspace(): boolean {
   return window.innerWidth <= 1100;
 }
@@ -196,11 +195,15 @@ export function BuilderShell({
   state,
   onDispatch,
   renderProperties,
+  status,
+  historyControls,
 }: {
   pageKey: string;
   state: BuilderState;
   onDispatch: (command: BuilderCommand) => CompositionResult;
   renderProperties?: BuilderMount;
+  status?: string;
+  historyControls?: ReactNode;
 }) {
   const locale = useLocale() === 'vi' ? 'vi' : 'en';
   const theme = useSyncExternalStore(subscribeTheme, documentTheme, () => 'light');
@@ -264,7 +267,9 @@ export function BuilderShell({
 
   useEffect(() => {
     if (!visibleSheet) return;
-    const first = sheetRef.current?.querySelector<HTMLElement>('button, input, [tabindex="0"]');
+    const first = sheetRef.current?.querySelector<HTMLElement>(
+      'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex="0"]',
+    );
     first?.focus();
   }, [visibleSheet]);
 
@@ -621,7 +626,6 @@ export function BuilderShell({
         <div className={styles.panelBody}>
           <p className={styles.eyebrow}>{text.selected}</p>
           <h3>{label(findNode(document, selectedId) ?? document.root, text)}</h3>
-          <p>{text.unsaved}</p>
           <p className={styles.hint}>{text.publishHint}</p>
           {renderProperties?.({ state, onDispatch })}
         </div>
@@ -831,10 +835,21 @@ export function BuilderShell({
           >
             {brand === 'neutral' ? 'Core' : 'lil.p'}
           </button>
-          <span className={styles.status}>{text.unsaved}</span>
-          <button type="button" disabled title={text.unsaved}>
+          {historyControls}
+          <span className={styles.status} aria-live="polite">
+            {status ?? text.unsaved}
+          </span>
+          <button
+            type="button"
+            disabled
+            title={text.publishHint}
+            aria-describedby="builder-publish-reason"
+          >
             {locale === 'vi' ? 'Xuất bản' : 'Publish'}
           </button>
+          <span id="builder-publish-reason" className={styles.publishReason}>
+            {text.publishHint}
+          </span>
         </div>
       </header>
       <div
@@ -883,6 +898,7 @@ export function BuilderShell({
         </section>
         {!compact && renderProperties && (
           <aside
+            data-builder-properties
             className={`${styles.sidebar} ${styles.inspector}`}
             aria-label={text.properties}
             ref={inspectorRef}
@@ -941,7 +957,13 @@ export function BuilderShell({
         )}
         <button
           type="button"
-          onClick={(event) => openSheet('properties', event.currentTarget)}
+          onClick={(event) => {
+            if (compact || !renderProperties) openSheet('properties', event.currentTarget);
+            else
+              globalThis.document
+                .querySelector<HTMLElement>('[data-builder-properties] button')
+                ?.focus();
+          }}
           aria-label={text.properties}
         >
           ↗
@@ -985,7 +1007,7 @@ export function BuilderShell({
               if (event.key === 'Tab') {
                 const items = Array.from(
                   sheetRef.current?.querySelectorAll<HTMLElement>(
-                    'button:not([disabled]), input, [tabindex="0"]',
+                    'button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex="0"]',
                   ) ?? [],
                 );
                 const first = items[0],
@@ -1001,7 +1023,12 @@ export function BuilderShell({
             }}
           >
             <div className={styles.sheetTitle}>
-              <h2>{text[visibleSheet]}</h2>
+              <div className={styles.sheetHeading}>
+                <h2>{text[visibleSheet]}</h2>
+                <span className={styles.sheetStatus} role="status" aria-live="polite">
+                  {status ?? text.unsaved}
+                </span>
+              </div>
               <button type="button" onClick={closeSheet} aria-label={text.cancel}>
                 ×
               </button>
