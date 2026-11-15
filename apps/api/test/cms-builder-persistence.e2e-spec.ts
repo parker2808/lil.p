@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-import type { INestApplication } from '@nestjs/common';
+import { type INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -44,6 +44,18 @@ const invalidTrees = [
   ['unknown field', { ...emptyTree, extra: true }],
   ['unknown component', treeWith([{ ...heading, componentType: 'future-component' }])],
   ['duplicate IDs', treeWith([heading, { ...heading }])],
+  [
+    'unsafe rich text',
+    treeWith([
+      heading,
+      {
+        id: 'rich-text',
+        type: 'component',
+        componentType: 'rich-text',
+        responsive: { base: { text: '<script>unsafe</script>' } },
+      },
+    ]),
+  ],
   [
     'unsafe URL',
     treeWith([
@@ -379,6 +391,97 @@ describe('builder draft persistence over disposable MySQL', () => {
     expect(rejected.body).toMatchObject({ code: 'VALIDATION_FAILED' });
     expect(JSON.stringify(rejected.body)).not.toContain(marker);
     expect(await persistedState(prisma, pageId)).toEqual(before);
+  });
+
+  it('checks draft, preview and version read capabilities separately from every write', async () => {
+    const admin = await adminAgent(app);
+    const user = await userAgent(app);
+    await seedLegacyBlocks(prisma, pageId);
+    const blocks = await prisma.pageBlock.findMany({
+      where: { pageId },
+      orderBy: { sortOrder: 'asc' },
+    });
+    const version = await prisma.pageVersion.create({
+      data: {
+        pageId,
+        version: 1,
+        snapshot: {
+          seo,
+          blocks: blocks.map(
+            ({ type, key, schemaVersion, layout, surface, sortOrder, isVisible, props }) => ({
+              type,
+              key,
+              schemaVersion,
+              layout,
+              surface,
+              sortOrder,
+              isVisible,
+              props,
+            }),
+          ),
+        },
+      },
+    });
+    await prisma.page.update({
+      where: { id: pageId },
+      data: { publishedVersionId: version.id },
+    });
+    const tree = treeWith([heading]);
+    await admin
+      .post('/api/admin/pages/ideas/builder/activate')
+      .send({ expectedRevision: '0', tree })
+      .expect(200);
+    const before = await persistedState(prisma, pageId);
+    const reads = [
+      '/api/admin/pages/ideas/builder/draft',
+      '/api/admin/pages/ideas/versions',
+      '/api/admin/pages/ideas/versions/1',
+      '/api/admin/preview/pages/ideas?locale=en&version=1',
+    ];
+    for (const [index, path] of reads.entries()) {
+      const guest = await request(app.getHttpServer()).get(path).expect(401);
+      expect(guest.body).toMatchObject({ code: 'UNAUTHENTICATED' });
+      for (const actor of [user, admin]) {
+        const { body } = await actor.get(path).expect(200);
+        if (index === 0) expect(body.tree).toEqual(tree);
+        if (index === 1)
+          expect(body).toEqual([expect.objectContaining({ version: 1, blockCount: 2 })]);
+        if (index === 2) expect(body.snapshot.blocks).toHaveLength(2);
+        if (index === 3) expect(body.blocks).toHaveLength(2);
+      }
+    }
+    for (const [method, path, body] of [
+      ['post', '/api/admin/pages', { key: 'denied-create', title: 'Denied', locale: 'en' }],
+      [
+        'post',
+        '/api/admin/pages/ideas/builder/activate',
+        { expectedRevision: '0', tree: emptyTree },
+      ],
+      ['put', '/api/admin/pages/ideas/builder/draft', { expectedRevision: '0', tree: emptyTree }],
+      ['post', '/api/admin/pages/ideas/builder/publish', { expectedRevision: '0' }],
+      ['post', '/api/admin/pages/ideas/versions/1/builder/restore', { expectedRevision: '0' }],
+    ] as const) {
+      expect(
+        (await request(app.getHttpServer())[method](path).send(body).expect(401)).body,
+      ).toMatchObject({
+        code: 'UNAUTHENTICATED',
+      });
+      expect((await user[method](path).send(body).expect(403)).body).toMatchObject({
+        code: 'FORBIDDEN',
+      });
+    }
+    expect(await persistedState(prisma, pageId)).toEqual(before);
+    expect(await prisma.page.findUnique({ where: { key: 'denied-create' } })).toBeNull();
+  });
+
+  it('does not echo rejected page content in HTTP errors', async () => {
+    const admin = await adminAgent(app);
+    const marker = 'private-body-marker-not-a-secret';
+    const response = await admin
+      .post('/api/admin/pages/ideas/builder/activate')
+      .send({ expectedRevision: '0', tree: { ...emptyTree, marker } })
+      .expect(400);
+    expect(JSON.stringify(response.body)).not.toContain(marker);
   });
 
   it('rolls back legacy publish when a real DB activation wins after the page read', async () => {

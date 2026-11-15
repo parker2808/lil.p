@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A 401/403 mutation test does not establish preview/version read capabilities or server log redaction; check both on real HTTP and retain a separate production-instance audit gate.
+
 - 2026-11-15: Express body-parser reports oversized JSON as a typed `entity.too.large` error rather than Nest's `PayloadTooLargeException`; map it centrally to a redacted 413 body error and create a trace ID before middleware runs, while preserving the existing file-upload 400 contract.
 
 - 2026-11-15: A green disposable-DB safety matrix does not prove a live old-instance drain: preserve the pre-D2 pointer-clobber reproduction as a failure boundary, and require independent authenticated inventory plus read-only DB evidence before forward-only migration.
@@ -313,3 +315,4 @@
 - 2026-11-10: Placeholder opacity can defeat an AA text token; measure the computed input contrast, and give Layers depth visible guides on desktop and mobile.
 - 2026-11-10: A flag-gated localized fixture needs localized, gated metadata too; derive the title from the same EN/VI copy and test both disabled and enabled states.
 - 2026-11-15: Unauthenticated 503 checks across direct API and Vercel ingress can detect a missing HTTP write freeze, but cannot prove old writers drained or D2 columns exist; require authenticated instance inventory and an authorized read-only schema check before migration or reopening. With locale-prefixed routing, accept only the expected same-origin root redirect and probe `/en` and `/vi` explicitly.
+- 2026-11-15: A 400 validation response never enters the exception filter's >=500 error-log branch; a spy with zero calls cannot prove log redaction. Label 400 checks HTTP-only, and require populated draft/version/preview response assertions to substantiate read capabilities.
