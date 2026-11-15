@@ -41,6 +41,7 @@ against its independently resolved EN/VI props and verifies a historical preview
 after republishing. Dynamic hosts compare stable props and API data rather than
 transient HTML; data-dependent/empty-default hosts do not prove nonblank semantic
 text solely through this suite.
+The [D6 tree parity gate](./docs/specs/2026-11-15-cms-d6-v04-v06-v09-v10-gate.md) adds serialized legacy/override assertions and paired EN/VI public/preview captures at three widths; visual review and the integrated UI restore path remain open.
 
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 

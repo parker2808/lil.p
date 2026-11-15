@@ -1,6 +1,8 @@
 # Lessons
 
 - 2026-11-15: A data-backed streaming notes fallback needs real 24px link targets, not only readable text; a lazy contact form can mount between public and preview captures, so wait for its existing interactive marker on both sides before comparing full semantics and unwaived axe.
+- 2026-11-15: A preview/public JSON equality check alone cannot prove breakpoint rendering or reviewable visual parity; attach paired browser screenshots at each locale and viewport while keeping the missing UI restore control an explicit GAP.
+- 2026-11-15: An incremental Graphify run can report no topology changes while retaining its earlier built-from SHA; record the verified code head separately rather than presenting the old graph as newly rebuilt.
 
 - 2026-11-15: During rapid draft/public navigation, a transient host can make a global `main.cms-core-host` locator ambiguous; wait for exactly one visible direct host under the content landmark instead of selecting the first element.
 
@@ -416,6 +418,8 @@
 - 2026-11-15: A 24-tuple visual matrix in one test can consume a 20-minute CI shard without a failing assertion or blob report; split by locale/theme with retry-unique pages, retain all tuple captures/axe, and print per-test progress to identify the stalled case.
 - 2026-11-15: At 390px the builder inspector is unmounted until the mobile Properties sheet opens; canvas-only screenshots and axe checks cannot establish mobile field layout or accessibility. Capture a second sheet-open state and assert a saved-host field inside it.
 - 2026-11-15: A seeded CV without a resume renders a zero-size wrapper; asserting its empty SSR/hydrated state is valid, but locator screenshots wait forever for visibility. Capture the surrounding visible host as an explicitly labeled empty-state pair, never claim a visible CV screenshot.
+- 2026-11-15: Browser tests can retain a VI UI preference after EN/VI public journeys; assert the localized builder canvas while keeping the exact restored heading, and use a per-attempt page key so a failed first attempt does not turn a retry into a slug collision.
+- 2026-11-15: When restacking parity evidence after a separately merged D6 converter and restore gate, keep their API/visual contracts and both documentation histories; fresh exact-head browser CI is needed before attributing prior screenshots to the combined tree.
 - 2026-11-15: An emitted public-bundle gzip cap does not prove CDN parity; record hashes of emitted bytes on the exact build head and compare every deployed chunk after an authorized deployment, without treating offline verifier tests as live evidence.
 - 2026-11-15: Unauthenticated 503 checks across direct API and Vercel ingress can detect a missing HTTP write freeze, but cannot prove old writers drained or D2 columns exist; require authenticated instance inventory and an authorized read-only schema check before migration or reopening. With locale-prefixed routing, accept only the expected same-origin root redirect and probe `/en` and `/vi` explicitly.
 - 2026-11-15: A four-shard visual matrix can hit the job time limit even while three peers finish quickly; measure actual job and Playwright step durations and keep per-shard provenance validation synchronized with the matrix size. Register an incoming spec before pinning it to a new shard—otherwise silent skips mask an incomplete gate. A separate failing accessibility assertion is not a throughput failure.

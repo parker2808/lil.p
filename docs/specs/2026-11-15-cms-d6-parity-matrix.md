@@ -107,6 +107,12 @@ asserts a token but does not establish a visible neutral SSR difference.
 The VI dark contact-form capture retains an English heading with Vietnamese
 form labels; its source content/default localization needs a separate
 assertion, rather than treating public/preview parity as locale correctness.
+The `contact-form` host defaults currently leave VI content empty, which
+intentionally falls back to the EN block; its EN-labeled wrapper and separately
+loaded VI site settings/form must be reviewed as distinct language scopes.
+The D6 Properties panel also exposes raw nested paths such as
+`primaryCta label (VI)` rather than translated field labels. These are
+localization GAPs, not failures that EN/VI screenshot pairing can certify.
 Follow-up work must exercise an actual neutral server-rendered host, a
 JavaScript-disabled nested tree, and localized VI defaults without weakening
 the existing pixel, SSR-inventory, hydration or axe assertions. Four visual
