@@ -40,7 +40,7 @@ four other host types in each page. Each file checks EN/VI × light/dark ×
 neutral/lil.p × 390/768/1440, yielding 24 page tuples and 120 type tuples per
 shard, 480 type tuples and 960 attached public/preview block PNGs overall.
 Every page tuple checks raw initial HTML block type, props hash and nonempty
-text; equal hydrated published/preview markup; paired block PNGs with at most
+text; equal hydrated published/preview block type, props hash and text; paired block PNGs with at most
 0.5% differing pixels (per-channel difference >10), allowing rasterization
 noise rather than falsely claiming byte-perfect pixels; and all WCAG
 2/2.1/2.2 AA axe violations (including moderate/minor), without waivers. A

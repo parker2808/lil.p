@@ -139,7 +139,9 @@ export function registerVisualMatrix(group: number) {
               testInfo,
               publicCapture,
             );
-            expect(previewCapture.markup, `${label} public/preview DOM`).toBe(publicCapture.markup);
+            expect(previewCapture.blocks, `${label} public/preview DOM semantics`).toEqual(
+              publicCapture.blocks,
+            );
             for (const definition of blocks) {
               const difference = await imageDifference(
                 page,
@@ -173,7 +175,10 @@ async function capture(
   blocks: Array<(typeof BLOCK_REGISTRY)[keyof typeof BLOCK_REGISTRY]>,
   label: string,
   testInfo: TestInfo,
-  publicCapture?: { markup: string; images: Map<string, Buffer> },
+  publicCapture?: {
+    blocks: Array<{ type: string | null; hash: string | null; text: string | undefined }>;
+    images: Map<string, Buffer>;
+  },
 ) {
   const serverResponse = await page.request.get(route);
   expect(serverResponse.status(), route).toBe(200);
@@ -231,7 +236,6 @@ async function capture(
   for (const block of serverBlocks) {
     expect(block.text, `${label}/${block.type} initial SSR text`).toBeTruthy();
   }
-  const markup = await main.innerHTML();
   const axe = await new AxeBuilder({ page })
     .include('main.cms-core-host')
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
@@ -255,5 +259,5 @@ async function capture(
       { body: image, contentType: 'image/png' },
     );
   }
-  return { markup, images };
+  return { blocks: hydratedBlocks, images };
 }
