@@ -1,5 +1,42 @@
 # Lessons
 
+- 2026-11-16: A D5 editor screenshot can attest to a saved draft revision but cannot prove editor→public→preview parity when the D5 publish endpoint intentionally returns CONFLICT; keep that combined D6 journey visibly GAP instead of substituting a mocked public response.
+
+- 2026-11-16: Filtering keyboard move destinations to valid slots prevents testing or announcing a rejected drop; expose an explicit Page-root attempt while retaining normal valid Arrow destinations, then verify unchanged server revision and restored keyboard focus.
+
+- 2026-11-15: Graphify freshness must name the integrated code head, not an intermediate branch commit; a docs-only report commit changes HEAD again, so document its exact source SHA and keep manual V16 screen-reader signoff separate from green automated V15 evidence.
+
+- 2026-11-15: A design capture that tabs through controls must restore its entry focus before continuing a keyboard-only edit; a fixed overlay escapes non-containing-block ancestor overflow, so stop clipping at the fixed backdrop while keeping strict 44px checks.
+
+- 2026-11-15: A scoped builder axe result cannot replace a full-page audit, and matching polite status text cannot prove what a screen reader actually speaks; record automated and manual V16 evidence separately.
+
+- 2026-11-15: A D2 tree-publish endpoint that always returns 409 cannot supply a genuine tree version for a restore test; gate the rejected publish and draft preservation honestly, and leave V10 version-restore coverage open until a real publication path exists.
+- 2026-11-15: When syncing a D4 study base into the D5 host, take D5's live host and history commands rather than reverting to the provisional study route; carry forward base locale/focus fixes and retain both branches' documentation histories.
+
+- 2026-11-15: A silent GitHub Playwright reporter plus a 20-minute shard limit conceals whether a large visual matrix stalled or merely overran the shard; retain a streaming per-test reporter and isolate the matrix from Lighthouse/pixel baselines before interpreting cancellation as feature failure.
+
+- 2026-11-15: A core CSS focus declaration is not proof that every embedded host control paints a ring in production; two ordinary builder buttons reached `:focus-visible` with no computed indicator in repeated CI. Scope an opaque host fallback to all interactive controls and retain exact-head contrast verification.
+
+- 2026-11-15: A V15 browser test with a ten-minute timeout obscured an unbounded transition-finished wait and caused shard cancellation on retry; sample reduced-motion paint after animation frames and fail the keyboard case promptly, retaining all 44px/3:1 assertions.
+- 2026-11-15: A matching focus rule does not establish painted contrast; verify the stronger host outline on exact-head CI before accepting V15. The separate D4 test owner is replacing obsolete study-only assertions on the live Properties route.
+- 2026-11-15: A D2 tree-publish endpoint that always returns 409 cannot supply a genuine tree version for a restore test; gate the rejected publish and draft preservation honestly, and leave V10 version-restore coverage open until a real publication path exists.
+
+- 2026-11-15: Emitted CSS is not proof of a visible focus ring: CI found a matching host toggle rule but a computed transparent shadow. Check cascade priority, connected/focused DOM state, paint-frame/transition timing, and the painted ≥3:1 contrast in the browser before claiming V15.
+
+- 2026-11-15: A computed-focus audit must parse all browser-emitted CSS color functions, including `oklab()` on box shadows; otherwise it can misreport a visible opaque ring as absent while a translucent outline fails 3:1. Check the actual shadow and adjacent painted surfaces without relaxing the contrast threshold.
+
+- 2026-11-15: Browser focus audits need keyboard modality before programmatically focusing each control: a modifier-only `Shift` press can leave `:focus-visible` unmatched even when the CSS rule is present. Use `Tab`, assert `:focus-visible`, and still measure each computed ring against adjacent surfaces at ≥3:1.
+- 2026-11-15: When syncing a D4 study base into the D5 host, take D5's live host and history commands rather than reverting to the provisional study route; carry forward base locale/focus fixes and retain both branches' documentation histories.
+- 2026-11-15: A core duplicate operation does not prove the V07 builder journey until a discoverable keyboard-accessible UI command generates fresh descendant IDs and the real browser preserves their order through undo/redo and a confirmed save.
+- 2026-11-15: A green duplicate/move history journey is only a V07 subset when insertion/edit undo-redo, copied text persistence, adapter bounds and failed-save/version boundaries are not asserted; keep the matrix row PARTIAL until these have exact-head evidence.
+
+- 2026-11-15: Audit every visible enabled builder control at desktop as well as compact widths; padding does not guarantee a 44px target, and a screenshot is not proof of focus visibility or absence of dialog overflow.
+
+- 2026-11-15: A green browser test does not make screenshots reviewable from CI when captures remain only in the checkout; attach the exact-head manifest and PNGs to the existing Playwright blob report, and assert localized glyph bounds instead of inferring fit from button widths.
+
+- 2026-11-15: Restacking D5 UI on a newer core/main must carry both the D2 revision-aware restore and the pure engine's lossless legacy snapshot reader; update legacy restore test transactions to model the conditional revision claim, and verify the host Docker build order and CI shard lists together.
+
+- 2026-11-15: Restacking pure D5 tree state on the integrated D base requires preserving host-registry validation and the typed legacy restore/reload protections alongside main's independent fixture and package-local gates.
 - 2026-11-16: When several editors schedule independent preview timers, waiting for one rendered preview does not prove the others have completed; await all three rendered bodies and retain the exact callback-count assertion.
 
 - 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
@@ -40,47 +77,26 @@
 - 2026-11-15: When a docs branch meets independently merged UI, SEO, core and contact fixes, preserve distinct README/context/lesson histories, deduplicate inherited entries, and regenerate Graphify rather than combining generated-report conflicts.
 - 2026-11-15: A feature PR can carry an additive migration through an ancestor branch even when its own UI diff does not edit Prisma; check full PR ancestry before scheduling a migration-last merge.
 - 2026-11-15: Keep the live stack ledger separate from dated historical snapshots; update merged SHAs and the final-head gate after every main integration without rewriting prior evidence.
-
 - 2026-11-15: A manual CI dispatch does not trigger PR-only context and ci-ok checks; after retargeting a draft, synchronize the branch with a substantive in-scope change and verify all required checks on its final head. For ordinary contact form tests, wait for the mounted interaction marker before filling, while preserving the separate pre-hydration regression.
-
 - 2026-11-15: Moving a bundle measurement script inside an extractable package also requires repointing test imports; run the package dependency guard, unit tests and browser theme job against the combined tree.
 - 2026-11-15: An integration merge can land U2's Radix topic picker before the contact-hydration PR; keep the accessible Select and its empty sentinel while holding scripts to assert pre-hydration name/email/message and exactly one client POST.
-
 - 2026-11-15: A bilingual fixture must keep even its registry fallback links within declared locale routes; testing only the generated block path can hide an invalid default.
-
 - 2026-11-15: Restacking a fixture after theme and tree changes must preserve its explicit CI/browser shard and lock-backed visual matrix while keeping core package build/measurement and host adapters independent.
-
 - 2026-11-15: A publish rule for exactly one H1 must count resolved nodes independently per breakpoint; checking whether a heading is H1 at any viewport misses both missing and duplicate headings at specific widths.
-
 - 2026-11-15: When a tree entry joins the theme and C1 package tooling, include its built bytes in the package-local browser cap and exercise tree resolution in both ESM/CJS; auto-merging exports alone does not enforce the cap.
-
 - 2026-11-15: ESLint invoked from lint-staged discovers the nearest config separately for root, web and package files; when multiple configs use the TypeScript parser, pin `tsconfigRootDir` in each rather than only in the root config.
-
 - 2026-11-15: A stacked theme merge after package tooling moves must retain the CSS export, build copy, local budget measurement and browser gate together; an automatic main-preferred merge can silently drop all four while leaving the theme source intact.
-
 - 2026-11-15: Package-local C1 tooling moves the measurement entrypoint; update B6's export-test import to the package script instead of retaining a monorepo-root path that breaks standalone extraction.
-
 - 2026-11-15: A full E2E run can leave mutated public ISR output in Next's generated `.next` cache; verify Linux pixel baselines against a fresh build directory and a disposable clean demo seed before changing screenshots.
-
 - 2026-11-15: Merging B6 React extraction onto B5b and U1 requires preserving the engine exports and labelled localized controls alongside headless form dispatch; regenerate the core bundle and graph from the combined tree.
-
 - 2026-11-15: When parallel branches both regenerate Graphify reports, resolve the generated-report conflict by rebuilding from the combined tree rather than mixing incompatible community sections.
 - 2026-11-15: A monorepo-only dependency guard disappears in a path-filtered package repository; add a package-local manifest/import boundary check and run it explicitly in CI before extraction.
 - 2026-11-15: An extraction-ready workspace package must carry its own build/lint/test tools, while its frozen standalone lockfile is generated from the filtered package tree rather than copied from the monorepo root.
 - 2026-11-15: When U2 visual changes meet a later main, keep the clean Vercel build and artifact dependency, combine the route audit with U0's capture-baseline override, and recapture conflicting Linux PNGs from the integrated app on a clean disposable seed.
 - 2026-11-15: CI job parallelism alone does not shorten a long critical-path shard; overlap only independent, read-only static checks with bounded local concurrency and compare actual final-head timings before claiming a wall-time gain.
-
 - 2026-11-14: When a pure engine is wired into a host, preserve the host's exact error mapping and verify compiled adapters inside the already-pruned production image; a passing package CJS smoke alone does not prove runtime integration.
-
 - 2026-11-11: A transitive workspace package added after Docker's manifest-copy stage can break frozen install, and its build output can be missing even when TypeScript compiles; list every runtime workspace manifest before install and smoke-test CJS exports from the pruned final image.
-- 2026-11-11: A green monorepo build can hide a deployment-only DTS failure when a provider's isolated build command skips a new workspace dependency; pin the provider command in the repository and run it from a clean checkout in CI.
-- 2026-11-11: Vercel branch previews are disabled outside `main` here, so green PR CI is not Vercel deployment evidence; a clean CI build must execute the full core → contracts → web deployment command, and the next main deploy still needs a READY status and live health checks.
-- 2026-11-11: Artifact-listing visibility does not prove a concurrently uploaded GitHub Actions artifact is finalized for download; make E2E consumers depend on the build job rather than racing its upload with a list-and-download check.
-- 2026-11-11: A clean integration merge can still carry a Graphify header naming its pre-merge parent; regenerate from the merged commit and check for duplicated changelog entries before requesting final-head review.
-
 - 2026-11-11: When a scaffold package and its extracted-contract branch both add the same files, retain the extracted contracts and host adapter while testing the scaffold's original gzip caps against the merged built artifacts; do not resolve a lockfile or generated graph by hand.
-
-- 2026-11-10: A bundle budget that excludes peers must validate the package's peer declarations; externalizing imports in tsup alone does not guarantee a valid consumer contract.
 - 2026-11-10: A duplicate endpoint must enforce the same registry cardinality rule as create before it shifts order or writes; cover the 409 response and unchanged page state through the real Nest route.
 - 2026-11-10: Capture public route baselines in an unauthenticated browser context; reusing the admin session can silently show the draft-preview banner and invalidate screenshots even when tests pass.
 - 2026-11-10: A Next page file is not necessarily a reachable screen: inspect redirects, role gates, test-only flags and shared layouts, and distinguish source/test inventory from actual live screenshot coverage.
@@ -92,8 +108,79 @@
 - 2026-11-11: Before carrying a package integration precondition into later draft specs, inspect the accepted export map and built import/require tests; an earlier missing CJS condition may already be fixed, while empty entries still need implementation and deployment proof.
 - 2026-11-10: Extract page/block mechanics behind a host-provided registry and persistence/auth ports; leave portfolio block definitions, domain pickers, routes and deployment adapters in the application until a neutral standalone fixture proves reuse.
 - 2026-11-10: A reusable CMS block engine is a foundation for a visual page builder, not the builder itself; keep behavior-preserving extraction separate from a versioned layout tree and its additive, independently approved storage migration.
-
 - 2026-11-10: Regenerate contact sheets only after the final screenshot capture completes, and version a small privacy-redacted review set alongside the spec; a local-only sheet can silently retain a pre-fix skeleton while the individual screenshots are correct.
+- 2026-11-10: A `labeled` workflow sharing PR-number concurrency with `opened`/`synchronize` can cancel checks on the same commit; split label-only E2E from code checks and keep stale code-commit cancellation.
+- 2026-11-15: When rebasing a label-only workflow on a new CI job, gate the new job on code events too; preserve the E2E shard's `needs: build-e2e` so download waits for upload finalization.
+- 2026-11-10: Page snapshots omit the original page locale; custom pages with no English SEO title but a Vietnamese title need the draft-preview VI fallback in both public snapshot and version-preview resolution, without changing built-in `pickGroup` behavior.
+- 2026-11-15: After merging B5b, the host-owned published snapshot SEO resolver remains outside the pure engine; update the isolated B1 known-bug golden for EN/VI and version previews instead of changing the engine or unrelated golden contracts.
+- 2026-11-15: A conflicting PR has no merge ref, so its `pull_request` labeled workflow cannot start; reconcile main before using a label event as E2E-path proof.
+- 2026-11-15: During a CI workflow merge, compare the result against current main as well as the branch; an otherwise clean merge can silently drop a new main-only dependency gate.
+- 2026-11-15: A stacked D integration branch may merge its restacked B7 base cleanly in code while conflicting throughout accumulated documentation; preserve current base facts and D-only acceptance details, then regenerate Graphify instead of selecting a historical report.
+- 2026-11-11: When merging parallel API packaging and pure engine branches, retain both documentation changes but regenerate Graphify; production CJS smoke must load the compiled host adapter, not just resolve the core subpath.
+- 2026-11-11: In a legacy snapshot compatibility reader, `?? {}` conflates an absent SEO object with an explicitly persisted null; check property presence before filling only absent keys, then reject malformed supplied data before transaction writes.
+- 2026-11-11: When tightening a shared snapshot reader, normalize only missing legacy fields at the host boundary; rebuild the workspace package before adapter tests so stale dist files cannot hide the new rejection behavior.
+- 2026-11-10: A form wrapper that clones an input cannot safely wrap a composite Radix Select: bind the label, error attributes and name to the actual trigger/root instead; a Select portal inside a modal must stack above the dialog, and repeated E2E sign-in redirects away from its login form.
+- 2026-11-10: Waiting for a client-only control before filling a public form hid pre-hydration data loss; test input before hydration instead. Visual hashes also change with seeded data, so review images instead of treating every changed hash as a UI regression.
+- 2026-11-10: Radix RadioGroup can move focus on a fast arrow key without selecting because its roving-focus timer runs after keyup; verify both a quick Playwright keypress and the checked state, not just focus movement.
+- 2026-11-10: Delay JavaScript to test server-rendered form input, then assert values and posted payload after hydration. Map Radix Select's nonempty placeholder sentinel back to the optional field's empty payload; never let Tab or programmatic radio focus change selection.
+- 2026-11-10: A green local screenshot update can still encode records created by earlier E2E specs; compare CI artifact actuals against the clean seed and assert fixture contents before regenerating unrelated pixel baselines.
+- 2026-11-10: A wrapper that forwards `--update-snapshots=all` defeats a nested visual script's verification mode; ensure the verify path cannot write baselines and check the git diff after it runs.
+- 2026-11-10: A server-rendered interactive test fixture can receive Tab before Radix hydration; expose a test-only effect marker and wait for it before asserting keyboard behavior, without weakening separate pre-hydration form tests.
+- 2026-11-10: An all-registry render loop under one Vitest timeout can fail only under CI load; compare equal-host baseline timings, then use one test per registry item to retain coverage and expose the slow case without increasing global timeouts.
+- 2026-11-10: A `pull_request.branches: [main]` workflow filter skips the entire job for stacked PRs targeting feature branches, even if the diff script would have caught a missing context update; use the PR's actual base for policy, not a trigger restricted to main.
+- 2026-11-10: Capture a route-complete behavior and control baseline before UI standardization, then extract its stable interfaces before building a new page tree; a code-only Graphify report cannot establish documentation or visual coverage.
+- 2026-11-10: A reusable CMS needs a finished default theme without host styling; screenshot-backed design review of individual components and assembled pages must gate completion alongside functional tests.
+- 2026-11-10: A docs-only fourth parallel thread can draft future migration and private-distribution contracts without touching shared e2e/DB resources; explicitly separate design acceptance from checks reserved for later implementation PRs.
+- 2026-11-10: A builder release gate needs a traceable requirement → test command → screenshot/artifact matrix and independent neutral-fixture component review; passing functional checks alone does not establish visual or accessibility readiness.
+- 2026-11-10: Parallel core extraction can avoid conflicts by keeping B5 engine/API and B6 React/web on disjoint paths after B4, freezing B4 exports and B1 goldens until integration; a green main-base context job alone cannot prove the stacked-base trigger.
+- 2026-11-10: Cross-check draft test and export filenames against the actual phase branch trees: B1 ships `cms-golden.e2e-spec.ts` and B3 ships flat `src/{contracts,engine,react}.ts` plus `measure-cms-core.mjs`; a build-time HTTP 404 proves an API answered, not that no API is running.
+- 2026-11-10: Pairwise `git merge-tree` in an isolated bare clone catches stacked documentation conflicts without touching other worktrees, but a sequential integration still needs fresh cumulative simulation; after squash, drop already-landed parent commits before retargeting children and regenerate rather than hand-merging Graphify reports.
+- 2026-11-10: A new core CJS `./contracts` export does not imply the future `./engine` entry is available to compiled Nest; add its `require` condition before adapter wiring, and when B4's CI edits meet U2's performance step keep both changes rather than choosing one job stanza.
+- 2026-11-10: Nest's CommonJS `tsc` output and a Vitest/SWC unit pass exercise different module loaders; when a workspace dependency is extracted, check the Docker manifest-copy stage, build order, pruned production package files and Render path filter before treating CI as deploy proof.
+- 2026-11-10: Individually green, mergeable PRs can still conflict cumulatively or silently reintroduce a bug: compare folded-in fixes (#173/U1) and independent limit guards (#174/B2/B4) before merging, and rerun checks on each newly restacked head; a skipped CI E2E job is not coverage.
+- 2026-11-11: An approved static builder study and generic block registry are not a working tree contract: pin real U3 tokens/keyboard/mobile states and B4 schema/allowance exports before D1, keep legacy snapshots lossless, and explicitly decide D4/D5 behaviors that screenshots cannot prove.
+- 2026-11-11: A server-safe React subpath needs its own no-client import-graph gate, and private package extraction must audit retained history and remove monorepo-relative build scripts before comparing registry, SHA-pinned Git or tarball installs across build hosts.
+- 2026-11-11: Sibling package branches can overlap in a lockfile and an export smoke test despite disjoint source trees; regenerate the combined API/web lockfile and preserve both engine and server-renderer assertions rather than choosing a branch's entire file.
+- 2026-11-11: A new snapshot reader can silently discard unknown fields even when validation passes, and stricter SEO schemas can reject historical records; freeze raw no-loss fixtures and retain the legacy host read path before adopting a pure reader.
+- 2026-11-11: Pin exports from pushed entry files rather than planned names: B6 exposes callback-based `renderBlocks` in `./react/server`, not a shared React `BlockRenderer`; keep fixture-only outputs pending and serialize post-D6 DB/E2E/visual proof under one lock owner.
+- 2026-11-11: A neutral fixture cannot prove a package default theme if its CSS lives only in the fixture; require an exported core-owned theme with light/dark tokens, keep brand overrides token-only, and make widget registration and localized labels explicit host contracts.
+- 2026-11-11: A history-preserving subtree split does not make a monorepo package releasable: run the package with its own pnpm/toolchain, tsconfig, ESLint and measurement scripts, verify the packed allowlist and consumer exports, and review retained commit metadata separately from secret-scan results.
+- 2026-11-11: Review strict legacy adapters against the exact absent-versus-null boundary, not only missing-key happy paths; after a code amend, a Graphify report built from an earlier commit is stale even if it was refreshed during the parent merge.
+- 2026-11-11: Never bypass git hooks after an environment failure; select the repo's Node 22 on PATH for both commit and push, then stop and report a genuine hook failure rather than skipping it.
+- 2026-11-11: Millisecond `updatedAt` is not a safe D5 autosave compare-and-swap token; propose a monotonic page draft revision with SQL NULL legacy-mode dispatch and require separate DDL/rollback-reader approval before tree publication.
+- 2026-11-11: A CSS theme's static palette ratios and optional three-pair computed browser smoke do not prove every adjacent focus/feedback contrast pair; pin the built public CSS export and side-effect rule, then require complete computed pairing evidence from the authorized visual owner.
+- 2026-11-11: A post-parse tree limit cannot prevent recursive schema stack overflow, and a publish-only H1 rule must not block draft autosave; bound input before recursive validation, separate draft from publish rules, and retain valid mobile single-column overrides.
+- 2026-11-11: A history-filtered package retains monorepo-relative tooling and an overbroad pack by default; pin isolated config, scripts, exact built-file allowlists and peer-license evidence before any private distribution, and distinguish a PR's current head from its last explicitly accepted SHA.
+- 2026-11-11: A builder callback exposing only `document`/`onDocumentChange` is not yet a safe persisted-history boundary; freeze one controlled owner for D4 composition and D5 history/autosave, and distinguish an accepted review SHA from open P1/design follow-ups in the stack table.
+- 2026-11-11: A reviewable additive migration checklist must separate disposable-local verification from production deployment, because deploying main executes pending migrations; pin the decimal revision CAS and old snapshot reader before authoring DDL.
+- 2026-11-11: A green stacked integration head can still carry a Graphify freshness header from its parent; review typed draft-versus-publish behavior separately from generated-report provenance, and gate each merge on the final restacked SHA rather than the accepted old head.
+- 2026-11-11: A combined package can build in its monorepo yet fail isolated tests because copied measurement omits a new tree entry and a theme assertion assumes the old bundle total; test the tarball's exact export map and pack contents after each new subpath, without silently inventing a root export.
+- 2026-11-10: A static 43-file route inventory is not a 43-screen accessibility audit: redirect-only files share destination UI and flagged fixtures can lack inherited metadata. Audit real routes on a clean disposable seed, and distinguish visible hit areas from clipped skip links, duplicate aria-hidden links and CSS full-card overlays before classifying size failures.
+- 2026-11-10: A successful 44px shared-control pass can still leave tiny inline links inside the CMS editor title; keep whole-route audits and resolve the final offender at its owning component rather than excluding it. An E2E file must be added to the explicit shard list or CI silently omits it.
+- 2026-11-10: Adding fallback title metadata at a parent layout can silently override the translated 404 title. Scope fixture-only metadata to gated routes; test both fixture document titles and public 404 titles after accessibility changes.
+- 2026-11-10: Disposable MySQL does not imply a clean Next ISR/data cache across repeated visual runs. A direct API clean-seed assertion can pass while the page renders cached records from a prior database; invalidate the existing public tag and route path before visual capture, then compare rendered seeded content without masking or accepting contaminated baselines.
+- 2026-11-10: Check the shared DataTable keyboard handler before describing destructive shortcuts: Backspace/Delete confirms selected rows or falls back to the active row, while the action name depends on the host.
+
+- 2026-11-15: A named screenshot width does not prove its viewport: set the Playwright viewport immediately before a standalone capture and verify image dimensions alongside the manifest, especially when the project default differs from the visual matrix.
+
+- 2026-11-11: When a stacked feature branch diverges from main through many unmerged parents, cherry-pick the approved isolated hotfix rather than merging all older main history into the feature stack; verify the focused CI-listed browser case against the integrated host, not only the upstream study route.
+
+- 2026-11-11: A contrast scan immediately after toggling the public theme can sample transitional foreground against settled background; wait for finite CSS transitions before running axe, rather than disabling contrast checks or changing production colors.
+- 2026-11-11: A green monorepo build can hide a deployment-only DTS failure when a provider's isolated build command skips a new workspace dependency; pin the provider command in the repository and run it from a clean checkout in CI.
+- 2026-11-11: Vercel branch previews are disabled outside `main` here, so green PR CI is not Vercel deployment evidence; a clean CI build must execute the full core → contracts → web deployment command, and the next main deploy still needs a READY status and live health checks.
+- 2026-11-11: Artifact-listing visibility does not prove a concurrently uploaded GitHub Actions artifact is finalized for download; make E2E consumers depend on the build job rather than racing its upload with a list-and-download check.
+
+- 2026-11-11: A clean integration merge can still carry a Graphify header naming its pre-merge parent; regenerate from the merged commit and check for duplicated changelog entries before requesting final-head review.
+
+- 2026-11-11: `check:content` reads tracked PNG bytes as UTF-8 and can flag random compressed data as an email; losslessly recompress the affected capture and rerun the scanner rather than suppressing a genuine text finding.
+
+- 2026-11-11: Production draft preview tests require one `localhost` web origin in both the Next build and Playwright browser; `127.0.0.1` can authenticate yet land on public 404 because the secure draft cookie is scoped differently. A fresh disposable MySQL container may also need one internal app-user TCP login to warm its authentication cache before host queries.
+
+- 2026-11-11: Treat a concurrent restore from a builder tree to legacy mode as a distinct autosave conflict, preserving local unsaved content; a reload must require explicit discard acknowledgement and cannot interpret a null tree as an empty page.
+- 2026-11-11: A lazy editor can leave a valid-looking screenshot of its loading fallback; wait for an editor-specific visible element before capturing the visual matrix. Vite's `pnpm preview -- --port` forwards the extra `--` to Vite and silently serves its default port; invoke `pnpm exec vite preview --port` instead.
+
+- 2026-11-10: A bundle budget that excludes peers must validate the package's peer declarations; externalizing imports in tsup alone does not guarantee a valid consumer contract.
+
 - 2026-11-03: A stacked integration PR can branch from the verified top PR tip when every lower branch tip is already an ancestor; this preserves the full stack without modifying or merging the original PRs.
 - 2026-11-03: Production Playwright draft previews must use `localhost` in both the web build and browser origin; a `127.0.0.1` origin loses Next's secure draft cookie after navigation.
 - 2026-11-03: Integrated visual changes require new Linux Chromium baselines; inspect expected and actual images before updating snapshots, and use the app's theme control so capture state matches its provider.
@@ -238,13 +325,53 @@
 - 2026-11-10: When publishing separate ESM/CJS subpaths, test both import and require for every entry and guard side-effect imports/re-exports, not only named imports.
 - 2026-11-11: A server-rendered React surface cannot consume a client-marked package entry without changing its public boundary; publish and measure a separate server-safe entry, and verify both built formats keep client directives only on client output.
 - 2026-11-11: A pnpm workspace host must declare its core dependency directly even when a sibling package already depends on it; verify Docker copies the package manifest before frozen install and builds its dependency closure before the host.
+- 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
 - 2026-11-11: Generic schema field extraction should require a host-localized label resolver and accept host widget registrations; inferring labels from a fixed English schema property can leak copy into Vietnamese UI.
-- 2026-11-15: A stacked D integration branch may merge its restacked B7 base cleanly in code while conflicting throughout accumulated documentation; preserve current base facts and D-only acceptance details, then regenerate Graphify instead of selecting a historical report.
+- 2026-11-11: Zod object parsing strips unknown keys by default; reject unsupported snapshot versions and unexpected persisted keys before parsing so a strict reader cannot silently lose stored data.
+- 2026-11-11: Ship a neutral core theme as a separately measured, side-effectful CSS subpath with scoped semantic tokens; test the actual light/dark token pairs and host overrides without inflating JS bundle caps or altering host pages.
 - 2026-11-11: A tree converter can keep unknown legacy block types losslessly only by carrying the entire validated JSON block as opaque data rather than reparsing it into the registered builder component shape; gate builder use separately from opt-in conversion.
 - 2026-11-11: Validate untrusted tree depth/count iteratively before recursive Zod parsing; keep incomplete draft validation separate from publish-only H1/required-component policy and ensure slot rules leave room for content at the deepest allowed layout.
+- 2026-11-11: When integrating sibling core exports, keep both theme CSS and tree JS declarations in the manifest and rebuild Graphify after a docs-only merge conflict instead of combining generated graph reports by hand.
+- 2026-11-11: A separate Playwright config resolves setup files and the web server working directory relative to its own location; pin absolute paths for D4-only tests without changing D6's shared shard assignments.
+- 2026-11-11: When a theme changes across full navigation, read the document class for the builder's CSS-token mode rather than assuming a provider snapshot matches the actual HTML theme; close mobile sheets and reset the viewport before toggling topbar controls in a visual matrix.
 - 2026-11-11: Check exactly-one-H1 for every publish attempt, including a zero-component tree; draft permissiveness must not bypass publish policy.
 - 2026-11-11: A browser contrast test hidden behind an opt-in environment flag does not protect the visual gate; require Chromium in local/CI E2E and assert each rendered text, feedback border and indicator against its adjacent surface in both palettes.
 - 2026-11-11: An editor-only axe check misses route-specific gallery and unknown-content regressions; assert every fixture route and focused state across locale, theme, brand and viewport, and measure effective mobile hit areas, including labels wrapping checkboxes.
+- 2026-11-11: When a stacked design branch meets a reviewed base update, preserve both branches' documented lessons and regenerate generated graph reports rather than hand-merging graph data.
+- 2026-11-11: A builder nested inside an admin flex layout must size against the host main content box, not subtract guessed pixels from 100dvh; a fixed page-node minimum can hide builder navigation behind the host mobile bar.
+- 2026-11-11: Keep one owner of builder document/selection and dispatch validated atomic operations, so history/autosave can wrap edits; after deletion, announce only the actual result and focus a surviving node rather than a detached trigger.
+- 2026-11-11: A timed-out CAS save may already have committed; keep the attempted tree and newer local edits separately, read the remote revision before retry and require explicit review rather than blindly replaying with a new revision.
+- 2026-11-11: A nullable JSON column must distinguish SQL NULL legacy mode from a versioned empty builder tree; use a monotonic BIGINT compare-and-swap rather than timestamps to reject stale autosaves without dropping recovery blocks.
+- 2026-11-11: A historical legacy restore increments the same draft revision even with a null tree; account for that increment in subsequent activation and restore contract tests.
+- 2026-11-11: A transaction's earlier page read does not guard a later unconditional update against concurrent builder activation; claim the revision and SQL-null mode in a conditional update before replacing blocks, and reject legacy restore input that would drop malformed blocks.
+- 2026-11-11: When local browser sign-in fails with Prisma pool 45028 while CI is green, validate with a fresh locked tmpfs MySQL and rebuild Next against the same default API port; the isolated D2 full gate passed, but the earlier transient root cause is unproven.
+- 2026-11-11: Keep the D4 shell controlled and mount the schema-derived Properties panel once; a single host can atomically record composition and property edits while the revision-checked autosave controller preserves uncertainty without force-writing.
+- 2026-11-11: Responsive editor panels must use the same compact breakpoint as CSS; a tablet can hide a desktop inspector even when it is wider than the mobile preview breakpoint.
+- 2026-11-11: A modal Properties sheet must trap focus through textarea/select fields, and browser contrast audits must wait for button transitions and scope to the active dialog rather than the inert, dimmed canvas.
+- 2026-11-11: Conflict tests must change remote content, not just its revision; an identical remote tree may safely acknowledge a stale revision and retry without losing edits.
+- 2026-11-11: Schema enum values can remain stable storage keys while a host-owned Properties select localizes their user-facing EN/VI choices.
+- 2026-11-11: A mobile builder must retain a visible save-state indicator outside the Properties sheet; hiding a polite live status in responsive CSS also removes its screen-reader announcement.
+- 2026-11-11: Test dirty-reload recovery before the autosave debounce, not just after a successful save; abort the draft write and assert the server remains unchanged until the user explicitly restores local edits.
+- 2026-11-11: Match a responsive editor's JS mount boundary to the CSS visibility breakpoint; a 768px tablet can hide the desktop inspector while a device classification still reports “tablet,” leaving a modal sheet empty.
+- 2026-11-11: Capture a destructive confirmation's target ID at the initiating keyboard/pointer event, rather than reading a selected ID that may lag focus after a batched state update.
+- 2026-11-11: A controlled composition-to-history adapter should validate once for typed user feedback, commit one core operation against the original tree, and compare results; never apply the provisional composition tree and then the operation to it.
+- 2026-11-11: A draft activation response acknowledges only the submitted tree, not edits made while awaiting the server; replay the latest history into the new controller and never overwrite pending stored recovery before the user chooses restore or dismiss.
+- 2026-11-11: Test responsive sheet ownership while its dialog remains open across a breakpoint; closing the sheet before resizing hides stale-modal and focus-restoration failures.
+- 2026-11-11: A browser regression that changes locale/theme after shrinking to tablet can time out on desktop-only topbar controls; perform topbar setup at desktop width before exercising responsive transitions.
+- 2026-11-15: A flattened schema field path must be committed as a full immutable top-level tree property, preserving siblings; incomplete optional groups and invalid ID-list tokens stay local until host Zod validation succeeds, never silently coerce or autosave them.
+
+- 2026-11-15: Scope Playwright text assertions to the intended semantic element when a host inspector and embedded schema panel display the same component type; an unscoped exact-text locator fails strict mode despite correct UI behavior.
+- 2026-11-15: Keep invalid property inputs in a builder-lifetime, page/node/breakpoint-keyed draft rather than a keyed field subtree; otherwise switching selections or mounting a responsive sheet silently discards edits before schema validation.
+- 2026-11-15: A D5 browser journey must assert actual D2 draft revisions and tree contents after reload or failed publish; mocked draft GETs and canvas-only checks cannot prove live persistence or public SSR parity.
+- 2026-11-15: A keyboard-only design capture that asserts reduced-motion media must explicitly emulate that preference after page setup, just as the full visual matrix does; the runner default is not evidence of reduced-motion behavior.
+- 2026-11-15: For live builder E2E, drop onto the intended tree-item target instead of a canvas parent whose children can intercept the pointer; after reconnect, assert persisted content whether autosave retries automatically or exposes an explicit Retry control.
+- 2026-11-15: A visual audit scoped to the core canvas misses host admin chrome; test computed dimensions and focus paint against adjacent surfaces on the entire builder route rather than assuming design tokens prove every focus state.
+- 2026-11-15: A stacked fixture that asserts raw block type headings can fail when another branch localizes host labels; derive expected labels from the shared editor metadata and the EN/VI message catalog before combining stacks.
+- 2026-11-15: CSS computed focus colors need not be hex or `rgb()` (modern color syntax is possible); measure supported colors through browser Canvas and fail explicitly on invalid/translucent colors rather than silently skipping contrast.
+- 2026-11-15: A computed box-shadow can end with a transparent placeholder; choose a visibly painted outline/ring and composite its adjacent painted backgrounds before comparing 3:1. Programmatic focus alone cannot prove Tab reachability or clipped touch size.
+- 2026-11-15: V15 target audits must distinguish intrinsically small controls from full-size controls partly exposed by nested scrollers; scroll into view, measure the clipped hit area, then restore scroll before screenshots.
+- 2026-11-15: A Select focus shadow may paint a white offset gap before its colored outer ring; audit all painted layers and require at least one real ≥2px ring to contrast against every adjacent surface instead of treating the first shadow as the indicator.
+- 2026-11-15: A global Tailwind outline-color reset can leave a computed translucent focus outline even when CSSOM shows a matching important component override; inspect computed colors and protect the host toggle with an independently painted opaque focus shadow, never relax the 3:1 audit.
 - 2026-11-11: A timed-out CAS save may already have committed; keep the attempted tree and newer local edits separately, read the remote revision before retry and require explicit review rather than blindly replaying with a new revision.
 - 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
 - 2026-11-11: When merging parallel API packaging and pure engine branches, retain both documentation changes but regenerate Graphify; production CJS smoke must load the compiled host adapter, not just resolve the core subpath.
@@ -307,5 +434,15 @@
 - 2026-11-15: Pin validation catches a dangling pin but not an unpinned spec missing from an explicit Playwright shard manifest; compare every recursive `*.spec.ts` on disk against the registered list in CI and require exact-head browser evidence after fixing omissions.
 - 2026-11-15: Re-enabling an omitted Playwright spec can reveal stale selectors on a custom Radix combobox; exercise the visible option and assert the reloaded locale/cookie rather than relaxing downstream keyboard and axe checks.
 - 2026-11-15: Radix does not fire a locale change when selecting the active language; to prove cookie persistence, switch away and back when needed. Restore sheet-trigger focus after React removes the inert overlay in a layout effect, not competing animation frames referencing a cleared ref.
+- 2026-11-15: A core-wide focus selector can lose to the host's CSS cascade on canvas selection buttons even when keyboard focus is visible; assert computed painted contrast on each control and provide a scoped opaque canvas outline rather than weakening the ≥3:1 gate.
+- 2026-11-15: English API errors are not necessarily Vietnamese builder leaks: trace `ApiError` through activation catches, autosave HTTP-status handling and rendered EN/VI labels before changing contracts; audit new version actions separately.
+- 2026-11-15: When a study route is handed from a fixture component to the real builder host, update formerly registered browser specs against the actual editable panel; a fixture-only textbox can hide a deterministic shard failure despite a correctly mounted dialog.
+- 2026-11-15: Scope editor recovery claims to their storage boundary: a component-owned Map retains invalid partial inputs across remounts but not reloads; a stale 409 test must construct a real revision conflict when integration enables previously disabled publishing.
+- 2026-11-15: A focus outline may contrast with the parent while disappearing against the focused button itself; use two opaque paint stripes and assess each adjacent background separately at ≥3:1.
+- 2026-11-15: A publish-conflict regression needs an intervening server-side draft write and an old expectedRevision; asserting 409 with the current revision only tests a feature-disable fallback, not revision CAS.
+- 2026-11-15: An undo coalescing window is not an editing session boundary: end the history typing key when a Properties input blurs, without treating metadata-only history changes as document edits; clearing a responsive override must clear all descendant raw/error drafts, not just the validated pending value.
+- 2026-11-16: Layers reinitializes with only the Page expanded after a builder reload; expand each nested ancestor by keyboard before checking a reloaded heading in the accessible tree, while separately comparing the saved draft and revision.
+- 2026-11-16: A translated property field does not imply its component heading is translated; test canvas, Layers and Properties labels against host metadata and reject raw type fallbacks in Vietnamese captures.
+- 2026-11-16: Test actual keyboard Tab/Shift+Tab boundaries and focus return in existing dialogs, but never claim D5 publish/restore-version dialogs or manual spoken screen-reader acceptance when that UI exists only on the integrated D6 branch.
 - 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
 - 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.

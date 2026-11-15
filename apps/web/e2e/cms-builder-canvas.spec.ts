@@ -1,9 +1,24 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { signIn } from './helpers/auth';
 import { switchBuilderLocale } from './helpers/builder-locale';
+
+async function addEditableHeading(page: Page, locale: 'en' | 'vi') {
+  const headings = page.locator('[data-node-type="component"]');
+  const previousCount = await headings.count();
+  const palette = page.getByRole('complementary', {
+    name: locale === 'vi' ? 'Thành phần' : 'Components',
+  });
+  await palette
+    .getByRole('button', { name: locale === 'vi' ? 'Phần' : 'Section', exact: true })
+    .click();
+  await palette
+    .getByRole('button', { name: locale === 'vi' ? 'Tiêu đề' : 'Heading', exact: true })
+    .click();
+  await expect(headings).toHaveCount(previousCount + 1);
+}
 
 test('empty page composes two sections and nested components with mouse', async ({ page }) => {
   await signIn(page);
@@ -60,18 +75,24 @@ test('mobile sheets contain focus, restore it, and retain a full canvas', async 
 });
 
 test('tablet Properties sheet contains its panel and restores keyboard focus', async ({ page }) => {
-  await page.setViewportSize({ width: 768, height: 900 });
+  await page.setViewportSize({ width: 1440, height: 900 });
   await signIn(page);
-  await page.goto('/admin/builder/properties-preview');
+  await page.goto('/admin/builder/home');
+  await addEditableHeading(page, 'en');
+  const textField = page.getByRole('complementary', { name: 'Properties' }).getByRole('textbox', {
+    name: 'Text',
+  });
+  await textField.fill('Responsive heading');
+  await page.setViewportSize({ width: 768, height: 900 });
   const trigger = page
     .getByRole('navigation', { name: 'Page builder' })
     .getByRole('button', { name: 'Properties' });
   await trigger.click();
   const sheet = page.getByRole('dialog', { name: 'Properties' });
   await expect(sheet.getByRole('heading', { name: 'Properties' })).toBeVisible();
-  await expect(sheet.getByRole('textbox', { name: 'Selected item ID' })).toHaveValue('page');
+  await expect(sheet.getByRole('textbox', { name: 'Text' })).toHaveValue('Responsive heading');
   await expect(
-    sheet.getByText('Publish needs a heading. Draft composition remains available.'),
+    sheet.getByText('Tree publishing is not enabled. Draft changes can still be saved.'),
   ).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(sheet).toBeHidden();
@@ -79,17 +100,13 @@ test('tablet Properties sheet contains its panel and restores keyboard focus', a
   await page.setViewportSize({ width: 1100, height: 900 });
   await trigger.click();
   await expect(
-    page
-      .getByRole('dialog', { name: 'Properties' })
-      .getByRole('textbox', { name: 'Selected item ID' }),
-  ).toBeVisible();
+    page.getByRole('dialog', { name: 'Properties' }).getByRole('textbox', { name: 'Text' }),
+  ).toHaveValue('Responsive heading');
   await page.keyboard.press('Escape');
   await page.setViewportSize({ width: 1101, height: 900 });
   await expect(
-    page
-      .getByRole('complementary', { name: 'Properties' })
-      .getByRole('textbox', { name: 'Selected item ID' }),
-  ).toBeVisible();
+    page.getByRole('complementary', { name: 'Properties' }).getByRole('textbox', { name: 'Text' }),
+  ).toHaveValue('Responsive heading');
   await expect(page.getByRole('dialog', { name: 'Properties' })).toHaveCount(0);
 });
 
@@ -101,11 +118,17 @@ test('Properties stays single-mounted across 768, 1100 and desktop in both direc
   for (const locale of ['en', 'vi'] as const) {
     await page.setViewportSize({ width: 1440, height: 900 });
     await switchBuilderLocale(page, locale);
+    await page.goto('/admin/builder/home');
+    await addEditableHeading(page, locale);
+    const field = locale === 'vi' ? 'Văn bản' : 'Text';
+    const value = locale === 'vi' ? 'Tiêu đề đáp ứng' : 'Responsive heading';
+    await page
+      .getByRole('complementary', { name: locale === 'vi' ? 'Thuộc tính' : 'Properties' })
+      .getByRole('textbox', { name: field })
+      .fill(value);
     await page.setViewportSize({ width: 768, height: 900 });
-    await page.goto('/admin/builder/properties-preview');
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     const name = locale === 'vi' ? 'Thuộc tính' : 'Properties';
-    const field = locale === 'vi' ? 'ID mục đã chọn' : 'Selected item ID';
     const trigger = page
       .getByRole('navigation', { name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder' })
       .getByRole('button', { name });
@@ -131,16 +154,16 @@ test('Properties stays single-mounted across 768, 1100 and desktop in both direc
         const inspector = page.getByRole('complementary', { name });
         if (width === 1440) {
           await expect(dialog).toHaveCount(0);
-          await expect(inspector.getByRole('textbox', { name: field })).toHaveCount(1);
+          await expect(inspector.getByRole('textbox', { name: field })).toHaveValue(value);
           await expect(inspector).toBeFocused();
         } else {
           await expect(inspector).toHaveCount(0);
           if (await dialog.count()) {
-            await expect(dialog.getByRole('textbox', { name: field })).toHaveCount(1);
+            await expect(dialog.getByRole('textbox', { name: field })).toHaveValue(value);
           } else {
             await expect(trigger).toBeFocused();
             await trigger.click();
-            await expect(dialog.getByRole('textbox', { name: field })).toHaveCount(1);
+            await expect(dialog.getByRole('textbox', { name: field })).toHaveValue(value);
           }
         }
         await expect(page.getByRole('textbox', { name: field })).toHaveCount(1);
@@ -263,12 +286,19 @@ test('reviewed visual matrix', async ({ page }) => {
                 name: locale === 'vi' ? 'Thuộc tính' : 'Properties',
               }),
             ).toBeVisible();
-            const selectedId = properties.getByRole('textbox', {
-              name: locale === 'vi' ? 'ID mục đã chọn' : 'Selected item ID',
-            });
-            await expect(selectedId).toHaveValue('page');
-            await selectedId.scrollIntoViewIfNeeded();
-            const inputBounds = await selectedId.boundingBox();
+            const breakpoint = properties
+              .getByRole('group', { name: locale === 'vi' ? 'Điểm ngắt' : 'Breakpoint' })
+              .getByRole('button', { name: locale === 'vi' ? 'Cơ bản' : 'Base' });
+            await expect(breakpoint).toHaveAttribute('aria-pressed', 'true');
+            await expect(
+              properties.getByText(
+                locale === 'vi'
+                  ? 'Thành phần này không có thuộc tính chỉnh sửa.'
+                  : 'This component has no editable properties.',
+              ),
+            ).toBeVisible();
+            await breakpoint.scrollIntoViewIfNeeded();
+            const inputBounds = await breakpoint.boundingBox();
             expect(inputBounds).not.toBeNull();
             expect(inputBounds!.y + inputBounds!.height).toBeLessThanOrEqual(900);
             await capture('properties-sheet');

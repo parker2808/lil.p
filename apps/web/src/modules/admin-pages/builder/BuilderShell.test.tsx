@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 
 import { BuilderShell } from './BuilderShell';
@@ -15,8 +15,55 @@ const state: BuilderState = {
 };
 
 afterEach(() => {
+  cleanup();
   Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1440 });
   window.dispatchEvent(new Event('resize'));
+});
+
+it('uses localized host labels in the canvas, layers and selection announcement', async () => {
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1440 });
+  const hostState: BuilderState = {
+    document: {
+      schemaVersion: 1,
+      root: {
+        id: 'page',
+        type: 'page',
+        responsive: { base: {} },
+        sections: [
+          {
+            id: 'section',
+            type: 'section',
+            responsive: { base: {} },
+            content: [
+              {
+                id: 'hero',
+                type: 'component',
+                componentType: 'hero',
+                responsive: { base: {} },
+              },
+            ],
+          },
+        ],
+      },
+    },
+    selectedId: 'hero',
+  };
+  render(
+    <BuilderShell
+      pageKey="home"
+      state={hostState}
+      onDispatch={(command) => reduceBuilderCommand(hostState, command)}
+      componentLabels={{ hero: 'Đầu trang' }}
+      renderProperties={() => null}
+    />,
+  );
+  fireEvent(window, new Event('resize'));
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: 'Đầu trang' })).toBeInTheDocument(),
+  );
+  expect(screen.getByRole('button', { name: 'Select Đầu trang' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Select Đầu trang' }));
+  expect(screen.getByRole('status')).toHaveTextContent('Selected: Đầu trang');
 });
 
 it('mounts Properties once in desktop inspector or mobile/tablet sheet and restores focus', async () => {
@@ -61,6 +108,46 @@ it('mounts Properties once in desktop inspector or mobile/tablet sheet and resto
   await waitFor(() => expect(screen.getAllByTestId('host-properties')).toHaveLength(1));
   fireEvent.keyDown(screen.getByRole('dialog', { name: 'Properties' }), { key: 'Escape' });
   await waitFor(() => expect(screen.queryByTestId('host-properties')).toBeNull());
+});
+
+it('traps focus across Properties textarea and select, then restores the sheet trigger', async () => {
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 390 });
+  render(
+    <BuilderShell
+      pageKey="home"
+      state={state}
+      onDispatch={(command) => reduceBuilderCommand(state, command)}
+      status="Draft saved"
+      renderProperties={() => (
+        <div>
+          <textarea aria-label="Text" />
+          <select aria-label="Heading level">
+            <option>2</option>
+          </select>
+        </div>
+      )}
+    />,
+  );
+  const trigger = within(screen.getByRole('navigation', { name: 'Page builder' })).getByRole(
+    'button',
+    { name: 'Properties' },
+  );
+  fireEvent.click(trigger);
+  const dialog = await screen.findByRole('dialog', { name: 'Properties' });
+  expect(within(dialog).getByRole('status')).toHaveTextContent('Draft saved');
+  const close = within(dialog).getByRole('button', { name: 'Cancel' });
+  const textarea = within(dialog).getByRole('textbox', { name: 'Text' });
+  const select = within(dialog).getByRole('combobox', { name: 'Heading level' });
+  expect(close).toHaveFocus();
+  fireEvent.keyDown(close, { key: 'Tab', shiftKey: true });
+  expect(select).toHaveFocus();
+  textarea.focus();
+  expect(fireEvent.keyDown(textarea, { key: 'Tab' })).toBe(true);
+  select.focus();
+  fireEvent.keyDown(select, { key: 'Tab' });
+  expect(close).toHaveFocus();
+  fireEvent.keyDown(dialog, { key: 'Escape' });
+  await waitFor(() => expect(trigger).toHaveFocus());
 });
 
 it('dismisses an open tablet Properties sheet on desktop transition without losing focus', async () => {

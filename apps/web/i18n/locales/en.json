@@ -1185,6 +1185,7 @@
     },
     "pages": {
       "title": "Pages",
+      "editPageTitle": "Edit {name} page",
       "create": {
         "title": "Add page",
         "hint": "Give this page a name and choose how to begin.",

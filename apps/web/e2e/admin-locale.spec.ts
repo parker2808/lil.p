@@ -21,3 +21,19 @@ test('admin locale switch persists and localizes dashboard activity time', async
   await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
   await expect(page.locator('[data-slot="audit-row"] time').first()).toContainText(/bây giờ|trước/);
 });
+
+test('admin page metadata follows EN/VI cookie on SSR', async ({ page, context }) => {
+  await signIn(page);
+  const origin = new URL(page.url()).origin;
+  for (const [locale, pages, home] of [
+    ['en', 'Pages · Admin', 'Edit Home page · Admin'],
+    ['vi', 'Trang · Quản trị', 'Chỉnh sửa trang Trang chủ · Quản trị'],
+  ] as const) {
+    await context.addCookies([{ name: 'NEXT_LOCALE', value: locale, url: origin }]);
+    await page.goto('/admin/pages');
+    await expect(page).toHaveTitle(pages);
+    await page.goto('/admin/pages/home');
+    await expect(page).toHaveTitle(home);
+    await expect(page.locator('html')).toHaveAttribute('lang', locale);
+  }
+});
