@@ -68,6 +68,7 @@ export const SPECS = [
   'cms-builder-d5-design.spec.ts',
   'u0-capture.spec.ts',
   'cms-tree-host-blocks.spec.ts',
+  'cms-d6-parity-matrix.spec.ts',
 ] as const;
 
 /** Specs that must run together in shard 1 (pixel baselines, Lighthouse scores). */

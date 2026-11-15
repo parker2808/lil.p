@@ -1,5 +1,12 @@
 # lil.p
 
+The [D6 parity matrix](./docs/specs/2026-11-15-cms-d6-parity-matrix.md) adds
+lossless nested-tree migration fixtures, real-API legacy/tree snapshot and route
+checks, and EN/VI preview/public SSR, hydration and screenshot pairs at
+390/768/1440. Tree publishing in the builder UI remains disabled; API publish
+and the separate legacy UI publish/version/restore journey are not proof of a
+tree UI publish/restore flow or of production rollout readiness.
+
 The D6 host-registry integration is staged on a scratch branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and
 publish, then EN/VI version preview and public SSR. This is route evidence, not

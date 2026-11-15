@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Separate D6's real tree API publish/restore evidence from legacy UI version controls: the tree builder currently disables its publish action, so a green legacy UI journey cannot be reported as a tree UI journey; compare browser SSR/hydrated markup and preview/public pixels at the same locale and viewport.
+
 - 2026-11-15: Test host-only CMS blocks through authenticated activation, revision-checked save/read and publish before EN/VI preview/public SSR; a mocked editor GET or schema-only registry count cannot catch an API boundary dropping the host registry.
 - 2026-11-15: Keep public bundle leak checks strict for actual public routes, but exclude explicitly gated browser-test fixture routes that intentionally import admin controls; retain a mandatory assertion for the production catch-all page.
 
