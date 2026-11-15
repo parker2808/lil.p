@@ -131,67 +131,70 @@ export class PageVersionsService {
 
   async publish(rawKey: string, input: PublishPageInput, actorId: number | null) {
     const key = parsePageKey(rawKey);
-    const result = await this.prisma.$transaction(async (tx) => {
-      const page = await this.requirePage(tx, key);
-      if (page.draftTree != null) {
-        throw new ConflictException({
-          code: 'CONFLICT',
-          message: 'Tree publishing is not enabled',
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        const page = await this.requirePage(tx, key);
+        if (page.draftTree != null) {
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Tree publishing is not enabled',
+          });
+        }
+        if (page.draftTreeRevision === 9223372036854775807n) {
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Builder revision limit reached',
+          });
+        }
+        const snapshot = await this.assertPublishable(tx, key, page);
+        const latest = await tx.pageVersion.aggregate({
+          where: { pageId: page.id },
+          _max: { version: true },
         });
-      }
-      if (page.draftTreeRevision === 9223372036854775807n) {
-        throw new ConflictException({
-          code: 'CONFLICT',
-          message: 'Builder revision limit reached',
+        const version = (latest._max.version ?? 0) + 1;
+        const created = await tx.pageVersion.create({
+          data: {
+            pageId: page.id,
+            version,
+            snapshot: snapshot as Prisma.InputJsonValue,
+            note: input.note,
+            createdById: actorId,
+          },
         });
-      }
-      const snapshot = await this.assertPublishable(tx, key, page);
-      const latest = await tx.pageVersion.aggregate({
-        where: { pageId: page.id },
-        _max: { version: true },
-      });
-      const version = (latest._max.version ?? 0) + 1;
-      const created = await tx.pageVersion.create({
-        data: {
-          pageId: page.id,
-          version,
-          snapshot: snapshot as Prisma.InputJsonValue,
-          note: input.note,
-          createdById: actorId,
-        },
-      });
-      const now = new Date();
-      const changed = await tx.page.updateMany({
-        where: {
-          id: page.id,
-          draftTreeRevision: page.draftTreeRevision,
-          draftTree: { equals: PrismaValue.DbNull },
-        },
-        data: {
-          publishedVersionId: created.id,
-          publishedAt: now,
-          updatedAt: now,
-          draftTreeRevision: { increment: 1 },
-        },
-      });
-      if (changed.count !== 1) {
-        const current = await this.requirePage(tx, key);
-        throw new ConflictException({
-          code: 'CONFLICT',
-          message: 'Builder draft changed; reload before publishing',
-          mode: current.draftTree == null ? 'legacy' : 'tree',
-          revision: current.draftTreeRevision.toString(),
+        const now = new Date();
+        const changed = await tx.page.updateMany({
+          where: {
+            id: page.id,
+            draftTreeRevision: page.draftTreeRevision,
+            draftTree: { equals: PrismaValue.DbNull },
+          },
+          data: {
+            publishedVersionId: created.id,
+            publishedAt: now,
+            updatedAt: now,
+            draftTreeRevision: { increment: 1 },
+          },
         });
-      }
-      await this.audit?.record(tx, {
-        userId: actorId,
-        action: 'PUBLISH',
-        entityType: 'page',
-        entityId: key,
-        summary: `Published ${key} v${version}`,
-      });
-      return toAdminPage(await this.requirePage(tx, key));
-    });
+        if (changed.count !== 1) {
+          const current = await this.requirePage(tx, key);
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Builder draft changed; reload before publishing',
+            mode: current.draftTree == null ? 'legacy' : 'tree',
+            revision: current.draftTreeRevision.toString(),
+          });
+        }
+        await this.audit?.record(tx, {
+          userId: actorId,
+          action: 'PUBLISH',
+          entityType: 'page',
+          entityId: key,
+          summary: `Published ${key} v${version}`,
+        });
+        return toAdminPage(await this.requirePage(tx, key));
+      },
+      { isolationLevel: PrismaValue.TransactionIsolationLevel.ReadCommitted },
+    );
     this.events?.emit('content.published', { entity: 'page', key });
     void this.publishing?.revalidate([...pageTags(key), ...SITE_TAGS]);
     return result;

@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- D2 #199 P1 legacy writer race: publish, SEO and block mutations now use the observed revision and SQL-NULL mode for conditional writes; losing a tree activation returns 409 and rolls back the transaction. The pre-D2 instance-drain gate below remains open; no schema or migration changed in this follow-up.
+- D2 #199 P1/P2 legacy writer race: publish, SEO and block mutations use the observed revision and SQL-NULL mode for conditional writes; real-DB E2E interleaves publish/delete with activation and asserts the current winning revision in the 409 response, with legacy writes rolled back. Publish/delete use read-committed transactions for the conflict reread. The pre-D2 instance-drain gate below remains open; no schema or migration changed in this follow-up.
 
 - D2 rollback-reader gate (2026-11-15): Parker approved the forward-only policy at 08:54 ICT, **not** a demonstrated Render page-write pause/drain or production migration. The pre-D2 Prisma reproduction `350ac169` can change `publishedVersionId` without claiming `draftTreeRevision`; no TiDB trigger fence exists. Before the `main` deploy runs `Page.draftTree` migration, prove page/version writes are paused and all old API instances drained; verify D2-aware instances before resuming. If unverifiable, block #199; write-freeze implementation is owned separately. See `docs/specs/2026-11-11-cms-d2-persistence.md`.
 
@@ -252,6 +252,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Added disposable-MySQL HTTP races for legacy publish/delete against tree activation; asserted 409 with the winning revision and unchanged pointer, version, block and audit state. Switched those two transactions to read committed for a fresh conflict reread. No migration, merge or deployment; forward-only old-instance drain still gates D2.
 
 - 2026-11-15: Hardened D2 legacy publish's published-pointer CAS and audited sibling SEO and five block mutations; deterministic activation-race unit coverage covers publish and delete rollback. Merged main `69f4806` preserving both documentation histories; no migration or production action in this change.
 

@@ -487,24 +487,27 @@ export class PagesService {
 
   async deleteBlock(rawKey: string, id: number): Promise<AdminBlock> {
     const key = parsePageKey(rawKey);
-    const result = await this.prisma.$transaction(async (tx) => {
-      const page = await this.requirePage(tx, key);
-      this.assertLegacyDraft(page);
-      const current = this.requireBlock(page, id);
-      const definition = definitionOf(current.type);
-      if (definition) {
-        assertCanDelete(definition);
-      }
-      await tx.pageBlock.delete({ where: { id: current.id } });
-      await this.touchPage(tx, page, key);
-      await this.audit?.record(tx, {
-        action: 'ARCHIVE',
-        entityType: 'page',
-        entityId: key,
-        summary: `Deleted block ${current.key} on ${key}`,
-      });
-      return toAdminBlock(current);
-    });
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        const page = await this.requirePage(tx, key);
+        this.assertLegacyDraft(page);
+        const current = this.requireBlock(page, id);
+        const definition = definitionOf(current.type);
+        if (definition) {
+          assertCanDelete(definition);
+        }
+        await tx.pageBlock.delete({ where: { id: current.id } });
+        await this.touchPage(tx, page, key);
+        await this.audit?.record(tx, {
+          action: 'ARCHIVE',
+          entityType: 'page',
+          entityId: key,
+          summary: `Deleted block ${current.key} on ${key}`,
+        });
+        return toAdminBlock(current);
+      },
+      { isolationLevel: PrismaValue.TransactionIsolationLevel.ReadCommitted },
+    );
     return result;
   }
 

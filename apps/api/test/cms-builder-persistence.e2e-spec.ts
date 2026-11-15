@@ -1,7 +1,9 @@
 import type { INestApplication } from '@nestjs/common';
 import request from 'supertest';
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { PageVersionsService } from '../src/modules/pages/page-versions.service';
+import { PagesService } from '../src/modules/pages/pages.service';
 import { UsersService } from '../src/modules/users/users.service';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { adminAgent, createTestUsers, userAgent } from './helpers/auth.helper';
@@ -18,6 +20,60 @@ const seo = {
   seoDescriptionEn: null,
   seoDescriptionVi: null,
 };
+
+async function activateAfterPageRead<Result>(
+  service: PageVersionsService | PagesService,
+  activate: () => Promise<unknown>,
+  operation: () => Promise<Result>,
+): Promise<Result> {
+  const reader = service as unknown as {
+    requirePage: (client: PrismaService, key: string) => Promise<unknown>;
+  };
+  const readFromDb = reader.requirePage.bind(service);
+  let activated = false;
+  const spy = vi.spyOn(reader, 'requirePage').mockImplementation(async (client, key) => {
+    const page = await readFromDb(client, key);
+    if (!activated) {
+      activated = true;
+      await activate();
+    }
+    return page;
+  });
+  try {
+    const result = await operation();
+    expect(activated).toBe(true);
+    return result;
+  } finally {
+    spy.mockRestore();
+  }
+}
+
+async function seedLegacyBlocks(prisma: PrismaService, pageId: number) {
+  await prisma.pageBlock.create({
+    data: {
+      pageId,
+      key: 'header',
+      type: 'page-header',
+      schemaVersion: 1,
+      layout: 'ONE',
+      surface: 'PLAIN',
+      sortOrder: 0,
+      props: { eyebrow: { en: 'Ideas', vi: '' }, title: { en: 'Ideas', vi: '' } },
+    },
+  });
+  return prisma.pageBlock.create({
+    data: {
+      pageId,
+      key: 'prose',
+      type: 'prose',
+      schemaVersion: 1,
+      layout: 'ONE',
+      surface: 'PLAIN',
+      sortOrder: 1,
+      props: { body: { en: 'Substantive original content for this page.', vi: '' } },
+    },
+  });
+}
 
 describe('builder draft persistence over disposable MySQL', () => {
   let app: INestApplication;
@@ -40,6 +96,59 @@ describe('builder draft persistence over disposable MySQL', () => {
   });
 
   afterAll(async () => app?.close());
+
+  it('rolls back legacy publish when a real DB activation wins after the page read', async () => {
+    await seedLegacyBlocks(prisma, pageId);
+    const admin = await adminAgent(app);
+    const response = await activateAfterPageRead(
+      app.get(PageVersionsService),
+      () =>
+        admin
+          .post('/api/admin/pages/ideas/builder/activate')
+          .send({ expectedRevision: '0', tree: emptyTree })
+          .expect(200),
+      () => admin.post('/api/admin/pages/ideas/publish').send({ note: 'losing publish' }),
+    );
+    expect(response.status).toBe(409);
+    expect(response.body).toMatchObject({ code: 'CONFLICT', mode: 'tree', revision: '1' });
+    const page = await prisma.page.findUniqueOrThrow({ where: { id: pageId } });
+    expect(page.draftTree).toEqual(emptyTree);
+    expect(page.draftTreeRevision).toBe(1n);
+    expect(page.publishedVersionId).toBeNull();
+    expect(await prisma.pageVersion.count({ where: { pageId } })).toBe(0);
+    expect(
+      await prisma.auditLog.count({
+        where: { entityType: 'page', entityId: 'ideas', action: 'PUBLISH' },
+      }),
+    ).toBe(0);
+    expect(await prisma.pageBlock.count({ where: { pageId } })).toBe(2);
+  });
+
+  it('rolls back legacy delete when a real DB activation wins after the page read', async () => {
+    const block = await seedLegacyBlocks(prisma, pageId);
+    const admin = await adminAgent(app);
+    const response = await activateAfterPageRead(
+      app.get(PagesService),
+      () =>
+        admin
+          .post('/api/admin/pages/ideas/builder/activate')
+          .send({ expectedRevision: '0', tree: emptyTree })
+          .expect(200),
+      () => admin.delete(`/api/admin/pages/ideas/blocks/${block.id}`),
+    );
+    expect(response.status).toBe(409);
+    expect(response.body).toMatchObject({ code: 'CONFLICT', mode: 'tree', revision: '1' });
+    const page = await prisma.page.findUniqueOrThrow({ where: { id: pageId } });
+    expect(page.draftTree).toEqual(emptyTree);
+    expect(page.draftTreeRevision).toBe(1n);
+    expect(await prisma.pageBlock.count({ where: { pageId } })).toBe(2);
+    expect(await prisma.pageBlock.findUnique({ where: { id: block.id } })).not.toBeNull();
+    expect(
+      await prisma.auditLog.count({
+        where: { entityType: 'page', entityId: 'ideas', action: 'ARCHIVE' },
+      }),
+    ).toBe(0);
+  });
 
   it('keeps legacy drafts null, denies guests and users mutations, and preserves decimal revisions', async () => {
     const path = '/api/admin/pages/ideas/builder/draft';
