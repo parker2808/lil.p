@@ -151,6 +151,8 @@ The [CMS B1 golden HTTP suite](./docs/specs/2026-11-10-cms-b1-golden-http.md) fr
 
 [CMS B6b neutral theme](./docs/specs/2026-11-11-cms-b6b-core-theme.md) adds opt-in `@parker2808/cms-core/theme.css`: scoped light/dark tokens and reusable surface/control states, including success/warning/danger/info feedback borders, with token-only host overrides. The required Chromium gate checks 224 computed WCAG AA pairs at desktop/mobile widths in both themes; it fails if Chromium is unavailable. The portfolio does not import this CSS, so existing visuals, API and B1 goldens remain unchanged. CSS gzip is measured separately from JS budgets.
 
+The [V19 public-bundle guard](./docs/specs/2026-11-15-cms-public-bundle-guard.md) checks production public-route chunk manifests, including the published-tree catch-all, for builder/editor bytes and caps their unique JS chunks at 100 KiB gzip in the CI build job. Its exact-head route/chunk graph and published-tree gzip total are attached as a CI artifact; the unrelated browser-only loading fixture remains excluded.
+
 [CMS B7 neutral fixture](./docs/specs/2026-11-11-cms-core-b7-fixture.md) adds an independent React/Vite consumer in [`examples/cms-core-fixture`](./examples/cms-core-fixture/README.md). It exercises EN/VI public and in-memory editor flows, legacy/unknown snapshots and the core-owned light/dark theme with token-only host overrides. Its Playwright route/contrast and visual matrix runs under the shared E2E lock; it does not save to production or alter the portfolio API, UI or B1 goldens.
 [D integration base](./docs/specs/2026-11-11-cms-d-integration-base.md) records the reviewed B7 fixture and opt-in D1 tree together for downstream D work. It changes no production API, page data or B1 golden contract.
 

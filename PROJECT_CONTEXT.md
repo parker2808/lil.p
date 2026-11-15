@@ -49,6 +49,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - 2026-11-15 D6 parity-matrix draft: real-API route/snapshot preservation, nested migrator round-trip and EN/VI × 390/768/1440 preview/public SSR, hydration and screenshot pairs are covered by new tests, pending exact-head CI. The all-20 addition captures EN/VI × 1440 × host-default computed light public/preview blocks plus page-level axe, but dark, smaller widths for most types, neutral fixture and branded lil.p variants remain GAP for V03/V14. Legacy UI publish/version/restore is separate; tree UI publish remains intentionally disabled, so V10's complete tree UI journey remains a GAP. J06/J08/V11/V12/V21/V22 and production rollout require independent evidence. See `docs/specs/2026-11-15-cms-d6-parity-matrix.md`.
+- 2026-11-15 V19 public-bundle guard on the D6 feature stack: CI builds the PR head, rejects builder/editor client modules and emitted bytes for every production `(site)` route, retains the `r3-loading-test` exclusion and asserts the published-tree catch-all by exact manifest path, enforces a 100 KiB unique-chunk gzip cap against the 90,291-byte #202 baseline, and uploads an exact-head route/chunk JSON artifact with the published-tree subset and gzip total. V19 remains OPEN until exact-head CI proves it; final combined-head and deployed bundle parity remain separate gates. No runtime or golden change. See `docs/specs/2026-11-15-cms-public-bundle-guard.md`.
 
 - 2026-11-15 D6 integrated gate adds an API E2E matrix of 20 real authenticated activate/CAS-save/read/publish/EN-VI preview-public cycles and a browser editor-origin H1 autosave → draft preview → publish → EN/VI SSR journey. Exact-head CI remains required; starter palette does not certify all-20 Properties. D2 migration/drain, visual/a11y, J01–J09 and release stay blocked. See `docs/specs/2026-11-15-cms-d6-integrated-gate.md`.
 
@@ -277,6 +278,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Added bounded real-API all-20 EN/VI host-default light 1440 public/version-preview screenshot, SSR/hydration and axe evidence to D6 parity; V03/V14 remain GAP outside the measured tuples, with neutral and branded hosts still unverified. No runtime, golden, migration or production change.
 
 - 2026-11-15: Added D6 isolated parity-matrix regression specs for nested migration, real legacy/tree API snapshot/route preservation and EN/VI responsive SSR/hydration/pixel pairs; registered the browser spec in all CI shards. No product code, golden contracts, schema, production DB or deployment changed; exact-head CI pending.
+- 2026-11-15: Added V19 production public-route bundle gzip cap and exact-head CI chunk graph artifact, without changing public or admin runtime output.
 
 - 2026-11-15: Corrected D6's all-20 API E2E bilingual fixture after exact-head CI found the intentional English SEO fallback; each custom page now sets Vietnamese SEO before publishing. No production locale fallback, golden contract or release gate changed; rerun exact-head CI.
 
