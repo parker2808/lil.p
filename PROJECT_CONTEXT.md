@@ -293,6 +293,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Integrated D6 real-HTTP 20-type cycle and editor-origin H1 browser journey into verification-only #208; preserved both documentation histories and existing goldens. No DB or deployment operation.
 
 - 2026-11-15: Synced #208 verification with main #212, preserving both documentation histories and C1 export-boundary tests; Graphify regenerated separately, golden contracts untouched. No release, database or deployment action.
+- 2026-11-15: Corrected D6's all-20 API E2E bilingual fixture after exact-head CI found the intentional English SEO fallback; each custom page now sets Vietnamese SEO before publishing. No production locale fallback, golden contract or release gate changed; rerun exact-head CI.
 
 - 2026-11-15: Added real-API all-20 host E2E and a separate editor-origin autosave/preview/public bilingual SSR browser journey on the D6 stack. Golden contracts unchanged; final exact-head CI pending.
 
