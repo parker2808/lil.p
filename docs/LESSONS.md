@@ -1,7 +1,24 @@
 # Lessons
 
+- 2026-11-15: Reconciling a static study after an independent canvas lands requires describing both routes separately in host documentation; integrate chronological lessons from both lanes and regenerate Graphify rather than hand-merging generated output.
 - 2026-11-15: When a static design-study branch absorbs a newer pure-state core release, preserve both histories while keeping the study's e2e flag and non-persistence boundary unchanged.
 - 2026-11-15: A static U3 design branch can integrate later renderer work without becoming a live builder; keep its no-persistence boundary explicit, retain both chronological context histories, and regenerate Graphify from the combined head instead of hand-merging reports.
+- 2026-11-15: When a pure core lane merges before its UI lane, keep the core exports and UI adapter boundary distinct; resolve accumulated docs additively and rebuild generated graphs instead of accepting either graph diff wholesale.
+- 2026-11-15: Restacking a reviewed D4 branch after D3 can conflict only in accumulated docs, but choosing either entire changelog loses the other lane; preserve both entries and rebuild Graphify from the integrated source.
+- 2026-11-11: A browser contrast test hidden behind an opt-in environment flag does not protect the visual gate; require Chromium in local/CI E2E and assert each rendered text, feedback border and indicator against its adjacent surface in both palettes.
+- 2026-11-11: A browser regression that changes locale/theme after shrinking to tablet can time out on desktop-only topbar controls; perform topbar setup at desktop width before exercising responsive transitions.
+- 2026-11-11: A builder nested inside an admin flex layout must size against the host main content box, not subtract guessed pixels from 100dvh; a fixed page-node minimum can hide builder navigation behind the host mobile bar.
+- 2026-11-11: A lazy editor can leave a valid-looking screenshot of its loading fallback; wait for an editor-specific visible element before capturing the visual matrix. Vite's `pnpm preview -- --port` forwards the extra `--` to Vite and silently serves its default port; invoke `pnpm exec vite preview --port` instead.
+- 2026-11-11: A separate Playwright config resolves setup files and the web server working directory relative to its own location; pin absolute paths for D4-only tests without changing D6's shared shard assignments.
+- 2026-11-11: An editor-only axe check misses route-specific gallery and unknown-content regressions; assert every fixture route and focused state across locale, theme, brand and viewport, and measure effective mobile hit areas, including labels wrapping checkboxes.
+- 2026-11-11: Capture a destructive confirmation's target ID at the initiating keyboard/pointer event, rather than reading a selected ID that may lag focus after a batched state update.
+- 2026-11-11: Keep one owner of builder document/selection and dispatch validated atomic operations, so history/autosave can wrap edits; after deletion, announce only the actual result and focus a surviving node rather than a detached trigger.
+- 2026-11-11: Match a responsive editor's JS mount boundary to the CSS visibility breakpoint; a 768px tablet can hide the desktop inspector while a device classification still reports “tablet,” leaving a modal sheet empty.
+- 2026-11-11: Ship a neutral core theme as a separately measured, side-effectful CSS subpath with scoped semantic tokens; test the actual light/dark token pairs and host overrides without inflating JS bundle caps or altering host pages.
+- 2026-11-11: Test responsive sheet ownership while its dialog remains open across a breakpoint; closing the sheet before resizing hides stale-modal and focus-restoration failures.
+- 2026-11-11: When a stacked design branch meets a reviewed base update, preserve both branches' documented lessons and regenerate generated graph reports rather than hand-merging graph data.
+- 2026-11-11: When a theme changes across full navigation, read the document class for the builder's CSS-token mode rather than assuming a provider snapshot matches the actual HTML theme; close mobile sheets and reset the viewport before toggling topbar controls in a visual matrix.
+- 2026-11-11: When integrating sibling core exports, keep both theme CSS and tree JS declarations in the manifest and rebuild Graphify after a docs-only merge conflict instead of combining generated graph reports by hand.
 
 - 2026-11-15: Restacking pure D5 tree state on the integrated D base requires preserving host-registry validation and the typed legacy restore/reload protections alongside main's independent fixture and package-local gates.
 - 2026-11-15: DOM `textContent()` includes display-none responsive heading variants, so a viewport regression must assert the single CSS-visible variant (and heading count) instead of comparing the whole heading's raw text.
