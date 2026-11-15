@@ -63,6 +63,10 @@ direct and Vercel-forwarded ingress; they are not a live CDN proof.
 
 ## Forward-only deployment checklist (release owner, separate authorization)
 
+The [curl-only ingress and read-only Render drain checklist](../runbooks/stage-a-drain-curl.md)
+is prepared for the release owner. Its probes cannot substitute for complete
+authenticated instance inventory or separate deploy/migration approval.
+
 1. Disable API auto-deploy and pin the exact approved Stage A commit; inventory
    every existing API service/instance ID and commit before deploying. Confirm
    Stage A's image contains **no D2 migration**. Render's zero-downtime release

@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- Stage A drain evidence preparation (2026-11-15): a curl-only release-owner checklist covers 14 safe sentinel page/version mutations via direct Render and Vercel, public EN/VI reads and health; Render's authenticated deploy/active-instance inventory must independently show every pre-freeze instance gone and in-flight work complete. Neither HTTP samples nor a Live deploy prove drain. No production probe, DB operation or rollout was performed.
+
 - Stage A #210 test-timing follow-up (2026-11-15): cold real-AppModule import/compile/init is isolated in a bounded setup hook so the normal 5-second 503 HTTP assertion still detects slow or missing middleware; no runtime guard, schema or release gate changes.
 
 - Stage A #210 main reconciliation (2026-11-15): preserved the C1 root-export guard, #214 rollout probe and Stage A histories after main `59677dfa`; re-audited all ten main page/SEO/block/version write routes and four D2 #199 `db064d88` builder writes against the non-read `/api/admin/pages` guard. No mutation route escapes that prefix; live drain and migration remain blocked pending separate authorization.
@@ -257,6 +259,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Prepared the Stage A curl-only direct/rewritten ingress checklist and read-only Render drain comparison; linked it from the release spec and README. Docs/Graphify only; no requests to production, migrations, runtime or check weakening.
 
 - 2026-11-15: Separated real-AppModule test bootstrap from its normally timed Stage A HTTP assertion after a cold full-suite timeout; preserved middleware coverage and the forward-only drain gate. No production code, schema, migration or deployment change.
 

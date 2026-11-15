@@ -28,6 +28,10 @@ before it starts, so new migrations apply on the next Render deploy.
 
 ### Stage A → D2 page-write rollout (release owner only)
 
+The [curl-only ingress and read-only instance-drain evidence sheet](./stage-a-drain-curl.md)
+provides an additional release-owner checklist. Neither it nor the public
+probe substitutes for the complete pre-/post-deploy Render instance roster.
+
 This is a **forward-only** exception to ordinary rolling deploys. The required
 release order is **#210 Stage A freeze and old-instance drain → #199 D2 migration
 and verification → separately approved D2-aware reopen → #204 → #202**.
