@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V03/V14 all-20 SSR intersection: draft real-host no-JS matrix checks 20 registry defaults in four five-host pages at EN/VI × light/dark × three widths × neutral/branded host × public/preview. CV receives a disposable local media upload so its visible content, not just its empty state, is exercised. Raw PNG/axe/provenance and independent image review plus exact-head ready-e2e CI remain required; no production claim. See `docs/specs/2026-11-16-cms-d6-all20-real-host-ssr.md`.
+
 - 2026-11-16 D6 preview banner P2: no-script dark mode inherited a light warning surface beside a light foreground. Scope the dark warning surface to the public shell and assert computed EN/VI banner contrast on both real hosts; exact-head CI and visual review remain pending. V03/V14 signoff remains GAP.
 - 2026-11-16 V02: D5 #248 covers EN/VI keyboard invalid drop but intentionally disables publish. A separate D6 real-browser gate now exercises keyboard-only edit/reorder, live status/focus order, publish and reload with the published version/public tree; exact-head ready-e2e CI and manual screen-reader audio remain pending. No runtime, API, schema or production change.
 
@@ -344,6 +346,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Add isolated V03/V14 all-20 real-host no-JS/axe/visual coverage and register four group specs across five CI shards; retain independent raw-image signoff gate.
 
 - 2026-11-16: Pair the no-script dark public preview banner with the dark warning surface and gate computed EN/VI neutral/branded text contrast at WCAG AA 4.5:1 without changing public/preview content parity or visual thresholds.
 - 2026-11-16: Register the D6 EN/VI keyboard-only publish browser test in the five-shard manifest; compare saved draft, version snapshot and public tree after reload while recording zero pointer events. CI pending; no V02 full PASS until exact-head evidence and independent review.

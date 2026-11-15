@@ -487,3 +487,4 @@
 - 2026-11-16 V02: sau reload, Layers thu gọn Section dù draft/published tree còn nguyên; test keyboard phải mở Section bằng ArrowRight rồi mới xác nhận các node con hiện ra, không đồng nhất trạng thái UI thu gọn với mất dữ liệu.
 
 - 2026-11-16 V02: Alt+ArrowDown trên sibling cuối là no-op; phải assert order trước/sau một Alt+ArrowUp thật, dùng Tab/Shift+Tab thay Playwright `.focus()` để chứng minh keyboard reachability.
+- 2026-11-16: V03/V14 visual signoff needs the same registered hosts on real neutral and branded SSR URLs with scripts off; a post-hydration brand flip or an empty CV placeholder cannot prove the all-20 intersection.

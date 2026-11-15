@@ -79,6 +79,10 @@ export const SPECS = [
   'cms-d6-visual-2.spec.ts',
   'cms-d6-visual-3.spec.ts',
   'cms-d6-visual-4.spec.ts',
+  'cms-d6-all20-ssr-1.spec.ts',
+  'cms-d6-all20-ssr-2.spec.ts',
+  'cms-d6-all20-ssr-3.spec.ts',
+  'cms-d6-all20-ssr-4.spec.ts',
   'cms-editor-host-1.spec.ts',
   'cms-editor-host-2.spec.ts',
   'cms-editor-host-3.spec.ts',
@@ -102,6 +106,10 @@ const PINNED: Record<string, number> = {
   'cms-d6-visual-2.spec.ts': 2,
   'cms-d6-visual-3.spec.ts': 3,
   'cms-d6-visual-4.spec.ts': 5,
+  'cms-d6-all20-ssr-1.spec.ts': 1,
+  'cms-d6-all20-ssr-2.spec.ts': 2,
+  'cms-d6-all20-ssr-3.spec.ts': 3,
+  'cms-d6-all20-ssr-4.spec.ts': 4,
   'public-header-responsive.spec.ts': 3,
 };
 
