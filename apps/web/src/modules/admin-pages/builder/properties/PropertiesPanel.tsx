@@ -18,7 +18,7 @@ import {
 } from '@portfolio/ui/components/ui/select';
 import { Switch } from '@portfolio/ui/components/ui/switch';
 import { Textarea } from '@portfolio/ui/components/ui/textarea';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import type { BuilderState } from '../canvas/commands';
 import { findNode } from '../canvas/model';
@@ -94,16 +94,26 @@ const choiceNames = {
   },
 } as const;
 
+export type PropertyDraft = {
+  pending: Record<string, unknown>;
+  inputs: Record<string, string>;
+  errors: Record<string, boolean>;
+};
+
 function Fields({
   node,
   breakpoint,
   locale,
   onEdit,
+  drafts,
+  draftKey,
 }: {
   node: TreeNode;
   breakpoint: Breakpoint;
   locale: 'en' | 'vi';
   onEdit: (operation: TreeOperation, typing?: boolean) => string | undefined;
+  drafts: Map<string, PropertyDraft>;
+  draftKey: string;
 }) {
   const schema = propertySchema(node);
   const text = copy[locale];
@@ -111,9 +121,19 @@ function Fields({
   const json = schema && propertyJson(schema);
   const effective =
     breakpoint === 'base' ? node.responsive.base : resolveResponsive(node.responsive, breakpoint);
-  const [pending, setPending] = useState<Record<string, unknown>>({});
-  const [inputs, setInputs] = useState<Record<string, string>>({});
-  const [errors, setErrors] = useState<Record<string, boolean>>({});
+  const [pending, setPending] = useState<Record<string, unknown>>(
+    () => drafts.get(draftKey)?.pending ?? {},
+  );
+  const [inputs, setInputs] = useState<Record<string, string>>(
+    () => drafts.get(draftKey)?.inputs ?? {},
+  );
+  const [errors, setErrors] = useState<Record<string, boolean>>(
+    () => drafts.get(draftKey)?.errors ?? {},
+  );
+
+  useEffect(() => {
+    drafts.set(draftKey, { pending, inputs, errors });
+  }, [drafts, draftKey, pending, inputs, errors]);
 
   function edit(path: string, next: unknown, typing: boolean, leaf?: string, raw?: string) {
     const key = path.split('.')[0]!;
@@ -357,12 +377,18 @@ export function PropertiesPanel({
   state,
   locale,
   onEdit,
+  pageKey = '',
+  propertyDrafts,
 }: {
   state: BuilderState;
   locale: 'en' | 'vi';
   onEdit: (operation: TreeOperation, typing?: boolean) => string | undefined;
+  pageKey?: string;
+  propertyDrafts?: Map<string, PropertyDraft>;
 }) {
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('base');
+  const [localDrafts] = useState(() => new Map<string, PropertyDraft>());
+  const drafts = propertyDrafts ?? localDrafts;
   const node = findNode(state.document, state.selectedId);
   const text = copy[locale];
   return (
@@ -399,6 +425,8 @@ export function PropertiesPanel({
           breakpoint={breakpoint}
           locale={locale}
           onEdit={onEdit}
+          drafts={drafts}
+          draftKey={`${pageKey}:${node.id}:${breakpoint}`}
         />
       ) : (
         <p className={styles.helper}>{text.empty}</p>

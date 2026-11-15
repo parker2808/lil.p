@@ -12,7 +12,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 import type { BuilderState } from '../canvas/commands';
 import { propertyFields } from './editor-model';
-import { PropertiesPanel } from './PropertiesPanel';
+import { PropertiesPanel, type PropertyDraft } from './PropertiesPanel';
 import { builderRegistry } from './registry';
 
 const state = {
@@ -271,6 +271,55 @@ it('keeps invalid partial values visible without dispatching and allows keyboard
   expect(onEdit).not.toHaveBeenCalled();
   fireEvent.keyDown(ids, { key: 'Tab' });
   fireEvent.change(ids, { target: { value: '1, 2' } });
+  expect(onEdit).toHaveBeenCalledWith(
+    expect.objectContaining({ key: 'projectIds', value: [1, 2] }),
+    true,
+  );
+});
+
+it('retains an invalid partial edit across breakpoint, node and sheet remounts', () => {
+  const initial = hostState(
+    'case-grid',
+    BLOCK_REGISTRY['case-grid'].props.parse(BLOCK_REGISTRY['case-grid'].defaults),
+  );
+  initial.document.root.sections[0]!.content.push({
+    id: 'other',
+    type: 'component',
+    componentType: 'heading',
+    responsive: { base: { text: 'Other', level: 2 } },
+  });
+  const drafts = new Map<string, PropertyDraft>();
+  const onEdit = vi.fn();
+  const props = { locale: 'en' as const, onEdit, pageKey: 'draft-page', propertyDrafts: drafts };
+  const view = render(<PropertiesPanel state={initial} {...props} />);
+  const ids = screen.getByRole('textbox', { name: 'Project IDs' });
+  fireEvent.change(ids, { target: { value: '1,not-a-number' } });
+  expect(ids).toHaveAttribute('aria-invalid', 'true');
+  expect(onEdit).not.toHaveBeenCalled();
+
+  fireEvent.click(screen.getByRole('button', { name: 'Mobile' }));
+  fireEvent.change(screen.getByRole('textbox', { name: 'Project IDs' }), {
+    target: { value: '3,not-a-number' },
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Base' }));
+  expect(screen.getByRole('textbox', { name: 'Project IDs' })).toHaveValue('1,not-a-number');
+  fireEvent.click(screen.getByRole('button', { name: 'Mobile' }));
+  expect(screen.getByRole('textbox', { name: 'Project IDs' })).toHaveValue('3,not-a-number');
+  fireEvent.click(screen.getByRole('button', { name: 'Base' }));
+  view.rerender(<PropertiesPanel state={{ ...initial, selectedId: 'other' }} {...props} />);
+  view.rerender(<PropertiesPanel state={initial} {...props} />);
+  expect(screen.getByRole('textbox', { name: 'Project IDs' })).toHaveAttribute(
+    'aria-invalid',
+    'true',
+  );
+
+  view.unmount();
+  render(<PropertiesPanel state={initial} {...props} />);
+  expect(screen.getByRole('textbox', { name: 'Project IDs' })).toHaveValue('1,not-a-number');
+  expect(onEdit).not.toHaveBeenCalled();
+  fireEvent.change(screen.getByRole('textbox', { name: 'Project IDs' }), {
+    target: { value: '1, 2' },
+  });
   expect(onEdit).toHaveBeenCalledWith(
     expect.objectContaining({ key: 'projectIds', value: [1, 2] }),
     true,

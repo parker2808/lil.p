@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- D5 all-block Properties (stacked draft): the gated host editor derives controls for all 20 portfolio definitions from their own Zod schemas, retaining nested siblings and invalid partial input while supporting EN/VI and base/mobile/tablet/desktop. The browser fixture mocks an active D2 draft because this D5 base's API does not yet register host definitions; D6's live API+public SSR gate is still required. Optional base groups can be added; removing one requires a future core delete-property operation. See `docs/specs/2026-11-15-cms-d5-all-block-properties.md`.
+- D5 all-block Properties (stacked draft): the gated host editor derives controls for all 20 portfolio definitions from their own Zod schemas, retaining nested siblings and invalid partial input per page/node/breakpoint across sheet remounts in EN/VI. The browser fixture mocks an active D2 draft: D2's `readTree` has no host registry and returns `UNKNOWN_TYPE` for host components, so D6's live API+public SSR gate is blocked pending host-aware validation. Optional base groups can be added; removing one requires a future core delete-property operation. See `docs/specs/2026-11-15-cms-d5-all-block-properties.md`.
 
 - D5 design/a11y evidence: 99 captured EN/VI × light/dark × neutral/lil.p responsive and editor states, a keyboard edit/history/focus path, zero axe violations and measured AA token contrasts are recorded in `docs/specs/2026-11-14-cms-d5-design-evidence.md`. This passes the gated D5 editor review only; D6 still owns the combined journey, all 20 definitions, preview/public parity and release approvals.
 
@@ -247,7 +247,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
-- 2026-11-15: Added all-20 host definition registry and schema-derived Properties controls with EN/VI localized editing, nested/optional fields, ID lists and four breakpoint overrides. Added 46 focused tests and a mocked active-draft browser/axe matrix; no CMS core, D2 API/schema, legacy HTTP, public route or golden change. Live API parity remains D6-owned.
+- 2026-11-15: Added all-20 host definition registry and schema-derived Properties controls with EN/VI localized editing, nested/optional fields, ID lists and four breakpoint overrides. Added 47 focused tests including invalid-input persistence across node/breakpoint/sheet remounts, and a mocked active-draft browser/axe matrix; no CMS core, D2 API/schema, legacy HTTP, public route or golden change. D6 owns the blocked live API host-registry gate.
 
 - 2026-11-15: Captured and reviewed 99 D5 builder states at 390/768/1440 with a D6-format manifest, axe A/AA and measured token contrast; corrected the keyboard-focus capture to its named 1440×900 viewport. The keyboard journey covers nested add/move/delete, undo/redo and focus restoration. The route remains flag gated with Publish disabled; D6 release proof remains pending.
 

@@ -17,6 +17,7 @@ import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from '
 import { useMe } from '@/modules/admin-core/hooks/use-me.hook';
 
 import { BuilderShell } from './BuilderShell';
+import type { PropertyDraft } from './properties/PropertiesPanel';
 import {
   activateBuilderDraft,
   readBuilderDraft,
@@ -109,6 +110,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
   const { id: userId } = useMe();
   const key = recoveryKey(userId, pageKey);
   const history = useRef<TreeHistory>(createTreeHistory(empty, 'page'));
+  const [propertyDrafts] = useState(() => new Map<string, PropertyDraft>());
   const [state, setState] = useState({ document: empty, selectedId: 'page' });
   const [historySize, setHistorySize] = useState({ past: 0, future: 0 });
   const [mode, setMode] = useState<'local' | 'loading' | 'legacy' | 'active' | 'unavailable'>(
@@ -402,7 +404,15 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
             )}
           </div>
         }
-        renderProperties={() => <PropertiesPanel state={state} locale={locale} onEdit={onEdit} />}
+        renderProperties={() => (
+          <PropertiesPanel
+            state={state}
+            locale={locale}
+            onEdit={onEdit}
+            pageKey={pageKey}
+            propertyDrafts={propertyDrafts}
+          />
+        )}
       />
       {recovery && (
         <div role="region" aria-label={text.restore} className={styles.recovery}>

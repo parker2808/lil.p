@@ -1,6 +1,6 @@
 # lil.p
 
-The stacked [D5 all-block Properties spec](./docs/specs/2026-11-15-cms-d5-all-block-properties.md) registers all 20 host block contracts in the gated builder. Its EN/VI editor derives nested/localized, numeric, array, optional-group and responsive controls from the host schemas; invalid partial edits remain local. This is draft-only: the D6 live-API all-20 release gate and approval remain separate.
+The stacked [D5 all-block Properties spec](./docs/specs/2026-11-15-cms-d5-all-block-properties.md) registers all 20 host block contracts in the gated builder. Its EN/VI editor derives nested/localized, numeric, array, optional-group and responsive controls from the host schemas; invalid partial edits remain local across node, breakpoint and sheet changes. This is draft-only: D2's API currently rejects host types without a registry, so D6's live-API all-20 release gate and approval remain blocked.
 
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 
