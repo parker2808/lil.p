@@ -228,7 +228,9 @@ for (const group of [0, 1, 2, 3]) {
               const expected = host(type, preview ? 1 : 2).responsive;
               const effective = { ...expected.base, ...expected[name] };
               const localized = resolveBlockLocale(effective, locale);
-              const hash = createHash('sha256').update(JSON.stringify(localized)).digest('hex');
+              const hash = createHash('sha256')
+                .update(JSON.stringify({ props: localized.props, lang: localized.lang }))
+                .digest('hex');
               expect(html, `${type}/${locale}/${width} SSR`).toContain(
                 `data-host-props-hash="${hash}"`,
               );
