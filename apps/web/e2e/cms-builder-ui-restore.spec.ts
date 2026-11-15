@@ -113,8 +113,8 @@ test('UI publish, edit, restore and republish preserves EN/VI preview/public par
   expect((await secondVersion.json()).snapshot.tree).toEqual(edited.tree);
   expect(edited.tree).not.toEqual(original.tree);
 
-  await page.setViewportSize({ width: 390, height: 900 });
   await switchBuilderLocale(page, 'vi');
+  await page.setViewportSize({ width: 390, height: 900 });
   await page.getByRole('button', { name: 'Lịch sử phiên bản' }).click();
   await expect(page.getByText('Phiên bản 1', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Khôi phục bản nháp 1' }).click();
@@ -168,8 +168,8 @@ test('UI publish, edit, restore and republish preserves EN/VI preview/public par
   await page.unroute(`**/admin/pages/${key}/versions/1/builder/restore`);
   await rejectedDialog.getByRole('button', { name: 'Hủy' }).click();
   await page.reload();
-  await switchBuilderLocale(page, 'en');
   await page.setViewportSize({ width: 1440, height: 900 });
+  await switchBuilderLocale(page, 'en');
   await expect(page.getByText('Draft saved', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Version history' }).click();
   await expect(page.getByText('Version 1', { exact: true })).toBeVisible();

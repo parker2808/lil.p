@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: The admin topbar locale combobox is desktop-only; change language before resizing to 390px (or use the actual mobile account menu) so a browser gate tests the responsive journey rather than waiting indefinitely on a hidden control.
+
 - 2026-11-15: Test version-action 409 recovery with a real concurrent revision bump before forwarding the intercepted UI request to the API; returning a mocked 409 cannot prove database state, localized modal feedback or recovery after reload.
 
 - 2026-11-15: Legacy CMS publish/restore hooks do not carry D2's draft revision; a tree builder must use the dedicated CAS endpoints, verify a fully acknowledged server draft, and reread the revision after publish before allowing another edit. A confirmed restore replaces only the draft, not the published pointer.
