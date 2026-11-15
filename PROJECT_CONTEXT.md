@@ -342,6 +342,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: V13 browser fixture follows the supported D2 transition (legacy publish → legacy SEO edit → tree activate/publish); prior exact-head run `43748389414` caught an invalid legacy PATCH after tree activation (409). Runtime version guard unchanged; next CI pending.
+
 - 2026-11-16: Propagate draft-only `?v=N` through shared core/custom SEO metadata, align parsing with tree rendering and add a real EN/VI versioned-browser regression; public query parameters cannot request historical metadata. CI/review pending.
 
 - 2026-11-15: Staged bilingual page-header fields and 18 public/preview screenshots (12 light EN/VI, 6 dark VI) in the real builder UI restore gate; kept CAS, pointer and restored-tree assertions, without runtime/schema changes. CI and independent review pending.
