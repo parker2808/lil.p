@@ -1,6 +1,7 @@
 # Lessons
 
 - 2026-11-16: A root dark class does not recolor an independently scoped CMS tree unless it explicitly inherits that theme; assert the computed card background before axe, and preserve a host's explicit light-theme override.
+- 2026-11-16: No-script dark shell tokens must include warning surfaces as well as foreground/background; otherwise a pale preview banner with inherited light text can pass route checks while failing legibility. Assert computed text-to-surface contrast in both locales and hosts.
 
 - 2026-11-16: D19 resolves a block's entire localized props to EN when even one populated EN field lacks VI; no-JS version fixtures must localize the page-header title as well as its eyebrow to assert actual VI output.
 

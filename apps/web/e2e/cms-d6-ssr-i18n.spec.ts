@@ -2,6 +2,23 @@ import { expect, test } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
 
+function contrastRatio(foreground: string, background: string) {
+  const luminance = (color: string) => {
+    const channels = color
+      .match(/[\d.]+/g)
+      ?.slice(0, 3)
+      .map(Number);
+    if (channels?.length !== 3) throw new Error(`Unexpected color: ${color}`);
+    const [red, green, blue] = channels.map((channel) => {
+      const value = channel / 255;
+      return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+    });
+    return red! * 0.2126 + green! * 0.7152 + blue! * 0.0722;
+  };
+  const values = [luminance(foreground), luminance(background)].sort((left, right) => right - left);
+  return (values[0]! + 0.05) / (values[1]! + 0.05);
+}
+
 for (const locale of ['en', 'vi'] as const) {
   for (const theme of ['light', 'dark'] as const) {
     test(`nested tree keeps ${locale} ${theme} SSR without scripts and selects brand by real host in public and preview`, async ({
@@ -200,6 +217,14 @@ for (const locale of ['en', 'vi'] as const) {
             const banner = visitor.locator('[data-slot="draft-banner"]');
             if (preview) {
               await expect(banner).toBeVisible();
+              const palette = await banner.evaluate((element) => ({
+                foreground: getComputedStyle(element.querySelector('p')!).color,
+                background: getComputedStyle(element).backgroundColor,
+              }));
+              expect(
+                contrastRatio(palette.foreground, palette.background),
+                `${locale}-${theme}-${brand} preview banner text contrast`,
+              ).toBeGreaterThanOrEqual(4.5);
             } else {
               await expect(banner).toHaveCount(0);
             }
