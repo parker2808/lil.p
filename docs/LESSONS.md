@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-15: A preview/public JSON equality check alone cannot prove breakpoint rendering or reviewable visual parity; attach paired browser screenshots at each locale and viewport while keeping the missing UI restore control an explicit GAP.
 - 2026-11-15: An incremental Graphify run can report no topology changes while retaining its earlier built-from SHA; record the verified code head separately rather than presenting the old graph as newly rebuilt.
 
 - 2026-11-15: Derive public-route gzip budgets from the production chunk graph on the owning feature head, count shared chunks once, and attach the exact-head graph with a named published-tree catch-all subset to CI; a green package-size cap alone does not prove the public JS boundary.
@@ -402,6 +403,7 @@
 - 2026-11-15: Two rapid localized Properties edits can derive the second candidate from a stale node while the first field is still saving; in the real editor-origin gate, confirm the EN draft revision and value over the API before editing VI, then require both values in the persisted draft.
 - 2026-11-15: In VI Properties, an optional host heading's required `heading.title` may appear after an optional eyebrow; selecting the first localized textbox leaves the required title blank and rejects draft autosave. Match the exact localized required-title labels after adding the heading.
 - 2026-11-15: At 390px the builder inspector is unmounted until the mobile Properties sheet opens; canvas-only screenshots and axe checks cannot establish mobile field layout or accessibility. Capture a second sheet-open state and assert a saved-host field inside it.
+- 2026-11-15: Browser tests can retain a VI UI preference after EN/VI public journeys; assert the localized builder canvas while keeping the exact restored heading, and use a per-attempt page key so a failed first attempt does not turn a retry into a slug collision.
 - 2026-11-15: An emitted public-bundle gzip cap does not prove CDN parity; record hashes of emitted bytes on the exact build head and compare every deployed chunk after an authorized deployment, without treating offline verifier tests as live evidence.
 - 2026-11-15: Unauthenticated 503 checks across direct API and Vercel ingress can detect a missing HTTP write freeze, but cannot prove old writers drained or D2 columns exist; require authenticated instance inventory and an authorized read-only schema check before migration or reopening. With locale-prefixed routing, accept only the expected same-origin root redirect and probe `/en` and `/vi` explicitly.
 - 2026-11-15: A four-shard visual matrix can hit the job time limit even while three peers finish quickly; measure actual job and Playwright step durations and keep per-shard provenance validation synchronized with the matrix size. Register an incoming spec before pinning it to a new shard—otherwise silent skips mask an incomplete gate. A separate failing accessibility assertion is not a throughput failure.
