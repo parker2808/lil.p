@@ -4,6 +4,7 @@
 2. Deny all non-read `/api/admin/pages` requests, including unknown future routes and method-override attempts, before controller/DB writes; return 503 with `Retry-After`.
 3. Keep GET/HEAD reads, public routes and `/api/health` available; expose only nonsecret deployment identity and freeze state.
 4. Test every current page/version mutation, prospective builder paths, alternate ingress and override headers; assert no writes reach services.
+   Also boot the real `AppModule` with stubbed services so removing its middleware registration fails the HTTP gate.
 5. Keep auto-deploy off and deploy a pinned Stage A commit only with the release owner's separate approval.
 6. Verify that every pre-freeze instance has terminated, not merely that Stage A is Live; then permit D2's startup migration with freeze still enabled.
 7. Keep freeze throughout D2 and D6 validation; unfreeze only via a later D2-aware deploy after all old instances drain.

@@ -49,6 +49,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - Pre-D2 Stage A page-write freeze (2026-11-15): a separate API branch blocks all admin-page mutations in production before service access, with unchanged public/read routes and an admin-only sanitized instance identity. D2's startup migration remains **blocked** until a separately authorized Stage A deploy proves all pre-freeze instances drained and direct/Vercel probes pass; no Render production proof or D2 migration is included here. See `docs/specs/2026-11-15-cms-pre-d2-write-freeze.md`.
+- Stage A follow-up: boot the actual AppModule with stubbed DB/page services to catch removal of its write-freeze middleware; bespoke route tests alone cannot prove the production registration. Live ingress and old-instance drain remain unverified.
 
 - CMS U3 #178 post-D4 main sync (2026-11-15): keep the approved, flag-gated EN/VI design study distinct from the authenticated D4 canvas. Main includes D4 #198 at `fc22b9f`; neither route gains U3 persistence or publishing, and D5 host integration remains separate.
 - CMS U3 #178 current-main sync (2026-11-15): the approved, flag-gated EN/VI study also incorporates D5's pure tree state from main without importing builder behavior into its static route; D6 release evidence remains separate. No U3 persistence, API or golden changes.
@@ -249,6 +250,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Added real-AppModule HTTP regression for the pre-D2 page write freeze, with stubbed services and no DB access; no production rollout or migration.
 - 2026-11-15: Prepared the production-default pre-D2 admin-page write freeze, future-path/override HTTP regressions and nonsecret instance identity; documented the no-deploy old-instance drain gate. No schema, golden, production DB or deployment change.
 
 - 2026-11-15: Synced U3 #178 with main through D4 #198 (`fc22b9f`); preserved the static study and the independent flag-gated D4 canvas, both documentation histories and existing golden contracts. Regenerated Graphify; no merge to main or deployment authorized.
