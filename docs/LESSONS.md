@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A D2 reopening plan dependent on a Render env edit is not executable without authorized write access; gate writes on read-only startup migration verification, reserve exact `CMS_PAGE_WRITE_FREEZE=1` as an explicit kill-switch, and prove all pre-D2 writers drained before deploying an image that may automatically reopen.
+
 - 2026-11-16: Waiting for theme transitions to settle can conceal a real WCAG contrast failure; switch paired primary CTA foreground/background atomically and sample successive rendered frames before axe instead of changing its threshold.
 
 - 2026-11-15: A screenshot immediately after manually toggling dark mode can leave button `transition-colors` midway through foreground interpolation; require the final computed button palette before axe so transient test timing cannot masquerade as a stable 4.5:1 violation.

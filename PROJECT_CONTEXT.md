@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 D2 reopen decision: #210 pre-D2 remains always frozen. D2 opens writes by default only after read-only startup verification of the applied migration and both columns; explicit `CMS_PAGE_WRITE_FREEZE=1` or failed check freezes. No Render env change is assumed or available. **Complete Stage A instance/in-flight-request drain before D2 deploy**, because a successful D2 startup can open writes automatically. The coordinator owns authorized Render inventory, migration verification and authenticated ingress write checks; CI cannot certify production drain or approval.
+
 - D2 #243 follow-up (2026-11-16): independent review found 4.11:1/3.69:1 CTA contrast during the transition, masked by a final-palette wait. Public primary buttons now switch both palette colors atomically while preserving transform motion; frame-by-frame EN/VI route checks precede axe. Exact-head CI pending; #199 is not re-green until this stacked PR lands.
 
 - D2 #199 exact-head CI follow-up (2026-11-15): shard 5 on `8a800999` measured a transitional primary CTA text color during the public test's manual light→dark switch (4.11/3.69:1). Await every public primary button's final dark computed foreground/background before running the unchanged axe gate; exact-head CI still required. No schema/migration/production change.
@@ -273,6 +275,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Changed D2-only production page/version write gate to open after verified startup migration with an unset or non-`1` flag; retained 503 on failure and explicit `=1` kill-switch, Stage A pre-D2 freeze, and bootstrap ordering. Updated forward-only deployment instructions without changing migration or golden contracts. No production deploy or DB action; old-instance drain remains a release gate.
 
 - 2026-11-16: Prevent transient sub-AA contrast during public primary CTA theme changes by transitioning transform only; sample each rendered primary CTA through light/dark frames before the unchanged final-state axe gate.
 
