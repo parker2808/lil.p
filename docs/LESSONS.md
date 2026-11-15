@@ -56,6 +56,7 @@
 
 - 2026-11-15: Test host-only CMS blocks through authenticated activation, revision-checked save/read and publish before EN/VI preview/public SSR; a mocked editor GET or schema-only registry count cannot catch an API boundary dropping the host registry.
 - 2026-11-15: Keep public bundle leak checks strict for actual public routes, but exclude explicitly gated browser-test fixture routes that intentionally import admin controls; retain a mandatory assertion for the production catch-all page.
+- 2026-11-16: When several editors schedule independent preview timers, waiting for one rendered preview does not prove the others have completed; await all three rendered bodies and retain the exact callback-count assertion.
 
 - 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
 
@@ -493,9 +494,13 @@
 - 2026-11-16: The builder palette creates headings at level 2 for valid editable drafts, while publication requires exactly one H1; keyboard publish evidence must set Heading level to 1 through Properties and verify the saved draft before pressing Publish.
 - 2026-11-15: For D19 whole-block localization, setting only `page-header.title.vi` leaves the block in English if its default `eyebrow.vi` is empty. A bilingual browser fixture must populate and verify every localized field with an English value before asserting a VI rendered H1.
 - 2026-11-15: Locale-specific visual evidence needs a bilingual block fixture and an assertion on painted localized text on both public and preview routes; merely switching the page locale with a shared heading string proves neither localized content nor dark-mode rendering.
+- 2026-11-16: For real-tenant no-script SSR, compare painted content-element pixels across actual hostnames at each viewport, not whole-page screenshot bytes: shell chrome alone can make two blank or unstyled CMS blocks appear different.
 - 2026-11-16: A successful restored-version API equality and EN/VI light screenshots do not prove dark-theme public/preview parity after republish; compare painted content crops and unwaived axe in all locale/theme/width tuples, keeping the preview banner outside the crop and asserting real 409 focus, live feedback and no writes.
+- 2026-11-16: When D6 no-script SSR and restored-version visual evidence land in parallel, keep both audit trails and regenerate graph provenance after merging the base; neither parent's green CI proves their combined head.
 
 - 2026-11-16 V02: sau reload, Layers thu gọn Section dù draft/published tree còn nguyên; test keyboard phải mở Section bằng ArrowRight rồi mới xác nhận các node con hiện ra, không đồng nhất trạng thái UI thu gọn với mất dữ liệu.
 
 - 2026-11-16 V02: Alt+ArrowDown trên sibling cuối là no-op; phải assert order trước/sau một Alt+ArrowUp thật, dùng Tab/Shift+Tab thay Playwright `.focus()` để chứng minh keyboard reachability.
 - 2026-11-16: V03/V14 visual signoff needs the same registered hosts on real neutral and branded SSR URLs with scripts off; a post-hydration brand flip or an empty CV placeholder cannot prove the all-20 intersection.
+- 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
+- 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.

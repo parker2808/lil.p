@@ -18,7 +18,9 @@ contact defaults and translated Properties labels; this does not by itself close
 the full V03/V14 visual matrix.
 The real-host no-script sample also checks OS-driven dark first paint and
 separately authored VI tree copy on both neutral and branded tenants; it does
-not certify all-20 dark neutral SSR or fully localized site content. A scoped
+so at 390/768/1440, asserting a painted CTA difference across actual tenant
+hosts and exact public/preview CTA parity. It does not certify all-20 dark
+neutral SSR or fully localized site content. A scoped
 no-script OS-dark shell rule keeps the public header/footer dark alongside the
 CMS tree and pairs the preview banner with a dark warning surface; CI checks
 its computed text/background contrast at 4.5:1 and attaches raw captures on
@@ -86,6 +88,7 @@ text solely through this suite.
 The [D6 tree parity gate](./docs/specs/2026-11-15-cms-d6-v04-v06-v09-v10-gate.md) adds serialized legacy/override assertions and paired EN/VI public/preview captures at three widths; visual review and the integrated UI restore path remain open.
 The [D6 UI restore gate](./docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md) exercises real UI publish → edit → 409 conflict → reload → restore → republish. A follow-up stages localized EN/VI page-header content and six additional VI dark captures alongside the 12 light captures; fresh exact-head CI and independent V09 visual review remain required. Broader V09/V10 signoff and deployed parity are not claimed.
 The D6 builder canvas browser gate now selects a real editable heading instead of the obsolete study-only Properties ID; five-shard exact-head CI remains required, and this test-only correction does not integrate the separate D5 runtime or close V10.
+The shared MarkdownEditor group regression waits for all three independently debounced previews before asserting their exact callback count; this stabilizes the unit gate without changing editor behavior or visual evidence.
 
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 
