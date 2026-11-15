@@ -268,6 +268,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Stacked D2-only write-reopen guard over #199: retained Stage A route/method and 503 semantics, added read-only startup proof of applied draft-tree migration and both columns, fail-closed Render-only `CMS_PAGE_WRITE_FREEZE=0` release switch and HTTP tests. Initial D2 deploy remains frozen; no migration/production action is authorized by this PR. §7: live instance drain, ingress proof and separately approved reopen remain release-owner gates.
+
 - 2026-11-15: Synced #199 with main after #236, retaining D2 forward-only drain requirements and both C1 provenance-documentation histories. D2 schema/migration and golden contracts remain unchanged; exact-head five-shard CI is required before merge consideration.
 
 - 2026-11-15: Added D2 V11/V12 API validation and capability assertions; corrected read evidence to nonempty content and clarified 400 redaction covers HTTP responses, not server logs. No schema/runtime change.

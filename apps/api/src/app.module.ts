@@ -8,6 +8,7 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { OriginGuard } from './common/guards/origin.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { PageWriteFreezeMiddleware } from './common/middleware/page-write-freeze.middleware';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 import { ConfigModule } from './config/config.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
@@ -88,6 +89,6 @@ import { PrismaModule } from './prisma/prisma.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(RequestIdMiddleware).forRoutes('*');
+    consumer.apply(RequestIdMiddleware, PageWriteFreezeMiddleware).forRoutes('*');
   }
 }
