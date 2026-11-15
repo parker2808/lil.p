@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #208 run `43695415133` on `2917cc61` exposed a test-fixture error in optional-heading hosts: the first localized field is the optional eyebrow, and submitting it before the required heading title leaves both inputs invalid and unsaved. The combined E2E now selects the required title and waits for its English autosave before editing Vietnamese; final-head CI remains OPEN, and this is not a production autosave fix. DO NOT MERGE.
+
 - 2026-11-15 #208 `0c6ba96a` CI `43694304354` shards 1/3 also exposed six optional-heading host journeys: the VI Properties control is named `Thêm · Tiêu đề mục`, but the D6 test helper searched `Thêm tiêu đề`, so it skipped the group and failed on the required EN textbox. Corrected the exact UI label on the combined branch and notified the D6/#222 owner to propagate to its source; exact-head CI remains required. No runtime or public/preview assertions changed. DO NOT MERGE.
 
 - 2026-11-15 #208 `0c6ba96a` CI `43694304354` unit job timed out at the default five seconds while booting the full AppModule in the Stage A middleware registration test; the integration branch gives only that test a 20-second budget, retaining the 503-before-service assertions. The #217 visual parity failures remain owned by its separate branch. Exact-head CI still required; DO NOT MERGE.
@@ -315,6 +317,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Corrected the combined all-host browser helper to edit the required localized heading title instead of an optional eyebrow, retaining real draft persistence and bilingual assertions. New exact-head CI required.
 
 - 2026-11-15: Aligned the combined real-editor optional-heading test helper with the VI Properties add-group button's actual accessible name; kept the bilingual textbox and live API assertions intact. Exact-head CI required.
 

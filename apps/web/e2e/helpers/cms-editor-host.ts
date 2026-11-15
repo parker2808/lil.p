@@ -57,7 +57,8 @@ export function registerEditorHostJourney(shard: number): void {
         inspector.getByText(hostName, { exact: true }).and(inspector.locator('p')),
       ).toBeVisible();
       const addHeading = inspector.getByRole('button', { name: 'Thêm · Tiêu đề mục' });
-      if (await addHeading.count()) await addHeading.click();
+      const hasOptionalHeading = (await addHeading.count()) > 0;
+      if (hasOptionalHeading) await addHeading.click();
 
       const englishValue = `Edited ${definition.type}`;
       const vietnameseValue = `Sửa ${definition.type}`;
@@ -65,19 +66,38 @@ export function registerEditorHostJourney(shard: number): void {
         await inspector.getByRole('switch', { name: 'showFeatured' }).click();
       } else {
         const englishTitle = inspector.getByRole('textbox', {
-          name: /(?:heading )?title (?:\(EN\)|· Tiếng Anh)$/,
+          name: hasOptionalHeading
+            ? /Tiêu đề mục · Tiêu đề · Tiếng Anh$/
+            : /(?:heading )?title (?:\(EN\)|· Tiếng Anh)$/,
         });
-        const english = (await englishTitle.count())
-          ? englishTitle.first()
-          : inspector.getByRole('textbox', { name: /(?:\(EN\)|· Tiếng Anh)$/ }).first();
+        const english =
+          hasOptionalHeading || (await englishTitle.count())
+            ? englishTitle.first()
+            : inspector.getByRole('textbox', { name: /(?:\(EN\)|· Tiếng Anh)$/ }).first();
         const vietnameseTitle = inspector.getByRole('textbox', {
-          name: /(?:heading )?title (?:\(VI\)|· Tiếng Việt)$/,
+          name: hasOptionalHeading
+            ? /Tiêu đề mục · Tiêu đề · Tiếng Việt$/
+            : /(?:heading )?title (?:\(VI\)|· Tiếng Việt)$/,
         });
-        const vietnamese = (await vietnameseTitle.count())
-          ? vietnameseTitle.first()
-          : inspector.getByRole('textbox', { name: /(?:\(VI\)|· Tiếng Việt)$/ }).first();
+        const vietnamese =
+          hasOptionalHeading || (await vietnameseTitle.count())
+            ? vietnameseTitle.first()
+            : inspector.getByRole('textbox', { name: /(?:\(VI\)|· Tiếng Việt)$/ }).first();
         await expect(english).toBeVisible();
         await english.fill(englishValue);
+        if (hasOptionalHeading) {
+          await expect
+            .poll(async () => {
+              const response = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+              if (response.status() !== 200) return false;
+              const body = await response.json();
+              const host = body.tree?.root.sections[0]?.content.find(
+                (node: { componentType?: string }) => node.componentType === definition.type,
+              );
+              return JSON.stringify(host?.responsive.base ?? {}).includes(englishValue);
+            })
+            .toBe(true);
+        }
         await vietnamese.fill(vietnameseValue);
       }
 
