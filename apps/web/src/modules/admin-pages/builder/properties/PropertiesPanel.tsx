@@ -398,6 +398,7 @@ export function PropertiesPanel({
   onEndTyping,
   pageKey = '',
   propertyDrafts,
+  componentLabels,
 }: {
   state: BuilderState;
   locale: 'en' | 'vi';
@@ -405,6 +406,7 @@ export function PropertiesPanel({
   onEndTyping?: () => void;
   pageKey?: string;
   propertyDrafts?: Map<string, PropertyDraft>;
+  componentLabels?: Record<string, string>;
 }) {
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('base');
   const [localDrafts] = useState(() => new Map<string, PropertyDraft>());
@@ -434,8 +436,8 @@ export function PropertiesPanel({
       <p className={styles.heading}>
         {node
           ? node.type === 'component'
-            ? node.componentType.replaceAll('-', ' ')
-            : node.type
+            ? (componentLabels?.[node.componentType] ?? propertyLabel(node.componentType, locale))
+            : propertyLabel(node.type, locale)
           : text.empty}
       </p>
       {node ? (

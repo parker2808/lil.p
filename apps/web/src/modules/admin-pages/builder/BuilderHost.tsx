@@ -12,12 +12,13 @@ import {
   type TreeOperation,
 } from '@parker2808/cms-core/tree';
 import { Button } from '@portfolio/ui/components/ui/button';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 import { useMe } from '@/modules/admin-core/hooks/use-me.hook';
+import { BLOCK_EDITOR_META } from '@/modules/admin-pages/constants/block-editor-meta.constant';
 
-import { BuilderShell } from './BuilderShell';
+import { BuilderShell, builderNodeLabels } from './BuilderShell';
 import type { PropertyDraft } from './properties/PropertiesPanel';
 import {
   activateBuilderDraft,
@@ -107,6 +108,13 @@ function subscribeOnline(onChange: () => void) {
 
 export function BuilderHost({ pageKey }: { pageKey: string }) {
   const locale = useLocale() === 'vi' ? 'vi' : 'en';
+  const translate = useTranslations();
+  const componentLabels = {
+    ...builderNodeLabels(locale),
+    ...Object.fromEntries(
+      Object.entries(BLOCK_EDITOR_META).map(([type, meta]) => [type, translate(meta.labelKey)]),
+    ),
+  };
   const text = labels[locale];
   const { id: userId } = useMe();
   const key = recoveryKey(userId, pageKey);
@@ -368,6 +376,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
   return (
     <div className={styles.host}>
       <BuilderShell
+        componentLabels={componentLabels}
         pageKey={pageKey}
         state={state}
         onDispatch={onDispatch}
@@ -417,6 +426,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
             onEndTyping={onEndTyping}
             pageKey={pageKey}
             propertyDrafts={propertyDrafts}
+            componentLabels={componentLabels}
           />
         )}
       />

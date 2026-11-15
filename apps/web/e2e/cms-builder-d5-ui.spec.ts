@@ -122,13 +122,11 @@ test('all 20 host Properties are visible through the gated builder in EN/VI and 
       const labelKey = BLOCK_EDITOR_META[definition.type].labelKey.split('.').at(-1)!;
       const localized = labels[locale][labelKey];
       expect(localized, `${locale}/${definition.type} translation`).toBeTruthy();
-      const raw = definition.type.replaceAll('-', ' ');
-      const expected = [localized ?? raw, raw]
-        .map((value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-        .join('|');
+      const expected = localized!.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       await expect(
-        inspector.getByRole('paragraph').filter({ hasText: new RegExp(`^(?:${expected})$`) }),
+        inspector.getByRole('paragraph').filter({ hasText: new RegExp(`^${expected}$`) }),
       ).toBeVisible();
+      await expect(layers.locator(`[data-tree-id="block-${index}"]`)).toContainText(localized!);
       await expect(
         inspector
           .locator(
