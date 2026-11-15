@@ -78,6 +78,7 @@
   line-height: 1.25;
 }
 .headerActions button {
+  min-height: 44px;
   background: var(--builder-raised);
   color: var(--builder-muted);
   border: 1px solid var(--builder-border);
