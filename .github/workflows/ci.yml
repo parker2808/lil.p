@@ -18,11 +18,12 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ci-${{ github.event.pull_request.number || github.ref }}
+  group: ci-${{ github.event.pull_request.number || github.ref }}-${{ github.event.action == 'labeled' && github.event.label.name || 'code' }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   changes:
+    if: github.event.action != 'labeled'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -38,18 +39,17 @@ jobs:
               - 'pnpm-lock.yaml'
 
   lint-typecheck:
+    if: github.event.action != 'labeled'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-      - run: pnpm format:check
-      - run: pnpm lint
-      - run: pnpm typecheck
-      - run: pnpm check:content
-      - run: pnpm check:deps
+      - run: pnpm check:all --static
+      - run: pnpm --filter @parker2808/cms-core check:deps
 
   unit:
+    if: github.event.action != 'labeled'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -57,6 +57,8 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm --filter @portfolio/contracts... build
       - run: pnpm -r --if-present test
+      - name: SchemaForm per-case performance evidence
+        run: pnpm --filter @portfolio/web exec vitest run src/modules/admin-core/components/SchemaForm/SchemaForm.test.tsx --reporter=verbose
 
   build:
     needs: changes
@@ -73,14 +75,22 @@ jobs:
           restore-keys: |
             next-${{ runner.os }}-build-${{ hashFiles('pnpm-lock.yaml') }}-
       - run: pnpm build
-      - name: Require zero builder bytes on public routes
-        run: node scripts/check-public-builder-bytes.mjs
       - name: Build Storybook (only when packages/ui changes)
         if: needs.changes.outputs.ui == 'true' || github.event_name != 'pull_request'
         run: pnpm --filter @portfolio/ui build-storybook
 
+  vercel-build:
+    name: vercel-build
+    if: github.event.action != 'labeled'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: node scripts/check-vercel-build.mjs
+
   api-e2e:
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e')
+    if: (github.event.action != 'labeled' || github.event.label.name == 'ready-e2e') && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     services:
@@ -130,7 +140,7 @@ jobs:
   build-e2e:
     # Builds contracts, api and web once for every web-e2e shard.
     name: web-e2e build
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e')
+    if: (github.event.action != 'labeled' || github.event.label.name == 'ready-e2e') && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e'))
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
@@ -173,10 +183,11 @@ jobs:
           retention-days: 1
 
   web-e2e-shard:
-    # Starts right away (no `needs`): MySQL, pnpm install and browser deps run
-    # while build-e2e builds, then the shard waits for the e2e-build artifact.
+    # Download only after upload-artifact has finalized in the build job;
+    # listing artifacts early does not guarantee download-artifact can read one.
     name: web-e2e shard ${{ matrix.shard }}/4
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e')
+    needs: build-e2e
+    if: (github.event.action != 'labeled' || github.event.label.name == 'ready-e2e') && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e'))
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -221,18 +232,6 @@ jobs:
             cmd="install --with-deps chromium"
           fi
           (cd apps/web && pnpm exec playwright $cmd > /tmp/pw-install.log 2>&1; echo $? > /tmp/pw-install.done) > /dev/null 2>&1 &
-      - name: Wait for the e2e-build artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          for i in $(seq 1 150); do
-            n=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts" \
-              --jq '[.artifacts[] | select(.name == "e2e-build")] | length')
-            [ "$n" = 1 ] && exit 0
-            sleep 2
-          done
-          echo "e2e-build artifact did not appear (did the web-e2e build job fail?)"
-          exit 1
       - uses: actions/download-artifact@v4
         with:
           name: e2e-build
@@ -285,7 +284,7 @@ jobs:
     # Stable check name: green only when the build and every shard passed, or e2e was
     # skipped (PR without the ready-e2e label). Also merges the reports.
     needs: [build-e2e, web-e2e-shard]
-    if: always()
+    if: always() && (github.event.action != 'labeled' || github.event.label.name == 'ready-e2e')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

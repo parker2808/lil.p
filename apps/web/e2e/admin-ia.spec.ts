@@ -29,6 +29,42 @@ const legacy = [
   ].map((path) => [path, path, null] as const),
 ] as const;
 
+const aboutTabs = [
+  'experience',
+  'education',
+  'skills',
+  'principles',
+  'process',
+  'stats',
+  'domains',
+] as const;
+
+test('seven legacy About routes redirect to the matching tab', async ({ page }) => {
+  await signIn(page);
+  for (const tab of aboutTabs) {
+    const response = await page.request.get(`/admin/${tab}`, { maxRedirects: 0 });
+    expect(response.status(), tab).toBe(307);
+    const location = response.headers()['location'];
+    expect(location, tab).toBeDefined();
+    const destination = new URL(location!, page.url());
+    expect(destination.pathname, tab).toBe('/admin/pages/about');
+    expect(destination.searchParams.get('tab'), tab).toBe(tab);
+  }
+});
+
+test('both legacy About experience editor pages redirect to standalone editors', async ({
+  page,
+}) => {
+  await signIn(page);
+  for (const [source, destination] of [
+    ['/admin/pages/about/experience/new', '/admin/experience/new'],
+    ['/admin/pages/about/experience/999999', '/admin/experience/999999'],
+  ] as const) {
+    await page.goto(source);
+    await expect(page).toHaveURL((url) => url.pathname === destination);
+  }
+});
+
 test('legacy admin routes land on the corresponding page and tab', async ({ page }) => {
   await signIn(page);
   for (const [oldPath, destination, tab] of legacy) {

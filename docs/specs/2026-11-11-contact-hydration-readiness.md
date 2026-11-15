@@ -24,6 +24,13 @@ preservation after mount and captures the submitted payload. Preserve server
 action progressive enhancement and validation; no UI copy, backend or DB
 change, and no baselines/thresholds/retries.
 
+On the merged U2 host, the optional topic is a shared Radix Select with a
+hidden form field rather than a native picker. Preserve its empty-choice
+sentinel and posted empty payload; synchronize any topic value already present
+in the DOM on mount. The delayed-script regression enters the SSR-editable
+name, email and message fields; the separate U2 browser case covers clearing
+the hydrated topic picker.
+
 ## Verification and rollback
 
 Red baseline: a delayed-script browser case entered name, email and message

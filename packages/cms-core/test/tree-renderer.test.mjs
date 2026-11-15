@@ -9,7 +9,7 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { z } from 'zod';
 
-import { measure } from '../../../scripts/measure-cms-core.mjs';
+import { measure } from '../scripts/measure-cms-core.mjs';
 
 const require = createRequire(import.meta.url);
 const { renderTree } = await import('@parker2808/cms-core/react/server');
@@ -111,7 +111,7 @@ test('responsive headings render one semantic H1 and row tracks preserve spans',
   columns[1].responsive.tablet = { span: 1 };
   columns[1].responsive.desktop = { span: 2 };
   const title = columns[0].content[0];
-  title.responsive.mobile = { text: 'Mobile', level: 2 };
+  title.responsive.mobile = { text: 'Mobile', level: 1 };
   title.responsive.tablet = { text: 'Tablet' };
   title.responsive.desktop = { text: 'Desktop' };
   const result = render(sample);
@@ -119,9 +119,37 @@ test('responsive headings render one semantic H1 and row tracks preserve spans',
   const html = markup(result);
   assert.equal((html.match(/<h1>/g) ?? []).length, 1);
   assert.equal((html.match(/<h2>/g) ?? []).length, 0);
+  assert.match(html, /cms-tree__heading-text--mobile[^>]*>Mobile<\/span>/);
+  assert.match(html, /cms-tree__heading-text--tablet[^>]*>Tablet<\/span>/);
+  assert.match(html, /cms-tree__heading-text--desktop[^>]*>Desktop<\/span>/);
   assert.match(html, /--cms-row-mobile:1fr 2fr/);
   assert.match(html, /--cms-row-tablet:3fr 1fr/);
   assert.match(html, /--cms-row-desktop:1fr 2fr/);
+});
+
+test('swapping heading levels by breakpoint fails safely instead of emitting two H1s', async () => {
+  const sample = globalThis.structuredClone(tree);
+  const first = sample.root.sections[0].content[0].columns[0].content[0];
+  first.responsive.mobile = { text: 'Mobile heading', level: 2 };
+  const second = makeNode(
+    'other-heading',
+    'component',
+    { text: 'Other', level: 2 },
+    {
+      componentType: 'heading',
+    },
+  );
+  second.responsive.mobile = { text: 'Mobile primary', level: 1 };
+  sample.root.sections[0].content[0].columns[1].content.push(second);
+  const { readTree, validateTreeForPublish } = await import('@parker2808/cms-core/tree');
+  assert.equal(readTree(sample).ok, true);
+  assert.equal(validateTreeForPublish(sample).code, 'HEADING_RULE');
+  const result = render(sample);
+  assert.equal(result.ok, false);
+  assert.equal(result.code, 'HEADING_RULE');
+  assert.equal(result.nodeId, 'other-heading');
+  assert.strictEqual(result.input, sample);
+  assert.equal((markup(result).match(/<h1>/g) ?? []).length, 0);
 });
 
 test('host cannot replace a responsive heading with duplicate semantic elements', () => {
@@ -285,6 +313,11 @@ test(
             const localized = globalThis.structuredClone(tree);
             localized.root.sections[0].content[0].columns[0].content[0].responsive.base.text =
               locale === 'vi' ? 'Xin chào' : 'Hello';
+            const responsiveHeading =
+              localized.root.sections[0].content[0].columns[0].content[0].responsive;
+            responsiveHeading.mobile = { text: `${locale}-mobile` };
+            responsiveHeading.tablet = { text: `${locale}-tablet` };
+            responsiveHeading.desktop = { text: `${locale}-desktop` };
             localized.root.sections[0].content[0].columns[0].content[1].responsive.base.alt =
               locale === 'vi' ? 'Phong cảnh' : 'Picture';
             localized.root.sections[0].content[0].columns[1].content[0].responsive.base.text =
@@ -297,6 +330,7 @@ test(
               resolveMedia: () => 'https://example.test/picture.svg',
             });
             assert.equal(result.ok, true);
+            assert.equal((markup(result).match(/<h1>/g) ?? []).length, 1);
             const page = await browser.newPage({ viewport: { width, height: 800 } });
             await page.route('https://example.test/picture.svg', (route) =>
               route.fulfill({ status: 200, contentType: 'image/svg+xml', body: illustration }),
@@ -313,9 +347,13 @@ test(
                   globalThis.getComputedStyle(element).gridTemplateColumns.split(' ').length,
               );
             assert.equal(gridColumns, width === 390 ? 1 : 2);
+            assert.equal(await page.locator('h1').count(), 1);
+            assert.equal(await page.locator('h2').count(), 0);
+            const visibleHeading = page.locator('h1 .cms-tree__heading-text:visible');
+            assert.equal(await visibleHeading.count(), 1);
             assert.equal(
-              await page.locator('h1').textContent(),
-              locale === 'vi' ? 'Xin chào' : 'Hello',
+              await visibleHeading.textContent(),
+              `${locale}-${width === 390 ? 'mobile' : width === 768 ? 'tablet' : 'desktop'}`,
             );
             assert.equal(await page.locator('script').count(), 0);
             await page.locator('.cms-tree__component a').focus();

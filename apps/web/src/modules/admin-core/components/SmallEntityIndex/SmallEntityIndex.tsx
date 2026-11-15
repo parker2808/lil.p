@@ -367,6 +367,7 @@ function EntityForm({
               ) : null}
               {field.kind === 'hue' ? (
                 <HuePicker
+                  groupLabel={field.label}
                   value={(api.state.value as Hue | '') ?? ''}
                   onChange={(value) => api.handleChange(value)}
                   labels={pickerLabels.hues}

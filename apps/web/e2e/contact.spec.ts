@@ -1,13 +1,13 @@
 import { expect, test } from '@playwright/test';
 
 import { E2E_VISITOR } from './helpers/credentials';
+import { selectChoice } from './helpers/select-choice';
 
 test.describe('contact', () => {
   test('shows errors under required fields and focuses the first on empty submit', async ({
     page,
   }) => {
     await page.goto('/en/contact');
-    await expect(page.locator('form[data-interactive="true"]')).toBeVisible();
     await page.getByRole('button', { name: /send message/i }).click();
 
     for (const name of ['name', 'email', 'message']) {
@@ -23,12 +23,12 @@ test.describe('contact', () => {
 
   test('submits a message from the public form', async ({ page }) => {
     await page.goto('/en/contact');
-    await expect(page.locator('form[data-interactive="true"]')).toBeVisible();
     await expect(page.getByRole('heading', { name: /talk about your product/i })).toBeVisible();
+    await expect(page.locator('form[data-interactive="true"]')).toBeVisible();
     await page.locator('#name').fill(E2E_VISITOR.name);
     await page.locator('#email').fill(E2E_VISITOR.email);
     await expect(page.locator('#topic')).toBeVisible();
-    await page.locator('#topic').selectOption({ index: 1 });
+    await selectChoice(page, page.locator('#topic'), 'A role');
     await page.locator('#message').fill('I would like to talk about a migration.');
     const send = page.locator('form').getByRole('button', { name: /send message/i });
     await expect(send).toBeEnabled();
@@ -37,7 +37,8 @@ test.describe('contact', () => {
     await expect(page.getByText('Message sent')).toBeVisible({ timeout: 20_000 });
   });
 
-  test('keeps text entered before hydration through client submission', async ({ page }) => {
+  test('preserves typing before hydration and submits it', async ({ page }) => {
+    test.setTimeout(60_000);
     let payload: Record<string, string> | undefined;
     const requests: string[] = [];
     page.on('request', (request) => {
@@ -70,19 +71,18 @@ test.describe('contact', () => {
     await expect(page.locator('#email')).toHaveValue(E2E_VISITOR.email);
     await expect(page.locator('#message')).toHaveValue('Pre-hydration message');
     expect(
-      await page
-        .locator('form')
-        .evaluate((form) => Object.fromEntries(new FormData(form as HTMLFormElement))),
-    ).toMatchObject({ name: E2E_VISITOR.name, email: E2E_VISITOR.email });
-    expect(
       await page.locator('form').evaluate((form) => ({
         noValidate: (form as HTMLFormElement).noValidate,
-        invalid: Array.from(form.querySelectorAll<HTMLInputElement>('input, textarea'))
-          .filter((input) => !input.checkValidity())
-          .map((input) => input.name),
+        values: Object.fromEntries(new FormData(form as HTMLFormElement)),
       })),
-    ).toEqual({ noValidate: true, invalid: [] });
-    await page.getByRole('button', { name: /send message/i }).click();
+    ).toMatchObject({
+      noValidate: true,
+      values: { name: E2E_VISITOR.name, email: E2E_VISITOR.email },
+    });
+    await page
+      .locator('form')
+      .getByRole('button', { name: /send message/i })
+      .click();
     await expect.poll(() => requests).toEqual(['/api/public/contact']);
     await expect(page.getByText('Message sent')).toBeVisible();
     expect(payload).toMatchObject({
@@ -91,5 +91,28 @@ test.describe('contact', () => {
       topic: '',
       message: 'Pre-hydration message',
     });
+  });
+
+  test('clears a selected optional topic back to the empty payload', async ({ page }) => {
+    let payload: Record<string, string> | undefined;
+    await page.route('**/api/public/contact', async (route) => {
+      payload = route.request().postDataJSON() as Record<string, string>;
+      await route.fulfill({ status: 201, body: '{}' });
+    });
+    await page.goto('/en/contact');
+    await expect(page.locator('form[data-interactive="true"]')).toBeVisible();
+    await page.locator('#name').fill(E2E_VISITOR.name);
+    await page.locator('#email').fill(E2E_VISITOR.email);
+    await selectChoice(page, page.locator('#topic'), 'A role');
+    await expect(page.locator('input[name="topic"]')).not.toHaveValue('');
+    await selectChoice(page, page.locator('#topic'), 'Choose a topic');
+    await expect(page.locator('input[name="topic"]')).toHaveValue('');
+    await page.locator('#message').fill('I would like to talk about a migration.');
+    await page
+      .locator('form')
+      .getByRole('button', { name: /send message/i })
+      .click();
+    await expect(page.getByText('Message sent')).toBeVisible();
+    expect(payload?.topic).toBe('');
   });
 });

@@ -1,6 +1,7 @@
 import {
   type ComponentNode,
   type ComponentRegistry,
+  hasStableHeadingLevel,
   readTree,
   resolveResponsive,
   type ResponsiveProps,
@@ -47,7 +48,7 @@ class InvalidMediaError extends Error {}
 function headingContent<Node>(node: ComponentNode, options: TreeRenderOptions<Node>): Node {
   const variants: Breakpoint[] = ['mobile', 'tablet', 'desktop'];
   const resolved = variants.map((breakpoint) => resolveResponsive(node.responsive, breakpoint));
-  const level = resolved.some((props) => props.level === 1) ? 1 : node.responsive.base.level;
+  const level = resolved[0]!.level;
   const texts = resolved.map((props) => String(props.text));
   if (texts.every((text) => text === texts[0])) {
     return options.createElement(`h${level}`, null, texts[0]);
@@ -213,6 +214,19 @@ export function renderTree<Node>(options: TreeRenderOptions<Node>): TreeRenderRe
     const node = pending.pop()!;
     if (node.type === 'legacy-component') {
       return { ok: false, code: 'UNKNOWN_TYPE', input: options.input, content: warning };
+    }
+    if (
+      node.type === 'component' &&
+      node.componentType === 'heading' &&
+      !hasStableHeadingLevel(node.responsive)
+    ) {
+      return {
+        ok: false,
+        code: 'HEADING_RULE',
+        input: options.input,
+        nodeId: node.id,
+        content: warning,
+      };
     }
     if (node.type === 'page') pending.push(...node.sections);
     else if (node.type === 'section' || node.type === 'column') pending.push(...node.content);

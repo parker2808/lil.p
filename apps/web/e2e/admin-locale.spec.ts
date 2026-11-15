@@ -6,7 +6,8 @@ test('admin locale switch persists and localizes dashboard activity time', async
   await signIn(page);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 
-  await page.getByRole('combobox', { name: 'Language' }).selectOption('vi');
+  await page.getByRole('combobox', { name: 'Language' }).click();
+  await page.getByRole('option', { name: 'VI' }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
   await expect
     .poll(

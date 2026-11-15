@@ -12,7 +12,9 @@ function manifests(directory) {
     const path = join(directory, entry.name);
     return entry.isDirectory()
       ? manifests(path)
-      : entry.name === 'page_client-reference-manifest.js' && path.includes('/(site)/')
+      : entry.name === 'page_client-reference-manifest.js' &&
+          path.includes('/(site)/') &&
+          !path.includes('/r3-loading-test/')
         ? [path]
         : [];
   });

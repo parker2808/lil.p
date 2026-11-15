@@ -9,6 +9,23 @@ const heroProps = {
 };
 
 describe('PagesService', () => {
+  it('rejects duplicating a limit-one block before any write', async () => {
+    const block = { id: 42, type: 'hero', key: 'hero', sortOrder: 0 };
+    const tx = {
+      page: { findUnique: vi.fn().mockResolvedValue({ id: 1, key: 'HOME', blocks: [block] }) },
+      pageBlock: { updateMany: vi.fn(), create: vi.fn() },
+    };
+    const prisma = { $transaction: vi.fn((work: (db: typeof tx) => unknown) => work(tx)) };
+    const service = new PagesService(prisma as never);
+
+    await expect(service.duplicateBlock('home', block.id)).rejects.toMatchObject({
+      status: 409,
+      response: { code: 'BLOCK_LIMIT' },
+    });
+    expect(tx.pageBlock.updateMany).not.toHaveBeenCalled();
+    expect(tx.pageBlock.create).not.toHaveBeenCalled();
+  });
+
   function createHarness(existing: boolean, race = false) {
     const row = {
       id: 12,
@@ -179,6 +196,60 @@ describe('PagesService', () => {
     expect(page.blocks[0]?.type).toBe('hero');
     expect(page.blocks[0]?.lang).toBe('vi');
   });
+
+  it.each(['en', 'vi'] as const)(
+    'serves a VI-only custom page SEO title in Vietnamese for %s requests',
+    async (locale) => {
+      const prisma = {
+        page: {
+          findUnique: vi.fn().mockResolvedValue({
+            key: 'IDEAS',
+            publishedVersion: {
+              snapshot: {
+                seo: {
+                  seoTitleEn: null,
+                  seoTitleVi: 'Ý tưởng',
+                  seoDescriptionEn: null,
+                  seoDescriptionVi: 'Mô tả',
+                },
+                blocks: [],
+              },
+            },
+          }),
+        },
+      };
+      const page = await new PagesService(prisma as never).getPublic('ideas', locale);
+      expect(page.seo).toEqual({ title: 'Ý tưởng', description: 'Mô tả', lang: 'vi' });
+    },
+  );
+
+  it.each([
+    ['home', null, 'Trang chủ', null, 'en'],
+    ['ideas', 'Ideas', 'Ý tưởng', 'Ideas', 'en'],
+  ] as const)(
+    'keeps existing %s SEO fallback for EN title %s',
+    async (key, seoTitleEn, seoTitleVi, title, lang) => {
+      const prisma = {
+        page: {
+          findUnique: vi.fn().mockResolvedValue({
+            publishedVersion: {
+              snapshot: {
+                seo: {
+                  seoTitleEn,
+                  seoTitleVi,
+                  seoDescriptionEn: 'English description',
+                  seoDescriptionVi: null,
+                },
+                blocks: [],
+              },
+            },
+          }),
+        },
+      };
+      const page = await new PagesService(prisma as never).getPublic(key, 'vi');
+      expect(page.seo).toEqual({ title, description: 'English description', lang });
+    },
+  );
 
   it('returns an empty shell when the page was never published', async () => {
     const prisma = {
