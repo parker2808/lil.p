@@ -10,6 +10,8 @@
 - 2026-11-15: Test bootstrap-order migration verification separately from a middleware-only fixture: prevent HTTP listening before read-only schema checks and keep writes frozen when verification fails.
 - 2026-11-15: A D2 image must not inherit an always-frozen guard without a reviewed reopening mechanism; require migration history and physical columns, default to frozen, and reserve the explicit production reopen setting for after old frozen instances drain.
 - 2026-11-15: Auth rejection alone does not establish version/preview read capability or production log redaction; verify populated reads and retain a distinct log audit gate.
+- 2026-11-15: Graphify freshness must name the integrated code head, not an intermediate branch commit; a docs-only report commit changes HEAD again, so document its exact source SHA and keep manual V16 screen-reader signoff separate from green automated V15 evidence.
+
 - 2026-11-15: A design capture that tabs through controls must restore its entry focus before continuing a keyboard-only edit; a fixed overlay escapes non-containing-block ancestor overflow, so stop clipping at the fixed backdrop while keeping strict 44px checks.
 
 - 2026-11-15: A scoped builder axe result cannot replace a full-page audit, and matching polite status text cannot prove what a screen reader actually speaks; record automated and manual V16 evidence separately.
