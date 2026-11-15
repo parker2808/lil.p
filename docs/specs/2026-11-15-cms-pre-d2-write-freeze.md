@@ -35,7 +35,8 @@ shells or other deployments are **outside HTTP middleware**, so the release
 owner must prohibit these throughout the pause. This guard does not freeze
 unrelated admin resources.
 
-Re-audit against main `b3ee1b30` and D2 #199 `db064d88` (2026-11-15):
+Re-audit against main `59677dfa` (including #214's probe-only changes) and
+D2 #199 `db064d88` (2026-11-15):
 `AdminPagesController` is the only page/version/SEO/block/builder mutation
 controller. On main, its ten writes are `POST /admin/pages`, `PATCH
 /admin/pages/:key` (including SEO), `POST /admin/pages/:key/blocks`, `PATCH
