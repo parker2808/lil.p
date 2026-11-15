@@ -1,7 +1,7 @@
 # Graph Report - cms-pre-d2-write-freeze  (2026-11-15)
 
 ## Corpus Check
-- 1607 files · ~648,196 words
+- 1607 files · ~648,691 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 38 file(s) not represented in the graph (top: (none) 18, .css 16, .example 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9c24449d`
+- Built from commit: `b5b20578`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
