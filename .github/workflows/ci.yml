@@ -323,6 +323,9 @@ jobs:
         if: always() && needs.web-e2e-shard.result != 'skipped'
         run: |
           mkdir -p playwright-report
+          for shard in 1 2 3 4; do
+            SHARD="$shard" node -e 'const { readFileSync } = require("node:fs"); const shard = process.env.SHARD; const p = JSON.parse(readFileSync(`all-blob-reports/provenance-shard-${shard}.json`)); if (p.shard !== Number(shard) || p.prHeadSha !== process.env.PR_HEAD_SHA || p.testedMergeSha !== process.env.TESTED_MERGE_SHA) process.exit(1)'
+          done
           printf '{"prHeadSha":"%s","testedMergeSha":"%s"}\n' "$PR_HEAD_SHA" "$TESTED_MERGE_SHA" > playwright-report/provenance.json
       - uses: actions/upload-artifact@v4
         if: always() && needs.web-e2e-shard.result != 'skipped'

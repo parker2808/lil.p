@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- CI evidence provenance (2026-11-15): E2E artifacts identify both the PR head and the tested synthetic-merge checkout; review screenshots against both SHAs, not only the run number. This does not change which ref runs, any required check or the Vercel build order. Exact-head CI remains the gate.
+- CI evidence provenance (2026-11-15): E2E artifacts identify both the PR head and the tested synthetic-merge checkout; the merged report verifies all four shard manifests against both SHAs before recording its provenance. Review screenshots against both SHAs, not only the run number. This does not change which ref runs, any required check or the Vercel build order. Exact-head CI remains the gate.
 
 - Stage A/D2 probe kit (2026-11-15): `scripts/probe-stage-a-d2.mjs` prepares unauthenticated direct-Render/Vercel freeze checks for ten legacy and four D2 paths, plus public health/EN/VI reads (including the expected root redirect); the Render hostname is supplied by the release owner because tracked config has only an illustrative URL. Instance drain and D2 schema proof require authenticated inventory and authorized read-only DB metadata; this PR runs no production checks or migration. The Stage A guard must be merged into the reviewed D2 image before rollout; rollout order is #210 freeze/drain → #199 migration/verify → approved reopen → #204 → #202.
 - C1 root-export guard (2026-11-15): `packages/cms-core/test/exports.test.mjs` asserts the six documented public subpaths and rejects the root `"."` specifier for both ESM and CJS. `packages/cms-core/scripts/packed-exports.test.mjs` repeats the check from an offline-installed tarball in a temporary consumer; the package's existing `test` script runs it in CI. This is a package-local boundary regression, not a new export or runtime behavior; repeat the pack at the final integrated SHA before C1. Private repo creation, rights audit and C3 remain gated.
@@ -253,7 +253,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
-- 2026-11-15: Added PR-head and tested-merge SHAs to E2E build, shard and merged-report artifact names and provenance JSON; no changes to test refs, checks, runtime or deployment.
+- 2026-11-15: Added PR-head and tested-merge SHAs to E2E build, shard and merged-report artifact names and provenance JSON, with four-shard verification before report attestation; no changes to test refs, checks, runtime or deployment.
 - 2026-11-15: Added a non-executed Stage A/D2 public probe kit with mocked failure/EN redirect tests and a forward-only #210 → #199 → reopen → #204 → #202 deployment checklist. No production request, database/migration change, golden-contract change or approval to deploy.
 - 2026-11-15: Added an offline scratch-consumer install from the packed CMS core tarball to verify all six subpath resolutions and ESM/CJS root rejection in the package test/CI job; no runtime or golden-contract change.
 - 2026-11-15: Added a package-local ESM/CJS root-import rejection and export-map regression for the six C1 subpaths, documented the packed-tarball repeat gate; no runtime or golden-contract change.
