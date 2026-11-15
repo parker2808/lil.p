@@ -706,6 +706,13 @@ test('EN/VI core and token-only lil.p builder states are visually and accessibly
     await palette
       .getByRole('button', { name: locale === 'vi' ? 'Tiêu đề' : 'Heading', exact: true })
       .click();
+    await expect(
+      page
+        .getByRole('complementary', {
+          name: locale === 'vi' ? 'Thuộc tính' : 'Properties',
+        })
+        .getByText(locale === 'vi' ? 'Tiêu đề' : 'Heading', { exact: true }),
+    ).toBeVisible();
     await expect(page.getByText(locale === 'vi' ? 'Đã lưu bản nháp' : 'Draft saved')).toBeVisible({
       timeout: 15_000,
     });

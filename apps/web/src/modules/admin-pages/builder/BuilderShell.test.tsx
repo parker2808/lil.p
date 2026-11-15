@@ -20,6 +20,52 @@ afterEach(() => {
   window.dispatchEvent(new Event('resize'));
 });
 
+it('uses localized host labels in the canvas, layers and selection announcement', async () => {
+  Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1440 });
+  const hostState: BuilderState = {
+    document: {
+      schemaVersion: 1,
+      root: {
+        id: 'page',
+        type: 'page',
+        responsive: { base: {} },
+        sections: [
+          {
+            id: 'section',
+            type: 'section',
+            responsive: { base: {} },
+            content: [
+              {
+                id: 'hero',
+                type: 'component',
+                componentType: 'hero',
+                responsive: { base: {} },
+              },
+            ],
+          },
+        ],
+      },
+    },
+    selectedId: 'hero',
+  };
+  render(
+    <BuilderShell
+      pageKey="home"
+      state={hostState}
+      onDispatch={(command) => reduceBuilderCommand(hostState, command)}
+      componentLabels={{ hero: 'Đầu trang' }}
+      renderProperties={() => null}
+    />,
+  );
+  fireEvent(window, new Event('resize'));
+  await waitFor(() =>
+    expect(screen.getByRole('heading', { name: 'Đầu trang' })).toBeInTheDocument(),
+  );
+  expect(screen.getByRole('button', { name: 'Select Đầu trang' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: 'Select Đầu trang' }));
+  expect(screen.getByRole('status')).toHaveTextContent('Selected: Đầu trang');
+});
+
 it('mounts Properties once in desktop inspector or mobile/tablet sheet and restores focus', async () => {
   Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1440 });
   const renderProperties = vi.fn(() => <span data-testid="host-properties" />);

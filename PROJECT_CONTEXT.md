@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- D5 design review at `24fc51b2` / CI `43759739138`: 197 captures across 24 EN/VI × light/dark × neutral/lil.p × 390/768/1440 combinations show raw English component names in the Vietnamese Properties inspector. The small label fix derives all 20 host names from existing translation metadata and shares them with canvas/Layers. Await exact-head CI and a refreshed visual review; D5 intentionally disables publish, so publish/restore dialog evidence belongs to combined D6. Manual V16 screen-reader review remains open.
+
 - V05 remains GAP on D5: 768px EN/VI light/dark editor images and an API revision attachment are only partial evidence; the same-revision public/preview chain requires D6 tree publishing (D5 explicitly returns CONFLICT). V13 full route/state review and manual V16 screen-reader signoff remain open after the focused metadata/error-language correction.
 
 - V02 D5 keyboard negative path: EN/VI real-draft browser coverage exercises keyboard-only insertion, Page-root invalid drop, polite live-region rejection, focus restoration and identical saved revision/tree after reload. Await exact-head CI and independent review; D5 cannot complete successful publish, and manual spoken screen-reader verification remains V16 GAP.
@@ -307,6 +309,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Localize builder canvas/Layers/Properties component names through existing host metadata keys and starter field labels; tighten EN/VI browser assertions to reject raw type fallbacks. Scope and evidence: `docs/specs/2026-11-16-cms-d5-design-labels.md`.
 
 - 2026-11-16: D5 V13 admin metadata and schema/API validation localization (EN/VI), preserving field paths and drafts; real-API 768px editor revision capture for V05 only. Spec: `docs/specs/2026-11-16-cms-d5-v13-v05.md`.
 
