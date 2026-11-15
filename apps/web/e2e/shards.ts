@@ -66,13 +66,25 @@ export const SPECS = [
   'u0-capture.spec.ts',
 ] as const;
 
-/** Specs pinned for pixel baselines, Lighthouse and the incoming D6 visual group. */
+/** Specs pinned for pixel baselines and Lighthouse scores. */
 const PINNED: Record<string, number> = {
   'visual.spec.ts': 1,
   'lighthouse.spec.ts': 1,
   'admin-editors-r3.spec.ts': 4,
-  'cms-d6-visual-4.spec.ts': 5,
 };
+
+export function assertPinnedSpecs(pins: Readonly<Record<string, number>>): void {
+  for (const [file, shard] of Object.entries(pins)) {
+    if (!SPECS.includes(file as (typeof SPECS)[number])) {
+      throw new Error(`Pinned E2E spec is not registered: ${file}`);
+    }
+    if (!Number.isInteger(shard) || shard < 1 || shard > SHARD_COUNT) {
+      throw new Error(`Pinned E2E shard must be 1..${SHARD_COUNT}: ${file}=${shard}`);
+    }
+  }
+}
+
+assertPinnedSpecs(PINNED);
 
 /** Baseline CI seconds per file from run 41382787431; unknown files count as 4. */
 const WEIGHT: Record<string, number> = {
@@ -99,7 +111,6 @@ function assign(): Map<string, number> {
   const load = Array.from({ length: SHARD_COUNT }, () => 0);
   const out = new Map<string, number>();
   for (const [file, shard] of Object.entries(PINNED)) {
-    if (!SPECS.includes(file as (typeof SPECS)[number])) continue;
     out.set(file, shard);
     load[shard - 1] = (load[shard - 1] ?? 0) + (WEIGHT[file] ?? 4);
   }
