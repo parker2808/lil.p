@@ -205,7 +205,8 @@ async function capture(
   const response = await page.goto(route);
   expect(response?.status(), route).toBe(200);
   await expect(page.locator('html')).toHaveClass(theme === 'dark' ? /\bdark\b/ : /\blight\b/);
-  const main = page.locator('main.cms-core-host');
+  const main = page.locator('#content > main.cms-core-host:visible');
+  await expect(main).toHaveCount(1);
   await expect(main).toHaveAttribute('data-brand', 'lilp');
   await main.evaluate(
     (element, values) => {

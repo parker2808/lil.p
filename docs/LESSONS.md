@@ -1,6 +1,8 @@
 # Lessons
 
-- 2026-11-15: A dark text token that passes against the page background may fail AA against an inset CMS card; measure against neutral and branded surfaces. A dynamic client component can SSR only its textless loading fallback; render data-backed initial content on the server and retain the initial-HTML assertion.
+- 2026-11-15: During rapid draft/public navigation, a transient host can make a global `main.cms-core-host` locator ambiguous; wait for exactly one visible direct host under the content landmark instead of selecting the first element.
+
+- 2026-11-15: A dark text token that passes against the page background may fail AA against an inset CMS card; measure against neutral and branded surfaces. Eagerly importing the notes client component increased unique public chunks by ~57 KiB gzip; keep it lazy with data-backed server suspense fallback and assert initial HTML rather than raising the bundle cap.
 
 - 2026-11-15: Real host pages may hydrate a decorative hero canvas after SSR; compare block SSR/hydration text and props hashes without treating that canvas as content, give retried API fixtures unique slugs, and run full (not severity-filtered) WCAG axe for each theme/viewport tuple.
 

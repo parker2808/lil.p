@@ -57,11 +57,18 @@ returning, preventing a stale public render versus an uncached draft render.
 Block screenshots exclude the fixed site header and locale suggestion overlay
 outside the block (as well as the decorative shader canvas); otherwise those
 overlays can obscure different scrolled portions of the same long block.
-The `notes-browser` host now server-renders its initial list instead of the
-textless client-chunk skeleton; the nested no-script stream remains a separate
-gate. The dark host scopes a higher-contrast subtle text token for both
+The `notes-browser` host now server-renders a data-backed suspense fallback
+with localized links or empty text instead of the textless client-chunk
+skeleton; the interactive browser remains split into an on-demand chunk and
+the nested no-script stream remains a separate gate. The dark host scopes a
+higher-contrast subtle text token for both
 neutral and lil.p cards without changing the shared palette or suppressing
-axe violations. Exact-head CI must verify both changes before V03/V14 advance.
+axe violations. Navigation transitions may briefly retain an old host; capture
+waits for exactly one visible host directly under `#content` instead of using
+an arbitrary first match. CI at `774d2aae` found eager notes imports raised public
+unique chunk gzip from 90,266 B on `861ada7a` to roughly 147,363 B, over the
+102,400 B cap; the split preserves the cap rather than raising it. Exact-head
+CI must verify both changes before V03/V14 advance.
 
 The published route serves explicit lil.p host tokens. The **neutral fixture is
 the same real published/preview host page with its root `data-brand` switched
