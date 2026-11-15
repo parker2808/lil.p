@@ -17,7 +17,10 @@ const legacySnapshot = {
       type: 'page-header',
       key: 'page-header',
       schemaVersion: 1,
-      props: { title: { en: 'Historical title', vi: 'Tiêu đề cũ' } },
+      props: {
+        eyebrow: { en: 'Archive', vi: 'Lưu trữ' },
+        title: { en: 'Historical title', vi: 'Tiêu đề cũ' },
+      },
       layout: 'ONE',
       surface: 'PLAIN',
       isVisible: true,
