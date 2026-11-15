@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- #221 V15 passed exact-head CI `43732468521` at `b2671d6c` and independent review found no P0–P2. Refresh Graphify against the merged D5 code head; V16 remains a separate manual screen-reader GAP (VoiceOver/NVDA spoken output, public/preview reading/H1 order, EN/VI review) despite automated builder checks.
+- #221 V15 passed exact-head CI `43732468521` at `b2671d6c` and independent review found no P0–P2. Graphify was regenerated against the merged D5 code head; V16 remains a separate manual screen-reader GAP (VoiceOver/NVDA spoken output, public/preview reading/H1 order, EN/VI review) despite automated builder checks.
 - D5 Properties blur/clear follow-up: rapid text edits separated by blur remain separate undo steps, and clearing an override discards invalid local input and its error. #244 passed exact-head CI `43737324989` (API E2E and five web shards) and independent review ACCEPT; combined release and manual V16 remain OPEN.
 
 - #221 run `43729842098` reached two deterministic V15 failures: the focus audit moved focus off Heading before keyboard Delete, and the 768px Properties sheet's fixed backdrop was wrongly clipped to the builder parent's overflow boundary. Restore pre-audit focus and stop clipping beyond the fixed backdrop; exact-head five-shard CI and independent review remain OPEN.
