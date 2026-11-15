@@ -1,10 +1,28 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, expect, it, vi } from 'vitest';
 
+import { BLOCK_REGISTRY } from '@portfolio/contracts';
+
+import viMessages from '../../../../i18n/locales/vi.json';
+import { BLOCK_EDITOR_META } from '../constants/block-editor-meta.constant';
 import { BuilderShell } from './BuilderShell';
 import { reduceBuilderCommand, type BuilderState } from './canvas/commands';
 
-vi.mock('next-intl', () => ({ useLocale: () => 'en' }));
+const localeState = vi.hoisted(() => ({ current: 'en' }));
+vi.mock('next-intl', async () => {
+  const [{ default: english }, { default: vietnamese }] = await Promise.all([
+    import('../../../../i18n/locales/en.json'),
+    import('../../../../i18n/locales/vi.json'),
+  ]);
+  return {
+    useLocale: () => localeState.current,
+    useTranslations: () => (key: string) => {
+      const names =
+        localeState.current === 'vi' ? vietnamese.admin.pages.types : english.admin.pages.types;
+      return names[key.split('.').at(-1) as keyof typeof names] ?? key;
+    },
+  };
+});
 
 const state: BuilderState = {
   document: {
@@ -16,8 +34,33 @@ const state: BuilderState = {
 
 afterEach(() => {
   cleanup();
+  localeState.current = 'en';
   Object.defineProperty(window, 'innerWidth', { configurable: true, value: 1440 });
   window.dispatchEvent(new Event('resize'));
+});
+
+it('finds every host tile by its Vietnamese display name', () => {
+  localeState.current = 'vi';
+  render(
+    <BuilderShell
+      pageKey="home"
+      state={state}
+      onDispatch={(command) => reduceBuilderCommand(state, command)}
+    />,
+  );
+  const palette = screen.getByRole('complementary', { name: 'Thành phần' });
+  for (const type of Object.keys(BLOCK_REGISTRY) as (keyof typeof BLOCK_REGISTRY)[]) {
+    const labelKey = BLOCK_EDITOR_META[type].labelKey
+      .split('.')
+      .at(-1) as keyof typeof viMessages.admin.pages.types;
+    const localized = viMessages.admin.pages.types[labelKey];
+    fireEvent.change(within(palette).getByRole('textbox', { name: 'Tìm thành phần' }), {
+      target: { value: localized },
+    });
+    expect(
+      within(palette).getByRole('button', { name: (name) => name.startsWith(localized) }),
+    ).toBeVisible();
+  }
 });
 
 it('mounts Properties once in desktop inspector or mobile/tablet sheet and restores focus', async () => {

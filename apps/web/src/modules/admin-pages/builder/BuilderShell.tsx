@@ -1,7 +1,8 @@
 'use client';
 
 import type { TreeDocument, TreeNode } from '@parker2808/cms-core/tree';
-import { useLocale } from 'next-intl';
+import { BLOCK_REGISTRY, type BlockType } from '@portfolio/contracts';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   useEffect,
   useRef,
@@ -23,7 +24,9 @@ import {
 import { reduceBuilderCommand, type BuilderCommand, type BuilderState } from './canvas/commands';
 import type { CompositionResult } from './canvas/model';
 import { navigateOutline, visibleOutline } from './layers/keyboard';
+import { BLOCK_EDITOR_META } from '../constants/block-editor-meta.constant';
 import { newNode, paletteKinds, type PaletteKind } from './palette/catalog';
+import { builderRegistry } from './properties/registry';
 import styles from './builder.module.css';
 
 type Copy = {
@@ -54,7 +57,13 @@ type Copy = {
   publishHint: string;
   empty: string;
   choose: string;
-  labels: Record<PaletteKind | 'page' | 'column' | 'legacy-component', string>;
+  labels: Record<
+    | Exclude<PaletteKind, keyof typeof import('@portfolio/contracts').BLOCK_REGISTRY>
+    | 'page'
+    | 'column'
+    | 'legacy-component',
+    string
+  >;
 };
 
 const copy: Record<'en' | 'vi', Copy> = {
@@ -179,9 +188,11 @@ function documentTheme(): 'light' | 'dark' {
   return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
 }
 
-function label(node: TreeNode, text: Copy) {
+function label(node: TreeNode, text: Copy, hostLabel: (type: BlockType) => string) {
   return node.type === 'component'
-    ? (text.labels[node.componentType as PaletteKind] ?? node.componentType)
+    ? node.componentType in BLOCK_REGISTRY
+      ? hostLabel(node.componentType as BlockType)
+      : (text.labels[node.componentType as keyof typeof text.labels] ?? node.componentType)
     : text.labels[node.type];
 }
 
@@ -206,8 +217,14 @@ export function BuilderShell({
   historyControls?: ReactNode;
 }) {
   const locale = useLocale() === 'vi' ? 'vi' : 'en';
+  const translate = useTranslations();
+  const hostLabel = (type: BlockType) => translate(BLOCK_EDITOR_META[type].labelKey);
   const theme = useSyncExternalStore(subscribeTheme, documentTheme, () => 'light');
   const text = copy[locale];
+  const paletteLabel = (kind: PaletteKind) =>
+    kind in BLOCK_REGISTRY
+      ? hostLabel(kind as BlockType)
+      : text.labels[kind as keyof typeof text.labels];
   const { document, selectedId } = state;
   const [sheet, setSheet] = useState<'components' | 'layers' | 'properties' | null>(null);
   const [query, setQuery] = useState('');
@@ -307,7 +324,7 @@ export function BuilderShell({
         }
       setExpanded(nextExpanded);
       setAnnouncement(
-        `${text.selected}: ${label(findNode(result.document, result.selectedId)!, text)}`,
+        `${text.selected}: ${label(findNode(result.document, result.selectedId)!, text, hostLabel)}`,
       );
     } else
       setAnnouncement(result.reason === 'REQUIRED_COLUMN' ? text.requiredColumn : text.invalid);
@@ -326,7 +343,7 @@ export function BuilderShell({
               ? 'items'
               : 'columns';
       const index = children(item.node).length;
-      if (insertNode(document, node, { parentId: item.id, slot, index }).ok)
+      if (insertNode(document, node, { parentId: item.id, slot, index }, builderRegistry).ok)
         targets.push({ parentId: item.id, slot, index });
     }
     return targets;
@@ -369,7 +386,7 @@ export function BuilderShell({
         siblings && siblings.length > 1
           ? ` ${siblings.findIndex((sibling) => sibling.id === item!.id) + 1}`
           : '';
-      names.unshift(`${label(item.node, text)}${ordinal}`);
+      names.unshift(`${label(item.node, text, hostLabel)}${ordinal}`);
       item = path.find((entry) => entry.id === item!.parentId);
     }
     return `${names.join(' / ')} · ${text.position} ${destination.index + 1}`;
@@ -392,8 +409,8 @@ export function BuilderShell({
       node ? { type: 'insert', node, destination } : { type: 'move', id: source, destination };
     const valid = (destination: Destination) =>
       node
-        ? insertNode(document, node, destination).ok
-        : validDestinations(document, source).some(
+        ? insertNode(document, node, destination, builderRegistry).ok
+        : validDestinations(document, source, builderRegistry).some(
             (item) =>
               item.parentId === destination.parentId &&
               item.slot === destination.slot &&
@@ -504,10 +521,10 @@ export function BuilderShell({
     } else if (event.key === 'Enter') {
       event.preventDefault();
       apply({ type: 'select', id });
-      setAnnouncement(`${text.selected}: ${label(current.node, text)}`);
+      setAnnouncement(`${text.selected}: ${label(current.node, text, hostLabel)}`);
     } else if (event.key === ' ' && id !== 'page') {
       event.preventDefault();
-      const destinations = validDestinations(document, id);
+      const destinations = validDestinations(document, id, builderRegistry);
       if (destinations.length) {
         setPickup({ source: id, destinations, index: 0 });
         setAnnouncement(`${text.picked} ${text.target}: ${destinationName(destinations[0]!)}`);
@@ -560,10 +577,9 @@ export function BuilderShell({
                   .filter(
                     (kind) =>
                       (group === 'layout'
-                        ? ['section', 'row', 'grid']
-                        : ['heading', 'paragraph', 'image', 'button', 'divider', 'spacer']
-                      ).includes(kind) &&
-                      text.labels[kind]
+                        ? ['section', 'row', 'grid'].includes(kind)
+                        : !['section', 'row', 'grid'].includes(kind)) &&
+                      paletteLabel(kind)
                         .toLocaleLowerCase(locale)
                         .includes(query.toLocaleLowerCase(locale)),
                   )
@@ -611,7 +627,7 @@ export function BuilderShell({
                                           ? '—'
                                           : '↕'}
                         </span>
-                        <span>{text.labels[kind]}</span>
+                        <span>{paletteLabel(kind)}</span>
                         {!available && <small>{reason}</small>}
                       </button>
                     );
@@ -625,7 +641,7 @@ export function BuilderShell({
       return (
         <div className={styles.panelBody}>
           <p className={styles.eyebrow}>{text.selected}</p>
-          <h3>{label(findNode(document, selectedId) ?? document.root, text)}</h3>
+          <h3>{label(findNode(document, selectedId) ?? document.root, text, hostLabel)}</h3>
           <p className={styles.hint}>{text.publishHint}</p>
           {renderProperties?.({ state, onDispatch })}
         </div>
@@ -677,7 +693,7 @@ export function BuilderShell({
               <span aria-hidden="true" className={styles.treeGuide}>
                 └
               </span>
-              <span className={styles.treeLabel}>{label(item.node, text)}</span>
+              <span className={styles.treeLabel}>{label(item.node, text, hostLabel)}</span>
               <small>{item.id === 'page' ? pageKey : item.id.slice(0, 6)}</small>
             </div>
           ))}
@@ -720,9 +736,9 @@ export function BuilderShell({
             type="button"
             data-canvas-id={node.id}
             onClick={() => apply({ type: 'select', id: node.id })}
-            aria-label={`${text.select} ${label(node, text)}`}
+            aria-label={`${text.select} ${label(node, text, hostLabel)}`}
           >
-            {label(node, text)}
+            {label(node, text, hostLabel)}
           </button>
           {selected && node.id !== 'page' && (
             <>
@@ -751,7 +767,7 @@ export function BuilderShell({
                   deleteTriggerRef.current = event.currentTarget;
                   setConfirmDelete(true);
                 }}
-                aria-label={`${text.remove} ${label(node, text)}`}
+                aria-label={`${text.remove} ${label(node, text, hostLabel)}`}
               >
                 ×
               </button>
@@ -799,7 +815,7 @@ export function BuilderShell({
   while (currentId) {
     const item = path.find((entry) => entry.id === currentId);
     if (!item) break;
-    selectedPath.unshift(label(item.node, text));
+    selectedPath.unshift(label(item.node, text, hostLabel));
     currentId = item.parentId;
   }
 

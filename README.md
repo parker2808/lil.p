@@ -3,7 +3,14 @@
 The D6 host-registry integration is staged on a scratch branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and
 publish, then EN/VI version preview and public SSR. This is route evidence, not
-all-20 Properties editing, visual/a11y approval, or permission to deploy D2.
+all-20 editor-origin parity until its exact-head four-shard CI passes. Visual/a11y
+approval and permission to deploy D2 remain separate gates. The editor-origin suite
+searches Vietnamese host tile labels, edits valid bilingual Properties, and opens
+the real EN/VI Next draft route before publish. The follow-up checks each host
+against its independently resolved EN/VI props and verifies a historical preview
+after republishing. Dynamic hosts compare stable props and API data rather than
+transient HTML; data-dependent/empty-default hosts do not prove nonblank semantic
+text solely through this suite.
 
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 
@@ -173,7 +180,7 @@ The D6 all-20 browser spec runs last on an existing web E2E shard; adding it doe
 
 ### Real content seed verification
 
-The [D6 integrated gate plan](./docs/specs/2026-11-15-cms-d6-integrated-gate.md) adds 20 real-API host activation/save/read/publish and bilingual preview/public cycles, plus a distinct editor-origin H1 autosave, draft preview, publish and EN/VI SSR browser journey. Exact-head CI is required before these become evidence; starter-palette coverage does not certify all-20 Properties, and migration/drain, visual/a11y and release approval remain separate.
+The [D6 integrated gate plan](./docs/specs/2026-11-15-cms-d6-integrated-gate.md) adds 20 real-API host activation/save/read/publish and bilingual preview/public cycles, plus an editor-origin H1 journey and four CI-sharded editor-origin host journeys (five types each). Each exercises palette insertion, applicable Properties editing, real draft autosave/read, publish and EN/VI preview/public API and SSR parity. Notes/projects browsers have numeric/toggle Properties but no localized fields; every other type exercises EN/VI text. Exact-head CI is required before these become evidence; migration/drain, visual/a11y and release approval remain separate.
 
 The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires private source evidence for every factual claim and project cover. Keep source paths, source text, and contact details out of git and logs. The staged migration check is `env -u DATABASE_URL bash apps/api/prisma/seed/migration-gate.sh`; it creates a random, tmpfs-only MySQL container, compares the five built-in page rows across the old and current migrations, checks page constraints and Prisma schema drift, then removes the container. It refuses to run when `DATABASE_URL` is already set.
 

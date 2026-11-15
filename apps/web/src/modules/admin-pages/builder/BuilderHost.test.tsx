@@ -9,7 +9,10 @@ import {
   saveBuilderDraft,
 } from './autosave/transport';
 
-vi.mock('next-intl', () => ({ useLocale: () => 'en' }));
+vi.mock('next-intl', () => ({
+  useLocale: () => 'en',
+  useTranslations: () => (key: string) => key,
+}));
 vi.mock('@/modules/admin-core/hooks/use-me.hook', () => ({ useMe: () => ({ id: 10 }) }));
 vi.mock('./autosave/transport', () => ({
   readBuilderDraft: vi.fn(),
