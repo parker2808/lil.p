@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A design capture that tabs through controls must restore its entry focus before continuing a keyboard-only edit; wait for scroll paint before reading clipped hit geometry, and keep strict 44px checks.
+
 - 2026-11-15: A silent GitHub Playwright reporter plus a 20-minute shard limit conceals whether a large visual matrix stalled or merely overran the shard; retain a streaming per-test reporter and isolate the matrix from Lighthouse/pixel baselines before interpreting cancellation as feature failure.
 
 - 2026-11-15: A core CSS focus declaration is not proof that every embedded host control paints a ring in production; two ordinary builder buttons reached `:focus-visible` with no computed indicator in repeated CI. Scope an opaque host fallback to all interactive controls and retain exact-head contrast verification.

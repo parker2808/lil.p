@@ -143,7 +143,7 @@ async function capture(
     expect(pairs[name], `${options.theme}/${options.brand}/${name}`).toBeGreaterThanOrEqual(4.5);
   for (const name of ['selectionSurface', 'focusSurface'] as const)
     expect(pairs[name], `${options.theme}/${options.brand}/${name}`).toBeGreaterThanOrEqual(3);
-  const targetGeometry = await page.locator('.admin-shell').evaluate((root) => {
+  const targetGeometry = await page.locator('.admin-shell').evaluate(async (root) => {
     function visibleRect(control: HTMLElement) {
       const rect = control.getBoundingClientRect();
       let left = Math.max(0, rect.left);
@@ -183,7 +183,8 @@ async function capture(
         !control.closest('[inert], [aria-hidden="true"]')
       );
     });
-    return visible.map((control) => {
+    const measurements = [];
+    for (const control of visible) {
       let rect = visibleRect(control);
       if (
         (rect.width < 44 || rect.height < 44) &&
@@ -203,19 +204,26 @@ async function capture(
           )
           .map((element) => ({ element, left: element.scrollLeft, top: element.scrollTop }));
         control.scrollIntoView({ block: 'center', inline: 'center', behavior: 'instant' });
+        await new Promise<void>((done) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => done())),
+        );
         rect = visibleRect(control);
         for (const { element, left, top } of scrollPositions)
           element.scrollTo({ left, top, behavior: 'instant' });
+        await new Promise<void>((done) =>
+          requestAnimationFrame(() => requestAnimationFrame(() => done())),
+        );
       }
-      return {
+      measurements.push({
         name:
           control.getAttribute('aria-label') ??
           control.textContent?.trim().slice(0, 70) ??
           control.tagName,
         width: rect.width,
         height: rect.height,
-      };
-    });
+      });
+    }
+    return measurements;
   });
   expect(targetGeometry.length, `${options.state} has visible controls`).toBeGreaterThan(0);
   expect(
@@ -229,6 +237,7 @@ async function capture(
     overflow,
     `${options.locale}/${options.width}/${options.state} horizontal overflow`,
   ).toBeLessThanOrEqual(1);
+  const originalFocus = await page.evaluateHandle(() => document.activeElement);
   await page.keyboard.press('Tab');
   const focusIndicators = await page.locator('.admin-shell').evaluate(async (root) => {
     const canvas = document.createElement('canvas');
@@ -413,6 +422,11 @@ async function capture(
         .join('; ')}`,
     ).toBe(true);
   }
+  await originalFocus.evaluate((element) => {
+    if (element instanceof HTMLElement && element.isConnected)
+      element.focus({ preventScroll: true });
+  });
+  await originalFocus.dispose();
   if (
     options.state === 'properties' ||
     options.state === 'empty' ||
@@ -580,7 +594,9 @@ test('active builder supports a keyboard-only nested edit, history and focus jou
     input: 'keyboard',
   });
   console.log('V15 keyboard: painted-focus capture complete');
+  await expect(tree.getByRole('treeitem', { name: /Heading/ })).toBeFocused();
   await page.keyboard.press('Delete');
+  await expect(page.getByRole('alertdialog')).toBeVisible();
   const confirm = page.getByRole('alertdialog').getByRole('button', { name: 'Delete' });
   await confirm.focus();
   await page.keyboard.press('Enter');

@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- #221 run `43729842098` reached two deterministic V15 failures: the focus audit moved focus off Heading before keyboard Delete, and the 768px Properties sheet yielded a stale clipped breakpoint measurement during scroll. Restore pre-audit focus and sample scrolled geometry after paint; exact-head five-shard CI and independent review remain OPEN.
+
 - #221 V15 run `43727078116` hung in the keyboard-only capture at 10 minutes and cancelled shard 5 during retry. Removed unbounded transition-finished waits in the reduced-motion audit and added a bounded keyboard test/diagnostic markers; exact-head five-shard CI and independent review remain OPEN.
 
 - V15 focus paint: CI `43720573277` found a blue Breakpoint control with an identical blue focus ring on its own surface. A two-tone ring and per-adjacent-surface 3:1 audit need exact-head CI and independent design review before signoff.
@@ -294,6 +296,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Restored V15 keyboard-journey focus after capture and sampled 768px sheet hit targets after scroll paint; kept ≥44px targets and ≥3:1 focus contrast, pending exact-head CI.
 
 - 2026-11-15: Bound V15 keyboard browser diagnosis after shard-5's reproducible ten-minute stall, sampling reduced-motion focus paint on frames instead of waiting indefinitely for transition completion; 44px and ≥3:1 assertions unchanged.
 
