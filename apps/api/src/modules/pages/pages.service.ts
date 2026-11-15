@@ -95,7 +95,7 @@ export class PagesService {
     @Optional() private readonly publishing?: PublishingService,
   ) {}
 
-  async getPublic(key: PageKey, locale: Locale, requestId = 'unknown'): Promise<PublicPage> {
+  async getPublic(key: PageKey, locale: Locale): Promise<PublicPage> {
     const row = await this.prisma.page.findUnique({
       where: { key: toPrismaPageKey(key) },
       include: { publishedVersion: true },
@@ -116,10 +116,8 @@ export class PagesService {
       };
     }
 
-    return snapshotToPublicPage(key, snapshot, locale, ({ blockId, type, reason }) => {
-      this.logger.warn(
-        `Dropped block ${blockId} type=${type} page=${key} reason=${reason} ${requestId}`,
-      );
+    return snapshotToPublicPage(key, snapshot, locale, () => {
+      this.logger.warn('Dropped invalid published block');
     });
   }
 
