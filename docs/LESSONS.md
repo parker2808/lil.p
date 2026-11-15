@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A D5 editor screenshot can attest to a saved draft revision but cannot prove editor→public→preview parity when the D5 publish endpoint intentionally returns CONFLICT; keep that combined D6 journey visibly GAP instead of substituting a mocked public response.
+
 - 2026-11-16: Filtering keyboard move destinations to valid slots prevents testing or announcing a rejected drop; expose an explicit Page-root attempt while retaining normal valid Arrow destinations, then verify unchanged server revision and restored keyboard focus.
 
 - 2026-11-15: Graphify freshness must name the integrated code head, not an intermediate branch commit; a docs-only report commit changes HEAD again, so document its exact source SHA and keep manual V16 screen-reader signoff separate from green automated V15 evidence.
