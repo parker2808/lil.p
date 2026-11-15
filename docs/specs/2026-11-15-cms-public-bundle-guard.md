@@ -30,3 +30,17 @@ graph, each chunk's gzip bytes, the baseline and the cap. A job summary records
 the same SHAs and totals, including the published-tree subset. V19 remains OPEN
 until the stacked PR's exact-head CI artifact verifies that route and its bytes;
 the combined-head rerun and production deployment parity remain separate gates.
+
+### Post-deploy parity design (not a deployment or PASS)
+
+The report now includes SHA-256 of the **uncompressed emitted bytes** of every
+public client chunk. After an authorized deployment of **the same source SHA**,
+download the `public-bundle-<source SHA>` CI artifact and run
+`node scripts/check-deployed-public-assets.mjs <public-bundle-report.json> <https-deployment-url>`.
+The verifier fetches every recorded asset at the specified HTTPS origin, rejects
+non-200 responses, mismatched source/checkout SHAs, missing route or catch-all
+references, malformed paths and mismatched bytes. The same cap and forbidden
+module checks remain in the build job; deployed-byte parity does not replace
+them. Attach the command output, deployment ID/SHA and artifact/run ID to the
+final V19 review. A live CDN check is **BLOCKED** until deployment is authorized;
+the offline fixture tests only prove the verifier's fail-closed behavior.

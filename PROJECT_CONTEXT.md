@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 V17/V18/V19/V21/V22 focused gates: real API version/public/preview/restore snapshots, five-row old-reader compatibility, core nested-field byte/no-mutation tests, and a post-deploy public-chunk hash verifier with offline fixture. V18 live freeze/drain, V19 deployed run, full V17 inventory and V21 HTTP matrix remain open; exact-head CI/review required. See `docs/specs/2026-11-15-cms-v17-v22-evidence-gates.md`.
+
 - 2026-11-15 D6 editor-origin visual follow-up: after real builder autosave, each of the 20 host cases now attaches EN/VI × light/dark × 1440/390 builder screenshots and scoped axe findings with source-head and screenshot digests in CI Playwright artifacts. This is pending exact-head CI and independent design inspection; neutral-brand host rendering, full accessibility acceptance, D2 operational drain and release remain separate. See `docs/specs/2026-11-15-cms-d6-editor-visual.md`.
 - 2026-11-15 D6 follow-up: the editor-origin browser gate now waits for EN to persist on the draft API before entering VI; it still requires both values and the draft revision before capture. This addresses a combined-head autosave race without changing product behavior. New exact-head CI remains required.
 - 2026-11-15 D6 combined evidence correction: optional-heading cases must select the required bilingual title by exact accessible label; choosing the first localized textbox can edit eyebrow and leave the heading invalid, preventing draft persistence. No runtime or golden change; exact-head CI required.
@@ -279,6 +281,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Added test-only CMS route/snapshot and old-reader evidence plus build SHA-256/public CDN verifier; retained existing gzip cap, forbidden-module assertions and golden/runtime behavior. Operational gates remain open.
 
 - 2026-11-15: Add 390px Properties-sheet screenshots and scoped axe findings to all 20 editor-origin hosts (EN/VI × light/dark), with manifest surface labels and host-field assertions; no runtime or golden change.
 - 2026-11-15: Require the optional host heading's exact EN/VI title fields in the editor-origin browser test so the test cannot mistake an eyebrow for a valid title.
