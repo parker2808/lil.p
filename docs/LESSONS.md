@@ -1,7 +1,14 @@
 # Lessons
 
+- 2026-11-15: A source-green builder restore gate must be rerun on the combined head; preserve both merge histories and label an interrupted Graphify refresh stale rather than fabricating current topology.
+
 - 2026-11-15: A paired public/preview gallery and zero-axe assertions do not establish a distinct neutral tenant SSR or complete no-JavaScript nested content; preserve those gaps when integrating D6 parity. A data-backed streaming notes fallback also needs readable, keyboard-sized links and an existing interactive marker before capture.
 - 2026-11-15: A combined D5/D6 merge must retain the D6 host-label argument on every canvas control, not just the inspector, and the D5 duplicate command must use the host registry; full typecheck catches a missed accessible-label call.
+- 2026-11-15: The admin topbar locale combobox is desktop-only; change language before resizing to 390px (or use the actual mobile account menu) so a browser gate tests the responsive journey rather than waiting indefinitely on a hidden control.
+
+- 2026-11-15: Test version-action 409 recovery with a real concurrent revision bump before forwarding the intercepted UI request to the API; returning a mocked 409 cannot prove database state, localized modal feedback or recovery after reload.
+
+- 2026-11-15: A data-backed streaming notes fallback needs real 24px link targets, not only readable text; a lazy contact form can mount between public and preview captures, so wait for its existing interactive marker on both sides before comparing full semantics and unwaived axe.
 - 2026-11-15: Legacy CMS publish/restore hooks do not carry D2's draft revision; a tree builder must use the dedicated CAS endpoints, verify a fully acknowledged server draft, and reread the revision after publish before allowing another edit. A confirmed restore replaces only the draft, not the published pointer.
 
 - 2026-11-15: A preview/public JSON equality check alone cannot prove breakpoint rendering or reviewable visual parity; attach paired browser screenshots at each locale and viewport while keeping the missing UI restore control an explicit GAP.
@@ -507,6 +514,9 @@
 - 2026-11-15: A four-shard visual matrix can hit the job time limit even while three peers finish quickly; measure actual job and Playwright step durations and keep per-shard provenance validation synchronized with the matrix size. Register an incoming spec before pinning it to a new shard—otherwise silent skips mask an incomplete gate. A separate failing accessibility assertion is not a throughput failure.
 - 2026-11-15: When merging five-shard CI onto a combined branch, keep every branch-specific browser spec registered and its intended pin; verify the merged registry before treating the new head as evidence.
 - 2026-11-15: A successful five-shard combined run can refresh a SHA-matched build budget subset, but does not transfer earlier human screenshot reviews or prove deployed asset parity; keep release-level gates open until independently reviewed.
+- 2026-11-15: A browser test that restores a historical version through the UI must assert the public pointer still serves the newer version until an explicit UI republish; API-only restore and version-preview checks cannot prove the publish/history controls or reset undo state.
+- 2026-11-15: An English API `message` is not necessarily a Vietnamese UI leak: trace `ApiError` through the autosave state machine and rendered host status before changing the API contract, then audit newly added publish/version controls separately.
+- 2026-11-15: Public/preview pixel equality after switching `data-brand` in the hydrated browser cannot prove a neutral server-rendered host; a brand token assertion can pass even when the neutral and branded hero images are identical. Check no-JavaScript nested content and VI source defaults independently of route parity before claiming V03/V14.
 - 2026-11-15: Pin validation catches a dangling pin but not an unpinned spec missing from an explicit Playwright shard manifest; compare every recursive `*.spec.ts` on disk against the registered list in CI and require exact-head browser evidence after fixing omissions.
 - 2026-11-15: Re-enabling an omitted Playwright spec can reveal stale selectors on a custom Radix combobox; exercise the visible option and assert the reloaded locale/cookie rather than relaxing downstream keyboard and axe checks.
 - 2026-11-15: Radix does not fire a locale change when selecting the active language; to prove cookie persistence, switch away and back when needed. Restore sheet-trigger focus after React removes the inert overlay in a layout effect, not competing animation frames referencing a cleared ref.
@@ -529,3 +539,6 @@
 - 2026-11-15: Reconcile stacked D2 safety tests and main's restored browser registry by retaining both documentation histories; green exact-head CI and independent drain proof remain distinct from a clean textual merge.
 - 2026-11-15: A docs-only main sync can conflict with D2 release-gate notes; keep both histories and verify schema/migration diffs before relying on prior disposable-MySQL proof.
 - 2026-11-15: A legacy edit or publish can advance the shared builder CAS revision before tree activation; integration tests must chain and assert actual returned revisions rather than hardcode zero, while preserving the 409 stale-revision contract.
+- 2026-11-15: A successful builder restore reports its own “restored to draft, publish separately” status, not the autosave “Draft saved” message; assert the correct UI status and restored API tree together to avoid masking a real publish/restore failure.
+- 2026-11-15: A browser heading can satisfy `toBeVisible()` while full-page visual evidence is blank at the captured viewport; center the target before capture and assert painted pixels inside its screenshot box, then independently inspect the paired artifacts.
+- 2026-11-15: A base that merges while a stacked visual run is active invalidates its mergeability and exact-head evidence; preserve both version-action and visual histories, regenerate the graph and rerun all shards on the new head.

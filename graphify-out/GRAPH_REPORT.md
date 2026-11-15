@@ -12,6 +12,7 @@
 
 ## Graph Freshness
 - Built from commit: `07a9e88f`
+- Combined #233 refresh attempted on 2026-11-15 but interrupted when local 1-minute load exceeded 25; this remains an older topology snapshot, not evidence for the new head.
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
