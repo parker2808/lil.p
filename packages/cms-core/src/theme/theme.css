@@ -44,6 +44,7 @@
 }
 
 :where([data-theme='dark']) .cms-core,
+.dark .cms-core:not([data-theme]),
 .cms-core[data-theme='dark'] {
   --builder-chrome: #171c26;
   --builder-canvas: #111722;
