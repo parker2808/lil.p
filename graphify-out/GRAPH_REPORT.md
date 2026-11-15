@@ -152,7 +152,8 @@
 - portfolio.mapper.ts
 - [locale]/layout.tsx
 - web/components.json
-- ContentHealthCard.tsx
+- cms-core/README.md
+- cms-builder-d5-design.spec.ts
 - steps
 - ui/components.json
 - api/README.md
@@ -212,8 +213,10 @@
 - TakeawaysCard
 - env
 - with
+- CMS U3 — builder design gate
 - exports
 - peerDependencies
+- project.mapper.ts
 - lighthouse.ts
 - visual.spec.ts
 - scripts
@@ -259,6 +262,7 @@
 - DomainCard.stories.tsx
 - changes
 - scripts
+- experience.schema.ts
 - collapsible.tsx
 - exports
 - scripts
@@ -737,7 +741,7 @@ Nodes (11): ActivityCard(), ActivityCardView(), item, useAdminAudit(), AdminAudi
 
 ### Community 92 - "package.json"
 Cohesion: 0.09
-Nodes (29): devDependencies, @commitlint/cli@^21.2.4, @commitlint/config-conventional@^21.2.4, eslint@^10.13.0, eslint-config-prettier@^10.1.8, @eslint/js@^10.0.1, eslint-plugin-simple-import-sort@^14.0.0, husky@^9.1.7 (+21 more)
+Nodes (21): columns(), 0. How to use this plan, 1. Sources of truth, 2. Ground rules and Definition of Done, 8. Owner tasks and out of scope, 9. Open questions, Portfolio implementation plan, 0. Cách dùng plan này (+13 more)
 
 ### Community 93 - "use-admin-audit.hook.ts"
 Cohesion: 0.21
