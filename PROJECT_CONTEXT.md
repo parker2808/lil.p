@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V03/V14 real-tenant SSR extension: EN/VI × light/dark × 390/768/1440 no-JS public/preview captures now assert more than 2% painted CTA pixel difference between actual neutral/branded hosts, with exact same-host preview parity. The all-20 host first-paint matrix, WCAG AA and manual review remain GAP pending exact-head CI and independent review; no runtime or schema changes.
 - 2026-11-16 V05: A focused D6 editor-origin page-header test edits nested EN/VI title and eyebrow in Properties, waits for each real autosaved draft value, then pairs the saved revision with version snapshot and EN/VI public/version-preview render captures at 390/768/1440. Prior head `957b907a` passed run `43761699036` (5/5 web shards); the merged D6 banner/contrast and V09/V10 base requires new exact-head CI and independent screenshot review. Full 20-schema validation/errors remain GAP. See `docs/specs/2026-11-16-cms-d6-v05-revision-chain.md`.
 - 2026-11-16 V09/V10 restore dark-host correction: #258 CI `43759532114` found a real 2.22:1 eyebrow/card contrast failure because the published tree omitted `data-theme` while `html.dark` changed foreground tokens. Scoped implicit `.dark` inheritance to core hosts without explicit theme, retained explicit theme opt-out and unwaived axe; new exact-head five-shard CI/artifact review pending. No API/schema/golden edits; production and all-20 restoration remain GAP.
 
@@ -350,6 +351,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Broadened the D6 real-host no-JS nested-tree browser sample to three widths and measured tenant CTA paint (over 2% pixel difference), retaining EN/VI, light/dark and strict public/preview parity; no product or data changes. CI and visual review pending.
 - 2026-11-16: Expanded V05 Properties evidence to include scrolled mobile/tablet title fields; initial run `43759329807` passed 18/18 at `561fe6ed`, and strengthened run `43760729931` passed five shards at `f8d3d14d`. The combined V02 base still needs exact-new-head CI.
 
 - 2026-11-16: Registered a V05 browser gate for nested bilingual Properties → revisioned draft → UI publish → immutable snapshot → paired preview/public text and viewport captures; no runtime or golden contract change.
