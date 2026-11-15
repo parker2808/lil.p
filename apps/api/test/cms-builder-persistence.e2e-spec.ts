@@ -1,5 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
 import { renderTree } from '@parker2808/cms-core/react/server';
+import { BLOCK_REGISTRY, HOST_TREE_REGISTRY } from '@portfolio/contracts';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
@@ -24,6 +25,87 @@ describe('builder draft persistence over disposable MySQL', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let pageId: number;
+
+  it('round-trips every host definition through real authenticated draft and published EN/VI routes', async () => {
+    const admin = await adminAgent(app);
+    expect(Object.keys(BLOCK_REGISTRY)).toHaveLength(20);
+    expect(Object.keys(HOST_TREE_REGISTRY).sort()).toEqual(Object.keys(BLOCK_REGISTRY).sort());
+    const publicServer = request(app.getHttpServer());
+    const previous = process.env.CMS_TREE_ROUTES;
+    process.env.CMS_TREE_ROUTES = '1';
+    try {
+      for (const definition of Object.values(BLOCK_REGISTRY)) {
+        const key = `host-api-${definition.type}`;
+        const host = {
+          id: `host-${definition.type}`,
+          type: 'component',
+          componentType: definition.type,
+          responsive: { base: definition.defaults },
+        };
+        const heading = {
+          id: 'host-heading',
+          type: 'component',
+          componentType: 'heading',
+          responsive: { base: { text: 'Host route gate', level: 1 } },
+        };
+        const tree = {
+          schemaVersion: 1,
+          root: {
+            id: 'host-root',
+            type: 'page',
+            responsive: { base: {} },
+            sections: [
+              {
+                id: 'host-section',
+                type: 'section',
+                responsive: { base: {} },
+                content: definition.role === 'h1' ? [host] : [heading, host],
+              },
+            ],
+          },
+        };
+        const created = await admin
+          .post('/api/admin/pages')
+          .send({ key, title: definition.type, locale: 'en', template: 'empty' })
+          .expect(201);
+        expect(created.body.key).toBe(key);
+        const path = `/api/admin/pages/${key}/builder`;
+        const activated = await admin
+          .post(`${path}/activate`)
+          .send({ expectedRevision: '0', tree })
+          .expect(200);
+        expect(activated.body).toMatchObject({ mode: 'tree', revision: '1', tree });
+        const saved = await admin
+          .put(`${path}/draft`)
+          .send({ expectedRevision: '1', tree })
+          .expect(200);
+        expect(saved.body).toMatchObject({ mode: 'tree', revision: '2', tree });
+        expect((await admin.get(`${path}/draft`).expect(200)).body).toEqual(saved.body);
+        const published = await admin
+          .post(`${path}/publish`)
+          .send({ expectedRevision: '2' })
+          .expect(200);
+        expect(published.body.publishedVersion).toBe(1);
+        for (const locale of ['en', 'vi']) {
+          const preview = await admin
+            .get(`/api/admin/preview/pages/${key}?locale=${locale}&version=1`)
+            .expect(200);
+          const publicPage = await publicServer
+            .get(`/api/public/pages/${key}?locale=${locale}`)
+            .expect(200);
+          expect(preview.body, `${definition.type}/${locale}`).toEqual({
+            ...publicPage.body,
+            invalidBlocks: [],
+          });
+          expect(publicPage.body.tree).toEqual(tree);
+          expect(publicPage.body.seo.lang).toBe(locale);
+        }
+      }
+    } finally {
+      if (previous === undefined) delete process.env.CMS_TREE_ROUTES;
+      else process.env.CMS_TREE_ROUTES = previous;
+    }
+  }, 180_000);
 
   it('saves, publishes, previews, restores and republishes a real tree without losing legacy rows', async () => {
     const admin = await adminAgent(app);

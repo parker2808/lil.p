@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A single editor-origin H1 autosave→publish SSR test complements but does not replace a 20-type real-API matrix or 20-type Properties editing; require exact combined-head CI for each claim.
+
 - 2026-11-15: A merged C1 package-boundary test can make a green combined verification branch dirty without changing its D2 runtime; preserve the new test and documentation, then regenerate Graphify and require a new exact-head CI run.
 
 - 2026-11-15: Separate mocked all-20 Properties editing from live all-20 route validation; neither alone proves editor-to-persisted-publish parity, and CI-generated images need attachment plus current-head visual review before design signoff.
@@ -387,3 +389,9 @@
 
 - 2026-11-15: Scope Playwright text assertions to the intended semantic element when a host inspector and embedded schema panel display the same component type; an unscoped exact-text locator fails strict mode despite correct UI behavior.
 - 2026-11-15: Keep invalid property inputs in a builder-lifetime, page/node/breakpoint-keyed draft rather than a keyed field subtree; otherwise switching selections or mounting a responsive sheet silently discards edits before schema validation.
+
+- 2026-11-11: Test-local tree renderer mappings cannot certify deployed host pages; inject the same explicit host registry into draft, publish and snapshot reads, and verify actual Next components through the live API in both locales.
+- 2026-11-14: A full browser gate can expose an unrelated exact-scroll-pixel variance; preserve the failing evidence, leave out-of-scope layout code untouched, and require a fresh locked full-gate pass before calling the CMS route change green.
+- 2026-11-14: Record partial release evidence in a separate manifest with exact source, commands and blocked rows; a green live route gate must not silently become editor, migration or accessibility approval.
+- 2026-11-14: Weighted E2E sharding can reshuffle unrelated test order and pollute visual baselines; preserve existing file assignments when adding a publishing test, then place the new case last in its shard.
+- 2026-11-15: A 20-type HTTP/SSR gate cannot substitute for client autosave; exercise an editor-origin change against the real server separately, and never label starter-palette coverage as all-20 Properties editing.

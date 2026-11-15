@@ -48,7 +48,15 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #208 D6 refresh: integrated `5ea3d3c4`'s real 20-type activate/CAS save/read/publish API test and separate editor-origin H1 autosave→preview→publish→EN/VI SSR browser journey. Neither proves all-20 Properties editor parity; final combined-head CI and Render drain remain open. DO NOT MERGE.
+
 - 2026-11-15 #208 main sync: merged `b3ee1b30` (#212) into verification-only combined branch, retaining C1 packed export/root rejection and the D2/D5/D6/Stage A evidence. Previous 16/16 run `43674791230` belongs to superseded `9a0a2f15`; new head requires its own CI. Design P2, combined journeys and Render drain remain open. DO NOT MERGE.
+
+- 2026-11-15 D6 integrated gate adds an API E2E matrix of 20 real authenticated activate/CAS-save/read/publish/EN-VI preview-public cycles and a browser editor-origin H1 autosave → draft preview → publish → EN/VI SSR journey. Exact-head CI remains required; starter palette does not certify all-20 Properties. D2 migration/drain, visual/a11y, J01–J09 and release stay blocked. See `docs/specs/2026-11-15-cms-d6-integrated-gate.md`.
+
+- 2026-11-15 D6 final integrated evidence: the scratch line adds an API E2E matrix of 20 real authenticated activation/CAS-save/read/publish/EN/VI preview-public cycles plus a real browser editor-origin H1 autosave → draft preview → publish → EN/VI public/preview SSR journey. The existing all-20 browser mounted-host parity gate remains independent. API/browser exact-head CI is required before marking the new evidence passed; the limited starter palette does not certify all-20 Properties editing. D2 migration/drain, visual/a11y, J01–J09 and release remain blocked. See `docs/specs/2026-11-15-cms-d6-integrated-gate.md`.
+
+- 2026-11-15 D6 final-stack scratch: `pre/d6-final-restack` combines main, #199, #204 and #202 in that order without updating their PR branches. Draft input and stored-tree reads, publish and immutable snapshot reads use `HOST_TREE_REGISTRY`. The all-20 live HTTP/EN/VI SSR test now asserts activation, revision-checked save and read before publish; exact-head CI remains required, and #211's mocked GET cannot establish this gate. D2 migration/drain and all-20 Properties/visual/a11y gates remain blocked; no release approval.
 
 - 2026-11-15 #208 rebuilt verification: main `69f48064` + Stage A `65ace7d0` + D2 `bf34af6d` + D5 UI/all-20 `227e6f7e` + D6 scratch `7c4d0675` are combined for CI evidence only. D6 live host-registry tests and #211 all-20 Properties tests are distinct, not one editor-to-publish journey. Independent #204 design review still has P2 clipped VI breakpoint labels at 390/1440 and absent uploaded current-head empty/error/focus/token-override captures. Forward-only policy is approved; Render drain, final-head CI and release signoff remain open. DO NOT MERGE.
 
@@ -278,7 +286,15 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Integrated D6 real-HTTP 20-type cycle and editor-origin H1 browser journey into verification-only #208; preserved both documentation histories and existing goldens. No DB or deployment operation.
+
 - 2026-11-15: Synced #208 verification with main #212, preserving both documentation histories and C1 export-boundary tests; Graphify regenerated separately, golden contracts untouched. No release, database or deployment action.
+
+- 2026-11-15: Added real-API all-20 host E2E and a separate editor-origin autosave/preview/public bilingual SSR browser journey on the D6 stack. Golden contracts unchanged; final exact-head CI pending.
+
+- 2026-11-15: Added separate real-API all-20 host draft/publish E2E and editor-origin autosave/preview/public EN/VI SSR browser journey to the D6 stack. Preserved golden contracts and explicitly kept all-20 Properties/editor, migration/drain and visual/a11y approval separate; final exact-head CI pending.
+
+- 2026-11-15: Prepared D6 scratch integration on the ordered main → D2 → D5 UI → D6 stack, retaining main's routing and D2/D5 behaviors while strengthening the all-20 real API/browser gate. The public-builder-byte scan excludes only the gated `r3-loading-test` fixture that imports an admin-only keyboard specimen; real public custom-page manifests stay mandatory. No golden-contract changes, production deployment or PR branch update.
 
 - 2026-11-15: Rebuilt verification-only #208 with Stage A, D2 CAS, #211 all-20 D5 UI and D6 host-registry test heads; preserved lossless snapshot restore and both documentation histories. Recorded design P2 and distinct editor/live route gaps; no production DDL, deploy or merge.
 
