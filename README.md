@@ -16,7 +16,7 @@ The [CMS core package](./packages/cms-core/README.md) runs its own dependency-bo
 
 ### CMS D5 history gate (V07)
 
-The stacked [D5 V07 gate](./docs/specs/2026-11-15-cms-d5-v07-gate.md) verifies recursive duplicate IDs, undo/redo for duplicate and move, and a real-API save/reload of node order. **V07 remains partial:** insertion/edit undo-redo, copied text persistence, size/slot bounds at the adapter, and failed-save/version history boundaries still need proof. Duplicate is keyboard-accessible in EN/VI and uses the validated core operation.
+The stacked [D5 V07 gate](./docs/specs/2026-11-15-cms-d5-v07-gate.md) verifies recursive duplicate IDs and real-API duplicate/move undo/redo and save/reload. Follow-up tests add insertion/edit undo-redo, copied-content equality, adapter bounds/history caps, and failed-save retry/rejected-publish preservation; their browser evidence is pending exact-head CI. D2 does not publish tree versions, so V10 version-restore history remains a separate D6 GAP. Duplicate is keyboard-accessible in EN/VI and uses the validated core operation.
 
 ### CMS U1 shared controls
 

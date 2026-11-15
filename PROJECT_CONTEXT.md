@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- D5 V07 gate: EN/VI Duplicate uses the core validated operation; exact-head run `43705931696` proves recursive fresh IDs in unit tests and real-browser duplicate/move undo/redo plus saved/reloaded order. **PARTIAL, not V07 PASS:** edit/insertion history, duplicated text persistence, adapter bounds, failed save and version reset are not proven. See `docs/specs/2026-11-15-cms-d5-v07-gate.md`.
+- D5 V07 gate: exact-head run `43705931696` proves the original duplicate/move subset. Follow-up tests for insertion/edit history, copied text, adapter limits, offline retry and rejected publish are pending CI; do not promote them to PASS without exact-head evidence. D2 forbids tree publish, so real tree-version restore and V10 history UI remain separate D6 GAPs. See `docs/specs/2026-11-15-cms-d5-v07-gate.md`.
 
 - D5 live journeys (stacked test PR): CI-sharded browser cases use actual Next and D2 HTTP for no-H1 save/publish rejection, mouse/keyboard nested layout, invalid drop/delete, undo/redo, responsive draft persistence, divergent CAS conflict and offline recovery. The expanded design case attaches exact-head EN/VI neutral/lil.p light/dark 390/768/1440 empty/error/focus/saved/saving/conflict captures with axe, reduced-motion, 44px all-controls, visible focus and overflow checks. A desktop header action gains a 44px minimum. Only CI-proven assertions can close J/V sub-gates; successful tree publication/public SSR, manual screen reader and all-20 host-type writes remain D6 gaps. See `docs/specs/2026-11-15-cms-d5-live-journeys.md`.
 
@@ -252,6 +252,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Expanded D5 V07 tests for real-builder insert/edit/duplicate history and failed-save retry, adapter slot/node/history limits, and explicit rejected-publish preservation; kept tree version restore open because the D2 publish API returns 409. No product runtime change.
 
 - 2026-11-15: Clarified #228 V07 as PARTIAL after exact-head green CI: duplicate/move history and saved node order are proven, while edit/insertion, text persistence, limits and failed-save/version history boundaries remain open; no product change.
 
