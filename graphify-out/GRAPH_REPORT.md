@@ -12,6 +12,7 @@
 
 ## Graph Freshness
 - Built from commit: `07a9e88f`
+- The D2 `8a800999`, D5 `3ba001e3` and D6 `bcd949d8` verification merge is newer than this snapshot; regenerate before using topology as current evidence.
 - Combined #233 refresh attempted on 2026-11-15 but interrupted when local 1-minute load exceeded 25; this remains an older topology snapshot, not evidence for the new head.
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
@@ -228,6 +229,7 @@
 - args
 - web
 - caddy
+- first-h1.util.ts
 - Ctrack Crystal | 01/2026 – Present
 - CMS U1 — shared controls
 - eslint.config.mjs
@@ -242,6 +244,9 @@
 - healthcheck
 - backup
 - db
+- heading-clamp.extension.ts
+- AdminPostsIndex.tsx
+- TechMarquee.stories.tsx
 - CMS B3 — package skeleton and measured browser budgets
 - D3 — shared server-side tree renderer
 - Vercel CMS-core build graph hotfix
@@ -290,6 +295,7 @@
 - B5 — pure page engine and host ports
 - D5 builder design and accessibility evidence
 - CI static-check throughput — 2026-11-15
+- D4 main reconciliation — scratch handoff
 - cms-d5-design/manifest.json
 - tsconfig.build.json
 - R3-02 — Custom page creation API
@@ -306,10 +312,15 @@
 - lint-staged
 - restore.sh
 - docker-entrypoint.sh
+- (cms)/experience/new/loading.tsx
+- inbox/loading.tsx
+- media/loading.tsx
+- about/experience/new/loading.tsx
 - visual-update.sh
 - StatCard
 - postcss.config.mjs
 - web/scripts/vercel-ignore-build.sh
+- posts/[id]/loading.tsx
 - 2026-11-01-admin-ia.md
 - 2026-11-01-case-study-layout.md
 - 2026-11-01-p5-4-project-cards.md
@@ -1293,7 +1304,7 @@ Nodes (4): adminDir, captures, publicDir, source
 
 ### Community 237 - "D6 — journey and release evidence manifest template"
 Cohesion: 0.33
-Nodes (6): Capture matrix and design review, Commands and owner (replace proposed paths only after they exist), D6 — journey and release evidence manifest template, Journey steps (one row per mouse and keyboard run), Run header (fill every field), Verdict and rollback
+Nodes (5): B7 — standalone neutral CMS core fixture, Design-review follow-up, Implementation and review, Integration and blocking decision, Plan
 
 ### Community 238 - "Contact form hydration readiness and value retention"
 Cohesion: 0.33

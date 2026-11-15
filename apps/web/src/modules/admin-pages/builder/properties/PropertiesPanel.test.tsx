@@ -16,6 +16,17 @@ import { propertyFields } from './editor-model';
 import { PropertiesPanel, type PropertyDraft } from './PropertiesPanel';
 import { builderRegistry } from './registry';
 
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) =>
+    ({
+      'admin.blocks.hero.ctaLabel': 'CTA label',
+      'admin.blocks.field.href': 'URL liên kết',
+      'admin.blocks.heading.title': 'Tiêu đề',
+    })[
+      key as 'admin.blocks.hero.ctaLabel' | 'admin.blocks.field.href' | 'admin.blocks.heading.title'
+    ] ?? key,
+}));
+
 const state = {
   selectedId: 'heading',
   document: {
@@ -126,6 +137,49 @@ it('submits bilingual nested host values as one validated root property', () => 
     }),
     true,
   );
+});
+
+it('translates nested labels in the VI inspector without changing stored paths', () => {
+  const host = newNode('hero', () => 'host') as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(<PropertiesPanel state={hostState} locale="vi" onEdit={vi.fn()} />);
+  expect(screen.getByLabelText('Hành động chính · URL liên kết')).toBeInTheDocument();
+  expect(screen.queryByText('primaryCta href')).toBeNull();
+});
+
+it('uses translated heading and language names for optional nested VI fields', () => {
+  const host = {
+    ...newNode('cv-download', () => 'host'),
+    responsive: {
+      base: { heading: { title: { en: 'Section heading', vi: 'Tiêu đề mục' } } },
+    },
+  } as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(<PropertiesPanel state={hostState} locale="vi" onEdit={vi.fn()} />);
+  expect(
+    screen.getByRole('textbox', { name: 'Tiêu đề mục · Tiêu đề · Tiếng Anh' }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole('textbox', { name: 'Tiêu đề mục · Tiêu đề · Tiếng Việt' }),
+  ).toBeInTheDocument();
 });
 
 it('offers valid optional bilingual heading for a host with empty defaults', () => {

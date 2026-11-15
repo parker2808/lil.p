@@ -3,6 +3,15 @@
 The [D5 live journey spec](./docs/specs/2026-11-15-cms-d5-live-journeys.md) registers CI-sharded browser tests against the real D2 draft API for composition, keyboard navigation, reload, responsive properties and conflict/offline recovery. V07 verifies a stale publish revision after a real intervening draft write. The exact-head design artifact spans EN/VI, light/dark, neutral/lil.p and mobile/tablet/desktop empty/error/focus/saved/saving/conflict states; the [V15 follow-up](./docs/specs/2026-11-15-cms-d5-v15-target-focus.md) audits the full admin-builder chrome for 44px targets, focus, overflow, axe and computed focus-ring/background contrast ≥3:1. The [V16 automated subset](./docs/specs/2026-11-15-cms-d5-v16-automated-a11y.md) checks EN/VI builder announcements and full-page axe. Incomplete publication is rejected; successful publish/public SSR parity, combined D6 verification and manual screen-reader review remain separate gates.
 
 The stacked [D5 all-block Properties spec](./docs/specs/2026-11-15-cms-d5-all-block-properties.md) registers all 20 host block contracts in the gated builder. Its EN/VI editor derives nested/localized, numeric, array, optional-group and responsive controls from the host schemas; invalid partial edits remain local across node, breakpoint and sheet changes. D6's editor-origin suite now exercises all 20 through the real draft API and SSR; integrated exact-head CI, remaining semantic/visual review and forward-only rollout evidence remain open. This draft verification branch must not merge.
+The [D6 SSR/i18n gate](./docs/specs/2026-11-15-cms-d6-ssr-i18n-gate.md)
+selects the configured site host's brand before rendering custom tree HTML;
+other tenant hosts keep neutral core tokens. Custom tree HTML is request-scoped
+(tagged API reads remain cacheable). It also checks nested no-script SSR, VI
+contact defaults and translated Properties labels; this does not by itself close
+the full V03/V14 visual matrix.
+The real-host no-script sample also checks OS-driven dark first paint and
+separately authored VI tree copy on both neutral and branded tenants; it does
+not certify all-20 dark neutral SSR or fully localized site content.
 
 The [D6 parity matrix](./docs/specs/2026-11-15-cms-d6-parity-matrix.md) adds
 lossless nested-tree migration fixtures, real-API legacy/tree snapshot and route
@@ -11,8 +20,9 @@ checks, and EN/VI preview/public SSR, hydration and screenshot pairs at
 controls; the visual matrix alone is not proof of that UI flow or production readiness.
 The four-group, five-shard all-20 published-host matrix now attempts EN/VI, light/dark,
 390/768/1440 and both neutral-core and explicit lil.p tokens, with paired
-public/preview screenshots and WCAG axe per tuple. Neutral is selected on the
-real host DOM in a browser fixture, not via a separate published tenant. CI
+public/preview screenshots and WCAG axe per tuple. The visual matrix selects
+neutral on the hydrated host DOM; the separate SSR gate selects the real
+neutral host before first paint. Exact-head CI
 and independent visual review remain required before V03/V14 can pass.
 The matrix checks the seeded CV empty state with labeled host-context images
 rather than pretending an invisible CV wrapper is rendered. Education writes invalidate
@@ -25,9 +35,9 @@ for both neutral and branded captures. #217 head `d4d098aa` passed five-shard
 CI and the public-bundle budget; the new combined head still needs exact-head
 checks and independent visual review before V03/V14 can pass.
 Async host block wrappers and props are resolved before tree rendering, but
-React may stream nested content after the initial HTML chunk. The current gate
-proves initial block inventory and props, hydrated preview/public parity and
-screen-reader checks; complete no-JavaScript tree text remains unverified.
+React may stream nested content after the initial HTML chunk. The combined
+gate checks nested no-JavaScript text on the real neutral and branded hosts;
+its exact-head CI and visual review remain pending.
 The [V17–V22 focused evidence gates](./docs/specs/2026-11-15-cms-v17-v22-evidence-gates.md)
 add legacy/tree route and missing-SEO snapshot checks, nested-field core
 preservation, and an offline deployed-public-asset parity verifier. They do not

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { contactFormBlock } from './definitions/contact-form.block';
 import { parseBlock, resolveBlockLocale } from './resolve-block.util';
 
 const heroRow = {
@@ -17,6 +18,13 @@ const heroRow = {
 };
 
 describe('parseBlock', () => {
+  it('renders the Vietnamese contact default without English fallback', () => {
+    const resolved = resolveBlockLocale(contactFormBlock.defaults, 'vi');
+    expect(resolved).toMatchObject({
+      lang: 'vi',
+      props: { eyebrow: 'Liên hệ', title: 'Nói về sản phẩm của bạn.' },
+    });
+  });
   it('accepts a valid hero', () => {
     const result = parseBlock(heroRow);
     expect(result.ok).toBe(true);

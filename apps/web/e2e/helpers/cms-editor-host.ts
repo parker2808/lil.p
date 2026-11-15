@@ -67,7 +67,11 @@ export function registerEditorHostJourney(shard: number): void {
       const vietnameseValue = `Sửa ${definition.type}`;
       const draftPath = `/api/admin/pages/${key}/builder/draft`;
       if (['notes-browser', 'projects-browser'].includes(definition.type)) {
-        await inspector.getByRole('switch', { name: 'Hiện mục nổi bật' }).click();
+        const showFeaturedLabel =
+          definition.type === 'notes-browser'
+            ? viMessages.admin.blocks.notesBrowser.showFeatured
+            : viMessages.admin.blocks.projectsBrowser.showFeatured;
+        await inspector.getByRole('switch', { name: showFeaturedLabel }).click();
       } else {
         const headingEnglish = inspector.getByRole('textbox', {
           name: /^(?:heading title \(EN\)|Tiêu đề mục · Tiêu đề · Tiếng Anh)$/,

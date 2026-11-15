@@ -14,8 +14,8 @@ export const contactFormBlock = defineBlock({
   version: 1,
   props: contactFormPropsSchema,
   defaults: {
-    eyebrow: { en: 'Contact', vi: '' },
-    title: { en: "Let's talk about your product.", vi: '' },
+    eyebrow: { en: 'Contact', vi: 'Liên hệ' },
+    title: { en: "Let's talk about your product.", vi: 'Nói về sản phẩm của bạn.' },
   },
   pages: ['contact'],
   layouts: ['TWO', 'ONE'],

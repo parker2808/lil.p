@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: During D5/D6 integration, retain the D5 schema-derived Properties editor and its in-memory partial drafts while carrying D6 localized nested field labels and real-host SSR assertions; never replace it with an older D6 editor implementation.
+
 - 2026-11-15: Test bootstrap-order migration verification separately from a middleware-only fixture: prevent HTTP listening before read-only schema checks and keep writes frozen when verification fails.
 - 2026-11-15: A D2 image must not inherit an always-frozen guard without a reviewed reopening mechanism; require migration history and physical columns, default to frozen, and reserve the explicit production reopen setting for after old frozen instances drain.
 - 2026-11-15: Auth rejection alone does not establish version/preview read capability or production log redaction; verify populated reads and retain a distinct log audit gate.
@@ -11,6 +13,8 @@
 
 - 2026-11-15: A paired public/preview gallery and zero-axe assertions do not establish a distinct neutral tenant SSR or complete no-JavaScript nested content; preserve those gaps when integrating D6 parity. A data-backed streaming notes fallback also needs readable, keyboard-sized links and an existing interactive marker before capture.
 - 2026-11-15: A combined D5/D6 merge must retain the D6 host-label argument on every canvas control, not just the inspector, and the D5 duplicate command must use the host registry; full typecheck catches a missed accessible-label call.
+- 2026-11-15: A post-hydration brand toggle cannot prove real-host dark first paint; with scripts disabled, use the OS color preference and assert computed host tokens, raw public/preview captures, and genuinely VI-authored tree copy instead of English text on a VI route.
+
 - 2026-11-15: The admin topbar locale combobox is desktop-only; change language before resizing to 390px (or use the actual mobile account menu) so a browser gate tests the responsive journey rather than waiting indefinitely on a hidden control.
 
 - 2026-11-15: Test version-action 409 recovery with a real concurrent revision bump before forwarding the intercepted UI request to the API; returning a mocked 409 cannot prove database state, localized modal feedback or recovery after reload.
@@ -554,6 +558,15 @@
 - 2026-11-15: A focus outline may contrast with the parent while disappearing against the focused button itself; use two opaque paint stripes and assess each adjacent background separately at ≥3:1.
 - 2026-11-15: A publish-conflict regression needs an intervening server-side draft write and an old expectedRevision; asserting 409 with the current revision only tests a feature-disable fallback, not revision CAS.
 - 2026-11-15: A base merge may auto-merge the Playwright manifest and builder UI while context conflicts; preserve both histories and run the complete five-shard registry/unit and exact-head browser gates rather than inheriting either parent's green status.
+- 2026-11-15: Host-specific tree branding must be selected before SSR and never shared through ISR across tenant hosts; compare public and authenticated preview on the actual host with scripts disabled, not a post-hydration data attribute.
+- 2026-11-15: Before requiring byte-identical public/preview element PNGs, remove only preview chrome from the capture geometry and verify equal bounding boxes; retain the unmodified full-page captures so deterministic antialias differences at rounded corners cannot conceal a content regression.
+- 2026-11-15: Translating host-schema field metadata changes accessible labels in the builder; update existing EN/VI editor-origin Playwright locators to read locale strings while keeping their draft persistence assertions intact.
+- 2026-11-15: Eight full-page no-script browser captures in one test exceeded the CI per-test timeout; split by locale while retaining both brands and paired public/preview checks in each test, rather than raising timeouts or dropping assertions.
+- 2026-11-15: Playwright `addStyleTag` can hang indefinitely when browser JavaScript is disabled (trace stopped at Add style tag); use screenshot-only CSS and measured banner-height geometry for no-script visual parity, preserving unmodified page captures.
+- 2026-11-15: A successful merge with no conflict markers can still break accepted design tokens; compare the complete CSS variable sets against the base's browser-matrix expectations, especially both light and dark branded accents.
+- 2026-11-15: When a stacked visual PR restacks across a base that added D4 shard registrations and focus fixes, retain both history trails, regenerate Graphify, and demand fresh five-shard evidence; prior source-head screenshots are not combined-head proof.
+- 2026-11-15: When a study route becomes the live builder host, test the selected editable heading across responsive Properties surfaces rather than a fixture-only ID; avoid merging divergent D5 runtime solely to repair a D6 test.
+- 2026-11-15: Two browser failures on a stacked parity branch can stem from obsolete base fixture locators; merge the reviewed live-builder test, preserve both histories and rerun exact-head shards before attributing them to parity coverage.
 - 2026-11-15: A modal restore failure must be announced inside the active alert dialog; a header status behind the modal does not give keyboard or screen-reader users actionable feedback.
 - 2026-11-15: When a study route is handed from a fixture component to the real builder host, update formerly registered browser specs against the actual editable panel; a fixture-only textbox can hide a deterministic shard failure despite a correctly mounted dialog.
 - 2026-11-15: When a study route becomes the live builder host, test the selected editable heading across responsive Properties surfaces rather than a fixture-only ID; avoid merging divergent D5 runtime solely to repair a D6 test.

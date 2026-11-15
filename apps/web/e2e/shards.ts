@@ -74,6 +74,7 @@ export const SPECS = [
   'cms-builder-d5-design.spec.ts',
   'cms-tree-host-blocks.spec.ts',
   'u0-capture.spec.ts',
+  'cms-d6-ssr-i18n.spec.ts',
   'cms-d6-parity-matrix.spec.ts',
   'cms-d6-visual-1.spec.ts',
   'cms-d6-visual-2.spec.ts',
