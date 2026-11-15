@@ -1,7 +1,30 @@
 # Lessons
 
+- 2026-11-16: When a D6 restack conflicts only in narrative docs and a generated graph report, retain both review histories while keeping the report's prior source commit explicit; old green source CI cannot score the new merge head.
+
 - 2026-11-16: A tree-backed page without explicit SEO must derive title from the same validated, locale-resolved H1 rendered in public and preview; never show raw server issue text in a translated invalid-block notice or reuse the empty-page label.
 
+- 2026-11-16: A base can advance again during a V05 restack; compare the remote feature SHA immediately before push and require combined-head CI instead of trusting the previous successful test-head run.
+
+- 2026-11-16: Restacking a test PR after a visual fix requires preserving both the old test's artifact provenance and the base's contrast assertion; the old 17/17 run does not verify the combined head.
+
+- 2026-11-16: A 390px Properties sheet can have valid nested fields below its scroll viewport; attach both its top and scrolled final-field captures, and require that field to enter the viewport before calling the mobile evidence reviewable.
+
+- 2026-11-16: A localized Properties control passing client validation is not evidence of the saved/public value: serialize nested EN/VI edits against real draft GETs, then compare the exact revision's immutable snapshot with public and preview rendered copy at each breakpoint.
+- 2026-11-16: A root dark class does not recolor an independently scoped CMS tree unless it explicitly inherits that theme; assert the computed card background before axe, and preserve a host's explicit light-theme override.
+- 2026-11-16: No-script dark shell tokens must include warning surfaces as well as foreground/background; otherwise a pale preview banner with inherited light text can pass route checks while failing legibility. Assert computed text-to-surface contrast in both locales and hosts.
+
+- 2026-11-16: D19 resolves a block's entire localized props to EN when even one populated EN field lacks VI; no-JS version fixtures must localize the page-header title as well as its eyebrow to assert actual VI output.
+
+- 2026-11-16: Moving the home page into a nested route group can remove the inherited file-convention OG image from its metadata; explicitly preserve the home OpenGraph image and gate it in SEO tests.
+
+- 2026-11-16: A `?v=1` preview test against a page published only once cannot distinguish a historical version from the current page; publish a second distinct visible version and require both DOM and API to differ.
+
+- 2026-11-16: A shared route-group loading fallback can break no-script custom pages, while deleting it also removes the home skeleton; give home a nested route-group loading boundary and gate visible painted text rather than raw `textContent` in no-script browser tests.
+
+- 2026-11-16: A route-group `loading.tsx` can stream custom page content into a hidden React segment only revealed by client insertion scripts; no-JavaScript checks must require the actual visible main, not a matching hidden wrapper. Three-width base-only fixtures do not establish breakpoint override semantics for every host.
+
+- 2026-11-16: A published host wrapper in raw HTML does not prove its nested async content survives without React patch scripts; exercise each host with JavaScript disabled, compare public/version-preview text at every width and keep explicitly empty data states distinct from visible content.
 - 2026-11-16: The D2 builder rejects legacy SEO PATCH once a tree draft is active (409 revision-aware boundary). To test historical SEO changes through supported APIs, publish a legacy snapshot first, update SEO in legacy mode, then activate and publish a tree snapshot.
 
 - 2026-11-16: Historical draft previews need the same validated version passed to both body and metadata fetches; `getPage` silently ignores versions on public routes, so test current public SEO and body with `?v=N` as well as EN/VI historical preview.
@@ -467,5 +490,13 @@
 - 2026-11-15: A browser heading can satisfy `toBeVisible()` while full-page visual evidence is blank at the captured viewport; center the target before capture and assert painted pixels inside its screenshot box, then independently inspect the paired artifacts.
 - 2026-11-15: A base that merges while a stacked visual run is active invalidates its mergeability and exact-head evidence; preserve both version-action and visual histories, regenerate the graph and rerun all shards on the new head.
 - 2026-11-15: A localized page-header title's actual accessible editor label can be `Properties (EN)` because the Properties panel maps the `title` schema path to its own label; use CI error-context to select and assert the exact visible field name, rather than assuming raw schema keys or relaxing saved-draft checks.
+- 2026-11-16: A D5 keyboard invalid-drop pass cannot prove keyboard publication because D5 intentionally disables Publish; exercise the enabled D6 control against real saved draft, version and public reads with zero pointer events, and keep spoken screen-reader audio as a manual gate.
+- 2026-11-16: Confirm builder header tab order from the rendered DOM: Publish precedes Version history, so Shift+Tab from history reaches Publish; a forward Tab assertion fails before publication even though both controls work.
+- 2026-11-16: The builder palette creates headings at level 2 for valid editable drafts, while publication requires exactly one H1; keyboard publish evidence must set Heading level to 1 through Properties and verify the saved draft before pressing Publish.
 - 2026-11-15: For D19 whole-block localization, setting only `page-header.title.vi` leaves the block in English if its default `eyebrow.vi` is empty. A bilingual browser fixture must populate and verify every localized field with an English value before asserting a VI rendered H1.
 - 2026-11-15: Locale-specific visual evidence needs a bilingual block fixture and an assertion on painted localized text on both public and preview routes; merely switching the page locale with a shared heading string proves neither localized content nor dark-mode rendering.
+- 2026-11-16: A successful restored-version API equality and EN/VI light screenshots do not prove dark-theme public/preview parity after republish; compare painted content crops and unwaived axe in all locale/theme/width tuples, keeping the preview banner outside the crop and asserting real 409 focus, live feedback and no writes.
+
+- 2026-11-16 V02: sau reload, Layers thu gọn Section dù draft/published tree còn nguyên; test keyboard phải mở Section bằng ArrowRight rồi mới xác nhận các node con hiện ra, không đồng nhất trạng thái UI thu gọn với mất dữ liệu.
+
+- 2026-11-16 V02: Alt+ArrowDown trên sibling cuối là no-op; phải assert order trước/sau một Alt+ArrowUp thật, dùng Tab/Shift+Tab thay Playwright `.focus()` để chứng minh keyboard reachability.
