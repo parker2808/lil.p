@@ -3,6 +3,11 @@
 The [D5 live journey spec](./docs/specs/2026-11-15-cms-d5-live-journeys.md) registers CI-sharded browser tests against the real D2 draft API for composition, keyboard navigation, reload, responsive properties and conflict/offline recovery. V07 verifies a stale publish revision after a real intervening draft write. The exact-head design artifact spans EN/VI, light/dark, neutral/lil.p and mobile/tablet/desktop empty/error/focus/saved/saving/conflict states; the [V15 follow-up](./docs/specs/2026-11-15-cms-d5-v15-target-focus.md) audits the full admin-builder chrome for 44px targets, focus, overflow, axe and computed focus-ring/background contrast ≥3:1. The [V16 automated subset](./docs/specs/2026-11-15-cms-d5-v16-automated-a11y.md) checks EN/VI builder announcements and full-page axe. Incomplete publication is rejected; successful publish/public SSR parity, combined D6 verification and manual screen-reader review remain separate gates.
 
 The stacked [D5 all-block Properties spec](./docs/specs/2026-11-15-cms-d5-all-block-properties.md) registers all 20 host block contracts in the gated builder. Its EN/VI editor derives nested/localized, numeric, array, optional-group and responsive controls from the host schemas; invalid partial edits remain local across node, breakpoint and sheet changes. Blurring a text field separates its next undo step; clearing a responsive override discards the invalid local value and error for that property. D6's editor-origin suite exercises all 20 through the real draft API and SSR; this merged verification head still needs exact-head CI, semantic/visual review and forward-only rollout evidence. This draft verification branch must not merge.
+The public header keeps compact search and an accessible navigation sheet through
+1024px; full navigation starts at 1280px to leave room for EN/VI labels and
+theme/language controls. The [responsive header gate](./docs/specs/2026-11-16-cms-d6-header-responsive.md)
+checks visible 44px controls, keyboard order and viewport bounds in both themes.
+
 The [D6 SSR/i18n gate](./docs/specs/2026-11-15-cms-d6-ssr-i18n-gate.md)
 selects the configured site host's brand before rendering custom tree HTML;
 other tenant hosts keep neutral core tokens. Custom tree HTML is request-scoped

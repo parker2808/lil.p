@@ -84,6 +84,7 @@ export const SPECS = [
   'cms-editor-host-2.spec.ts',
   'cms-editor-host-3.spec.ts',
   'cms-editor-host-4.spec.ts',
+  'public-header-responsive.spec.ts',
 ] as const;
 
 const EDITOR_HOST_SPECS = [
@@ -103,6 +104,7 @@ const PINNED: Record<string, number> = {
   'cms-d6-visual-3.spec.ts': 3,
   'cms-d6-visual-4.spec.ts': 5,
   'cms-builder-d5-design.spec.ts': 5,
+  'public-header-responsive.spec.ts': 3,
 };
 
 export function assertPinnedSpecs(pins: Readonly<Record<string, number>>): void {
