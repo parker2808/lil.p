@@ -528,3 +528,4 @@
 - 2026-11-15: When restacking the Stage A freeze after a docs-only C1 merge, keep both histories; clean HTTP guards and a conflict-free runtime are not evidence that old production writers drained.
 - 2026-11-15: Reconcile stacked D2 safety tests and main's restored browser registry by retaining both documentation histories; green exact-head CI and independent drain proof remain distinct from a clean textual merge.
 - 2026-11-15: A docs-only main sync can conflict with D2 release-gate notes; keep both histories and verify schema/migration diffs before relying on prior disposable-MySQL proof.
+- 2026-11-15: A legacy edit or publish can advance the shared builder CAS revision before tree activation; integration tests must chain and assert actual returned revisions rather than hardcode zero, while preserving the 409 stale-revision contract.

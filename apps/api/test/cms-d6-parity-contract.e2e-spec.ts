@@ -94,25 +94,29 @@ describe('legacy and tree route/snapshot parity over disposable MySQL', () => {
       ]);
       expect(beforeRoutes.map((response) => response.status)).toEqual([200, 200, 200, 200, 200]);
       expect(beforeRoutes[1]!.body.mode).toBe('legacy');
+      const legacyRevision = beforeRoutes[1]!.body.revision as string;
+      expect(legacyRevision).toBe(row.draftTreeRevision.toString());
 
-      await admin
+      const activated = await admin
         .post(`/api/admin/pages/${key}/builder/activate`)
         .send({
-          expectedRevision: '0',
+          expectedRevision: legacyRevision,
           tree,
         })
         .expect(200);
-      await admin
+      expect(activated.body.revision).toBe((BigInt(legacyRevision) + 1n).toString());
+      const saved = await admin
         .put(`/api/admin/pages/${key}/builder/draft`)
         .send({
-          expectedRevision: '1',
+          expectedRevision: activated.body.revision,
           tree,
         })
         .expect(200);
+      expect(saved.body.revision).toBe((BigInt(activated.body.revision) + 1n).toString());
       const published = await admin
         .post(`/api/admin/pages/${key}/builder/publish`)
         .send({
-          expectedRevision: '2',
+          expectedRevision: saved.body.revision,
         })
         .expect(200);
       expect(published.body.publishedVersion).toBe(2);
@@ -129,7 +133,11 @@ describe('legacy and tree route/snapshot parity over disposable MySQL', () => {
       expect(afterRoutes.map((response) => response.status)).toEqual([
         200, 200, 200, 200, 200, 200, 200,
       ]);
-      expect(afterRoutes[1]!.body).toMatchObject({ mode: 'tree', revision: '3', tree });
+      expect(afterRoutes[1]!.body).toMatchObject({
+        mode: 'tree',
+        revision: (BigInt(saved.body.revision) + 1n).toString(),
+        tree,
+      });
       expect(afterRoutes[2]!.body.snapshot).toEqual(legacyVersion.snapshot);
       expect(afterRoutes[3]!.body.snapshot).toMatchObject({
         format: 'tree',
