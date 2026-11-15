@@ -134,6 +134,13 @@ for (const locale of ['en', 'vi'] as const) {
     expect(afterResponse.status()).toBe(200);
     expect(await afterResponse.json()).toEqual(before);
     await page.reload();
+    for (const level of [2, 3, 4]) {
+      const parent = tree.locator(`[role="treeitem"][aria-level="${level}"]`).first();
+      await expect(parent).toBeVisible();
+      await parent.focus();
+      await page.keyboard.press('ArrowRight');
+      await expect(parent).toHaveAttribute('aria-expanded', 'true');
+    }
     await expect(
       tree.getByRole('treeitem', { name: locale === 'vi' ? /Tiêu đề/ : /Heading/ }),
     ).toHaveCount(1);

@@ -437,3 +437,4 @@
 - 2026-11-15: A focus outline may contrast with the parent while disappearing against the focused button itself; use two opaque paint stripes and assess each adjacent background separately at ≥3:1.
 - 2026-11-15: A publish-conflict regression needs an intervening server-side draft write and an old expectedRevision; asserting 409 with the current revision only tests a feature-disable fallback, not revision CAS.
 - 2026-11-15: An undo coalescing window is not an editing session boundary: end the history typing key when a Properties input blurs, without treating metadata-only history changes as document edits; clearing a responsive override must clear all descendant raw/error drafts, not just the validated pending value.
+- 2026-11-16: Layers reinitializes with only the Page expanded after a builder reload; expand each nested ancestor by keyboard before checking a reloaded heading in the accessible tree, while separately comparing the saved draft and revision.
