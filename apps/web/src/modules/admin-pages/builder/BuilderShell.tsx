@@ -24,6 +24,7 @@ import { reduceBuilderCommand, type BuilderCommand, type BuilderState } from './
 import type { CompositionResult } from './canvas/model';
 import { navigateOutline, visibleOutline } from './layers/keyboard';
 import { newNode, paletteKinds, type PaletteKind } from './palette/catalog';
+import { builderRegistry } from './properties/registry';
 import styles from './builder.module.css';
 
 type Copy = {
@@ -54,7 +55,13 @@ type Copy = {
   publishHint: string;
   empty: string;
   choose: string;
-  labels: Record<PaletteKind | 'page' | 'column' | 'legacy-component', string>;
+  labels: Record<
+    | Exclude<PaletteKind, keyof typeof import('@portfolio/contracts').BLOCK_REGISTRY>
+    | 'page'
+    | 'column'
+    | 'legacy-component',
+    string
+  >;
 };
 
 const copy: Record<'en' | 'vi', Copy> = {
@@ -181,7 +188,7 @@ function documentTheme(): 'light' | 'dark' {
 
 function label(node: TreeNode, text: Copy) {
   return node.type === 'component'
-    ? (text.labels[node.componentType as PaletteKind] ?? node.componentType)
+    ? (text.labels[node.componentType as keyof typeof text.labels] ?? node.componentType)
     : text.labels[node.type];
 }
 
@@ -326,7 +333,7 @@ export function BuilderShell({
               ? 'items'
               : 'columns';
       const index = children(item.node).length;
-      if (insertNode(document, node, { parentId: item.id, slot, index }).ok)
+      if (insertNode(document, node, { parentId: item.id, slot, index }, builderRegistry).ok)
         targets.push({ parentId: item.id, slot, index });
     }
     return targets;
@@ -392,8 +399,8 @@ export function BuilderShell({
       node ? { type: 'insert', node, destination } : { type: 'move', id: source, destination };
     const valid = (destination: Destination) =>
       node
-        ? insertNode(document, node, destination).ok
-        : validDestinations(document, source).some(
+        ? insertNode(document, node, destination, builderRegistry).ok
+        : validDestinations(document, source, builderRegistry).some(
             (item) =>
               item.parentId === destination.parentId &&
               item.slot === destination.slot &&
@@ -507,7 +514,7 @@ export function BuilderShell({
       setAnnouncement(`${text.selected}: ${label(current.node, text)}`);
     } else if (event.key === ' ' && id !== 'page') {
       event.preventDefault();
-      const destinations = validDestinations(document, id);
+      const destinations = validDestinations(document, id, builderRegistry);
       if (destinations.length) {
         setPickup({ source: id, destinations, index: 0 });
         setAnnouncement(`${text.picked} ${text.target}: ${destinationName(destinations[0]!)}`);
@@ -560,10 +567,9 @@ export function BuilderShell({
                   .filter(
                     (kind) =>
                       (group === 'layout'
-                        ? ['section', 'row', 'grid']
-                        : ['heading', 'paragraph', 'image', 'button', 'divider', 'spacer']
-                      ).includes(kind) &&
-                      text.labels[kind]
+                        ? ['section', 'row', 'grid'].includes(kind)
+                        : !['section', 'row', 'grid'].includes(kind)) &&
+                      (text.labels[kind as keyof typeof text.labels] ?? kind)
                         .toLocaleLowerCase(locale)
                         .includes(query.toLocaleLowerCase(locale)),
                   )
@@ -611,7 +617,7 @@ export function BuilderShell({
                                           ? '—'
                                           : '↕'}
                         </span>
-                        <span>{text.labels[kind]}</span>
+                        <span>{text.labels[kind as keyof typeof text.labels] ?? kind}</span>
                         {!available && <small>{reason}</small>}
                       </button>
                     );

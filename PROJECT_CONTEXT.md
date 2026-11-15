@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 D6 all-20 editor-origin extension (scratch, CI pending): host palette, Properties and composition/history/recovery now use the host registry. Four file-pinned browser groups cover five types each through real palette → applicable EN/VI Properties or numeric/toggle control → server autosave/read → draft preview → publish → EN/VI API and Next SSR parity. This is not a visual/a11y or D2 deployment/drain claim; #208 must incorporate and re-green this exact head before closing J04/J07/V05. See `docs/specs/2026-11-15-cms-d6-integrated-gate.md`.
+
 - 2026-11-15 D6 integrated gate adds an API E2E matrix of 20 real authenticated activate/CAS-save/read/publish/EN-VI preview-public cycles and a browser editor-origin H1 autosave → draft preview → publish → EN/VI SSR journey. Exact-head CI remains required; starter palette does not certify all-20 Properties. D2 migration/drain, visual/a11y, J01–J09 and release stay blocked. See `docs/specs/2026-11-15-cms-d6-integrated-gate.md`.
 
 - 2026-11-15 D6 final integrated evidence: the scratch line adds an API E2E matrix of 20 real authenticated activation/CAS-save/read/publish/EN/VI preview-public cycles plus a real browser editor-origin H1 autosave → draft preview → publish → EN/VI public/preview SSR journey. The existing all-20 browser mounted-host parity gate remains independent. API/browser exact-head CI is required before marking the new evidence passed; the limited starter palette does not certify all-20 Properties editing. D2 migration/drain, visual/a11y, J01–J09 and release remain blocked. See `docs/specs/2026-11-15-cms-d6-integrated-gate.md`.
@@ -271,6 +273,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Connected all 20 host definitions to builder palette and validated composition, history, recovery and Properties, including nested bilingual fields and optional heading setup. Added four fixed-shard editor-origin real-API/SSR journey groups, preserving pre-existing shard assignments. Golden contracts unchanged; exact-head CI pending.
 
 - 2026-11-15: Corrected D6's all-20 API E2E bilingual fixture after exact-head CI found the intentional English SEO fallback; each custom page now sets Vietnamese SEO before publishing. No production locale fallback, golden contract or release gate changed; rerun exact-head CI.
 

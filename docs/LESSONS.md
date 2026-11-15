@@ -382,3 +382,4 @@
 - 2026-11-14: Weighted E2E sharding can reshuffle unrelated test order and pollute visual baselines; preserve existing file assignments when adding a publishing test, then place the new case last in its shard.
 - 2026-11-15: A 20-type HTTP/SSR gate cannot substitute for client autosave; exercise an editor-origin change against the real server separately, and never label starter-palette coverage as all-20 Properties editing.
 - 2026-11-15: A Vietnamese URL does not guarantee Vietnamese SEO when the snapshot only has English fields; seed both locale groups before asserting `lang: vi` in live-route parity tests.
+- 2026-11-15: An all-20 route test that inserts trees directly via API cannot prove editor-origin parity; exercise each host definition through the real palette, valid Properties, autosave and bilingual public/preview routes, while retaining old E2E shard assignments.
