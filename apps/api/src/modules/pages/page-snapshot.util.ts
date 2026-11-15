@@ -122,6 +122,11 @@ export function readPageSnapshot(value: unknown): PageSnapshot | null {
   return { seo, blocks };
 }
 
+export function readRestorablePageSnapshot(value: unknown): PageSnapshot | null {
+  if (hasSnapshotFormat(value)) return null;
+  return readRestorableSnapshot(value);
+}
+
 function asNullableString(source: unknown, key: string): string | null {
   if (!source || typeof source !== 'object') {
     return null;
