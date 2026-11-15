@@ -8,6 +8,8 @@
 
 - 2026-11-15: An additive D2 schema lets a pre-D2 Prisma client alter a tree page's published pointer without bumping the draft revision. Parker approved forward-only recovery, not evidence of an old-writer drain; because the `main` API deploy runs the migration on startup, prove the page-write pause and complete Render drain before merging/deploying D2. A MySQL trigger cannot serve as a TiDB fence.
 
+- 2026-11-15: Checkout self-resolution can pass when a distributable tarball is broken; install the packed package in a scratch consumer and assert both ESM/CJS subpath and root behavior in the regular CI unit job.
+- 2026-11-15: Lock a subpath-only package boundary with both a manifest-export assertion and ESM/CJS root resolution rejection; a tarball rehearsal alone does not prevent a future accidental root export.
 - 2026-11-15: Describe D2 deploy readiness as executable proof of forward-only Stage A write freeze/drain, not rollback-read proof; once migrated, an old API rollback is unsafe and recovery must roll forward.
 - 2026-11-15: Treat a rehearsal's pack count as evidence for that source SHA, not a timeless policy; enumerate the allowlisted paths and review all four direct consumer manifests and their lockfile diff before a C3 pin.
 - 2026-11-15: Before removing a workspace package in a tarball rehearsal, search every workspace manifest for direct `workspace:*` consumers; web and the neutral fixture can block a frozen install even when contracts and API are pinned.
