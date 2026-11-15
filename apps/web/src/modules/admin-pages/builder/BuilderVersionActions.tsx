@@ -133,7 +133,7 @@ export function BuilderVersionActions({
             {text.history}
           </Button>
         </SheetTrigger>
-        <SheetContent className="overflow-y-auto">
+        <SheetContent className="overflow-y-auto" aria-modal="true">
           <SheetTitle>{text.history}</SheetTitle>
           {loading && <p role="status">{text.loading}</p>}
           {error && !loading && (
@@ -191,7 +191,7 @@ export function BuilderVersionActions({
           }
         }}
       >
-        <AlertDialogContent>
+        <AlertDialogContent aria-modal="true">
           <AlertDialogHeader>
             <AlertDialogTitle>{text.confirm}</AlertDialogTitle>
             <AlertDialogDescription>{text.warning}</AlertDialogDescription>
