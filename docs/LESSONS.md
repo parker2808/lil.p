@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-15: Body-parser oversized JSON may bypass Nest exception types; convert its typed size error into a redacted 413 with trace ID before normal middleware, assert unchanged DB rows, and retain the existing file-upload contract.
+- 2026-11-15: Green D2 disposable-DB rejection tests do not certify live old-instance drain; preserve anonymous freeze-probe evidence separately from authenticated Render inventory and read-only schema proof.
+
 - 2026-11-15: Audit a pre-schema fail-closed page-write guard against both legacy and new builder route tables, including shared SEO PATCH and builder restore, then preserve that audit when resolving stacked documentation conflicts; route tests cannot replace live old-instance drain proof.
 
 - 2026-11-15: A signed design/a11y review can find evidence gaps after combined-head CI passes: keep public/preview pairs, all-control hit/focus coverage, and actual screen-reader/reduced-motion checks OPEN until artifact and manual signoff are complete.

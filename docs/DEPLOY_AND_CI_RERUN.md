@@ -53,6 +53,8 @@ deploys, verification and rollback.
    drain cannot be verified, **stop before deployment/migration**. Do not infer
    execution from this policy approval, disposable MySQL tests, or CI.
 
+   Follow the [Stage A → D2 release order](./runbooks/deploy.md#stage-a--d2-page-write-rollout-release-owner-only): #210 frozen guard and authenticated inventory/probes → #199 migration plus read-only schema/data verification → separately approved D2-aware reopen → #204 → #202. Merging is distinct from deployment authorization; disable auto-deploy before any migration-bearing merge. Public direct-Render/Vercel 503 probes cannot prove the authenticated drain or column presence. Keep the guard on until every serving instance is D2-aware. No MySQL-trigger result substitutes for TiDB evidence.
+
 ## 3. Deploy main to production
 
 Pick one option.

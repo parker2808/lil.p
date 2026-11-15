@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 import type { INestApplication } from '@nestjs/common';
 import { renderTree } from '@parker2808/cms-core/react/server';
 import { BLOCK_REGISTRY, HOST_TREE_REGISTRY } from '@portfolio/contracts';
@@ -22,6 +24,114 @@ const seo = {
   seoDescriptionEn: null,
   seoDescriptionVi: null,
 };
+
+const section = {
+  id: 'section',
+  type: 'section',
+  responsive: { base: {} },
+  content: [] as unknown[],
+};
+const heading = {
+  id: 'heading',
+  type: 'component',
+  componentType: 'heading',
+  responsive: { base: { text: 'Safe heading', level: 1 } },
+};
+const treeWith = (content: unknown[]) => ({
+  schemaVersion: 1,
+  root: { ...emptyTree.root, sections: [{ ...section, content }] },
+});
+const invalidTrees = [
+  ['future version', { ...emptyTree, schemaVersion: 2 }],
+  ['unknown field', { ...emptyTree, extra: true }],
+  ['unknown component', treeWith([{ ...heading, componentType: 'future-component' }])],
+  ['duplicate IDs', treeWith([heading, { ...heading }])],
+  [
+    'unsafe URL',
+    treeWith([
+      heading,
+      {
+        id: 'button',
+        type: 'component',
+        componentType: 'button',
+        responsive: { base: { label: 'Unsafe', href: 'javascript:alert(1)' } },
+      },
+    ]),
+  ],
+  [
+    'invalid responsive override',
+    treeWith([
+      {
+        ...heading,
+        responsive: {
+          ...heading.responsive,
+          mobile: { level: 7 },
+        },
+      },
+    ]),
+  ],
+  [
+    'unknown breakpoint',
+    treeWith([
+      {
+        ...heading,
+        responsive: {
+          ...heading.responsive,
+          television: { level: 1 },
+        },
+      },
+    ]),
+  ],
+  [
+    'too many nodes',
+    {
+      ...emptyTree,
+      root: {
+        ...emptyTree.root,
+        sections: Array.from({ length: 500 }, (_, index) => ({
+          ...section,
+          id: `section-${index}`,
+        })),
+      },
+    },
+  ],
+  [
+    'too deep',
+    treeWith([
+      {
+        id: 'row',
+        type: 'row',
+        responsive: { base: {} },
+        columns: [
+          {
+            id: 'column',
+            type: 'column',
+            responsive: { base: { span: 1 } },
+            content: [{ ...heading, content: [{ ...heading, id: 'nested' }] }],
+          },
+        ],
+      },
+    ]),
+  ],
+] as const;
+
+const rawHash = (value: unknown) =>
+  createHash('sha256').update(JSON.stringify(value)).digest('hex');
+
+async function persistedState(prisma: PrismaService, pageId: number) {
+  const page = await prisma.page.findUniqueOrThrow({ where: { id: pageId } });
+  return {
+    revision: page.draftTreeRevision,
+    tree: page.draftTree,
+    pointer: page.publishedVersionId,
+    seo: [page.seoTitleEn, page.seoTitleVi, page.seoDescriptionEn, page.seoDescriptionVi],
+    blocks: await prisma.pageBlock.findMany({ where: { pageId }, orderBy: { id: 'asc' } }),
+    versions: (
+      await prisma.pageVersion.findMany({ where: { pageId }, orderBy: { id: 'asc' } })
+    ).map((version) => [version.id, rawHash(version.snapshot)]),
+    audit: await prisma.auditLog.findMany({ where: { entityType: 'page', entityId: page.key } }),
+  };
+}
 
 async function activateAfterPageRead<Result>(
   service: PageVersionsService | PagesService,
@@ -512,6 +622,180 @@ describe('builder draft persistence over disposable MySQL', () => {
   });
 
   afterAll(async () => app?.close());
+
+  it.each(invalidTrees)(
+    'rejects %s on activation, save and stored publish without changing database state',
+    async (_reason, invalidTree) => {
+      const admin = await adminAgent(app);
+      await seedLegacyBlocks(prisma, pageId);
+      const version = await prisma.pageVersion.create({
+        data: { pageId, version: 1, snapshot: { seo: {}, blocks: [] } },
+      });
+      await prisma.page.update({
+        where: { id: pageId },
+        data: { publishedVersionId: version.id },
+      });
+      const initial = await persistedState(prisma, pageId);
+      const activate = await admin
+        .post('/api/admin/pages/ideas/builder/activate')
+        .send({ expectedRevision: '0', tree: invalidTree })
+        .expect(400);
+      expect(activate.body).toMatchObject({ code: 'VALIDATION_FAILED' });
+      expect(await persistedState(prisma, pageId)).toEqual(initial);
+
+      await admin
+        .post('/api/admin/pages/ideas/builder/activate')
+        .send({ expectedRevision: '0', tree: emptyTree })
+        .expect(200);
+      const beforeSave = await persistedState(prisma, pageId);
+      const save = await admin
+        .put('/api/admin/pages/ideas/builder/draft')
+        .send({ expectedRevision: '1', tree: invalidTree })
+        .expect(400);
+      expect(save.body).toMatchObject({ code: 'VALIDATION_FAILED' });
+      expect(await persistedState(prisma, pageId)).toEqual(beforeSave);
+
+      await prisma.page.update({ where: { id: pageId }, data: { draftTree: invalidTree } });
+      const beforePublish = await persistedState(prisma, pageId);
+      const publish = await admin
+        .post('/api/admin/pages/ideas/builder/publish')
+        .send({ expectedRevision: '1' })
+        .expect(400);
+      expect(publish.body).toMatchObject({ code: 'INVALID_BLOCKS' });
+      expect(await persistedState(prisma, pageId)).toEqual(beforePublish);
+    },
+  );
+
+  it('rejects oversized save bodies and incomplete publish without changing pointer or audit', async () => {
+    const admin = await adminAgent(app);
+    await admin
+      .post('/api/admin/pages/ideas/builder/activate')
+      .send({ expectedRevision: '0', tree: emptyTree })
+      .expect(200);
+    const before = await persistedState(prisma, pageId);
+    const oversized = await admin
+      .put('/api/admin/pages/ideas/builder/draft')
+      .send({
+        expectedRevision: '1',
+        tree: treeWith([
+          { ...heading, responsive: { base: { text: 'a'.repeat(260_000), level: 1 } } },
+        ]),
+      })
+      .expect(413);
+    expect(oversized.body).toMatchObject({
+      code: 'VALIDATION_FAILED',
+      requestId: expect.any(String),
+      fieldErrors: { body: ['Request body too large'] },
+    });
+    expect(oversized.headers['x-request-id']).toBe(oversized.body.requestId);
+    expect(await persistedState(prisma, pageId)).toEqual(before);
+    const publish = await admin
+      .post('/api/admin/pages/ideas/builder/publish')
+      .send({ expectedRevision: '1' })
+      .expect(400);
+    expect(publish.body).toMatchObject({
+      code: 'VALIDATION_FAILED',
+      fieldErrors: {
+        tree: [expect.stringContaining('HEADING_RULE')],
+      },
+    });
+    expect(await persistedState(prisma, pageId)).toEqual(before);
+  });
+
+  it('preserves raw historical snapshots and nested legacy data across reads and restores', async () => {
+    const admin = await adminAgent(app);
+    await seedLegacyBlocks(prisma, pageId);
+    const legacySnapshot = { seo: { seoTitleVi: 'Lưu trữ' }, blocks: [] };
+    const nested = { future: { nested: [{ keep: 'raw-value', number: 12 }] } };
+    const tree = treeWith([
+      {
+        id: 'legacy',
+        type: 'legacy-component',
+        responsive: {
+          base: { block: { type: 'future-block', props: nested } },
+        },
+      },
+    ]);
+    const legacy = await prisma.pageVersion.create({
+      data: { pageId, version: 1, snapshot: legacySnapshot },
+    });
+    const treeVersion = await prisma.pageVersion.create({
+      data: { pageId, version: 2, snapshot: { format: 'tree', snapshotVersion: 1, seo, tree } },
+    });
+    await prisma.page.update({
+      where: { id: pageId },
+      data: { publishedVersionId: legacy.id },
+    });
+    const hashes = [rawHash(legacy.snapshot), rawHash(treeVersion.snapshot)];
+    const before = await persistedState(prisma, pageId);
+    await admin.get('/api/admin/pages/ideas/versions/1').expect(200);
+    await admin.get('/api/admin/preview/pages/ideas?locale=vi&version=1').expect(200);
+    expect(
+      (await admin.get('/api/admin/pages/ideas/versions/2').expect(200)).body.snapshot.tree,
+    ).toEqual(tree);
+    await admin.get('/api/admin/preview/pages/ideas?locale=en&version=2').expect(400);
+    expect(await persistedState(prisma, pageId)).toEqual(before);
+
+    await admin
+      .post('/api/admin/pages/ideas/builder/activate')
+      .send({ expectedRevision: '0', tree })
+      .expect(200);
+    const activated = await persistedState(prisma, pageId);
+    await admin
+      .post('/api/admin/pages/ideas/versions/2/builder/restore')
+      .send({ expectedRevision: '1' })
+      .expect(200);
+    const treeRestored = await persistedState(prisma, pageId);
+    expect(treeRestored.tree).toEqual(tree);
+    expect(treeRestored.blocks).toEqual(activated.blocks);
+    expect(treeRestored.pointer).toBe(legacy.id);
+    expect(treeRestored.versions.map((entry) => entry[1])).toEqual(hashes);
+    expect((await admin.get('/api/admin/pages/ideas/builder/draft').expect(200)).body.tree).toEqual(
+      tree,
+    );
+
+    await admin
+      .post('/api/admin/pages/ideas/versions/1/builder/restore')
+      .send({ expectedRevision: '2' })
+      .expect(200);
+    const legacyRestored = await persistedState(prisma, pageId);
+    expect(legacyRestored.tree).toBeNull();
+    expect(legacyRestored.pointer).toBe(legacy.id);
+    expect(legacyRestored.revision).toBe(3n);
+    expect(legacyRestored.versions.map((entry) => entry[1])).toEqual(hashes);
+    expect(legacyRestored.blocks).toEqual([]);
+  });
+
+  it('denies every builder mutation to guests and users without logging payloads', async () => {
+    const admin = await adminAgent(app);
+    const user = await userAgent(app);
+    await prisma.pageVersion.create({
+      data: { pageId, version: 1, snapshot: { seo: {}, blocks: [] } },
+    });
+    const before = await persistedState(prisma, pageId);
+    const paths = [
+      ['post', '/api/admin/pages/ideas/builder/activate'],
+      ['put', '/api/admin/pages/ideas/builder/draft'],
+      ['post', '/api/admin/pages/ideas/builder/publish'],
+      ['post', '/api/admin/pages/ideas/versions/1/builder/restore'],
+    ] as const;
+    for (const [method, path] of paths) {
+      const body = { expectedRevision: '0', tree: emptyTree };
+      const guest = await request(app.getHttpServer())[method](path).send(body).expect(401);
+      const denied = await user[method](path).send(body).expect(403);
+      expect(guest.body).toMatchObject({ code: 'UNAUTHENTICATED' });
+      expect(denied.body).toMatchObject({ code: 'FORBIDDEN' });
+      expect(JSON.stringify(guest.body) + JSON.stringify(denied.body)).not.toContain('page-root');
+    }
+    const marker = 'private-marker-not-a-secret';
+    const rejected = await admin
+      .post('/api/admin/pages/ideas/builder/activate')
+      .send({ expectedRevision: '0', tree: { ...emptyTree, marker } })
+      .expect(400);
+    expect(rejected.body).toMatchObject({ code: 'VALIDATION_FAILED' });
+    expect(JSON.stringify(rejected.body)).not.toContain(marker);
+    expect(await persistedState(prisma, pageId)).toEqual(before);
+  });
 
   it('rolls back legacy publish when a real DB activation wins after the page read', async () => {
     await seedLegacyBlocks(prisma, pageId);
