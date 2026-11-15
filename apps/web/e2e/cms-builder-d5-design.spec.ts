@@ -301,7 +301,7 @@ async function capture(
       if (document.activeElement !== control) {
         results.push({
           name: control.getAttribute('aria-label') ?? control.textContent?.trim(),
-          color: '',
+          colors: [],
           surfaces: [],
           reached: false,
         });
@@ -323,7 +323,7 @@ async function capture(
           : '';
       results.push({
         name: control.getAttribute('aria-label') ?? control.textContent?.trim().slice(0, 70),
-        color: outline || shadowColors(focused.boxShadow)[0] || '',
+        colors: [...(outline ? [outline] : []), ...shadowColors(focused.boxShadow)],
         surfaces,
         reached: true,
       });
@@ -334,26 +334,41 @@ async function capture(
   expect(focusIndicators.length, `${options.state} keyboard-focusable controls`).toBeGreaterThan(0);
   const focusPairs = Object.fromEntries(
     focusIndicators.flatMap((focus, index) =>
-      focus.color
-        ? focus.surfaces.map((surface, surfaceIndex) => [
-            `${index}/${surfaceIndex}`,
-            [focus.color, surface] as [string, string],
-          ])
-        : [],
+      focus.colors.flatMap((color, colorIndex) =>
+        focus.surfaces.map((surface, surfaceIndex) => [
+          `${index}/${colorIndex}/${surfaceIndex}`,
+          [color, surface] as [string, string],
+        ]),
+      ),
     ),
   );
   const focusContrast = await contrastPairs(page, focusPairs);
   for (const [index, focus] of focusIndicators.entries()) {
     expect(focus.reached, `${options.state}/${focus.name} programmatic focus`).toBe(true);
-    expect(focus.color, `${options.state}/${focus.name} focus indicator`).toBeTruthy();
+    expect(focus.colors.length, `${options.state}/${focus.name} focus indicator`).toBeGreaterThan(
+      0,
+    );
     expect(focus.surfaces.length, `${options.state}/${focus.name} painted surface`).toBeGreaterThan(
       0,
     );
-    for (const [surfaceIndex, surface] of focus.surfaces.entries())
-      expect(
-        focusContrast[`${index}/${surfaceIndex}`],
-        `${options.state}/${focus.name} focus ${focus.color} against ${surface}`,
-      ).toBeGreaterThanOrEqual(3);
+    expect(
+      focus.colors.some((color, colorIndex) =>
+        focus.surfaces.every(
+          (_, surfaceIndex) => (focusContrast[`${index}/${colorIndex}/${surfaceIndex}`] ?? 0) >= 3,
+        ),
+      ),
+      `${options.state}/${focus.name} painted focus rings ${focus.colors
+        .map(
+          (color, colorIndex) =>
+            `${color}: ${focus.surfaces
+              .map(
+                (surface, surfaceIndex) =>
+                  `${surface}=${focusContrast[`${index}/${colorIndex}/${surfaceIndex}`]}`,
+              )
+              .join(', ')}`,
+        )
+        .join('; ')}`,
+    ).toBe(true);
   }
   if (
     options.state === 'properties' ||
