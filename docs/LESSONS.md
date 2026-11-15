@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Assert rendered VI breakpoint glyph bounds at 390 and 1440 rather than inferring fit from button widths; attach exact-head screenshots and their manifest to the Playwright artifact so reviewers can inspect empty, error and focus states.
+
 - 2026-11-15: A single editor-origin H1 autosave→publish SSR test complements but does not replace a 20-type real-API matrix or 20-type Properties editing; require exact combined-head CI for each claim.
 
 - 2026-11-15: A merged C1 package-boundary test can make a green combined verification branch dirty without changing its D2 runtime; preserve the new test and documentation, then regenerate Graphify and require a new exact-head CI run.

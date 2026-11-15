@@ -12,6 +12,14 @@ This is D5 editor-only evidence for the D6 release manifest template on `docs/cm
 6. Refresh Graphify, docs and the full locked gate.
 7. Push draft PR #204 and verify final CI.
 
+## P2 review follow-up plan (stacked draft)
+
+1. Give all four localized breakpoint labels two equal-width rows.
+2. Assert label glyphs stay within buttons at 390 and desktop widths.
+3. Capture empty, invalid-field and keyboard-focus states in CI.
+4. Attach source-SHA manifest and neutral/lil.p comparison PNGs to the blob report.
+5. Review the labeled CI artifact before replacing historical images.
+
 ## Acceptance and recording contract
 
 The separate `docs/specs/screenshots/cms-d5-design/manifest.json` records source SHA, page/UI locale, route, brand, theme, exact width, state, modality, screenshot path, axe severity counts and measured token contrast pairs for each capture. The Markdown review records the manifest SHA-256, reviewer, findings/fixes, exact commands and lock isolation. Cover EN/VI × light/dark × 390/768/1440 × neutral/lil.p for the populated canvas and its single Properties mount; compact widths also show the searchable palette sheet, while desktop canvas shows palette, Layers, inspector and history. Capture conflict/retry and saved autosave states without claiming Publish is enabled. Keep neutral core tokens in `@parker2808/cms-core/theme.css`; lil.p branding may override CSS tokens only.
@@ -19,6 +27,8 @@ The separate `docs/specs/screenshots/cms-d5-design/manifest.json` records source
 The keyboard run must insert, move and delete a nested component using focus/Space/arrow/Enter/Delete confirmation, restore focus to the surviving selection, and exercise Ctrl/Cmd+Z plus redo. Check a visible focus ring, named mobile/tablet sheets, Escape focus restoration, 44px targets and axe WCAG AA with zero serious/critical violations; report all other violations rather than hiding them. A screenshot alone is not proof of keyboard or screen-reader behavior. D6 owns its own combined journey manifest and must reference this D5 artifact rather than count it as a full release pass.
 
 ## Run header and result
+
+P2 follow-up (pending labeled CI): the checked-in 99 PNGs and manifest below are a **historical snapshot** from source `b1b9d37b`, not evidence of the breakpoint fix at this PR's head. The CI-listed `cms-builder-d5-design.spec.ts` now attaches the current head's PNGs and JSON manifest plus SHA-256 to the existing `playwright-report` artifact (seven-day retention); its raw `blob-report-*` artifact lasts one day. The generated manifest records `sourceSha` from the PR head (or checkout for non-PR runs) and `checkoutSha` of the code actually tested (the PR merge ref in Actions). New `empty` (no editable component on the selected page root) and `field-error` (invalid Heading level retained locally) captures cover EN/VI at desktop 1440 neutral light and phone 390 lil.p dark, alongside the existing EN/VI × light/dark × neutral/lil.p saved/Properties/conflict matrix and keyboard-focus image. The CI assertions check every breakpoint's rendered text stays within its button in compact Properties sheets and the desktop inspector. Download and visually review the head-matched report before declaring these new states AA or replacing any committed image; the old manifest checksum must not be relabeled.
 
 Self review, November 15, 2026 ICT: the CI-listed focused Chromium suite passed 2/2 against disposable local MySQL under `~/.t3/locks/lilp-e2e.lock`; the lock was released immediately. I read representative EN/VI light/dark neutral/lil.p desktop, tablet and mobile canvas, palette, Layers, Properties, saving and conflict captures. The 1440 keyboard-focus image initially used Playwright's 1280 default viewport; the test now sets 1440×900 before capture, and the recaptured image was reviewed at its actual 1440×900 dimensions. No remaining visual finding in this D5 scope.
 

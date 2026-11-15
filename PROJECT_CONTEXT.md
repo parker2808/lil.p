@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- D5 design P2 follow-up (#213 `9d6cebc5`): accepted independent review confirms responsive EN/VI breakpoint labels no longer overlap and current-head EN/VI × light/dark × neutral/lil.p empty/error/focus captures are attached to CI; zero axe violations. Historical checked-in 99-image captures keep their original SHA. This closes the two design P2 findings, not all-20 editor-to-publish or Render drain gates; #208 still requires its own CI. DO NOT MERGE.
+
 - 2026-11-15 #208 D6 refresh: integrated `5ea3d3c4`'s real 20-type activate/CAS save/read/publish API test and separate editor-origin H1 autosave→preview→publish→EN/VI SSR browser journey. Neither proves all-20 Properties editor parity; final combined-head CI and Render drain remain open. DO NOT MERGE.
 
 - 2026-11-15 #208 main sync: merged `b3ee1b30` (#212) into verification-only combined branch, retaining C1 packed export/root rejection and the D2/D5/D6/Stage A evidence. Previous 16/16 run `43674791230` belongs to superseded `9a0a2f15`; new head requires its own CI. Design P2, combined journeys and Render drain remain open. DO NOT MERGE.
@@ -285,6 +287,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Incorporated accepted #213 responsive Properties labels and CI-attached 107-capture design review into verification-only #208; kept historical images attributed to their original head. No schema, production, goldens or deployment change.
 
 - 2026-11-15: Integrated D6 real-HTTP 20-type cycle and editor-origin H1 browser journey into verification-only #208; preserved both documentation histories and existing goldens. No DB or deployment operation.
 
