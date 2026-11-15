@@ -17,7 +17,14 @@ vi.mock('next-intl/server', () => ({
   getTranslations: vi.fn(async () => (key: string) => key),
 }));
 vi.mock('../services/pages.service', () => ({ getPage: vi.fn() }));
-vi.mock('../constants/block-renderers.constant', () => ({ BLOCK_RENDERERS: {} }));
+vi.mock('../constants/block-renderers.constant', () => ({
+  BLOCK_RENDERERS: {
+    'tech-marquee': {
+      component: async () => <span>Resolved async host content</span>,
+      skeleton: () => null,
+    },
+  },
+}));
 vi.mock('../components/BlockRenderer/BlockRenderer', () => ({ BlockRenderer: () => null }));
 
 const tree = {
@@ -45,6 +52,40 @@ const tree = {
 };
 
 describe('tree route SSR', () => {
+  it.each(['en', 'vi'] as const)(
+    'includes async host content in the initial %s HTML',
+    async (locale) => {
+      vi.mocked(getPage).mockResolvedValueOnce({
+        key: 'ideas',
+        seo: { title: 'Ideas', description: null, lang: locale },
+        tree: {
+          ...tree,
+          root: {
+            ...tree.root,
+            sections: [
+              {
+                ...tree.root.sections[0]!,
+                content: [
+                  ...tree.root.sections[0]!.content,
+                  {
+                    id: 'async-host',
+                    type: 'component',
+                    componentType: 'tech-marquee',
+                    responsive: { base: {} },
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      });
+      vi.mocked(draftMode).mockResolvedValueOnce({ isEnabled: false } as never);
+      const html = renderToStaticMarkup(await BlocksPage({ pageKey: 'ideas', locale }));
+      expect(html).toContain('Resolved async host content');
+      expect(html).toContain('data-host-block-type="tech-marquee"');
+    },
+  );
+
   it('does not serve a warning as HTTP 200 for an unrenderable tree', async () => {
     vi.mocked(getPage).mockResolvedValueOnce({
       key: 'ideas',

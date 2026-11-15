@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-15: A paired public/preview gallery and zero-axe assertions do not establish a distinct neutral tenant SSR or complete no-JavaScript nested content; preserve those gaps when integrating D6 parity. A data-backed streaming notes fallback also needs readable, keyboard-sized links and an existing interactive marker before capture.
 - 2026-11-15: A combined D5/D6 merge must retain the D6 host-label argument on every canvas control, not just the inspector, and the D5 duplicate command must use the host registry; full typecheck catches a missed accessible-label call.
 - 2026-11-15: Legacy CMS publish/restore hooks do not carry D2's draft revision; a tree builder must use the dedicated CAS endpoints, verify a fully acknowledged server draft, and reread the revision after publish before allowing another edit. A confirmed restore replaces only the draft, not the published pointer.
 

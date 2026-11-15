@@ -2,6 +2,34 @@
 @source '../src';
 @source '../../../packages/ui/src';
 
+.cms-core-host[data-theme='dark'] {
+  --subtle-foreground: #b5b1aa;
+}
+
+.cms-core-host[data-brand='lilp'] {
+  --builder-accent: #a44520;
+  --builder-accent-text: #fff;
+  --builder-accent-soft: #fff0e6;
+  --builder-success: #326c48;
+  --builder-selection: #af4d24;
+  --builder-drop: #a44520;
+  --builder-focus: #a44520;
+  --builder-art: #f4dfc7;
+  --builder-art-ink: #7a4934;
+}
+
+.cms-core-host[data-brand='lilp'][data-theme='dark'] {
+  --builder-accent: #ffb587;
+  --builder-accent-text: #392011;
+  --builder-accent-soft: #513323;
+  --builder-success: #98dcb0;
+  --builder-selection: #ffc39e;
+  --builder-drop: #ffc39e;
+  --builder-focus: #ffc39e;
+  --builder-art: #4a352b;
+  --builder-art-ink: #f7bb91;
+}
+
 /* Next streams resolved server content into hidden siblings; expose it when scripts cannot run. */
 @layer base {
   @media (scripting: none) {

@@ -72,6 +72,11 @@ export const SPECS = [
   'cms-builder-d5-design.spec.ts',
   'cms-tree-host-blocks.spec.ts',
   'u0-capture.spec.ts',
+  'cms-d6-parity-matrix.spec.ts',
+  'cms-d6-visual-1.spec.ts',
+  'cms-d6-visual-2.spec.ts',
+  'cms-d6-visual-3.spec.ts',
+  'cms-d6-visual-4.spec.ts',
   'cms-editor-host-1.spec.ts',
   'cms-editor-host-2.spec.ts',
   'cms-editor-host-3.spec.ts',
@@ -90,6 +95,10 @@ const PINNED: Record<string, number> = {
   'visual.spec.ts': 1,
   'lighthouse.spec.ts': 1,
   'admin-editors-r3.spec.ts': 4,
+  'cms-d6-visual-1.spec.ts': 1,
+  'cms-d6-visual-2.spec.ts': 2,
+  'cms-d6-visual-3.spec.ts': 3,
+  'cms-d6-visual-4.spec.ts': 5,
 };
 
 export function assertPinnedSpecs(pins: Readonly<Record<string, number>>): void {
