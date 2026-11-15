@@ -1,5 +1,7 @@
 # lil.p
 
+The stacked [D5 all-block Properties spec](./docs/specs/2026-11-15-cms-d5-all-block-properties.md) registers all 20 host block contracts in the gated builder. Its EN/VI editor derives nested/localized, numeric, array, optional-group and responsive controls from the host schemas; invalid partial edits remain local across node, breakpoint and sheet changes. This is draft-only: D2's API currently rejects host types without a registry, so D6's live-API all-20 release gate and approval remain blocked.
+
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 
 The same runbook records a local #208 tarball rehearsal: its 26-file pack contains only built `dist/**`, README, LICENSE and package.json. The package remains subpath-only, and a future C3 consumer switch must pin all four direct dependents (contracts, API, web and the neutral fixture). Recount the pack at the final integrated SHA; final merge, rights and distribution authorization remain separate gates.

@@ -377,3 +377,7 @@
 - 2026-11-15: A disposable forward-migration/drift pass does not prove downgrade-reader compatibility or a combined UI/API release; pin the exact integrated head before claiming J07 or visual parity.
 - 2026-11-15: Zero-downtime deploy health cannot prove all pre-migration writers are gone; freeze page mutations in a separate pre-schema release, enumerate old instances until drained, and retain a fail-closed guard across the migrating release.
 - 2026-11-15: A bespoke HTTP test module can pass even if the production AppModule drops a middleware; boot real module wiring with stubbed services and assert 503 before page publish access.
+- 2026-11-15: A flattened schema field path must be committed as a full immutable top-level tree property, preserving siblings; incomplete optional groups and invalid ID-list tokens stay local until host Zod validation succeeds, never silently coerce or autosave them.
+
+- 2026-11-15: Scope Playwright text assertions to the intended semantic element when a host inspector and embedded schema panel display the same component type; an unscoped exact-text locator fails strict mode despite correct UI behavior.
+- 2026-11-15: Keep invalid property inputs in a builder-lifetime, page/node/breakpoint-keyed draft rather than a keyed field subtree; otherwise switching selections or mounting a responsive sheet silently discards edits before schema validation.

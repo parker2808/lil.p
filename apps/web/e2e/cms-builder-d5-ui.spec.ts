@@ -3,6 +3,7 @@ import { join, resolve } from 'node:path';
 
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
+import { BLOCK_REGISTRY } from '@portfolio/contracts';
 
 import { signIn } from './helpers/auth';
 
@@ -54,6 +55,106 @@ async function captureDraftState(
 }
 
 test.setTimeout(240_000);
+
+test('all 20 host Properties are visible through the gated builder in EN/VI and accessible at mobile/desktop', async ({
+  page,
+  context,
+}) => {
+  await signIn(page);
+  const key = 'all-host-properties-fixture';
+  const types = Object.values(BLOCK_REGISTRY);
+  expect(types).toHaveLength(20);
+  const tree = {
+    schemaVersion: 1,
+    root: {
+      id: 'page',
+      type: 'page',
+      responsive: { base: {} },
+      sections: [
+        {
+          id: 'section',
+          type: 'section',
+          responsive: { base: {} },
+          content: types.map((definition, index) => ({
+            id: `block-${index}`,
+            type: 'component',
+            componentType: definition.type,
+            responsive: { base: definition.props.parse(definition.defaults) },
+          })),
+        },
+      ],
+    },
+  };
+  await page.route(`**/admin/pages/${key}/builder/draft`, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ mode: 'tree', revision: '1', tree }),
+    }),
+  );
+  for (const locale of ['en', 'vi'] as const) {
+    await context.addCookies([
+      { name: 'NEXT_LOCALE', value: locale, url: new URL(page.url()).origin, sameSite: 'Lax' },
+    ]);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(`/admin/builder/${key}`);
+    await expect(page.locator('[data-node-type="component"]')).toHaveCount(20);
+    const layers = page.getByRole('complementary', { name: locale === 'en' ? 'Layers' : 'Lớp' });
+    await layers.getByRole('treeitem', { name: /Section|Phần/ }).press('ArrowRight');
+    const inspector = page.getByRole('complementary', {
+      name: locale === 'en' ? 'Properties' : 'Thuộc tính',
+    });
+    for (const [index, definition] of types.entries()) {
+      await layers.locator(`[data-tree-id="block-${index}"]`).click();
+      await expect(
+        inspector
+          .getByRole('paragraph')
+          .filter({ hasText: new RegExp(`^${definition.type.replaceAll('-', ' ')}$`) }),
+      ).toBeVisible();
+      await expect(
+        inspector
+          .locator(
+            'input,textarea,button[role="switch"],button[role="combobox"],button:has-text("Add"),button:has-text("Thêm")',
+          )
+          .first(),
+      ).toBeVisible();
+    }
+    for (const theme of ['light', 'dark'] as const) {
+      await page.evaluate(
+        (value) => document.documentElement.classList.toggle('dark', value === 'dark'),
+        theme,
+      );
+      for (const width of [1440, 390]) {
+        await page.setViewportSize({ width, height: 900 });
+        if (width === 390) {
+          await page
+            .getByRole('navigation', {
+              name: locale === 'en' ? 'Page builder' : 'Trình dựng trang',
+            })
+            .getByRole('button', { name: locale === 'en' ? 'Properties' : 'Thuộc tính' })
+            .click();
+        }
+        const panel =
+          width === 390
+            ? page.getByRole('dialog', { name: locale === 'en' ? 'Properties' : 'Thuộc tính' })
+            : inspector;
+        await expect(
+          panel.getByRole('button', { name: locale === 'en' ? 'Desktop' : 'Máy tính bàn' }),
+        ).toBeVisible();
+        const audit = await new AxeBuilder({ page })
+          .include(width === 390 ? '[role="dialog"]' : '.cms-core')
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+          .analyze();
+        expect(audit.violations, `${locale}/${theme}/${width}`).toEqual([]);
+        await test.info().attach(`properties-${locale}-${theme}-${width}`, {
+          body: await page.screenshot({ animations: 'disabled' }),
+          contentType: 'image/png',
+        });
+        if (width === 390) await page.keyboard.press('Escape');
+      }
+    }
+  }
+});
 
 test('Properties remains editable at 1100 and 768 after desktop', async ({ page }) => {
   await signIn(page);
