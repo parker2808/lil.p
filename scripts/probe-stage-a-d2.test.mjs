@@ -72,11 +72,9 @@ test('fails closed on missing freeze, wrong JSON and unhealthy DB', async () => 
 });
 
 test('rejects URLs with credentials or paths before any network call', async () => {
-  for (const renderUrl of [
-    'https://user@render.example',
-    'https://render.example/api',
-    'file:///tmp/local',
-  ]) {
+  const credentialed = new globalThis.URL('https://render.example');
+  credentialed.password = 'x';
+  for (const renderUrl of [credentialed.href, 'https://render.example/api', 'file:///tmp/local']) {
     await assert.rejects(probe({ renderUrl, fetchImpl: () => assert.fail('network called') }));
   }
 });
