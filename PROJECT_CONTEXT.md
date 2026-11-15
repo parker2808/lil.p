@@ -49,6 +49,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - 2026-11-16 D2 reopen decision: #210 pre-D2 remains always frozen. D2 opens writes by default only after read-only startup verification of the applied migration and both columns; explicit `CMS_PAGE_WRITE_FREEZE=1` or failed check freezes. No Render env change is assumed or available. **Complete Stage A instance/in-flight-request drain before D2 deploy**, because a successful D2 startup can open writes automatically. The coordinator owns authorized Render inventory, migration verification and authenticated ingress write checks; CI cannot certify production drain or approval.
+- 2026-11-16 D2 runbook reconciliation: the older general deploy checklist also requires drain before the D2 image starts; its former separate env-based reopen step is superseded. Do not claim an unauthenticated 503 probe proves a D2 authenticated write reopened.
 
 - D2 #243 follow-up (2026-11-16): independent review found 4.11:1/3.69:1 CTA contrast during the transition, masked by a final-palette wait. Public primary buttons now switch both palette colors atomically while preserving transform motion; frame-by-frame EN/VI route checks precede axe. Exact-head CI pending; #199 is not re-green until this stacked PR lands.
 
@@ -275,6 +276,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Corrected the general deployment checklist to match default D2 startup reopening and mandate full Stage A drain before D2 deploy; documentation-only follow-up, no production action.
 
 - 2026-11-16: Changed D2-only production page/version write gate to open after verified startup migration with an unset or non-`1` flag; retained 503 on failure and explicit `=1` kill-switch, Stage A pre-D2 freeze, and bootstrap ordering. Updated forward-only deployment instructions without changing migration or golden contracts. No production deploy or DB action; old-instance drain remains a release gate.
 
