@@ -1,9 +1,10 @@
 import { buildSnapshot, orderBlocks, readSnapshot } from '@parker2808/cms-core/engine';
-import { readTree, type TreeDocument } from '@parker2808/cms-core/tree';
+import { readTree, type TreeDocument, type TreeNode } from '@parker2808/cms-core/tree';
 import {
   BLOCK_REGISTRY,
   type BlockType,
   corePageKeySchema,
+  HOST_TREE_REGISTRY,
   isLocalizedPair,
   type Locale,
   type PageKey,
@@ -45,14 +46,27 @@ export type TreeVersionSnapshot = {
 };
 
 export function hasSnapshotFormat(value: unknown): boolean {
-  return value !== null && typeof value === 'object' && 'format' in value;
+  return value !== null && typeof value === 'object' && ('format' in value || 'tree' in value);
 }
 
 export function readTreeVersionSnapshot(value: unknown): TreeVersionSnapshot | null {
   const parsed = treeVersionSnapshotSchema.safeParse(value);
   if (!parsed.success) return null;
-  const tree = readTree(parsed.data.tree);
-  return tree.ok ? { ...parsed.data, tree: tree.value } : null;
+  const tree = readTree(parsed.data.tree, HOST_TREE_REGISTRY);
+  return tree.ok && isTreeRenderable(tree.value) ? { ...parsed.data, tree: tree.value } : null;
+}
+
+export function isTreeRenderable(tree: TreeDocument): boolean {
+  const pending: TreeNode[] = [tree.root];
+  while (pending.length) {
+    const node = pending.pop()!;
+    if (node.type === 'legacy-component') return false;
+    if (node.type === 'page') pending.push(...node.sections);
+    else if (node.type === 'section' || node.type === 'column') pending.push(...node.content);
+    else if (node.type === 'row') pending.push(...node.columns);
+    else if (node.type === 'grid') pending.push(...node.items);
+  }
+  return true;
 }
 
 export type InvalidSnapshotBlock = {
@@ -84,7 +98,8 @@ export function buildPageSnapshot(page: PageWithAllBlocks): PageSnapshot {
 }
 
 export function readRestorableSnapshot(value: unknown): PageSnapshot | null {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  if (!value || typeof value !== 'object' || Array.isArray(value) || hasSnapshotFormat(value))
+    return null;
   const raw = value as { seo?: unknown };
   const seo = Object.hasOwn(raw, 'seo') ? raw.seo : {};
   if (!seo || typeof seo !== 'object' || Array.isArray(seo)) return null;

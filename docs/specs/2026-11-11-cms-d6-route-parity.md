@@ -1,0 +1,63 @@
+# D6 — guarded tree route parity
+
+**Status:** integration draft stacked on `feat/cms-d-base`, carrying D2 (#199), D3 and contact readiness (#201). #202 must not merge before #199's final gate and Parker's approval. D4/D5 client acceptance and release remain separate; no production migration is authorized here.
+
+## Plan (10 lines)
+
+1. Merge D2 and D3 into this worktree.
+2. Preserve both documentation histories and regenerate Graphify.
+3. Add guarded tree snapshot dispatch to API routes.
+4. Reuse one D3 SSR host for preview/public.
+5. Prove route parity with disposable MySQL.
+6. Assert public chunks exclude builder code.
+7. Run checks and locked browser gate.
+8. Reject unrenderable stored trees and require the public scanner in CI.
+9. Publish validated tree snapshots transactionally with CAS, then test API/browser parity and restore.
+10. Document independent D5 host gates, review dependencies and open draft PR.
+11. Integrate D5's pure tree helpers without D5 UI.
+12. Enumerate all 20 host schemas from the explicit registry.
+13. Round-trip operations, history and autosave against each schema.
+14. Compare bilingual preview/public SSR with host render mappings.
+15. Inject the host's 20 schemas into live draft, publish and stored-snapshot validation.
+16. Map all 20 host components into Next tree preview/public SSR.
+17. Exercise each host definition through real HTTP and browser parity.
+
+## Review gates (2026-11-11)
+
+- **Fail closed:** A `legacy-component` or any unsupported node in a versioned published snapshot must produce 400 `INVALID_BLOCKS` on public and version preview, not a 200 warning. Next must not return a warning page with HTTP 200 if D3 rendering fails for any other reason; add a focused SSR regression. Incomplete drafts may retain legacy nodes losslessly but cannot publish them.
+- **CI:** Run `scripts/check-public-builder-bytes.mjs` as a required build job step after the web build, in addition to `check:all`; keep the zero-byte proof across all public route manifests.
+- **Host schemas (separate D5 integration gate):** Before D5 UI acceptance, register property schemas for all 20 host block definitions and prove no missing/unknown type falls back to a starter schema. The pure starter tree uses explicitly supported core component types; do not claim 20-definition registration as passing from this D6 route test.
+- **All-20 release-gate extension:** Carry the D5 pure tree APIs from #200 (not its UI). The lil.p host explicitly supplies the 20 definition schemas, rather than adding them to core. For each definition exercise an insert and, where defaults contain a field, a valid responsive property edit; reject an invalid property without mutation, replay history undo/redo and validate revision-aware autosave; assert missing and unknown definitions fail closed. Render a host-mapped EN and VI tree with the same server-side D3 renderer for preview and public input and compare deterministic markup. This is schema/renderer parity evidence, not a claim that the currently starter-only HTTP tree routes accept all 20 types: that separate host API/Next registry wiring must be proven before release.
+
+The host-gate unit test in `apps/web/src/modules/blocks/host-schema-gate.test.tsx` passes 21 cases: registry count plus one schema/edit/history/autosave/EN+VI SSR case per definition (40 deterministic preview/public comparisons). Its renderer mapping remains test-local. The subsequent browser test `apps/web/e2e/cms-tree-host-blocks.spec.ts` passes all 20 definitions through live HTTP activation and publication, Next public and authorized version-preview rendering in both locales (40 route pairs), with actual host components and validated resolved-props fingerprints. D5 #200 is carried in this stacked branch, so both lower PRs #199 and #200 require their own acceptance before #202 merges.
+
+### Live host registry follow-up
+
+The host, not cms-core, owns the 20 Zod property schemas and React block components. Pass one host registry to Nest draft save/read, publish and immutable-snapshot validation; pass the same registry and host component mapping to Next SSR for both public and authenticated version preview. Localize props through the existing host resolver, preserve node IDs and responsive variants, and fail closed on unsupported or invalid data. Test every definition through actual HTTP activation/publish and EN/VI Next rendering, without changing the B1 legacy goldens or authorizing a production migration. Graphify provenance must cite the actual final D6 branch source, not `c8fc833a`.
+
+For host components that fetch post/project collections, preview may legitimately include unpublished rows while public SSR does not. The live parity gate compares HTTP tree/SEO, ordered tree node IDs and the SHA-256 of each localized effective host prop set; it also asserts each real host component is mounted. Do not compare dynamic listing HTML byte-for-byte or misreport editorial data as a tree-renderer mismatch.
+
+The first focused disposable-MySQL browser attempt did not discover the new spec because the explicit E2E shard allowlist omitted it; after registration it reached a draft/public notes-list difference (5 versus 3 entries) and exposed why byte-for-byte dynamic HTML parity is invalid. The corrected focused run passed **1/1** with all 20 definitions and 40 locale route pairs; each run released the shared lock and destroyed its disposable container.
+
+On 2026-11-14, the final full locked disposable-MySQL gate first passed 12/13: all D6, API and fixture checks passed, while an existing admin-scroll exact-pixel assertion differed by 14px (`1572` versus `1586`) in one of 183 web cases. No unrelated scroll code was changed. The unchanged full gate then passed **13/13** on a fresh disposable MySQL (including web E2E and the all-20 EN/VI route test); both runs released the lock and removed their containers. This is live route evidence, not D4/D5 editor integration or dirty-reload acceptance.
+
+The partial [live-route evidence manifest](./2026-11-14-cms-d6-live-route-evidence.md) records exact source/base heads, commands, CI link and distinct PASS/BLOCKED release gates. It is not migration, visual or merge approval.
+
+The first Linux CI on the manifest head failed web shard 1: assigning the new all-20 spec a 120-second weight rebalanced every existing shard. Previously shard 1 ran Lighthouse, visual and four fixed companion specs; the new map moved eleven different specs into shard 1, several before the visual captures. Seven public/admin screenshots drifted, and one table-density token probe flaked. Keep the old spec-to-shard mapping stable, append the new host test after existing specs, and rerun CI; do not update unrelated pixel baselines or weaken their assertions. This test-only scheduling fix changes no route behavior or B1 golden.
+
+The first post-merge locked full gate caught a test-fixture TypeScript annotation (`Record<string, unknown>` versus JSON-compatible responsive props): typecheck/build/web E2E failed as a consequence, while the 21 focused tests passed. The fixture type was corrected to D1 `ResponsiveProps['base']`; focused web typecheck passed, followed by a fresh complete `pnpm check:all --e2e` gate passing **13/13** on disposable tmpfs MySQL under the shared lock. The failed attempt is not counted as green; the successful gate released its lock and container.
+
+- **Dirty-edit protection (separate D5 integration gate):** The host must require explicit confirmation/export before D5 `reload` can replace a dirty local tree. API revision CAS cannot by itself certify browser autosave/reload safety.
+- **Real route journey:** With the server flag enabled and an eligible custom page, activate and save a versioned draft using revision CAS, reject stale/invalid writes, publish only a tree that passes publish and renderability validation, then compare EN/VI version preview/public JSON and Next SSR HTML. A revision-aware historical restore changes the draft (not published pointer), and republish advances the version. Legacy pages and goldens remain unchanged. Keep publish atomic in one host Prisma transaction, including version, pointer, audit and revision CAS; reject future/unknown/lossy versions before writes. Browser tests may drive the builder draft HTTP endpoints until the independently reviewed D5 editor/autosave UI is integrated; do not describe that as D5 client autosave coverage.
+
+## Contract and evidence
+
+Tree mode is opt-in and never silently serves legacy block rows as a substitute. D2 owns validation and revision CAS; D6 adds a version-checked tree publish in one host transaction, with immutable snapshot, published pointer and audit. A versioned tree snapshot must be strictly validated before public display; invalid/unknown content fails closed with the existing typed stored-snapshot error. Authorized draft/version preview and published public tree use the same D3 SSR renderer, component registry and locale; legacy routes and response envelopes remain unchanged. The Next server owns React SSR; Nest supplies validated tree data, never a React element.
+
+Prove EN/VI real HTTP preview/public tree and SEO parity, including VI-only custom-page SEO, for identical published snapshots, ignoring only the admin-only `invalidBlocks: []`; pass both responses through D3 and compare the rendered element structure. An opt-in browser test performs actual HTTP activate/save/publish/restore/republish and compares EN/VI preview/public SSR HTML. This proves the host endpoint journey, **not** D5 client autosave/reload or full editor interaction. Default-off draft preview retains its 409, and unsupported published tree versions fail with 400 `INVALID_BLOCKS`, not an empty legacy shell. Public production chunks must contain zero editor/builder modules. The D6 evidence template's complete mouse/keyboard, D4/D5 autosave, responsive, visual, migration-approval and release gates remain **BLOCKED** until their actual integration and review. No test may mark a skipped gate PASS. Roll back the opt-in route dispatch/publish; retain stored drafts and immutable versions for a compatible reader.
+
+Any snapshot carrying a `tree` key without the required `format` is treated as malformed tree input, not as a recoverable legacy block list. Its preview and public responses return typed 400 `INVALID_BLOCKS` instead of silently presenting an empty legacy page. The initial locked local `check:all --e2e` passed 12/13 checks (API and fixture E2E passed; web E2E had 179 passes, 14 skips and one known intermittent contact-form failure tracked separately in #183). No contact source or tests were changed here; one locked full-gate retry is required before claiming local green.
+
+The one locked retry passed API, web and fixture E2E (including EN/VI route parity); its format stage alone failed because the public-chunk scanner had been widened to all site routes without Prettier before the run. That script was formatted during the run, and a separate `pnpm format:check` passed afterward. The scanner checks 11 public route manifests and 135 referenced chunks with zero builder/editor bytes. The final non-E2E `pnpm check:all` passed all eight stages after this documentation update. Neither earlier run is misreported as a fully green local `--e2e` invocation. The focused contact hydration fix from #201 is now merged into this branch; its pre-hydration input regression makes retries unnecessary as a remedy. With the fix present, a new complete `pnpm check:all --e2e` run passed **13/13** checks (including API, web and fixture E2E) under the shared lock on a disposable tmpfs MySQL; the lock and container were released after the run.
+
+After D6 review changes, the focused browser HTTP publish/restore journey passed. The first locked full gate passed all API, web and fixture E2E stages but failed import ordering in lint; after fixing that import, `pnpm check:all` passed 8/8 and a new locked `pnpm check:all --e2e` passed **13/13** on disposable tmpfs MySQL. Both runs released their own lock and container. This is host HTTP save/publish evidence, not a passing D5 client autosave or dirty-reload gate.

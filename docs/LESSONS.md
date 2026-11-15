@@ -1,5 +1,11 @@
 # Lessons
 
+- 2026-11-15: An inherited D2 migration can survive a D6 merge even when D6's runtime parity tests pass; reconcile D4/D5 and docs in scratch, but gate any PR update on the approved migration ordering and final-head CI.
+- 2026-11-14: Weighted E2E sharding can reshuffle unrelated test order and pollute visual baselines; preserve existing file assignments when adding a publishing test, then place the new case last in its shard.
+- 2026-11-11: Test-local tree renderer mappings cannot certify deployed host pages; inject the same explicit host registry into draft, publish and snapshot reads, and verify actual Next components through the live API in both locales.
+
+- 2026-11-15: A forward-compatible additive schema does not make an older writer safe: an old Prisma client can publish a legacy snapshot over a tree publication pointer without changing the draft revision; block release until a write fence or approved no-old-writer rollback is proven against disposable MySQL.
+
 - 2026-11-15: Reconciling a static study after an independent canvas lands requires describing both routes separately in host documentation; integrate chronological lessons from both lanes and regenerate Graphify rather than hand-merging generated output.
 - 2026-11-15: When a static design-study branch absorbs a newer pure-state core release, preserve both histories while keeping the study's e2e flag and non-persistence boundary unchanged.
 - 2026-11-15: A static U3 design branch can integrate later renderer work without becoming a live builder; keep its no-persistence boundary explicit, retain both chronological context histories, and regenerate Graphify from the combined head instead of hand-merging reports.
@@ -361,3 +367,4 @@
 - 2026-11-11: A draft activation response acknowledges only the submitted tree, not edits made while awaiting the server; replay the latest history into the new controller and never overwrite pending stored recovery before the user chooses restore or dismiss.
 - 2026-11-11: Test responsive sheet ownership while its dialog remains open across a breakpoint; closing the sheet before resizing hides stale-modal and focus-restoration failures.
 - 2026-11-11: A browser regression that changes locale/theme after shrinking to tablet can time out on desktop-only topbar controls; perform topbar setup at desktop width before exercising responsive transitions.
+- 2026-11-15: A disposable forward-migration/drift pass does not prove downgrade-reader compatibility or a combined UI/API release; pin the exact integrated head before claiming J07 or visual parity.

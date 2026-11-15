@@ -59,12 +59,14 @@ export const SPECS = [
   'admin-collections-r3.spec.ts',
   'admin-editors-r3.spec.ts',
   'custom-public-pages.spec.ts',
+  'cms-tree-journey.spec.ts',
   'admin-page-create.spec.ts',
   'public-shell-indexes.spec.ts',
   'copy-email.spec.ts',
   'public-details-states.spec.ts',
   'cms-builder-d5-ui.spec.ts',
   'cms-builder-d5-design.spec.ts',
+  'cms-tree-host-blocks.spec.ts',
   'u0-capture.spec.ts',
 ] as const;
 

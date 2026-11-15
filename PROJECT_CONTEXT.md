@@ -48,6 +48,12 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #202 integrated gate preparation: D2-free live publish/preview parity is infeasible because Page draft and revision columns back CAS and transactionally published snapshots. Local D6 scratch `e960c117` includes D2 and main `98f045f` but not #204 UI. A locked, disposable migration-only forward/drift gate passed; rollback-reader and combined J01–J09, visual/SSR, final-head CI remain blocked. See `docs/specs/2026-11-15-cms-d6-integrated-gate-prep.md`.
+
+- D6 #202 scratch reconciliation against main after #198: preserve the opt-in tree publish/preview/public parity guard, all 20 host schemas, D4/D5 state and legacy readers. The branch carries D2's additive migration, so a clean static gate alone cannot authorize merging before #199's migration gate; full J01–J09 and migration release remain blocked. See `docs/specs/2026-11-11-cms-d6-route-parity.md` and `docs/specs/2026-11-14-cms-d6-live-route-evidence.md`.
+
+- Combined #199/#204/#202 verification is **BLOCKED** by the genuine pre-D2 Prisma-client regression at local test commit `350ac169` (not cherry-picked into release CI): the old client reads post-D2 rows and legacy writes preserve the tree, but its unguarded legacy publish-shaped transaction replaces a published tree pointer (id 6 → 7) without changing `draftTree`/revision. This does not prove the old HTTP route accepts the transaction. Do not ship a pre-D2 API binary after the migration, or release the stack, until a proven write fence or separately approved drain/rollback strategy passes disposable MySQL. The main deploy following #199 would run the additive `Page.draftTree` migration; no production migration is authorized by this branch.
+
 - CMS U3 #178 post-D4 main sync (2026-11-15): keep the approved, flag-gated EN/VI design study distinct from the authenticated D4 canvas. Main includes D4 #198 at `fc22b9f`; neither route gains U3 persistence or publishing, and D5 host integration remains separate.
 - CMS U3 #178 current-main sync (2026-11-15): the approved, flag-gated EN/VI study also incorporates D5's pure tree state from main without importing builder behavior into its static route; D6 release evidence remains separate. No U3 persistence, API or golden changes.
 - CMS U3 #178 final main sync (2026-11-15): this remains the separate flag-gated, static EN/VI design study, not the live D4/D5 builder. It incorporates main's D3 shared renderer and responsive-heading safety without changing its own non-persistent palette, Layers, or mobile samples. D6 still owns end-to-end release proof; no U3 merge or deployment is authorized.
@@ -256,6 +262,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Prepared #199 → #204 → #202 disposable-only integrated gate commands and recorded the scratch D2 forward/drift PASS with explicit rollback-reader and visual/J01–J09 gaps; no PR push, production DB, or release claim.
+
+- 2026-11-15: Reconciled D6's opt-in preview/public tree parity and all-host route gate with #198's D4 canvas and main's D5 pure state without changing B1 goldens. Preserved both documentation histories and regenerated Graphify. Scratch-only integration pending #199 migration approval and #204 ordering; no production database or deploy action.
+- 2026-11-15: Combined #199 → #204 → #202 for verification only, preserving strict snapshot restore, opt-in D6 routes and D5 UI; rollback-reader write safety failed on genuine pre-D2 client after migration, so release remains blocked and draft verification PR must not merge. Parker owns all eventual merges.
 - 2026-11-15: Synced U3 #178 with main through D4 #198 (`fc22b9f`); preserved the static study and the independent flag-gated D4 canvas, both documentation histories and existing golden contracts. Regenerated Graphify; no merge to main or deployment authorized.
 - 2026-11-15: Synced U3 #178 with main through D5 #200, retaining the static sample boundary and both documentation histories; refreshed Graphify without changing CMS goldens or granting a merge.
 - 2026-11-15: Synced the approved, static U3 study with main's D3 renderer and heading-safety contracts while keeping both documentation histories and existing goldens; Graphify and non-browser checks were refreshed. U3 remains draft, non-persistent and unmerged; CI is the final browser gate.

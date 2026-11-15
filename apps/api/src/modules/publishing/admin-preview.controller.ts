@@ -8,6 +8,7 @@ import type {
 import { Roles } from '../../common/decorators/roles.decorator';
 import { Locale } from '../../i18n/locale.decorator';
 import { PageVersionsService } from '../pages/page-versions.service';
+import type { TreePage } from '../pages/tree-page.util';
 import { PostsService } from '../posts/posts.service';
 import { ProjectsService } from '../projects/projects.service';
 
@@ -40,7 +41,7 @@ export class AdminPreviewController {
     @Param('key') key: string,
     @Locale() locale: 'en' | 'vi',
     @Query('version') version?: string,
-  ): Promise<PublicPagePreview> {
+  ): Promise<PublicPagePreview | (TreePage & { invalidBlocks: [] })> {
     const parsed = version ? Number(version) : undefined;
     return this.pages.getPreview(
       key,
