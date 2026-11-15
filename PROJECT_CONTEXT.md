@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 D6 shard-5 follow-up: carry the reviewed #231 canvas browser fix against the live `BuilderHost` without importing divergent D5 runtime; exact-head five-shard CI is still required. D5 V07 and D6 publish/restore remain separate integration gates.
 - 2026-11-15 D6 base reconciliation: keep D6 V04/V06/V09/V10 and editor-origin histories alongside the five-shard D4 canvas/keyboard registry and focus/locale fixes from #224; the combined branch requires exact-new-head `ready-e2e` before treating the auto-merged tests as evidence. Release and integrated D5 publish/restore remain separate gates.
 - Out of scope for this base-only merge: the D6 read-only i18n audit on `55de575d` found raw nested Properties labels, incomplete VI form/site-settings fallback and no neutral-tenant host adapter for public/preview SSR. Keep V03/V14 and complete localization as GAP pending independently reviewed fixes; existing hydrated captures do not prove them.
 
@@ -294,6 +295,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Adapted D4 canvas Properties browser assertions to the real D6 builder with editable EN/VI heading text and retained responsive focus/single-mount checks; no runtime or threshold change. Full D5→D6 runtime integration remains pending independent reconciliation.
 - 2026-11-15: Merged the updated D6 base containing #224's five-shard D4 canvas/keyboard registration and test repairs; retained D6 parity/visual assertions and both documentation histories. No golden contract, migration or production change.
 
 - 2026-11-15: Added D6 no-loss converter, responsive inheritance and paired real published/preview browser evidence, with version/restore draft checks; no runtime or schema changes.
