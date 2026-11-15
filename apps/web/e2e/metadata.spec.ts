@@ -1,3 +1,6 @@
+import { execFileSync } from 'node:child_process';
+import { resolve } from 'node:path';
+
 import { expect, test } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
@@ -62,6 +65,88 @@ test('admin routes have distinct titles and an icon', async ({ page }) => {
     const title = await checkMetadata(page, route, false);
     expect(titles.has(title), route).toBe(false);
     titles.add(title);
+  }
+});
+
+test('real invalid draft block is localized only in EN/VI preview, without diagnostics', async ({
+  page,
+}, testInfo) => {
+  test.setTimeout(120_000);
+  await signIn(page);
+  const key = `metadata-invalid-${Date.now()}-${testInfo.retry}`;
+  const headers = { Origin: new URL(page.url()).origin };
+  const created = await page.request.post('/api/admin/pages', {
+    headers,
+    data: { key, title: 'Invalid preview fixture', locale: 'en', template: 'starter' },
+  });
+  expect(created.status(), await created.text()).toBe(201);
+  const seo = await page.request.patch(`/api/admin/pages/${key}`, {
+    headers,
+    data: {
+      seoTitleEn: 'Published English fixture',
+      seoTitleVi: 'Bản công khai tiếng Việt',
+      seoDescriptionEn: 'Public English description',
+      seoDescriptionVi: 'Mô tả công khai tiếng Việt',
+    },
+  });
+  expect(seo.status(), await seo.text()).toBe(200);
+  const published = await page.request.post(`/api/admin/pages/${key}/publish`, {
+    headers,
+    data: {},
+  });
+  expect(published.status(), await published.text()).toBe(200);
+
+  execFileSync('pnpm', ['exec', 'tsx', 'test/helpers/seed-invalid-preview.ts', key], {
+    cwd: resolve(import.meta.dirname, '../../api'),
+    env: process.env,
+    stdio: 'pipe',
+  });
+
+  for (const [locale, title, description, notice, help] of [
+    [
+      'en',
+      'Published English fixture',
+      'Public English description',
+      'This block cannot be previewed',
+      'Review this block in the editor, then try previewing again.',
+    ],
+    [
+      'vi',
+      'Bản công khai tiếng Việt',
+      'Mô tả công khai tiếng Việt',
+      'Không thể xem trước khối này',
+      'Kiểm tra khối này trong trình chỉnh sửa, rồi thử xem trước lại.',
+    ],
+  ] as const) {
+    const path = `/${locale}/${key}`;
+    const draftApi = await page.request.get(`/api/admin/preview/pages/${key}?locale=${locale}`);
+    expect(draftApi.status()).toBe(200);
+    const draft = await draftApi.json();
+    expect(draft.invalidBlocks).toHaveLength(1);
+    expect(draft.invalidBlocks[0].type).toBe('f4-internal-legacy-type');
+    expect(draft.seo).toMatchObject({ title, description });
+
+    await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
+    const previewResponse = await page.goto(path);
+    expect(previewResponse?.status()).toBe(200);
+    const previewHtml = await previewResponse!.text();
+    expect(previewHtml).toContain(notice);
+    expect(previewHtml).toContain(help);
+    expect(previewHtml).not.toContain('f4-internal-legacy-type');
+    expect(previewHtml).not.toContain('invalidBlocks');
+    expect(previewHtml).not.toContain('issues');
+    await expect(page.getByRole('status').filter({ hasText: notice })).toContainText(help);
+    expect(await page.content()).not.toContain('f4-internal-legacy-type');
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', description);
+    expect(await page.title()).toContain(title);
+
+    await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
+    const publicResponse = await page.goto(path);
+    expect(publicResponse?.status()).toBe(200);
+    expect(await publicResponse!.text()).not.toContain(notice);
+    await expect(page.getByText(notice)).toHaveCount(0);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', description);
+    expect(await page.title()).toContain(title);
   }
 });
 

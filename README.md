@@ -5,6 +5,8 @@ derives missing tree SEO from the visible bilingual H1 on public and draft route
 and displays localized recovery help instead of raw invalid-block diagnostics.
 Real EN/VI browser evidence runs in the existing metadata shard; full V13 signoff
 still requires combined-head route/state review.
+Its F4 integration fixture uses only the disposable Playwright database to check
+real invalid draft previews against the unchanged published snapshot.
 
 Historical CMS previews (`?v=N`) now read the same version for the rendered
 tree and EN/VI SEO title/description. Public routes ignore `?v=` and retain
