@@ -1,5 +1,7 @@
 # D5 V15 full-builder target and focus audit
 
+CI `43721865827` and `43724237737` cancelled shard 1 at its 20-minute job limit after the new V15 matrix landed alongside pinned pixel baselines and Lighthouse; GitHub's reporter emitted no individual test progress and the cancelled blob contained only provenance. Pin the design spec to shard 5, keeping all 23 shard-1 tests and all V15 assertions, and emit per-test progress in CI to distinguish throughput from a failing/blocked interaction. Both shards must pass on the new head; this is not a timeout extension or a V15 PASS.
+
 CI `43720573277` exposed a real paint mismatch on the primary Breakpoint button: the blue focus ring was identical to the blue control background despite contrasting with the outer white panel. Use two opaque, 3px-or-wider focus stripes (theme focus color and opposite-contrast color) so the indicator remains distinguishable at ≥3:1 against _each_ adjacent painted surface. The browser audit requires at least one visibly painted stripe above 3:1 on each measured adjacent surface; no tolerance or per-surface threshold reduction. This is not a V15 PASS until exact-head five-shard CI is green and captures are reviewed.
 
 Stack on the accepted D5 live journeys; do not change tree, HTTP or golden contracts. The prior capture only measured `.cms-core` and tolerated 43.5px, leaving admin chrome and focus-ring contrast unproven.

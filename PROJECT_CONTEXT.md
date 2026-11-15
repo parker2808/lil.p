@@ -293,6 +293,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Isolated the V15 design matrix from Lighthouse/pixel shard 1 into shard 5 and added per-test CI progress after two 20-minute cancellations; all existing browser assertions remain required and exact-head CI is pending.
+
 - 2026-11-15: Added neutral theme opposite-contrast focus token and two-tone host ring, checking ≥3:1 for each adjacent surface without lowering the target/focus thresholds.
 - 2026-11-15: Corrected V07 real-browser publish-conflict setup to use an intervening server revision, retaining offline recovery and adding draft/version invariants; no runtime or golden change.
 

@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A silent GitHub Playwright reporter plus a 20-minute shard limit conceals whether a large visual matrix stalled or merely overran the shard; retain a streaming per-test reporter and isolate the matrix from Lighthouse/pixel baselines before interpreting cancellation as feature failure.
+
 - 2026-11-15: A core CSS focus declaration is not proof that every embedded host control paints a ring in production; two ordinary builder buttons reached `:focus-visible` with no computed indicator in repeated CI. Scope an opaque host fallback to all interactive controls and retain exact-head contrast verification.
 
 - 2026-11-15: A matching focus rule does not establish painted contrast; verify the stronger host outline on exact-head CI before accepting V15. The separate D4 test owner is replacing obsolete study-only assertions on the live Properties route.
