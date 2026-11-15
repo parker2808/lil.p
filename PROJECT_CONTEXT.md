@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- 2026-11-16 V03/V14 all-20 SSR intersection: draft real-host no-JS matrix checks 20 registry defaults in four five-host pages at EN/VI × light/dark × three widths × neutral/branded host × public/preview. CV receives a disposable local media upload so its visible content, not just its empty state, is exercised. Raw PNG/axe/provenance and independent image review plus exact-head ready-e2e CI remain required; no production claim. See `docs/specs/2026-11-16-cms-d6-all20-real-host-ssr.md`.
+- 2026-11-16 V03/V14 all-20 SSR intersection: draft real-host no-JS matrix checks 20 registry defaults in four five-host pages at EN/VI × light/dark × three widths × neutral/branded host × public/preview. CI `43769497764` exceeded the 20-minute shard budget while 12-tuple tests hit the four-minute case limit; split into 12 registered viewport specs distributed across five shards without removing any tuple, raw PNG or axe check. CV receives a disposable local media upload so its visible content, not just its empty state, is exercised. Exact-head CI and independent image review remain required; no production claim. See `docs/specs/2026-11-16-cms-d6-all20-real-host-ssr.md`.
 - 2026-11-16 V05: A focused D6 editor-origin page-header test edits nested EN/VI title and eyebrow in Properties, waits for each real autosaved draft value, then pairs the saved revision with version snapshot and EN/VI public/version-preview render captures at 390/768/1440. Prior head `957b907a` passed run `43761699036` (5/5 web shards); the merged D6 banner/contrast and V09/V10 base requires new exact-head CI and independent screenshot review. Full 20-schema validation/errors remain GAP. See `docs/specs/2026-11-16-cms-d6-v05-revision-chain.md`.
 - 2026-11-16 V09/V10 restore dark-host correction: #258 CI `43759532114` found a real 2.22:1 eyebrow/card contrast failure because the published tree omitted `data-theme` while `html.dark` changed foreground tokens. Scoped implicit `.dark` inheritance to core hosts without explicit theme, retained explicit theme opt-out and unwaived axe; new exact-head five-shard CI/artifact review pending. No API/schema/golden edits; production and all-20 restoration remain GAP.
 
@@ -351,7 +351,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
-- 2026-11-16: Add isolated V03/V14 all-20 real-host no-JS/axe/visual coverage and register four group specs across five CI shards; retain independent raw-image signoff gate.
+- 2026-11-16: Split the V03/V14 all-20 real-host no-JS/axe/visual matrix into 12 viewport-bounded specs across five CI shards after 12-tuple tests timed out; retain all 96 public/preview tuples (480 per-host pairs), raw PNGs, unwaived axe and independent image signoff.
 - 2026-11-16: Expanded V05 Properties evidence to include scrolled mobile/tablet title fields; initial run `43759329807` passed 18/18 at `561fe6ed`, and strengthened run `43760729931` passed five shards at `f8d3d14d`. The combined V02 base still needs exact-new-head CI.
 
 - 2026-11-16: Registered a V05 browser gate for nested bilingual Properties → revisioned draft → UI publish → immutable snapshot → paired preview/public text and viewport captures; no runtime or golden contract change.

@@ -12,8 +12,15 @@ The first H1 host has an explicit EN/VI localized visible label; the remaining
 hosts reuse registry defaults, which do not certify full translation coverage.
 
 Each group tests EN/VI × light/dark × 390/768/1440 × actual neutral/lil.p Host
-header × public/version preview, with JavaScript disabled. The response HTML
-must contain the server-selected brand; each of five host wrappers must have
+header × public/version preview, with JavaScript disabled. The matrix
+is split into one bounded test per group/locale/theme/viewport after CI
+`43769497764` showed a four-minute timeout per 12-tuple test and two shards
+exceeded their 20-minute job budget. Twelve registered specs distribute the
+three viewport slices of each group across five CI shards; each test still
+captures both brands and both public/preview modes, with exactly four manifest
+tuples. Diagnostic phase markers identify slow navigation or rendering without
+changing assertions or performance budgets. The response HTML must contain
+the server-selected brand; each of five host wrappers must have
 an SSR props hash, visible painted text, and matching published/preview hash.
 Record a raw full-page PNG and five raw host PNGs for every tuple; compare
 paired public/preview host pixels without relaxing the existing 0.5% threshold.
