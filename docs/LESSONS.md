@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Audit every transaction that can lose a page revision CAS, not just the first reproduced route: default repeatable-read can make SEO, block writes and builder restore return an obsolete revision after a real concurrent winner. A read-committed reread plus real-DB interleaving proves both the conflict envelope and transaction rollback.
+
 - 2026-11-15: A revision CAS can reject a lost race while the transaction's repeatable-read snapshot still reports the old revision; interleave a real second DB connection in API E2E and use read committed for the conflict reread before claiming the returned revision is current.
 
 - 2026-11-15: Checking legacy mode before a transaction's version insert or block mutation does not fence a later tree activation; claim both SQL-NULL mode and monotonic revision in the final page write, and roll back the whole transaction on a lost CAS.
