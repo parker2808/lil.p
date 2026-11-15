@@ -48,7 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- D5 Properties blur/clear follow-up: rapid text edits separated by blur must remain separate undo steps, and clearing an override must discard invalid local input and its error; EN/VI unit and real-builder browser regressions are added. Exact-head ready-e2e CI and independent review remain OPEN.
+- #221 V15 passed exact-head CI `43732468521` at `b2671d6c` and independent review found no P0–P2. Graphify was regenerated against the merged D5 code head; V16 remains a separate manual screen-reader GAP (VoiceOver/NVDA spoken output, public/preview reading/H1 order, EN/VI review) despite automated builder checks.
+- D5 Properties blur/clear follow-up: rapid text edits separated by blur remain separate undo steps, and clearing an override discards invalid local input and its error. #244 passed exact-head CI `43737324989` (API E2E and five web shards) and independent review ACCEPT; combined release and manual V16 remain OPEN.
 
 - #221 run `43729842098` reached two deterministic V15 failures: the focus audit moved focus off Heading before keyboard Delete, and the 768px Properties sheet's fixed backdrop was wrongly clipped to the builder parent's overflow boundary. Restore pre-audit focus and stop clipping beyond the fixed backdrop; exact-head five-shard CI and independent review remain OPEN.
 
@@ -303,6 +304,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Documented the V16 manual matrix GAP after #221 and refreshed Graphify against the integrated D5 head; no runtime, golden, or screen-reader acceptance change.
 - 2026-11-15: Ended property typing coalescence on input blur without scheduling an extra autosave; successful Clear override removes all pending, raw input and error state for its responsive property. Added EN/VI unit and real-API keyboard browser regressions.
 
 - 2026-11-15: Restored V15 keyboard-journey focus after capture and fixed overlay hit-area clipping at the fixed-position backdrop; kept ≥44px targets and ≥3:1 focus contrast, pending exact-head CI.

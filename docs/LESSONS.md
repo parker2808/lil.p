@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Graphify freshness must name the integrated code head, not an intermediate branch commit; a docs-only report commit changes HEAD again, so document its exact source SHA and keep manual V16 screen-reader signoff separate from green automated V15 evidence.
+
 - 2026-11-15: A design capture that tabs through controls must restore its entry focus before continuing a keyboard-only edit; a fixed overlay escapes non-containing-block ancestor overflow, so stop clipping at the fixed backdrop while keeping strict 44px checks.
 
 - 2026-11-15: A scoped builder axe result cannot replace a full-page audit, and matching polite status text cannot prove what a screen reader actually speaks; record automated and manual V16 evidence separately.
