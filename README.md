@@ -21,7 +21,9 @@ The real-host no-script sample also checks OS-driven dark first paint and
 separately authored VI tree copy on both neutral and branded tenants; it does
 not certify all-20 dark neutral SSR or fully localized site content. A scoped
 no-script OS-dark shell rule keeps the public header/footer dark alongside the
-CMS tree; CI attaches raw header/footer captures on both real tenant hosts.
+CMS tree and pairs the preview banner with a dark warning surface; CI checks
+its computed text/background contrast at 4.5:1 and attaches raw captures on
+both real tenant hosts.
 The footer assertion preserves its existing 93% background/7% green blend
 rather than expecting the unmixed card color.
 

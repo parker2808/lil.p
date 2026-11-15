@@ -34,6 +34,7 @@
   .public-site {
     --background: #111318;
     --foreground: #eee9df;
+    --warning-subtle: #3a2f18;
     --card: #181b22;
     --card-foreground: #eee9df;
     --primary: #ff8f74;

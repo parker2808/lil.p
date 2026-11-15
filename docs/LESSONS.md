@@ -1,6 +1,7 @@
 # Lessons
 
 - 2026-11-16: A no-script host-hash assertion must hash the renderer's serialized `{ props, lang }` envelope after locale resolution, not just localized props; CI `43762556788` exposed the mismatch without changing any production host behavior.
+- 2026-11-16: No-script dark shell tokens must include warning surfaces as well as foreground/background; otherwise a pale preview banner with inherited light text can pass route checks while failing legibility. Assert computed text-to-surface contrast in both locales and hosts.
 
 - 2026-11-16: D19 resolves a block's entire localized props to EN when even one populated EN field lacks VI; no-JS version fixtures must localize the page-header title as well as its eyebrow to assert actual VI output.
 
