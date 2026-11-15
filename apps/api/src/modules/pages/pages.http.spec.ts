@@ -40,6 +40,8 @@ type MockPage = {
   publishedVersionId: number | null;
   publishedVersion: { version: number } | null;
   publishedAt: Date | null;
+  draftTree: null;
+  draftTreeRevision: bigint;
   updatedAt: Date;
   blocks: MockBlock[];
 };
@@ -94,6 +96,8 @@ describe('real page services over Nest HTTP with transactional Prisma state', ()
             publishedVersionId: null,
             publishedVersion: null,
             publishedAt: null,
+            draftTree: null,
+            draftTreeRevision: 0n,
             updatedAt: new Date('2026-11-03T00:00:00Z'),
             blocks: [],
           };

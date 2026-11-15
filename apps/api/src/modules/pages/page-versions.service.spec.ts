@@ -47,6 +47,8 @@ function pageRow(over: Record<string, unknown> = {}) {
     publishedVersionId: null,
     publishedVersion: null,
     publishedAt: null,
+    draftTree: null,
+    draftTreeRevision: 0n,
     updatedAt: new Date('2026-01-01T00:00:00.000Z'),
     blocks: [hero],
     ...over,
@@ -55,7 +57,11 @@ function pageRow(over: Record<string, unknown> = {}) {
 
 describe('PageVersionsService', () => {
   let prisma: {
-    page: { findUnique: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn> };
+    page: {
+      findUnique: ReturnType<typeof vi.fn>;
+      update: ReturnType<typeof vi.fn>;
+      updateMany: ReturnType<typeof vi.fn>;
+    };
     pageVersion: {
       findMany: ReturnType<typeof vi.fn>;
       findUnique: ReturnType<typeof vi.fn>;
@@ -69,7 +75,11 @@ describe('PageVersionsService', () => {
 
   beforeEach(() => {
     prisma = {
-      page: { findUnique: vi.fn(), update: vi.fn() },
+      page: {
+        findUnique: vi.fn(),
+        update: vi.fn(),
+        updateMany: vi.fn().mockResolvedValue({ count: 1 }),
+      },
       pageVersion: {
         findMany: vi.fn(),
         findUnique: vi.fn(),
@@ -156,6 +166,10 @@ describe('PageVersionsService', () => {
     prisma.page.update.mockResolvedValue({});
     await service.restore('home', 1);
     expect(prisma.$transaction).toHaveBeenCalledTimes(1);
+    expect(prisma.page.updateMany).toHaveBeenCalledWith({
+      where: expect.objectContaining({ id: 10, draftTreeRevision: 0n }),
+      data: { draftTreeRevision: { increment: 1 } },
+    });
     expect(prisma.pageBlock.createMany).toHaveBeenCalledWith({
       data: [
         expect.objectContaining({

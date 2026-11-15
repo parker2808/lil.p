@@ -1,4 +1,5 @@
 import { buildSnapshot, orderBlocks, readSnapshot } from '@parker2808/cms-core/engine';
+import { readTree, type TreeDocument } from '@parker2808/cms-core/tree';
 import {
   BLOCK_REGISTRY,
   type BlockType,
@@ -16,12 +17,43 @@ import {
   publishLint,
   resolveBlockLocale,
 } from '@portfolio/contracts';
+import { z } from 'zod';
 
 import { pickGroup } from '../../i18n/pick-locale.util';
 import type { PageWithAllBlocks } from './entities/page.entity';
 import { definitionOf } from './pages-rules.util';
 
 export type SnapshotBlockRow = PageSnapshotBlock & { id?: number };
+
+const treeVersionSnapshotSchema = z.strictObject({
+  format: z.literal('tree'),
+  snapshotVersion: z.literal(1),
+  seo: z.strictObject({
+    seoTitleEn: z.string().nullable(),
+    seoTitleVi: z.string().nullable(),
+    seoDescriptionEn: z.string().nullable(),
+    seoDescriptionVi: z.string().nullable(),
+  }),
+  tree: z.unknown(),
+});
+
+export type TreeVersionSnapshot = {
+  format: 'tree';
+  snapshotVersion: 1;
+  seo: z.infer<typeof treeVersionSnapshotSchema>['seo'];
+  tree: TreeDocument;
+};
+
+export function hasSnapshotFormat(value: unknown): boolean {
+  return value !== null && typeof value === 'object' && 'format' in value;
+}
+
+export function readTreeVersionSnapshot(value: unknown): TreeVersionSnapshot | null {
+  const parsed = treeVersionSnapshotSchema.safeParse(value);
+  if (!parsed.success) return null;
+  const tree = readTree(parsed.data.tree);
+  return tree.ok ? { ...parsed.data, tree: tree.value } : null;
+}
 
 export type InvalidSnapshotBlock = {
   id: number;
@@ -66,6 +98,7 @@ export function readRestorableSnapshot(value: unknown): PageSnapshot | null {
 }
 
 export function readPageSnapshot(value: unknown): PageSnapshot | null {
+  if (hasSnapshotFormat(value)) return null;
   const parsed = pageSnapshotSchema.safeParse(value);
   if (parsed.success) {
     return parsed.data;
