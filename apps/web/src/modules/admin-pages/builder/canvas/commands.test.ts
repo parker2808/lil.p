@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import type { TreeDocument, TreeNode } from '@parker2808/cms-core/tree';
+import { BLOCK_REGISTRY } from '@portfolio/contracts';
 
 import { reduceBuilderCommand, type BuilderState } from './commands';
+import { newNode } from '../palette/catalog';
 
 const empty: TreeDocument = {
   schemaVersion: 1,
@@ -9,6 +11,27 @@ const empty: TreeDocument = {
 };
 
 describe('controlled builder commands', () => {
+  it.each(Object.keys(BLOCK_REGISTRY))(
+    'inserts host palette component %s into a real builder section',
+    (kind) => {
+      const section: TreeDocument = {
+        schemaVersion: 1,
+        root: {
+          ...empty.root,
+          sections: [{ id: 'section', type: 'section', responsive: { base: {} }, content: [] }],
+        },
+      };
+      const result = reduceBuilderCommand(
+        { document: section, selectedId: 'section' },
+        {
+          type: 'insert',
+          node: newNode(kind as Parameters<typeof newNode>[0], () => 'host'),
+          destination: { parentId: 'section', slot: 'content', index: 0 },
+        },
+      );
+      expect(result).toMatchObject({ ok: true, selectedId: 'host' });
+    },
+  );
   it('accepts a complete operation and returns the new selection without mutating input', () => {
     const state: BuilderState = { document: empty, selectedId: 'page' };
     const node: TreeNode = {

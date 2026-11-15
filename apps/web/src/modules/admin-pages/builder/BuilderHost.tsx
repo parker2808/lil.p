@@ -11,11 +11,12 @@ import {
   type TreeOperation,
 } from '@parker2808/cms-core/tree';
 import { Button } from '@portfolio/ui/components/ui/button';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 import { useMe } from '@/modules/admin-core/hooks/use-me.hook';
 
+import { BLOCK_EDITOR_META } from '../constants/block-editor-meta.constant';
 import { BuilderShell } from './BuilderShell';
 import {
   activateBuilderDraft,
@@ -105,6 +106,7 @@ function subscribeOnline(onChange: () => void) {
 
 export function BuilderHost({ pageKey }: { pageKey: string }) {
   const locale = useLocale() === 'vi' ? 'vi' : 'en';
+  const translate = useTranslations();
   const text = labels[locale];
   const { id: userId } = useMe();
   const key = recoveryKey(userId, pageKey);
@@ -402,7 +404,14 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
             )}
           </div>
         }
-        renderProperties={() => <PropertiesPanel state={state} locale={locale} onEdit={onEdit} />}
+        renderProperties={() => (
+          <PropertiesPanel
+            state={state}
+            locale={locale}
+            onEdit={onEdit}
+            hostLabel={(type) => translate(BLOCK_EDITOR_META[type].labelKey)}
+          />
+        )}
       />
       {recovery && (
         <div role="region" aria-label={text.restore} className={styles.recovery}>

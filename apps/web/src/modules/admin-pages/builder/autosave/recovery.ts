@@ -1,4 +1,5 @@
 import { readTree, serializedBytes, type TreeDocument } from '@parker2808/cms-core/tree';
+import { builderRegistry } from '../properties/registry';
 
 const MAX_AGE_MS = 24 * 60 * 60 * 1000;
 
@@ -16,7 +17,7 @@ export function readRecovery(key: string): TreeDocument | undefined {
       localStorage.removeItem(key);
       return;
     }
-    const parsed = readTree(data.tree);
+    const parsed = readTree(data.tree, builderRegistry);
     return parsed.ok ? parsed.value : undefined;
   } catch {
     return;
@@ -24,7 +25,8 @@ export function readRecovery(key: string): TreeDocument | undefined {
 }
 
 export function writeRecovery(key: string, tree: TreeDocument): boolean {
-  if (!readTree(tree).ok || (serializedBytes(tree) ?? Infinity) > 256 * 1024) return false;
+  if (!readTree(tree, builderRegistry).ok || (serializedBytes(tree) ?? Infinity) > 256 * 1024)
+    return false;
   try {
     localStorage.setItem(key, JSON.stringify({ at: Date.now(), tree }));
     return true;

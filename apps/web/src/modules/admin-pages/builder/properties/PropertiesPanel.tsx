@@ -8,6 +8,7 @@ import {
   type TreeNode,
   type TreeOperation,
 } from '@parker2808/cms-core/tree';
+import { BLOCK_REGISTRY, type BlockType } from '@portfolio/contracts';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Input } from '@portfolio/ui/components/ui/input';
 import {
@@ -114,9 +115,39 @@ const layoutSchemas = {
 
 function schemaFor(node: TreeNode) {
   if (node.type === 'component')
-    return starterComponentSchemas[node.componentType as keyof typeof starterComponentSchemas];
+    return node.componentType in BLOCK_REGISTRY
+      ? BLOCK_REGISTRY[node.componentType as BlockType].props
+      : starterComponentSchemas[node.componentType as keyof typeof starterComponentSchemas];
   if (node.type === 'grid' || node.type === 'column') return layoutSchemas[node.type];
   return undefined;
+}
+
+function nestedValue(props: Record<string, unknown>, path: string): unknown {
+  return path
+    .split('.')
+    .reduce<unknown>(
+      (value, part) =>
+        value && typeof value === 'object' ? (value as Record<string, unknown>)[part] : undefined,
+      props,
+    );
+}
+
+function propertyChange(
+  props: Record<string, unknown>,
+  path: string,
+  value: string | number | boolean,
+): { key: string; value: Extract<TreeOperation, { kind: 'property' }>['value'] } {
+  const [key, ...parts] = path.split('.');
+  if (!key) throw new Error('Property path must not be empty');
+  if (!parts.length) return { key, value };
+  const root = structuredClone(props[key] ?? {}) as Record<string, unknown>;
+  let target = root;
+  for (const part of parts.slice(0, -1)) {
+    target[part] = structuredClone(target[part] ?? {});
+    target = target[part] as Record<string, unknown>;
+  }
+  target[parts[parts.length - 1]!] = value;
+  return { key, value: root as Extract<TreeOperation, { kind: 'property' }>['value'] };
 }
 
 function EditorField({
@@ -136,8 +167,10 @@ function EditorField({
   const key = field.path;
   const current =
     breakpoint === 'base' ? node.responsive.base : resolveResponsive(node.responsive, breakpoint);
-  const value = current[key];
-  const overridden = breakpoint !== 'base' && Object.hasOwn(node.responsive[breakpoint] ?? {}, key);
+  const [rootKey] = key.split('.');
+  const value = nestedValue(current, key);
+  const overridden =
+    breakpoint !== 'base' && Object.hasOwn(node.responsive[breakpoint] ?? {}, rootKey!);
   const [draft, setDraft] = useState<{ source: string; input: string } | null>(null);
   const [error, setError] = useState('');
   const source = String(value ?? '');
@@ -145,7 +178,10 @@ function EditorField({
   function update(next: string | number | boolean, typing = false) {
     setDraft({ source, input: String(next) });
     setError(
-      onEdit({ kind: 'property', nodeId: node.id, breakpoint, key, value: next }, typing)
+      onEdit(
+        { kind: 'property', nodeId: node.id, breakpoint, ...propertyChange(current, key, next) },
+        typing,
+      )
         ? text.invalid
         : '',
     );
@@ -225,7 +261,7 @@ function EditorField({
               kind: 'clear-override',
               nodeId: node.id,
               breakpoint: breakpoint as Exclude<Breakpoint, 'base'>,
-              key,
+              key: rootKey!,
             });
             setDraft(null);
           }}
@@ -241,10 +277,12 @@ export function PropertiesPanel({
   state,
   locale,
   onEdit,
+  hostLabel,
 }: {
   state: BuilderState;
   locale: 'en' | 'vi';
   onEdit: (operation: TreeOperation, typing?: boolean) => string | undefined;
+  hostLabel?: (type: BlockType) => string;
 }) {
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('base');
   const node = findNode(state.document, state.selectedId);
@@ -252,9 +290,35 @@ export function PropertiesPanel({
   const text = fields[locale];
   const descriptors = schema
     ? schemaToFields(schema, {
-        labelFor: (path) => (path in text ? text[path as keyof typeof text] : ''),
+        labelFor: (path) =>
+          path in text ? text[path as keyof typeof text] : path.replaceAll('.', ' '),
       })
     : [];
+  const current =
+    node &&
+    (breakpoint === 'base' ? node.responsive.base : resolveResponsive(node.responsive, breakpoint));
+  const editable = descriptors.flatMap((field) => {
+    if (
+      field.kind === 'array' ||
+      (field.path.includes('.') &&
+        nestedValue(current ?? {}, field.path.split('.').slice(0, -1).join('.')) === undefined)
+    )
+      return [];
+    if (['localized-text', 'localized-textarea', 'markdown'].includes(field.kind)) {
+      return (['en', 'vi'] as const).map((language) => ({
+        ...field,
+        path: `${field.path}.${language}`,
+        label: `${field.label} (${language.toUpperCase()})`,
+        kind: field.kind === 'localized-text' ? 'text' : 'textarea',
+      }));
+    }
+    return [field];
+  });
+  const canAddHeading =
+    node?.type === 'component' &&
+    node.componentType in BLOCK_REGISTRY &&
+    descriptors.some((field) => field.path === 'heading.title') &&
+    nestedValue(current ?? {}, 'heading') === undefined;
   return (
     <div className={styles.panel} aria-label={text.title}>
       <div
@@ -278,16 +342,35 @@ export function PropertiesPanel({
       <p className={styles.heading}>
         {node
           ? node.type === 'component'
-            ? (nodeNames[locale][node.componentType as keyof typeof nodeNames.en] ??
-              node.componentType)
+            ? node.componentType in BLOCK_REGISTRY
+              ? (hostLabel?.(node.componentType as BlockType) ?? node.componentType)
+              : (nodeNames[locale][node.componentType as keyof typeof nodeNames.en] ??
+                node.componentType)
             : nodeNames[locale][node.type]
           : text.empty}
       </p>
-      {!descriptors.length && (
+      {!editable.length && !canAddHeading && (
         <p className={styles.helper}>{node ? text.unavailable : text.empty}</p>
       )}
+      {canAddHeading && (
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() =>
+            onEdit({
+              kind: 'property',
+              nodeId: node.id,
+              breakpoint,
+              key: 'heading',
+              value: { title: { en: 'Section heading', vi: 'Tiêu đề mục' } },
+            })
+          }
+        >
+          {locale === 'vi' ? 'Thêm tiêu đề' : 'Add heading'}
+        </Button>
+      )}
       {node &&
-        descriptors.map((field) => (
+        editable.map((field) => (
           <EditorField
             key={`${node.id}-${breakpoint}-${field.path}`}
             node={node}

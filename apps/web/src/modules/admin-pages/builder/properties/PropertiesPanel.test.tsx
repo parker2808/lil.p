@@ -1,7 +1,10 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { BLOCK_REGISTRY } from '@portfolio/contracts';
+import type { TreeNode } from '@parker2808/cms-core/tree';
 
 import type { BuilderState } from '../canvas/commands';
+import { newNode } from '../palette/catalog';
 import { PropertiesPanel } from './PropertiesPanel';
 
 const state = {
@@ -38,6 +41,105 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   Element.prototype.scrollIntoView = scrollIntoView;
+});
+
+it.each(Object.keys(BLOCK_REGISTRY))('renders Properties for host component %s', (kind) => {
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [
+          {
+            ...state.document.root.sections[0]!,
+            content: [
+              newNode(kind as Parameters<typeof newNode>[0], () => 'host') as Extract<
+                TreeNode,
+                { type: 'component' }
+              >,
+            ],
+          },
+        ],
+      },
+    },
+  };
+  render(<PropertiesPanel state={hostState} locale="en" onEdit={vi.fn()} />);
+  expect(screen.getByRole('group', { name: 'Breakpoint' })).toBeInTheDocument();
+  cleanup();
+});
+
+it('shows the translated host name in the Properties heading', () => {
+  const host = newNode('page-header', () => 'host') as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(
+    <PropertiesPanel
+      state={hostState}
+      locale="vi"
+      onEdit={vi.fn()}
+      hostLabel={() => 'Đầu trang'}
+    />,
+  );
+  expect(screen.getByText('Đầu trang')).toBeInTheDocument();
+  expect(screen.queryByText('page-header')).toBeNull();
+});
+
+it('submits bilingual nested host values as one validated root property', () => {
+  const onEdit = vi.fn();
+  const host = newNode('hero', () => 'host') as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(<PropertiesPanel state={hostState} locale="en" onEdit={onEdit} />);
+  fireEvent.change(screen.getByRole('textbox', { name: 'primaryCta label (VI)' }), {
+    target: { value: 'Dự án' },
+  });
+  expect(onEdit).toHaveBeenCalledWith(
+    expect.objectContaining({
+      key: 'primaryCta',
+      value: { label: { en: 'View case studies', vi: 'Dự án' }, href: '/projects' },
+    }),
+    true,
+  );
+});
+
+it('offers valid optional bilingual heading for a host with empty defaults', () => {
+  const onEdit = vi.fn();
+  const host = newNode('cv-download', () => 'host') as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(<PropertiesPanel state={hostState} locale="en" onEdit={onEdit} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Add heading' }));
+  expect(onEdit).toHaveBeenCalledWith(
+    expect.objectContaining({
+      key: 'heading',
+      value: { title: { en: 'Section heading', vi: 'Tiêu đề mục' } },
+    }),
+  );
 });
 
 it('uses localized labels and submits base, mobile and clear-override operations', () => {
