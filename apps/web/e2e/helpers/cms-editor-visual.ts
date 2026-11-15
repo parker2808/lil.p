@@ -20,6 +20,7 @@ export async function captureEditorHostVisuals(
     locale: 'en' | 'vi';
     theme: 'light' | 'dark';
     width: 390 | 1440;
+    surface: 'canvas' | 'properties-sheet';
     file: string;
     screenshotSha256: string;
     axe: Array<{ id: string; impact: string | null; targets: string[] }>;
@@ -59,6 +60,7 @@ export async function captureEditorHostVisuals(
           locale,
           theme,
           width,
+          surface: 'canvas',
           file,
           screenshotSha256: createHash('sha256').update(screenshot).digest('hex'),
           axe: result.violations.map((violation) => ({
@@ -67,6 +69,42 @@ export async function captureEditorHostVisuals(
             targets: violation.nodes.map((node) => JSON.stringify(node.target)),
           })),
         });
+        if (width === 390) {
+          const properties = locale === 'vi' ? 'Thuộc tính' : 'Properties';
+          await page
+            .getByRole('navigation', {
+              name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder',
+            })
+            .getByRole('button', { name: properties })
+            .click();
+          const sheet = page.getByRole('dialog', { name: properties });
+          await expect(sheet).toBeVisible();
+          const hostField = sheet.locator(`[id^="builder-field-${hostId}-base-"]`).first();
+          await expect(hostField).toBeVisible();
+          await hostField.scrollIntoViewIfNeeded();
+          const sheetScreenshot = await page.screenshot({ fullPage: true, animations: 'disabled' });
+          const sheetFile = `${componentType}-${locale}-${theme}-390-properties.png`;
+          await testInfo.attach(sheetFile, { body: sheetScreenshot, contentType: 'image/png' });
+          const sheetResult = await new AxeBuilder({ page })
+            .include('[role="dialog"]')
+            .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+            .analyze();
+          entries.push({
+            locale,
+            theme,
+            width,
+            surface: 'properties-sheet',
+            file: sheetFile,
+            screenshotSha256: createHash('sha256').update(sheetScreenshot).digest('hex'),
+            axe: sheetResult.violations.map((violation) => ({
+              id: violation.id,
+              impact: violation.impact ?? null,
+              targets: violation.nodes.map((node) => JSON.stringify(node.target)),
+            })),
+          });
+          await sheet.press('Escape');
+          await expect(sheet).toHaveCount(0);
+        }
       }
     }
   }
@@ -90,7 +128,8 @@ export async function captureEditorHostVisuals(
     ),
     contentType: 'application/json',
   });
-  expect(entries).toHaveLength(8);
+  expect(entries.filter((entry) => entry.surface === 'canvas')).toHaveLength(8);
+  expect(entries.filter((entry) => entry.surface === 'properties-sheet')).toHaveLength(4);
   expect(
     entries.flatMap((entry) =>
       entry.axe
