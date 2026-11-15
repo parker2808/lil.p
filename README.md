@@ -1,5 +1,7 @@
 # lil.p
 
+The stacked [D5 all-block Properties spec](./docs/specs/2026-11-15-cms-d5-all-block-properties.md) registers all 20 host block contracts in the gated builder. Its EN/VI editor derives nested/localized, numeric, array, optional-group and responsive controls from the host schemas; invalid partial edits remain local. This is draft-only: the D6 live-API all-20 release gate and approval remain separate.
+
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 
 The contact form retains name, email, and message typed before hydration, synchronizes them on mount, and sends one client request. The server action remains available without JavaScript; see the [hydration regression spec](./docs/specs/2026-11-11-contact-hydration-readiness.md).

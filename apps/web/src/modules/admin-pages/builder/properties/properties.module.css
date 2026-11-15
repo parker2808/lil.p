@@ -41,6 +41,10 @@
   border-radius: var(--builder-radius-sm);
   background: var(--builder-surface);
 }
+.group {
+  display: grid;
+  gap: 6px;
+}
 .fieldHead {
   display: flex;
   justify-content: space-between;
