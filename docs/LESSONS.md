@@ -2,6 +2,11 @@
 
 - 2026-11-15: A design capture that tabs through controls must restore its entry focus before continuing a keyboard-only edit; wait for scroll paint before reading clipped hit geometry, and keep strict 44px checks.
 
+- 2026-11-15: A scoped builder axe result cannot replace a full-page audit, and matching polite status text cannot prove what a screen reader actually speaks; record automated and manual V16 evidence separately.
+
+- 2026-11-15: A D2 tree-publish endpoint that always returns 409 cannot supply a genuine tree version for a restore test; gate the rejected publish and draft preservation honestly, and leave V10 version-restore coverage open until a real publication path exists.
+- 2026-11-15: When syncing a D4 study base into the D5 host, take D5's live host and history commands rather than reverting to the provisional study route; carry forward base locale/focus fixes and retain both branches' documentation histories.
+
 - 2026-11-15: A silent GitHub Playwright reporter plus a 20-minute shard limit conceals whether a large visual matrix stalled or merely overran the shard; retain a streaming per-test reporter and isolate the matrix from Lighthouse/pixel baselines before interpreting cancellation as feature failure.
 
 - 2026-11-15: A core CSS focus declaration is not proof that every embedded host control paints a ring in production; two ordinary builder buttons reached `:focus-visible` with no computed indicator in repeated CI. Scope an opaque host fallback to all interactive controls and retain exact-head contrast verification.

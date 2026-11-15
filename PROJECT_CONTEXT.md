@@ -50,6 +50,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - #221 run `43729842098` reached two deterministic V15 failures: the focus audit moved focus off Heading before keyboard Delete, and the 768px Properties sheet yielded a stale clipped breakpoint measurement during scroll. Restore pre-audit focus and sample scrolled geometry after paint; exact-head five-shard CI and independent review remain OPEN.
 
+- V16 builder automation adds real-API EN/VI accessible-name, live announcement, keyboard focus, reduced-motion and whole-page axe coverage. Manual VoiceOver/NVDA output, public/preview heading order and independent screen-reader review remain OPEN; no release signoff from this subset.
+
+- D5 V07 stale publish CAS: the earlier post-recovery request reused the current revision and may publish successfully after D6 integration. A stacked browser fix performs an intervening real draft PUT, then asserts stale publish 409 and unchanged draft/revision/versions; exact-head CI and combined #208 rerun remain pending.
+
 - #221 V15 run `43727078116` hung in the keyboard-only capture at 10 minutes and cancelled shard 5 during retry. Removed unbounded transition-finished waits in the reduced-motion audit and added a bounded keyboard test/diagnostic markers; exact-head five-shard CI and independent review remain OPEN.
 
 - V15 focus paint: CI `43720573277` found a blue Breakpoint control with an identical blue focus ring on its own surface. A two-tone ring and per-adjacent-surface 3:1 audit need exact-head CI and independent design review before signoff.
@@ -304,6 +308,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Isolated the V15 design matrix from Lighthouse/pixel shard 1 into shard 5 and added per-test CI progress after two 20-minute cancellations; all existing browser assertions remain required and exact-head CI is pending.
 
 - 2026-11-15: Added neutral theme opposite-contrast focus token and two-tone host ring, checking ≥3:1 for each adjacent surface without lowering the target/focus thresholds.
+
+- 2026-11-15: Registered a real-browser D5 V16 automated accessibility subset for EN/VI tree-builder announcements, focus, reduced-motion and full-page axe. Manual screen-reader and public/preview checks remain open; no runtime or golden changes.
 - 2026-11-15: Corrected V07 real-browser publish-conflict setup to use an intervening server revision, retaining offline recovery and adding draft/version invariants; no runtime or golden change.
 
 - 2026-11-15: Recorded #204 exact-head CI `43716297284`/`43716429537`, clarified invalid Properties input survives remount only (not reload), and separated the failing #208 V07 publish expectation from the D5 feature-head evidence. Docs only; no release signoff.
