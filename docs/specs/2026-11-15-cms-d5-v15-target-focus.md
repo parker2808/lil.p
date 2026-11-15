@@ -13,4 +13,4 @@ The measurement reports each undersized control and each failing focus color/sur
 
 The stacked #204 all-20 fixture also resolves `BLOCK_EDITOR_META.labelKey` against the real EN/VI messages. Until the separate host-label change from #215 is in this branch, its heading assertion accepts either the current raw type text or its translated label; once combined, both languages must continue finding all 20 controls without assuming a raw `hero` label.
 
-Compute color contrast from browser Canvas sRGB pixels for CSS-computed colors rather than parsing only `rgb()` and hex; invalid or translucent measurements fail explicitly, without lowering the focus 3:1 threshold.
+Compute color contrast from browser Canvas sRGB pixels for CSS-computed colors rather than parsing only `rgb()` and hex. Composite painted ancestor surfaces and translucent rings, reject invisible rings (1:1), and measure each visible control's viewport/overflow-clipped geometry; do not lower the focus 3:1 or target 44px thresholds. A real Tab traversal covers the keyboard journey's active builder controls; manual SR and full combined-stack EN/VI localization remain separate gates.

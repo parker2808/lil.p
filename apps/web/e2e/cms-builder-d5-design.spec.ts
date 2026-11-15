@@ -39,13 +39,14 @@ async function contrastPairs(page: Page, pairs: Record<string, [string, string]>
     canvas.width = canvas.height = 1;
     const context = canvas.getContext('2d', { willReadFrequently: true });
     if (!context) throw new Error('Canvas color measurement unavailable');
-    function luminance(color: string): number {
-      if (!CSS.supports('color', color)) throw new Error(`Invalid measured color: ${color}`);
+    function pixel(color: string, name: string) {
+      if (!CSS.supports('color', color)) throw new Error(`${name}: invalid color ${color}`);
       context!.clearRect(0, 0, 1, 1);
       context!.fillStyle = color;
       context!.fillRect(0, 0, 1, 1);
-      const [red, green, blue, alpha] = context!.getImageData(0, 0, 1, 1).data;
-      if (alpha !== 255) throw new Error(`Non-opaque measured color: ${color}`);
+      return context!.getImageData(0, 0, 1, 1).data;
+    }
+    function luminance([red, green, blue]: Uint8ClampedArray): number {
       const channel = (value: number) => {
         const normalized = value / 255;
         return normalized <= 0.04045 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
@@ -54,8 +55,17 @@ async function contrastPairs(page: Page, pairs: Record<string, [string, string]>
     }
     return Object.fromEntries(
       Object.entries(colors).map(([name, [foreground, background]]) => {
-        const first = luminance(foreground);
-        const second = luminance(background);
+        const surface = pixel(background, name);
+        if (surface[3] !== 255) throw new Error(`${name}: uncomposited surface ${background}`);
+        const paint = pixel(foreground, name);
+        context!.clearRect(0, 0, 1, 1);
+        context!.fillStyle = background;
+        context!.fillRect(0, 0, 1, 1);
+        context!.fillStyle = foreground;
+        context!.fillRect(0, 0, 1, 1);
+        const first = luminance(context!.getImageData(0, 0, 1, 1).data);
+        const second = luminance(surface);
+        if (paint[3] === 0) return [name, 1];
         return [
           name,
           Math.round(((Math.max(first, second) + 0.05) / (Math.min(first, second) + 0.05)) * 100) /
@@ -138,6 +148,26 @@ async function capture(
   for (const name of ['selectionSurface', 'focusSurface'] as const)
     expect(pairs[name], `${options.theme}/${options.brand}/${name}`).toBeGreaterThanOrEqual(3);
   const targetGeometry = await page.locator('.admin-shell').evaluate((root) => {
+    function visibleRect(control: HTMLElement) {
+      const rect = control.getBoundingClientRect();
+      let left = Math.max(0, rect.left);
+      let right = Math.min(innerWidth, rect.right);
+      let top = Math.max(0, rect.top);
+      let bottom = Math.min(innerHeight, rect.bottom);
+      for (let parent = control.parentElement; parent; parent = parent.parentElement) {
+        const style = getComputedStyle(parent);
+        const bounds = parent.getBoundingClientRect();
+        if (/hidden|auto|scroll|clip/.test(style.overflowX)) {
+          left = Math.max(left, bounds.left);
+          right = Math.min(right, bounds.right);
+        }
+        if (/hidden|auto|scroll|clip/.test(style.overflowY)) {
+          top = Math.max(top, bounds.top);
+          bottom = Math.min(bottom, bounds.bottom);
+        }
+      }
+      return { width: Math.max(0, right - left), height: Math.max(0, bottom - top) };
+    }
     const controls = Array.from(
       root.querySelectorAll<HTMLElement>(
         'button, a[href], input:not([type="hidden"]), select, textarea, [role="treeitem"], [role="button"], [role="link"], [role="menuitem"], [role="checkbox"], [role="radio"], [role="switch"], [role="tab"], [role="combobox"], [tabindex]:not([tabindex="-1"])',
@@ -145,15 +175,11 @@ async function capture(
     );
     const visible = controls.filter((control) => {
       const style = getComputedStyle(control);
-      const rect = control.getBoundingClientRect();
+      const rect = visibleRect(control);
       return (
         control.getClientRects().length > 0 &&
         rect.width > 0 &&
         rect.height > 0 &&
-        rect.right > 0 &&
-        rect.bottom > 0 &&
-        rect.left < innerWidth &&
-        rect.top < innerHeight &&
         style.visibility !== 'hidden' &&
         style.display !== 'none' &&
         !control.hasAttribute('disabled') &&
@@ -162,7 +188,7 @@ async function capture(
       );
     });
     return visible.map((control) => {
-      const rect = control.getBoundingClientRect();
+      const rect = visibleRect(control);
       return {
         name:
           control.getAttribute('aria-label') ??
@@ -187,6 +213,44 @@ async function capture(
   ).toBeLessThanOrEqual(1);
   await page.keyboard.press('Shift');
   const focusIndicators = await page.locator('.admin-shell').evaluate((root) => {
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 1;
+    const context = canvas.getContext('2d', { willReadFrequently: true });
+    if (!context) throw new Error('Canvas focus measurement unavailable');
+    function alpha(color: string) {
+      if (!CSS.supports('color', color)) return 0;
+      context!.clearRect(0, 0, 1, 1);
+      context!.fillStyle = color;
+      context!.fillRect(0, 0, 1, 1);
+      return context!.getImageData(0, 0, 1, 1).data[3]!;
+    }
+    function paintedSurface(element: HTMLElement) {
+      const ancestors: HTMLElement[] = [];
+      for (let current: HTMLElement | null = element; current; current = current.parentElement)
+        ancestors.unshift(current);
+      context!.clearRect(0, 0, 1, 1);
+      context!.fillStyle = 'white';
+      context!.fillRect(0, 0, 1, 1);
+      for (const ancestor of ancestors) {
+        context!.fillStyle = getComputedStyle(ancestor).backgroundColor;
+        context!.fillRect(0, 0, 1, 1);
+      }
+      const [red, green, blue] = context!.getImageData(0, 0, 1, 1).data;
+      return `rgb(${red} ${green} ${blue})`;
+    }
+    function shadowColors(value: string) {
+      return value.split(/,(?![^()]*\))/).flatMap((shadow) => {
+        const color = shadow.match(/(?:rgba?|hsla?|oklch|color)\([^)]*\)|#[\da-f]{3,8}/i)?.[0];
+        if (!color) return [];
+        const offsets = shadow
+          .replace(color, '')
+          .match(/-?\d+(?:\.\d+)?(?:px)?/g)
+          ?.map((offset) => Number.parseFloat(offset));
+        return offsets && offsets.length >= 4 && offsets[3]! >= 2 && alpha(color) > 0
+          ? [color]
+          : [];
+      });
+    }
     const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const controls = Array.from(
       root.querySelectorAll<HTMLElement>(
@@ -212,22 +276,34 @@ async function capture(
       )
         continue;
       control.focus({ preventScroll: true });
-      if (document.activeElement !== control) continue;
+      if (document.activeElement !== control) {
+        results.push({
+          name: control.getAttribute('aria-label') ?? control.textContent?.trim(),
+          color: '',
+          surfaces: [],
+          reached: false,
+        });
+        continue;
+      }
       const focused = getComputedStyle(control);
       const surfaces: string[] = [];
       for (let element: HTMLElement | null = control; element; element = element.parentElement) {
         const color = getComputedStyle(element).backgroundColor;
-        if (color !== 'rgba(0, 0, 0, 0)' && color !== 'transparent') surfaces.push(color);
+        if (alpha(color) > 0) surfaces.push(paintedSurface(element));
         if (surfaces.length === 2) break;
       }
-      const ring = focused.boxShadow.match(/rgba?\([^)]+\)/g)?.at(-1);
+      if (surfaces.length === 0) surfaces.push(paintedSurface(control));
+      const outline =
+        focused.outlineStyle !== 'none' &&
+        Number.parseFloat(focused.outlineWidth) >= 2 &&
+        alpha(focused.outlineColor) > 0
+          ? focused.outlineColor
+          : '';
       results.push({
         name: control.getAttribute('aria-label') ?? control.textContent?.trim().slice(0, 70),
-        color:
-          focused.outlineStyle !== 'none' && focused.outlineWidth !== '0px'
-            ? focused.outlineColor
-            : ring,
+        color: outline || shadowColors(focused.boxShadow)[0] || '',
         surfaces,
+        reached: true,
       });
     }
     previous?.focus({ preventScroll: true });
@@ -236,14 +312,17 @@ async function capture(
   expect(focusIndicators.length, `${options.state} keyboard-focusable controls`).toBeGreaterThan(0);
   const focusPairs = Object.fromEntries(
     focusIndicators.flatMap((focus, index) =>
-      focus.surfaces.map((surface, surfaceIndex) => [
-        `${index}/${surfaceIndex}`,
-        [focus.color!, surface] as [string, string],
-      ]),
+      focus.color
+        ? focus.surfaces.map((surface, surfaceIndex) => [
+            `${index}/${surfaceIndex}`,
+            [focus.color, surface] as [string, string],
+          ])
+        : [],
     ),
   );
   const focusContrast = await contrastPairs(page, focusPairs);
   for (const [index, focus] of focusIndicators.entries()) {
+    expect(focus.reached, `${options.state}/${focus.name} programmatic focus`).toBe(true);
     expect(focus.color, `${options.state}/${focus.name} focus indicator`).toBeTruthy();
     expect(focus.surfaces.length, `${options.state}/${focus.name} painted surface`).toBeGreaterThan(
       0,
@@ -322,6 +401,67 @@ async function createActivePage(page: Page, locale: 'en' | 'vi') {
   return { key, origin };
 }
 
+async function assertTabReachability(page: Page) {
+  const expected = await page.locator('.admin-shell').evaluate((root) => {
+    const controls = Array.from(
+      root.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [tabindex]'),
+    ).filter((control) => {
+      const style = getComputedStyle(control);
+      const rect = control.getBoundingClientRect();
+      return (
+        control.tabIndex >= 0 &&
+        !control.matches(':disabled') &&
+        !control.closest('[inert], [aria-hidden="true"]') &&
+        style.visibility !== 'hidden' &&
+        style.display !== 'none' &&
+        rect.width > 0 &&
+        rect.height > 0 &&
+        rect.right > 0 &&
+        rect.bottom > 0 &&
+        rect.left < innerWidth &&
+        rect.top < innerHeight
+      );
+    });
+    return controls.map((control, index) => {
+      control.dataset.auditTab = String(index);
+      return (
+        control.getAttribute('aria-label') ??
+        control.textContent?.trim().slice(0, 70) ??
+        String(index)
+      );
+    });
+  });
+  expect(expected.length).toBeGreaterThan(0);
+  const count = await page.locator('button, a[href], input, select, textarea, [tabindex]').count();
+  await page.evaluate(() => {
+    document.body.tabIndex = -1;
+    document.body.focus();
+  });
+  const visited = new Set<number>();
+  try {
+    for (let index = 0; index < count + 2 && visited.size < expected.length; index++) {
+      await page.keyboard.press('Tab');
+      const active = await page.evaluate(() =>
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement.dataset.auditTab
+          : undefined,
+      );
+      if (active !== undefined) visited.add(Number(active));
+    }
+    expect(
+      expected.filter((_, index) => !visited.has(index)),
+      'Visible, enabled builder controls unreachable by Tab',
+    ).toEqual([]);
+  } finally {
+    await page.evaluate(() => {
+      document
+        .querySelectorAll('[data-audit-tab]')
+        .forEach((element) => element.removeAttribute('data-audit-tab'));
+      document.body.removeAttribute('tabindex');
+    });
+  }
+}
+
 test.setTimeout(600_000);
 
 test('active builder supports a keyboard-only nested edit, history and focus journey', async ({
@@ -377,6 +517,7 @@ test('active builder supports a keyboard-only nested edit, history and focus jou
   await expect(page.getByRole('dialog', { name: 'Properties' })).toBeVisible();
   await page.keyboard.press('Escape');
   await expect(trigger).toBeFocused();
+  await assertTabReachability(page);
 });
 
 test('EN/VI core and token-only lil.p builder states are visually and accessibly evidenced', async ({
