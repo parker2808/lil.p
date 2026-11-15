@@ -417,3 +417,4 @@
 - 2026-11-15: When a study route is handed from a fixture component to the real builder host, update formerly registered browser specs against the actual editable panel; a fixture-only textbox can hide a deterministic shard failure despite a correctly mounted dialog.
 - 2026-11-15: When a study route becomes the live builder host, test the selected editable heading across responsive Properties surfaces rather than a fixture-only ID; avoid merging divergent D5 runtime solely to repair a D6 test.
 - 2026-11-15: When a stacked UI branch and its base independently repair the same browser fixture, merge test code normally and preserve both context histories; rerun exact-head shards on the merged base instead of inheriting either prior green run.
+- 2026-11-15: When a restore conflict disables the focused confirmation action, explicitly focus the enabled Cancel button inside the still-open alert dialog; a visible localized error alone does not preserve keyboard focus.
