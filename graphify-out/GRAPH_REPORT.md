@@ -1,7 +1,7 @@
 # Graph Report - test-cms-d6-parity-matrix  (2026-11-15)
 
 ## Corpus Check
-- 1659 files · ~691,108 words
+- 1659 files · ~691,436 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 40 file(s) not represented in the graph (top: (none) 18, .css 17, .example 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `dff7c7b5`
+- Built from commit: `d03d282d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A data-backed streaming notes fallback needs real 24px link targets, not only readable text; a lazy contact form can mount between public and preview captures, so wait for its existing interactive marker on both sides before comparing full semantics and unwaived axe.
+
 - 2026-11-15: During rapid draft/public navigation, a transient host can make a global `main.cms-core-host` locator ambiguous; wait for exactly one visible direct host under the content landmark instead of selecting the first element.
 
 - 2026-11-15: A dark text token that passes against the page background may fail AA against an inset CMS card; measure against neutral and branded surfaces. Eagerly importing the notes client component increased unique public chunks by ~57 KiB gzip; keep it lazy with data-backed server suspense fallback and assert initial HTML rather than raising the bundle cap.

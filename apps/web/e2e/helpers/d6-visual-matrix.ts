@@ -219,6 +219,12 @@ async function capture(
     { brand, theme },
   );
   await expect(main).toHaveCSS('color-scheme', theme);
+  if (blocks.some(({ type }) => type === 'contact-form')) {
+    await expect(
+      main.locator('[data-host-block-type="contact-form"] form[data-interactive="true"]'),
+      `${label} contact form hydrated before semantic and visual capture`,
+    ).toBeVisible();
+  }
   const accent = await main.evaluate((element) =>
     getComputedStyle(element).getPropertyValue('--builder-accent').trim(),
   );

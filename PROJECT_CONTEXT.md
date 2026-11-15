@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- #217 exact-head `d03d282d` run `43706973188` passed web shards 1–4 but shard 5 found 16px notes fallback links (axe target-size) and a preview contact form captured before lazy hydration. Sized actual fallback link targets to at least 24px and made both captures wait for the existing form interactive marker. Await new exact-head 5/5, API/build evidence and artifact review; distinct neutral SSR tenant, visible CV and full no-script nested tree remain GAP.
+
 - #217 run `43701640505` exposed a zero-size `cv-download` wrapper when the seeded profile has no resume: Playwright waited for visibility while screenshotting that empty wrapper. Capture labeled empty host-context public/preview pairs, retain empty SSR/hydration/hidden-wrapper assertions and axe. Four visual groups now register across five CI shards (group 4 on shard 5); visible CV, neutral SSR tenant, exact-head five-shard CI and visual review remain GAP.
 
 - #217 exact-head `cccc2286` CI run `43698675563` passed build/API E2E and web shards 1–3, but shard 4 reached its 20-minute job timeout without a test failure or artifact. The visual matrix is now split into four independently retried locale/theme cases per group (all 24 tuples and axe/pixel checks retained) with bounded per-case timeouts and per-test CI progress. Final four-shard CI, full visual review, distinct neutral SSR tenant and visible CV remain GAP.
@@ -294,6 +296,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Addressed #217 shard-5 notes fallback touch-target failure with 24px clickable links and a unit assertion; the visual matrix now awaits hydrated contact fields on both routes before full text/pixel/axe comparison. No threshold, inventory or screenshot tuple removed; exact-head CI pending.
 
 - 2026-11-15: #217 replaces impossible screenshots of an intentionally empty CV wrapper with labeled host-context pairs; the CV remains asserted empty/hidden and is not represented as a visible rendered block.
 

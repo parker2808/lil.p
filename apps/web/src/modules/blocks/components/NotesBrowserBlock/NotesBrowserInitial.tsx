@@ -15,7 +15,12 @@ export function NotesBrowserInitial({
         <ul>
           {page.items.map((post) => (
             <li key={post.id}>
-              <a href={`/${locale}/notes/${post.slug}`}>{post.title}</a>
+              <a
+                className="inline-flex min-h-6 min-w-6 items-center"
+                href={`/${locale}/notes/${post.slug}`}
+              >
+                {post.title}
+              </a>
             </li>
           ))}
         </ul>

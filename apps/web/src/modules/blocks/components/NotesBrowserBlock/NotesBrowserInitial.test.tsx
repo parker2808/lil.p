@@ -14,6 +14,7 @@ describe('notes browser streamed fallback', () => {
       />,
     );
     expect(html).toContain(`href="/${locale}/notes/sample-note"`);
+    expect(html).toContain('class="inline-flex min-h-6 min-w-6 items-center"');
     expect(html).toContain(postFixture.title);
   });
 

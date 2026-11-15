@@ -36,6 +36,14 @@ That narrower SSR claim remains a separate GAP until a no-script browser test
 proves all nested content appears without React stream patch scripts.
 
 V03/V14 matrix is **pending exact-head CI and visual review**, not yet PASS.
+Run `43706973188` passed four web shards but failed shard 5: the
+data-backed notes fallback exposed 16px links below WCAG 2.2 AA target size,
+and preview capture could race the lazy contact form's interactive mount.
+The fallback links now expose at least 24px clickable height, and the matrix
+waits for the existing form `data-interactive` signal on both public and
+preview before asserting their full text, axe and paired pixels. No contact
+text is excluded and the axe gate stays unwaived; the next exact-head run
+must prove both fixes before these tuples count.
 Four independent shard files publish one real API page per locale/theme test,
 with one H1 and four other host types in each page. Splitting each shard into
 four retry-isolated cases bounds a stalled tuple to two minutes per attempt
