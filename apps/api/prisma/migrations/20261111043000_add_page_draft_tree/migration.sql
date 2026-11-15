@@ -1,0 +1,3 @@
+ALTER TABLE `page`
+  ADD COLUMN `draftTree` JSON NULL,
+  ADD COLUMN `draftTreeRevision` BIGINT NOT NULL DEFAULT 0;

@@ -21,6 +21,7 @@
 - 2026-11-11: When integrating sibling core exports, keep both theme CSS and tree JS declarations in the manifest and rebuild Graphify after a docs-only merge conflict instead of combining generated graph reports by hand.
 
 - 2026-11-15: Restacking pure D5 tree state on the integrated D base requires preserving host-registry validation and the typed legacy restore/reload protections alongside main's independent fixture and package-local gates.
+- 2026-11-15: When merging a stale D2 branch onto main, preserve its revision-and-mode CAS and lossless restore checks while adopting main's newer host/core code, corrected golden SEO test and generated Graphify output; never let earlier branch ancestry overwrite accepted fixes.
 - 2026-11-15: DOM `textContent()` includes display-none responsive heading variants, so a viewport regression must assert the single CSS-visible variant (and heading count) instead of comparing the whole heading's raw text.
 - 2026-11-15: Per-breakpoint H1 counting alone is insufficient for a one-element SSR heading renderer: reject responsive level changes at publish and render time, but continue allowing incomplete draft editing; assert the visible heading at mobile, tablet and desktop.
 - 2026-11-15: Integrating a server-only CMS tree renderer after package tooling moved requires updating its measurement import to the package-local script and gating computed breakpoint behavior in both CI and local E2E. Preserve legacy route dispatch until the D2 snapshot contract is wired.
