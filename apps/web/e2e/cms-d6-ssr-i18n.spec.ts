@@ -54,6 +54,19 @@ test('nested tree keeps EN/VI SSR without scripts and selects brand by real host
                     },
                   ],
                 },
+                {
+                  id: 'column-two',
+                  type: 'column',
+                  responsive: { base: { span: 1 } },
+                  content: [
+                    {
+                      id: 'nested-detail',
+                      type: 'component',
+                      componentType: 'paragraph',
+                      responsive: { base: { text: 'Nested SSR detail' } },
+                    },
+                  ],
+                },
               ],
             },
           ],
@@ -110,6 +123,7 @@ test('nested tree keeps EN/VI SSR without scripts and selects brand by real host
           await expect(root).toHaveAttribute('data-brand', brand);
           await expect(root.getByRole('heading', { name: 'Nested SSR heading' })).toBeVisible();
           await expect(root.getByText('Nested SSR paragraph')).toBeVisible();
+          await expect(root.getByText('Nested SSR detail')).toBeVisible();
           const action = root.getByRole('link', { name: 'Nested SSR action' });
           await expect(action).toBeVisible();
           const screenshot = await action.screenshot({ animations: 'disabled' });
