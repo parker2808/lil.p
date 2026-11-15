@@ -39,6 +39,20 @@ deploys, verification and rollback.
    `20261101082635_site_settings_hero_stats`). Agents never run migrations on
    TiDB.
 
+   **D2 forward-only exception (`20261111043000_add_page_draft_tree`):** Parker
+   approved a brief admin page/version write pause at 08:54 ICT on 2026-11-15.
+   The coordinator must first establish and record a concrete Render procedure
+   that pauses those writes _before_ migration can start, drains **all** old API
+   instances (including during new-instance startup migration), and prevents
+   old instances from accepting writes until retired. Record the pause and
+   drain evidence, instance identities/deployment versions and timestamps,
+   migration start and completion, new D2-aware API readiness and a controlled
+   reopening of writes only after verification. The current Docker entrypoint
+   auto-migrates on startup, so a normal rolling redeploy with an old serving
+   instance does **not** establish this no-overlap interval. If the pause or
+   drain cannot be verified, **stop before deployment/migration**. Do not infer
+   execution from this policy approval, disposable MySQL tests, or CI.
+
 ## 3. Deploy main to production
 
 Pick one option.
@@ -122,6 +136,15 @@ If production breaks, open a `hotfix/*` PR; only those branches get preview depl
   This does not rebuild and does not count as a new build.
 - **Code:** open a `hotfix/*` PR that reverts the bad merge
   (`git revert -m 1 <merge-sha>`), let CI pass, merge. Never force-push `main`.
+- **After D2 migration:** never roll back or redeploy a pre-D2 API, even if it
+  starts against the additive schema. A genuine old Prisma-client transaction
+  can overwrite a published tree pointer without the new revision CAS (test
+  `350ac169`, 1 pass / 1 deliberate safety failure on disposable MySQL; not
+  proof the old HTTP route accepts it). Keep page/version writes paused and
+  fix forward with a D2-aware API build; a web-only rollback is safe only if
+  the serving API stays D2-aware. No TiDB-specific database fence is planned.
+  The forward-only policy and brief outage are approved; the actual Render
+  no-overlap evidence must still be obtained before #199 deploy.
 - **Database:** migrations are not rolled back automatically. Any data or schema
   fix on TiDB needs Parker's approval and is done by Parker.
 - After a rollback, auto-promotion of new `main` deploys may be paused; promote
