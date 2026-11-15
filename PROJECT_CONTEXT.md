@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 D6 J07/V06 no-script gate: four five-host groups now require real API publication and 390/768/1440 EN/VI public/version-preview browser output with scripts disabled, nonempty nested host content except the known empty CV, no horizontal overflow and paired screenshot manifests. Exact-head five-shard CI and independent responsive artifact review are outstanding; J07/V06 remain GAP until those complete. Neutral/VI-wide accessibility and live D2 gates remain separate. See `docs/specs/2026-11-16-cms-d6-j07-v06-nojs.md`.
+
 - 2026-11-16 D6 header tablet overflow: move the shared public desktop-navigation breakpoint from 768px to 1280px, keeping the existing mobile sheet/keyboard flow at 768/1024; add EN/VI light/dark viewport/44px/keyboard screenshot evidence. Exact-head CI and raw image review pending; no broader V09/V10 signoff.
 
 - 2026-11-15 D6 #241 CI 43737085933: dark public footer screenshot scrolls the no-script viewport to the bottom while preview omits that capture; reset to top before strict link geometry comparison. No threshold or runtime changes; new exact-head CI pending.
@@ -335,6 +337,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Added all-20 no-script host public/preview tests at three responsive widths and source-head screenshot manifests; registered the test on five-shard CI. No runtime, schema, golden-contract or production change; responsive signoff awaits exact-head artifacts and review.
 
 - 2026-11-16: Keep public header's compact navigation until 1280px and gate 768/1024/1280 EN/VI light/dark viewport bounds, target sizes, keyboard order and screenshots; CI and independent visual review pending.
 
