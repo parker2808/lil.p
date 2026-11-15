@@ -178,10 +178,15 @@ for (const locale of ['en', 'vi'] as const) {
               `${locale}-${theme}-${brand} no-script shell background`,
             ).toBe(theme === 'dark' ? '#111318' : '#f6f3ec');
             await expect(shell).toHaveCSS('color-scheme', theme === 'dark' ? 'dark' : 'normal');
-            await expect(footer).toHaveCSS(
-              'background-color',
-              theme === 'dark' ? 'rgb(24, 27, 34)' : 'rgb(252, 250, 246)',
-            );
+            const expectedFooterColor = await footer.evaluate((element, palette) => {
+              const probe = document.createElement('span');
+              probe.style.backgroundColor = `color-mix(in srgb, ${palette === 'dark' ? '#111318' : '#f6f3ec'} 93%, #17634a 7%)`;
+              element.appendChild(probe);
+              const color = getComputedStyle(probe).backgroundColor;
+              probe.remove();
+              return color;
+            }, theme);
+            await expect(footer).toHaveCSS('background-color', expectedFooterColor);
             if (theme === 'dark' && !preview) {
               await testInfo.attach(`${locale}-${brand}-nojs-dark-header.png`, {
                 body: await header.screenshot({ animations: 'disabled' }),
