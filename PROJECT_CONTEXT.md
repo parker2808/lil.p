@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- 2026-11-16 #208 current integration: D2 `67c4d1c6`, D5 `7e91f613`, D6 `6b09962f` merged into verification-only head `cbf01a22`. CI `43748043927` shard 4 exposed D5/D6 Properties accessible-label drift in the D6 UI restore fixture (`Title · English` versus `Title (EN)`); exact-locator correction is combined-only and requires fresh five-shard CI. J07/V06/V13 and V17/V21 source follow-ups remain pending final integrated evidence; J09/V18/V19 remain post-deploy. DO NOT MERGE.
+- 2026-11-16 #208 current integration: D2 `67c4d1c6`, D5 `7e91f613`, D6 `6b09962f` merged into verification-only head `dc505019`. Run `43748043927` shard 4 exposed D5/D6 Properties accessible-label drift; combined-only exact-locator correction passed API + 5/5 web shards on `43749231048`. This cut scores 15/28 pre-merge PASS, 13 GAP; #247/#248/#249/#250/#251 source follow-ups do not confer full combined PASS. J09/V18/V19 remain post-deploy; manual SR V16 remains documented limitation. DO NOT MERGE.
 
 - 2026-11-16 #208 final-cut verification: code head `e13790ae` includes D2 `15a4a3a`, D5 `7e91f61`, D6 `ba2fe0e`; exact-head CI `43742443333` passed API/unit/build and all five web shards. Scored pre-merge 15/28 PASS, 13/28 GAP; J09/V18/V19 deferred to the approved rollout's live gates. V16's automated subset is the approved gate; manual SR remains documented limitation, not WCAG certification. #239 is not integrated; #208 DO NOT MERGE. See combined matrix spec for row IDs/owners.
 
@@ -433,6 +433,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Scored verification-only #208 at `dc505019` against exact-head CI `43749231048` (17/17, API + all five web shards), source/merge artifact provenance and bounded independent reviews; V09/V10/full visual, V12/V13, J07/V06 and raw inventory gaps remain. No main merge/deploy or production action.
 
 - 2026-11-16: Corrected combined-only D6 UI restore field locators to the D5 Properties panel's actual accessible English/Vietnamese labels after failed #208 run `43748043927`; no saved-draft, visual, product runtime or release-gate assertion was relaxed.
 
