@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Test host-only CMS blocks through authenticated activation, revision-checked save/read and publish before EN/VI preview/public SSR; a mocked editor GET or schema-only registry count cannot catch an API boundary dropping the host registry.
+
 - 2026-11-15: Describe D2 deploy readiness as executable proof of forward-only Stage A write freeze/drain, not rollback-read proof; once migrated, an old API rollback is unsafe and recovery must roll forward.
 - 2026-11-15: Treat a rehearsal's pack count as evidence for that source SHA, not a timeless policy; enumerate the allowlisted paths and review all four direct consumer manifests and their lockfile diff before a C3 pin.
 - 2026-11-15: Before removing a workspace package in a tarball rehearsal, search every workspace manifest for direct `workspace:*` consumers; web and the neutral fixture can block a frozen install even when contracts and API are pinned.

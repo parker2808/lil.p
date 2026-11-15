@@ -1,5 +1,10 @@
 # lil.p
 
+The D6 host-registry integration is staged on a scratch branch: all 20 registered
+component types must pass real authenticated draft activation, save, read and
+publish, then EN/VI version preview and public SSR. This is route evidence, not
+all-20 Properties editing, visual/a11y approval, or permission to deploy D2.
+
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 
 The same runbook records a local #208 tarball rehearsal: its 26-file pack contains only built `dist/**`, README, LICENSE and package.json. The package remains subpath-only, and a future C3 consumer switch must pin all four direct dependents (contracts, API, web and the neutral fixture). Recount the pack at the final integrated SHA; final merge, rights and distribution authorization remain separate gates.

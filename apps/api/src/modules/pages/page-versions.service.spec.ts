@@ -201,6 +201,8 @@ describe('PageVersionsService', () => {
     for (const locale of ['en', 'vi'] as const) {
       const preview = await service.getPreview('home', locale, 1);
       expect(preview.seo.title).toBe('Legacy home');
+      expect('blocks' in preview).toBe(true);
+      if (!('blocks' in preview)) throw new Error('Expected a legacy block preview');
       expect(preview.blocks.map(({ type, key }) => ({ type, key }))).toEqual([
         { type: 'hero', key: 'hero' },
       ]);

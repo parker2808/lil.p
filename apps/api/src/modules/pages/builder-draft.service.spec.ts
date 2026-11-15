@@ -1,3 +1,4 @@
+import { BLOCK_REGISTRY } from '@portfolio/contracts';
 import { describe, expect, it, vi } from 'vitest';
 
 import { BuilderDraftService } from './builder-draft.service';
@@ -65,6 +66,47 @@ function setup(revision = 0n) {
 }
 
 describe('builder draft revision contract', () => {
+  it.each(Object.values(BLOCK_REGISTRY))(
+    'accepts and reloads host type $type',
+    async (definition) => {
+      const { service } = setup();
+      const tree = {
+        schemaVersion: 1,
+        root: {
+          id: 'page-root',
+          type: 'page',
+          responsive: { base: {} },
+          sections: [
+            {
+              id: 'section',
+              type: 'section',
+              responsive: { base: {} },
+              content: [
+                {
+                  id: 'host-block',
+                  type: 'component',
+                  componentType: definition.type,
+                  responsive: { base: definition.defaults },
+                },
+              ],
+            },
+          ],
+        },
+      };
+      expect(await service.activate('ideas', { expectedRevision: '0', tree })).toMatchObject({
+        mode: 'tree',
+        revision: '1',
+        tree,
+      });
+      expect(await service.save('ideas', { expectedRevision: '1', tree })).toMatchObject({
+        mode: 'tree',
+        revision: '2',
+        tree,
+      });
+      expect(await service.get('ideas')).toMatchObject({ mode: 'tree', revision: '2', tree });
+    },
+  );
+
   it('reads legacy without converting blocks and serializes a large revision exactly', async () => {
     const { service } = setup(9007199254740993n);
     expect(await service.get('ideas')).toEqual({

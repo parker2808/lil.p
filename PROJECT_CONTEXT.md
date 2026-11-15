@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 D6 final-stack scratch: `pre/d6-final-restack` combines main, #199, #204 and #202 in that order without updating their PR branches. Draft input and stored-tree reads, publish and immutable snapshot reads use `HOST_TREE_REGISTRY`. The all-20 live HTTP/EN/VI SSR test now asserts activation, revision-checked save and read before publish; exact-head CI remains required, and #211's mocked GET cannot establish this gate. D2 migration/drain and all-20 Properties/visual/a11y gates remain blocked; no release approval.
+
 - C1 #209 P3 docs follow-up (2026-11-15): the #208 26-file tarball is evidence for that source SHA, not a fixed count for later integration; the allowlist is `dist/**`, README, LICENSE and package.json. The coordinator C3 command sheet must review all four direct consumer manifests (contracts, API, web, neutral fixture) alongside the root lockfile. No package/runtime/golden changes; final integrated audit and authorization remain open.
 - C1 combined-head rehearsal (#208 `59cc3b4f`, 2026-11-15): a local `git filter-repo` package extraction builds, lints, typechecks, passes the package boundary gate and 54 unit tests (two optional browser tests skipped), and packs only 26 allowlisted files. All five JS subpaths resolve from the tarball in ESM/CJS with types; CSS resolves, while the root `"."` is intentionally absent pending consumer-owner decision. A four-consumer scratch install and contracts → web → API build pass. The C3 command sheet must include web and the fixture; manual history/metadata/license and trusted install/deploy gates remain open. No repo, runtime or golden-contract change.
 - D2 rollback-reader gate (2026-11-15): Parker approved the forward-only policy at 08:54 ICT, **not** a demonstrated Render page-write pause/drain or production migration. The pre-D2 Prisma reproduction `350ac169` can change `publishedVersionId` without claiming `draftTreeRevision`; no TiDB trigger fence exists. Before the `main` deploy runs `Page.draftTree` migration, prove page/version writes are paused and all old API instances drained; verify D2-aware instances before resuming. If unverifiable, block #199; write-freeze implementation is owned separately. See `docs/specs/2026-11-11-cms-d2-persistence.md`.
@@ -265,6 +267,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Prepared D6 scratch integration on the ordered main → D2 → D5 UI → D6 stack, retaining main's routing and D2/D5 behaviors while strengthening the all-20 real API/browser gate; no golden-contract changes, production deployment or PR branch update.
 
 - 2026-11-15: Corrected #209's C1 pack checklist to the #208 26-file observation and path allowlist, and reconciled the C3 command sheet's four-consumer manifest and lockfile review; docs only, no package, runtime or golden-contract change.
 - 2026-11-15: Documented #208's isolated C1 rehearsal and corrected the future filter-repo/C3 consumer-switch instructions for all four current dependents; no package, runtime or contract change.

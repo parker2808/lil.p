@@ -1,4 +1,4 @@
-import { BLOCK_REGISTRY } from '@portfolio/contracts';
+import { BLOCK_REGISTRY, HOST_TREE_REGISTRY } from '@portfolio/contracts';
 import { expect, test } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
@@ -10,6 +10,7 @@ test('all 20 host definitions publish through the live API and render in Next pr
   await signIn(page);
   const headers = { Origin: new URL(page.url()).origin };
   expect(Object.keys(BLOCK_REGISTRY)).toHaveLength(20);
+  expect(Object.keys(HOST_TREE_REGISTRY).sort()).toEqual(Object.keys(BLOCK_REGISTRY).sort());
 
   for (const definition of Object.values(BLOCK_REGISTRY)) {
     const key = `host-gate-${definition.type}`;
@@ -51,9 +52,19 @@ test('all 20 host definitions publish through the live API and render in Next pr
       data: { expectedRevision: '0', tree },
     });
     expect(activated.status(), `${definition.type}: ${await activated.text()}`).toBe(200);
+    expect(await activated.json()).toMatchObject({ mode: 'tree', revision: '1', tree });
+    const saved = await page.request.put(`/api/admin/pages/${key}/builder/draft`, {
+      headers,
+      data: { expectedRevision: '1', tree },
+    });
+    expect(saved.status(), `${definition.type}: ${await saved.text()}`).toBe(200);
+    expect(await saved.json()).toMatchObject({ mode: 'tree', revision: '2', tree });
+    const read = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+    expect(read.status(), `${definition.type}: ${await read.text()}`).toBe(200);
+    expect(await read.json()).toMatchObject({ mode: 'tree', revision: '2', tree });
     const published = await page.request.post(`/api/admin/pages/${key}/builder/publish`, {
       headers,
-      data: { expectedRevision: '1' },
+      data: { expectedRevision: '2' },
     });
     expect(published.status(), `${definition.type}: ${await published.text()}`).toBe(200);
 
