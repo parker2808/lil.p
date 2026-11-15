@@ -1,7 +1,7 @@
 # Graph Report - pre-combined-d2-d5ui-d6  (2026-11-15)
 
 ## Corpus Check
-- 1643 files · ~686,646 words
+- 1643 files · ~686,794 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 40 file(s) not represented in the graph (top: (none) 18, .css 17, .example 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c2dc7fb8`
+- Built from commit: `b71da5b8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

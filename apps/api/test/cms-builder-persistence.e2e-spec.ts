@@ -74,20 +74,22 @@ describe('builder draft persistence over disposable MySQL', () => {
           .send({ seoTitleVi: `VI ${definition.type}` })
           .expect(200);
         const path = `/api/admin/pages/${key}/builder`;
+        const initial = await admin.get(`${path}/draft`).expect(200);
+        expect(initial.body).toMatchObject({ mode: 'legacy', revision: '1', tree: null });
         const activated = await admin
           .post(`${path}/activate`)
-          .send({ expectedRevision: '0', tree })
+          .send({ expectedRevision: initial.body.revision, tree })
           .expect(200);
-        expect(activated.body).toMatchObject({ mode: 'tree', revision: '1', tree });
+        expect(activated.body).toMatchObject({ mode: 'tree', revision: '2', tree });
         const saved = await admin
           .put(`${path}/draft`)
-          .send({ expectedRevision: '1', tree })
+          .send({ expectedRevision: activated.body.revision, tree })
           .expect(200);
-        expect(saved.body).toMatchObject({ mode: 'tree', revision: '2', tree });
+        expect(saved.body).toMatchObject({ mode: 'tree', revision: '3', tree });
         expect((await admin.get(`${path}/draft`).expect(200)).body).toEqual(saved.body);
         const published = await admin
           .post(`${path}/publish`)
-          .send({ expectedRevision: '2' })
+          .send({ expectedRevision: saved.body.revision })
           .expect(200);
         expect(published.body.publishedVersion).toBe(1);
         for (const locale of ['en', 'vi']) {

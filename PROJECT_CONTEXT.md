@@ -288,6 +288,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Corrected the combined-only D6 API E2E fixture after authenticated VI SEO PATCH advanced the D2 revision; activation/save/publish now chain the actual returned revisions and assert the expected progression. No production behavior, goldens, migration or deploy change; exact-head CI required.
+
 - 2026-11-15: Incorporated accepted #213 responsive Properties labels and CI-attached 107-capture design review into verification-only #208; kept historical images attributed to their original head. No schema, production, goldens or deployment change.
 
 - 2026-11-15: Integrated D6 real-HTTP 20-type cycle and editor-origin H1 browser journey into verification-only #208; preserved both documentation histories and existing goldens. No DB or deployment operation.
