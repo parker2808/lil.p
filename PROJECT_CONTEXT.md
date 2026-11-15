@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- 2026-11-15 D2 V11/V12 gate: expand the real MySQL save/activation/publish negative matrix with unsafe rich text, exercise draft/version/preview read and create/write capabilities, and inspect rejected-body log redaction in CI. D6 final-head publication and production log audit remain GAP; see `docs/specs/2026-11-15-cms-d2-v11-v12-gate.md`.
+- 2026-11-15 D2 V11/V12 gate: expand the real MySQL save/activation/publish negative matrix with unsafe rich text and nonempty draft/version/preview read capabilities; assert HTTP-body redaction only. A 400 does not exercise error logging; D6 final-head publication and production log audit remain GAP. See `docs/specs/2026-11-15-cms-d2-v11-v12-gate.md`.
 
 - D2 safety matrix CI follow-up (2026-11-15): oversized JSON is now a typed 413 `VALIDATION_FAILED` body error with a trace ID even when body parsing stops before request-ID middleware; Multer's file-upload 400 contract remains unchanged. The disposable-DB rejection/no-write check must re-green on the exact #216 head; J09/V18 still require live Stage A drain evidence.
 
@@ -262,7 +262,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
-- 2026-11-15: Added D2 V11/V12 API validation, capability and error-log assertions without schema/runtime changes.
+- 2026-11-15: Added D2 V11/V12 API validation and capability assertions; corrected read evidence to nonempty content and clarified 400 redaction covers HTTP responses, not server logs. No schema/runtime change.
 - 2026-11-15: Fixed the #216 oversized-builder-JSON CI regression by mapping body-parser's typed size error to a redacted 413 body response, with request ID and unchanged-DB E2E assertions; retained file-upload behavior and the live D2 drain block.
 
 - 2026-11-15: Added D2 real-DB invalid activation/save/stored-publish no-write inventory, paired missing-SEO/tree snapshot hash and restore checks, per-action role/error redaction checks, and core nested-data/rejection hash cases. Documented release-owner live drain protocol and kept unsafe old-writer repro as BLOCKED; no schema/migration, local E2E, merge or deploy.
