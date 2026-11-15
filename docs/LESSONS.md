@@ -1,6 +1,6 @@
 # Lessons
 
-- 2026-11-15: Resolve repeated focus contrast failures against computed colors and adjacent painted surfaces: an opaque token can coexist with a translucent computed host ring, so fix the actual control style instead of weakening the 3:1 browser audit.
+- 2026-11-15: Browser focus audits need keyboard modality before programmatically focusing each control: a modifier-only `Shift` press can leave `:focus-visible` unmatched even when the CSS rule is present. Use `Tab`, assert `:focus-visible`, and still measure each computed ring against adjacent surfaces at ≥3:1.
 
 - 2026-11-15: Audit every visible enabled builder control at desktop as well as compact widths; padding does not guarantee a 44px target, and a screenshot is not proof of focus visibility or absence of dialog overflow.
 

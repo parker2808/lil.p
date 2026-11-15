@@ -233,7 +233,7 @@ async function capture(
     overflow,
     `${options.locale}/${options.width}/${options.state} horizontal overflow`,
   ).toBeLessThanOrEqual(1);
-  await page.keyboard.press('Shift');
+  await page.keyboard.press('Tab');
   const focusIndicators = await page.locator('.admin-shell').evaluate((root) => {
     const canvas = document.createElement('canvas');
     canvas.width = canvas.height = 1;
@@ -304,6 +304,7 @@ async function capture(
           colors: [],
           surfaces: [],
           reached: false,
+          visibleFocus: false,
         });
         continue;
       }
@@ -326,6 +327,7 @@ async function capture(
         colors: [...(outline ? [outline] : []), ...shadowColors(focused.boxShadow)],
         surfaces,
         reached: true,
+        visibleFocus: control.matches(':focus-visible'),
       });
     }
     previous?.focus({ preventScroll: true });
@@ -345,6 +347,7 @@ async function capture(
   const focusContrast = await contrastPairs(page, focusPairs);
   for (const [index, focus] of focusIndicators.entries()) {
     expect(focus.reached, `${options.state}/${focus.name} programmatic focus`).toBe(true);
+    expect(focus.visibleFocus, `${options.state}/${focus.name} keyboard-visible focus`).toBe(true);
     expect(focus.colors.length, `${options.state}/${focus.name} focus indicator`).toBeGreaterThan(
       0,
     );
