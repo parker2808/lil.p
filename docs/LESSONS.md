@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-16: A saved tree may preserve semantic props while changing JSON key order; compute SSR host hashes from the persisted API tree after the same tree parse as the renderer, not from the pre-save fixture object. CI `43765148714` exposed the false-negative in V06 without weakening its per-host hash assertion.
 - 2026-11-16: A no-script host-hash assertion must hash the renderer's serialized `{ props, lang }` envelope after locale resolution, not just localized props; CI `43762556788` exposed the mismatch without changing any production host behavior.
 - 2026-11-16: No-script dark shell tokens must include warning surfaces as well as foreground/background; otherwise a pale preview banner with inherited light text can pass route checks while failing legibility. Assert computed text-to-surface contrast in both locales and hosts.
 

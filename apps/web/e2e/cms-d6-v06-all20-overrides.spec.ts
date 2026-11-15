@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 
-import { BLOCK_REGISTRY, resolveBlockLocale } from '@portfolio/contracts';
+import { BLOCK_REGISTRY, HOST_TREE_REGISTRY, resolveBlockLocale } from '@portfolio/contracts';
+import { readTree, resolveResponsive } from '@parker2808/cms-core/tree';
 import { expect, test } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
@@ -197,8 +198,10 @@ for (const group of [0, 1, 2, 3]) {
       );
       expect(publicData.status()).toBe(200);
       expect(previewData.status()).toBe(200);
-      expect((await publicData.json()).tree).toEqual(second);
-      expect((await previewData.json()).tree).toEqual(first);
+      const publicTree = (await publicData.json()).tree;
+      const previewTree = (await previewData.json()).tree;
+      expect(publicTree).toEqual(second);
+      expect(previewTree).toEqual(first);
 
       const cookies = await page.context().cookies();
       const captures = [];
@@ -211,6 +214,16 @@ for (const group of [0, 1, 2, 3]) {
           });
           try {
             const visitor = await context.newPage();
+            const parsed = readTree(preview ? previewTree : publicTree, HOST_TREE_REGISTRY);
+            expect(parsed.ok).toBe(true);
+            if (!parsed.ok) throw new Error(`Invalid persisted tree: ${parsed.code}`);
+            const nodes = parsed.value.root.sections[0]!.content.flatMap((node) =>
+              node.type === 'row'
+                ? node.columns.flatMap((column) => column.content)
+                : node.type === 'component'
+                  ? [node]
+                  : [],
+            );
             if (preview) {
               const enabled = await visitor.goto(
                 new URL(`/api/draft?path=${encodeURIComponent(route)}`, origin).href,
@@ -225,8 +238,11 @@ for (const group of [0, 1, 2, 3]) {
             const main = visitor.locator('#content > main.cms-core-host:visible');
             await expect(main).toHaveCount(1);
             for (const type of types) {
-              const expected = host(type, preview ? 1 : 2).responsive;
-              const effective = { ...expected.base, ...expected[name] };
+              const hostNode = nodes.find((node) => node.id === `host-${type}`);
+              expect(hostNode?.type).toBe('component');
+              if (!hostNode || hostNode.type !== 'component')
+                throw new Error(`Missing persisted host ${type}`);
+              const effective = resolveResponsive(hostNode.responsive, name);
               const localized = resolveBlockLocale(effective, locale);
               const hash = createHash('sha256')
                 .update(JSON.stringify({ props: localized.props, lang: localized.lang }))
