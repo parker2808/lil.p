@@ -1,9 +1,7 @@
 # Graph Report - pre-d4-main-reconcile  (2026-11-15)
 
 ## Corpus Check
-- 1591 files · ~631,079 words
-- Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 37 file(s) not represented in the graph (top: (none) 18, .css 15, .example 1)
+- cluster-only mode — file stats not available
 
 ## Summary
 - 7657 nodes · 23759 edges · 332 communities (289 shown, 43 thin omitted)
@@ -347,16 +345,16 @@
 10. `apiServer()` - 81 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Highlights authored by Parker` --references--> `text()`  [INFERRED]
-  docs/case-studies/cfw-backoffice-portal.md → apps/api/prisma/seed/data/portfolio.mapper.ts
-- `Contract and acceptance` --references--> `pickGroup()`  [INFERRED]
-  docs/specs/2026-11-10-custom-page-locale-seo.md → apps/api/src/i18n/pick-locale.util.ts
 - `T50 · Media API: upload, variants, relations` --references--> `MediaService`  [INFERRED]
   docs/archive/plan/12-7-tasks-t46-users-admin-admin-only-change-own-pass.md → apps/api/src/modules/media/media.service.ts
 - `T50 · API media: upload, variant, quan hệ` --references--> `MediaService`  [INFERRED]
   docs/archive/plan-vi/14-7-cac-task-m5-realtime-media-publish.md → apps/api/src/modules/media/media.service.ts
 - `8. Owner tasks and out of scope` --references--> `MediaService`  [INFERRED]
   docs/PLAN.md → apps/api/src/modules/media/media.service.ts
+- `8. Việc của owner và ngoài phạm vi` --references--> `MediaService`  [INFERRED]
+  docs/PLAN.vi.md → apps/api/src/modules/media/media.service.ts
+- `T16 · Domains + projects + metrics (one-to-many)` --references--> `Hue`  [INFERRED]
+  docs/archive/plan/08-7-tasks-t16-domains-projects-metrics-one-to-many.md → packages/contracts/src/domains/domains.enum.ts
 
 ## Import Cycles
 - None detected.
@@ -1520,23 +1518,23 @@ Cohesion: 0.67
 Nodes (3): lint-staged, *.{json,md,css,yml,yaml}, *.{ts,tsx,js,jsx,mjs,cjs}
 
 ## Knowledge Gaps
-- **17 isolated node(s):** `DATABASE_URL`, `./tsconfig.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json` (+12 more)
+- **17 isolated node(s):** `../../tsconfig.base.json`, `ANALYTICS_SALT_SECRET`, `API_PORT`, `API_URL`, `DATABASE_URL` (+12 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2305 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **43 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `@nestjs/common` connect `@nestjs/common` to `RolesGuard`, `media.service.ts`, `auth/auth.service.ts`, `dashboard/dashboard.service.ts`, `SiteSettingsService`, `ref_vitest`, `pages/pages.service.ts`, `contact.schema.ts`, `api/package.json`, `EventsService`, `admin-users.controller.ts`, `apps_api_src_generated_prisma_client`, `posts/posts.service.ts`, `content-migration.e2e-spec.ts`, `all-exceptions.filter.ts`, `contact.service.ts`, `media-storage.ts`?**
-  _High betweenness centrality (0.041) - this node is a cross-community bridge._
+- **Why does `Button()` connect `Badge` to `Input`, `DataTable`, `@storybook/react`, `AdminUsersIndex.tsx`, `4. Architecture at a glance`, `useIsAdmin`, `EditorToolbar.tsx`, `04-4-components-and-layout.md`, `ref_lucide_react`, `SiteShell.tsx`, `next-intl`, `7. Open items`, `block-renderers.constant.ts`, `@tanstack/react-query`, `PublicErrorState.tsx`, `AdminProjectsEditor.tsx`, `cn`, `Foundations.stories.tsx`, `button.stories.tsx`, `AdminSiteIndex.tsx`, `ProjectsDetail.tsx`, `AdminSidebar.tsx`, `BlockInspector.tsx`, `next-intl`, `AdminPostsIndex.tsx`, `AdminAboutExperienceIndex.tsx`, `ContactForm.tsx`, `admin-core/components/CommandPalette/CommandPalette.tsx`, `Modules`?**
+  _High betweenness centrality (0.039) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `cn()` (e.g. with `T04 · Design tokens + shadcn theme in `packages/ui`` and `T04 · Design token + shadcn theme trong `packages/ui``) actually correct?**
   _`cn()` has 2 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `DATABASE_URL`, `./tsconfig.json`, `../../tsconfig.base.json` to the rest of the system?**
+- **What connects `../../tsconfig.base.json`, `ANALYTICS_SALT_SECRET`, `API_PORT` to the rest of the system?**
   _17 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Input` be split into smaller, more focused modules?**
   _Cohesion score 0.07861712598425197 - nodes in this community are weakly interconnected._
-- **Why does `PrismaService` connect `ref_vitest` to `media.service.ts`, `@nestjs/common`, `SiteSettingsService`, `pages/pages.service.ts`, `api/package.json`, `resolve-block.util.ts`, `4. Architecture at a glance`, `apiServer`, `apps_api_src_generated_prisma_client`, `posts/posts.service.ts`, `content-migration.e2e-spec.ts`, `dashboard/dashboard.service.ts`, `contact.service.ts`, `media-storage.ts`?**
-  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+- **Why does `AppConfigService` connect `api/package.json` to `RolesGuard`, `auth/auth.service.ts`, `@nestjs/common`, `ref_vitest`, `apps_api_src_generated_prisma_client`, `M0 — Nền tảng`, `contact.service.ts`, `media-storage.ts`?**
+  _High betweenness centrality (0.029) - this node is a cross-community bridge._
 - **Are the 11 inferred relationships involving `Button()` (e.g. with `4. Architecture at a glance` and `T12 · UI primitives matching Figma component sets`) actually correct?**
   _`Button()` has 11 INFERRED edges - model-reasoned connections that need verification._
 - **Should `ref_playwright_test` be split into smaller, more focused modules?**
