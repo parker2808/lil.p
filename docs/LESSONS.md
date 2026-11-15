@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-15: Treat a rehearsal's pack count as evidence for that source SHA, not a timeless policy; enumerate the allowlisted paths and review all four direct consumer manifests and their lockfile diff before a C3 pin.
 - 2026-11-15: Before removing a workspace package in a tarball rehearsal, search every workspace manifest for direct `workspace:*` consumers; web and the neutral fixture can block a frozen install even when contracts and API are pinned.
 - 2026-11-15: Reconciling a static study after an independent canvas lands requires describing both routes separately in host documentation; integrate chronological lessons from both lanes and regenerate Graphify rather than hand-merging generated output.
 - 2026-11-15: When a static design-study branch absorbs a newer pure-state core release, preserve both histories while keeping the study's e2e flag and non-persistence boundary unchanged.
