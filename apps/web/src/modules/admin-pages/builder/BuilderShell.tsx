@@ -5,6 +5,7 @@ import { BLOCK_REGISTRY, type BlockType } from '@portfolio/contracts';
 import { useLocale, useTranslations } from 'next-intl';
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
@@ -294,16 +295,15 @@ export function BuilderShell({
     first?.focus();
   }, [visibleSheet]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (visibleSheet || !triggerRef.current) return;
     const trigger = triggerRef.current;
     triggerRef.current = null;
-    requestAnimationFrame(() => trigger.focus());
+    trigger.focus();
   }, [visibleSheet]);
 
   function closeSheet() {
     setSheet(null);
-    requestAnimationFrame(() => triggerRef.current?.focus());
   }
   function closeConfirmation(restoreTrigger = true) {
     setConfirmDelete(false);
