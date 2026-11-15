@@ -30,6 +30,45 @@
   --builder-art-ink: #f7bb91;
 }
 
+@media (scripting: none) and (prefers-color-scheme: dark) {
+  .cms-core.cms-core-host {
+    --builder-chrome: #171c26;
+    --builder-canvas: #111722;
+    --builder-surface: #202735;
+    --builder-raised: #293243;
+    --builder-text: #f1f4f9;
+    --builder-muted: #afbdce;
+    --builder-border: #3b4657;
+    --builder-accent: #98b8ff;
+    --builder-accent-text: #172746;
+    --builder-accent-soft: #283b5c;
+    --builder-success: #83d9b0;
+    --builder-warning: #ecc58d;
+    --builder-danger: #ff9ca3;
+    --builder-info: #89c8ec;
+    --builder-selection: #9bbaff;
+    --builder-drop: #9bbaff;
+    --builder-focus: #b4ccff;
+    --builder-art: #293e58;
+    --builder-art-ink: #9cbbe1;
+    --builder-shadow: 0 22px 65px rgb(0 0 0 / 25%);
+    --subtle-foreground: #b5b1aa;
+    color-scheme: dark;
+  }
+
+  .cms-core.cms-core-host[data-brand='lilp'] {
+    --builder-accent: #ffb587;
+    --builder-accent-text: #392011;
+    --builder-accent-soft: #513323;
+    --builder-success: #98dcb0;
+    --builder-selection: #ffc39e;
+    --builder-drop: #ffc39e;
+    --builder-focus: #ffc39e;
+    --builder-art: #4a352b;
+    --builder-art-ink: #f7bb91;
+  }
+}
+
 /* Next streams resolved server content into hidden siblings; expose it when scripts cannot run. */
 @layer base {
   @media (scripting: none) {

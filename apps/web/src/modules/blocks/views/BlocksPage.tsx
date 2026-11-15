@@ -30,10 +30,12 @@ export async function BlocksPage({
   pageKey,
   locale,
   searchParams,
+  brand = 'lilp',
 }: {
   pageKey: PageKey;
   locale: Locale;
   searchParams?: Record<string, string | string[] | undefined>;
+  brand?: 'neutral' | 'lilp';
 }) {
   const rawVersion = firstQuery(searchParams?.v);
   const version = rawVersion ? Number(rawVersion) : undefined;
@@ -108,7 +110,7 @@ export async function BlocksPage({
     });
     if (!result.ok) notFound();
     return (
-      <main className="cms-core cms-core-host" data-brand="lilp">
+      <main className="cms-core cms-core-host" data-brand={brand}>
         {result.content}
       </main>
     );

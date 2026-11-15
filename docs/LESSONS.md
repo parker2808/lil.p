@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A post-hydration brand toggle cannot prove real-host dark first paint; with scripts disabled, use the OS color preference and assert computed host tokens, raw public/preview captures, and genuinely VI-authored tree copy instead of English text on a VI route.
+
 - 2026-11-15: The admin topbar locale combobox is desktop-only; change language before resizing to 390px (or use the actual mobile account menu) so a browser gate tests the responsive journey rather than waiting indefinitely on a hidden control.
 
 - 2026-11-15: Test version-action 409 recovery with a real concurrent revision bump before forwarding the intercepted UI request to the API; returning a mocked 409 cannot prove database state, localized modal feedback or recovery after reload.
@@ -435,6 +437,12 @@
 - 2026-11-15: Re-enabling an omitted Playwright spec can reveal stale selectors on a custom Radix combobox; exercise the visible option and assert the reloaded locale/cookie rather than relaxing downstream keyboard and axe checks.
 - 2026-11-15: Radix does not fire a locale change when selecting the active language; to prove cookie persistence, switch away and back when needed. Restore sheet-trigger focus after React removes the inert overlay in a layout effect, not competing animation frames referencing a cleared ref.
 - 2026-11-15: A base merge may auto-merge the Playwright manifest and builder UI while context conflicts; preserve both histories and run the complete five-shard registry/unit and exact-head browser gates rather than inheriting either parent's green status.
+- 2026-11-15: Host-specific tree branding must be selected before SSR and never shared through ISR across tenant hosts; compare public and authenticated preview on the actual host with scripts disabled, not a post-hydration data attribute.
+- 2026-11-15: Before requiring byte-identical public/preview element PNGs, remove only preview chrome from the capture geometry and verify equal bounding boxes; retain the unmodified full-page captures so deterministic antialias differences at rounded corners cannot conceal a content regression.
+- 2026-11-15: Translating host-schema field metadata changes accessible labels in the builder; update existing EN/VI editor-origin Playwright locators to read locale strings while keeping their draft persistence assertions intact.
+- 2026-11-15: Eight full-page no-script browser captures in one test exceeded the CI per-test timeout; split by locale while retaining both brands and paired public/preview checks in each test, rather than raising timeouts or dropping assertions.
+- 2026-11-15: Playwright `addStyleTag` can hang indefinitely when browser JavaScript is disabled (trace stopped at Add style tag); use screenshot-only CSS and measured banner-height geometry for no-script visual parity, preserving unmodified page captures.
+- 2026-11-15: A successful merge with no conflict markers can still break accepted design tokens; compare the complete CSS variable sets against the base's browser-matrix expectations, especially both light and dark branded accents.
 - 2026-11-15: When a stacked visual PR restacks across a base that added D4 shard registrations and focus fixes, retain both history trails, regenerate Graphify, and demand fresh five-shard evidence; prior source-head screenshots are not combined-head proof.
 - 2026-11-15: When a study route becomes the live builder host, test the selected editable heading across responsive Properties surfaces rather than a fixture-only ID; avoid merging divergent D5 runtime solely to repair a D6 test.
 - 2026-11-15: Two browser failures on a stacked parity branch can stem from obsolete base fixture locators; merge the reviewed live-builder test, preserve both histories and rerun exact-head shards before attributing them to parity coverage.
