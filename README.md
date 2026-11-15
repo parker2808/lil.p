@@ -16,7 +16,7 @@ other tenant hosts keep neutral core tokens. Custom tree HTML is request-scoped
 (tagged API reads remain cacheable). It also checks nested no-script SSR, VI
 contact defaults and translated Properties labels; this does not by itself close
 the full V03/V14 visual matrix.
-The [V06 all-20 responsive gate](./docs/specs/2026-11-16-cms-d6-v06-all20-overrides.md) separately tests no-script EN/VI historical preview and current public layout/host overrides at 390/768/1440; exact-head CI captures and independent review are pending, not a full V06 signoff.
+The [V06 all-20 responsive gate](./docs/specs/2026-11-16-cms-d6-v06-all20-overrides.md) separately tests no-script EN/VI historical preview and current public layout/host overrides at 390/768/1440; its previous head passed CI `43767645840` attempt 2, but the merged V05 base needs new exact-head CI and independent capture review before V06 signoff.
 The real-host no-script sample also checks OS-driven dark first paint and
 separately authored VI tree copy on both neutral and branded tenants; it does
 not certify all-20 dark neutral SSR or fully localized site content. A scoped
@@ -265,6 +265,7 @@ The D6 all-20 browser spec runs last on an existing web E2E shard; adding it doe
 The [D6 integrated gate plan](./docs/specs/2026-11-15-cms-d6-integrated-gate.md) adds 20 real-API host activation/save/read/publish and bilingual preview/public cycles, plus an editor-origin H1 journey and four CI-sharded editor-origin host journeys (five types each). Each exercises palette insertion, applicable Properties editing, real draft autosave/read, publish and EN/VI preview/public API and SSR parity. Notes/projects browsers have numeric/toggle Properties but no localized fields; every other type exercises EN/VI text. Exact-head CI is required before these become evidence; migration/drain, visual/a11y and release approval remain separate.
 
 The [D6 editor-origin visual matrix](./docs/specs/2026-11-15-cms-d6-editor-visual.md) attaches all 20 builder-origin hosts at EN/VI × light/dark × 390/1440, with screenshot digests and axe findings tied to the exact CI source head. Captures need independent design review; they do not substitute for deployment or full WCAG approval.
+The [V05 revision chain](./docs/specs/2026-11-16-cms-d6-v05-revision-chain.md) separately exercises localized nested page-header Properties through real autosave, UI publish, immutable snapshot and EN/VI preview/public captures at 390/768/1440; full-schema error coverage and review remain open.
 
 The [D6 published/preview parity matrix](./docs/specs/2026-11-15-cms-d6-parity-matrix.md) pairs all 20 host blocks across EN/VI, light/dark, core/brand and 390/768/1440 with semantic, screenshot and unwaived axe checks. Notes fallback links provide 24px targets, and contact forms must hydrate before capture; exact-head CI and visual review still gate V03/V14 acceptance.
 

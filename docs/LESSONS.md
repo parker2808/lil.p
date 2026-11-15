@@ -2,6 +2,13 @@
 
 - 2026-11-16: A saved tree may preserve semantic props while changing JSON key order; compute SSR host hashes from the persisted API tree after the same tree parse as the renderer, not from the pre-save fixture object. CI `43765148714` exposed the false-negative in V06 without weakening its per-host hash assertion.
 - 2026-11-16: A no-script host-hash assertion must hash the renderer's serialized `{ props, lang }` envelope after locale resolution, not just localized props; CI `43762556788` exposed the mismatch without changing any production host behavior.
+- 2026-11-16: A base can advance again during a V05 restack; compare the remote feature SHA immediately before push and require combined-head CI instead of trusting the previous successful test-head run.
+
+- 2026-11-16: Restacking a test PR after a visual fix requires preserving both the old test's artifact provenance and the base's contrast assertion; the old 17/17 run does not verify the combined head.
+
+- 2026-11-16: A 390px Properties sheet can have valid nested fields below its scroll viewport; attach both its top and scrolled final-field captures, and require that field to enter the viewport before calling the mobile evidence reviewable.
+
+- 2026-11-16: A localized Properties control passing client validation is not evidence of the saved/public value: serialize nested EN/VI edits against real draft GETs, then compare the exact revision's immutable snapshot with public and preview rendered copy at each breakpoint.
 - 2026-11-16: A root dark class does not recolor an independently scoped CMS tree unless it explicitly inherits that theme; assert the computed card background before axe, and preserve a host's explicit light-theme override.
 - 2026-11-16: No-script dark shell tokens must include warning surfaces as well as foreground/background; otherwise a pale preview banner with inherited light text can pass route checks while failing legibility. Assert computed text-to-surface contrast in both locales and hosts.
 
