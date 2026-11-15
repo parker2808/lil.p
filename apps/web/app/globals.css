@@ -31,6 +31,21 @@
 }
 
 @media (scripting: none) and (prefers-color-scheme: dark) {
+  .public-site {
+    --background: #111318;
+    --foreground: #eee9df;
+    --card: #181b22;
+    --card-foreground: #eee9df;
+    --primary: #ff8f74;
+    --primary-foreground: #16181f;
+    --muted-foreground: #b7b2a8;
+    --border: #2a2e37;
+    --ring: #ff8f74;
+    --subtle-foreground: #8f8b83;
+    color: var(--foreground);
+    color-scheme: dark;
+  }
+
   .cms-core.cms-core-host {
     --builder-chrome: #171c26;
     --builder-canvas: #111722;
