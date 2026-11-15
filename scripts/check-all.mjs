@@ -16,11 +16,16 @@ const parallelSteps = [
 const steps = [['typecheck', 'pnpm typecheck']];
 if (!args.has('--static')) steps.push(['test', 'pnpm test']);
 steps.push(['content', 'pnpm check:content'], ['deps', 'pnpm check:deps']);
+steps.push(['stage-a-probe', 'node --test scripts/probe-stage-a-d2.test.mjs']);
 if (!args.has('--static') && !args.has('--no-build')) steps.push(['build', 'pnpm build']);
 if (!args.has('--static') && args.has('--e2e')) {
   steps.push([
     'cms-theme-browser',
     'CMS_THEME_BROWSER=1 node --test packages/cms-core/test/theme.test.mjs',
+  ]);
+  steps.push([
+    'cms-tree-browser',
+    'CMS_TREE_BROWSER=1 node --test packages/cms-core/test/tree-renderer.test.mjs',
   ]);
   steps.push(['api-e2e', 'pnpm --filter @portfolio/api test:e2e']);
   steps.push(['web-e2e', 'pnpm --filter @portfolio/web test:e2e']);
