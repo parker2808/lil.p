@@ -1,6 +1,9 @@
 # Lessons
 
 - 2026-11-16: A tracked seed/SQL inventory is not a production inventory; gate the source-writer list and compare normalized responses with original stored JSON hashes before claiming legacy version safety.
+- 2026-11-16: Search every general deployment checklist for an obsolete separate-unfreeze step when changing D2 startup defaults; a correct phase-specific runbook alone can leave unsafe contradictory instructions.
+
+- 2026-11-16: A D2 reopening plan dependent on a Render env edit is not executable without authorized write access; gate writes on read-only startup migration verification, reserve exact `CMS_PAGE_WRITE_FREEZE=1` as an explicit kill-switch, and prove all pre-D2 writers drained before deploying an image that may automatically reopen.
 
 - 2026-11-16: Waiting for theme transitions to settle can conceal a real WCAG contrast failure; switch paired primary CTA foreground/background atomically and sample successive rendered frames before axe instead of changing its threshold.
 
