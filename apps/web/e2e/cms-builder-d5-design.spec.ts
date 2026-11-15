@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 
@@ -9,7 +10,13 @@ import { expect, test, type Page } from '@playwright/test';
 import { signIn } from './helpers/auth';
 
 const directory = resolve(import.meta.dirname, '../../../docs/specs/screenshots/cms-d5-design');
-const sourceSha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+const checkoutSha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+const event = process.env.GITHUB_EVENT_PATH
+  ? (JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8')) as {
+      pull_request?: { head?: { sha?: string } };
+    })
+  : undefined;
+const sourceSha = event?.pull_request?.head?.sha ?? checkoutSha;
 const entries: Array<{
   route: string;
   pageLocale: 'en' | 'vi';
@@ -119,8 +126,39 @@ async function capture(
       expect(target?.height).toBeGreaterThanOrEqual(44);
     }
   }
+  if (
+    options.state === 'properties' ||
+    options.state === 'empty' ||
+    options.state === 'field-error'
+  ) {
+    const breakpoints = page.getByRole('group', {
+      name: options.locale === 'vi' ? 'Điểm ngắt' : 'Breakpoint',
+    });
+    const overflow = await breakpoints.locator('button').evaluateAll((buttons) =>
+      buttons.flatMap((button) => {
+        const bounds = button.getBoundingClientRect();
+        const range = document.createRange();
+        range.selectNodeContents(button);
+        return Array.from(range.getClientRects())
+          .filter(
+            (text) =>
+              text.left < bounds.left - 1 ||
+              text.right > bounds.right + 1 ||
+              text.top < bounds.top - 1 ||
+              text.bottom > bounds.bottom + 1,
+          )
+          .map(() => button.textContent?.trim());
+      }),
+    );
+    expect(await breakpoints.locator('button').count()).toBe(4);
+    expect(
+      overflow,
+      `${options.locale}/${options.theme}/${options.width} breakpoint overflow`,
+    ).toEqual([]);
+  }
   const file = `${options.locale}-${options.theme}-${options.brand}-${options.width}-${options.state}.png`;
-  await page.screenshot({ path: join(directory, file), animations: 'disabled' });
+  const image = await page.screenshot({ path: join(directory, file), animations: 'disabled' });
+  await test.info().attach(file, { body: image, contentType: 'image/png' });
   entries.push({
     route: `/admin/builder/${options.key}`,
     pageLocale: options.locale,
@@ -225,6 +263,50 @@ test('EN/VI core and token-only lil.p builder states are visually and accessibly
     const { key, origin } = await createActivePage(page, locale);
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     const shell = page.locator('.cms-core');
+    await page.evaluate(() => document.documentElement.classList.remove('dark'));
+    await expect(
+      page.getByText(
+        locale === 'vi'
+          ? 'Thành phần này không có thuộc tính chỉnh sửa.'
+          : 'This component has no editable properties.',
+      ),
+    ).toBeVisible();
+    await capture(page, {
+      key,
+      locale,
+      theme: 'light',
+      brand: 'neutral',
+      width: 1440,
+      state: 'empty',
+    });
+    await page.setViewportSize({ width: 390, height: 900 });
+    const emptyTrigger = page
+      .getByRole('navigation', {
+        name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder',
+      })
+      .getByRole('button', { name: locale === 'vi' ? 'Thuộc tính' : 'Properties' });
+    await emptyTrigger.click();
+    await expect(
+      page
+        .getByRole('dialog', { name: locale === 'vi' ? 'Thuộc tính' : 'Properties' })
+        .getByText(
+          locale === 'vi'
+            ? 'Thành phần này không có thuộc tính chỉnh sửa.'
+            : 'This component has no editable properties.',
+        ),
+    ).toBeVisible();
+    await capture(page, {
+      key,
+      locale,
+      theme: 'light',
+      brand: 'neutral',
+      width: 390,
+      state: 'empty',
+      sheet: true,
+    });
+    await page.keyboard.press('Escape');
+    await expect(emptyTrigger).toBeFocused();
+    await page.setViewportSize({ width: 1440, height: 900 });
     const palette = page.getByRole('complementary', {
       name: locale === 'vi' ? 'Thành phần' : 'Components',
     });
@@ -287,6 +369,60 @@ test('EN/VI core and token-only lil.p builder states are visually and accessibly
         }
       }
     }
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.evaluate(() => document.documentElement.classList.remove('dark'));
+    if ((await shell.getAttribute('data-brand')) !== 'neutral')
+      await shell
+        .getByRole('button', {
+          name: /(?:Switch neutral and lil\.p theme|Đổi giao diện lõi và lil\.p)/,
+        })
+        .click();
+    const invalidField = page
+      .getByRole('complementary', {
+        name: locale === 'vi' ? 'Thuộc tính' : 'Properties',
+      })
+      .getByRole('spinbutton', { name: locale === 'vi' ? 'Cấp tiêu đề' : 'Heading level' });
+    await invalidField.fill('99');
+    await expect(invalidField).toHaveAttribute('aria-invalid', 'true');
+    await capture(page, {
+      key,
+      locale,
+      theme: 'light',
+      brand: 'neutral',
+      width: 1440,
+      state: 'field-error',
+    });
+    await page.setViewportSize({ width: 390, height: 900 });
+    await page.evaluate(() => document.documentElement.classList.add('dark'));
+    await shell
+      .getByRole('button', {
+        name: /(?:Switch neutral and lil\.p theme|Đổi giao diện lõi và lil\.p)/,
+      })
+      .click();
+    const errorTrigger = page
+      .getByRole('navigation', {
+        name: locale === 'vi' ? 'Trình dựng trang' : 'Page builder',
+      })
+      .getByRole('button', { name: locale === 'vi' ? 'Thuộc tính' : 'Properties' });
+    await errorTrigger.click();
+    await expect(
+      page
+        .getByRole('dialog', {
+          name: locale === 'vi' ? 'Thuộc tính' : 'Properties',
+        })
+        .getByRole('spinbutton', { name: locale === 'vi' ? 'Cấp tiêu đề' : 'Heading level' }),
+    ).toHaveAttribute('aria-invalid', 'true');
+    await capture(page, {
+      key,
+      locale,
+      theme: 'dark',
+      brand: 'lilp',
+      width: 390,
+      state: 'field-error',
+      sheet: true,
+    });
+    await page.keyboard.press('Escape');
+    await expect(errorTrigger).toBeFocused();
     await page.setViewportSize({ width: 1440, height: 900 });
     let releaseSave: (() => void) | undefined;
     const heldSave = new Promise<void>((resolveSave) => {
@@ -360,11 +496,19 @@ test('EN/VI core and token-only lil.p builder states are visually and accessibly
       }
     }
   }
-  const evidence = { sourceSha, browser: 'Chromium', lock: 'lilp-e2e.lock', entries };
+  const evidence = { sourceSha, checkoutSha, browser: 'Chromium', lock: 'lilp-e2e.lock', entries };
   const serialized = `${JSON.stringify(evidence, null, 2)}\n`;
   await writeFile(join(directory, 'manifest.json'), serialized);
+  await test.info().attach('cms-d5-design-manifest.json', {
+    body: Buffer.from(serialized),
+    contentType: 'application/json',
+  });
   await writeFile(
     join(directory, 'manifest.sha256'),
     `${createHash('sha256').update(serialized).digest('hex')}  manifest.json\n`,
   );
+  await test.info().attach('cms-d5-design-manifest.sha256', {
+    body: Buffer.from(`${createHash('sha256').update(serialized).digest('hex')}  manifest.json\n`),
+    contentType: 'text/plain',
+  });
 });
