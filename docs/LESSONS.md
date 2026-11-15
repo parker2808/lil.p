@@ -290,3 +290,4 @@
 - 2026-11-15: A D5 browser journey must assert actual D2 draft revisions and tree contents after reload or failed publish; mocked draft GETs and canvas-only checks cannot prove live persistence or public SSR parity.
 - 2026-11-15: A keyboard-only design capture that asserts reduced-motion media must explicitly emulate that preference after page setup, just as the full visual matrix does; the runner default is not evidence of reduced-motion behavior.
 - 2026-11-15: For live builder E2E, drop onto the intended tree-item target instead of a canvas parent whose children can intercept the pointer; after reconnect, assert persisted content whether autosave retries automatically or exposes an explicit Retry control.
+- 2026-11-15: A visual audit scoped to the core canvas misses host admin chrome; test computed dimensions and focus paint against adjacent surfaces on the entire builder route rather than assuming design tokens prove every focus state.

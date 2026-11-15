@@ -30,16 +30,22 @@ const entries: Array<{
   axe: { serious: number; critical: number; other: number };
   contrast: Record<string, number>;
   checkedTargets: number;
+  checkedFocus: number;
 }> = [];
 
 function contrast(foreground: string, background: string): number {
   function luminance(color: string): number {
     const hex = color.replace('#', '');
     const channels = (
-      hex.length === 3 ? hex.split('').map((value) => value.repeat(2)) : (hex.match(/.{2}/g) ?? [])
+      color.startsWith('#')
+        ? hex.length === 3
+          ? hex.split('').map((value) => Number.parseInt(value.repeat(2), 16))
+          : (hex.match(/.{2}/g) ?? []).map((value) => Number.parseInt(value, 16))
+        : (color.match(/rgba?\(([^)]+)\)/)?.[1]?.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number)
     )
-      .map((value) => Number.parseInt(value, 16) / 255)
+      .map((value) => value / 255)
       .map((value) => (value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4));
+    expect(channels).toHaveLength(3);
     return channels[0]! * 0.2126 + channels[1]! * 0.7152 + channels[2]! * 0.0722;
   }
   const first = luminance(foreground);
@@ -120,26 +126,37 @@ async function capture(
     expect(pairs[name], `${options.theme}/${options.brand}/${name}`).toBeGreaterThanOrEqual(4.5);
   for (const name of ['selectionSurface', 'focusSurface'] as const)
     expect(pairs[name], `${options.theme}/${options.brand}/${name}`).toBeGreaterThanOrEqual(3);
-  const targetGeometry = await page.locator('.cms-core').evaluate((root) => {
+  const targetGeometry = await page.locator('.admin-shell').evaluate((root) => {
     const controls = Array.from(
       root.querySelectorAll<HTMLElement>(
-        'button, a[href], input, select, textarea, [role="treeitem"], [role="button"]',
+        'button, a[href], input:not([type="hidden"]), select, textarea, [role="treeitem"], [role="button"], [role="link"], [role="menuitem"], [role="checkbox"], [role="radio"], [role="switch"], [role="tab"], [role="combobox"], [tabindex]:not([tabindex="-1"])',
       ),
     );
     const visible = controls.filter((control) => {
       const style = getComputedStyle(control);
+      const rect = control.getBoundingClientRect();
       return (
         control.getClientRects().length > 0 &&
+        rect.width > 0 &&
+        rect.height > 0 &&
+        rect.right > 0 &&
+        rect.bottom > 0 &&
+        rect.left < innerWidth &&
+        rect.top < innerHeight &&
         style.visibility !== 'hidden' &&
         style.display !== 'none' &&
         !control.hasAttribute('disabled') &&
-        control.getAttribute('aria-disabled') !== 'true'
+        control.getAttribute('aria-disabled') !== 'true' &&
+        !control.closest('[inert], [aria-hidden="true"]')
       );
     });
     return visible.map((control) => {
       const rect = control.getBoundingClientRect();
       return {
-        name: control.getAttribute('aria-label') ?? control.textContent?.trim().slice(0, 70),
+        name:
+          control.getAttribute('aria-label') ??
+          control.textContent?.trim().slice(0, 70) ??
+          control.tagName,
         width: rect.width,
         height: rect.height,
       };
@@ -147,7 +164,7 @@ async function capture(
   });
   expect(targetGeometry.length, `${options.state} has visible controls`).toBeGreaterThan(0);
   expect(
-    targetGeometry.filter((target) => target.width < 43.5 || target.height < 43.5),
+    targetGeometry.filter((target) => target.width < 44 || target.height < 44),
     `${options.locale}/${options.theme}/${options.brand}/${options.width}/${options.state} undersized targets`,
   ).toEqual([]);
   const overflow = await (options.sheet ? page.getByRole('dialog') : shell).evaluate(
@@ -157,20 +174,65 @@ async function capture(
     overflow,
     `${options.locale}/${options.width}/${options.state} horizontal overflow`,
   ).toBeLessThanOrEqual(1);
-  if (options.input === 'keyboard') {
-    const focus = await page.evaluate(() => {
-      const active = document.activeElement;
-      if (!(active instanceof HTMLElement)) return null;
-      const style = getComputedStyle(active);
-      return {
-        visible: active.getClientRects().length > 0,
-        outline: style.outlineStyle,
-        width: style.outlineWidth,
-      };
-    });
-    expect(focus?.visible, `${options.state} keyboard focus is visible`).toBe(true);
-    expect(focus?.outline, `${options.state} focus indicator`).not.toBe('none');
-    expect(focus?.width, `${options.state} focus indicator width`).not.toBe('0px');
+  await page.keyboard.press('Shift');
+  const focusIndicators = await page.locator('.admin-shell').evaluate((root) => {
+    const previous = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const controls = Array.from(
+      root.querySelectorAll<HTMLElement>(
+        'button, a[href], input:not([type="hidden"]), select, textarea, [role="treeitem"], [role="button"], [role="link"], [role="menuitem"], [role="checkbox"], [role="radio"], [role="switch"], [role="tab"], [role="combobox"], [tabindex]:not([tabindex="-1"])',
+      ),
+    );
+    const results = [];
+    for (const control of controls) {
+      const bounds = control.getBoundingClientRect();
+      const style = getComputedStyle(control);
+      if (
+        !bounds.width ||
+        !bounds.height ||
+        bounds.right <= 0 ||
+        bounds.bottom <= 0 ||
+        bounds.left >= innerWidth ||
+        bounds.top >= innerHeight ||
+        style.visibility === 'hidden' ||
+        style.display === 'none' ||
+        control.hasAttribute('disabled') ||
+        control.getAttribute('aria-disabled') === 'true' ||
+        control.closest('[inert], [aria-hidden="true"]')
+      )
+        continue;
+      control.focus({ preventScroll: true });
+      if (document.activeElement !== control) continue;
+      const focused = getComputedStyle(control);
+      const surfaces: string[] = [];
+      for (let element: HTMLElement | null = control; element; element = element.parentElement) {
+        const color = getComputedStyle(element).backgroundColor;
+        if (color !== 'rgba(0, 0, 0, 0)' && color !== 'transparent') surfaces.push(color);
+        if (surfaces.length === 2) break;
+      }
+      const ring = focused.boxShadow.match(/rgba?\([^)]+\)/g)?.at(-1);
+      results.push({
+        name: control.getAttribute('aria-label') ?? control.textContent?.trim().slice(0, 70),
+        color:
+          focused.outlineStyle !== 'none' && focused.outlineWidth !== '0px'
+            ? focused.outlineColor
+            : ring,
+        surfaces,
+      });
+    }
+    previous?.focus({ preventScroll: true });
+    return results;
+  });
+  expect(focusIndicators.length, `${options.state} keyboard-focusable controls`).toBeGreaterThan(0);
+  for (const focus of focusIndicators) {
+    expect(focus.color, `${options.state}/${focus.name} focus indicator`).toBeTruthy();
+    expect(focus.surfaces.length, `${options.state}/${focus.name} painted surface`).toBeGreaterThan(
+      0,
+    );
+    for (const surface of focus.surfaces)
+      expect(
+        contrast(focus.color!, surface),
+        `${options.state}/${focus.name} focus ${focus.color} against ${surface}`,
+      ).toBeGreaterThanOrEqual(3);
   }
   if (
     options.state === 'properties' ||
@@ -218,6 +280,7 @@ async function capture(
     axe: { serious, critical, other: violations.length - serious - critical },
     contrast: pairs,
     checkedTargets: targetGeometry.length,
+    checkedFocus: focusIndicators.length,
   });
 }
 
