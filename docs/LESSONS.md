@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A core CSS focus declaration is not proof that every embedded host control paints a ring in production; two ordinary builder buttons reached `:focus-visible` with no computed indicator in repeated CI. Scope an opaque host fallback to all interactive controls and retain exact-head contrast verification.
+
 - 2026-11-15: A matching focus rule does not establish painted contrast; verify the stronger host outline on exact-head CI before accepting V15. The separate D4 test owner is replacing obsolete study-only assertions on the live Properties route.
 - 2026-11-15: A D2 tree-publish endpoint that always returns 409 cannot supply a genuine tree version for a restore test; gate the rejected publish and draft preservation honestly, and leave V10 version-restore coverage open until a real publication path exists.
 

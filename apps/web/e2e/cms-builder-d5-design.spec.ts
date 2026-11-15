@@ -331,9 +331,7 @@ async function capture(
         alpha(focused.outlineColor) > 0
           ? focused.outlineColor
           : '';
-      const inspectFocus =
-        control.className.toString().includes('brandButton') ||
-        control.hasAttribute('data-canvas-id');
+      const inspectFocus = true;
       results.push({
         name: control.getAttribute('aria-label') ?? control.textContent?.trim().slice(0, 70),
         colors: [...(outline ? [outline] : []), ...shadowColors(focused.boxShadow)],
@@ -398,9 +396,10 @@ async function capture(
   for (const [index, focus] of focusIndicators.entries()) {
     expect(focus.reached, `${options.state}/${focus.name} programmatic focus`).toBe(true);
     expect(focus.visibleFocus, `${options.state}/${focus.name} keyboard-visible focus`).toBe(true);
-    expect(focus.colors.length, `${options.state}/${focus.name} focus indicator`).toBeGreaterThan(
-      0,
-    );
+    expect(
+      focus.colors.length,
+      `${options.state}/${focus.name} ${JSON.stringify(focus.diagnostic)} focus indicator`,
+    ).toBeGreaterThan(0);
     expect(focus.surfaces.length, `${options.state}/${focus.name} painted surface`).toBeGreaterThan(
       0,
     );

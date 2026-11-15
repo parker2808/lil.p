@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- #221 CI 43717611638 repeatedly found `:focus-visible` ordinary host buttons without a computed indicator, despite the core theme fallback. Apply a scoped opaque host ring to all interactive builder controls, retain the ≥3:1 browser assertion, and await exact-head five-shard proof.
+
 - #221 run `43713811749` exposed an unpainted focus indicator on the canvas “Select Page” control; the host canvas now requests an opaque scoped outline and logs its computed style. V15 remains blocked until exact-head browser contrast passes; the separate D4 test owner handles shard 5's obsolete textbox assertions.
 
 - #221 restacked on the D5 five-shard base; the separate D4 test owner is replacing obsolete study-only textbox assertions on the live Properties route. An explicitly opaque host outline remains subject to exact-head computed ≥3:1 focus verification; #204 base CI 43712324642 failed the obsolete D4 test, so neither base nor V15 is accepted yet.
@@ -286,6 +288,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Applied an opaque host focus indicator across interactive builder controls after repeated production-CSS failures on ordinary buttons; expanded failure diagnostics without relaxing V15 contrast or target-size thresholds. Exact-head browser CI remains required.
 
 - 2026-11-15: Scoped the canvas selection focus ring to the host and expanded failed-focus diagnostics after #221 shard 1 detected no painted indicator; the ≥3:1 contrast assertion is unchanged. Await exact-head CI.
 - 2026-11-15: Expanded D5 V07 tests for real-builder insert/edit/duplicate history and failed-save retry, adapter slot/node/history limits, and explicit rejected-publish preservation; kept tree version restore open because the D2 publish API returns 409. No product runtime change.
