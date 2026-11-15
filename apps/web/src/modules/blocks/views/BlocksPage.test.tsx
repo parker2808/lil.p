@@ -1,8 +1,13 @@
 import { draftMode } from 'next/headers';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
+import en from '../../../../i18n/locales/en.json';
+import viStrings from '../../../../i18n/locales/vi.json';
+
+import { BlockRenderer } from '../components/BlockRenderer/BlockRenderer';
 import { getPage } from '../services/pages.service';
 import { BlocksPage } from './BlocksPage';
 
@@ -25,7 +30,7 @@ vi.mock('../constants/block-renderers.constant', () => ({
     },
   },
 }));
-vi.mock('../components/BlockRenderer/BlockRenderer', () => ({ BlockRenderer: () => null }));
+vi.mock('../components/BlockRenderer/BlockRenderer', () => ({ BlockRenderer: vi.fn(() => null) }));
 
 const tree = {
   schemaVersion: 1,
@@ -52,6 +57,33 @@ const tree = {
 };
 
 describe('tree route SSR', () => {
+  it.each([
+    ['en', en.states],
+    ['vi', viStrings.states],
+  ] as const)(
+    'passes the %s invalid-preview notice instead of empty-page copy',
+    async (locale, states) => {
+      vi.mocked(getPage).mockResolvedValueOnce({
+        key: 'ideas',
+        seo: { title: null, description: null, lang: locale },
+        blocks: [],
+        invalidBlocks: [{ id: 3, key: 'broken', type: 'unknown', issues: ['Raw diagnostic'] }],
+      });
+      vi.mocked(draftMode).mockResolvedValueOnce({ isEnabled: true } as never);
+      vi.mocked(getTranslations).mockResolvedValueOnce(
+        ((key: keyof typeof states) => states[key]) as never,
+      );
+      renderToStaticMarkup(await BlocksPage({ pageKey: 'ideas', locale }));
+      const labels = vi.mocked(BlockRenderer).mock.lastCall?.[0].labels;
+      expect(labels).toMatchObject({
+        empty: states.empty,
+        unknown: states.unknownBlock,
+        unknownHelp: states.unknownBlockHelp,
+      });
+      expect(labels?.unknown).not.toBe(labels?.empty);
+    },
+  );
+
   it.each(['en', 'vi'] as const)(
     'includes async host content in the initial %s HTML',
     async (locale) => {

@@ -1,0 +1,7 @@
+# V13 D6 no-SEO tree metadata and invalid-block preview
+
+Scope: the D6 public and authenticated draft tree routes use the same validated tree heading for SEO title and (when supplied by the `page-header`) description. EN/VI localized `page-header` fields use the host's whole-block locale fallback, matching rendered text; explicit SEO always wins. The first responsive mobile/base H1 is the metadata fallback when breakpoint copy differs. A tree without a usable heading retains existing site-setting SEO fallback. Historical `?v=N` still only affects authorized draft previews.
+
+Invalid legacy preview blocks use dedicated EN/VI notice and recovery help, not the empty-page state. The notice does not print untrusted block types or raw API/validation issue strings. The public route does not show preview-only invalid-block notices. No API schema, migration, CMS core or golden contract changes.
+
+Evidence: `build-page-metadata.util.test.ts` covers blank versus explicit SEO in EN/VI, `BlockRenderer.test.tsx` checks localized notice and omitted diagnostics, and the existing registered `metadata.spec.ts` shard uses the real admin API to clear SEO, activate a bilingual tree, compare draft/public H1 with title/description in both locales, then publish. Exact-head `ready-e2e` CI and an independent combined-head V13 route/state review remain required; this scoped F3/F4 fix does not certify all V13 states, WCAG or production rollout.

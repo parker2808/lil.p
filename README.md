@@ -1,5 +1,11 @@
 # lil.p
 
+The [V13 D6 metadata/preview fix](./docs/specs/2026-11-16-cms-d6-v13-metadata.md)
+derives missing tree SEO from the visible bilingual H1 on public and draft routes,
+and displays localized recovery help instead of raw invalid-block diagnostics.
+Real EN/VI browser evidence runs in the existing metadata shard; full V13 signoff
+still requires combined-head route/state review.
+
 Historical CMS previews (`?v=N`) now read the same version for the rendered
 tree and EN/VI SEO title/description. Public routes ignore `?v=` and retain
 their current published content and metadata; this is a scoped V13 regression

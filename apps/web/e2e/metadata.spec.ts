@@ -169,3 +169,88 @@ test('EN/VI historical draft SEO matches the versioned body; public query stays 
     await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
   }
 });
+
+test('EN/VI tree page without SEO derives public and draft metadata from the visible H1', async ({
+  page,
+}) => {
+  test.setTimeout(120_000);
+  await signIn(page);
+  const key = `metadata-tree-${Date.now()}`;
+  const headers = { Origin: new URL(page.url()).origin };
+  const created = await page.request.post('/api/admin/pages', {
+    headers,
+    data: { key, title: 'Tree metadata', locale: 'en', template: 'starter' },
+  });
+  expect(created.status(), await created.text()).toBe(201);
+  const cleared = await page.request.patch(`/api/admin/pages/${key}`, {
+    headers,
+    data: {
+      seoTitleEn: null,
+      seoTitleVi: null,
+      seoDescriptionEn: null,
+      seoDescriptionVi: null,
+    },
+  });
+  expect(cleared.status(), await cleared.text()).toBe(200);
+
+  const tree = {
+    schemaVersion: 1,
+    root: {
+      id: 'page',
+      type: 'page',
+      responsive: { base: {} },
+      sections: [
+        {
+          id: 'section',
+          type: 'section',
+          responsive: { base: {} },
+          content: [
+            {
+              id: 'heading',
+              type: 'component',
+              componentType: 'page-header',
+              responsive: {
+                base: {
+                  eyebrow: { en: 'Work', vi: 'Công việc' },
+                  title: { en: 'Selected projects', vi: 'Dự án tiêu biểu' },
+                  intro: { en: 'Project overview', vi: 'Tổng quan dự án' },
+                },
+              },
+            },
+          ],
+        },
+      ],
+    },
+  };
+  const activated = await page.request.post(`/api/admin/pages/${key}/builder/activate`, {
+    headers,
+    data: { expectedRevision: '0', tree },
+  });
+  expect(activated.status(), await activated.text()).toBe(200);
+  for (const [locale, heading, description] of [
+    ['en', 'Selected projects', 'Project overview'],
+    ['vi', 'Dự án tiêu biểu', 'Tổng quan dự án'],
+  ] as const) {
+    const path = `/${locale}/${key}`;
+    await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
+    await page.goto(path);
+    await expect(page.getByRole('heading', { name: heading, level: 1 })).toBeVisible();
+    expect(await page.title()).toContain(heading);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', description);
+    await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
+  }
+  const published = await page.request.post(`/api/admin/pages/${key}/builder/publish`, {
+    headers,
+    data: { expectedRevision: (await activated.json()).revision },
+  });
+  expect(published.status(), await published.text()).toBe(200);
+  for (const [locale, heading, description] of [
+    ['en', 'Selected projects', 'Project overview'],
+    ['vi', 'Dự án tiêu biểu', 'Tổng quan dự án'],
+  ] as const) {
+    await page.goto(`/${locale}/${key}`);
+    await expect(page.getByRole('heading', { name: heading, level: 1 })).toBeVisible();
+    expect(await page.title()).toContain(heading);
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', description);
+  }
+});

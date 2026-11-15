@@ -45,6 +45,8 @@
   "states": {
     "loading": "Loading",
     "empty": "Nothing here yet",
+    "unknownBlock": "This block cannot be previewed",
+    "unknownBlockHelp": "Review this block in the editor, then try previewing again.",
     "error": "Something went wrong",
     "errorDescription": "The page could not load. Try again or return to the beginning.",
     "retry": "Retry",

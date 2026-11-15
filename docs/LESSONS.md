@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A tree-backed page without explicit SEO must derive title from the same validated, locale-resolved H1 rendered in public and preview; never show raw server issue text in a translated invalid-block notice or reuse the empty-page label.
+
 - 2026-11-16: The D2 builder rejects legacy SEO PATCH once a tree draft is active (409 revision-aware boundary). To test historical SEO changes through supported APIs, publish a legacy snapshot first, update SEO in legacy mode, then activate and publish a tree snapshot.
 
 - 2026-11-16: Historical draft previews need the same validated version passed to both body and metadata fetches; `getPage` silently ignores versions on public routes, so test current public SEO and body with `?v=N` as well as EN/VI historical preview.

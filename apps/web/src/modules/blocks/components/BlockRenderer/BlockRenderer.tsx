@@ -22,7 +22,7 @@ export function BlockRenderer({
   invalidBlocks?: InvalidPreviewBlock[];
   draft?: boolean;
   context: BlockContext;
-  labels: { error: string; retry: string; empty: string; unknown?: string };
+  labels: { error: string; retry: string; empty: string; unknown?: string; unknownHelp?: string };
   registry: BlockRenderers;
   resolved?: Record<number, ReactNode>;
 }) {
@@ -70,7 +70,7 @@ export function BlockRenderer({
           <UnknownBlockNotice
             key={reason === 'invalid' ? `invalid-${block.id}-${block.key}` : `unknown-${block.id}`}
             block={block}
-            labels={{ unknown: label }}
+            labels={{ unknown: label, help: labels.unknownHelp }}
           />
         ),
       })}
