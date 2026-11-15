@@ -19,7 +19,7 @@ Base: `feat/cms-d6-verify` (#202). Draft stacked branch:
    historical legacy raw JSON bytes, immutable rows, semantic snapshots and
    historical VI preview across a real tree publish on disposable MySQL.
 
-CI must run Node 22 checks and `ready-e2e` API + four browser shards on the
+CI must run Node 22 checks and `ready-e2e` API + five browser shards on the
 exact PR head; attachments are generated in the Playwright report, not a
 committed platform-specific pixel baseline. This slice does not close J06/J08,
 V11/V12/V21/V22, all-20 editor-origin, design review or rollout gates.
@@ -84,6 +84,7 @@ server/host deployment; dark is selected by next-themes and marked on the host
 root for core tokens. Consequently neutral SSR brand selection, separate
 tenant-host integration, and manual approval of visual artifacts remain GAP;
 the suite cannot claim a distinct neutral published host or pixel design
-approval from its pairwise equality alone. Four shards are pinned in
-`shards.ts`, each under the existing 20-minute CI budget; if they exceed the
+approval from its pairwise equality alone. Four visual groups are registered
+across five CI shards in `shards.ts`, with group 4 pinned to shard 5; each
+retains the existing 20-minute job budget. If they exceed the
 budget, the matrix stays GAP rather than weakening the gate.

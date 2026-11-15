@@ -6,12 +6,13 @@ checks, and EN/VI preview/public SSR, hydration and screenshot pairs at
 390/768/1440. Tree publishing in the builder UI remains disabled; API publish
 and the separate legacy UI publish/version/restore journey are not proof of a
 tree UI publish/restore flow or of production rollout readiness.
-The four-shard all-20 published-host matrix now attempts EN/VI, light/dark,
+The four-group, five-shard all-20 published-host matrix now attempts EN/VI, light/dark,
 390/768/1440 and both neutral-core and explicit lil.p tokens, with paired
 public/preview screenshots and WCAG axe per tuple. Neutral is selected on the
 real host DOM in a browser fixture, not via a separate published tenant. CI
 and independent visual review remain required before V03/V14 can pass.
-The matrix checks the seeded CV empty state, while education writes invalidate
+The matrix checks the seeded CV empty state with labeled host-context images
+rather than pretending an invisible CV wrapper is rendered. Education writes invalidate
 the public read cache before returning so published and preview hosts see the
 same collection. Captures exclude fixed site chrome, not block content.
 The notes browser host retains lazy client loading with a data-backed SSR
@@ -27,7 +28,7 @@ screen-reader checks; complete no-JavaScript tree text remains unverified.
 The D6 host-registry integration is staged on a scratch branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and
 publish, then EN/VI version preview and public SSR. This is route evidence, not
-all-20 editor-origin parity until its exact-head four-shard CI passes. Visual/a11y
+all-20 editor-origin parity until its exact-head five-shard CI passes. Visual/a11y
 approval and permission to deploy D2 remain separate gates. The editor-origin suite
 searches Vietnamese host tile labels, edits valid bilingual Properties, and opens
 the real EN/VI Next draft route before publish. The follow-up checks each host
@@ -38,7 +39,7 @@ text solely through this suite.
 
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 
-The same runbook records a local #208 tarball rehearsal: its 26-file pack contains only built `dist/**`, README, LICENSE and package.json. The package remains subpath-only, and a future C3 consumer switch must pin all four direct dependents (contracts, API, web and the neutral fixture). Recount the pack at the final integrated SHA; final merge, rights and distribution authorization remain separate gates.
+The same runbook records a local #208 tarball rehearsal: its 26-file pack contains only built `dist/**`, README, LICENSE and package.json. The package remains subpath-only; package-local tests reject the root `"."` specifier for ESM and CJS both in the checkout and from an installed tarball, where all six subpaths resolve. A future C3 consumer switch must pin all four direct dependents (contracts, API, web and the neutral fixture). Recount the pack at the final integrated SHA; final merge, rights and distribution authorization remain separate gates.
 
 The contact form retains name, email, and message typed before hydration, synchronizes them on mount, and sends one client request. The server action remains available without JavaScript; see the [hydration regression spec](./docs/specs/2026-11-11-contact-hydration-readiness.md).
 
@@ -355,10 +356,13 @@ After `git pull`, run `pnpm install`, `pnpm --filter @portfolio/contracts build`
 
 Live hosting is **Vercel (web) + Render (API) + TiDB Cloud (MySQL) + Cloudinary (media)**. First-time provisioning, every env var, and the admin bootstrap are in [docs/DEPLOY.md](./docs/DEPLOY.md) ([Tiếng Việt](./docs/DEPLOY.vi.md)). Rollback and secret rotation: [docs/runbooks/deploy.md](./docs/runbooks/deploy.md), [docs/runbooks/secrets.md](./docs/runbooks/secrets.md).
 
+The exceptional Stage A → D2 forward-only rollout uses the [release-owner probe and drain checklist](./docs/runbooks/deploy.md#stage-a--d2-page-write-rollout-release-owner-only). `scripts/probe-stage-a-d2.mjs` checks public health and unauthenticated page-write freeze across direct Render and Vercel ingress; it cannot certify old-instance drain or migration by itself. Never run it against production without release-owner authorization.
+
 ### How a change reaches production
 
 1. Open a PR (or push) to `main`. CI runs format, lint, typecheck, tests, content checks, build, and API e2e.
    On a PR without `ready-e2e`, API/web E2E is skipped. Adding that label later starts E2E-only CI without cancelling the original code-check run; further code pushes still cancel stale code-check runs. Unrelated labels do not rerun expensive checks.
+   E2E build, shard and merged-report artifact names and provenance JSON record both the PR head SHA and the tested checkout SHA (the synthetic merge SHA on PR runs); the merged report verifies all five shard manifests. Match both SHAs before attributing screenshots to a head. [Shard throughput measurements](./docs/specs/2026-11-15-cms-e2e-shard-throughput.md) explain the fifth runner.
 2. Vercel and Render auto-deploy `main`.
 3. On boot, the API image runs `prisma migrate deploy` — it applies committed migrations only, never creates new ones, never resets data.
 
