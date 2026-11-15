@@ -277,7 +277,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
-- 2026-11-15: Follow-up to V15's five-shard CI failure: keep the host Core toggle's opaque focus shadow above competing declarations and add diagnostics for matching CSS rules and DOM focus/connection. Exact-head CI is pending; no API or golden changes.
+- 2026-11-15: Follow-up to V15's five-shard CI failure: keep the host Core toggle's opaque focus shadow above competing declarations and measure after a paint frame/finished CSS transitions; matching CSSOM selectors alone did not prove the shadow painted on CI 43708917423. Exact-head CI is pending; no API or golden changes.
 
 - 2026-11-15: Synced the D5 V15 stacked gate with five-shard D base; preserved both context/lessons histories and the U3/D3 additions. Focus audit now recognizes browser-computed `oklab()` shadows without changing the ≥3:1 requirement; CI remains the acceptance gate.
 

@@ -234,7 +234,7 @@ async function capture(
     `${options.locale}/${options.width}/${options.state} horizontal overflow`,
   ).toBeLessThanOrEqual(1);
   await page.keyboard.press('Tab');
-  const focusIndicators = await page.locator('.admin-shell').evaluate((root) => {
+  const focusIndicators = await page.locator('.admin-shell').evaluate(async (root) => {
     const canvas = document.createElement('canvas');
     canvas.width = canvas.height = 1;
     const context = canvas.getContext('2d', { willReadFrequently: true });
@@ -300,6 +300,13 @@ async function capture(
       )
         continue;
       control.focus({ preventScroll: true });
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      await Promise.all(
+        control
+          .getAnimations()
+          .filter((animation) => animation instanceof CSSTransition)
+          .map((animation) => animation.finished.catch(() => undefined)),
+      );
       if (document.activeElement !== control) {
         results.push({
           name: control.getAttribute('aria-label') ?? control.textContent?.trim(),
@@ -339,6 +346,10 @@ async function capture(
               active: document.activeElement === control,
               className: control.className,
               coreMatch: control.matches('.cms-core :where(button):focus-visible'),
+              animations: control.getAnimations().map((animation) => ({
+                type: animation.constructor.name,
+                playState: animation.playState,
+              })),
               rules: Array.from(document.styleSheets).flatMap((sheet) => {
                 try {
                   return Array.from(sheet.cssRules).flatMap((rule) =>
@@ -352,6 +363,8 @@ async function capture(
                             shadow: rule.style.getPropertyValue('box-shadow'),
                             priority: rule.style.getPropertyPriority('box-shadow'),
                             disabled: sheet.disabled,
+                            media: sheet.media.mediaText,
+                            href: sheet.href,
                           },
                         ]
                       : [],
