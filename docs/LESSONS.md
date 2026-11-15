@@ -58,6 +58,7 @@
 
 - 2026-11-15: Test host-only CMS blocks through authenticated activation, revision-checked save/read and publish before EN/VI preview/public SSR; a mocked editor GET or schema-only registry count cannot catch an API boundary dropping the host registry.
 - 2026-11-15: Keep public bundle leak checks strict for actual public routes, but exclude explicitly gated browser-test fixture routes that intentionally import admin controls; retain a mandatory assertion for the production catch-all page.
+- 2026-11-16: When several editors schedule independent preview timers, waiting for one rendered preview does not prove the others have completed; await all three rendered bodies and retain the exact callback-count assertion.
 
 - 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
 
@@ -502,3 +503,5 @@
 - 2026-11-16 V02: sau reload, Layers thu gọn Section dù draft/published tree còn nguyên; test keyboard phải mở Section bằng ArrowRight rồi mới xác nhận các node con hiện ra, không đồng nhất trạng thái UI thu gọn với mất dữ liệu.
 
 - 2026-11-16 V02: Alt+ArrowDown trên sibling cuối là no-op; phải assert order trước/sau một Alt+ArrowUp thật, dùng Tab/Shift+Tab thay Playwright `.focus()` để chứng minh keyboard reachability.
+- 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
+- 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
