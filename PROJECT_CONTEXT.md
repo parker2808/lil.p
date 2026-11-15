@@ -50,6 +50,11 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - 2026-11-15 D6 V09/V10 UI restore browser gate: register a real builder publish/edit/version-history restore/republish journey and paired EN/VI responsive screenshots; integration with the D6 UI controls is staged, but exact-head CI and independent V09 visual review are pending. See `docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md`.
 - 2026-11-15 D2 builder error-message audit: API English messages are retained in `ApiError` but the D5 builder and new D6 version-actions UI render EN/VI status labels rather than raw API messages. This is not a full API/admin i18n signoff. See the V09/V10 UI restore spec.
+- 2026-11-15 V10 review follow-up: show localized restore failures within the focused confirmation dialog, rather than only the header behind the modal. #232 exact-head 5-shard CI and real browser V10 journey remain open until the D4 canvas fix from #231 reaches the D6 base; no rollout approval.
+- D5 shard-5 correction: #204 `6a48a4cc` CI `43712324642` exposed D4 canvas tests targeting a `BuilderStudy`-only Selected item ID textbox after the route switched to real `BuilderHost`/`PropertiesPanel`. A stacked test-only fix verifies a composed heading's real EN/VI Text value across 768/1100/1440, theme changes and sheet focus; exact-head CI remains required. No runtime or release gate is waived.
+
+- 2026-11-15 D5 base synchronization: merge current D base into the isolated D5 integration branch without replacing D5's host, V07 duplicate/history coverage or V15 design assertions. Preserve D4 focus restoration and locale helper fixes; #221's separate focus-ring audit remains blocked pending its own exact-head CI.
+
 - 2026-11-15 V10 builder actions: the gated D6 builder now offers admin-only publish, authenticated version list and confirmed revision-aware restore through existing D2 routes. Publication rereads the advanced draft revision; unsuccessful/uncertain actions keep local content, and restoring a legacy snapshot switches the builder to legacy activation rather than silently overwriting. Exact-head ready-e2e V10 journey, review, operational D2 drain and production rollout remain open. See `docs/specs/2026-11-15-cms-builder-version-actions.md`.
 
 - 2026-11-15 D6 base reconciliation: keep D6 V04/V06/V09/V10 and editor-origin histories alongside the five-shard D4 canvas/keyboard registry and focus/locale fixes from #224; the combined branch requires exact-new-head `ready-e2e` before treating the auto-merged tests as evidence. Release and integrated D5 publish/restore remain separate gates.
@@ -300,6 +305,11 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - 2026-11-15: Staged the D6 builder UI version-restore browser gate and five-shard registration, with 12 EN/VI paired responsive captures. No runtime/schema or golden-contract change; exact-head CI and V09 human review remain pending.
 - 2026-11-15: Audited D2 English builder draft error payloads against the D5 builder and merged D6 version-actions code; both show localized status/recovery copy rather than API messages. No API/schema change.
+- 2026-11-15: Announce failed revision-aware restore inside the active EN/VI confirmation dialog, retaining focus, local edits and blocked uncertain state; add dialog-scoped tests without changing API contracts.
+- 2026-11-15: Replaced obsolete D4 Properties fixture-textbox expectations with real D5 heading field persistence, responsive single-mount and focus assertions; updated the serialized capture check without changing production behavior. CI evidence pending.
+
+- 2026-11-15: Synchronized D5 UI with `feat/cms-d-base` after #224, preserving the live D5 host and V07/V15 evidence, D4 sheet-focus handling and locale-safe browser tests. No migration, public route, or golden changes; final-head CI is required.
+
 - 2026-11-15: Wired gated builder publish/history/confirmed restore to existing D2 CAS API without changing golden contracts, schema or migration; added EN/VI status and no-data-loss unit checks. Ready-e2e browser and independent design review remain pending.
 
 - 2026-11-15: Added test-only CMS route/snapshot and old-reader evidence plus build SHA-256/public CDN verifier; retained existing gzip cap, forbidden-module assertions and golden/runtime behavior. Operational gates remain open.

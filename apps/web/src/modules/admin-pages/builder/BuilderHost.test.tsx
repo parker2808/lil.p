@@ -12,8 +12,9 @@ import {
 } from './autosave/transport';
 import { listAdminPageVersions } from '../services/admin-pages.service';
 
+const localeState = vi.hoisted(() => ({ current: 'en' as 'en' | 'vi' }));
 vi.mock('next-intl', () => ({
-  useLocale: () => 'en',
+  useLocale: () => localeState.current,
   useTranslations: () => (key: string) => key,
 }));
 vi.mock('@/modules/admin-core/hooks/use-me.hook', () => ({
@@ -38,6 +39,7 @@ afterEach(() => {
   cleanup();
   vi.clearAllMocks();
   localStorage.clear();
+  localeState.current = 'en';
 });
 
 it('publishes only the acknowledged tree revision and refreshes it before further editing', async () => {
@@ -120,10 +122,35 @@ it('keeps the confirmation open and hides raw API errors on a failed restore', a
   fireEvent.click(
     within(screen.getByRole('alertdialog')).getByRole('button', { name: 'Restore draft' }),
   );
-  await screen.findByText('Server draft changed · reload before trying again');
-  expect(screen.getByRole('alertdialog')).toBeVisible();
+  const dialog = screen.getByRole('alertdialog');
+  expect(await within(dialog).findByRole('alert')).toHaveTextContent(
+    'Server draft changed · reload before trying again',
+  );
+  expect(dialog).toBeVisible();
+  expect(within(dialog).getByRole('button', { name: 'Cancel' })).toHaveFocus();
   expect(screen.queryByText('Raw server error')).toBeNull();
   expect(screen.getByText('Publish').closest('button')).toBeDisabled();
+});
+
+it('announces a localized restore failure inside the active VI confirmation', async () => {
+  localeState.current = 'vi';
+  vi.mocked(readBuilderDraft).mockResolvedValue({ mode: 'tree', revision: '8', tree: empty });
+  vi.mocked(listAdminPageVersions).mockResolvedValue([
+    { version: 1, createdAt: '2026-11-15T00:00:00Z', authorName: null, note: null, blockCount: 1 },
+  ]);
+  vi.mocked(restoreBuilderVersion).mockRejectedValue({ status: 409, message: 'Raw server error' });
+  render(<BuilderHost pageKey="ideas" />);
+  await screen.findByText('Đã lưu bản nháp');
+  fireEvent.click(screen.getByRole('button', { name: 'Lịch sử phiên bản' }));
+  fireEvent.click(await screen.findByRole('button', { name: 'Khôi phục bản nháp 1' }));
+  const dialog = screen.getByRole('alertdialog');
+  const confirm = within(dialog).getByRole('button', { name: 'Khôi phục bản nháp' });
+  fireEvent.click(confirm);
+  expect(await within(dialog).findByRole('alert')).toHaveTextContent(
+    'Bản nháp máy chủ đã thay đổi · tải lại trước khi thử lại',
+  );
+  expect(within(dialog).getByRole('button', { name: 'Hủy' })).toHaveFocus();
+  expect(screen.queryByText('Raw server error')).toBeNull();
 });
 
 it('owns composition and undo/redo without saving local-only studies', async () => {
