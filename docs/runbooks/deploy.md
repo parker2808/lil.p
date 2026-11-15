@@ -28,7 +28,11 @@ before it starts, so new migrations apply on the next Render deploy.
 
 ### Stage A → D2 page-write rollout (release owner only)
 
-This is a **forward-only** exception to ordinary rolling deploys. Do not deploy
+This is a **forward-only** exception to ordinary rolling deploys. The required
+release order is **#210 Stage A freeze and old-instance drain → #199 D2 migration
+and verification → separately approved D2-aware reopen → #204 → #202**.
+Review/merge of each PR is a separate decision from its production deploy;
+neither a green PR nor merging to `main` authorizes the next step. Do not deploy
 an API image predating Stage A after D2 migrates. Approval to merge a PR is not
 approval to deploy or migrate; obtain separate release-owner authorization.
 Keep auto-deploy disabled and pin reviewed image commits throughout.
@@ -46,8 +50,9 @@ Keep auto-deploy disabled and pin reviewed image commits throughout.
    Vercel origin defaults to `https://lil-p.vercel.app`. The actual Render host
    is **not stored in tracked config**: `docs/DEPLOY.md` shows only an example;
    obtain the public hostname from the approved Render service settings, not
-   from `.env` or a secret. This script makes unauthenticated GETs for `/`,
-   `/vi`, and `/api/health` (both API ingresses for health), then sends empty,
+   from `.env` or a secret. This script makes unauthenticated GETs for `/`
+   (200 or a same-origin 307/308 redirect to `/en`), explicit `/en` and `/vi`
+   (200), and `/api/health` (200 via both ingresses), then sends empty,
    unauthenticated mutation requests to all ten legacy and four D2 paths via
    direct Render and Vercel `/api`. It uses a nonexistent sentinel page key,
    block ID 0, version 0, and invalid `{}` for creation; it never sends cookies
@@ -82,6 +87,11 @@ Keep auto-deploy disabled and pin reviewed image commits throughout.
    If any gate fails, **hold freeze and roll forward**, never redeploy a pre-D2
    writer. No seed, manual SQL, script or background page writer may bypass the
    freeze during this window.
+6. Only after the reopen and CAS/data gates are signed off, consider #204 and
+   then #202 in that order, with each reviewed final head and independent
+   merge/deploy approval. Keep Render auto-deploy disabled while ordering the
+   releases; a merge is not a drain, migration verification or permission to
+   reopen writes.
 
 ## Rollback
 

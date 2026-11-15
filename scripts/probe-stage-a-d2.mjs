@@ -72,6 +72,9 @@ export async function probe({
       } else if (path === '/api/health') {
         const body = await response.json();
         valid &&= body.status === 'ok' && body.db === 'ok';
+      } else if (path === '/' && label === 'Vercel' && [307, 308].includes(response.status)) {
+        const destination = response.headers.get('location');
+        valid = destination !== null && new globalThis.URL(destination, base).href === `${base}/en`;
       }
       log(`${valid ? 'PASS' : 'FAIL'} ${label} ${method} ${path} (${response.status})`);
       if (!valid) failures.push(`${label} ${method} ${path}`);
@@ -83,7 +86,7 @@ export async function probe({
     }
   }
 
-  for (const path of ['/', '/vi']) await check('Vercel', vercel, 'GET', path);
+  for (const path of ['/', '/en', '/vi']) await check('Vercel', vercel, 'GET', path);
   for (const [label, base] of [
     ['Render', render],
     ['Vercel', vercel],
@@ -92,7 +95,7 @@ export async function probe({
     for (const [method, path] of mutations) await check(label, base, method, path, true);
   }
   log(
-    `Stage A: ${failures.length ? `${failures.length} mismatch(es); STOP` : '32/32 public probes passed; instance drain NOT proven'}`,
+    `Stage A: ${failures.length ? `${failures.length} mismatch(es); STOP` : '33/33 public probes passed; instance drain NOT proven'}`,
   );
   log(
     'Instance identity/commit: unavailable on unauthenticated endpoints; verify via authorized inventory.',

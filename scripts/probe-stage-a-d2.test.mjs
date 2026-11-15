@@ -3,13 +3,14 @@ import { test } from 'node:test';
 
 import { mutations, probe } from './probe-stage-a-d2.mjs';
 
-function mockFetch({ wrongPath, wrongStatus, wrongBody, wrongHealth } = {}) {
+function mockFetch({ wrongPath, wrongStatus, wrongBody, wrongHealth, rootRedirect } = {}) {
   const requests = [];
   async function fetchImpl(url, options) {
     requests.push({ url, options });
     const path = new globalThis.URL(url).pathname;
     const frozen = path.startsWith('/api/admin/pages');
-    const status = path === wrongPath ? wrongStatus : frozen ? 503 : 200;
+    const status =
+      path === wrongPath ? wrongStatus : rootRedirect && path === '/' ? 307 : frozen ? 503 : 200;
     const body = frozen
       ? {
           statusCode: 503,
@@ -23,7 +24,10 @@ function mockFetch({ wrongPath, wrongStatus, wrongBody, wrongHealth } = {}) {
         : { status: 'ok', db: 'ok' };
     return {
       status,
-      headers: new globalThis.Headers({ 'Retry-After': frozen ? '120' : '' }),
+      headers: new globalThis.Headers({
+        'Retry-After': frozen ? '120' : '',
+        ...(rootRedirect && path === '/' ? { Location: rootRedirect } : {}),
+      }),
       json: async () => body,
     };
   }
@@ -41,7 +45,11 @@ test('checks both ingresses and every legacy/D2 path without credentials or vali
     }),
     true,
   );
-  assert.equal(requests.length, 32);
+  assert.equal(requests.length, 33);
+  assert.deepEqual(
+    requests.slice(0, 3).map(({ url }) => new globalThis.URL(url).pathname),
+    ['/', '/en', '/vi'],
+  );
   assert.deepEqual(
     requests
       .filter(({ url }) => url.includes('/api/admin/pages'))
@@ -55,6 +63,26 @@ test('checks both ingresses and every legacy/D2 path without credentials or vali
   );
   assert.ok(lines.some((line) => line.includes('drain NOT proven')));
   assert.ok(lines.at(-1).includes('unavailable'));
+});
+
+test('accepts only a same-origin root redirect to EN and still fetches EN and VI', async () => {
+  const valid = mockFetch({ rootRedirect: '/en' });
+  assert.equal(
+    await probe({ renderUrl: 'https://render.example', fetchImpl: valid.fetchImpl, log: () => {} }),
+    true,
+  );
+  assert.equal(valid.requests[1].url, 'https://lil-p.vercel.app/en');
+  for (const rootRedirect of ['/vi', 'https://unrelated.example/en']) {
+    const invalid = mockFetch({ rootRedirect });
+    assert.equal(
+      await probe({
+        renderUrl: 'https://render.example',
+        fetchImpl: invalid.fetchImpl,
+        log: () => {},
+      }),
+      false,
+    );
+  }
 });
 
 test('fails closed on missing freeze, wrong JSON and unhealthy DB', async () => {
