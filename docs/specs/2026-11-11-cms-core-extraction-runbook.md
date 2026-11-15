@@ -237,8 +237,11 @@ lockfile. Installed from that tarball, `./contracts`, `./engine`, `./tree`,
 loaders reject it. No current consumer imports the root, so keep subpath-only
 usage unless the consumer owners explicitly request and review a real root
 entry; `packages/cms-core/test/exports.test.mjs` now locks the six documented
-subpaths and rejects root ESM/CJS resolution. Repeat the rejection check from
-the packed tarball at the final integrated SHA before C1.
+subpaths and rejects root ESM/CJS resolution. The package-local
+`scripts/packed-exports.test.mjs` now packs and installs a tarball in a scratch
+consumer during the existing CI unit job, asserting all six installed subpaths
+resolve through both loaders while root ESM/CJS resolution is rejected.
+Repeat the pack and checks at the final integrated SHA before C1.
 Four scratch consumers (`packages/contracts`, `apps/api`, `apps/web` and
 `examples/cms-core-fixture`) installed the tarball rather than the workspace
 package; contracts → web → API builds passed. The first attempt to remove the
