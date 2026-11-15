@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- V16 builder automation adds real-API EN/VI accessible-name, live announcement, keyboard focus, reduced-motion and whole-page axe coverage. Manual VoiceOver/NVDA output, public/preview heading order and independent screen-reader review remain OPEN; no release signoff from this subset.
+
 - D5 V07 stale publish CAS: the earlier post-recovery request reused the current revision and may publish successfully after D6 integration. A stacked browser fix performs an intervening real draft PUT, then asserts stale publish 409 and unchanged draft/revision/versions; exact-head CI and combined #208 rerun remain pending.
 
 - 2026-11-15 D5 builder error localization: D2's English `message` remains in the API response but current D5 builder status/recovery UI uses only typed HTTP outcomes and EN/VI labels. Verify the new D6 publish/version controls independently; other admin/API i18n remains out of scope. See `docs/specs/2026-11-11-cms-d5-ui.md`.
@@ -283,6 +285,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Registered a real-browser D5 V16 automated accessibility subset for EN/VI tree-builder announcements, focus, reduced-motion and full-page axe. Manual screen-reader and public/preview checks remain open; no runtime or golden changes.
 
 - 2026-11-15: Corrected V07 real-browser publish-conflict setup to use an intervening server revision, retaining offline recovery and adding draft/version invariants; no runtime or golden change.
 
