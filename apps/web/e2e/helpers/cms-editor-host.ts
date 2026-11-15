@@ -64,16 +64,18 @@ export function registerEditorHostJourney(shard: number): void {
       if (['notes-browser', 'projects-browser'].includes(definition.type)) {
         await inspector.getByRole('switch', { name: 'showFeatured' }).click();
       } else {
-        const englishTitle = inspector.getByRole('textbox', { name: /(?:heading )?title \(EN\)$/ });
+        const englishTitle = inspector.getByRole('textbox', {
+          name: /(?:heading )?title (?:\(EN\)|· Tiếng Anh)$/,
+        });
         const english = (await englishTitle.count())
           ? englishTitle.first()
-          : inspector.getByRole('textbox', { name: /\(EN\)$/ }).first();
+          : inspector.getByRole('textbox', { name: /(?:\(EN\)|· Tiếng Anh)$/ }).first();
         const vietnameseTitle = inspector.getByRole('textbox', {
-          name: /(?:heading )?title \(VI\)$/,
+          name: /(?:heading )?title (?:\(VI\)|· Tiếng Việt)$/,
         });
         const vietnamese = (await vietnameseTitle.count())
           ? vietnameseTitle.first()
-          : inspector.getByRole('textbox', { name: /\(VI\)$/ }).first();
+          : inspector.getByRole('textbox', { name: /(?:\(VI\)|· Tiếng Việt)$/ }).first();
         await expect(english).toBeVisible();
         await english.fill(englishValue);
         await vietnamese.fill(vietnameseValue);
