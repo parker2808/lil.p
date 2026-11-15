@@ -49,6 +49,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - 2026-11-15 D6 V09/V10 UI restore browser gate: register a real builder publish/edit/version-history restore/republish journey and paired EN/VI responsive screenshots; integration with the separately owned UI controls, exact-head CI and independent V09 visual review are pending. See `docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md`.
+- 2026-11-15 D2 builder error-message audit: API English messages are retained in `ApiError` but current D5 builder renders only EN/VI status labels based on HTTP status; the future D6 version-actions UI must not expose raw messages. This is not a full API/admin i18n signoff. See the V09/V10 UI restore spec.
 
 - 2026-11-15 D6 V04/V06/V09/V10 gate: serialized legacy converter and responsive inheritance checks plus paired real-tree EN/VI public/preview browser captures at 390/768/1440 are staged for exact-head CI. Independent visual inspection and full integrated D5 UI publish/version/restore remain GAP; see `docs/specs/2026-11-15-cms-d6-v04-v06-v09-v10-gate.md`.
 - 2026-11-15 D6 gate CI correction: the restored builder canvas is localized by the retained UI preference, so the browser gate accepts its exact EN or VI accessible region while requiring the unchanged restored heading; unique per-attempt slugs keep Playwright retries independent. Await new exact-head CI.
@@ -293,6 +294,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 9. Changelog
 
 - 2026-11-15: Staged the D6 builder UI version-restore browser gate and five-shard registration, with 12 EN/VI paired responsive captures. No runtime/schema or golden-contract change; exact-head CI and V09 human review remain pending.
+- 2026-11-15: Audited D2 English builder draft error payloads against the D5 browser error path; current UI shows only localized status/recovery copy, with no API message rendered. Future D6 version actions require the same boundary; no runtime or schema change.
 
 - 2026-11-15: Added D6 no-loss converter, responsive inheritance and paired real published/preview browser evidence, with version/restore draft checks; no runtime or schema changes.
 - 2026-11-15: Correct D6 browser restore assertion for localized canvas name and isolate page keys between retries; no runtime or assertion threshold changes.
