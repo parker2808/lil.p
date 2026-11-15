@@ -11,6 +11,14 @@ add legacy/tree route and missing-SEO snapshot checks, nested-field core
 preservation, and an offline deployed-public-asset parity verifier. They do not
 authorize deployment or close the V18 live drain and V19 CDN parity gates.
 
+The [builder version actions](./docs/specs/2026-11-15-cms-builder-version-actions.md)
+use D2's revision-checked publish and restore endpoints in the gated builder:
+publish requires a fully acknowledged server draft, history lists immutable
+versions, and restoring one requires confirmation before replacing the draft.
+Uncertain writes or CAS conflicts keep local content and block further version
+changes until review; restoration never automatically republishes. This is a
+verification-branch UI gate, not authorization for the D2 production migration.
+
 The D6 host-registry integration is staged on this verification branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and
 publish, then EN/VI version preview and public SSR. Its separate four-shard editor-origin
@@ -24,6 +32,7 @@ transient HTML; data-dependent/empty-default hosts do not prove nonblank semanti
 text solely through this suite.
 The [D2 V11/V12 safety gate](./docs/specs/2026-11-15-cms-d2-v11-v12-gate.md) extends real-DB negative tree and capability checks. Final integrated D6 publication and authorized production log review remain separate gates.
 The [D6 tree parity gate](./docs/specs/2026-11-15-cms-d6-v04-v06-v09-v10-gate.md) adds serialized legacy/override assertions and paired EN/VI public/preview captures at three widths; visual review and the integrated UI restore path remain open.
+The D6 builder canvas browser gate now selects a real editable heading instead of the obsolete study-only Properties ID; five-shard exact-head CI remains required, and this test-only correction does not integrate the separate D5 runtime or close V10.
 
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 
