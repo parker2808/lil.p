@@ -2,7 +2,6 @@ import { expect, test } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
 
-const key = 'builder-journey';
 const firstTree = {
   schemaVersion: 1,
   root: {
@@ -46,6 +45,7 @@ const secondTree = {
 
 test('real tree save, publish, EN/VI SSR parity and revision-aware restore', async ({ page }) => {
   await signIn(page);
+  const key = `builder-journey-${Date.now()}`;
   const headers = { Origin: new URL(page.url()).origin };
   const created = await page.request.post('/api/admin/pages', {
     headers,
@@ -103,7 +103,9 @@ test('real tree save, publish, EN/VI SSR parity and revision-aware restore', asy
   expect((await restore.json()).tree).toEqual(firstTree);
   await page.goto(`/admin/builder/${key}`);
   await expect(
-    page.getByRole('region', { name: 'Page canvas' }).getByText('First tree heading'),
+    page
+      .getByRole('region', { name: /^(Page canvas|Khung trang)$/ })
+      .getByRole('heading', { name: 'First tree heading', level: 2 }),
   ).toBeVisible();
   expect(
     (await (await page.request.get(`/api/admin/pages/${key}/builder/draft`)).json()).tree,
