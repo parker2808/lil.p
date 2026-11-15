@@ -163,6 +163,9 @@ describe('pageMetadata', () => {
       path: '/',
     });
     expect(meta.alternates).toEqual(buildAlternates('vi', '/'));
+    expect(meta.openGraph?.images).toEqual([
+      { url: absoluteUrl('vi', '/opengraph-image'), width: 1200, height: 630 },
+    ]);
     expect(
       pageMetadata({
         site,
