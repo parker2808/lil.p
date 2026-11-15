@@ -95,6 +95,10 @@ test('nested tree keeps EN/VI SSR without scripts and selects brand by real host
   neutral.hostname = 'neutral.localhost';
   const cookies = await page.context().cookies();
   const captures = new Map<string, Buffer>();
+  const publicLinkBoxes = new Map<
+    string,
+    { x: number; y: number; width: number; height: number }
+  >();
   for (const locale of ['en', 'vi']) {
     for (const [brand, host] of [
       ['lilp', canonical],
@@ -126,14 +130,35 @@ test('nested tree keeps EN/VI SSR without scripts and selects brand by real host
           await expect(root.getByText('Nested SSR detail')).toBeVisible();
           const action = root.getByRole('link', { name: 'Nested SSR action' });
           await expect(action).toBeVisible();
-          const screenshot = await action.screenshot({ animations: 'disabled' });
+          const banner = visitor.locator('[data-slot="draft-banner"]');
+          if (preview) {
+            await expect(banner).toBeVisible();
+          } else {
+            await expect(banner).toHaveCount(0);
+          }
           const tuple = `${locale}-${brand}-${preview ? 'preview' : 'public'}`;
-          await testInfo.attach(`${tuple}-link.png`, {
-            body: screenshot,
-            contentType: 'image/png',
-          });
           await testInfo.attach(`${tuple}-page.png`, {
             body: await visitor.screenshot({ fullPage: true, animations: 'disabled' }),
+            contentType: 'image/png',
+          });
+          if (preview) {
+            await visitor.addStyleTag({
+              content: '[data-slot="draft-banner"] { display: none !important; }',
+            });
+            await expect(banner).toBeHidden();
+          }
+          const box = await action.boundingBox();
+          expect(box).not.toBeNull();
+          if (preview) {
+            expect(box, `${tuple} content geometry without preview chrome`).toEqual(
+              publicLinkBoxes.get(`${locale}/${brand}`),
+            );
+          } else {
+            publicLinkBoxes.set(`${locale}/${brand}`, box!);
+          }
+          const screenshot = await action.screenshot({ animations: 'disabled' });
+          await testInfo.attach(`${tuple}-link.png`, {
+            body: screenshot,
             contentType: 'image/png',
           });
           captures.set(`${locale}/${brand}/${preview}`, screenshot);

@@ -2,6 +2,7 @@
 
 - Resolve the custom-tree tenant from the request host on the server; the configured site host uses the lil.p override, other hosts use neutral core tokens. Disable shared HTML ISR for this host-dependent route while retaining tagged API fetch caching.
 - Publish a nested tree through the real API and assert complete no-script EN/VI SSR content; capture neutral and branded public/preview output and require a visible screenshot difference.
+- Attach unmodified full-page public/preview captures, including the preview banner. For strict link pixel parity, temporarily hide only the preview banner after capturing that evidence, assert the link's full bounding box matches the public box, then compare PNG bytes without a tolerance. The banner otherwise shifts the link 60 physical pixels and produces repeatable corner raster differences despite matching text and interior pixels.
 - Supply VI contact-form defaults without changing any golden fixture or stored row; separate block-copy language from locale-specific site settings.
 - Translate schema metadata labels and nested leaf labels in the builder; retain operation paths and wire payloads. No V10 files change.
 - V03/V14 remain GAP until exact-head CI and independent artifact review establish full tuple coverage.
