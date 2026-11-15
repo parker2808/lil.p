@@ -16,8 +16,10 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; rest: string[] }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<Metadata> {
   const { locale, rest } = await params;
   const key = customPageKey(rest);
@@ -28,7 +30,7 @@ export async function generateMetadata({
     if (error instanceof ApiError && error.status === 404) notFound();
     throw error;
   }
-  return buildPageMetadata(key, params);
+  return buildPageMetadata(key, params, searchParams);
 }
 
 export default async function CustomSitePage({
