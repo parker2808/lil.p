@@ -508,3 +508,5 @@
 
 - 2026-11-15: English API errors are not necessarily Vietnamese builder leaks: trace `ApiError` through activation catches, autosave HTTP-status handling and rendered EN/VI labels before changing contracts; audit new version actions separately.
 - 2026-11-15: When a study route is handed from a fixture component to the real builder host, update formerly registered browser specs against the actual editable panel; a fixture-only textbox can hide a deterministic shard failure despite a correctly mounted dialog.
+- 2026-11-15: Scope editor recovery claims to their storage boundary: a component-owned Map retains invalid partial inputs across remounts but not reloads; a stale 409 test must construct a real revision conflict when integration enables previously disabled publishing.
+- 2026-11-15: A publish-conflict regression needs an intervening server-side draft write and an old expectedRevision; asserting 409 with the current revision only tests a feature-disable fallback, not revision CAS.

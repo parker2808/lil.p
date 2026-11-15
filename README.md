@@ -1,5 +1,7 @@
 # lil.p
 
+The D5 V07 browser journey now verifies a stale publish revision after a real intervening draft write; see the [live journey spec](./docs/specs/2026-11-15-cms-d5-live-journeys.md). Exact-head CI and combined D6 verification remain required.
+
 The [D5 live journey spec](./docs/specs/2026-11-15-cms-d5-live-journeys.md) registers CI-sharded browser tests against the real D2 draft API for composition, keyboard navigation, reload, responsive properties and conflict/offline recovery. The exact-head design artifact spans EN/VI, light/dark, neutral/lil.p and mobile/tablet/desktop empty/error/focus/saved/saving/conflict states, measuring 44px targets, focus, overflow and axe. Incomplete publication is rejected; successful publish/public SSR parity and manual screen-reader review remain separate gates.
 
 The stacked [D5 all-block Properties spec](./docs/specs/2026-11-15-cms-d5-all-block-properties.md) registers all 20 host block contracts in the gated builder. Its EN/VI editor derives nested/localized, numeric, array, optional-group and responsive controls from the host schemas; invalid partial edits remain local across node, breakpoint and sheet changes. D6's editor-origin suite now exercises all 20 through the real draft API and SSR; integrated exact-head CI, remaining semantic/visual review and forward-only rollout evidence remain open. This draft verification branch must not merge.

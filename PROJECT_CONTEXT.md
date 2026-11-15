@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- D5 `8b0b3562` includes #237's real stale-CAS V07 browser test (intervening PUT, typed 409, unchanged draft/version after reload); source run `43722753820` passed 17 checks. Combined #208 still needs exact-head CI after D5/D6 integration; the earlier combined test incorrectly expected 409 for a current revision. D5 Properties keeps invalid partial input across sheet remount in memory, **not** across page reload.
 - D6 feature refresh (`e4e80da3`) contributes V04/V06/V09/V10 converter and EN/VI real-tree public/preview subset, plus V17–V22 route snapshots, nested raw-field tests and an offline CDN verifier. The D6 i18n audit still finds raw VI nested Properties labels, incomplete VI contact/site-settings fallback and no neutral-tenant SSR adapter. V03/V14, integrated UI publish/version/restore V10, live V18 drain, deployed V19 parity and final full VI remain GAP pending independent signoff. See `docs/specs/2026-11-15-cms-d6-v04-v06-v09-v10-gate.md` and `docs/specs/2026-11-15-cms-v17-v22-evidence-gates.md`.
 - 2026-11-15 D5 builder error localization: D2's English `message` remains in the API response but current D5 builder status/recovery UI uses only typed HTTP outcomes and EN/VI labels. Verify the new D6 publish/version controls independently; other admin/API i18n remains out of scope. See `docs/specs/2026-11-11-cms-d5-ui.md`.
 - D5 shard-5 correction: #204 `6a48a4cc` CI `43712324642` exposed D4 canvas tests targeting a `BuilderStudy`-only Selected item ID textbox after the route switched to real `BuilderHost`/`PropertiesPanel`. A stacked test-only fix verifies a composed heading's real EN/VI Text value across 768/1100/1440, theme changes and sheet focus; exact-head CI remains required. No runtime or release gate is waived.
@@ -344,6 +345,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Integrated D5 `8b0b3562` (#237 stale-CAS V07) after source run `43722753820` and D6 `169ebdff` (#232 version UI) after source run `43722565450` into verification-only #208. Neither source run certifies combined behavior; exact-head five-shard CI and manual/operational gates remain OPEN. No main merge/deploy.
 - 2026-11-15: Refreshed verification-only #208 with main `3162b973`, Stage A `2a5c32bf`, D2 `596f7dbb`, D5 `22b4b1c0` and D6 `e4e80da3`; retained D6 localized registry and D5 validated duplicate/history. Seven non-browser Node 22 checks passed. Exact combined-head CI, public/preview design, UI restore, manual SR and live Stage A drain remain open; DO NOT MERGE.
 
 - 2026-11-15: Integrated D6 `e4e80da3` converter, route-snapshot, editor and public-bundle guard tests into #208 alongside D2/Stage A; retained both independent core raw-preservation cases. No golden, schema, migration, production deploy or release authorization change; exact combined-head CI required.
