@@ -41,18 +41,24 @@ deploys, verification and rollback.
 
    **D2 forward-only gate (policy approved 2026-11-15 08:54 ICT; drain unverified):**
    follow the [Stage A → D2 release order](./runbooks/deploy.md#stage-a--d2-page-write-rollout-release-owner-only):
-   #210 freeze and prove every old instance drained → #199 migration and schema/
-   data verification → separately approved D2-aware reopen → #204 → #202.
+   #210 freeze and prove every old instance and in-flight request drained →
+   separately approved #199 D2 migration/startup schema check (writes reopen
+   automatically after success) → authenticated write/data verification → #204 → #202.
    Merging a PR is distinct from authorizing its deployment. Disable auto-deploy
    before merging a migration-bearing commit. `20261111043000_add_page_draft_tree`
-   runs during the D2 `main` Render API startup; keep Stage A freeze throughout
-   that rollout and do not start it until the authenticated inventory and logs
-   prove **all** pre-Stage-A API instances drained. Main's public probe kit
+   runs during the D2 `main` Render API startup. Do **not** deploy D2 until
+   authenticated inventory and logs prove **all** old Stage A API instances
+   and in-flight requests drained: without an explicit `CMS_PAGE_WRITE_FREEZE=1`
+   kill-switch, D2 opens writes as soon as its read-only migration-history and
+   two-column startup check succeeds. No Render environment change is assumed
+   or available to open writes later. Main's public probe kit
    checks 503 through direct Render and Vercel ingress but cannot establish
    instance drain or column presence. Verify `page.draftTree` and
    `page.draftTreeRevision` with an authorized read-only schema check and verify
-   every serving API instance is D2-aware before reopening page writes or
-   activating builder drafts. If the no-overlap gate is not proven, stop: do
+   every serving API instance is D2-aware before accepting builder draft
+   activation. A failed startup check keeps writes frozen with 503; the public
+   probe cannot prove the subsequent authenticated reopen. If the no-overlap
+   gate is not proven, stop: do
    not deploy the migration. Do not use a MySQL trigger as evidence for TiDB.
 
 ## 3. Deploy main to production
