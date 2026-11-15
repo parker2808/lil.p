@@ -35,7 +35,16 @@ preview/public semantic markup; it does not certify full no-JavaScript content.
 That narrower SSR claim remains a separate GAP until a no-script browser test
 proves all nested content appears without React stream patch scripts.
 
-V03/V14 matrix is **pending exact-head CI and visual review**, not yet PASS.
+V03/V14 matrix is **GAP after independent visual review**; the reviewer
+accepted only the hydrated public/preview parity test slice, not neutral SSR
+or full localization. No merge/design acceptance is implied by green CI.
+On PR head `d4d098aa5e34fc17735ef0f78ff646ef6c0e1690`, CI
+`43708708160` passed 17/17 checks and five browser shards. Its Playwright
+artifact records source head and synthetic merge
+`84bf89b733839950abb15c5a5238fa0d9163c138`, 16/16 visual cases,
+480 public/preview PNG pairs and 192 axe attachments. These are test evidence,
+not an approved design inspection or distinct neutral-host deployment. The
+subsequent #225 base integration requires a new combined-head CI run.
 Run `43706973188` passed four web shards but failed shard 5: the
 data-backed notes fallback exposed 16px links below WCAG 2.2 AA target size,
 and preview capture could race the lazy contact form's interactive mount.
@@ -43,7 +52,7 @@ The fallback links now expose at least 24px clickable height, and the matrix
 waits for the existing form `data-interactive` signal on both public and
 preview before asserting their full text, axe and paired pixels. No contact
 text is excluded and the axe gate stays unwaived; the next exact-head run
-must prove both fixes before these tuples count.
+proved both fixes on that head; combined-head checks still need to pass.
 Four independent shard files publish one real API page per locale/theme test,
 with one H1 and four other host types in each page. Splitting each shard into
 four retry-isolated cases bounds a stalled tuple to two minutes per attempt
@@ -92,7 +101,16 @@ server/host deployment; dark is selected by next-themes and marked on the host
 root for core tokens. Consequently neutral SSR brand selection, separate
 tenant-host integration, and manual approval of visual artifacts remain GAP;
 the suite cannot claim a distinct neutral published host or pixel design
-approval from its pairwise equality alone. Four visual groups are registered
-across five CI shards in `shards.ts`, with group 4 pinned to shard 5; each
+approval from its pairwise equality alone. Independent artifact review found
+the neutral/lil.p hero pair at EN/light/390 pixel-identical: the selector
+asserts a token but does not establish a visible neutral SSR difference.
+The VI dark contact-form capture retains an English heading with Vietnamese
+form labels; its source content/default localization needs a separate
+assertion, rather than treating public/preview parity as locale correctness.
+Follow-up work must exercise an actual neutral server-rendered host, a
+JavaScript-disabled nested tree, and localized VI defaults without weakening
+the existing pixel, SSR-inventory, hydration or axe assertions. Four visual
+groups are registered across five CI shards in `shards.ts`, with group 4 pinned
+to shard 5; each
 retains the existing 20-minute job budget. If they exceed the
 budget, the matrix stays GAP rather than weakening the gate.

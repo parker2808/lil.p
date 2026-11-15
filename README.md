@@ -18,12 +18,17 @@ same collection. Captures exclude fixed site chrome, not block content.
 The notes browser host retains lazy client loading with a data-backed SSR
 fallback (localized note links or empty text), rather than the textless
 client-chunk skeleton; dark host cards use an AA-contrast subtle text token
-for both neutral and branded captures. These repairs require exact-head CI,
-public-bundle budget verification and visual review before V03/V14 can pass.
+for both neutral and branded captures. #217 head `d4d098aa` passed five-shard
+CI and the public-bundle budget; the new combined head still needs exact-head
+checks and independent visual review before V03/V14 can pass.
 Async host block wrappers and props are resolved before tree rendering, but
 React may stream nested content after the initial HTML chunk. The current gate
 proves initial block inventory and props, hydrated preview/public parity and
 screen-reader checks; complete no-JavaScript tree text remains unverified.
+The [V17–V22 focused evidence gates](./docs/specs/2026-11-15-cms-v17-v22-evidence-gates.md)
+add legacy/tree route and missing-SEO snapshot checks, nested-field core
+preservation, and an offline deployed-public-asset parity verifier. They do not
+authorize deployment or close the V18 live drain and V19 CDN parity gates.
 
 The D6 host-registry integration is staged on a scratch branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and
