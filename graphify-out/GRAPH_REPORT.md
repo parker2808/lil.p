@@ -1,7 +1,7 @@
 # Graph Report - test-cms-d6-ssr-i18n-gate  (2026-11-15)
 
 ## Corpus Check
-- 1672 files · ~701,515 words
+- 1672 files · ~701,614 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 40 file(s) not represented in the graph (top: (none) 18, .css 17, .example 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d5e29027`
+- Built from commit: `5177d703`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1686,7 +1686,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `ref_playwright_test` be split into smaller, more focused modules?**
   _Cohesion score 0.038834951456310676 - nodes in this community are weakly interconnected._
 - **Why does `next-intl` connect `next-intl` to `Input`, `Topbar.tsx`, `cn`, `ref_node_path`, `DataTable`, `block-renderers.constant.ts`, `ActionCards.tsx`, `ProjectsBrowser.tsx`, `useIsAdmin`, `ref_react`, `AdminPagesEditor.tsx`, `next`, `BuilderShell.tsx`, `Markdown`, `proxy.ts`, `BlockInspector.tsx`, `Modules`, `AdminAboutExperienceIndex.tsx`, `ProjectsDetail.tsx`, `AdminPostsEditor.test.tsx`, `notes/[slug]/page.tsx`, `(site)/[...rest]/page.tsx`, `Badge`, `BuilderHost.tsx`, `NotesBrowser.tsx`, `AdminProjectsEditor.tsx`, `web/package.json`, `AdminMediaIndex.tsx`, `dependencies`, `apps_web_i18n_locales_en`, `ThemeToggle`, `use-admin-events.hook.test.tsx`, `AdminSiteProfile.tsx`, `Locale`, `AdminAuthLogin.tsx`, `craft/page.tsx`, `cms-u3-study/page.tsx`?**
-  _High betweenness centrality (0.024) - this node is a cross-community bridge._
+  _High betweenness centrality (0.023) - this node is a cross-community bridge._
 - **Are the 12 inferred relationships involving `Button()` (e.g. with `4. Architecture at a glance` and `T12 · UI primitives matching Figma component sets`) actually correct?**
   _`Button()` has 12 INFERRED edges - model-reasoned connections that need verification._
 - **Should `tree-renderer.test.mjs` be split into smaller, more focused modules?**

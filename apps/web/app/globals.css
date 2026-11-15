@@ -7,27 +7,27 @@
 }
 
 .cms-core-host[data-brand='lilp'] {
-  --builder-accent: #a94623;
+  --builder-accent: #a44520;
   --builder-accent-text: #fff;
-  --builder-accent-soft: #fff0e8;
-  --builder-focus: #a94623;
-  --builder-selection: #a94623;
-  --builder-drop: #a94623;
-  --builder-success: #146749;
-  --builder-art: #e5f0df;
-  --builder-art-ink: #24684b;
+  --builder-accent-soft: #fff0e6;
+  --builder-success: #326c48;
+  --builder-selection: #af4d24;
+  --builder-drop: #a44520;
+  --builder-focus: #a44520;
+  --builder-art: #f4dfc7;
+  --builder-art-ink: #7a4934;
 }
 
 .cms-core-host[data-brand='lilp'][data-theme='dark'] {
-  --builder-accent: #ffb694;
-  --builder-accent-text: #312019;
-  --builder-accent-soft: #473026;
-  --builder-focus: #ffb694;
-  --builder-selection: #ffb694;
-  --builder-drop: #ffb694;
-  --builder-success: #9bdfb2;
-  --builder-art: #293c32;
-  --subtle-foreground: #b5b1aa;
+  --builder-accent: #ffb587;
+  --builder-accent-text: #392011;
+  --builder-accent-soft: #513323;
+  --builder-success: #98dcb0;
+  --builder-selection: #ffc39e;
+  --builder-drop: #ffc39e;
+  --builder-focus: #ffc39e;
+  --builder-art: #4a352b;
+  --builder-art-ink: #f7bb91;
 }
 
 /* Next streams resolved server content into hidden siblings; expose it when scripts cannot run. */
