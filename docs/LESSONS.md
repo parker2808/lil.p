@@ -1,10 +1,13 @@
 # Lessons
 
+- 2026-11-15: Restacking pure D5 tree state on the integrated D base requires preserving host-registry validation and the typed legacy restore/reload protections alongside main's independent fixture and package-local gates.
 - 2026-11-15: DOM `textContent()` includes display-none responsive heading variants, so a viewport regression must assert the single CSS-visible variant (and heading count) instead of comparing the whole heading's raw text.
 - 2026-11-15: Per-breakpoint H1 counting alone is insufficient for a one-element SSR heading renderer: reject responsive level changes at publish and render time, but continue allowing incomplete draft editing; assert the visible heading at mobile, tablet and desktop.
 - 2026-11-15: Integrating a server-only CMS tree renderer after package tooling moved requires updating its measurement import to the package-local script and gating computed breakpoint behavior in both CI and local E2E. Preserve legacy route dispatch until the D2 snapshot contract is wired.
 
 - 2026-11-11: A server renderer's semantic invariant must include host extension points; routing built-ins through a single-heading path is insufficient if a host override can still create breakpoint-specific H1 elements.
+- 2026-11-11: Treat a concurrent restore from a builder tree to legacy mode as a distinct autosave conflict, preserving local unsaved content; a reload must require explicit discard acknowledgement and cannot interpret a null tree as an empty page.
+- 2026-11-11: A lazy editor can leave a valid-looking screenshot of its loading fallback; wait for an editor-specific visible element before capturing the visual matrix. Vite's `pnpm preview -- --port` forwards the extra `--` to Vite and silently serves its default port; invoke `pnpm exec vite preview --port` instead.
 - 2026-11-15: When a docs branch meets independently merged UI, SEO, core and contact fixes, preserve distinct README/context/lesson histories, deduplicate inherited entries, and regenerate Graphify rather than combining generated-report conflicts.
 - 2026-11-15: A feature PR can carry an additive migration through an ancestor branch even when its own UI diff does not edit Prisma; check full PR ancestry before scheduling a migration-last merge.
 - 2026-11-15: Keep the live stack ledger separate from dated historical snapshots; update merged SHAs and the final-head gate after every main integration without rewriting prior evidence.
@@ -209,6 +212,9 @@
 - 2026-11-11: A tree converter can keep unknown legacy block types losslessly only by carrying the entire validated JSON block as opaque data rather than reparsing it into the registered builder component shape; gate builder use separately from opt-in conversion.
 - 2026-11-11: Validate untrusted tree depth/count iteratively before recursive Zod parsing; keep incomplete draft validation separate from publish-only H1/required-component policy and ensure slot rules leave room for content at the deepest allowed layout.
 - 2026-11-11: Check exactly-one-H1 for every publish attempt, including a zero-component tree; draft permissiveness must not bypass publish policy.
+- 2026-11-11: A browser contrast test hidden behind an opt-in environment flag does not protect the visual gate; require Chromium in local/CI E2E and assert each rendered text, feedback border and indicator against its adjacent surface in both palettes.
+- 2026-11-11: An editor-only axe check misses route-specific gallery and unknown-content regressions; assert every fixture route and focused state across locale, theme, brand and viewport, and measure effective mobile hit areas, including labels wrapping checkboxes.
+- 2026-11-11: A timed-out CAS save may already have committed; keep the attempted tree and newer local edits separately, read the remote revision before retry and require explicit review rather than blindly replaying with a new revision.
 - 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
 - 2026-11-11: When merging parallel API packaging and pure engine branches, retain both documentation changes but regenerate Graphify; production CJS smoke must load the compiled host adapter, not just resolve the core subpath.
 - 2026-11-11: In a legacy snapshot compatibility reader, `?? {}` conflates an absent SEO object with an explicitly persisted null; check property presence before filling only absent keys, then reject malformed supplied data before transaction writes.
