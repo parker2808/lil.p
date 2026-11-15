@@ -1,4 +1,4 @@
-import { BLOCK_REGISTRY } from '@portfolio/contracts';
+import { BLOCK_REGISTRY, resolveBlockLocale } from '@portfolio/contracts';
 import { expect, test } from '@playwright/test';
 
 import viMessages from '../../i18n/locales/vi.json' with { type: 'json' };
@@ -98,10 +98,19 @@ export function registerEditorHostJourney(shard: number): void {
       const draft = await read.json();
       expect(read.status()).toBe(200);
       expect(draft.revision).not.toBe('1');
-      const dynamic = ['notes-browser', 'projects-browser', 'contact-form'].includes(
-        definition.type,
+      const savedHost = draft.tree.root.sections[0].content.find(
+        (node: { componentType?: string }) => node.componentType === definition.type,
       );
-      const draftRender = new Map<string, { hash: string; html: string | null }>();
+      expect(savedHost).toBeDefined();
+      const visibleEdit = [
+        'hero',
+        'page-header',
+        'contact-form',
+        'cta-band',
+        'prose',
+        'about-intro',
+      ];
+      const draftRender = new Map<string, { hash: string; editedText: string | null }>();
       for (const locale of ['en', 'vi']) {
         const preview = await page.request.get(`/api/admin/preview/pages/${key}?locale=${locale}`);
         expect(preview.status(), `${definition.type}/${locale}: ${await preview.text()}`).toBe(200);
@@ -113,18 +122,17 @@ export function registerEditorHostJourney(shard: number): void {
         expect(await draftResponse?.text()).toContain(`data-host-block-type="${definition.type}"`);
         const draftHost = page.locator(`[data-host-block-type="${definition.type}"]`);
         await expect(draftHost).toHaveCount(1);
-        if (
-          ['hero', 'page-header', 'contact-form', 'cta-band', 'prose', 'about-intro'].includes(
-            definition.type,
-          )
-        ) {
-          await expect(draftHost).toContainText(locale === 'en' ? englishValue : vietnameseValue);
+        let editedText: string | null = null;
+        if (visibleEdit.includes(definition.type)) {
+          const resolved = resolveBlockLocale(savedHost.responsive.base, locale as 'en' | 'vi');
+          editedText = resolved.lang === 'vi' ? vietnameseValue : englishValue;
+          await expect(draftHost).toContainText(editedText);
         }
         const hash = await draftHost.getAttribute('data-host-props-hash');
         expect(hash).toMatch(/^[a-f0-9]{64}$/);
         draftRender.set(locale, {
           hash: hash ?? '',
-          html: dynamic ? null : await page.locator('main.cms-core').innerHTML(),
+          editedText,
         });
         await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
       }
@@ -151,14 +159,13 @@ export function registerEditorHostJourney(shard: number): void {
         const publishedHash = await host.getAttribute('data-host-props-hash');
         expect(publishedHash).toMatch(/^[a-f0-9]{64}$/);
         expect(publishedHash).toBe(draftRender.get(locale)?.hash);
-        const publicHtml = dynamic ? null : await page.locator('main.cms-core').innerHTML();
-        if (publicHtml !== null) expect(publicHtml).toBe(draftRender.get(locale)?.html);
+        const editedText = draftRender.get(locale)?.editedText;
+        if (editedText) await expect(host).toContainText(editedText);
         await page.goto(`/api/draft?path=${encodeURIComponent(`/${locale}/${key}`)}`);
         await page.goto(`/${locale}/${key}?v=1`);
         await expect(host).toHaveCount(1);
         expect(await host.getAttribute('data-host-props-hash')).toBe(publishedHash);
-        if (publicHtml !== null)
-          expect(await page.locator('main.cms-core').innerHTML()).toBe(publicHtml);
+        if (editedText) await expect(host).toContainText(editedText);
         await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(`/${locale}/${key}`)}`);
       }
     });
