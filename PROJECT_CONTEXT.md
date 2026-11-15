@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 V09 P1 visual evidence: #233 head `ac6e4bbf` passed all 17 checks in run `43723336640`, but its 12 paired captures were blank below the header. `toBeVisible()` did not prove the heading was painted in the capture viewport; recapture around the centered heading with a screenshot-pixel assertion and require fresh exact-head CI plus independent visual review. V09/V10 full signoff remains GAP.
 - 2026-11-15 D6 V09/V10 UI restore browser gate: register a real builder publish/edit/version-history restore/republish journey, VI mobile 409 confirmation from a real concurrent API write, EN desktop recovery, and paired EN/VI responsive screenshots; exact-head CI and independent V09 visual review remain pending. See `docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md`.
 - 2026-11-15 V10 browser evidence: after a successful UI restore the header intentionally says “Version restored to draft · publish separately to make it public,” not the ordinary autosave “Draft saved”; assert the restore-specific status alongside the unchanged tree/version/pointer checks. Exact-head five-shard CI remains pending.
 - 2026-11-15 D2 builder error-message audit: API English messages are retained in `ApiError` but the D5 builder and new D6 version-actions UI render EN/VI status labels rather than raw API messages. This is not a full API/admin i18n signoff. See the V09/V10 UI restore spec.
@@ -305,6 +306,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Replaced blank-prone main-element captures with centered-heading viewport screenshots and a painted-pixel check across all 12 EN/VI public/preview captures; no runtime or contract changes.
 - 2026-11-15: Aligned the V10 browser gate with the explicit post-restore EN status while preserving real revision/CAS, restored tree and public-pointer assertions; no runtime or golden-contract change.
 - 2026-11-15: Staged the D6 builder UI version-restore browser gate and five-shard registration, with 12 EN/VI paired responsive captures. No runtime/schema or golden-contract change; exact-head CI and V09 human review remain pending.
 - 2026-11-15: Audited D2 English builder draft error payloads against the D5 builder and merged D6 version-actions code; both show localized status/recovery copy rather than API messages. No API/schema change.
