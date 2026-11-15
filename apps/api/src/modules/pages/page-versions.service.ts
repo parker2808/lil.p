@@ -135,67 +135,70 @@ export class PageVersionsService {
 
   async publish(rawKey: string, input: PublishPageInput, actorId: number | null) {
     const key = parsePageKey(rawKey);
-    const result = await this.prisma.$transaction(async (tx) => {
-      const page = await this.requirePage(tx, key);
-      if (page.draftTree != null) {
-        throw new ConflictException({
-          code: 'CONFLICT',
-          message: 'Tree publishing is not enabled',
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        const page = await this.requirePage(tx, key);
+        if (page.draftTree != null) {
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Tree publishing is not enabled',
+          });
+        }
+        if (page.draftTreeRevision === 9223372036854775807n) {
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Builder revision limit reached',
+          });
+        }
+        const snapshot = await this.assertPublishable(tx, key, page);
+        const latest = await tx.pageVersion.aggregate({
+          where: { pageId: page.id },
+          _max: { version: true },
         });
-      }
-      if (page.draftTreeRevision === 9223372036854775807n) {
-        throw new ConflictException({
-          code: 'CONFLICT',
-          message: 'Builder revision limit reached',
+        const version = (latest._max.version ?? 0) + 1;
+        const created = await tx.pageVersion.create({
+          data: {
+            pageId: page.id,
+            version,
+            snapshot: snapshot as Prisma.InputJsonValue,
+            note: input.note,
+            createdById: actorId,
+          },
         });
-      }
-      const snapshot = await this.assertPublishable(tx, key, page);
-      const latest = await tx.pageVersion.aggregate({
-        where: { pageId: page.id },
-        _max: { version: true },
-      });
-      const version = (latest._max.version ?? 0) + 1;
-      const created = await tx.pageVersion.create({
-        data: {
-          pageId: page.id,
-          version,
-          snapshot: snapshot as Prisma.InputJsonValue,
-          note: input.note,
-          createdById: actorId,
-        },
-      });
-      const now = new Date();
-      const changed = await tx.page.updateMany({
-        where: {
-          id: page.id,
-          draftTreeRevision: page.draftTreeRevision,
-          draftTree: { equals: PrismaValue.DbNull },
-        },
-        data: {
-          publishedVersionId: created.id,
-          publishedAt: now,
-          updatedAt: now,
-          draftTreeRevision: { increment: 1 },
-        },
-      });
-      if (changed.count !== 1) {
-        const current = await this.requirePage(tx, key);
-        throw new ConflictException({
-          code: 'CONFLICT',
-          message: 'Builder draft changed; reload before publishing',
-          mode: current.draftTree == null ? 'legacy' : 'tree',
-          revision: current.draftTreeRevision.toString(),
+        const now = new Date();
+        const changed = await tx.page.updateMany({
+          where: {
+            id: page.id,
+            draftTreeRevision: page.draftTreeRevision,
+            draftTree: { equals: PrismaValue.DbNull },
+          },
+          data: {
+            publishedVersionId: created.id,
+            publishedAt: now,
+            updatedAt: now,
+            draftTreeRevision: { increment: 1 },
+          },
         });
-      }
-      await this.audit?.record(tx, {
-        userId: actorId,
-        action: 'PUBLISH',
-        entityType: 'page',
-        entityId: key,
-        summary: `Published ${key} v${version}`,
-      });
-      return toAdminPage(await this.requirePage(tx, key));
-    });
+        if (changed.count !== 1) {
+          const current = await this.requirePage(tx, key);
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Builder draft changed; reload before publishing',
+            mode: current.draftTree == null ? 'legacy' : 'tree',
+            revision: current.draftTreeRevision.toString(),
+          });
+        }
+        await this.audit?.record(tx, {
+          userId: actorId,
+          action: 'PUBLISH',
+          entityType: 'page',
+          entityId: key,
+          summary: `Published ${key} v${version}`,
+        });
+        return toAdminPage(await this.requirePage(tx, key));
+      },
+      { isolationLevel: PrismaValue.TransactionIsolationLevel.ReadCommitted },
+    );
     this.events?.emit('content.published', { entity: 'page', key });
     void this.publishing?.revalidate([...pageTags(key), ...SITE_TAGS]);
     return result;
@@ -367,77 +370,80 @@ export class PageVersionsService {
 
   async restoreBuilder(rawKey: string, version: number, expectedRevision: string) {
     const key = parsePageKey(rawKey);
-    return this.prisma.$transaction(async (tx) => {
-      const page = await this.requirePage(tx, key);
-      if (page.draftTree === null || page.draftTreeRevision.toString() !== expectedRevision) {
-        throw new ConflictException({
-          code: 'CONFLICT',
-          message: 'Builder draft changed; reload before restoring',
-          mode: page.draftTree === null ? 'legacy' : 'tree',
-          revision: page.draftTreeRevision.toString(),
+    return this.prisma.$transaction(
+      async (tx) => {
+        const page = await this.requirePage(tx, key);
+        if (page.draftTree === null || page.draftTreeRevision.toString() !== expectedRevision) {
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Builder draft changed; reload before restoring',
+            mode: page.draftTree === null ? 'legacy' : 'tree',
+            revision: page.draftTreeRevision.toString(),
+          });
+        }
+        if (page.draftTree !== null) {
+          const current = readTree(page.draftTree, HOST_TREE_REGISTRY);
+          if (!current.ok) throw storedTreeError();
+        }
+        const row = await tx.pageVersion.findUnique({
+          where: { pageId_version: { pageId: page.id, version } },
         });
-      }
-      if (page.draftTree !== null) {
-        const current = readTree(page.draftTree, HOST_TREE_REGISTRY);
-        if (!current.ok) throw storedTreeError();
-      }
-      const row = await tx.pageVersion.findUnique({
-        where: { pageId_version: { pageId: page.id, version } },
-      });
-      if (!row) {
-        throw new NotFoundException({
-          code: 'NOT_FOUND',
-          message: `Version ${version} was not found`,
+        if (!row) {
+          throw new NotFoundException({
+            code: 'NOT_FOUND',
+            message: `Version ${version} was not found`,
+          });
+        }
+        const snapshot = hasSnapshotFormat(row.snapshot)
+          ? readTreeVersionSnapshot(row.snapshot)
+          : readRestorablePageSnapshot(row.snapshot);
+        if (!snapshot) throw storedTreeError();
+        if (page.draftTreeRevision === 9223372036854775807n) {
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Builder revision limit reached',
+          });
+        }
+        const changed = await tx.page.updateMany({
+          where: {
+            id: page.id,
+            draftTreeRevision: page.draftTreeRevision,
+            draftTree: { not: PrismaValue.DbNull },
+          },
+          data: {
+            draftTree:
+              'tree' in snapshot ? (snapshot.tree as Prisma.InputJsonValue) : PrismaValue.DbNull,
+            draftTreeRevision: { increment: 1 },
+            ...('tree' in snapshot ? snapshot.seo : {}),
+          },
         });
-      }
-      const snapshot = hasSnapshotFormat(row.snapshot)
-        ? readTreeVersionSnapshot(row.snapshot)
-        : readRestorablePageSnapshot(row.snapshot);
-      if (!snapshot) throw storedTreeError();
-      if (page.draftTreeRevision === 9223372036854775807n) {
-        throw new ConflictException({
-          code: 'CONFLICT',
-          message: 'Builder revision limit reached',
+        if (changed.count !== 1) {
+          const current = await this.requirePage(tx, key);
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Builder draft changed; reload before restoring',
+            mode: current.draftTree === null ? 'legacy' : 'tree',
+            revision: current.draftTreeRevision.toString(),
+          });
+        }
+        if (!('tree' in snapshot)) await this.applySnapshot(tx, page.id, snapshot, true);
+        await this.audit?.record(tx, {
+          action: 'RESTORE',
+          entityType: 'page',
+          entityId: key,
+          summary: `Restored ${key} to v${version}`,
         });
-      }
-      const changed = await tx.page.updateMany({
-        where: {
-          id: page.id,
-          draftTreeRevision: page.draftTreeRevision,
-          draftTree: { not: PrismaValue.DbNull },
-        },
-        data: {
-          draftTree:
-            'tree' in snapshot ? (snapshot.tree as Prisma.InputJsonValue) : PrismaValue.DbNull,
-          draftTreeRevision: { increment: 1 },
-          ...('tree' in snapshot ? snapshot.seo : {}),
-        },
-      });
-      if (changed.count !== 1) {
-        const current = await this.requirePage(tx, key);
-        throw new ConflictException({
-          code: 'CONFLICT',
-          message: 'Builder draft changed; reload before restoring',
-          mode: current.draftTree === null ? 'legacy' : 'tree',
-          revision: current.draftTreeRevision.toString(),
-        });
-      }
-      if (!('tree' in snapshot)) await this.applySnapshot(tx, page.id, snapshot, true);
-      await this.audit?.record(tx, {
-        action: 'RESTORE',
-        entityType: 'page',
-        entityId: key,
-        summary: `Restored ${key} to v${version}`,
-      });
-      const updated = await this.requirePage(tx, key);
-      return 'tree' in snapshot
-        ? {
-            mode: 'tree' as const,
-            revision: updated.draftTreeRevision.toString(),
-            tree: snapshot.tree,
-          }
-        : { mode: 'legacy' as const, revision: updated.draftTreeRevision.toString(), tree: null };
-    });
+        const updated = await this.requirePage(tx, key);
+        return 'tree' in snapshot
+          ? {
+              mode: 'tree' as const,
+              revision: updated.draftTreeRevision.toString(),
+              tree: snapshot.tree,
+            }
+          : { mode: 'legacy' as const, revision: updated.draftTreeRevision.toString(), tree: null };
+      },
+      { isolationLevel: PrismaValue.TransactionIsolationLevel.ReadCommitted },
+    );
   }
 
   async discard(rawKey: string) {

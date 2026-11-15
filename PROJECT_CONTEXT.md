@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #208 D2 sync: merged #199 `db064d88` into the verification branch; builder restore retains D6 host registry and lossless legacy snapshot parser inside D2 read-committed revision CAS. Both D2 race tests and D6 bilingual fixture revisions require exact-head CI. Main #214 probe wiring must be incorporated before final verification; DO NOT MERGE and Render drain remain open.
+
 - D5 design P2 follow-up (#213 `9d6cebc5`): accepted independent review confirms responsive EN/VI breakpoint labels no longer overlap and current-head EN/VI × light/dark × neutral/lil.p empty/error/focus captures are attached to CI; zero axe violations. Historical checked-in 99-image captures keep their original SHA. This closes the two design P2 findings, not all-20 editor-to-publish or Render drain gates; #208 still requires its own CI. DO NOT MERGE.
 
 - 2026-11-15 #208 D6 refresh: integrated `5ea3d3c4`'s real 20-type activate/CAS save/read/publish API test and separate editor-origin H1 autosave→preview→publish→EN/VI SSR browser journey. Neither proves all-20 Properties editor parity; final combined-head CI and Render drain remain open. DO NOT MERGE.
@@ -73,6 +75,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - Pre-D2 Stage A page-write freeze (2026-11-15): a separate API branch blocks all admin-page mutations in production before service access, with unchanged public/read routes and an admin-only sanitized instance identity. D2's startup migration remains **blocked** until a separately authorized Stage A deploy proves all pre-freeze instances drained and direct/Vercel probes pass; no Render production proof or D2 migration is included here. See `docs/specs/2026-11-15-cms-pre-d2-write-freeze.md`.
 - Stage A follow-up: boot the actual AppModule with stubbed DB/page services to catch removal of its write-freeze middleware; bespoke route tests alone cannot prove the production registration. Live ingress and old-instance drain remain unverified.
 - D2 #199 P1 legacy writer race: publish, SEO and block mutations now use the observed revision and SQL-NULL mode for conditional writes; losing a tree activation returns 409 and rolls back the transaction. The pre-D2 instance-drain gate below remains open; no schema or migration changed in this follow-up.
+- D2 #199 P1/P2 CAS accuracy: publish, SEO, all five block mutations and both restore paths use read-committed transactions for a fresh reread after losing their revision/mode CAS. Real-DB E2E interleaves activation with the legacy paths and a tree save with builder restore; each 409 reports the winning revision and preserves losing data. The pre-D2 instance-drain gate below remains open; no schema or migration changed in this follow-up.
 
 - D2 rollback-reader gate (2026-11-15): Parker approved the forward-only policy at 08:54 ICT, **not** a demonstrated Render page-write pause/drain or production migration. The pre-D2 Prisma reproduction `350ac169` can change `publishedVersionId` without claiming `draftTreeRevision`; no TiDB trigger fence exists. Before the `main` deploy runs `Page.draftTree` migration, prove page/version writes are paused and all old API instances drained; verify D2-aware instances before resuming. If unverifiable, block #199; write-freeze implementation is owned separately. See `docs/specs/2026-11-11-cms-d2-persistence.md`.
 
@@ -288,6 +291,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Reconciled #208 with D2 #199 `db064d88`: retained D2 read-committed CAS for builder restore and D6 host-aware/lossless snapshot reads, plus both branches' documentation and regression tests. Verification-only, no production DDL/deploy, goldens unchanged; further main sync and final-head CI required.
+
 - 2026-11-15: Corrected the combined-only D6 API E2E fixture after authenticated VI SEO PATCH advanced the D2 revision; activation/save/publish now chain the actual returned revisions and assert the expected progression. No production behavior, goldens, migration or deploy change; exact-head CI required.
 
 - 2026-11-15: Incorporated accepted #213 responsive Properties labels and CI-attached 107-capture design review into verification-only #208; kept historical images attributed to their original head. No schema, production, goldens or deployment change.
@@ -312,6 +317,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Combined #199 → #204 → #202 for verification only, preserving strict snapshot restore, opt-in D6 routes and D5 UI; rollback-reader write safety failed on genuine pre-D2 client after migration, so release remains blocked and draft verification PR must not merge. Parker owns all eventual merges.
 - 2026-11-15: Added real-AppModule HTTP regression for the pre-D2 page write freeze, with stubbed services and no DB access; no production rollout or migration.
 - 2026-11-15: Prepared the production-default pre-D2 admin-page write freeze, future-path/override HTTP regressions and nonsecret instance identity; documented the no-deploy old-instance drain gate. No schema, golden, production DB or deployment change.
+- 2026-11-15: Completed #199 CAS-loss revision accuracy: read committed for SEO, reorder/create/update/duplicate block and builder restore (publish, delete and legacy restore already covered); disposable-MySQL HTTP race cases assert current 409 revision and rollback of SEO, block rows, tree and audit. No schema/migration, local E2E, merge or deployment; forward-only drain gate remains.
+
+- 2026-11-15: Added disposable-MySQL HTTP races for legacy publish/delete against tree activation; asserted 409 with the winning revision and unchanged pointer, version, block and audit state. Switched those two transactions to read committed for a fresh conflict reread. No migration, merge or deployment; forward-only old-instance drain still gates D2.
+
 - 2026-11-15: Hardened D2 legacy publish's published-pointer CAS and audited sibling SEO and five block mutations; deterministic activation-race unit coverage covers publish and delete rollback. Merged main `69f4806` preserving both documentation histories; no migration or production action in this change.
 
 - 2026-11-15: Reconciled #199 D2 persistence onto main, retaining main's CMS engine, VI-only SEO golden and both documentation histories. Recorded Parker's forward-only approval separately from the outstanding Render drain gate; preserved the pre-D2 rollback-reader reproduction as a known unsafe-writer test. The `main` API deploy runs the additive migration on startup, so no merge/deploy until the no-overlap gate is verified.

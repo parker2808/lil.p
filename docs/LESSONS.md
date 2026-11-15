@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: When rebasing D6 host-aware snapshots onto D2 CAS improvements, retain the host registry and lossless legacy parser inside the new read-committed builder restore transaction; a whole-side merge choice silently loses one guarantee.
+
 - 2026-11-15: Assert rendered VI breakpoint glyph bounds at 390 and 1440 rather than inferring fit from button widths; attach exact-head screenshots and their manifest to the Playwright artifact so reviewers can inspect empty, error and focus states.
 
 - 2026-11-15: A single editor-origin H1 autosave→publish SSR test complements but does not replace a 20-type real-API matrix or 20-type Properties editing; require exact combined-head CI for each claim.
@@ -15,6 +17,10 @@
 - 2026-11-11: Test-local tree renderer mappings cannot certify deployed host pages; inject the same explicit host registry into draft, publish and snapshot reads, and verify actual Next components through the live API in both locales.
 
 - 2026-11-15: A forward-compatible additive schema does not make an older writer safe: an old Prisma client can publish a legacy snapshot over a tree publication pointer without changing the draft revision; block release until a write fence or approved no-old-writer rollback is proven against disposable MySQL.
+- 2026-11-15: Audit every transaction that can lose a page revision CAS, not just the first reproduced route: default repeatable-read can make SEO, block writes and builder restore return an obsolete revision after a real concurrent winner. A read-committed reread plus real-DB interleaving proves both the conflict envelope and transaction rollback.
+
+- 2026-11-15: A revision CAS can reject a lost race while the transaction's repeatable-read snapshot still reports the old revision; interleave a real second DB connection in API E2E and use read committed for the conflict reread before claiming the returned revision is current.
+
 - 2026-11-15: Checking legacy mode before a transaction's version insert or block mutation does not fence a later tree activation; claim both SQL-NULL mode and monotonic revision in the final page write, and roll back the whole transaction on a lost CAS.
 
 - 2026-11-15: An additive D2 schema lets a pre-D2 Prisma client alter a tree page's published pointer without bumping the draft revision. Parker approved forward-only recovery, not evidence of an old-writer drain; because the `main` API deploy runs the migration on startup, prove the page-write pause and complete Render drain before merging/deploying D2. A MySQL trigger cannot serve as a TiDB fence.
