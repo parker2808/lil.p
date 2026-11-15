@@ -64,6 +64,9 @@ for (const group of [0, 1, 2, 3]) {
           (props.primaryCta as { label: typeof label }).label = label;
         } else {
           props.eyebrow = label;
+          if (headingType === 'page-header') {
+            props.title = { en: 'Case studies', vi: 'Dự án' };
+          }
         }
       };
       setHeadingVersion(1, tree);

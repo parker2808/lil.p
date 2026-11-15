@@ -342,6 +342,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: #249 CI `43754309959` found page-header VI test content falling back to EN because the default title.vi is empty; fill both heading fields in the version fixture so the no-JS assertion proves VI rendering. Same run confirmed home OG metadata missing; fix committed before rerun.
+
 - 2026-11-16: #249 CI `43753130466` caught the home OG image disappearing after moving home into a route group; page metadata now explicitly includes the existing localized OG image for home and a unit assertion guards it. Recheck exact-head CI; no weaker metadata assertion.
 
 - 2026-11-16: Follow-up #249 historical version P2: publish v1 then a distinct visible H1-host label in v2 before comparing no-JS public v2 versus authenticated `?v=1` preview; assert API trees, text and props hashes diverge while the other four hosts remain unchanged. Exact-head CI pending.
