@@ -49,11 +49,16 @@ export function hasSnapshotFormat(value: unknown): boolean {
   return value !== null && typeof value === 'object' && ('format' in value || 'tree' in value);
 }
 
-export function readTreeVersionSnapshot(value: unknown): TreeVersionSnapshot | null {
+export function readTreeVersionSnapshot(
+  value: unknown,
+  allowUnrenderable = false,
+): TreeVersionSnapshot | null {
   const parsed = treeVersionSnapshotSchema.safeParse(value);
   if (!parsed.success) return null;
   const tree = readTree(parsed.data.tree, HOST_TREE_REGISTRY);
-  return tree.ok && isTreeRenderable(tree.value) ? { ...parsed.data, tree: tree.value } : null;
+  return tree.ok && (allowUnrenderable || isTreeRenderable(tree.value))
+    ? { ...parsed.data, tree: tree.value }
+    : null;
 }
 
 export function isTreeRenderable(tree: TreeDocument): boolean {

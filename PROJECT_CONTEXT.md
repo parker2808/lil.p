@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #208 exact-head API E2E `43687009780` surfaced D2 safety/D6 host-registry contract collision: nine malformed stored-tree publish assertions returned `VALIDATION_FAILED` rather than `INVALID_BLOCKS`, and one opaque legacy snapshot was rejected by admin version read. Combined-only correction parses stored tree before publish lint and permits admin history/restore of valid opaque legacy nodes while public/preview remain fail-closed; exact-head rerun required. #208 DO NOT MERGE; propagate reviewed fix to owning branches before release.
+
 - 2026-11-15 #208 D2 safety refresh: integrated #199 `72019eb1` including #216's redacted oversized-body 413, real-DB invalid-tree/no-write inventory, missing-SEO/restore hashes and scoped role checks. J06/V11 have feature-level evidence; combined CI and D6 publication are pending. J09/V18 remain blocked on the authorized Stage A live drain; V12 still needs production log review.
 
 - 2026-11-15 #208 Stage A refresh: integrated the #210 `8a674cdb` guard after main `59677dfa`, retaining the C1 root-export guard, #214 read-only probe and all ten legacy plus four D2 builder mutation routes under the fail-closed `/api/admin/pages` prefix. Neither checked routes nor passing CI prove live Render old-instance drain; #208 stays DO NOT MERGE.
@@ -298,6 +300,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Reconciled D2 stored-tree rejection and admin historical snapshot recovery with D6 public renderability fence on verification-only #208; added focused unit regression. No schema, golden, production deploy or release change; exact-head CI pending.
 
 - 2026-11-15: Merged #199 `72019eb1` into verification-only #208, preserving #210 guard and #214 probe kit and both documentation histories; retained oversized JSON 413 and unchanged-DB regression alongside D2 safety matrix. No golden, schema, production migration or deploy change.
 

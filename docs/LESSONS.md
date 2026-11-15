@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: During D2+D6 integration, distinguish malformed persisted tree data (`INVALID_BLOCKS`) from publish lint (`VALIDATION_FAILED`); preserve a valid opaque legacy snapshot for admin recovery without allowing public or preview rendering of that node.
+
 - 2026-11-15: Body-parser oversized JSON may bypass Nest exception types; convert its typed size error into a redacted 413 with trace ID before normal middleware, assert unchanged DB rows, and retain the existing file-upload contract.
 - 2026-11-15: Green D2 disposable-DB rejection tests do not certify live old-instance drain; preserve anonymous freeze-probe evidence separately from authenticated Render inventory and read-only schema proof.
 - 2026-11-15: Derive public-route gzip budgets from the production chunk graph on the owning feature head, count shared chunks once, and attach the exact-head graph with a named published-tree catch-all subset to CI; a green package-size cap alone does not prove the public JS boundary.

@@ -106,7 +106,7 @@ export class PageVersionsService {
     const snapshot = readPageSnapshot(row.snapshot);
     if (!snapshot) {
       if (hasSnapshotFormat(row.snapshot)) {
-        const tree = readTreeVersionSnapshot(row.snapshot);
+        const tree = readTreeVersionSnapshot(row.snapshot, true);
         if (!tree) throw storedTreeError();
         return {
           version: row.version,
@@ -221,7 +221,9 @@ export class PageVersionsService {
             revision: page.draftTreeRevision.toString(),
           });
         }
-        const parsed = validateTreeForPublish(page.draftTree, HOST_TREE_REGISTRY);
+        const stored = readTree(page.draftTree, HOST_TREE_REGISTRY);
+        if (!stored.ok) throw storedTreeError();
+        const parsed = validateTreeForPublish(stored.value, HOST_TREE_REGISTRY);
         if (!parsed.ok) throw treeValidationError(parsed.code, parsed.nodeId);
         if (!isTreeRenderable(parsed.value)) throw treeValidationError('UNKNOWN_TYPE');
         if (!treeRoutesEnabled()) {
@@ -395,7 +397,7 @@ export class PageVersionsService {
           });
         }
         const snapshot = hasSnapshotFormat(row.snapshot)
-          ? readTreeVersionSnapshot(row.snapshot)
+          ? readTreeVersionSnapshot(row.snapshot, true)
           : readRestorablePageSnapshot(row.snapshot);
         if (!snapshot) throw storedTreeError();
         if (page.draftTreeRevision === 9223372036854775807n) {
