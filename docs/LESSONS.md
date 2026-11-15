@@ -1,5 +1,7 @@
 # Lessons
 
+<<<<<<< HEAD
+
 - 2026-11-16: When D5 label localization and D6 restore/dark-banner work merge cleanly in runtime, retain both documentation histories and rerun the combined gates; separate source-green visual subsets are not a combined-head row verdict.
 
 - 2026-11-16: A combined D2/D6 historical metadata fixture must read the persisted builder revision after legacy publish and SEO edits before activation; a hardcoded zero masks the correct CAS boundary and fails exact-head CI.
@@ -44,6 +46,17 @@
 
 - 2026-11-15: A paired public/preview gallery and zero-axe assertions do not establish a distinct neutral tenant SSR or complete no-JavaScript nested content; preserve those gaps when integrating D6 parity. A data-backed streaming notes fallback also needs readable, keyboard-sized links and an existing interactive marker before capture.
 - 2026-11-15: A combined D5/D6 merge must retain the D6 host-label argument on every canvas control, not just the inspector, and the D5 duplicate command must use the host registry; full typecheck catches a missed accessible-label call.
+  \=======
+- 2026-11-16: A base can advance again during a V05 restack; compare the remote feature SHA immediately before push and require combined-head CI instead of trusting the previous successful test-head run.
+
+- 2026-11-16: Restacking a test PR after a visual fix requires preserving both the old test's artifact provenance and the base's contrast assertion; the old 17/17 run does not verify the combined head.
+
+- 2026-11-16: A 390px Properties sheet can have valid nested fields below its scroll viewport; attach both its top and scrolled final-field captures, and require that field to enter the viewport before calling the mobile evidence reviewable.
+
+- 2026-11-16: A localized Properties control passing client validation is not evidence of the saved/public value: serialize nested EN/VI edits against real draft GETs, then compare the exact revision's immutable snapshot with public and preview rendered copy at each breakpoint.
+
+> > > > > > > origin/feat/cms-d6-verify
+
 - 2026-11-16: A root dark class does not recolor an independently scoped CMS tree unless it explicitly inherits that theme; assert the computed card background before axe, and preserve a host's explicit light-theme override.
 - 2026-11-16: No-script dark shell tokens must include warning surfaces as well as foreground/background; otherwise a pale preview banner with inherited light text can pass route checks while failing legibility. Assert computed text-to-surface contrast in both locales and hosts.
 
