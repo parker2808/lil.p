@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #208 combined-only wiring: D5 keyboard Home-root announcement calls the D6 three-argument localized node-label helper with the existing `hostLabel`; pre-push typecheck caught the missing argument before any remote push. Keep the negative-drop status/focus/no-write assertions unchanged; exact-head CI pending.
+
 - 2026-11-16 #208 next verification cut: D2 `e4863639` (#247/#250), D5 `bebb9555` (#248) and D6 `ed099954` (#251) normal-merged in isolation. Source heads each passed 17/17, but source CI does not confer combined PASS. Keep prior 15/28 A PASS, 13 A GAP, 3 B DEFERRED as the **last scored cut** until the new exact-head CI and bounded independent review. V02 keyboard invalid-drop negative path is reviewed; successful keyboard publish needs an integrated D6 browser gate because D5 Publish is disabled. V13 historical SEO/body and V17/V21 tracked raw inventory are scoped source evidence, not full-row acceptance. No #208 merge, production action or migration.
 
 - 2026-11-16 #208 current integration: D2 `67c4d1c6`, D5 `7e91f613`, D6 `6b09962f` merged into verification-only head `dc505019`. Run `43748043927` shard 4 exposed D5/D6 Properties accessible-label drift; combined-only exact-locator correction passed API + 5/5 web shards on `43749231048`. This cut scores 15/28 pre-merge PASS, 13 GAP; #247/#248/#249/#250/#251 source follow-ups do not confer full combined PASS. J09/V18/V19 remain post-deploy; manual SR V16 remains documented limitation. DO NOT MERGE.
@@ -439,6 +441,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Passed the D6 localized host-label callback into D5's keyboard Home-root status announcement after merge-time typecheck; no changed publish capability or gate threshold.
 
 - 2026-11-16: Integrated D2 log/inventory, D5 keyboard negative path and D6 historical preview SEO into verification-only #208 without removing tree API or legacy raw-hash tests; new exact-head CI pending, release matrix unchanged until reviewed. No main merge/deploy.
 

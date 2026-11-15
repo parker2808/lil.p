@@ -496,7 +496,7 @@ export function BuilderShell({
         event.preventDefault();
         setPickup({ ...pickup, targetId: 'page' });
         focusTree('page');
-        setAnnouncement(`${text.target}: ${label(document.root, text)}`);
+        setAnnouncement(`${text.target}: ${label(document.root, text, hostLabel)}`);
         return;
       }
       if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {

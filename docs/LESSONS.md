@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A D5 keyboard navigation branch can miss a newly required D6 localized host-label callback; run combined typecheck before push and keep live announcement assertions intact.
+
 - 2026-11-16: An accepted D5 keyboard-only invalid-drop test is not successful keyboard publish evidence while D5 disables Publish; route the positive gate to integrated D6 and keep manual spoken screen-reader proof separate.
 
 - 2026-11-15: During D5/D6 integration, retain the D5 schema-derived Properties editor and its in-memory partial drafts while carrying D6 localized nested field labels and real-host SSR assertions; never replace it with an older D6 editor implementation.
