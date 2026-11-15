@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- E2E registry completeness (2026-11-15): both existing D4 canvas and keyboard browser specs were absent from `SPECS` and silently skipped by the Playwright shard matcher. Register both on the five-shard line and compare the full recursive spec inventory with the manifest in a unit test, rejecting missing, stale and duplicate names. Re-run exact-head `ready-e2e` before claiming J03/J05/V02/V20 coverage; the #217 visual group 4 pin must still move to shard 5 after registration.
+
 - E2E throughput (2026-11-15): web E2E now uses five shards with the same required aggregate `web-e2e` check, per-shard provenance and 20-minute limit. The #217 owner must register D6 visual group 4 in `SPECS` and change its pin from shard 4 to 5 when restacking; missing/out-of-range pins now fail loudly. The #221 focus-ring contrast assertion failure is separate and cannot be solved by sharding. Exact-head five-shard CI remains required; see [measurements](./docs/specs/2026-11-15-cms-e2e-shard-throughput.md).
 
 - CI evidence provenance (2026-11-15): E2E artifacts identify both the PR head and the tested synthetic-merge checkout; the merged report verifies all four shard manifests against both SHAs before recording its provenance. Review screenshots against both SHAs, not only the run number. This does not change which ref runs, any required check or the Vercel build order. Exact-head CI remains the gate.
@@ -255,6 +257,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Registered the existing canvas and keyboard D4 browser specs across five shards and added a filesystem-to-manifest completeness check, preventing silent omission of any `apps/web/e2e/**/*.spec.ts`; no product, golden contract or threshold change.
 - 2026-11-15: Balanced the web E2E suite across five free CI shards, documented the #217 group-4 move to shard 5, rejected missing/invalid pins with a unit regression, and extended exact-head artifact provenance checks to five without increasing timeouts or changing the aggregate required check.
 - 2026-11-15: Added PR-head and tested-merge SHAs to E2E build, shard and merged-report artifact names and provenance JSON, with four-shard verification before report attestation; no changes to test refs, checks, runtime or deployment.
 - 2026-11-15: Added a non-executed Stage A/D2 public probe kit with mocked failure/EN redirect tests and a forward-only #210 → #199 → reopen → #204 → #202 deployment checklist. No production request, database/migration change, golden-contract change or approval to deploy.
