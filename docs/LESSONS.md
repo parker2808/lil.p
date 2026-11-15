@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A no-JS full-page Playwright screenshot can stall before producing any artifact even after successful SSR assertions; capture the measured full content rectangle via Chromium protocol and verify PNG dimensions before reviewing any visual gate.
+
 - 2026-11-16: A no-JS all-host visual test can consume its entire four-minute case and then a shard's 20-minute budget on retries; split by viewport and balance registered specs across all shards, keeping each public/preview pair, raw screenshots and unwaived axe intact.
 
 - 2026-11-16: A base can advance again during a V05 restack; compare the remote feature SHA immediately before push and require combined-head CI instead of trusting the previous successful test-head run.

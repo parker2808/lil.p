@@ -230,10 +230,39 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                 if (mode === 'preview') await expect(banner).toBeVisible();
                 else await expect(banner).toHaveCount(0);
                 console.log(`[all20-ssr] ${label}: capture`);
-                const fullImage = await visitor.screenshot({
-                  fullPage: true,
-                  animations: 'disabled',
+                await expect
+                  .poll(() => visitor.evaluate(() => document.fonts.status), { timeout: 5_000 })
+                  .toBe('loaded');
+                const session = await context.newCDPSession(visitor);
+                const { cssContentSize } = await session.send('Page.getLayoutMetrics');
+                expect(cssContentSize.width, `${label} full-page width`).toBeGreaterThanOrEqual(
+                  width,
+                );
+                expect(cssContentSize.height, `${label} full-page height`).toBeGreaterThanOrEqual(
+                  900,
+                );
+                expect(cssContentSize.height, `${label} bounded full-page height`).toBeLessThan(
+                  20_000,
+                );
+                const { data } = await session.send('Page.captureScreenshot', {
+                  format: 'png',
+                  captureBeyondViewport: true,
+                  fromSurface: true,
+                  clip: {
+                    x: 0,
+                    y: 0,
+                    width: Math.ceil(cssContentSize.width),
+                    height: Math.ceil(cssContentSize.height),
+                    scale: 1,
+                  },
                 });
+                const fullImage = Buffer.from(data, 'base64');
+                expect(fullImage.readUInt32BE(16), `${label} PNG width`).toBe(
+                  Math.ceil(cssContentSize.width),
+                );
+                expect(fullImage.readUInt32BE(20), `${label} PNG height`).toBe(
+                  Math.ceil(cssContentSize.height),
+                );
                 await testInfo.attach(`${label}-page.png`, {
                   body: fullImage,
                   contentType: 'image/png',

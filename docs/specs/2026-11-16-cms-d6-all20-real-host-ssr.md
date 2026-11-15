@@ -24,6 +24,12 @@ the server-selected brand; each of five host wrappers must have
 an SSR props hash, visible painted text, and matching published/preview hash.
 Record a raw full-page PNG and five raw host PNGs for every tuple; compare
 paired public/preview host pixels without relaxing the existing 0.5% threshold.
+CI `43773289505` exposed a Chromium full-page Playwright screenshot stall at
+the first no-JS capture on every shard, before any image attachment. Capture
+the same full content rectangle directly through Chromium's screenshot protocol
+and assert the PNG's width and height match measured layout dimensions. Keep a
+bounded height assertion to fail visibly on pathological layouts rather than
+silently timing out, while retaining all host crops and parity checks.
 Check the neutral/brand accent at first paint and run unwaived WCAG A/AA axe
 against the content (including minor/moderate violations). Attach all JSON
 results and screenshot SHA-256 values to a provenance manifest. The preview
