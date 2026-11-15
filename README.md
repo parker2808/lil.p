@@ -13,7 +13,11 @@ contact defaults and translated Properties labels; this does not by itself close
 the full V03/V14 visual matrix.
 The real-host no-script sample also checks OS-driven dark first paint and
 separately authored VI tree copy on both neutral and branded tenants; it does
-not certify all-20 dark neutral SSR or fully localized site content.
+not certify all-20 dark neutral SSR or fully localized site content. A scoped
+no-script OS-dark shell rule keeps the public header/footer dark alongside the
+CMS tree; CI attaches raw header/footer captures on both real tenant hosts.
+The footer assertion preserves its existing 93% background/7% green blend
+rather than expecting the unmixed card color.
 
 The [D6 parity matrix](./docs/specs/2026-11-15-cms-d6-parity-matrix.md) adds
 lossless nested-tree migration fixtures, real-API legacy/tree snapshot and route

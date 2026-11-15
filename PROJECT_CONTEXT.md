@@ -50,6 +50,12 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - 2026-11-16 D6 header tablet overflow: move the shared public desktop-navigation breakpoint from 768px to 1280px, keeping the existing mobile sheet/keyboard flow at 768/1024; add EN/VI light/dark viewport/44px/keyboard screenshot evidence. Exact-head CI and raw image review pending; no broader V09/V10 signoff.
 
+- 2026-11-15 D6 #241 CI 43737085933: dark public footer screenshot scrolls the no-script viewport to the bottom while preview omits that capture; reset to top before strict link geometry comparison. No threshold or runtime changes; new exact-head CI pending.
+
+- 2026-11-15 D6 #241 no-script shell CI follow-up: shard 2 correctly found the footer blends 93% background with 7% green in `public-round3.css`, so an RGB-only assertion was incorrect even though it rendered dark. Assert the exact computed CSS mix from fixed light/dark inputs and keep raw header/footer screenshots, host tokens and parity. Exact-head CI pending.
+
+- 2026-11-15 D6 no-script dark shell follow-up: scope OS-dark shell tokens to no-script public pages, check computed header/footer styles and attach raw EN/VI neutral/lil.p dark captures. Exact-head CI and independent review pending; V03/V14/full VI remain GAP.
+
 - 2026-11-15 #234 follow-up: real neutral/lil.p hosts now have a bounded EN/VI × light/dark no-script nested-tree gate with VI-authored copy and scoped dark OS-preference CSS; strict preview geometry/link PNG parity and raw full-page attachments remain. Exact-head CI and independent visual review pending. V03/V14 all-20 neutral dark and full VI content remain GAP; no golden/API/schema changes.
 
 - 2026-11-15 D6 SSR/i18n gate: host-specific custom-tree rendering is request-scoped (no shared HTML ISR), while API fetch tags remain cached. Neutral tenant SSR, no-script nested content, VI contact defaults and translated nested inspector labels require exact-head five-shard CI and review. V03/V14/full VI remain GAP; no golden or V10 files changed. See `docs/specs/2026-11-15-cms-d6-ssr-i18n-gate.md`.
@@ -331,6 +337,12 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 9. Changelog
 
 - 2026-11-16: Keep public header's compact navigation until 1280px and gate 768/1024/1280 EN/VI light/dark viewport bounds, target sizes, keyboard order and screenshots; CI and independent visual review pending.
+
+- 2026-11-15: Restore top-of-page scroll before no-script public/preview link geometry assertions after full-page and footer screenshots; retain strict PNG/geometry checks. CI pending.
+
+- 2026-11-15: Correct the #241 no-script footer assertion to compare the actual computed 93% shell-background/7% green blend against fixed light/dark inputs. Keep the dark shell fix and real-host screenshots unchanged; five-shard CI pending.
+
+- 2026-11-15: Added a scoped no-script dark public-shell token override so header/footer follow the already-dark CMS tree; extended the real-host EN/VI light/dark browser gate with painted footer assertions and raw dark shell captures. No golden, API, migration or JavaScript-theme changes; exact-head CI pending.
 
 - 2026-11-15: Added no-script OS-dark first-paint host tokens and EN/VI authored nested-tree public/preview sample on real neutral/lil.p hosts; maintained exact link PNG parity and preserved all golden contracts. Full V03/V14 and VI acceptance still need separate evidence.
 

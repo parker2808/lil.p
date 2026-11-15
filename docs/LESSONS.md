@@ -2,6 +2,10 @@
 
 - 2026-11-16: A 768px CSS desktop breakpoint must match the JavaScript `matchMedia` breakpoint; a desktop header can overflow before the mobile sheet disappears, especially with VI navigation. Gate 768/1024 and the new desktop boundary in both languages and themes with real control bounds, touch sizes and keyboard order.
 
+- 2026-11-15: A painted footer using `color-mix` resolves to `color(srgb …)`, not the raw `rgb()` card token; compare the browser's computed blend against explicit light/dark shell inputs before attributing a screenshot gate failure to an incorrect theme.
+
+- 2026-11-15: A no-script dark CMS tree can still sit between light public header/footer because Next theme classes require JavaScript; test the surrounding shell's computed tokens and painted footer on real hosts, not only the main tree's accent.
+
 - 2026-11-15: A post-hydration brand toggle cannot prove real-host dark first paint; with scripts disabled, use the OS color preference and assert computed host tokens, raw public/preview captures, and genuinely VI-authored tree copy instead of English text on a VI route.
 
 - 2026-11-15: The admin topbar locale combobox is desktop-only; change language before resizing to 390px (or use the actual mobile account menu) so a browser gate tests the responsive journey rather than waiting indefinitely on a hidden control.
@@ -439,6 +443,7 @@
 - 2026-11-15: Re-enabling an omitted Playwright spec can reveal stale selectors on a custom Radix combobox; exercise the visible option and assert the reloaded locale/cookie rather than relaxing downstream keyboard and axe checks.
 - 2026-11-15: Radix does not fire a locale change when selecting the active language; to prove cookie persistence, switch away and back when needed. Restore sheet-trigger focus after React removes the inert overlay in a layout effect, not competing animation frames referencing a cleared ref.
 - 2026-11-15: A base merge may auto-merge the Playwright manifest and builder UI while context conflicts; preserve both histories and run the complete five-shard registry/unit and exact-head browser gates rather than inheriting either parent's green status.
+- 2026-11-15: Playwright element screenshots of the footer scroll the viewport even with JavaScript disabled; reset scroll after full-page captures before comparing public/preview viewport bounding boxes, keeping strict geometry and pixel equality.
 - 2026-11-15: Host-specific tree branding must be selected before SSR and never shared through ISR across tenant hosts; compare public and authenticated preview on the actual host with scripts disabled, not a post-hydration data attribute.
 - 2026-11-15: Before requiring byte-identical public/preview element PNGs, remove only preview chrome from the capture geometry and verify equal bounding boxes; retain the unmodified full-page captures so deterministic antialias differences at rounded corners cannot conceal a content regression.
 - 2026-11-15: Translating host-schema field metadata changes accessible labels in the builder; update existing EN/VI editor-origin Playwright locators to read locale strings while keeping their draft persistence assertions intact.
