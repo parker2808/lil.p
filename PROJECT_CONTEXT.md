@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V03/V14 real-tenant SSR extension: EN/VI × light/dark × 390/768/1440 no-JS public/preview captures now assert more than 2% painted CTA pixel difference between actual neutral/branded hosts, with exact same-host preview parity. The all-20 host first-paint matrix, WCAG AA and manual review remain GAP pending exact-head CI and independent review; no runtime or schema changes.
+
 - 2026-11-16 V13: D6 historical draft SEO title/description previously read the current draft while `?v=N` rendered a versioned tree. Shared metadata now uses the validated draft-only version for core and custom page routes; browser evidence must verify EN/VI old body/SEO versus current public body/SEO. Full V13 route/state localization remains GAP.
 
 - 2026-11-15 V09/V10 #239 first CI `43730577307` failed only shard 2: the page-header's actual Properties title labels are `Properties (EN)`/`Properties (VI)` (verified from Playwright error-context), not `title (EN)`/`title (VI)`. Fixture locators now assert the exact accessible names; new-head CI/visual evidence still pending, no assertion/threshold removed.
@@ -341,6 +343,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Broadened the D6 real-host no-JS nested-tree browser sample to three widths and measured tenant CTA paint (over 2% pixel difference), retaining EN/VI, light/dark and strict public/preview parity; no product or data changes. CI and visual review pending.
 
 - 2026-11-16: V13 browser fixture follows the supported D2 transition (legacy publish → legacy SEO edit → tree activate/publish); prior exact-head run `43748389414` caught an invalid legacy PATCH after tree activation (409). Runtime version guard unchanged; next CI pending.
 

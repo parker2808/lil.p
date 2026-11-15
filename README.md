@@ -18,7 +18,9 @@ contact defaults and translated Properties labels; this does not by itself close
 the full V03/V14 visual matrix.
 The real-host no-script sample also checks OS-driven dark first paint and
 separately authored VI tree copy on both neutral and branded tenants; it does
-not certify all-20 dark neutral SSR or fully localized site content. A scoped
+so at 390/768/1440, asserting a painted CTA difference across actual tenant
+hosts and exact public/preview CTA parity. It does not certify all-20 dark
+neutral SSR or fully localized site content. A scoped
 no-script OS-dark shell rule keeps the public header/footer dark alongside the
 CMS tree; CI attaches raw header/footer captures on both real tenant hosts.
 The footer assertion preserves its existing 93% background/7% green blend
