@@ -84,29 +84,55 @@ for (const group of [0, 1, 2, 3]) {
               );
               expect(enabled?.url()).toContain(route);
             }
-            const response = await visitor.goto(new URL(route, origin).href);
+            const requestedRoute = preview ? `${route}?v=1` : route;
+            const response = await visitor.goto(new URL(requestedRoute, origin).href);
             expect(response?.status()).toBe(200);
             await expect(visitor.locator('html')).toHaveAttribute('lang', locale);
-            const main = visitor.locator('#content > main.cms-core-host');
+            const main = visitor.locator('#content > main.cms-core-host:visible');
             await expect(main).toHaveCount(1);
+            await expect(main).toBeVisible();
             const wrappers = main.locator('[data-host-block-type]');
             await expect(wrappers).toHaveCount(5);
             const snapshot = await wrappers.evaluateAll((elements) =>
-              elements.map((element) => ({
-                type: element.getAttribute('data-host-block-type'),
-                hash: element.getAttribute('data-host-props-hash'),
-                text: element.textContent?.replace(/\s+/g, ' ').trim() ?? '',
-                childCount: element.children.length,
-              })),
+              elements.map((element) => {
+                const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+                const painted: string[] = [];
+                while (walker.nextNode()) {
+                  const textNode = walker.currentNode;
+                  const parent = textNode.parentElement;
+                  if (
+                    !textNode.textContent?.trim() ||
+                    parent === element ||
+                    !parent?.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })
+                  )
+                    continue;
+                  const range = document.createRange();
+                  range.selectNodeContents(textNode);
+                  if (
+                    Array.from(range.getClientRects()).some(
+                      (rect) => rect.width > 0 && rect.height > 0,
+                    )
+                  ) {
+                    painted.push(textNode.textContent ?? '');
+                  }
+                }
+                return {
+                  type: element.getAttribute('data-host-block-type'),
+                  hash: element.getAttribute('data-host-props-hash'),
+                  text: painted.join(' ').replace(/\s+/g, ' ').trim(),
+                  childCount: element.children.length,
+                };
+              }),
             );
             expect(snapshot.map(({ type }) => type)).toEqual(blocks.map(({ type }) => type));
-            for (const block of snapshot) {
+            for (const [index, block] of snapshot.entries()) {
               expect(block.hash, `${locale}/${width}/${block.type} SSR props`).toMatch(
                 /^[a-f0-9]{64}$/,
               );
               if (block.type === 'cv-download') {
                 expect(block.text, 'No configured resume is an explicit empty state').toBe('');
               } else {
+                await expect(wrappers.nth(index)).toBeVisible();
                 expect(block.text, `${locale}/${width}/${block.type} no-script content`).not.toBe(
                   '',
                 );

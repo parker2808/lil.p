@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A shared route-group loading fallback can break no-script custom pages, while deleting it also removes the home skeleton; give home a nested route-group loading boundary and gate visible painted text rather than raw `textContent` in no-script browser tests.
+
 - 2026-11-16: A route-group `loading.tsx` can stream custom page content into a hidden React segment only revealed by client insertion scripts; no-JavaScript checks must require the actual visible main, not a matching hidden wrapper. Three-width base-only fixtures do not establish breakpoint override semantics for every host.
 
 - 2026-11-16: A published host wrapper in raw HTML does not prove its nested async content survives without React patch scripts; exercise each host with JavaScript disabled, compare public/version-preview text at every width and keep explicitly empty data states distinct from visible content.
