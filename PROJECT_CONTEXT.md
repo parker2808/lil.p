@@ -275,6 +275,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 9. Changelog
 
 - 2026-11-15: Connected all 20 host definitions to builder palette and validated composition, history, recovery and Properties, including nested bilingual fields and optional heading setup. Added four fixed-shard editor-origin real-API/SSR journey groups, preserving pre-existing shard assignments. Golden contracts unchanged; exact-head CI pending.
+- 2026-11-15: #215 independent P2 found host palette titles/search used raw type slugs under VI. Reused existing admin block translations for all 20 palette/tree labels and tested VI search through the real builder. Initial ready-e2e CI run 43683804671 failed: optional `heading.eyebrow` was invalid when filled without a valid title, while streaming/dynamic HTML can vary across preview/public. The browser gate now edits a valid localized title or explicitly tests a browser toggle, asserts server autosave and stable host props; final exact-head CI remains pending.
 
 - 2026-11-15: Corrected D6's all-20 API E2E bilingual fixture after exact-head CI found the intentional English SEO fallback; each custom page now sets Vietnamese SEO before publishing. No production locale fallback, golden contract or release gate changed; rerun exact-head CI.
 

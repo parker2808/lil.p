@@ -4,7 +4,9 @@ The D6 host-registry integration is staged on a scratch branch: all 20 registere
 component types must pass real authenticated draft activation, save, read and
 publish, then EN/VI version preview and public SSR. This is route evidence, not
 all-20 editor-origin parity until its exact-head four-shard CI passes, visual/a11y
-approval, or permission to deploy D2.
+approval, or permission to deploy D2. The editor-origin suite now searches the
+Vietnamese host tile labels from the existing admin catalog and edits valid bilingual
+Properties; dynamic hosts compare stable props and API data rather than transient HTML.
 
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 

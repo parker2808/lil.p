@@ -1,6 +1,8 @@
 import { BLOCK_REGISTRY } from '@portfolio/contracts';
 import { expect, test } from '@playwright/test';
 
+import viMessages from '../../i18n/locales/vi.json';
+import { BLOCK_EDITOR_META } from '../../src/modules/admin-pages/constants/block-editor-meta.constant';
 import { signIn } from './auth';
 
 export function registerEditorHostJourney(shard: number): void {
@@ -9,6 +11,7 @@ export function registerEditorHostJourney(shard: number): void {
   for (const definition of definitions.slice((shard - 1) * 5, shard * 5)) {
     test(`${definition.type}: palette, Properties, autosave and EN/VI preview/public parity`, async ({
       page,
+      context,
     }) => {
       test.setTimeout(180_000);
       await signIn(page);
@@ -25,30 +28,50 @@ export function registerEditorHostJourney(shard: number): void {
       });
       expect(seo.status(), await seo.text()).toBe(200);
 
+      await context.addCookies([
+        { name: 'NEXT_LOCALE', value: 'vi', url: new URL(page.url()).origin, sameSite: 'Lax' },
+      ]);
       await page.goto(`/admin/builder/${key}`);
-      await page.getByRole('button', { name: 'Activate tree draft' }).click();
-      await expect(page.getByText('Draft saved')).toBeVisible();
-      const palette = page.getByRole('complementary', { name: 'Components' });
-      const inspector = page.getByRole('complementary', { name: 'Properties' });
-      await palette.getByRole('button', { name: 'Section', exact: true }).click();
+      await expect(page.locator('html')).toHaveAttribute('lang', 'vi');
+      await page.getByRole('button', { name: 'Kích hoạt bản nháp cây' }).click();
+      await expect(page.getByText('Đã lưu bản nháp')).toBeVisible();
+      const palette = page.getByRole('complementary', { name: 'Thành phần' });
+      const inspector = page.getByRole('complementary', { name: 'Thuộc tính' });
+      await palette.getByRole('button', { name: 'Phần', exact: true }).click();
       if (definition.role !== 'h1') {
-        await palette.getByRole('button', { name: 'Heading', exact: true }).click();
-        await inspector.getByRole('spinbutton', { name: 'Heading level' }).fill('1');
+        await palette.getByRole('button', { name: 'Tiêu đề', exact: true }).click();
+        await inspector.getByRole('spinbutton', { name: 'Cấp tiêu đề' }).fill('1');
       }
-      await palette.getByRole('button', { name: definition.type, exact: true }).click();
-      const addHeading = inspector.getByRole('button', { name: 'Add heading' });
+      const labelKey = BLOCK_EDITOR_META[definition.type].labelKey
+        .split('.')
+        .at(-1) as keyof typeof viMessages.admin.pages.types;
+      const hostName = viMessages.admin.pages.types[labelKey];
+      const search = palette.getByRole('textbox', { name: 'Tìm thành phần' });
+      await search.fill(hostName);
+      const hostTile = palette.getByRole('button', { name: hostName, exact: true });
+      await expect(hostTile).toBeVisible();
+      await hostTile.click();
+      const addHeading = inspector.getByRole('button', { name: 'Thêm tiêu đề' });
       if (await addHeading.count()) await addHeading.click();
 
-      const english = inspector.getByRole('textbox', { name: /\(EN\)$/ }).first();
-      const vietnamese = inspector.getByRole('textbox', { name: /\(VI\)$/ }).first();
       const englishValue = `Edited ${definition.type}`;
       const vietnameseValue = `Sửa ${definition.type}`;
-      if (await english.count()) {
+      if (['notes-browser', 'projects-browser'].includes(definition.type)) {
+        await inspector.getByRole('switch', { name: 'showFeatured' }).click();
+      } else {
+        const englishTitle = inspector.getByRole('textbox', { name: /(?:heading )?title \(EN\)$/ });
+        const english = (await englishTitle.count())
+          ? englishTitle.first()
+          : inspector.getByRole('textbox', { name: /\(EN\)$/ }).first();
+        const vietnameseTitle = inspector.getByRole('textbox', {
+          name: /(?:heading )?title \(VI\)$/,
+        });
+        const vietnamese = (await vietnameseTitle.count())
+          ? vietnameseTitle.first()
+          : inspector.getByRole('textbox', { name: /\(VI\)$/ }).first();
+        await expect(english).toBeVisible();
         await english.fill(englishValue);
         await vietnamese.fill(vietnameseValue);
-      } else {
-        expect(['notes-browser', 'projects-browser']).toContain(definition.type);
-        await inspector.getByRole('switch', { name: 'showFeatured' }).click();
       }
 
       const draftPath = `/api/admin/pages/${key}/builder/draft`;
@@ -102,12 +125,16 @@ export function registerEditorHostJourney(shard: number): void {
         await expect(host).toHaveCount(1);
         const publishedHash = await host.getAttribute('data-host-props-hash');
         expect(publishedHash).toMatch(/^[a-f0-9]{64}$/);
-        const publicHtml = await page.locator('main.cms-core').innerHTML();
+        const dynamic = ['notes-browser', 'projects-browser', 'contact-form'].includes(
+          definition.type,
+        );
+        const publicHtml = dynamic ? null : await page.locator('main.cms-core').innerHTML();
         await page.goto(`/api/draft?path=${encodeURIComponent(`/${locale}/${key}`)}`);
         await page.goto(`/${locale}/${key}?v=1`);
         await expect(host).toHaveCount(1);
         expect(await host.getAttribute('data-host-props-hash')).toBe(publishedHash);
-        expect(await page.locator('main.cms-core').innerHTML()).toBe(publicHtml);
+        if (publicHtml !== null)
+          expect(await page.locator('main.cms-core').innerHTML()).toBe(publicHtml);
         await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(`/${locale}/${key}`)}`);
       }
     });
