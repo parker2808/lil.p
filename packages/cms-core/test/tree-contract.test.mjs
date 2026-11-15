@@ -224,6 +224,29 @@ test('publish requires exactly one H1 even for an empty draft', () => {
 });
 
 test('publish requires exactly one effective H1 at every breakpoint', () => {
+  const swapped = {
+    ...heading,
+    responsive: { base: { text: 'First', level: 1 }, mobile: { level: 2 } },
+  };
+  const swappedSecond = {
+    ...heading,
+    id: 'second',
+    responsive: { base: { text: 'Second', level: 2 }, mobile: { level: 1 } },
+  };
+  assert.equal(readTree(page([swapped, swappedSecond])).ok, true);
+  errorCode(page([swapped, swappedSecond]), 'HEADING_RULE', undefined, validateTreeForPublish);
+
+  const stable = {
+    ...heading,
+    responsive: {
+      base: { text: 'Title', level: 2 },
+      mobile: { level: 1 },
+      tablet: { level: 1 },
+      desktop: { level: 1 },
+    },
+  };
+  assert.equal(validateTreeForPublish(page([stable])).ok, true);
+
   const mobileOnly = {
     ...heading,
     responsive: { base: { text: 'Hello', level: 2 }, mobile: { level: 1 } },

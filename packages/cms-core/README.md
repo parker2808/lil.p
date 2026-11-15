@@ -34,6 +34,8 @@ D5 adds `applyTreeOperation`, `createTreeHistory`/`commitTreeHistory`/`undoTreeH
 
 Call `endTreeTyping(history)` on blur/explicit commit to close the current coalescing window; editing afterward starts a separate undo entry.
 
+D3 adds opt-in `renderTree({ input, createElement, labels, registry?, components?, resolveMedia? })` to `./react/server`. Draft preview and public SSR share the bounded draft reader; hosts separately call `validateTreeForPublish`. Invalid trees produce a typed localized fallback, while thrown host renderers return `RENDER_FAILED`. Core owns semantic headings and rejects `components.heading`; publish and SSR reject heading-level changes across breakpoints with `HEADING_RULE`. Legacy rendering remains the default until D2/D6 route integration. See the [D3 spec](../../docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md).
+
 Build and check the browser gzip budgets with `pnpm build` from this package (or
 `pnpm --filter @parker2808/cms-core build` from the monorepo).
 Run `pnpm check:deps` in either location to reject workspace/host dependencies
