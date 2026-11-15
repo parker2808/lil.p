@@ -74,6 +74,7 @@
 
 .cms-core :where(a, button, input, textarea, select, [tabindex]):focus-visible {
   outline: 2px solid var(--builder-focus);
+  outline-color: var(--builder-focus) !important;
   outline-offset: 2px;
 }
 
