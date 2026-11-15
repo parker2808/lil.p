@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- E2E throughput (2026-11-15): web E2E now uses five shards with the same required aggregate `web-e2e` check, per-shard provenance and 20-minute limit. The #217 owner must register D6 visual group 4 in `SPECS` and change its pin from shard 4 to 5 when restacking; missing/out-of-range pins now fail loudly. The #221 focus-ring contrast assertion failure is separate and cannot be solved by sharding. Exact-head five-shard CI remains required; see [measurements](./docs/specs/2026-11-15-cms-e2e-shard-throughput.md).
+
 - CI evidence provenance (2026-11-15): E2E artifacts identify both the PR head and the tested synthetic-merge checkout; the merged report verifies all four shard manifests against both SHAs before recording its provenance. Review screenshots against both SHAs, not only the run number. This does not change which ref runs, any required check or the Vercel build order. Exact-head CI remains the gate.
 
 - Stage A/D2 probe kit (2026-11-15): `scripts/probe-stage-a-d2.mjs` prepares unauthenticated direct-Render/Vercel freeze checks for ten legacy and four D2 paths, plus public health/EN/VI reads (including the expected root redirect); the Render hostname is supplied by the release owner because tracked config has only an illustrative URL. Instance drain and D2 schema proof require authenticated inventory and authorized read-only DB metadata; this PR runs no production checks or migration. The Stage A guard must be merged into the reviewed D2 image before rollout; rollout order is #210 freeze/drain → #199 migration/verify → approved reopen → #204 → #202.
@@ -253,6 +255,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Balanced the web E2E suite across five free CI shards, documented the #217 group-4 move to shard 5, rejected missing/invalid pins with a unit regression, and extended exact-head artifact provenance checks to five without increasing timeouts or changing the aggregate required check.
 - 2026-11-15: Added PR-head and tested-merge SHAs to E2E build, shard and merged-report artifact names and provenance JSON, with four-shard verification before report attestation; no changes to test refs, checks, runtime or deployment.
 - 2026-11-15: Added a non-executed Stage A/D2 public probe kit with mocked failure/EN redirect tests and a forward-only #210 → #199 → reopen → #204 → #202 deployment checklist. No production request, database/migration change, golden-contract change or approval to deploy.
 - 2026-11-15: Added an offline scratch-consumer install from the packed CMS core tarball to verify all six subpath resolutions and ESM/CJS root rejection in the package test/CI job; no runtime or golden-contract change.
