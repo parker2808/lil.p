@@ -1,3 +1,5 @@
+import AxeBuilder from '@axe-core/playwright';
+import { BLOCK_REGISTRY } from '@portfolio/contracts';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
@@ -39,7 +41,7 @@ const tree = {
   },
 };
 
-async function renderedMain(page: Page, route: string, heading: string) {
+async function renderedMain(page: Page, route: string, heading?: string) {
   const response = await page.request.get(route);
   expect(response.status(), route).toBe(200);
   const serverHtml = await response.text();
@@ -51,7 +53,7 @@ async function renderedMain(page: Page, route: string, heading: string) {
   expect(serverMain, `${route} SSR main`).toBeTruthy();
   const browser = await page.goto(route);
   expect(browser?.status(), route).toBe(200);
-  await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible();
+  if (heading) await expect(page.getByRole('heading', { level: 1, name: heading })).toBeVisible();
   await page.evaluate(
     () =>
       new Promise<void>((resolve) =>
@@ -61,6 +63,16 @@ async function renderedMain(page: Page, route: string, heading: string) {
   const hydratedMain = await page.locator('main.cms-core').innerHTML();
   expect(hydratedMain, `${route} hydration`).toBe(serverMain);
   return hydratedMain;
+}
+
+async function semanticMain(page: Page) {
+  return page.locator('main').evaluate((element) => {
+    const clone = element.cloneNode(true) as HTMLElement;
+    clone
+      .querySelectorAll('[data-block-id]')
+      .forEach((block) => block.removeAttribute('data-block-id'));
+    return clone.innerHTML;
+  });
 }
 
 test('real EN/VI preview-public SSR, hydration and pixel pairs at 390/768/1440', async ({
@@ -184,11 +196,11 @@ test('legacy UI publish, version history and restore preserve SSR/read version p
       await page.goto(path);
       await expect(page.getByText(copy, { exact: true })).toBeVisible();
     }).toPass({ timeout: 30_000 });
-    const publicMain = await page.locator('main').innerHTML();
+    const publicMain = await semanticMain(page);
     await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
     await page.goto(`${path}?v=${version}`);
     await expect(page.getByText(copy, { exact: true })).toBeVisible();
-    expect(await page.locator('main').innerHTML()).toBe(publicMain);
+    expect(await semanticMain(page)).toBe(publicMain);
     await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
   }
 
@@ -219,4 +231,123 @@ test('legacy UI publish, version history and restore preserve SSR/read version p
     await page.goto(path);
     await expect(page.getByText('First version', { exact: true })).toBeVisible();
   }).toPass({ timeout: 30_000 });
+});
+
+test('all 20 host blocks have real published-preview EN/VI desktop visual and axe evidence', async ({
+  page,
+}, testInfo: TestInfo) => {
+  test.setTimeout(10 * 60_000);
+  await signIn(page);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const headers = { Origin: new URL(page.url()).origin };
+  const definitions = Object.values(BLOCK_REGISTRY);
+  expect(definitions).toHaveLength(20);
+  const titleBlocks = definitions.filter((definition) => definition.role === 'h1');
+  const otherBlocks = definitions.filter((definition) => definition.role !== 'h1');
+
+  for (const [index, titleBlock] of titleBlocks.entries()) {
+    const blocks = index === 0 ? [titleBlock, ...otherBlocks] : [titleBlock];
+    const pageKey = `d6-visual-${titleBlock.type}`;
+    const treeDocument = {
+      schemaVersion: 1,
+      root: {
+        id: 'visual-page',
+        type: 'page',
+        responsive: { base: {} },
+        sections: [
+          {
+            id: 'visual-section',
+            type: 'section',
+            responsive: { base: {} },
+            content: blocks.map((definition) => ({
+              id: `visual-${definition.type}`,
+              type: 'component',
+              componentType: definition.type,
+              responsive: { base: definition.defaults },
+            })),
+          },
+        ],
+      },
+    };
+    const created = await page.request.post('/api/admin/pages', {
+      headers,
+      data: { key: pageKey, title: `Visual ${titleBlock.type}`, locale: 'en', template: 'empty' },
+    });
+    expect(created.status(), await created.text()).toBe(201);
+    const activated = await page.request.post(`/api/admin/pages/${pageKey}/builder/activate`, {
+      headers,
+      data: { expectedRevision: '0', tree: treeDocument },
+    });
+    expect(activated.status(), await activated.text()).toBe(200);
+    const published = await page.request.post(`/api/admin/pages/${pageKey}/builder/publish`, {
+      headers,
+      data: { expectedRevision: '1' },
+    });
+    expect(published.status(), await published.text()).toBe(200);
+
+    for (const locale of ['en', 'vi'] as const) {
+      const path = `/${locale}/${pageKey}`;
+      const publicMain = await renderedMain(page, path);
+      await expect(page.locator('main.cms-core')).toHaveCSS('color-scheme', 'light');
+      const publicCaptures = new Map<string, Buffer>();
+      for (const definition of blocks) {
+        const locator = page.locator(`[data-host-block-type="${definition.type}"]`);
+        await expect(locator).toHaveCount(1);
+        const image = await locator.screenshot({ animations: 'disabled' });
+        publicCaptures.set(definition.type, image);
+        await testInfo.attach(`${locale}-host-default-light-1440-${definition.type}-public.png`, {
+          body: image,
+          contentType: 'image/png',
+        });
+      }
+      const axe = await new AxeBuilder({ page })
+        .include('main.cms-core')
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+        .analyze();
+      await testInfo.attach(`${locale}-host-default-light-1440-${titleBlock.type}-axe.json`, {
+        body: JSON.stringify(axe.violations),
+        contentType: 'application/json',
+      });
+      expect(
+        axe.violations.filter((violation) =>
+          ['serious', 'critical'].includes(violation.impact ?? ''),
+        ),
+        `${titleBlock.type}/${locale}`,
+      ).toEqual([]);
+
+      await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
+      const previewMain = await renderedMain(page, `${path}?v=1`);
+      expect(previewMain).toBe(publicMain);
+      const previewAxe = await new AxeBuilder({ page })
+        .include('main.cms-core')
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+        .analyze();
+      await testInfo.attach(
+        `${locale}-host-default-light-1440-${titleBlock.type}-preview-axe.json`,
+        {
+          body: JSON.stringify(previewAxe.violations),
+          contentType: 'application/json',
+        },
+      );
+      expect(
+        previewAxe.violations.map(({ id, nodes }) => ({
+          id,
+          targets: nodes.map(({ target }) => target),
+        })),
+      ).toEqual(
+        axe.violations.map(({ id, nodes }) => ({ id, targets: nodes.map(({ target }) => target) })),
+      );
+      for (const definition of blocks) {
+        const image = await page
+          .locator(`[data-host-block-type="${definition.type}"]`)
+          .screenshot({ animations: 'disabled' });
+        await testInfo.attach(`${locale}-host-default-light-1440-${definition.type}-preview.png`, {
+          body: image,
+          contentType: 'image/png',
+        });
+        expect(image.equals(publicCaptures.get(definition.type)!)).toBe(true);
+      }
+      await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
+    }
+  }
 });

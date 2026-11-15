@@ -384,3 +384,5 @@
 - 2026-11-14: Weighted E2E sharding can reshuffle unrelated test order and pollute visual baselines; preserve existing file assignments when adding a publishing test, then place the new case last in its shard.
 - 2026-11-15: A 20-type HTTP/SSR gate cannot substitute for client autosave; exercise an editor-origin change against the real server separately, and never label starter-palette coverage as all-20 Properties editing.
 - 2026-11-15: A Vietnamese URL does not guarantee Vietnamese SEO when the snapshot only has English fields; seed both locale groups before asserting `lang: vi` in live-route parity tests.
+- 2026-11-15: All-20 browser API/DOM hashes are not visual acceptance; group non-H1 blocks under one H1 and capture the other H1s separately, labeling every tested locale/theme/width and leaving neutral/brand combinations open until those hosts are mounted and reviewed.
+- 2026-11-15: A restored legacy version keeps block content but assigns historical snapshot block IDs distinct from current published rows; compare version/public DOM semantically by excluding only `data-block-id`, while asserting separate version row content unchanged.

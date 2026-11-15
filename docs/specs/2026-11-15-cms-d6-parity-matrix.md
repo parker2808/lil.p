@@ -24,11 +24,22 @@ exact PR head; attachments are generated in the Playwright report, not a
 committed platform-specific pixel baseline. This slice does not close J06/J08,
 V11/V12/V21/V22, all-20 editor-origin, design review or rollout gates.
 
-V03/V14 **remain GAP**: the paired screenshots cover only heading + paragraph
-in the lil.p host under its default theme. There are no paired screenshots or
-axe results for the other 18 host types, either theme-specific light/dark tuple
-for any of the 20 types, or any neutral-fixture tuple. Their complete matrix
-would require 20 types × 2 locales × 2 themes × 3 widths × 2 routes = 480
-route captures per host (960 across the two hosts); these are not implied by
-the 12 screenshots in this focused CI slice. Existing all-20 host API/DOM
-checks remain independent evidence, not a visual or design acceptance.
+V03/V14 **remain GAP**. The new bounded real-API host test publishes four pages:
+one page with a single H1 block and all 16 non-H1 host blocks, plus one page
+for each remaining H1 type. For every type it compares public/version-preview
+SSR and hydrated DOM and attaches block-level screenshot pairs at **EN/VI ×
+1440 × computed light** (40 type/locale pairs, 80 PNGs), with ten public and
+ten paired preview page-level WCAG axe reports. CI attachments are evidence only after the exact-head shard
+passes; they are not a manually reviewed pixel baseline. The earlier heading
+and paragraph test adds EN/VI × 390/768/1440 default-host screenshot pairs.
+
+Uncovered tuples: **all 20 types** at 390/768 and dark on the published host
+(except heading/paragraph at 390/768 in the earlier test); **all 20 types** at
+EN/VI × light/dark × 390/768/1440 in the separate neutral fixture; and the
+explicit lil.p brand-token variant across every type/locale/theme/width. The
+public `BlocksPage` currently renders `main.cms-core` with no selectable
+`data-brand`, so a host-default light screenshot cannot prove either branded
+variant. The full cartesian gate remains open pending visual-owner scope and
+review; 20 types × 2 locales × 2 themes × 3 widths × 2 routes = 480 route/type
+captures per host, 960 for two distinct hosts. No mock or unmounted fixture is
+claimed as a published route.

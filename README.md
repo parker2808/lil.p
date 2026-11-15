@@ -6,6 +6,9 @@ checks, and EN/VI preview/public SSR, hydration and screenshot pairs at
 390/768/1440. Tree publishing in the builder UI remains disabled; API publish
 and the separate legacy UI publish/version/restore journey are not proof of a
 tree UI publish/restore flow or of production rollout readiness.
+The bounded all-20 public-host EN/VI desktop default-light screenshot and axe
+evidence leaves neutral/brand, dark and most mobile/tablet visual tuples open;
+see the matrix spec for the precise uncovered combinations.
 
 The D6 host-registry integration is staged on a scratch branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and
