@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 D6 SSR/i18n gate: host-specific custom-tree rendering is request-scoped (no shared HTML ISR), while API fetch tags remain cached. Neutral tenant SSR, no-script nested content, VI contact defaults and translated nested inspector labels require exact-head five-shard CI and review. V03/V14/full VI remain GAP; no golden or V10 files changed. See `docs/specs/2026-11-15-cms-d6-ssr-i18n-gate.md`.
+
 - 2026-11-15 D6 base reconciliation: keep D6 V04/V06/V09/V10 and editor-origin histories alongside the five-shard D4 canvas/keyboard registry and focus/locale fixes from #224; the combined branch requires exact-new-head `ready-e2e` before treating the auto-merged tests as evidence. Release and integrated D5 publish/restore remain separate gates.
 - Out of scope for this base-only merge: the D6 read-only i18n audit on `55de575d` found raw nested Properties labels, incomplete VI form/site-settings fallback and no neutral-tenant host adapter for public/preview SSR. Keep V03/V14 and complete localization as GAP pending independently reviewed fixes; existing hydrated captures do not prove them.
 
@@ -293,6 +295,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Staged D6 tenant-host SSR brand selection and neutral/lil.p token separation with no-script nested route and VI contact/Properties regressions; golden contracts unchanged, exact-head CI pending.
 
 - 2026-11-15: Merged the updated D6 base containing #224's five-shard D4 canvas/keyboard registration and test repairs; retained D6 parity/visual assertions and both documentation histories. No golden contract, migration or production change.
 

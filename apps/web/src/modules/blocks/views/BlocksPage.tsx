@@ -30,10 +30,12 @@ export async function BlocksPage({
   pageKey,
   locale,
   searchParams,
+  brand = 'lilp',
 }: {
   pageKey: PageKey;
   locale: Locale;
   searchParams?: Record<string, string | string[] | undefined>;
+  brand?: 'neutral' | 'lilp';
 }) {
   const rawVersion = firstQuery(searchParams?.v);
   const version = rawVersion ? Number(rawVersion) : undefined;
@@ -81,7 +83,11 @@ export async function BlocksPage({
       labels: { unsupported: t('error') },
     });
     if (!result.ok) notFound();
-    return <main className="cms-core">{result.content}</main>;
+    return (
+      <main className="cms-core" data-brand={brand}>
+        {result.content}
+      </main>
+    );
   }
   // Resolve async blocks before writing their wrappers. This also preserves a complete
   // initial HTML document without the client script needed to reveal streamed chunks.

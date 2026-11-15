@@ -1,5 +1,12 @@
 # lil.p
 
+The [D6 SSR/i18n gate](./docs/specs/2026-11-15-cms-d6-ssr-i18n-gate.md)
+selects the configured site host's brand before rendering custom tree HTML;
+other tenant hosts keep neutral core tokens. Custom tree HTML is request-scoped
+(tagged API reads remain cacheable). It also checks nested no-script SSR, VI
+contact defaults and translated Properties labels; this does not by itself close
+the full V03/V14 visual matrix.
+
 The [V17–V22 focused evidence gates](./docs/specs/2026-11-15-cms-v17-v22-evidence-gates.md)
 add legacy/tree route and missing-SEO snapshot checks, nested-field core
 preservation, and an offline deployed-public-asset parity verifier. They do not

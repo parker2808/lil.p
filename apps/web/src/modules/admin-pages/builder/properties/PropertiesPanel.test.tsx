@@ -7,6 +7,14 @@ import type { BuilderState } from '../canvas/commands';
 import { newNode } from '../palette/catalog';
 import { PropertiesPanel } from './PropertiesPanel';
 
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) =>
+    ({
+      'admin.blocks.hero.ctaLabel': 'CTA label',
+      'admin.blocks.field.href': 'URL liên kết',
+    })[key as 'admin.blocks.hero.ctaLabel' | 'admin.blocks.field.href'] ?? key,
+}));
+
 const state = {
   selectedId: 'heading',
   document: {
@@ -107,7 +115,7 @@ it('submits bilingual nested host values as one validated root property', () => 
     },
   };
   render(<PropertiesPanel state={hostState} locale="en" onEdit={onEdit} />);
-  fireEvent.change(screen.getByRole('textbox', { name: 'primaryCta label (VI)' }), {
+  fireEvent.change(screen.getByRole('textbox', { name: 'CTA label (VI)' }), {
     target: { value: 'Dự án' },
   });
   expect(onEdit).toHaveBeenCalledWith(
@@ -117,6 +125,23 @@ it('submits bilingual nested host values as one validated root property', () => 
     }),
     true,
   );
+});
+
+it('translates nested labels in the VI inspector without changing stored paths', () => {
+  const host = newNode('hero', () => 'host') as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(<PropertiesPanel state={hostState} locale="vi" onEdit={vi.fn()} />);
+  expect(screen.getByLabelText('URL liên kết')).toBeInTheDocument();
+  expect(screen.queryByText('primaryCta href')).toBeNull();
 });
 
 it('offers valid optional bilingual heading for a host with empty defaults', () => {
