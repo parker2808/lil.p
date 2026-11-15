@@ -53,7 +53,9 @@ export function registerEditorHostJourney(shard: number): void {
       const hostTile = palette.getByRole('button', { name: hostName, exact: true });
       await expect(hostTile).toBeVisible();
       await hostTile.click();
-      await expect(inspector.getByText(hostName, { exact: true })).toBeVisible();
+      await expect(
+        inspector.getByText(hostName, { exact: true }).and(inspector.locator('p')),
+      ).toBeVisible();
       const addHeading = inspector.getByRole('button', { name: 'Thêm tiêu đề' });
       if (await addHeading.count()) await addHeading.click();
 
