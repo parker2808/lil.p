@@ -498,3 +498,4 @@
 - 2026-11-16 V02: Alt+ArrowDown trên sibling cuối là no-op; phải assert order trước/sau một Alt+ArrowUp thật, dùng Tab/Shift+Tab thay Playwright `.focus()` để chứng minh keyboard reachability.
 - 2026-11-16: Audit the live version controls before testing “confirmation dialogs”: D6 Publish acts immediately, whereas Restore alone has a Radix alertdialog; record the absent UI separately from keyboard/ARIA/axe evidence and keep manual screen-reader signoff open.
 - 2026-11-16: A focus-trapping Radix Sheet can render `role="dialog"` with a title but omit `aria-modal`; verify computed DOM semantics, then explicitly mark the scoped modal sheet rather than weakening browser assertions.
+- 2026-11-16: Controlled Radix alertdialogs without an AlertDialogTrigger need explicit close-auto-focus return to their originating action; nested sheets also need focus return to their own trigger after a successful restore closes both layers.

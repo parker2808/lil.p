@@ -80,6 +80,8 @@ export function BuilderVersionActions({
   const [error, setError] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const historyRef = useRef<HTMLButtonElement>(null);
+  const restoreTriggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (restoreFailed && !pending) cancelRef.current?.focus();
@@ -129,11 +131,18 @@ export function BuilderVersionActions({
         }}
       >
         <SheetTrigger asChild>
-          <Button type="button" variant="outline">
+          <Button ref={historyRef} type="button" variant="outline">
             {text.history}
           </Button>
         </SheetTrigger>
-        <SheetContent className="overflow-y-auto" aria-modal="true">
+        <SheetContent
+          className="overflow-y-auto"
+          aria-modal="true"
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            historyRef.current?.focus();
+          }}
+        >
           <SheetTitle>{text.history}</SheetTitle>
           {loading && <p role="status">{text.loading}</p>}
           {error && !loading && (
@@ -168,7 +177,8 @@ export function BuilderVersionActions({
                       variant="outline"
                       className="mt-2"
                       disabled={!canRestore || pending}
-                      onClick={() => {
+                      onClick={(event) => {
+                        restoreTriggerRef.current = event.currentTarget;
                         setRestoreFailed(false);
                         setRestoreVersion(row.version);
                       }}
@@ -191,7 +201,14 @@ export function BuilderVersionActions({
           }
         }}
       >
-        <AlertDialogContent aria-modal="true">
+        <AlertDialogContent
+          aria-modal="true"
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            if (open) restoreTriggerRef.current?.focus();
+            else historyRef.current?.focus();
+          }}
+        >
           <AlertDialogHeader>
             <AlertDialogTitle>{text.confirm}</AlertDialogTitle>
             <AlertDialogDescription>{text.warning}</AlertDialogDescription>
