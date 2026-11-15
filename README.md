@@ -19,7 +19,9 @@ the full V03/V14 visual matrix.
 The [V06 all-20 responsive gate](./docs/specs/2026-11-16-cms-d6-v06-all20-overrides.md) separately tests no-script EN/VI historical preview and current public layout/host overrides at 390/768/1440; its previous head passed CI `43767645840` attempt 2, but the merged V05 base needs new exact-head CI and independent capture review before V06 signoff.
 The real-host no-script sample also checks OS-driven dark first paint and
 separately authored VI tree copy on both neutral and branded tenants; it does
-not certify all-20 dark neutral SSR or fully localized site content. A scoped
+so at 390/768/1440, asserting a painted CTA difference across actual tenant
+hosts and exact public/preview CTA parity. It does not certify all-20 dark
+neutral SSR or fully localized site content. A scoped
 no-script OS-dark shell rule keeps the public header/footer dark alongside the
 CMS tree and pairs the preview banner with a dark warning surface; CI checks
 its computed text/background contrast at 4.5:1 and attaches raw captures on
