@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- D2 write-reopen bootstrap follow-up (2026-11-15): a deferred entrypoint test proves `app.init()` precedes the read-only migration query and `listen()` waits for it; a failed query still listens with writes frozen. This does not replace the live old-instance drain and separate rollout approval.
+
 - 2026-11-15 D2 V11/V12 gate: expand the real MySQL save/activation/publish negative matrix with unsafe rich text and nonempty draft/version/preview read capabilities; assert HTTP-body redaction only. A 400 does not exercise error logging; D6 final-head publication and production log audit remain GAP. See `docs/specs/2026-11-15-cms-d2-v11-v12-gate.md`.
 
 - D2 safety matrix CI follow-up (2026-11-15): oversized JSON is now a typed 413 `VALIDATION_FAILED` body error with a trace ID even when body parsing stops before request-ID middleware; Multer's file-upload 400 contract remains unchanged. The disposable-DB rejection/no-write check must re-green on the exact #216 head; J09/V18 still require live Stage A drain evidence.
@@ -267,6 +269,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Added a D2 entrypoint bootstrap-order regression test for init → migration verification → listen, including fail-closed writes on a rejected schema query; no runtime behavior or release authorization changed.
 
 - 2026-11-15: Stacked D2-only write-reopen guard over #199: retained Stage A route/method and 503 semantics, added read-only startup proof of applied draft-tree migration and both columns, fail-closed Render-only `CMS_PAGE_WRITE_FREEZE=0` release switch and HTTP tests. Initial D2 deploy remains frozen; no migration/production action is authorized by this PR. §7: live instance drain, ingress proof and separately approved reopen remain release-owner gates.
 
