@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #208 `0c6ba96a` CI `43694304354` unit job timed out at the default five seconds while booting the full AppModule in the Stage A middleware registration test; the integration branch gives only that test a 20-second budget, retaining the 503-before-service assertions. The #217 visual parity failures remain owned by its separate branch. Exact-head CI still required; DO NOT MERGE.
+
 - 2026-11-15 #208 exact-head `72573ed8` CI `43692772530` exposed a cross-branch test mismatch: D6 localizes the Properties host heading, while D5's all-host assertion expected raw `hero`; D6 editor-origin VI locators also still expect `(EN)/(VI)` rather than `Tiếng Anh/Tiếng Việt`. The D5 assertion now derives the EN/VI label from metadata and translations; the D6 owner supplied a separate correction. New exact-head CI is required; J04/J07/V05 remain GAP. DO NOT MERGE.
 
 - CI evidence provenance (2026-11-15): E2E artifacts identify both the PR head and the tested synthetic-merge checkout; the merged report verifies all four shard manifests against both SHAs before recording its provenance. Review screenshots against both SHAs, not only the run number. This does not change which ref runs, any required check or the Vercel build order. Exact-head CI remains the gate.
@@ -311,6 +313,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Scoped the full-AppModule Stage A registration test timeout to 20 seconds after combined CI exceeded the default five seconds under concurrent jobs; no guard/runtime or assertion changes. Verification-only #208 requires new exact-head CI.
 
 - 2026-11-15: Corrected the combined D5 all-host browser assertion to compare the translated EN/VI Properties heading after D6 integration. CI `43692772530` failed this and the D6 VI field-label tests; a new exact-head green run remains required.
 

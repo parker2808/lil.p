@@ -139,7 +139,7 @@ describe('pre-D2 Stage A page write freeze', () => {
     } finally {
       await productionWiringApp.close();
     }
-  });
+  }, 20_000);
 
   it.each([
     ['POST', '/api/admin/pages'],
