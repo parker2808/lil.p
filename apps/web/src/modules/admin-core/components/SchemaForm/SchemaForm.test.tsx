@@ -53,6 +53,26 @@ describe('SchemaForm', () => {
     ).toBeInTheDocument();
   });
 
+  it('shows a Vietnamese client validation error without losing neighboring values', async () => {
+    const user = userEvent.setup();
+    render(
+      <NextIntlClientProvider locale="vi" messages={viMessages}>
+        <SchemaForm
+          schema={BLOCK_REGISTRY.hero.props}
+          defaultValues={BLOCK_REGISTRY.hero.defaults as Record<string, unknown>}
+        />
+      </NextIntlClientProvider>,
+    );
+    const english = document.getElementById('primaryCta.label.en') as HTMLInputElement;
+    const vietnamese = document.getElementById('primaryCta.label.vi') as HTMLInputElement;
+    await user.type(vietnamese, 'Giữ nguyên');
+    await user.clear(english);
+    expect(
+      await screen.findByText(/Nhập tối thiểu|Bắt buộc|Giá trị không hợp lệ/),
+    ).toBeInTheDocument();
+    expect(vietnamese).toHaveValue('Giữ nguyên');
+  });
+
   it('shows a server error under the English CTA label', () => {
     render(
       <NextIntlClientProvider locale="en" messages={en}>

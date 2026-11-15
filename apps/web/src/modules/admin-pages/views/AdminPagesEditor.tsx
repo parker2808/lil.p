@@ -5,7 +5,7 @@ import { BLOCK_REGISTRY } from '@portfolio/contracts';
 import { ConfirmDialog } from '@portfolio/ui/components/ui/confirm-dialog';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { useMemo, useRef, useState } from 'react';
 
@@ -28,6 +28,7 @@ import { publicPagePath } from '../utils/preview-frame.util';
 
 export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
   const t = useTranslations('admin.pages');
+  const uiLocale = useLocale() === 'vi' ? 'vi' : 'en';
   const editorT = useTranslations('admin.editor');
   const back = useAdminBack('pages');
   const isAdmin = useIsAdmin();
@@ -81,7 +82,7 @@ export function AdminPagesEditor({ pageKey }: { pageKey: PageKey }) {
         bumpPreview();
         return { updatedAt: next.updatedAt };
       } catch (error) {
-        setFieldErrors(inspectorFieldErrors(error));
+        setFieldErrors(inspectorFieldErrors(error, uiLocale));
         throw error;
       }
     },

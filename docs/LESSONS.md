@@ -1,6 +1,10 @@
 # Lessons
 
 - 2026-11-16: A D5 keyboard navigation branch can miss a newly required D6 localized host-label callback; run combined typecheck before push and keep live announcement assertions intact.
+- 2026-11-16: A D5 editor screenshot can attest to a saved draft revision but cannot prove editor→public→preview parity when the D5 publish endpoint intentionally returns CONFLICT; keep that combined D6 journey visibly GAP instead of substituting a mocked public response.
+
+- 2026-11-16: Filtering keyboard move destinations to valid slots prevents testing or announcing a rejected drop; expose an explicit Page-root attempt while retaining normal valid Arrow destinations, then verify unchanged server revision and restored keyboard focus.
+- 2026-11-16: Do not rerun a combined head with a known revision mismatch after source-only merges; the D2/D6 fixture must use the real persisted revision without weakening CAS.
 
 - 2026-11-16: An accepted D5 keyboard-only invalid-drop test is not successful keyboard publish evidence while D5 disables Publish; route the positive gate to integrated D6 and keep manual spoken screen-reader proof separate.
 

@@ -49,6 +49,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - 2026-11-16 #208 combined-only wiring: D5 keyboard Home-root announcement calls the D6 three-argument localized node-label helper with the existing `hostLabel`; pre-push typecheck caught the missing argument before any remote push. Keep the negative-drop status/focus/no-write assertions unchanged; exact-head CI pending.
+- V05 remains GAP on D5: 768px EN/VI light/dark editor images and an API revision attachment are only partial evidence; the same-revision public/preview chain requires D6 tree publishing (D5 explicitly returns CONFLICT). V13 full route/state review and manual V16 screen-reader signoff remain open after the focused metadata/error-language correction.
+
+- V02 D5 keyboard negative path: EN/VI real-draft browser coverage exercises keyboard-only insertion, Page-root invalid drop, polite live-region rejection, focus restoration and identical saved revision/tree after reload. Await exact-head CI and independent review; D5 cannot complete successful publish, and manual spoken screen-reader verification remains V16 GAP.
 
 - 2026-11-16 #208 next verification cut: D2 `e4863639` (#247/#250), D5 `bebb9555` (#248) and D6 `ed099954` (#251) normal-merged in isolation. Source heads each passed 17/17, but source CI does not confer combined PASS. Keep prior 15/28 A PASS, 13 A GAP, 3 B DEFERRED as the **last scored cut** until the new exact-head CI and bounded independent review. V02 keyboard invalid-drop negative path is reviewed; successful keyboard publish needs an integrated D6 browser gate because D5 Publish is disabled. V13 historical SEO/body and V17/V21 tracked raw inventory are scoped source evidence, not full-row acceptance. No #208 merge, production action or migration.
 
@@ -443,7 +446,12 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Integrated D5 `24fc51b2` and D6 `59af4538` into verification-only #208 after D2 `26ace408`; scoped V13 SSR/validation and J07 no-JS source evidence do not confer full-row PASS before combined CI and review. No main merge/deploy.
+
 - 2026-11-16: Merged D2 `26ace408` (#253 manifests) into verification-only #208, preserving source and disposable-DB raw hashes alongside D5/D6 checks; exact-head CI and artifact comparison required before V17/V21 scoring. No main merge or deploy.
+- 2026-11-16: D5 V13 admin metadata and schema/API validation localization (EN/VI), preserving field paths and drafts; real-API 768px editor revision capture for V05 only. Spec: `docs/specs/2026-11-16-cms-d5-v13-v05.md`.
+
+- 2026-11-16: Added keyboard Home root-drop attempt with localized rejection and EN/VI browser assertions for focus, live status and unchanged persisted tree/revision; full V02 publish remains pending integrated D6 evidence.
 
 - 2026-11-16: Passed the D6 localized host-label callback into D5's keyboard Home-root status announcement after merge-time typecheck; no changed publish capability or gate threshold.
 

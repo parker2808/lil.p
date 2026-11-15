@@ -1,5 +1,7 @@
 # Changelog archive — lil.p
 
+- 2026-11-16: Localized EN/VI admin page metadata and schema/API validation messages; added 768px real-draft editor captures. D6 public/preview parity remains unproven on the D5 branch.
+
 Full changelog moved verbatim from `PROJECT_CONTEXT.md` on 2026-11-01. New entries go to `PROJECT_CONTEXT.md`.
 
 - 2026-11-03: Documented R3 PR 2 in the README: the admin-only custom page creation API, draft templates, reserved keys, and publish content requirement. The implementation and verification entry is in `PROJECT_CONTEXT.md` §9.
