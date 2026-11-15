@@ -373,6 +373,10 @@
   color: var(--builder-accent);
   padding: 0 10px;
 }
+.nodeBar button:focus-visible {
+  outline: 3px solid var(--builder-focus) !important;
+  outline-offset: 2px;
+}
 .nodeBar button:hover {
   background: var(--builder-accent-soft);
 }

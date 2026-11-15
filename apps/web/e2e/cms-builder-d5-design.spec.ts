@@ -331,13 +331,16 @@ async function capture(
         alpha(focused.outlineColor) > 0
           ? focused.outlineColor
           : '';
+      const inspectFocus =
+        control.className.toString().includes('brandButton') ||
+        control.hasAttribute('data-canvas-id');
       results.push({
         name: control.getAttribute('aria-label') ?? control.textContent?.trim().slice(0, 70),
         colors: [...(outline ? [outline] : []), ...shadowColors(focused.boxShadow)],
         surfaces,
         reached: true,
         visibleFocus: control.matches(':focus-visible'),
-        diagnostic: control.className.toString().includes('brandButton')
+        diagnostic: inspectFocus
           ? {
               outline: focused.outline,
               boxShadow: focused.boxShadow,

@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- #221 run `43713811749` exposed an unpainted focus indicator on the canvas “Select Page” control; the host canvas now requests an opaque scoped outline and logs its computed style. V15 remains blocked until exact-head browser contrast passes; the separate D4 test owner handles shard 5's obsolete textbox assertions.
+
 - #221 restacked on the D5 five-shard base; the separate D4 test owner is replacing obsolete study-only textbox assertions on the live Properties route. An explicitly opaque host outline remains subject to exact-head computed ≥3:1 focus verification; #204 base CI 43712324642 failed the obsolete D4 test, so neither base nor V15 is accepted yet.
 
 - D5 V15 base sync (2026-11-15): reconcile #221 with the five-shard D base without touching the dirty D5 UI worktree; keep the ≥3:1 rendered-focus gate, including CSS `oklab()` shadow colors, and retain both branches' documentation history. Exact-head CI remains required.
@@ -282,6 +284,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Scoped the canvas selection focus ring to the host and expanded failed-focus diagnostics after #221 shard 1 detected no painted indicator; the ≥3:1 contrast assertion is unchanged. Await exact-head CI.
 
 - 2026-11-15: Follow-up to V15's five-shard CI failure: keep the host Core toggle's opaque focus shadow above competing declarations and measure after a paint frame/finished CSS transitions; matching CSSOM selectors alone did not prove the shadow painted on CI 43708917423. Exact-head CI is pending; no API or golden changes.
 
