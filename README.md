@@ -18,7 +18,7 @@ The [CMS core package](./packages/cms-core/README.md) runs its own dependency-bo
 
 ### CMS D5 history gate (V07)
 
-The stacked [D5 V07 gate](./docs/specs/2026-11-15-cms-d5-v07-gate.md) verifies recursive duplicate IDs and real-API duplicate/move undo/redo and save/reload. Follow-up tests add insertion/edit undo-redo, copied-content equality, adapter bounds/history caps, and failed-save retry/rejected-publish preservation; their browser evidence is pending exact-head CI. D2 does not publish tree versions, so V10 version-restore history remains a separate D6 GAP. Duplicate is keyboard-accessible in EN/VI and uses the validated core operation.
+The stacked [D5 V07 gate](./docs/specs/2026-11-15-cms-d5-v07-gate.md) verifies recursive duplicate IDs and real-API duplicate/move undo/redo and save/reload. Follow-up tests cover insertion/edit undo-redo, copied-content equality, adapter bounds/history caps, and failed-save retry/rejected-publish preservation; #229 head `b5eeadd6` passed exact-head CI run `43711670856`. The restacked D5 head needs its own CI before integrated evidence is claimed. D2 does not publish tree versions, so V10 version-restore history remains a separate D6 GAP. Duplicate is keyboard-accessible in EN/VI and uses the validated core operation.
 
 ### CMS U1 shared controls
 
