@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Emitted CSS is not proof of a visible focus ring: CI found a matching host toggle rule but a computed transparent shadow. Check cascade priority, connected/focused DOM state, and the painted ≥3:1 contrast in the browser before claiming V15.
+
 - 2026-11-15: A computed-focus audit must parse all browser-emitted CSS color functions, including `oklab()` on box shadows; otherwise it can misreport a visible opaque ring as absent while a translucent outline fails 3:1. Check the actual shadow and adjacent painted surfaces without relaxing the contrast threshold.
 
 - 2026-11-15: Browser focus audits need keyboard modality before programmatically focusing each control: a modifier-only `Shift` press can leave `:focus-visible` unmatched even when the CSS rule is present. Use `Tab`, assert `:focus-visible`, and still measure each computed ring against adjacent surfaces at ≥3:1.

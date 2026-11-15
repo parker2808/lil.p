@@ -94,7 +94,7 @@
 .headerActions .brandButton:focus-visible {
   outline: 2px solid var(--builder-focus);
   outline-offset: 2px;
-  box-shadow: 0 0 0 3px var(--builder-focus);
+  box-shadow: 0 0 0 3px var(--builder-focus) !important;
 }
 .headerActions .propertiesTrigger {
   min-height: 44px;

@@ -335,6 +335,9 @@ async function capture(
               outline: focused.outline,
               boxShadow: focused.boxShadow,
               focusToken: focused.getPropertyValue('--builder-focus'),
+              connected: control.isConnected,
+              active: document.activeElement === control,
+              className: control.className,
               coreMatch: control.matches('.cms-core :where(button):focus-visible'),
               rules: Array.from(document.styleSheets).flatMap((sheet) => {
                 try {
@@ -345,8 +348,10 @@ async function capture(
                       ? [
                           {
                             selector: rule.selectorText,
-                            color: rule.style.getPropertyValue('outline-color'),
-                            priority: rule.style.getPropertyPriority('outline-color'),
+                            outline: rule.style.getPropertyValue('outline'),
+                            shadow: rule.style.getPropertyValue('box-shadow'),
+                            priority: rule.style.getPropertyPriority('box-shadow'),
+                            disabled: sheet.disabled,
                           },
                         ]
                       : [],
