@@ -59,13 +59,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - D5 V15 base sync (2026-11-15): reconcile #221 with the five-shard D base without touching the dirty D5 UI worktree; keep the ≥3:1 rendered-focus gate, including CSS `oklab()` shadow colors, and retain both branches' documentation history. Exact-head CI remains required.
 
 - D5 V15 full-builder gate: the stacked design audit measures visible controls outside `.cms-core` without the previous 43.5px tolerance and checks computed keyboard focus color against painted surfaces at ≥3:1. After two CI runs still saw a translucent ring despite the explicit host outline being present, the audit now establishes keyboard modality with Tab and requires `:focus-visible` on each measured control; exact-head CI must prove the correction. The all-20 fixture accepts the existing raw heading or the #215 translated metadata label during the stacked transition, backed by EN/VI messages. Await ready-e2e CI and independent review before declaring V15 PASS; manual SR and combined D6 proof remain open. See `docs/specs/2026-11-15-cms-d5-v15-target-focus.md`.
+- D5 V07 stale publish CAS: the earlier post-recovery request reused the current revision and may publish successfully after D6 integration. A stacked browser fix performs an intervening real draft PUT, then asserts stale publish 409 and unchanged draft/revision/versions; #237 passed exact-head CI `43721680512`, but combined #208 rerun remains pending.
 - 2026-11-15 D5 builder error localization: D2's English `message` remains in the API response but current D5 builder status/recovery UI uses only typed HTTP outcomes and EN/VI labels. Verify the new D6 publish/version controls independently; other admin/API i18n remains out of scope. See `docs/specs/2026-11-11-cms-d5-ui.md`.
-  <<<<<<< HEAD
-- D5 shard-5 correction: #204 `6a48a4cc` CI `43712324642` exposed D4 canvas tests targeting a `BuilderStudy`-only Selected item ID textbox after the route switched to real `BuilderHost`/`PropertiesPanel`. A stacked test-only fix verifies a composed heading's real EN/VI Text value across 768/1100/1440, theme changes and sheet focus; exact-head CI remains required. No runtime or release gate is waived.
-  \=======
 - D5 shard-5 correction: #204 `6a48a4cc` CI `43712324642` exposed D4 canvas tests targeting a `BuilderStudy`-only Selected item ID textbox after the route switched to real `BuilderHost`/`PropertiesPanel`. A stacked test-only fix verifies a composed heading's real EN/VI Text value across 768/1100/1440, theme changes and sheet focus; #204 head `22b4b1c0` passed CI `43716297284` and ready-e2e `43716429537` (API E2E and five web shards). This does not waive the combined/release gate: #208 run `43717182977` fails V07's historical 409 expectation after D6 enables publishing. No runtime change here.
-
-> > > > > > > origin/feat/cms-d5-ui
 
 - 2026-11-15 D5 base synchronization: merge current D base into the isolated D5 integration branch without replacing D5's host, V07 duplicate/history coverage or V15 design assertions. Preserve D4 focus restoration and locale helper fixes; #221's separate focus-ring audit remains blocked pending its own exact-head CI.
 
@@ -298,6 +294,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 9. Changelog
 
 - 2026-11-15: Added neutral theme opposite-contrast focus token and two-tone host ring, checking ≥3:1 for each adjacent surface without lowering the target/focus thresholds.
+- 2026-11-15: Corrected V07 real-browser publish-conflict setup to use an intervening server revision, retaining offline recovery and adding draft/version invariants; no runtime or golden change.
+
+- 2026-11-15: Recorded #204 exact-head CI `43716297284`/`43716429537`, clarified invalid Properties input survives remount only (not reload), and separated the failing #208 V07 publish expectation from the D5 feature-head evidence. Docs only; no release signoff.
 
 - 2026-11-15: Applied an opaque host focus indicator across interactive builder controls after repeated production-CSS failures on ordinary buttons; expanded failure diagnostics without relaxing V15 contrast or target-size thresholds. Exact-head browser CI remains required.
 

@@ -109,7 +109,7 @@ test('V07: edit, duplicate and move remain atomic across undo/redo and confirmed
   await expect(page.getByRole('button', { name: 'Undo' })).toBeDisabled();
 });
 
-test('V07: offline save failure retains edits and a rejected publish preserves the draft', async ({
+test('V07: offline recovery retains edits and stale publish cannot replace the draft', async ({
   page,
   context,
 }) => {
@@ -160,17 +160,35 @@ test('V07: offline save failure retains edits and a rejected publish preserves t
     .toBe('Retained local edit');
   await expect(page.getByText('Draft saved')).toBeVisible();
   const saved = await draft(page, key);
+  const versionsBefore = await page.request.get(`/api/admin/pages/${key}/versions`);
+  expect(versionsBefore.status(), await versionsBefore.text()).toBe(200);
+  const versions = await versionsBefore.json();
+  const concurrent = await page.request.put(`/api/admin/pages/${key}/builder/draft`, {
+    headers: { Origin: origin },
+    data: { expectedRevision: saved.revision, tree: saved.tree },
+  });
+  expect(concurrent.status(), await concurrent.text()).toBe(200);
+  const current = await draft(page, key);
+  expect(current.revision).not.toBe(saved.revision);
+  expect(current.tree).toEqual(saved.tree);
   const published = await page.request.post(`/api/admin/pages/${key}/builder/publish`, {
     headers: { Origin: origin },
     data: { expectedRevision: saved.revision },
   });
   expect(published.status(), await published.text()).toBe(409);
-  expect(await published.json()).toMatchObject({ code: 'CONFLICT', mode: 'tree' });
-  expect(await draft(page, key)).toEqual(saved);
+  expect(await published.json()).toMatchObject({
+    code: 'CONFLICT',
+    mode: 'tree',
+    revision: current.revision,
+  });
+  expect(await draft(page, key)).toEqual(current);
+  const versionsAfter = await page.request.get(`/api/admin/pages/${key}/versions`);
+  expect(versionsAfter.status(), await versionsAfter.text()).toBe(200);
+  expect(await versionsAfter.json()).toEqual(versions);
   await page.reload();
   await expect(page.getByRole('button', { name: 'Undo' })).toBeDisabled();
   await expect(page.getByRole('button', { name: 'Select Heading' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Undo' })).toBeDisabled();
   await expect(page.getByRole('button', { name: 'Redo' })).toBeDisabled();
-  expect((await draft(page, key)).tree).toEqual(saved.tree);
+  expect(await draft(page, key)).toEqual(current);
 });
