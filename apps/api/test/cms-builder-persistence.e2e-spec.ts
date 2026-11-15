@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-import type { INestApplication } from '@nestjs/common';
+import { type INestApplication, Logger } from '@nestjs/common';
 import { renderTree } from '@parker2808/cms-core/react/server';
 import { BLOCK_REGISTRY, HOST_TREE_REGISTRY } from '@portfolio/contracts';
 import request from 'supertest';
@@ -740,8 +740,27 @@ describe('builder draft persistence over disposable MySQL', () => {
     });
     const hashes = [rawHash(legacy.snapshot), rawHash(treeVersion.snapshot)];
     const before = await persistedState(prisma, pageId);
-    await admin.get('/api/admin/pages/ideas/versions/1').expect(200);
-    await admin.get('/api/admin/preview/pages/ideas?locale=vi&version=1').expect(200);
+    const historicalVersion = await admin.get('/api/admin/pages/ideas/versions/1').expect(200);
+    expect(historicalVersion.body.snapshot).toEqual({
+      seo: {
+        seoTitleEn: null,
+        seoTitleVi: 'Lưu trữ',
+        seoDescriptionEn: null,
+        seoDescriptionVi: null,
+      },
+      blocks: [],
+    });
+    const historicalPreview = await admin
+      .get('/api/admin/preview/pages/ideas?locale=vi&version=1')
+      .expect(200);
+    expect(historicalPreview.body).toMatchObject({
+      seo: { title: 'Lưu trữ', lang: 'vi' },
+      blocks: [],
+      invalidBlocks: [],
+    });
+    expect(
+      rawHash((await prisma.pageVersion.findUniqueOrThrow({ where: { id: legacy.id } })).snapshot),
+    ).toBe(hashes[0]);
     expect(
       (await admin.get('/api/admin/pages/ideas/versions/2').expect(200)).body.snapshot.tree,
     ).toEqual(tree);
@@ -848,46 +867,72 @@ describe('builder draft persistence over disposable MySQL', () => {
       .send({ expectedRevision: '0', tree })
       .expect(200);
     const before = await persistedState(prisma, pageId);
-    const reads = [
-      '/api/admin/pages/ideas/builder/draft',
-      '/api/admin/pages/ideas/versions',
-      '/api/admin/pages/ideas/versions/1',
-      '/api/admin/preview/pages/ideas?locale=en&version=1',
-    ];
-    for (const [index, path] of reads.entries()) {
-      const guest = await request(app.getHttpServer()).get(path).expect(401);
-      expect(guest.body).toMatchObject({ code: 'UNAUTHENTICATED' });
-      for (const actor of [user, admin]) {
-        const { body } = await actor.get(path).expect(200);
-        if (index === 0) expect(body.tree).toEqual(tree);
-        if (index === 1)
-          expect(body).toEqual([expect.objectContaining({ version: 1, blockCount: 2 })]);
-        if (index === 2) expect(body.snapshot.blocks).toHaveLength(2);
-        if (index === 3) expect(body.blocks).toHaveLength(2);
+    const log = vi.spyOn(Logger.prototype, 'log').mockImplementation(() => {});
+    const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
+    const error = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => {});
+    try {
+      const reads = [
+        '/api/admin/pages/ideas/builder/draft',
+        '/api/admin/pages/ideas/versions',
+        '/api/admin/pages/ideas/versions/1',
+        '/api/admin/preview/pages/ideas?locale=en&version=1',
+      ];
+      for (const [index, path] of reads.entries()) {
+        const markedPath = `${path}${path.includes('?') ? '&' : '?'}token=token-marker`;
+        const guest = await request(app.getHttpServer())
+          .get(markedPath)
+          .set('x-request-id', 'pii-marker')
+          .expect(401);
+        expect(guest.body).toMatchObject({ code: 'UNAUTHENTICATED' });
+        for (const actor of [user, admin]) {
+          const { body } = await actor
+            .get(markedPath)
+            .set('x-request-id', 'pii-marker')
+            .expect(200);
+          if (index === 0) expect(body.tree).toEqual(tree);
+          if (index === 1)
+            expect(body).toEqual([expect.objectContaining({ version: 1, blockCount: 2 })]);
+          if (index === 2) expect(body.snapshot.blocks).toHaveLength(2);
+          if (index === 3) expect(body.blocks).toHaveLength(2);
+        }
       }
+      for (const [method, path, body] of [
+        ['post', '/api/admin/pages', { key: 'denied-create', title: 'Denied', locale: 'en' }],
+        [
+          'post',
+          '/api/admin/pages/ideas/builder/activate',
+          { expectedRevision: '0', tree: emptyTree },
+        ],
+        ['put', '/api/admin/pages/ideas/builder/draft', { expectedRevision: '0', tree: emptyTree }],
+        ['post', '/api/admin/pages/ideas/builder/publish', { expectedRevision: '0' }],
+        ['post', '/api/admin/pages/ideas/versions/1/builder/restore', { expectedRevision: '0' }],
+      ] as const) {
+        expect(
+          (
+            await request(app.getHttpServer())
+              [method](path)
+              .set('x-request-id', 'pii-marker')
+              .send({ ...body, tree: { ...emptyTree, marker: 'draft-marker' } })
+              .expect(401)
+          ).body,
+        ).toMatchObject({
+          code: 'UNAUTHENTICATED',
+        });
+        expect((await user[method](path).send(body).expect(403)).body).toMatchObject({
+          code: 'FORBIDDEN',
+        });
+      }
+      expect(await persistedState(prisma, pageId)).toEqual(before);
+      expect(await prisma.page.findUnique({ where: { key: 'denied-create' } })).toBeNull();
+      expect(log.mock.calls.length).toBeGreaterThan(0);
+      expect(JSON.stringify([log.mock.calls, warn.mock.calls, error.mock.calls])).not.toMatch(
+        /token-marker|pii-marker|draft-marker|Safe heading/,
+      );
+    } finally {
+      log.mockRestore();
+      warn.mockRestore();
+      error.mockRestore();
     }
-    for (const [method, path, body] of [
-      ['post', '/api/admin/pages', { key: 'denied-create', title: 'Denied', locale: 'en' }],
-      [
-        'post',
-        '/api/admin/pages/ideas/builder/activate',
-        { expectedRevision: '0', tree: emptyTree },
-      ],
-      ['put', '/api/admin/pages/ideas/builder/draft', { expectedRevision: '0', tree: emptyTree }],
-      ['post', '/api/admin/pages/ideas/builder/publish', { expectedRevision: '0' }],
-      ['post', '/api/admin/pages/ideas/versions/1/builder/restore', { expectedRevision: '0' }],
-    ] as const) {
-      expect(
-        (await request(app.getHttpServer())[method](path).send(body).expect(401)).body,
-      ).toMatchObject({
-        code: 'UNAUTHENTICATED',
-      });
-      expect((await user[method](path).send(body).expect(403)).body).toMatchObject({
-        code: 'FORBIDDEN',
-      });
-    }
-    expect(await persistedState(prisma, pageId)).toEqual(before);
-    expect(await prisma.page.findUnique({ where: { key: 'denied-create' } })).toBeNull();
   });
 
   it('does not echo rejected page content in HTTP errors', async () => {

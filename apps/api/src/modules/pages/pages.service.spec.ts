@@ -238,7 +238,7 @@ describe('PagesService', () => {
     };
 
     const service = new PagesService(prisma as never);
-    const page = await service.getPublic('home', 'vi', 'req-test');
+    const page = await service.getPublic('home', 'vi');
     if (!('blocks' in page)) throw new Error('Expected legacy page');
     expect(page.key).toBe('home');
     expect(page.blocks).toHaveLength(1);

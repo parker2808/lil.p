@@ -33,13 +33,11 @@ export class PublishingService {
 
     try {
       await attempt();
-    } catch (first) {
+    } catch {
       try {
         await attempt();
-      } catch (second) {
-        this.logger.warn(
-          `Revalidate failed for ${unique.join(',')}: ${String(second)} (after ${String(first)})`,
-        );
+      } catch {
+        this.logger.warn('Revalidate failed after retry');
       }
     }
   }

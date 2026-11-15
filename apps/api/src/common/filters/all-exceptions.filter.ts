@@ -12,6 +12,7 @@ import type { ApiErrorBody, ErrorCode } from '@portfolio/contracts';
 import type { Request, Response } from 'express';
 
 import { Prisma } from '../../generated/prisma/client';
+import { requestLogContext } from '../utils/request-log.util';
 
 type RequestWithId = Request & { requestId?: string };
 
@@ -70,10 +71,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const body = this.toBody(exception, requestId);
 
     if (body.statusCode >= 500) {
-      this.logger.error(
-        `${request.method} ${request.url} ${body.code} ${requestId}`,
-        exception instanceof Error ? exception.stack : String(exception),
-      );
+      this.logger.error(`${requestLogContext(request, requestId)} ${body.code}`);
     }
 
     response.status(body.statusCode).json(body);

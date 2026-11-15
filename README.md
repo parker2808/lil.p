@@ -78,7 +78,7 @@ change, while retaining their hover transform. The EN/VI browser gate samples
 contrast during both theme changes before its final-state axe check; its 4.5:1
 WCAG AA threshold and light/dark route captures remain unchanged.
 
-The [D2 V11/V12 safety gate](./docs/specs/2026-11-15-cms-d2-v11-v12-gate.md) extends real-DB negative tree and capability checks. Final integrated D6 publication and authorized production log review remain separate gates.
+The [D2 V11/V12 safety gate](./docs/specs/2026-11-15-cms-d2-v11-v12-gate.md) extends real-DB negative tree and capability checks. Pre-deploy V12 log tests cover failed revalidation without logging page keys or upstream errors; they do not replace the deferred, authorized read-only production log audit after deploy. Final integrated D6 publication remains a separate gate.
 The [D6 tree parity gate](./docs/specs/2026-11-15-cms-d6-v04-v06-v09-v10-gate.md) adds serialized legacy/override assertions and paired EN/VI public/preview captures at three widths; visual review and the integrated UI restore path remain open.
 The [D6 UI restore gate](./docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md) exercises real UI publish → edit → 409 conflict → reload → restore → republish. A follow-up stages localized EN/VI page-header content and six additional VI dark captures alongside the 12 light captures; fresh exact-head CI and independent V09 visual review remain required. Broader V09/V10 signoff and deployed parity are not claimed.
 The D6 builder canvas browser gate now selects a real editable heading instead of the obsolete study-only Properties ID; five-shard exact-head CI remains required, and this test-only correction does not integrate the separate D5 runtime or close V10.
@@ -92,7 +92,7 @@ The stacked [CMS U2 site/admin pattern spec](./docs/specs/2026-11-10-cms-u2-site
 
 The [CMS U0 route/control baseline](./docs/audits/2026-11-10-cms-u0-route-control-baseline.md) maps the current public/admin routes, redirect and role boundaries, control ownership, and existing behavior/visual tests before UI standardization. It records uncovered live/visual states separately from executed focused tests; U0 changes no runtime behavior.
 
-The [CMS core package](./packages/cms-core/README.md) runs its own dependency-boundary check in CI, independent of the monorepo root check, so extraction cannot silently drop this gate. Its React and theme tests import the package-local bundle measure, so the same tests run after extraction. The [C1 runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md) retains the final integration and authorization requirements.
+The [CMS core package](./packages/cms-core/README.md) runs its own dependency-boundary check in CI, independent of the monorepo root check, so extraction cannot silently drop this gate. Its React and theme tests import the package-local bundle measure, so the same tests run after extraction. The [C1 runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md) retains the final integration and authorization requirements. The [V17/V21 tracked raw inventory](./docs/specs/2026-11-16-cms-d2-v17-v21-raw-inventory.md) is not a production DB inventory.
 
 ### CMS D5 history gate (V07)
 
