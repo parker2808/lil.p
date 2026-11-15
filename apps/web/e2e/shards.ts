@@ -59,6 +59,7 @@ export const SPECS = [
   'admin-collections-r3.spec.ts',
   'admin-editors-r3.spec.ts',
   'custom-public-pages.spec.ts',
+  'cms-tree-journey.spec.ts',
   'admin-page-create.spec.ts',
   'public-shell-indexes.spec.ts',
   'copy-email.spec.ts',
@@ -66,6 +67,7 @@ export const SPECS = [
   'cms-builder-d5-ui.spec.ts',
   'cms-builder-d5-design.spec.ts',
   'u0-capture.spec.ts',
+  'cms-tree-host-blocks.spec.ts',
 ] as const;
 
 /** Specs that must run together in shard 1 (pixel baselines, Lighthouse scores). */

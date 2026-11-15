@@ -86,6 +86,8 @@ sampled EN/VI pages resolve their own locale-prefixed component links.
 
 ### Public site
 
+The contact form keeps text entered before hydration, synchronizes it when interactive and sends one client request; its server action remains available without JavaScript. See the [contact hydration spec](./docs/specs/2026-11-11-contact-hydration-readiness.md).
+
 The EN/VI home, projects, notes, about, and contact routes share the round 3 public shell and index styling. They continue to read CMS content through the public API; project and note filters stay in the URL across reloads, and the contact form keeps its server submission. `/[locale]/craft` is a localized, static interaction study linked from the public header. Its presentation and the index styles are scoped to public routes, so project and note details and admin screens keep their own layouts. See the [R3-05 spec](./docs/specs/2026-11-03-r3-05-public-shell-indexes.md) for the route, accessibility, and capture checks.
 
 The contact page, public CTA, and search palette use the contact email configured in site settings. Copy email reports success or failure in the selected language and keeps a direct email link available. See the [R3-06 spec](./docs/specs/2026-11-03-r3-06-copy-email.md).
@@ -144,17 +146,23 @@ B5b's restore reader fills **absent** legacy SEO keys but rejects an explicitly 
 
 The B5b integration retains #189's production API dependency and Docker CJS
 smoke, adding compiled page-adapter assertions without changing HTTP contracts.
-
-[API image CMS-core prerequisite](./docs/specs/2026-11-11-api-docker-cms-core.md): the [API Dockerfile](./apps/api/Dockerfile) installs the core workspace manifest, builds core before contracts/API and checks its CommonJS exports against the pruned production layout. The API declares a direct runtime dependency for B5; Render rebuilds the API image on core source changes. No database or deployment changes are part of this integration.
-
-[D4 canvas and D5 host](./docs/specs/2026-11-11-cms-d5-ui.md) provide an admin-only, `R3_E2E_STATES=1` gated `/admin/builder/[key]` route with slot-validated drag/keyboard composition, Layers and mobile/tablet sheets. The single D5 host mounts typed Properties once in the desktop inspector or compact sheet (≤1100px); an open sheet closes on transition to desktop width with focus restored. It edits base/tablet/mobile overrides and owns atomic undo/redo and draft status. Eligible custom pages can explicitly activate D2 revision-checked tree drafts and autosave; a built-in key stays local-only. Conflict/offline recovery keeps local edits until explicit retry/export/reload. **Tree publishing stays disabled; the legacy editor and public content are unchanged.** With the flag off the route returns not found. Core CSS supplies the neutral theme; lil.p colors override tokens only.
-[D5 core logic](./docs/specs/2026-11-11-cms-d5-core-logic.md) adds framework-neutral atomic tree edits, shallow responsive property overrides, bounded undo/redo and revision-checked draft autosave in `./tree`. The separate D5 host adapts D4's validated insert/move/delete/reorder commands into one core history commit and integrates the gated D4 UI with D2 custom-page drafts. Activation preserves edits made while its response is pending; failed remote reads still offer stored recovery without overwriting it. Golden responses and public pages remain unchanged.
-
-[D5 design and accessibility evidence](./docs/specs/2026-11-14-cms-d5-design-evidence.md) records 99 EN/VI, light/dark, neutral/lil.p desktop, tablet and mobile captures, keyboard editing and focus restoration, measured contrast, and zero axe WCAG A/AA violations for the gated draft editor. D6 must still verify the complete release journey.
 [CMS D2 persistence](./docs/specs/2026-11-11-cms-d2-persistence.md) adds nullable `Page.draftTree` storage and decimal-string `draftTreeRevision` CAS for eligible custom-page builder drafts. Authenticated admin draft read/activate/save and revision-aware tree restore reject unknown data instead of stripping it. Legacy pages and public block-list routes retain their existing responses; tree publication remains server-disabled until D3 public SSR parity. The migration and API tests run on disposable local MySQL only; this draft is not permission to deploy database DDL.
 
 D2's legacy restore now takes a revision-and-mode compare-and-swap lock before touching block rows; builder restore rejects snapshots with unparsable blocks, while missing SEO keys remain compatible. Unversioned preview of an active tree draft returns a typed 409 until D3 renders it; concurrent-writer regressions run against disposable MySQL.
-The host passes its component schema registry explicitly. A concurrent restore to legacy mode (`tree: null`) pauses autosave without losing local edits; reloading another builder draft requires explicit discard confirmation. An interrupted save keeps page/user-scoped recovery for explicit restoration after reload; when browser storage rejects recovery, the host warns before leaving and offers local export. The D6 integration gate must exercise all 20 host block definitions.
+
+[CMS D3 shared SSR renderer](./docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md) adds an opt-in, server-only tree renderer to `@parker2808/cms-core/react/server`; breakpoint-specific row spans and single semantic headings are covered by a required browser matrix. Host rendering failures have a separate typed result from invalid media content. Legacy lil.p routes remain the default until D2 provides authorized tree snapshot dispatch and publish gating; route parity remains unverified.
+
+Core owns semantic headings in D3: a host `components.heading` override fails with a typed result instead of emitting duplicate responsive H1s.
+
+[CMS D6 guarded route integration](./docs/specs/2026-11-11-cms-d6-route-parity.md) combines D2 and D3: `CMS_TREE_ROUTES=1` enables strict tree snapshot JSON on authenticated preview and public routes, rendered by the same server-only D3 renderer in Next. Opt-in publish uses a version-checked host transaction; the disposable-MySQL API/browser journey covers EN/VI save, publish, preview/public SSR, restore and republish. Legacy routes remain unchanged; D5 client autosave and dirty-reload acceptance remain separate gates. The required CI build step checks zero builder/editor bytes in public chunks. The stacked #201 contact hydration fix preserves pre-mount input. This stacked D6 PR must not merge before D2 #199's final gate.
+
+[D5 pure tree logic](./docs/specs/2026-11-11-cms-d5-core-logic.md) adds explicit-registry atomic edits, responsive overrides, bounded history and CAS autosave to `./tree` without shipping its editor UI. D6's release-gate extension checks all 20 host schemas and EN/VI SSR parity using test-local host render mappings; its follow-up injects the host-owned registry into live API draft/publish/snapshot validation and Next SSR with an all-20 browser parity gate. Dirty-reload UI remains blocked. #202 now carries #200 and must wait for both #199 and #200 approvals.
+
+The all-20 D6 live route gate passes on disposable MySQL in both locales; the complete locked `check:all --e2e` passes 13/13 after one unrelated admin-scroll exact-pixel variance on the first run. D4/D5 editor integration and reload safety still require their own release evidence.
+
+The [partial D6 live-route manifest](./docs/specs/2026-11-14-cms-d6-live-route-evidence.md) separates verified route behavior from blocked editor, visual and migration release gates.
+
+The D6 all-20 browser spec runs last on an existing web E2E shard; adding it does not reshuffle earlier tests or contaminate visual baselines with newly published test pages. A throwaway D4+D5+D6 scratch merge passes non-browser checks (8/8), the all-20 live route case (1/1) and focused editor autosave/reload, navigation-failure guard and restore cases (3/3) on disposable MySQL. Full J01–J09, all-20 editor interaction, visual/a11y and migration release gates remain blocked in the D6 evidence manifest.
 
 ### Real content seed verification
 

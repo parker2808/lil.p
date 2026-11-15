@@ -4,12 +4,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { readTree, validateTreeForPublish } from '@parker2808/cms-core/tree';
-import { corePageKeySchema, toPrismaPageKey } from '@portfolio/contracts';
+import { readTree } from '@parker2808/cms-core/tree';
+import { corePageKeySchema, HOST_TREE_REGISTRY, toPrismaPageKey } from '@portfolio/contracts';
 
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import type { BuilderDraftInput, BuilderPublishInput } from './dto/builder-draft.dto';
+import type { BuilderDraftInput } from './dto/builder-draft.dto';
 import { parsePageKey } from './pages-rules.util';
 
 const MAX_REVISION = 9223372036854775807n;
@@ -47,27 +47,13 @@ export class BuilderDraftService {
     return this.write(rawKey, input, 'tree');
   }
 
-  async publish(rawKey: string, input: BuilderPublishInput) {
-    const page = await this.requirePage(rawKey);
-    this.assertRevision(page, input.expectedRevision, 'tree');
-    this.toDraft(page);
-    const parsed = validateTreeForPublish(page.draftTree);
-    if (!parsed.ok) throw treeValidationError(parsed.code, parsed.nodeId);
-    throw new ConflictException({
-      code: 'CONFLICT',
-      message: 'Tree publishing is not enabled',
-      mode: 'tree',
-      revision: page.draftTreeRevision.toString(),
-    });
-  }
-
   private async write(rawKey: string, input: BuilderDraftInput, mode: 'legacy' | 'tree') {
     const key = parsePageKey(rawKey);
     const page = await this.requirePage(rawKey);
     if (corePageKeySchema.safeParse(key).success) throw this.conflict(page);
     this.assertRevision(page, input.expectedRevision, mode);
     if (mode === 'tree') this.toDraft(page);
-    const parsed = readTree(input.tree);
+    const parsed = readTree(input.tree, HOST_TREE_REGISTRY);
     if (!parsed.ok) throw treeValidationError(parsed.code, parsed.nodeId);
     if (page.draftTreeRevision === MAX_REVISION) throw this.conflict(page);
     const changed = await this.prisma.page.updateMany({
@@ -113,7 +99,7 @@ export class BuilderDraftService {
   private toDraft(page: Awaited<ReturnType<BuilderDraftService['requirePage']>>) {
     if (page.draftTree === null)
       return { mode: 'legacy' as const, revision: page.draftTreeRevision.toString(), tree: null };
-    const parsed = readTree(page.draftTree);
+    const parsed = readTree(page.draftTree, HOST_TREE_REGISTRY);
     if (!parsed.ok) throw storedTreeError();
     return {
       mode: 'tree' as const,

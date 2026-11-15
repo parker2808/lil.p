@@ -145,19 +145,13 @@ describe('builder draft revision contract', () => {
     expect(page.draftTreeRevision).toBe(0n);
   });
 
-  it('blocks fixed pages and disabled publication without changing data', async () => {
+  it('blocks fixed pages without changing data', async () => {
     const { service, prisma } = setup();
     await expect(
       service.activate('home', { expectedRevision: '0', tree: emptyTree }),
     ).rejects.toMatchObject({ response: { code: 'CONFLICT' } });
     await service.activate('ideas', { expectedRevision: '0', tree: emptyTree });
-    await expect(service.publish('ideas', { expectedRevision: '1' })).rejects.toMatchObject({
-      response: { code: 'VALIDATION_FAILED', fieldErrors: { tree: expect.any(Array) } },
-    });
     await service.save('ideas', { expectedRevision: '1', tree: publishReadyTree });
-    await expect(service.publish('ideas', { expectedRevision: '2' })).rejects.toMatchObject({
-      response: { code: 'CONFLICT', message: 'Tree publishing is not enabled' },
-    });
     expect(prisma.page.updateMany).toHaveBeenCalledTimes(2);
   });
 
