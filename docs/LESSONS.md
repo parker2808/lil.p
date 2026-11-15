@@ -5,6 +5,8 @@
 - 2026-11-16: An accepted D5 keyboard-only invalid-drop test is not successful keyboard publish evidence while D5 disables Publish; route the positive gate to integrated D6 and keep manual spoken screen-reader proof separate.
 
 - 2026-11-15: During D5/D6 integration, retain the D5 schema-derived Properties editor and its in-memory partial drafts while carrying D6 localized nested field labels and real-host SSR assertions; never replace it with an older D6 editor implementation.
+- 2026-11-16: A passing nested-snapshot test is not an independently diffable combined-head inventory; emit source-file byte hashes separately from normalized DB JSON byte hashes and pair each with tested-merge provenance, never claiming production inventory from disposable fixtures.
+- 2026-11-16: A green source V17/V21 inventory does not certify a combined head; compare CI manifests using head and tested-merge provenance, then keep production inventory deferred.
 - 2026-11-16: A tracked seed/SQL inventory is not a production inventory; gate the source-writer list and compare normalized responses with original stored JSON hashes before claiming legacy version safety.
 - 2026-11-16: Revalidation failure logs must omit both caller-derived cache tags and upstream error strings; custom page keys and transport errors can carry private data even when HTTP request logs are redacted.
 

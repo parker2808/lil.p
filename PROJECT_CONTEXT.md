@@ -58,6 +58,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - #208 verification refresh merges D2 `8a800999` (#240), D5 `3ba001e3` (#221) and D6 `bcd949d8` (#234) in a fresh checkout. D5's invalid-input draft retention and ≥3:1 focus audit remain intact; D6 adds real-host SSR and VI nested labels without replacing D5's schema-derived editor. This is verification-only, not a production rollout; CI and independent full-row review must use the final combined SHA.
 - 2026-11-16 V17/V21 raw inventory: tracked migration/seed page writers and raw fixture variants are gated in tests; V17 still requires authorized read-only production inventory and final-head route/golden comparison. V21 requires final integrated-head evidence; see `docs/specs/2026-11-16-cms-d2-v17-v21-raw-inventory.md`.
+- 2026-11-16 V17/V21 combined artifact follow-up: unit/API CI emit source-byte and canonical disposable-DB JSON byte/hash manifests with head/merge provenance. Review these on the integrated #208 head and final main before closing the code evidence; production inventory stays deferred. No runtime/schema/golden change.
 - 2026-11-16 V12 split: pre-deploy route-template logging, request-ID fingerprinting, stack-free 500 logging and retry-exhausted revalidation warning redaction now have unit tests; disposable-DB populated draft/version/preview and denied-mutation tests capture and reject content/token/PII markers in logs. New exact-head CI and independent review pending. Authorized read-only Render log audit is DEFERRED until after deploy; no operational signoff or production calls here.
 - 2026-11-16 D2 reopen decision: #210 pre-D2 remains always frozen. D2 opens writes by default only after read-only startup verification of the applied migration and both columns; explicit `CMS_PAGE_WRITE_FREEZE=1` or failed check freezes. No Render env change is assumed or available. **Complete Stage A instance/in-flight-request drain before D2 deploy**, because a successful D2 startup can open writes automatically. The coordinator owns authorized Render inventory, migration verification and authenticated ingress write checks; CI cannot certify production drain or approval.
 - 2026-11-16 D2 runbook reconciliation: the older general deploy checklist also requires drain before the D2 image starts; its former separate env-based reopen step is superseded. Do not claim an unauthenticated 503 probe proves a D2 authenticated write reopened.
@@ -442,6 +443,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Merged D2 `26ace408` (#253 manifests) into verification-only #208, preserving source and disposable-DB raw hashes alongside D5/D6 checks; exact-head CI and artifact comparison required before V17/V21 scoring. No main merge or deploy.
+
 - 2026-11-16: Passed the D6 localized host-label callback into D5's keyboard Home-root status announcement after merge-time typecheck; no changed publish capability or gate threshold.
 
 - 2026-11-16: Integrated D2 log/inventory, D5 keyboard negative path and D6 historical preview SEO into verification-only #208 without removing tree API or legacy raw-hash tests; new exact-head CI pending, release matrix unchanged until reviewed. No main merge/deploy.
@@ -471,6 +474,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Ended property typing coalescence on input blur without scheduling an extra autosave; successful Clear override removes all pending, raw input and error state for its responsive property. Added EN/VI unit and real-API keyboard browser regressions.
 
 - 2026-11-15: Restore top-of-page scroll before no-script public/preview link geometry assertions after full-page and footer screenshots; retain strict PNG/geometry checks. CI pending.
+- 2026-11-16: Add CI-uploaded V17/V21 source fixture and disposable-DB version/route hash inventories, including rejected future version routes and before/after canonical byte comparisons; no production DB access, runtime/schema/golden change or V17 operational signoff.
 - 2026-11-16: Added tracked pre-D2 migration/seed writer inventory gate, package-local nested/unknown/future snapshot hash fixtures, and disposable-DB historical version response versus stored JSON comparison. No runtime, schema or golden contract changes.
 - 2026-11-16: Redact HTTP request logs (route template and request-ID fingerprint only), omit raw exception stacks and invalid published-block identifiers, and assert real populated CMS reads and denied mutations never log synthetic content/token/PII markers. No schema/golden changes; production log audit remains deferred.
 - 2026-11-16: Corrected the general deployment checklist to match default D2 startup reopening and mandate full Stage A drain before D2 deploy; documentation-only follow-up, no production action.

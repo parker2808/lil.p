@@ -1,4 +1,6 @@
 import { createHash } from 'node:crypto';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 import { type INestApplication, Logger } from '@nestjs/common';
 import { renderTree } from '@parker2808/cms-core/react/server';
@@ -739,6 +741,7 @@ describe('builder draft persistence over disposable MySQL', () => {
       data: { publishedVersionId: legacy.id },
     });
     const hashes = [rawHash(legacy.snapshot), rawHash(treeVersion.snapshot)];
+    const rawBytes = [JSON.stringify(legacy.snapshot), JSON.stringify(treeVersion.snapshot)];
     const before = await persistedState(prisma, pageId);
     const historicalVersion = await admin.get('/api/admin/pages/ideas/versions/1').expect(200);
     expect(historicalVersion.body.snapshot).toEqual({
@@ -761,10 +764,11 @@ describe('builder draft persistence over disposable MySQL', () => {
     expect(
       rawHash((await prisma.pageVersion.findUniqueOrThrow({ where: { id: legacy.id } })).snapshot),
     ).toBe(hashes[0]);
-    expect(
-      (await admin.get('/api/admin/pages/ideas/versions/2').expect(200)).body.snapshot.tree,
-    ).toEqual(tree);
-    await admin.get('/api/admin/preview/pages/ideas?locale=en&version=2').expect(400);
+    const treeVersionResponse = await admin.get('/api/admin/pages/ideas/versions/2').expect(200);
+    expect(treeVersionResponse.body.snapshot.tree).toEqual(tree);
+    const unknownPreview = await admin
+      .get('/api/admin/preview/pages/ideas?locale=en&version=2')
+      .expect(400);
     expect(await persistedState(prisma, pageId)).toEqual(before);
 
     await admin
@@ -795,6 +799,51 @@ describe('builder draft persistence over disposable MySQL', () => {
     expect(legacyRestored.revision).toBe(3n);
     expect(legacyRestored.versions.map((entry) => entry[1])).toEqual(hashes);
     expect(legacyRestored.blocks).toEqual([]);
+    const futureVersion = await prisma.pageVersion.create({
+      data: {
+        pageId,
+        version: 3,
+        snapshot: { format: 'tree', snapshotVersion: 2, seo, tree },
+      },
+    });
+    rawBytes.push(JSON.stringify(futureVersion.snapshot));
+    const futureVersionResponse = await admin.get('/api/admin/pages/ideas/versions/3').expect(400);
+    const futurePreview = await admin
+      .get('/api/admin/preview/pages/ideas?locale=en&version=3')
+      .expect(400);
+    for (const [index, version] of [legacy, treeVersion, futureVersion].entries()) {
+      const stored = await prisma.pageVersion.findUniqueOrThrow({ where: { id: version.id } });
+      expect(JSON.stringify(stored.snapshot)).toBe(rawBytes[index]);
+    }
+    if (process.env.CMS_RAW_INVENTORY_DIR) {
+      mkdirSync(process.env.CMS_RAW_INVENTORY_DIR, { recursive: true });
+      writeFileSync(
+        join(process.env.CMS_RAW_INVENTORY_DIR, 'api.json'),
+        `${JSON.stringify(
+          {
+            prHeadSha: process.env.PR_HEAD_SHA ?? null,
+            testedMergeSha: process.env.TESTED_MERGE_SHA ?? null,
+            source: 'disposable-mysql',
+            variants: [legacy, treeVersion, futureVersion].map((version, index) => ({
+              version: version.version,
+              canonicalBytes: Buffer.byteLength(rawBytes[index]),
+              canonicalSha256: rawHash(version.snapshot),
+              storedBytesPreserved: true,
+            })),
+            routes: {
+              legacyVersionNormalizedSha256: rawHash(historicalVersion.body.snapshot),
+              legacyViPreviewSha256: rawHash(historicalPreview.body),
+              nestedTreeVersionSha256: rawHash(treeVersionResponse.body.snapshot),
+              unknownTreePreviewStatus: unknownPreview.status,
+              futureTreeVersionStatus: futureVersionResponse.status,
+              futureTreePreviewStatus: futurePreview.status,
+            },
+          },
+          null,
+          2,
+        )}\n`,
+      );
+    }
   });
 
   it('denies every builder mutation to guests and users without logging payloads', async () => {
