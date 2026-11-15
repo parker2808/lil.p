@@ -6,7 +6,7 @@ import { switchBuilderLocale } from './helpers/builder-locale';
 const firstHeading = 'Original UI version heading';
 const secondHeading = 'Edited UI version heading';
 
-async function savedHeading(page: Page, key: string, text: string) {
+async function savedHeading(page: Page, key: string, text: string, status = 'Draft saved') {
   await expect
     .poll(async () => {
       const response = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
@@ -16,7 +16,7 @@ async function savedHeading(page: Page, key: string, text: string) {
       return heading?.text === text && heading?.level === 1 ? draft : null;
     })
     .not.toBeNull();
-  await expect(page.getByText('Draft saved', { exact: true })).toBeVisible();
+  await expect(page.getByText(status, { exact: true })).toBeVisible();
   const response = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
   expect(response.status()).toBe(200);
   return response.json();
@@ -183,7 +183,13 @@ test('UI publish, edit, restore and republish preserves EN/VI preview/public par
   const restored = await restoredResponse;
   expect(restored.status(), await restored.text()).toBe(200);
   expect((await restored.json()).tree).toEqual(original.tree);
-  expect((await savedHeading(page, key, firstHeading)).tree).toEqual(original.tree);
+  const restoredDraft = await savedHeading(
+    page,
+    key,
+    firstHeading,
+    'Version restored to draft · publish separately to make it public',
+  );
+  expect(restoredDraft.tree).toEqual(original.tree);
   await expect(page.getByRole('button', { name: 'Undo', exact: true })).toBeDisabled();
   const stillPublished = await page.request.get(`/api/public/pages/${key}?locale=en`);
   expect(stillPublished.status()).toBe(200);
