@@ -14,6 +14,7 @@ export const SPECS = [
   'a11y.spec.ts',
   'cms-u1-controls.spec.ts',
   'cms-u2-patterns.spec.ts',
+  'cms-u3-study.spec.ts',
   'lighthouse.spec.ts',
   'ux-overlay.spec.ts',
   'admin-scroll.spec.ts',
@@ -69,6 +70,7 @@ export const SPECS = [
 const PINNED: Record<string, number> = {
   'visual.spec.ts': 1,
   'lighthouse.spec.ts': 1,
+  'admin-editors-r3.spec.ts': 4,
 };
 
 /** CI seconds per file, measured on run 41382787431; unknown files count as 4. */

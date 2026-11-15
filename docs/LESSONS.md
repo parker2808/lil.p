@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-15: Reconciling a static study after an independent canvas lands requires describing both routes separately in host documentation; integrate chronological lessons from both lanes and regenerate Graphify rather than hand-merging generated output.
+- 2026-11-15: When a static design-study branch absorbs a newer pure-state core release, preserve both histories while keeping the study's e2e flag and non-persistence boundary unchanged.
+- 2026-11-15: A static U3 design branch can integrate later renderer work without becoming a live builder; keep its no-persistence boundary explicit, retain both chronological context histories, and regenerate Graphify from the combined head instead of hand-merging reports.
 - 2026-11-15: When a pure core lane merges before its UI lane, keep the core exports and UI adapter boundary distinct; resolve accumulated docs additively and rebuild generated graphs instead of accepting either graph diff wholesale.
 - 2026-11-15: Restacking a reviewed D4 branch after D3 can conflict only in accumulated docs, but choosing either entire changelog loses the other lane; preserve both entries and rebuild Graphify from the integrated source.
 - 2026-11-11: A browser contrast test hidden behind an opt-in environment flag does not protect the visual gate; require Chromium in local/CI E2E and assert each rendered text, feedback border and indicator against its adjacent surface in both palettes.
@@ -210,6 +213,8 @@
 - 2026-11-15: After merging B5b, the host-owned published snapshot SEO resolver remains outside the pure engine; update the isolated B1 known-bug golden for EN/VI and version previews instead of changing the engine or unrelated golden contracts.
 - 2026-11-15: A conflicting PR has no merge ref, so its `pull_request` labeled workflow cannot start; reconcile main before using a label event as E2E-path proof.
 - 2026-11-15: During a CI workflow merge, compare the result against current main as well as the branch; an otherwise clean merge can silently drop a new main-only dependency gate.
+- 2026-11-15: A design-study PR merged after the core theme and standalone fixture must retain both shard-1 computed-theme and fixture WCAG browser jobs alongside the existing web visual baseline; regenerate Graphify rather than merging generated report conflicts.
+- 2026-11-15: `git fetch origin main` can refresh only `FETCH_HEAD` without advancing `origin/main`; use an explicit remote-tracking refspec and compare it with GitHub's branch SHA before claiming a PR is synced.
 - 2026-11-10: Keep CMS HTTP goldens structural and seed-isolated: assert semantic status/code/locale fields, not dynamic IDs, timestamps, cookie values or snapshots; B1 can freeze API behavior before U2/U3 while implementation B remains gated.
 - 2026-11-10: Public SEO resolves a group of localized fields together: a VI title with a missing VI description falls back to EN for both; seed both locales' descriptions when asserting VI SEO and record VI-only custom-page fallback separately.
 - 2026-11-10: A restore/discard HTTP golden must first diverge the draft from the published snapshot, then compare normalized block/SEO state and confirm public content stays fixed; response status alone cannot detect a no-op.
@@ -278,3 +283,13 @@
 - 2026-11-10: Adding fallback title metadata at a parent layout can silently override the translated 404 title. Scope fixture-only metadata to gated routes; test both fixture document titles and public 404 titles after accessibility changes.
 - 2026-11-10: Disposable MySQL does not imply a clean Next ISR/data cache across repeated visual runs. A direct API clean-seed assertion can pass while the page renders cached records from a prior database; invalidate the existing public tag and route path before visual capture, then compare rendered seeded content without masking or accepting contaminated baselines.
 - 2026-11-10: Check the shared DataTable keyboard handler before describing destructive shortcuts: Backspace/Delete confirms selected rows or falls back to the active row, while the action name depends on the host.
+- 2026-11-15: A moving main can repeatedly conflict with a study PR even when code files do not overlap: the shared first lines of context and lessons plus generated Graphify are the hot spots. Preserve both side-specific prose, place study entries away from the first-line append point, and regenerate the graph on the integrated tree.
+- 2026-11-15: A functional builder stacked elsewhere does not absorb a flag-gated visual study; compare route/spec/screenshot file inventories before closing the design PR, and preserve integrated clean-seed pixel baselines during main reconciliation.
+- 2026-11-10: A builder design gate can exercise complete empty/nested/responsive compositions without shipping a builder: keep the fixture flag-gated, links limited to sample variants, and all brand differences in scoped semantic tokens.
+- 2026-11-10: A Playwright webServer's fixture flag is not automatically present in the test runner process; assert the served route rather than inferring its visibility from the runner env.
+- 2026-11-10: A mobile horizontal component shelf needs a named focusable scroll region and a visible focus outline; a partially shown next tile does not provide keyboard access.
+- 2026-11-10: A full-height mobile builder study needs persistent selection and bottom-sheet entry points; make the inner canvas scrollable and explicitly label scaled preview widths.
+- 2026-11-10: Contrast spot checks miss muted text and brand-specific selected segments; tabulate surface/foreground, selected and disabled pairs across both themes and token sets.
+- 2026-11-10: Shard assignment can move content-creating specs ahead of clean-seed pixel tests; pin the mutator outside the visual shard instead of weakening snapshots.
+- 2026-11-10: Placeholder opacity can defeat an AA text token; measure the computed input contrast, and give Layers depth visible guides on desktop and mobile.
+- 2026-11-10: A flag-gated localized fixture needs localized, gated metadata too; derive the title from the same EN/VI copy and test both disabled and enabled states.
