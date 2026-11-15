@@ -49,6 +49,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - 2026-11-16 V03/V14 real-tenant SSR extension: EN/VI × light/dark × 390/768/1440 no-JS public/preview captures now assert more than 2% painted CTA pixel difference between actual neutral/branded hosts, with exact same-host preview parity. The all-20 host first-paint matrix, WCAG AA and manual review remain GAP pending exact-head CI and independent review; no runtime or schema changes.
+- 2026-11-16 V09/V10 restore dark-host correction: #258 CI `43759532114` found a real 2.22:1 eyebrow/card contrast failure because the published tree omitted `data-theme` while `html.dark` changed foreground tokens. Scoped implicit `.dark` inheritance to core hosts without explicit theme, retained explicit theme opt-out and unwaived axe; new exact-head five-shard CI/artifact review pending. No API/schema/golden edits; production and all-20 restoration remain GAP.
+
+- 2026-11-16 V09/V10 restore evidence branch: extend the real builder UI restore journey to the missing EN-dark 390/768/1440 tuples; compare actual republished version-3 public/preview content pixels and unwaived axe for all 12 locale/theme/width tuples, plus keyboard 409 no-write, focus and dialog live announcement. Exact-head five-shard CI and independent raw-artifact review pending; all-20 restore and production parity remain GAP.
+
 - 2026-11-16 D6 preview banner P2: no-script dark mode inherited a light warning surface beside a light foreground. Scope the dark warning surface to the public shell and assert computed EN/VI banner contrast on both real hosts; exact-head CI and visual review remain pending. V03/V14 signoff remains GAP.
 - 2026-11-16 V02: D5 #248 covers EN/VI keyboard invalid drop but intentionally disables publish. A separate D6 real-browser gate now exercises keyboard-only edit/reorder, live status/focus order, publish and reload with the published version/public tree; exact-head ready-e2e CI and manual screen-reader audio remain pending. No runtime, API, schema or production change.
 
@@ -347,6 +351,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 9. Changelog
 
 - 2026-11-16: Broadened the D6 real-host no-JS nested-tree browser sample to three widths and measured tenant CTA paint (over 2% pixel difference), retaining EN/VI, light/dark and strict public/preview parity; no product or data changes. CI and visual review pending.
+- 2026-11-16: Inherit dark core/brand tokens for an otherwise unthemed public tree beneath `html.dark`; assert real public/preview card background and color-scheme in the restore browser matrix without relaxing axe or screenshot thresholds.
+
+- 2026-11-16: Add V09/V10 restored-version EN/VI × light/dark × 390/768/1440 public/preview content-pixel and WCAG-AA evidence, keyboard 409 focus/live/no-write checks; no API/schema/golden changes. Exact-head CI pending.
+
 - 2026-11-16: Pair the no-script dark public preview banner with the dark warning surface and gate computed EN/VI neutral/branded text contrast at WCAG AA 4.5:1 without changing public/preview content parity or visual thresholds.
 - 2026-11-16: Register the D6 EN/VI keyboard-only publish browser test in the five-shard manifest; compare saved draft, version snapshot and public tree after reload while recording zero pointer events. CI pending; no V02 full PASS until exact-head evidence and independent review.
 
