@@ -1,6 +1,22 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
+
+async function tabTo(page: Page, target: Locator) {
+  await expect(target).toBeVisible();
+  if (await target.evaluate((element) => document.activeElement === element)) {
+    await expect(target).toBeFocused();
+    return;
+  }
+  for (let step = 0; step < 100; step++) {
+    await page.keyboard.press('Tab');
+    if (await target.evaluate((element) => document.activeElement === element)) {
+      await expect(target).toBeFocused();
+      return;
+    }
+  }
+  throw new Error(`Tab navigation did not reach ${await target.getAttribute('aria-label')}`);
+}
 
 for (const locale of ['en', 'vi'] as const) {
   test(`${locale} keyboard-only edit, reorder, publish and reload retain the saved tree`, async ({
@@ -64,27 +80,24 @@ for (const locale of ['en', 'vi'] as const) {
             version: 'Phiên bản 1',
           };
     const activate = page.getByRole('button', { name: copy.activate });
-    await activate.focus();
-    await expect(activate).toBeFocused();
+    await tabTo(page, activate);
     await page.keyboard.press('Enter');
 
     const palette = page.getByRole('complementary', { name: copy.palette });
     for (const name of [copy.section, copy.heading]) {
       const button = palette.getByRole('button', { name, exact: true });
-      await button.focus();
-      await expect(button).toBeFocused();
+      await tabTo(page, button);
       await page.keyboard.press('Enter');
     }
     const inspector = page.getByRole('complementary', { name: copy.inspector });
     const textField = inspector.getByRole('textbox', { name: copy.text, exact: true });
     const editedText = locale === 'vi' ? 'Tiêu đề dùng bàn phím' : 'Keyboard-edited heading';
-    await textField.focus();
-    await expect(textField).toBeFocused();
+    await tabTo(page, textField);
     await page.keyboard.press('ControlOrMeta+A');
     await page.keyboard.type(editedText);
     await page.keyboard.press('Tab');
     const headingLevel = inspector.getByRole('spinbutton', { name: copy.level });
-    await headingLevel.focus();
+    await tabTo(page, headingLevel);
     await expect(headingLevel).toBeFocused();
     await page.keyboard.press('ControlOrMeta+A');
     await page.keyboard.press('1');
@@ -94,28 +107,35 @@ for (const locale of ['en', 'vi'] as const) {
       name: copy.paragraph,
       exact: true,
     });
-    await paragraphButton.focus();
+    await tabTo(page, paragraphButton);
     await page.keyboard.press('Enter');
     const tree = page.getByRole('complementary', { name: copy.layers }).getByRole('tree');
     const paragraph = tree.getByRole('treeitem', { name: new RegExp(copy.paragraph) });
     const announcement = page.locator('.cms-core [role="status"][aria-live="polite"]').last();
     await expect(announcement).toHaveText(copy.selected);
-    await paragraph.focus();
-    await expect(paragraph).toBeFocused();
-    await page.keyboard.press('Alt+ArrowDown');
+    await tabTo(page, paragraph);
+    const draftUrl = `/api/admin/pages/${key}/builder/draft`;
+    await expect
+      .poll(async () => {
+        const response = await page.request.get(draftUrl);
+        if (response.status() !== 200) return null;
+        const content = (await response.json()).tree?.root.sections[0]?.content;
+        return content?.map((node: { componentType: string }) => node.componentType);
+      })
+      .toEqual(['heading', 'paragraph']);
+    await page.keyboard.press('Alt+ArrowUp');
     await expect(paragraph).toBeFocused();
 
-    const draftUrl = `/api/admin/pages/${key}/builder/draft`;
     await expect
       .poll(async () => {
         const response = await page.request.get(draftUrl);
         if (response.status() !== 200) return null;
         const draft = await response.json();
         const content = draft.tree?.root.sections[0]?.content;
-        return content?.[0]?.componentType === 'heading' &&
-          content?.[0]?.responsive.base.text === editedText &&
-          content?.[0]?.responsive.base.level === 1 &&
-          content?.[1]?.componentType === 'paragraph'
+        return content?.[0]?.componentType === 'paragraph' &&
+          content?.[1]?.componentType === 'heading' &&
+          content?.[1]?.responsive.base.text === editedText &&
+          content?.[1]?.responsive.base.level === 1
           ? draft
           : null;
       })
@@ -128,8 +148,7 @@ for (const locale of ['en', 'vi'] as const) {
     const history = page.getByRole('button', { name: copy.history });
     const publish = page.getByRole('button', { name: copy.publish, exact: true });
     await expect(publish).toBeEnabled();
-    await history.focus();
-    await expect(history).toBeFocused();
+    await tabTo(page, history);
     await page.keyboard.press('Shift+Tab');
     await expect(publish).toBeFocused();
     const publishing = page.waitForResponse(
@@ -156,8 +175,12 @@ for (const locale of ['en', 'vi'] as const) {
     const publicPage = await page.request.get(`/api/public/pages/${key}?locale=${locale}`);
     expect(publicPage.status()).toBe(200);
     expect((await publicPage.json()).tree).toEqual(saved.tree);
+    const pageLayer = tree.getByRole('treeitem', {
+      name: new RegExp(locale === 'vi' ? 'Trang' : 'Page'),
+    });
+    await tabTo(page, pageLayer);
+    await page.keyboard.press('ArrowDown');
     const section = tree.getByRole('treeitem', { name: new RegExp(copy.section) });
-    await section.focus();
     await expect(section).toBeFocused();
     await page.keyboard.press('ArrowRight');
     await expect(section).toHaveAttribute('aria-expanded', 'true');
