@@ -143,6 +143,9 @@ smoke, adding compiled page-adapter assertions without changing HTTP contracts.
 
 [API image CMS-core prerequisite](./docs/specs/2026-11-11-api-docker-cms-core.md): the [API Dockerfile](./apps/api/Dockerfile) installs the core workspace manifest, builds core before contracts/API and checks its CommonJS exports against the pruned production layout. The API declares a direct runtime dependency for B5; Render rebuilds the API image on core source changes. No database or deployment changes are part of this integration.
 
+[D5 core logic](./docs/specs/2026-11-11-cms-d5-core-logic.md) adds framework-neutral atomic tree edits, shallow responsive property overrides, bounded undo/redo and revision-checked draft autosave in `./tree`. Conflict and uncertain network outcomes preserve local edits for explicit review; no editor UI, route, database or golden response is changed until the separate D2/D4 integration.
+The host must pass its component schema registry explicitly. A concurrent restore to legacy mode (`tree: null`) pauses autosave without losing local edits; reloading another builder draft requires explicit discard confirmation. The D6 integration gate must exercise all 20 host block definitions.
+
 ### Real content seed verification
 
 The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires private source evidence for every factual claim and project cover. Keep source paths, source text, and contact details out of git and logs. The staged migration check is `env -u DATABASE_URL bash apps/api/prisma/seed/migration-gate.sh`; it creates a random, tmpfs-only MySQL container, compares the five built-in page rows across the old and current migrations, checks page constraints and Prisma schema drift, then removes the container. It refuses to run when `DATABASE_URL` is already set.
