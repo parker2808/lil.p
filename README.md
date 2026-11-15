@@ -55,7 +55,9 @@ is a separate, production-default API guard; it does not ship D2 storage or
 authorize a deploy. Release owners must verify every old writer has drained
 before the later D2 migration, and keep the freeze until D2-aware unfreeze.
 The API test boots the production `AppModule` with stubbed services to catch a
-missing middleware registration; this is not proof of live Render drain.
+missing middleware registration. Its cold module bootstrap is a separate setup
+step; the 503 HTTP assertion retains the normal per-test timeout. This is not
+proof of live Render drain.
 
 The Round 3 integration branch contains the verified PR #169 head and all eleven earlier Round 3 branch tips. It is a review PR to `main`; the stacked PRs remain open. See the [integration handoff](./docs/specs/2026-11-03-r3-stack-integration.md) and [Round 3 audit](./docs/specs/2026-11-03-r3-12-real-flow-audit.md) for scope and checks.
 

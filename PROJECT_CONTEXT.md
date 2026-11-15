@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- Stage A #210 test-timing follow-up (2026-11-15): cold real-AppModule import/compile/init is isolated in a bounded setup hook so the normal 5-second 503 HTTP assertion still detects slow or missing middleware; no runtime guard, schema or release gate changes.
+
 - Stage A #210 main reconciliation (2026-11-15): preserved the C1 root-export guard, #214 rollout probe and Stage A histories after main `59677dfa`; re-audited all ten main page/SEO/block/version write routes and four D2 #199 `db064d88` builder writes against the non-read `/api/admin/pages` guard. No mutation route escapes that prefix; live drain and migration remain blocked pending separate authorization.
 - Pre-D2 Stage A page-write freeze (2026-11-15): a separate API branch blocks all admin-page mutations in production before service access, with unchanged public/read routes and an admin-only sanitized instance identity. D2's startup migration remains **blocked** until a separately authorized Stage A deploy proves all pre-freeze instances drained and direct/Vercel probes pass; no Render production proof or D2 migration is included here. See `docs/specs/2026-11-15-cms-pre-d2-write-freeze.md`.
 - Stage A follow-up: boot the actual AppModule with stubbed DB/page services to catch removal of its write-freeze middleware; bespoke route tests alone cannot prove the production registration. Live ingress and old-instance drain remain unverified.
@@ -253,6 +255,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Separated real-AppModule test bootstrap from its normally timed Stage A HTTP assertion after a cold full-suite timeout; preserved middleware coverage and the forward-only drain gate. No production code, schema, migration or deployment change.
 
 - 2026-11-15: Reconciled Stage A page-write freeze with main and documented current/D2 mutation-route coverage without changing guard behavior or running production migrations.
 - 2026-11-15: Added real-AppModule HTTP regression for the pre-D2 page write freeze, with stubbed services and no DB access; no production rollout or migration.

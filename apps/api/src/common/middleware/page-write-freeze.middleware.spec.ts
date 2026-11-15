@@ -108,27 +108,36 @@ describe('pre-D2 Stage A page write freeze', () => {
     vi.stubEnv('CMS_PAGE_WRITE_FREEZE', '1');
   });
 
-  it('uses the production AppModule middleware before the page service', async () => {
-    vi.stubEnv('NODE_ENV', 'test');
-    vi.stubEnv('CMS_PAGE_WRITE_FREEZE', '1');
-    vi.stubEnv('API_PORT', '4001');
-    vi.stubEnv('WEB_ORIGIN', 'http://localhost:3000');
-    vi.stubEnv('DATABASE_URL', 'mysql://localhost:3306/freeze_test');
-    vi.stubEnv('JWT_ACCESS_SECRET', 'test-access-secret-at-least-32-chars!!');
-    vi.stubEnv('JWT_REFRESH_SECRET', 'test-refresh-secret-at-least-32-chars!');
-    const { AppModule } = await import('../../app.module');
-    const module = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(PrismaService)
-      .useValue(db)
-      .overrideProvider(PagesService)
-      .useValue(pages)
-      .overrideProvider(PageVersionsService)
-      .useValue(versions)
-      .compile();
-    const productionWiringApp = module.createNestApplication();
-    productionWiringApp.setGlobalPrefix('api');
-    try {
+  describe('production AppModule wiring', () => {
+    let productionWiringApp: INestApplication;
+
+    beforeAll(async () => {
+      vi.stubEnv('NODE_ENV', 'test');
+      vi.stubEnv('CMS_PAGE_WRITE_FREEZE', '1');
+      vi.stubEnv('API_PORT', '4001');
+      vi.stubEnv('WEB_ORIGIN', 'http://localhost:3000');
+      vi.stubEnv('DATABASE_URL', 'mysql://localhost:3306/freeze_test');
+      vi.stubEnv('JWT_ACCESS_SECRET', 'test-access-secret-at-least-32-chars!!');
+      vi.stubEnv('JWT_REFRESH_SECRET', 'test-refresh-secret-at-least-32-chars!');
+      const { AppModule } = await import('../../app.module');
+      const module = await Test.createTestingModule({ imports: [AppModule] })
+        .overrideProvider(PrismaService)
+        .useValue(db)
+        .overrideProvider(PagesService)
+        .useValue(pages)
+        .overrideProvider(PageVersionsService)
+        .useValue(versions)
+        .compile();
+      productionWiringApp = module.createNestApplication();
+      productionWiringApp.setGlobalPrefix('api');
       await productionWiringApp.init();
+    }, 20_000);
+
+    afterAll(async () => {
+      await productionWiringApp?.close();
+    });
+
+    it('uses the production AppModule middleware before the page service', async () => {
       versions.publish.mockClear();
       const response = await request(productionWiringApp.getHttpServer())
         .post('/api/admin/pages/home/publish')
@@ -136,9 +145,7 @@ describe('pre-D2 Stage A page write freeze', () => {
         .expect(503);
       expect(response.headers['retry-after']).toBe('120');
       expect(versions.publish).not.toHaveBeenCalled();
-    } finally {
-      await productionWiringApp.close();
-    }
+    });
   });
 
   it.each([
