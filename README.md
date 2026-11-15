@@ -89,6 +89,7 @@ text solely through this suite.
 The [D6 tree parity gate](./docs/specs/2026-11-15-cms-d6-v04-v06-v09-v10-gate.md) adds serialized legacy/override assertions and paired EN/VI public/preview captures at three widths; visual review and the integrated UI restore path remain open.
 The [D6 UI restore gate](./docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md) exercises real UI publish → edit → 409 conflict → reload → restore → republish. A follow-up stages localized EN/VI page-header content and six additional VI dark captures alongside the 12 light captures; fresh exact-head CI and independent V09 visual review remain required. Broader V09/V10 signoff and deployed parity are not claimed.
 The D6 builder canvas browser gate now selects a real editable heading instead of the obsolete study-only Properties ID; five-shard exact-head CI remains required, and this test-only correction does not integrate the separate D5 runtime or close V10.
+The shared MarkdownEditor group regression waits for all three independently debounced previews before asserting their exact callback count; this stabilizes the unit gate without changing editor behavior or visual evidence.
 
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 
