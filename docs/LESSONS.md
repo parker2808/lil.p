@@ -1,5 +1,9 @@
 # Lessons
 
+- 2026-11-15: Verify startup gates with a deferred bootstrap test, not only a middleware fixture: hold `app.init()` and the schema query separately to prove no HTTP listen precedes verification and a failed check retains the freeze.
+
+- 2026-11-15: A D2 image must not inherit an always-frozen guard without a reviewed reopening mechanism; require applied migration history and physical columns before listening, default to frozen, and reserve the Render-only `=0` env deployment for after old frozen instances drain.
+
 - 2026-11-15: A 401/403 mutation test does not establish preview/version read capabilities or server log redaction; check both on real HTTP and retain a separate production-instance audit gate.
 
 - 2026-11-15: Express body-parser reports oversized JSON as a typed `entity.too.large` error rather than Nest's `PayloadTooLargeException`; map it centrally to a redacted 413 body error and create a trace ID before middleware runs, while preserving the existing file-upload 400 contract.
