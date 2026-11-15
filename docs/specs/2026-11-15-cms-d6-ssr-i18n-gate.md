@@ -5,4 +5,5 @@
 - Attach unmodified full-page public/preview captures, including the preview banner. For strict link pixel parity, temporarily hide only the preview banner after capturing that evidence, assert the link's full bounding box matches the public box, then compare PNG bytes without a tolerance. The banner otherwise shifts the link 60 physical pixels and produces repeatable corner raster differences despite matching text and interior pixels.
 - Supply VI contact-form defaults without changing any golden fixture or stored row; separate block-copy language from locale-specific site settings.
 - Translate schema metadata labels and nested leaf labels in the builder; retain operation paths and wire payloads. No V10 files change.
+- The all-20 builder-origin browser journey must locate the localized VI `showFeatured` switch by its accessible label, not the raw schema key; its persisted `showFeatured: false` assertion remains unchanged.
 - V03/V14 remain GAP until exact-head CI and independent artifact review establish full tuple coverage.
