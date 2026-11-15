@@ -3,6 +3,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { signIn } from './helpers/auth';
+import { switchBuilderLocale } from './helpers/builder-locale';
 
 test('empty page composes two sections and nested components with mouse', async ({ page }) => {
   await signIn(page);
@@ -99,7 +100,7 @@ test('Properties stays single-mounted across 768, 1100 and desktop in both direc
   await signIn(page);
   for (const locale of ['en', 'vi'] as const) {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.getByRole('combobox', { name: 'Language' }).selectOption(locale);
+    await switchBuilderLocale(page, locale);
     await page.setViewportSize({ width: 768, height: 900 });
     await page.goto('/admin/builder/properties-preview');
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
@@ -160,7 +161,7 @@ test('reviewed visual matrix', async ({ page }) => {
   await signIn(page);
   for (const locale of ['en', 'vi'] as const) {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.getByRole('combobox', { name: 'Language' }).selectOption(locale);
+    await switchBuilderLocale(page, locale);
     if (locale === 'vi') {
       await expect
         .poll(
