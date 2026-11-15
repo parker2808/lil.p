@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-15: When reconciling a verification PR after CI provenance changes on main, preserve both PR-head and synthetic-merge SHAs in artifact checks; a green older run cannot attest to the newly merged head.
+- 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
+
 - 2026-11-15: During D2+D6 integration, distinguish malformed persisted tree data (`INVALID_BLOCKS`) from publish lint (`VALIDATION_FAILED`); preserve a valid opaque legacy snapshot for admin recovery without allowing public or preview rendering of that node.
 
 - 2026-11-15: Body-parser oversized JSON may bypass Nest exception types; convert its typed size error into a redacted 413 with trace ID before normal middleware, assert unchanged DB rows, and retain the existing file-upload contract.
