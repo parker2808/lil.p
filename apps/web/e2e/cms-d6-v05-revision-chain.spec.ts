@@ -163,6 +163,21 @@ test('V05 editor nested Properties persist one revision into EN/VI preview and p
         sha256: createHash('sha256').update(inspectorImage).digest('hex'),
       });
       if (width !== 1440) {
+        const titleLabel = `${locale === 'en' ? 'Title' : 'Tiêu đề'} (${locale.toUpperCase()})`;
+        const titleField = panel.getByRole('textbox', { name: titleLabel, exact: true });
+        await titleField.scrollIntoViewIfNeeded();
+        await expect(titleField).toBeInViewport();
+        const detailImage = await page.screenshot({ animations: 'disabled' });
+        await testInfo.attach(`${locale}-${width}-properties-title.png`, {
+          body: detailImage,
+          contentType: 'image/png',
+        });
+        entries.push({
+          locale,
+          width,
+          surface: 'properties-title',
+          sha256: createHash('sha256').update(detailImage).digest('hex'),
+        });
         await page.keyboard.press('Escape');
         await expect(panel).toBeHidden();
         await expect(trigger).toBeFocused();
@@ -203,7 +218,7 @@ test('V05 editor nested Properties persist one revision into EN/VI preview and p
       await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
     }
   }
-  expect(entries).toHaveLength(18);
+  expect(entries).toHaveLength(22);
   await testInfo.attach('v05-revision-manifest.json', {
     body: Buffer.from(
       JSON.stringify(

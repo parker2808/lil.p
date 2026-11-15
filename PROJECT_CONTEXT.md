@@ -344,6 +344,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Expanded V05 Properties evidence to include scrolled mobile/tablet title fields; the initial exact-head CI passed 18/18 at `561fe6ed` (run `43759329807`), but the strengthened evidence needs its own new-head CI.
+
 - 2026-11-16: Registered a V05 browser gate for nested bilingual Properties → revisioned draft → UI publish → immutable snapshot → paired preview/public text and viewport captures; no runtime or golden contract change.
 
 - 2026-11-16: #249 CI `43754309959` found page-header VI test content falling back to EN because the default title.vi is empty; fill both heading fields in the version fixture so the no-JS assertion proves VI rendering. Same run confirmed home OG metadata missing; fix committed before rerun.
