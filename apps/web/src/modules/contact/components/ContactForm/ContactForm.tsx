@@ -8,8 +8,16 @@ import {
 } from '@portfolio/contracts';
 import { Alert } from '@portfolio/ui/components/ui/alert';
 import { Button } from '@portfolio/ui/components/ui/button';
+import { Field, FieldError, FieldLabel } from '@portfolio/ui/components/ui/field';
 import { FormField } from '@portfolio/ui/components/ui/form-field';
 import { Input } from '@portfolio/ui/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@portfolio/ui/components/ui/select';
 import { Textarea } from '@portfolio/ui/components/ui/textarea';
 import { useForm } from '@tanstack/react-form';
 import { useTranslations } from 'next-intl';
@@ -55,6 +63,7 @@ function firstError(errors: unknown[]): string | null {
 
 export function ContactForm({ locale, topics }: { locale: Locale; topics: PublicContactTopic[] }) {
   const t = useTranslations('contact.form');
+  const formRef = useRef<HTMLFormElement>(null);
   const summaryRef = useRef<HTMLDivElement>(null);
   const [submitted, setSubmitted] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string[]>>({});
@@ -75,6 +84,7 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
     },
     validators: { onBlur: contactSchema as never },
   });
+  const formStateRef = useRef(form);
 
   function sendFrom(formEl: HTMLFormElement): boolean {
     const posted = postedFields(formEl);
@@ -114,6 +124,19 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
   }
 
   useEffect(() => {
+    const formEl = formRef.current;
+    if (!formEl) return;
+    const initial = postedFields(formEl);
+    const formState = formStateRef.current;
+    if (initial.name) formState.setFieldValue('name', initial.name);
+    if (initial.email) formState.setFieldValue('email', initial.email);
+    if (initial.topic) formState.setFieldValue('topic', initial.topic);
+    if (initial.message) formState.setFieldValue('message', initial.message);
+    if (initial.website) formState.setFieldValue('website', initial.website);
+    formEl.setAttribute('data-interactive', 'true');
+  }, []);
+
+  useEffect(() => {
     if (result && !result.ok) {
       summaryRef.current?.focus();
     }
@@ -133,6 +156,7 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
 
   return (
     <form
+      ref={formRef}
       action={formAction}
       className="bg-card-glass border-border shadow-1 relative flex flex-col gap-4 rounded-xl border p-6"
       noValidate
@@ -168,8 +192,11 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
                 id="name"
                 name="name"
                 autoComplete="name"
-                value={field.state.value}
-                onBlur={field.handleBlur}
+                defaultValue={field.state.value}
+                onBlur={(event) => {
+                  field.handleChange(event.target.value);
+                  field.handleBlur();
+                }}
                 onChange={(event) => {
                   field.handleChange(event.target.value);
                   setValidationErrors((errors) => ({ ...errors, name: [] }));
@@ -194,8 +221,11 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
                 name="email"
                 type="email"
                 autoComplete="email"
-                value={field.state.value}
-                onBlur={field.handleBlur}
+                defaultValue={field.state.value}
+                onBlur={(event) => {
+                  field.handleChange(event.target.value);
+                  field.handleBlur();
+                }}
                 onChange={(event) => {
                   field.handleChange(event.target.value);
                   setValidationErrors((errors) => ({ ...errors, email: [] }));
@@ -208,28 +238,39 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
 
       {topics.length > 0 ? (
         <form.Field name="topic">
-          {(field) => (
-            <FormField
-              label={t('topic')}
-              error={firstError(field.state.meta.errors) ?? fieldErrors.topic?.[0]}
-            >
-              <select
-                id="topic"
-                name="topic"
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(event) => field.handleChange(event.target.value)}
-                className="border-input bg-background text-ui flex h-8 w-full rounded-md border px-3"
-              >
-                <option value="">{t('topicPlaceholder')}</option>
-                {topics.map((topic) => (
-                  <option key={topic.id} value={topic.slug}>
-                    {topic.label}
-                  </option>
-                ))}
-              </select>
-            </FormField>
-          )}
+          {(field) => {
+            const error = firstError(field.state.meta.errors) ?? fieldErrors.topic?.[0];
+            return (
+              <Field>
+                <FieldLabel htmlFor="topic">{t('topic')}</FieldLabel>
+                <input type="hidden" name="topic" value={field.state.value} />
+                <Select
+                  value={field.state.value}
+                  onValueChange={(value) =>
+                    field.handleChange(value === '__empty_topic__' ? '' : value)
+                  }
+                >
+                  <SelectTrigger
+                    id="topic"
+                    onBlur={field.handleBlur}
+                    aria-invalid={Boolean(error)}
+                    aria-describedby={error ? 'topic-error' : undefined}
+                  >
+                    <SelectValue placeholder={t('topicPlaceholder')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__empty_topic__">{t('topicPlaceholder')}</SelectItem>
+                    {topics.map((topic) => (
+                      <SelectItem key={topic.id} value={topic.slug}>
+                        {topic.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {error ? <FieldError id="topic-error">{error}</FieldError> : null}
+              </Field>
+            );
+          }}
         </form.Field>
       ) : null}
 
@@ -248,8 +289,11 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
             <Textarea
               id="message"
               name="message"
-              value={field.state.value}
-              onBlur={field.handleBlur}
+              defaultValue={field.state.value}
+              onBlur={(event) => {
+                field.handleChange(event.target.value);
+                field.handleBlur();
+              }}
               onChange={(event) => {
                 field.handleChange(event.target.value);
                 setValidationErrors((errors) => ({ ...errors, message: [] }));
@@ -268,7 +312,7 @@ export function ContactForm({ locale, topics }: { locale: Locale; topics: Public
               name="website"
               tabIndex={-1}
               autoComplete="off"
-              value={field.state.value}
+              defaultValue={field.state.value}
               onChange={(event) => field.handleChange(event.target.value)}
             />
           </div>

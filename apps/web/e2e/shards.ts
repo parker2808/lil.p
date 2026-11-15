@@ -12,6 +12,9 @@ export const SPECS = [
   'admin-pages.spec.ts',
   'admin-save-status.spec.ts',
   'a11y.spec.ts',
+  'cms-u1-controls.spec.ts',
+  'cms-u2-patterns.spec.ts',
+  'cms-u3-study.spec.ts',
   'lighthouse.spec.ts',
   'ux-overlay.spec.ts',
   'admin-scroll.spec.ts',
@@ -60,12 +63,14 @@ export const SPECS = [
   'public-shell-indexes.spec.ts',
   'copy-email.spec.ts',
   'public-details-states.spec.ts',
+  'u0-capture.spec.ts',
 ] as const;
 
 /** Specs that must run together in shard 1 (pixel baselines, Lighthouse scores). */
 const PINNED: Record<string, number> = {
   'visual.spec.ts': 1,
   'lighthouse.spec.ts': 1,
+  'admin-editors-r3.spec.ts': 4,
 };
 
 /** CI seconds per file, measured on run 41382787431; unknown files count as 4. */
@@ -74,6 +79,7 @@ const WEIGHT: Record<string, number> = {
   'lighthouse.spec.ts': 58,
   'visual.spec.ts': 27,
   'redesign.spec.ts': 10,
+  'cms-u2-patterns.spec.ts': 10,
   'footer.spec.ts': 9,
   'navigation-progress.spec.ts': 8,
   'editor-split.spec.ts': 8,
