@@ -154,6 +154,10 @@ describe('V17/V22 legacy and tree route inventory over real HTTP and disposable 
         });
         const versionRead = await admin.get(`/api/admin/pages/${key}/versions/1`).expect(200);
         expect(versionRead.body.version).toBe(1);
+        const draftPreview = await admin
+          .get(`/api/admin/preview/pages/${key}?locale=en`)
+          .expect(200);
+        expect(draftPreview.body.key).toBe(key);
         for (const locale of ['en', 'vi']) {
           const published = await publicServer
             .get(`/api/public/pages/${key}?locale=${locale}`)
@@ -177,5 +181,52 @@ describe('V17/V22 legacy and tree route inventory over real HTTP and disposable 
       if (previous === undefined) delete process.env.CMS_TREE_ROUTES;
       else process.env.CMS_TREE_ROUTES = previous;
     }
+  });
+
+  it('preserves unknown nested props on legacy reads and rejects future versions without writes', async () => {
+    const page = await prisma.page.create({
+      data: { key: 'future-page', title: 'Future', locale: 'en', seoTitleEn: 'Draft SEO' },
+    });
+    const nestedSnapshot = {
+      ...legacySnapshot,
+      blocks: [
+        {
+          ...legacySnapshot.blocks[0],
+          props: { ...legacySnapshot.blocks[0].props, future: { nested: [1, { locale: 'vi' }] } },
+        },
+      ],
+    };
+    const current = await prisma.pageVersion.create({
+      data: { pageId: page.id, version: 1, snapshot: nestedSnapshot },
+    });
+    const future = await prisma.pageVersion.create({
+      data: {
+        pageId: page.id,
+        version: 2,
+        snapshot: {
+          ...nestedSnapshot,
+          blocks: [{ ...nestedSnapshot.blocks[0], schemaVersion: 99 }],
+        },
+      },
+    });
+    const originalCurrent = hash(current.snapshot);
+    const originalFuture = hash(future.snapshot);
+    const admin = await adminAgent(app);
+    expect(
+      (await admin.get('/api/admin/pages/future-page/versions/1').expect(200)).body.snapshot
+        .blocks[0].props.future,
+    ).toEqual({ nested: [1, { locale: 'vi' }] });
+    const before = await prisma.page.findUniqueOrThrow({ where: { id: page.id } });
+    expect(
+      (await admin.post('/api/admin/pages/future-page/versions/2/restore').expect(400)).body,
+    ).toMatchObject({ code: 'INVALID_BLOCKS', fieldErrors: { snapshot: expect.any(Array) } });
+    const after = await prisma.page.findUniqueOrThrow({ where: { id: page.id } });
+    expect(after).toEqual(before);
+    expect(
+      hash((await prisma.pageVersion.findUniqueOrThrow({ where: { id: current.id } })).snapshot),
+    ).toBe(originalCurrent);
+    expect(
+      hash((await prisma.pageVersion.findUniqueOrThrow({ where: { id: future.id } })).snapshot),
+    ).toBe(originalFuture);
   });
 });
