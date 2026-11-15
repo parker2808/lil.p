@@ -5,6 +5,10 @@ maps rendered site colors to core tokens only inside the neutral CMS host and
 checks a painted hero accent and brand-different screenshots in CI. The
 existing lil.p host palette stays unchanged; gallery evidence alone does not
 close V03/V05/V14 or prove a separate neutral SSR tenant.
+Historical CMS previews (`?v=N`) now read the same version for the rendered
+tree and EN/VI SEO title/description. Public routes ignore `?v=` and retain
+their current published content and metadata; this is a scoped V13 regression
+gate, not full localization acceptance.
 
 The public header keeps compact search and an accessible navigation sheet through
 1024px; full navigation starts at 1280px to leave room for EN/VI labels and
