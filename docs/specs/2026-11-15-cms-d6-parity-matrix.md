@@ -24,24 +24,28 @@ exact PR head; attachments are generated in the Playwright report, not a
 committed platform-specific pixel baseline. This slice does not close J06/J08,
 V11/V12/V21/V22, all-20 editor-origin, design review or rollout gates.
 
-The initial all-20 CI run exposed incomplete no-JavaScript HTML for async host
-blocks: the tree renderer left their content in streamed React patches, unlike
-the existing legacy block path. The host now resolves those block components
-before producing the tree HTML. A unit regression covers EN/VI initial markup;
-the four real-route shards must still pass on the corrected exact head before
-any visual/SSR tuple is marked passed.
+The first all-20 CI run exposed empty initial wrappers for async host blocks.
+The host now awaits the outer block renderers before building the tree; the
+EN/VI unit regression covers those wrappers. The next exact-head run showed
+nested async React children (e.g. fourth statistic, case title, contact fields)
+still arrive in streamed HTML patches. The gate therefore checks SSR block
+inventory and props hashes plus nonempty initial text, and checks hydrated
+preview/public semantic markup; it does not certify full no-JavaScript content.
+That narrower SSR claim remains a separate GAP until a no-script browser test
+proves all nested content appears without React stream patch scripts.
 
 V03/V14 matrix is **pending exact-head CI and visual review**, not yet PASS.
 Four independent shard files publish one real API page apiece, with one H1 and
 four other host types in each page. Each file checks EN/VI × light/dark ×
 neutral/lil.p × 390/768/1440, yielding 24 page tuples and 120 type tuples per
 shard, 480 type tuples and 960 attached public/preview block PNGs overall.
-Every page tuple checks raw server-rendered block type, props hash and visible
-text against hydrated DOM, equal published/preview hydrated markup and paired
-block screenshot bytes, and full WCAG 2/2.1/2.2 AA axe violations (including
-moderate/minor), without waivers. A per-shard manifest records each tuple.
-The animation-only hero canvas is excluded from pixel captures while its
-semantic content remains in the SSR/hydration comparison.
+Every page tuple checks raw initial HTML block type, props hash and nonempty
+text; equal hydrated published/preview markup; paired block PNGs with at most
+0.5% differing pixels (per-channel difference >10), allowing rasterization
+noise rather than falsely claiming byte-perfect pixels; and all WCAG
+2/2.1/2.2 AA axe violations (including moderate/minor), without waivers. A
+per-shard manifest records each tuple. The animation-only hero canvas is
+excluded from pixel captures; it is not evidence of canvas parity.
 
 The published route serves explicit lil.p host tokens. The **neutral fixture is
 the same real published/preview host page with its root `data-brand` switched

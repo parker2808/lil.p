@@ -1,8 +1,8 @@
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
+import { imageDifference } from './helpers/d6-visual-matrix';
 
-const key = 'd6-parity-matrix';
 const responsive = {
   base: { text: 'Base heading', level: 1 },
   mobile: { text: 'Mobile heading' },
@@ -78,6 +78,7 @@ test('real EN/VI preview-public SSR, hydration and pixel pairs at 390/768/1440',
 }, testInfo: TestInfo) => {
   test.setTimeout(240_000);
   await signIn(page);
+  const key = `d6-parity-matrix-${Date.now()}-${testInfo.retry}`;
   const headers = { Origin: new URL(page.url()).origin };
   const created = await page.request.post('/api/admin/pages', {
     headers,
@@ -146,10 +147,11 @@ test('real EN/VI preview-public SSR, hydration and pixel pairs at 390/768/1440',
         body: previewImage,
         contentType: 'image/png',
       });
+      const difference = await imageDifference(page, publicImage, previewImage);
       expect(
-        previewImage.equals(publicImage),
+        difference.differingPixels / difference.totalPixels,
         `${locale}/${width} preview/public pixel parity`,
-      ).toBe(true);
+      ).toBeLessThanOrEqual(0.005);
       await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
     }
   }

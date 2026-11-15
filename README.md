@@ -11,8 +11,10 @@ The four-shard all-20 published-host matrix now attempts EN/VI, light/dark,
 public/preview screenshots and WCAG axe per tuple. Neutral is selected on the
 real host DOM in a browser fixture, not via a separate published tenant. CI
 and independent visual review remain required before V03/V14 can pass.
-Async host blocks in the tree route are resolved before the initial HTML is
-emitted, matching the legacy route's no-JavaScript content behavior.
+Async host block wrappers and props are resolved before tree rendering, but
+React may stream nested content after the initial HTML chunk. The current gate
+proves initial block inventory and props, hydrated preview/public parity and
+screen-reader checks; complete no-JavaScript tree text remains unverified.
 
 The D6 host-registry integration is staged on a scratch branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and

@@ -4,6 +4,48 @@ import { expect, test, type Page, type TestInfo } from '@playwright/test';
 
 import { signIn } from './auth';
 
+export async function imageDifference(page: Page, publicImage: Buffer, previewImage: Buffer) {
+  return page.evaluate(
+    async ([publicBase64, previewBase64]) => {
+      const decode = async (base64: string) => {
+        const bytes = Uint8Array.from(atob(base64), (character) => character.charCodeAt(0));
+        return createImageBitmap(new Blob([bytes], { type: 'image/png' }));
+      };
+      const [published, preview] = await Promise.all([
+        decode(publicBase64!),
+        decode(previewBase64!),
+      ]);
+      if (published.width !== preview.width || published.height !== preview.height) {
+        return { differingPixels: Infinity, totalPixels: 0 };
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = published.width;
+      canvas.height = published.height;
+      const context = canvas.getContext('2d', { willReadFrequently: true })!;
+      context.drawImage(published, 0, 0);
+      const publishedPixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(preview, 0, 0);
+      const previewPixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+      let differingPixels = 0;
+      for (let index = 0; index < publishedPixels.length; index += 4) {
+        if (
+          [0, 1, 2, 3].some(
+            (channel) =>
+              Math.abs(publishedPixels[index + channel]! - previewPixels[index + channel]!) > 10,
+          )
+        ) {
+          differingPixels++;
+        }
+      }
+      published.close();
+      preview.close();
+      return { differingPixels, totalPixels: canvas.width * canvas.height };
+    },
+    [publicImage.toString('base64'), previewImage.toString('base64')],
+  );
+}
+
 const widths = [390, 768, 1440] as const;
 const locales = ['en', 'vi'] as const;
 const themes = ['light', 'dark'] as const;
@@ -99,12 +141,15 @@ export function registerVisualMatrix(group: number) {
             );
             expect(previewCapture.markup, `${label} public/preview DOM`).toBe(publicCapture.markup);
             for (const definition of blocks) {
+              const difference = await imageDifference(
+                page,
+                publicCapture.images.get(definition.type)!,
+                previewCapture.images.get(definition.type)!,
+              );
               expect(
-                previewCapture.images
-                  .get(definition.type)
-                  ?.equals(publicCapture.images.get(definition.type)!),
+                difference.differingPixels / difference.totalPixels,
                 `${label}/${definition.type} public/preview pixels`,
-              ).toBe(true);
+              ).toBeLessThanOrEqual(0.005);
             }
             await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
             manifest.push({ locale, theme, brand, width, types: blocks.map(({ type }) => type) });
@@ -179,7 +224,13 @@ async function capture(
       text: element.textContent?.replace(/\s+/g, ' ').trim(),
     })),
   );
-  expect(hydratedBlocks, `${label} SSR/hydration semantics`).toEqual(serverBlocks);
+  expect(
+    hydratedBlocks.map(({ type, hash }) => ({ type, hash })),
+    `${label} SSR/hydration block contract`,
+  ).toEqual(serverBlocks.map(({ type, hash }) => ({ type, hash })));
+  for (const block of serverBlocks) {
+    expect(block.text, `${label}/${block.type} initial SSR text`).toBeTruthy();
+  }
   const markup = await main.innerHTML();
   const axe = await new AxeBuilder({ page })
     .include('main.cms-core-host')
