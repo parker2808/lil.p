@@ -1,6 +1,6 @@
 # Lessons
 
-- 2026-11-15: A design capture that tabs through controls must restore its entry focus before continuing a keyboard-only edit; wait for scroll paint before reading clipped hit geometry, and keep strict 44px checks.
+- 2026-11-15: A design capture that tabs through controls must restore its entry focus before continuing a keyboard-only edit; a fixed overlay escapes non-containing-block ancestor overflow, so stop clipping at the fixed backdrop while keeping strict 44px checks.
 
 - 2026-11-15: A scoped builder axe result cannot replace a full-page audit, and matching polite status text cannot prove what a screen reader actually speaks; record automated and manual V16 evidence separately.
 

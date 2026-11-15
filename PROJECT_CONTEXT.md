@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- #221 run `43729842098` reached two deterministic V15 failures: the focus audit moved focus off Heading before keyboard Delete, and the 768px Properties sheet yielded a stale clipped breakpoint measurement during scroll. Restore pre-audit focus and sample scrolled geometry after paint; exact-head five-shard CI and independent review remain OPEN.
+- #221 run `43729842098` reached two deterministic V15 failures: the focus audit moved focus off Heading before keyboard Delete, and the 768px Properties sheet's fixed backdrop was wrongly clipped to the builder parent's overflow boundary. Restore pre-audit focus and stop clipping beyond the fixed backdrop; exact-head five-shard CI and independent review remain OPEN.
 
 - V16 builder automation adds real-API EN/VI accessible-name, live announcement, keyboard focus, reduced-motion and whole-page axe coverage. Manual VoiceOver/NVDA output, public/preview heading order and independent screen-reader review remain OPEN; no release signoff from this subset.
 
@@ -301,7 +301,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
-- 2026-11-15: Restored V15 keyboard-journey focus after capture and sampled 768px sheet hit targets after scroll paint; kept ≥44px targets and ≥3:1 focus contrast, pending exact-head CI.
+- 2026-11-15: Restored V15 keyboard-journey focus after capture and fixed overlay hit-area clipping at the fixed-position backdrop; kept ≥44px targets and ≥3:1 focus contrast, pending exact-head CI.
 
 - 2026-11-15: Bound V15 keyboard browser diagnosis after shard-5's reproducible ten-minute stall, sampling reduced-motion focus paint on frames instead of waiting indefinitely for transition completion; 44px and ≥3:1 assertions unchanged.
 

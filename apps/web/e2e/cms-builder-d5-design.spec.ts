@@ -161,6 +161,7 @@ async function capture(
           top = Math.max(top, bounds.top);
           bottom = Math.min(bottom, bounds.bottom);
         }
+        if (style.position === 'fixed') break;
       }
       return { width: Math.max(0, right - left), height: Math.max(0, bottom - top) };
     }
