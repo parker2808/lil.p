@@ -523,3 +523,5 @@
 - 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
 - 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
 - 2026-11-15: Merging documentation-only main changes can conflict with active release notes without changing runtime; retain both histories and request exact-head CI rather than treating a single security check as a full gate.
+- 2026-11-15: When rebasing the pre-migration write freeze on five-shard main, preserve both Stage A drain instructions and newly registered keyboard/canvas E2E coverage; a clean merge of runtime files alone does not prove production instances have drained.
+- 2026-11-15: When restacking the Stage A freeze after a docs-only C1 merge, keep both histories; clean HTTP guards and a conflict-free runtime are not evidence that old production writers drained.
