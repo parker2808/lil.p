@@ -54,6 +54,7 @@
 
 - 2026-11-15: Test host-only CMS blocks through authenticated activation, revision-checked save/read and publish before EN/VI preview/public SSR; a mocked editor GET or schema-only registry count cannot catch an API boundary dropping the host registry.
 - 2026-11-15: Keep public bundle leak checks strict for actual public routes, but exclude explicitly gated browser-test fixture routes that intentionally import admin controls; retain a mandatory assertion for the production catch-all page.
+- 2026-11-16: When several editors schedule independent preview timers, waiting for one rendered preview does not prove the others have completed; await all three rendered bodies and retain the exact callback-count assertion.
 
 - 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
 
@@ -501,3 +502,5 @@
 - 2026-11-16: Audit the live version controls before testing “confirmation dialogs”: D6 Publish acts immediately, whereas Restore alone has a Radix alertdialog; record the absent UI separately from keyboard/ARIA/axe evidence and keep manual screen-reader signoff open.
 - 2026-11-16: A focus-trapping Radix Sheet can render `role="dialog"` with a title but omit `aria-modal`; verify computed DOM semantics, then explicitly mark the scoped modal sheet rather than weakening browser assertions.
 - 2026-11-16: Controlled Radix alertdialogs without an AlertDialogTrigger need explicit close-auto-focus return to their originating action; nested sheets also need focus return to their own trigger after a successful restore closes both layers.
+- 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
+- 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
