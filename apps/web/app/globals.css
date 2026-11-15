@@ -2,6 +2,10 @@
 @source '../src';
 @source '../../../packages/ui/src';
 
+.cms-core-host[data-theme='dark'] {
+  --subtle-foreground: #b5b1aa;
+}
+
 .cms-core-host[data-brand='lilp'] {
   --builder-accent: #a44520;
   --builder-accent-text: #fff;

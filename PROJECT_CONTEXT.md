@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- #217 follow-up: dark host subtle labels fell below AA on neutral cards and notes-browser returned a textless client-chunk skeleton in initial SSR. Scoped a contrast-safe dark host token and server-rendered the initial notes list; V03/V14 remain GAP until exact-head four-shard CI and independent artifact review. Complete no-script nested tree content, separate neutral SSR tenant and visible CV remain unproven.
+
 - #217 V03/V14 remain open after four-shard pixel/SSR failures: invalidate education caches on mutation, exclude fixed outside-block overlays from screenshots, and verify seeded CV absence on SSR/hydration. Re-run exact-head CI and manually review visual artifacts; a visible CV, separate neutral SSR tenant and complete no-script tree content remain unproven.
 
 - 2026-11-15 D6 parity-matrix draft: real-API route/snapshot preservation, nested migrator round-trip and EN/VI × 390/768/1440 preview/public SSR inventory, hydration and screenshot pairs are covered by new tests. Four pinned browser shards attempt the full 20-type × EN/VI × light/dark × neutral/lil.p × 390/768/1440 real published/preview matrix with axe, pending exact-head CI. Nested content may arrive through React streamed patches, so complete no-JavaScript tree content remains GAP. Neutral is a browser-switched theme on the same real host route, **not** a separate published tenant; neutral SSR host and manual visual approval remain GAP for V03/V14. Legacy UI publish/version/restore is separate; tree UI publish remains disabled, so V10's complete tree UI journey remains GAP. J06/J08/V11/V12/V21/V22 and rollout require independent evidence. See `docs/specs/2026-11-15-cms-d6-parity-matrix.md`.
@@ -277,6 +279,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Replaced notes-browser's initial textless dynamic fallback with the server-rendered client component and scoped dark host subtle text to clear neutral/branded card AA contrast. The all-20 visual gate retains unwaived axe and SSR assertions; exact-head CI, bundle budget and visual review pending. No core token, golden or migration change.
 
 - 2026-11-15: #217 exact-head CI found stale public education versus uncached preview after admin collection writes; education mutations now await public tag invalidation. Hero/case-grid screenshot differences came from site header/locale toast overlaying scrolled blocks, so only outside-block chrome is hidden for capture. Seeded CV has no resume and correctly renders empty; the gate asserts SSR/hydration empty state. V03/V14 still need new exact-head CI and manual review; visible CV remains GAP.
 

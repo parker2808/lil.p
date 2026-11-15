@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A dark text token that passes against the page background may fail AA against an inset CMS card; measure against neutral and branded surfaces. A dynamic client component can SSR only its textless loading fallback; render data-backed initial content on the server and retain the initial-HTML assertion.
+
 - 2026-11-15: Real host pages may hydrate a decorative hero canvas after SSR; compare block SSR/hydration text and props hashes without treating that canvas as content, give retried API fixtures unique slugs, and run full (not severity-filtered) WCAG axe for each theme/viewport tuple.
 
 - 2026-11-15: Separate D6's real tree API publish/restore evidence from legacy UI version controls: the tree builder currently disables its publish action, so a green legacy UI journey cannot be reported as a tree UI journey; compare browser SSR/hydrated markup and preview/public pixels at the same locale and viewport.

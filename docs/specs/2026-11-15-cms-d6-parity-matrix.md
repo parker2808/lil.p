@@ -57,6 +57,11 @@ returning, preventing a stale public render versus an uncached draft render.
 Block screenshots exclude the fixed site header and locale suggestion overlay
 outside the block (as well as the decorative shader canvas); otherwise those
 overlays can obscure different scrolled portions of the same long block.
+The `notes-browser` host now server-renders its initial list instead of the
+textless client-chunk skeleton; the nested no-script stream remains a separate
+gate. The dark host scopes a higher-contrast subtle text token for both
+neutral and lil.p cards without changing the shared palette or suppressing
+axe violations. Exact-head CI must verify both changes before V03/V14 advance.
 
 The published route serves explicit lil.p host tokens. The **neutral fixture is
 the same real published/preview host page with its root `data-brand` switched
