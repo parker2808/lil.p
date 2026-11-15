@@ -49,19 +49,13 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - 2026-11-16 #208 integration-only V05 browser fixture: localized Properties now names the English/Vietnamese fields with a middle dot, so the prior parenthesized locator fails before persistence assertions. Preserve the publish/revision/public assertions and require a new exact-head five-shard run; no release or production claim.
-
 - 2026-11-16 #208 next verification cut includes D2 `26ace408`, D5 `92fb84d4` (#263) and D6 `dd66938d` (#259). Do not inherit earlier #208 CI or source-green row scores: await new exact-head API/five-shard run and raw-artifact review. D5 dialog automation is bounded; D6 V05 revision-chain single fixture is bounded; manual spoken SR, V03/V06/V09/V10/V14 all-host/prod remain GAP. #208 DO NOT MERGE.
-
 - 2026-11-16 #208 verification-only cut integrates D2 `26ace408`, D5 `aaec9e62` and D6 `3b60df35`; 7/7 no-build gate passed after the D6 merge. Await exact combined-head API/five-shard CI and artifact review before rescoring; #256/#260 are not integrated. V03/V06/V09/V10/V14 and dialogs/manual SR remain open. DO NOT MERGE or deploy.
 - D5 V16 automated follow-up checks EN/VI keyboard trap/return for the delete dialog and compact Properties sheet, live deletion/local-draft status, and the disabled Publish reason. D5 has no publish/restore-version dialog; its integrated D6 dialog capture/a11y review and manual spoken VoiceOver/NVDA check remain GAP.
 - 2026-11-16: The shared MarkdownEditor preview callback uses an independent 500ms timer per editor. #260's unit run `43767645840` observed only two callbacks when the test waited for the second body; a focused test fix waits for all three rendered bodies and all three callback invocations without relaxing the count. The fix is based on `main`, with no V06 runtime changes; exact-head CI remains the merge gate.
-
 - C1 retained-history identity review (2026-11-15): the local #208 `4df25c52` filtered rehearsal has 86 commits across two anonymized author/committer pairs. At 20:46 ICT, the coordinator under Parker approval `t250u` and delegated rule `12:26` decided to keep both reviewed identities unchanged: no rewrite or `.mailmap`, preserving provenance in Parker's own private destination. Re-audit the final integrated tree and stop on any new pair before a private push; see the C1 runbook.
-
 - E2E registry completeness (2026-11-15): both existing D4 canvas and keyboard browser specs were absent from `SPECS` and silently skipped by the Playwright shard matcher. Register both on the five-shard line and compare the full recursive spec inventory with the manifest in a unit test, rejecting missing, stale and duplicate names. First real CI exposed obsolete native-select interactions; the next run exposed selecting already-active EN without a cookie and intermittent Escape focus restoration. Exercise actual Radix locale transitions and persist the cookie; restore focus in the sheet-close layout effect without competing animation frames. Re-run exact-head `ready-e2e` before claiming J03/J05/V02/V20 coverage; the #217 visual group 4 pin must still move to shard 5 after registration.
-
 - D5 design review at `24fc51b2` / CI `43759739138`: 197 captures across 24 EN/VI × light/dark × neutral/lil.p × 390/768/1440 combinations show raw English component names in the Vietnamese Properties inspector. The small label fix derives all 20 host names from existing translation metadata and shares them with canvas/Layers. Await exact-head CI and a refreshed visual review; D5 intentionally disables publish, so publish/restore dialog evidence belongs to combined D6. Manual V16 screen-reader review remains open.
-
 - 2026-11-16 #208 current D5 sync: #262 localized host/starter labels now need combined D6 keyboard-publish and Properties exact-head proof; no source-only matrix promotion.
 - 2026-11-16 #208 D6 V02 refresh: integrate reviewed #254 from D6 `1b2037d2`; source keyboard-publish CI is not combined proof. Await exact-head #208 API/five-shard run; manual spoken SR remains a documented V16 limitation.
 - 2026-11-16 #208 combined-only wiring: D5 keyboard Home-root announcement calls the D6 three-argument localized node-label helper with the existing `hostLabel`; pre-push typecheck caught the missing argument before any remote push. Keep the negative-drop status/focus/no-write assertions unchanged; exact-head CI pending.
@@ -474,12 +468,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 9. Changelog
 
 - 2026-11-16: Normal-merged D5 `92fb84d4` automated dialog coverage and D6 `dd66938d` V05 revision-chain browser evidence into verification-only #208; no main merge or deploy.
-
 - 2026-11-16: Normal-merged D6 `3b60df35` (#261 dark banner, #258 restored UI) into verification-only #208 after D5 `aaec9e62` and D2 `26ace408`; preserved both histories and reran 7/7 no-build gates. Exact-head CI still required.
 - 2026-11-16: Extended registered D5 V16 browser coverage for real EN/VI dialog keyboard focus boundaries, return, and live announcements; documented disabled publishing and remaining integrated/manual scope in `docs/specs/2026-11-15-cms-d5-v16-automated-a11y.md`.
-
 - 2026-11-16: Localize builder canvas/Layers/Properties component names through existing host metadata keys and starter field labels; tighten EN/VI browser assertions to reject raw type fallbacks. Scope and evidence: `docs/specs/2026-11-16-cms-d5-design-labels.md`.
-
 - 2026-11-16: Normal-merged D5 `aaec9e62` (#262 label localization) into verification-only #208, preserving D6 version controls and localized Layers/canvas/Properties; new exact-head CI required. No main merge/deploy.
 - 2026-11-16: Integrated D6 `1b2037d2` (#254 keyboard publish) into verification-only #208 after D2/D5 refresh; exact combined-head CI/review required before V02 scoring. No main merge/deploy.
 - 2026-11-16: Integrated D5 `24fc51b2` and D6 `59af4538` into verification-only #208 after D2 `26ace408`; scoped V13 SSR/validation and J07 no-JS source evidence do not confer full-row PASS before combined CI and review. No main merge/deploy.
@@ -680,24 +671,17 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Added separate real-API all-20 host draft/publish E2E and editor-origin autosave/preview/public EN/VI SSR browser journey to the D6 stack. Preserved golden contracts and explicitly kept all-20 Properties/editor, migration/drain and visual/a11y approval separate; final exact-head CI pending.
 
 - 2026-11-15: Prepared D6 scratch integration on the ordered main → D2 → D5 UI → D6 stack, retaining main's routing and D2/D5 behaviors while strengthening the all-20 real API/browser gate. The public-builder-byte scan excludes only the gated `r3-loading-test` fixture that imports an admin-only keyboard specimen; real public custom-page manifests stay mandatory. No golden-contract changes, production deployment or PR branch update.
-
 - 2026-11-15: Rebuilt verification-only #208 with Stage A, D2 CAS, #211 all-20 D5 UI and D6 host-registry test heads; preserved lossless snapshot restore and both documentation histories. Recorded design P2 and distinct editor/live route gaps; no production DDL, deploy or merge.
-
 - 2026-11-15: Recorded Parker's 08:54 ICT forward-only D2 rollout approval and known old-writer regression `350ac169`; documented the pending Render no-overlap proof, the explicitly blocked all-20 D5 Properties gate and no old-binary rollback. Verification-only #208 remains DO NOT MERGE; no production migration or deployment was run.
 - 2026-11-15: Prepared #199 → #204 → #202 disposable-only integrated gate commands and recorded the scratch D2 forward/drift PASS with explicit rollback-reader and visual/J01–J09 gaps; no PR push, production DB, or release claim.
-
 - 2026-11-15: Reconciled D6's opt-in preview/public tree parity and all-host route gate with #198's D4 canvas and main's D5 pure state without changing B1 goldens. Preserved both documentation histories and regenerated Graphify. Scratch-only integration pending #199 migration approval and #204 ordering; no production database or deploy action.
 - 2026-11-15: Combined #199 → #204 → #202 for verification only, preserving strict snapshot restore, opt-in D6 routes and D5 UI; rollback-reader write safety failed on genuine pre-D2 client after migration, so release remains blocked and draft verification PR must not merge. Parker owns all eventual merges.
 - 2026-11-15: Added real-AppModule HTTP regression for the pre-D2 page write freeze, with stubbed services and no DB access; no production rollout or migration.
 - 2026-11-15: Prepared the production-default pre-D2 admin-page write freeze, future-path/override HTTP regressions and nonsecret instance identity; documented the no-deploy old-instance drain gate. No schema, golden, production DB or deployment change.
 - 2026-11-15: Completed #199 CAS-loss revision accuracy: read committed for SEO, reorder/create/update/duplicate block and builder restore (publish, delete and legacy restore already covered); disposable-MySQL HTTP race cases assert current 409 revision and rollback of SEO, block rows, tree and audit. No schema/migration, local E2E, merge or deployment; forward-only drain gate remains.
-
 - 2026-11-15: Added disposable-MySQL HTTP races for legacy publish/delete against tree activation; asserted 409 with the winning revision and unchanged pointer, version, block and audit state. Switched those two transactions to read committed for a fresh conflict reread. No migration, merge or deployment; forward-only old-instance drain still gates D2.
-
 - 2026-11-15: Hardened D2 legacy publish's published-pointer CAS and audited sibling SEO and five block mutations; deterministic activation-race unit coverage covers publish and delete rollback. Merged main `69f4806` preserving both documentation histories; no migration or production action in this change.
-
 - 2026-11-15: Reconciled #199 D2 persistence onto main, retaining main's CMS engine, VI-only SEO golden and both documentation histories. Recorded Parker's forward-only approval separately from the outstanding Render drain gate; preserved the pre-D2 rollback-reader reproduction as a known unsafe-writer test. The `main` API deploy runs the additive migration on startup, so no merge/deploy until the no-overlap gate is verified.
-
 - 2026-11-11: Integrated D5 Properties, history shortcuts and draft autosave into the gated D4 host, with explicit custom-page activation and local recovery. No public page, legacy editor, tree publish, production DB, migration or golden behavior changed.
 - 2026-11-16: Make the three-editor Write/Preview unit test await every debounced preview and retain its exact three-call assertion; no editor behavior, API, or threshold changes.
 - 2026-11-15: Recorded the coordinator's 20:46 ICT C1 decision to retain the two reviewed identity pairs without a rewrite or `.mailmap`; final-history audit remains required. Docs only, no private push.
