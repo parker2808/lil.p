@@ -49,6 +49,48 @@ async function savedWith(page: Page, key: string, matches: (draft: Draft) => boo
 
 test.setTimeout(240_000);
 
+test('V05 editor 768 capture uses a persisted real-API revision in EN/VI and light/dark', async ({
+  page,
+  context,
+}) => {
+  await signIn(page);
+  const { key } = await createDraft(page, 'v05-768');
+  await page
+    .getByRole('complementary', { name: 'Components' })
+    .getByRole('button', { name: 'Section', exact: true })
+    .click();
+  await savedWith(page, key, (draft) => draft.tree.root.sections.length === 1);
+  const saved = await readDraft(page, key);
+  for (const locale of ['en', 'vi'] as const) {
+    await context.addCookies([
+      { name: 'NEXT_LOCALE', value: locale, url: new URL(page.url()).origin, sameSite: 'Lax' },
+    ]);
+    for (const theme of ['light', 'dark'] as const) {
+      await page.setViewportSize({ width: 768, height: 900 });
+      await page.goto(`/admin/builder/${key}`);
+      await page.evaluate(
+        (value) => document.documentElement.classList.toggle('dark', value === 'dark'),
+        theme,
+      );
+      await expect(page.locator('html')).toHaveAttribute('lang', locale);
+      await expect(page.locator('[data-node-type="section"]')).toHaveCount(1);
+      await expect(
+        page.getByText(locale === 'en' ? 'Draft saved' : 'Đã lưu bản nháp'),
+      ).toBeVisible();
+      expect(await readDraft(page, key)).toEqual(saved);
+      const name = `v05-editor-${locale}-${theme}-768-revision-${saved.revision}`;
+      await test.info().attach(name, {
+        body: await page.screenshot({ animations: 'disabled' }),
+        contentType: 'image/png',
+      });
+    }
+  }
+  await test.info().attach('v05-editor-api-revision.json', {
+    body: JSON.stringify({ key, revision: saved.revision, tree: saved.tree }),
+    contentType: 'application/json',
+  });
+});
+
 test('J01/J02/V01: mouse nesting saves a no-H1 draft and incomplete publish cannot change it', async ({
   page,
 }) => {
