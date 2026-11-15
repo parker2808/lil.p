@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V16 D6 version-dialog gate: register EN/VI × light/dark real-API keyboard publish and Restore confirmation tests (trap, Escape/Cancel/confirm return, ARIA, polite status, unwaived axe). Publish has no confirmation dialog in D6; manual VoiceOver/NVDA and public-route V16 remain GAP even if CI passes. See `docs/specs/2026-11-16-cms-d6-v16-version-dialog.md`.
+
 - 2026-11-16 V09/V10 restore dark-host correction: #258 CI `43759532114` found a real 2.22:1 eyebrow/card contrast failure because the published tree omitted `data-theme` while `html.dark` changed foreground tokens. Scoped implicit `.dark` inheritance to core hosts without explicit theme, retained explicit theme opt-out and unwaived axe; new exact-head five-shard CI/artifact review pending. No API/schema/golden edits; production and all-20 restoration remain GAP.
 
 - 2026-11-16 V09/V10 restore evidence branch: extend the real builder UI restore journey to the missing EN-dark 390/768/1440 tuples; compare actual republished version-3 public/preview content pixels and unwaived axe for all 12 locale/theme/width tuples, plus keyboard 409 no-write, focus and dialog live announcement. Exact-head five-shard CI and independent raw-artifact review pending; all-20 restore and production parity remain GAP.
@@ -348,6 +350,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Add a sharded D6 real-API version-action keyboard/ARIA/axe browser gate and explicitly preserve manual screen-reader and missing Publish-dialog limitations; no golden, runtime or API changes.
 
 - 2026-11-16: Inherit dark core/brand tokens for an otherwise unthemed public tree beneath `html.dark`; assert real public/preview card background and color-scheme in the restore browser matrix without relaxing axe or screenshot thresholds.
 
