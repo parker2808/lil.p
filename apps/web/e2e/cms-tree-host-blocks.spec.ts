@@ -3,6 +3,79 @@ import { expect, test } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
 
+test('editor autosaves a real H1 draft before preview, publish and matching EN/VI SSR', async ({
+  page,
+}) => {
+  test.setTimeout(180_000);
+  await signIn(page);
+  const key = `editor-host-gate-${Date.now()}`;
+  const headers = { Origin: new URL(page.url()).origin };
+  const created = await page.request.post('/api/admin/pages', {
+    headers,
+    data: { key, title: 'Editor host gate', locale: 'en', template: 'starter' },
+  });
+  expect(created.status(), await created.text()).toBe(201);
+  await page.goto(`/admin/builder/${key}`);
+  await page.getByRole('button', { name: 'Activate tree draft' }).click();
+  await expect(page.getByText('Draft saved')).toBeVisible();
+  const palette = page.getByRole('complementary', { name: 'Components' });
+  await palette.getByRole('button', { name: 'Section', exact: true }).click();
+  await palette.getByRole('button', { name: 'Heading', exact: true }).click();
+  const inspector = page.getByRole('complementary', { name: 'Properties' });
+  await inspector.getByRole('textbox', { name: 'Text' }).fill('Editor-origin host heading');
+  await inspector.getByRole('spinbutton', { name: 'Heading level' }).fill('1');
+  const draftPath = `/api/admin/pages/${key}/builder/draft`;
+  await expect
+    .poll(async () => {
+      const response = await page.request.get(draftPath);
+      const body = await response.json();
+      const heading = body.tree?.root.sections[0]?.content[0];
+      return response.status() === 200 &&
+        body.revision !== '1' &&
+        heading?.responsive.base.text === 'Editor-origin host heading' &&
+        heading?.responsive.base.level === 1
+        ? body
+        : null;
+    })
+    .not.toBeNull();
+  const saved = await (await page.request.get(draftPath)).json();
+  expect(saved.tree.root.sections[0].content[0].responsive.base).toMatchObject({
+    text: 'Editor-origin host heading',
+    level: 1,
+  });
+  for (const locale of ['en', 'vi']) {
+    const preview = await page.request.get(`/api/admin/preview/pages/${key}?locale=${locale}`);
+    expect(preview.status(), await preview.text()).toBe(200);
+    expect((await preview.json()).tree).toEqual(saved.tree);
+  }
+  const published = await page.request.post(`/api/admin/pages/${key}/builder/publish`, {
+    headers,
+    data: { expectedRevision: saved.revision },
+  });
+  expect(published.status(), await published.text()).toBe(200);
+  for (const locale of ['en', 'vi']) {
+    const preview = await page.request.get(
+      `/api/admin/preview/pages/${key}?locale=${locale}&version=1`,
+    );
+    const publicPage = await page.request.get(`/api/public/pages/${key}?locale=${locale}`);
+    expect(preview.status()).toBe(200);
+    expect(publicPage.status()).toBe(200);
+    expect(await preview.json()).toEqual({ ...(await publicPage.json()), invalidBlocks: [] });
+    await page.goto(`/${locale}/${key}`);
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Editor-origin host heading' }),
+    ).toBeVisible();
+    const publicHtml = await page.locator('main.cms-core').innerHTML();
+    await page.goto(`/api/draft?path=${encodeURIComponent(`/${locale}/${key}`)}`);
+    await page.goto(`/${locale}/${key}?v=1`);
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Editor-origin host heading' }),
+    ).toBeVisible();
+    expect(await page.locator('main.cms-core').innerHTML()).toBe(publicHtml);
+    await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(`/${locale}/${key}`)}`);
+  }
+});
+
 test('all 20 host definitions publish through the live API and render in Next preview/public EN/VI', async ({
   page,
 }) => {

@@ -48,6 +48,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 D6 integrated gate adds an API E2E matrix of 20 real authenticated activate/CAS-save/read/publish/EN-VI preview-public cycles and a browser editor-origin H1 autosave → draft preview → publish → EN/VI SSR journey. Exact-head CI remains required; starter palette does not certify all-20 Properties. D2 migration/drain, visual/a11y, J01–J09 and release stay blocked. See `docs/specs/2026-11-15-cms-d6-integrated-gate.md`.
+
+- 2026-11-15 D6 final integrated evidence: the scratch line adds an API E2E matrix of 20 real authenticated activation/CAS-save/read/publish/EN/VI preview-public cycles plus a real browser editor-origin H1 autosave → draft preview → publish → EN/VI public/preview SSR journey. The existing all-20 browser mounted-host parity gate remains independent. API/browser exact-head CI is required before marking the new evidence passed; the limited starter palette does not certify all-20 Properties editing. D2 migration/drain, visual/a11y, J01–J09 and release remain blocked. See `docs/specs/2026-11-15-cms-d6-integrated-gate.md`.
+
 - 2026-11-15 D6 final-stack scratch: `pre/d6-final-restack` combines main, #199, #204 and #202 in that order without updating their PR branches. Draft input and stored-tree reads, publish and immutable snapshot reads use `HOST_TREE_REGISTRY`. The all-20 live HTTP/EN/VI SSR test now asserts activation, revision-checked save and read before publish; exact-head CI remains required, and #211's mocked GET cannot establish this gate. D2 migration/drain and all-20 Properties/visual/a11y gates remain blocked; no release approval.
 
 - C1 #209 P3 docs follow-up (2026-11-15): the #208 26-file tarball is evidence for that source SHA, not a fixed count for later integration; the allowlist is `dist/**`, README, LICENSE and package.json. The coordinator C3 command sheet must review all four direct consumer manifests (contracts, API, web, neutral fixture) alongside the root lockfile. No package/runtime/golden changes; final integrated audit and authorization remain open.
@@ -267,6 +271,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Added real-API all-20 host E2E and a separate editor-origin autosave/preview/public bilingual SSR browser journey on the D6 stack. Golden contracts unchanged; final exact-head CI pending.
+
+- 2026-11-15: Added separate real-API all-20 host draft/publish E2E and editor-origin autosave/preview/public EN/VI SSR browser journey to the D6 stack. Preserved golden contracts and explicitly kept all-20 Properties/editor, migration/drain and visual/a11y approval separate; final exact-head CI pending.
 
 - 2026-11-15: Prepared D6 scratch integration on the ordered main → D2 → D5 UI → D6 stack, retaining main's routing and D2/D5 behaviors while strengthening the all-20 real API/browser gate. The public-builder-byte scan excludes only the gated `r3-loading-test` fixture that imports an admin-only keyboard specimen; real public custom-page manifests stay mandatory. No golden-contract changes, production deployment or PR branch update.
 
