@@ -19,6 +19,72 @@ async function draft(page: Page, key: string) {
 
 test.setTimeout(180_000);
 
+for (const locale of ['en', 'vi'] as const) {
+  test(`Properties ${locale}: blur separates rapid keyboard undo and clear resets invalid override`, async ({
+    page,
+    context,
+  }) => {
+    await signIn(page);
+    const key = `property-sessions-${locale}-${Date.now()}`;
+    const origin = new URL(page.url()).origin;
+    const created = await page.request.post('/api/admin/pages', {
+      headers: { Origin: origin },
+      data: { key, title: 'Property sessions', locale, template: 'starter' },
+    });
+    expect(created.status(), await created.text()).toBe(201);
+    await context.addCookies([
+      { name: 'NEXT_LOCALE', value: locale, url: origin, sameSite: 'Lax' },
+    ]);
+    await page.goto(`/admin/builder/${key}`);
+    await page
+      .getByRole('button', {
+        name: locale === 'vi' ? 'Kích hoạt bản nháp cây' : 'Activate tree draft',
+      })
+      .click();
+    const palette = page.getByRole('complementary', {
+      name: locale === 'vi' ? 'Thành phần' : 'Components',
+    });
+    await palette
+      .getByRole('button', { name: locale === 'vi' ? 'Phần' : 'Section', exact: true })
+      .click();
+    await palette
+      .getByRole('button', { name: locale === 'vi' ? 'Tiêu đề' : 'Heading', exact: true })
+      .click();
+    const inspector = page.getByRole('complementary', {
+      name: locale === 'vi' ? 'Thuộc tính' : 'Properties',
+    });
+    const text = inspector.getByRole('textbox', { name: locale === 'vi' ? 'Văn bản' : 'Text' });
+    const original = await text.inputValue();
+    await page.clock.setFixedTime(new Date('2026-11-15T00:00:00Z'));
+    await text.fill('First edit');
+    await text.press('Tab');
+    await text.fill('Second edit');
+    await page.getByRole('button', { name: locale === 'vi' ? 'Hoàn tác' : 'Undo' }).click();
+    await expect(text).toHaveValue('First edit');
+    await page.getByRole('button', { name: locale === 'vi' ? 'Hoàn tác' : 'Undo' }).click();
+    await expect(text).toHaveValue(original);
+    await inspector.getByRole('button', { name: locale === 'vi' ? 'Di động' : 'Mobile' }).click();
+    const level = inspector.getByRole('spinbutton', {
+      name: locale === 'vi' ? 'Cấp tiêu đề' : 'Heading level',
+    });
+    await level.fill('3');
+    await expect(level).toHaveValue('3');
+    await level.fill('99');
+    await expect(level).toHaveAttribute('aria-invalid', 'true');
+    await level.press('Tab');
+    await inspector
+      .getByRole('button', {
+        name: new RegExp(
+          locale === 'vi' ? 'Xóa ghi đè.*Cấp tiêu đề' : 'Clear override.*Heading level',
+        ),
+      })
+      .click();
+    await expect(level).toHaveValue('2');
+    await expect(level).toHaveAttribute('aria-invalid', 'false');
+    await expect(inspector.getByRole('alert')).toHaveCount(0);
+  });
+}
+
 test('V07: edit, duplicate and move remain atomic across undo/redo and confirmed save', async ({
   page,
 }) => {

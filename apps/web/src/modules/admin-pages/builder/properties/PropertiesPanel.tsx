@@ -106,6 +106,7 @@ function Fields({
   breakpoint,
   locale,
   onEdit,
+  onEndTyping,
   drafts,
   draftKey,
 }: {
@@ -113,6 +114,7 @@ function Fields({
   breakpoint: Breakpoint;
   locale: 'en' | 'vi';
   onEdit: (operation: TreeOperation, typing?: boolean) => string | undefined;
+  onEndTyping?: () => void;
   drafts: Map<string, PropertyDraft>;
   draftKey: string;
 }) {
@@ -274,6 +276,7 @@ function Fields({
               id={id}
               value={input}
               onChange={(event) => change(event.target.value, true, event.target.value)}
+              onBlur={onEndTyping}
               aria-invalid={!!hasError}
               aria-describedby={hasError ? `${id}-error` : undefined}
               className={styles.control}
@@ -285,6 +288,7 @@ function Fields({
               min={field.min}
               max={field.max}
               value={input}
+              onBlur={onEndTyping}
               onChange={(event) => {
                 const raw = event.target.value;
                 if (field.kind === 'array')
@@ -348,6 +352,20 @@ function Fields({
                   delete updated[key];
                   return updated;
                 });
+                setInputs((previous) =>
+                  Object.fromEntries(
+                    Object.entries(previous).filter(
+                      ([entry]) => entry !== key && !entry.startsWith(`${key}.`),
+                    ),
+                  ),
+                );
+                setErrors((previous) =>
+                  Object.fromEntries(
+                    Object.entries(previous).filter(
+                      ([entry]) => entry !== key && !entry.startsWith(`${key}.`),
+                    ),
+                  ),
+                );
               }}
             >
               {text.clear} · {field.label}
@@ -378,6 +396,7 @@ export function PropertiesPanel({
   state,
   locale,
   onEdit,
+  onEndTyping,
   pageKey = '',
   propertyDrafts,
   hostLabel,
@@ -385,6 +404,7 @@ export function PropertiesPanel({
   state: BuilderState;
   locale: 'en' | 'vi';
   onEdit: (operation: TreeOperation, typing?: boolean) => string | undefined;
+  onEndTyping?: () => void;
   pageKey?: string;
   propertyDrafts?: Map<string, PropertyDraft>;
   hostLabel?: (type: BlockType) => string;
@@ -431,6 +451,7 @@ export function PropertiesPanel({
           breakpoint={breakpoint}
           locale={locale}
           onEdit={onEdit}
+          onEndTyping={onEndTyping}
           drafts={drafts}
           draftKey={`${pageKey}:${node.id}:${breakpoint}`}
         />

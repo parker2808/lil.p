@@ -52,6 +52,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - D2 write-reopen bootstrap follow-up: an entrypoint test proves `app.init()` precedes migration verification and `listen()`; a failed query leaves writes frozen. This does not replace the live old-instance drain and separate rollout approval.
 - D2 V11/V12 negative matrix verifies unsafe rich text and populated draft/version/preview reads; HTTP 400 alone cannot attest to production log redaction. Final D6 publish and live log audit remain GAP.
+- D5 Properties blur/clear follow-up: rapid text edits separated by blur remain separate undo steps, and clearing an override discards invalid local input and its error; EN/VI unit and real-builder browser regressions passed source CI `43737324989`, scoped review ACCEPT. New combined-head CI remains required.
 - #221 run `43729842098` reached two deterministic V15 failures: the focus audit moved focus off Heading before keyboard Delete, and the 768px Properties sheet's fixed backdrop was wrongly clipped to the builder parent's overflow boundary. Restore pre-audit focus and stop clipping beyond the fixed backdrop; exact-head five-shard CI and independent review remain OPEN.
 
 - V16 builder automation adds real-API EN/VI accessible-name, live announcement, keyboard focus, reduced-motion and whole-page axe coverage. Manual VoiceOver/NVDA output, public/preview heading order and independent screen-reader review remain OPEN; no release signoff from this subset.
@@ -425,6 +426,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Merged main `cb216865` into Stage A #210 while retaining the production write freeze and both Stage A and C1 documentation histories; exact-head five-shard CI and operational drain proof remain pending.
 - 2026-11-15: Reconciled Stage A #210 with main `3162b973`, preserving the production admin-page write freeze alongside five-shard CI and registered D4 keyboard/canvas specs. Exact-head CI and live old-instance drain remain separate gates.
 - 2026-11-15: Registered a real-browser D5 V16 automated accessibility subset for EN/VI tree-builder announcements, focus, reduced-motion and full-page axe. Manual screen-reader and public/preview checks remain open; no runtime or golden changes.
+- 2026-11-15: Ended property typing coalescence on input blur without scheduling an extra autosave; successful Clear override removes all pending, raw input and error state for its responsive property. Added EN/VI unit and real-API keyboard browser regressions.
 - 2026-11-15: Restored V15 keyboard-journey focus after capture and fixed overlay hit-area clipping at the fixed-position backdrop; kept ≥44px targets and ≥3:1 focus contrast, pending exact-head CI.
 
 - 2026-11-15: Bound V15 keyboard browser diagnosis after shard-5's reproducible ten-minute stall, sampling reduced-motion focus paint on frames instead of waiting indefinitely for transition completion; 44px and ≥3:1 assertions unchanged.
