@@ -661,6 +661,8 @@
 - 2026-11-16: A green source-branch restore journey can fail after D5/D6 integration when accessible Properties labels change; use exact labels from the failed CI accessibility snapshot and retain the saved-tree and painted-page assertions.
 - 2026-11-16: Layers reinitializes with only the Page expanded after a builder reload; expand each nested ancestor by keyboard before checking a reloaded heading in the accessible tree, while separately comparing the saved draft and revision.
 - 2026-11-16: A successful restored-version API equality and EN/VI light screenshots do not prove dark-theme public/preview parity after republish; compare painted content crops and unwaived axe in all locale/theme/width tuples, keeping the preview banner outside the crop and asserting real 409 focus, live feedback and no writes.
+- 2026-11-16: For real-tenant no-script SSR, compare painted content-element pixels across actual hostnames at each viewport, not whole-page screenshot bytes: shell chrome alone can make two blank or unstyled CMS blocks appear different.
+- 2026-11-16: When D6 no-script SSR and restored-version visual evidence land in parallel, keep both audit trails and regenerate graph provenance after merging the base; neither parent's green CI proves their combined head.
 - 2026-11-16 V02: sau reload, Layers thu gọn Section dù draft/published tree còn nguyên; test keyboard phải mở Section bằng ArrowRight rồi mới xác nhận các node con hiện ra, không đồng nhất trạng thái UI thu gọn với mất dữ liệu.
 
 - 2026-11-16 V02: Alt+ArrowDown trên sibling cuối là no-op; phải assert order trước/sau một Alt+ArrowUp thật, dùng Tab/Shift+Tab thay Playwright `.focus()` để chứng minh keyboard reachability.
