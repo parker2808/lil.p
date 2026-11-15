@@ -69,6 +69,10 @@ export const SPECS = [
   'u0-capture.spec.ts',
   'cms-tree-host-blocks.spec.ts',
   'cms-d6-parity-matrix.spec.ts',
+  'cms-d6-visual-1.spec.ts',
+  'cms-d6-visual-2.spec.ts',
+  'cms-d6-visual-3.spec.ts',
+  'cms-d6-visual-4.spec.ts',
 ] as const;
 
 /** Specs that must run together in shard 1 (pixel baselines, Lighthouse scores). */
@@ -76,6 +80,10 @@ const PINNED: Record<string, number> = {
   'visual.spec.ts': 1,
   'lighthouse.spec.ts': 1,
   'admin-editors-r3.spec.ts': 4,
+  'cms-d6-visual-1.spec.ts': 1,
+  'cms-d6-visual-2.spec.ts': 2,
+  'cms-d6-visual-3.spec.ts': 3,
+  'cms-d6-visual-4.spec.ts': 4,
 };
 
 /** CI seconds per file, measured on run 41382787431; unknown files count as 4. */

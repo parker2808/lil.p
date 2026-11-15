@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Real host pages may hydrate a decorative hero canvas after SSR; compare block SSR/hydration text and props hashes without treating that canvas as content, give retried API fixtures unique slugs, and run full (not severity-filtered) WCAG axe for each theme/viewport tuple.
+
 - 2026-11-15: Separate D6's real tree API publish/restore evidence from legacy UI version controls: the tree builder currently disables its publish action, so a green legacy UI journey cannot be reported as a tree UI journey; compare browser SSR/hydrated markup and preview/public pixels at the same locale and viewport.
 - 2026-11-15: Derive public-route gzip budgets from the production chunk graph on the owning feature head, count shared chunks once, and attach the exact-head graph with a named published-tree catch-all subset to CI; a green package-size cap alone does not prove the public JS boundary.
 

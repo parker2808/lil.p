@@ -24,22 +24,25 @@ exact PR head; attachments are generated in the Playwright report, not a
 committed platform-specific pixel baseline. This slice does not close J06/J08,
 V11/V12/V21/V22, all-20 editor-origin, design review or rollout gates.
 
-V03/V14 **remain GAP**. The new bounded real-API host test publishes four pages:
-one page with a single H1 block and all 16 non-H1 host blocks, plus one page
-for each remaining H1 type. For every type it compares public/version-preview
-SSR and hydrated DOM and attaches block-level screenshot pairs at **EN/VI ×
-1440 × computed light** (40 type/locale pairs, 80 PNGs), with ten public and
-ten paired preview page-level WCAG axe reports. CI attachments are evidence only after the exact-head shard
-passes; they are not a manually reviewed pixel baseline. The earlier heading
-and paragraph test adds EN/VI × 390/768/1440 default-host screenshot pairs.
+V03/V14 matrix is **pending exact-head CI and visual review**, not yet PASS.
+Four independent shard files publish one real API page apiece, with one H1 and
+four other host types in each page. Each file checks EN/VI × light/dark ×
+neutral/lil.p × 390/768/1440, yielding 24 page tuples and 120 type tuples per
+shard, 480 type tuples and 960 attached public/preview block PNGs overall.
+Every page tuple checks raw server-rendered block type, props hash and visible
+text against hydrated DOM, equal published/preview hydrated markup and paired
+block screenshot bytes, and full WCAG 2/2.1/2.2 AA axe violations (including
+moderate/minor), without waivers. A per-shard manifest records each tuple.
+The animation-only hero canvas is excluded from pixel captures while its
+semantic content remains in the SSR/hydration comparison.
 
-Uncovered tuples: **all 20 types** at 390/768 and dark on the published host
-(except heading/paragraph at 390/768 in the earlier test); **all 20 types** at
-EN/VI × light/dark × 390/768/1440 in the separate neutral fixture; and the
-explicit lil.p brand-token variant across every type/locale/theme/width. The
-public `BlocksPage` currently renders `main.cms-core` with no selectable
-`data-brand`, so a host-default light screenshot cannot prove either branded
-variant. The full cartesian gate remains open pending visual-owner scope and
-review; 20 types × 2 locales × 2 themes × 3 widths × 2 routes = 480 route/type
-captures per host, 960 for two distinct hosts. No mock or unmounted fixture is
-claimed as a published route.
+The published route serves explicit lil.p host tokens. The **neutral fixture is
+the same real published/preview host page with its root `data-brand` switched
+in the browser**, reusing the real neutral core CSS, not a separate neutral
+server/host deployment; dark is selected by next-themes and marked on the host
+root for core tokens. Consequently neutral SSR brand selection, separate
+tenant-host integration, and manual approval of visual artifacts remain GAP;
+the suite cannot claim a distinct neutral published host or pixel design
+approval from its pairwise equality alone. Four shards are pinned in
+`shards.ts`, each under the existing 20-minute CI budget; if they exceed the
+budget, the matrix stays GAP rather than weakening the gate.

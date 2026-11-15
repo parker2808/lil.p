@@ -6,9 +6,11 @@ checks, and EN/VI preview/public SSR, hydration and screenshot pairs at
 390/768/1440. Tree publishing in the builder UI remains disabled; API publish
 and the separate legacy UI publish/version/restore journey are not proof of a
 tree UI publish/restore flow or of production rollout readiness.
-The bounded all-20 public-host EN/VI desktop default-light screenshot and axe
-evidence leaves neutral/brand, dark and most mobile/tablet visual tuples open;
-see the matrix spec for the precise uncovered combinations.
+The four-shard all-20 published-host matrix now attempts EN/VI, light/dark,
+390/768/1440 and both neutral-core and explicit lil.p tokens, with paired
+public/preview screenshots and WCAG axe per tuple. Neutral is selected on the
+real host DOM in a browser fixture, not via a separate published tenant. CI
+and independent visual review remain required before V03/V14 can pass.
 
 The D6 host-registry integration is staged on a scratch branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and

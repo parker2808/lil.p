@@ -81,7 +81,11 @@ export async function BlocksPage({
       labels: { unsupported: t('error') },
     });
     if (!result.ok) notFound();
-    return <main className="cms-core">{result.content}</main>;
+    return (
+      <main className="cms-core cms-core-host" data-brand="lilp">
+        {result.content}
+      </main>
+    );
   }
   // Resolve async blocks before writing their wrappers. This also preserves a complete
   // initial HTML document without the client script needed to reveal streamed chunks.
