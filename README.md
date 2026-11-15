@@ -20,6 +20,8 @@ The [CMS core package](./packages/cms-core/README.md) runs its own dependency-bo
 
 The stacked [D5 V07 gate](./docs/specs/2026-11-15-cms-d5-v07-gate.md) verifies recursive duplicate IDs, undo/redo for duplicate and move, and a real-API save/reload of node order. **V07 remains partial:** insertion/edit undo-redo, copied text persistence, size/slot bounds at the adapter, and failed-save/version history boundaries still need proof. Duplicate is keyboard-accessible in EN/VI and uses the validated core operation.
 
+The [D5 live-journey spec](./docs/specs/2026-11-15-cms-d5-live-journeys.md#d4-sheet-integration-regression) tracks the shard-5 Properties correction after the study route switched to the real builder host; the EN/VI responsive single-mount and focus gate needs exact-head CI.
+
 ### CMS U1 shared controls
 
 The stacked [CMS U1 shared-controls spec](./docs/specs/2026-11-10-cms-u1-shared-controls.md) tracks the shadcn Select/RadioGroup migration, normalized checkbox/switch/menu states, EN/VI field labels, behavior tests, and the comparison against U0. Its review fixes preserve contact fields typed before hydration, keep the optional topic clearable to an empty payload, and test radio Tab/focus without changing selection. SchemaForm's registry coverage runs once per block, making slow editor forms identifiable without raising test timeouts. The existing test-only loading fixture serves a radio variant only with `R3_E2E_STATES=1` and otherwise returns 404. U0 stays the before reference; U1 does not change the API or database.
