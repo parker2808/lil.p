@@ -1,5 +1,9 @@
 # Lessons
 
+- 2026-11-16: The D2 builder rejects legacy SEO PATCH once a tree draft is active (409 revision-aware boundary). To test historical SEO changes through supported APIs, publish a legacy snapshot first, update SEO in legacy mode, then activate and publish a tree snapshot.
+
+- 2026-11-16: Historical draft previews need the same validated version passed to both body and metadata fetches; `getPage` silently ignores versions on public routes, so test current public SEO and body with `?v=N` as well as EN/VI historical preview.
+
 - 2026-11-16: A 768px CSS desktop breakpoint must match the JavaScript `matchMedia` breakpoint; a desktop header can overflow before the mobile sheet disappears, especially with VI navigation. Gate 768/1024 and the new desktop boundary in both languages and themes with real control bounds, touch sizes and keyboard order.
 
 - 2026-11-15: A painted footer using `color-mix` resolves to `color(srgb …)`, not the raw `rgb()` card token; compare the browser's computed blend against explicit light/dark shell inputs before attributing a screenshot gate failure to an incorrect theme.

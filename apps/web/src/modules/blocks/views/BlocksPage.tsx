@@ -21,10 +21,7 @@ import { createElement } from 'react';
 import { BlockRenderer } from '../components/BlockRenderer/BlockRenderer';
 import { BLOCK_RENDERERS } from '../constants/block-renderers.constant';
 import { getPage } from '../services/pages.service';
-
-function firstQuery(value: string | string[] | undefined): string | undefined {
-  return Array.isArray(value) ? value[0] : value;
-}
+import { previewVersion } from '../utils/preview-version.util';
 
 export async function BlocksPage({
   pageKey,
@@ -37,13 +34,7 @@ export async function BlocksPage({
   searchParams?: Record<string, string | string[] | undefined>;
   brand?: 'neutral' | 'lilp';
 }) {
-  const rawVersion = firstQuery(searchParams?.v);
-  const version = rawVersion ? Number(rawVersion) : undefined;
-  const page = await getPage(
-    pageKey,
-    locale,
-    version !== undefined && Number.isInteger(version) && version > 0 ? version : undefined,
-  );
+  const page = await getPage(pageKey, locale, previewVersion(searchParams));
   const draft = await draftMode();
   const t = await getTranslations('states');
   const preview = page as PublicPagePreview;

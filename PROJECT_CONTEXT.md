@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V13: D6 historical draft SEO title/description previously read the current draft while `?v=N` rendered a versioned tree. Shared metadata now uses the validated draft-only version for core and custom page routes; browser evidence must verify EN/VI old body/SEO versus current public body/SEO. Full V13 route/state localization remains GAP.
+
 - 2026-11-15 V09/V10 #239 first CI `43730577307` failed only shard 2: the page-header's actual Properties title labels are `Properties (EN)`/`Properties (VI)` (verified from Playwright error-context), not `title (EN)`/`title (VI)`. Fixture locators now assert the exact accessible names; new-head CI/visual evidence still pending, no assertion/threshold removed.
 - 2026-11-15 V09/V10 localized restore follow-up: test fixture changes to a bilingual page-header H1, requiring Vietnamese painted text in both public and preview captures at 390/768/1440, plus VI dark-theme paired captures. Exact-head five-shard CI and independent screenshot review remain pending; broader V09/V10, a11y and deployed parity remain GAP.
 - 2026-11-16 D6 header tablet overflow: move the shared public desktop-navigation breakpoint from 768px to 1280px, keeping the existing mobile sheet/keyboard flow at 768/1024; add EN/VI light/dark viewport/44px/keyboard screenshot evidence. Exact-head CI and raw image review pending; no broader V09/V10 signoff.
@@ -339,6 +341,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: V13 browser fixture follows the supported D2 transition (legacy publish → legacy SEO edit → tree activate/publish); prior exact-head run `43748389414` caught an invalid legacy PATCH after tree activation (409). Runtime version guard unchanged; next CI pending.
+
+- 2026-11-16: Propagate draft-only `?v=N` through shared core/custom SEO metadata, align parsing with tree rendering and add a real EN/VI versioned-browser regression; public query parameters cannot request historical metadata. CI/review pending.
 
 - 2026-11-15: Staged bilingual page-header fields and 18 public/preview screenshots (12 light EN/VI, 6 dark VI) in the real builder UI restore gate; kept CAS, pointer and restored-tree assertions, without runtime/schema changes. CI and independent review pending.
 - 2026-11-16: Keep public header's compact navigation until 1280px and gate 768/1024/1280 EN/VI light/dark viewport bounds, target sizes, keyboard order and screenshots; CI and independent visual review pending.

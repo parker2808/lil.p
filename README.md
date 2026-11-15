@@ -1,5 +1,10 @@
 # lil.p
 
+Historical CMS previews (`?v=N`) now read the same version for the rendered
+tree and EN/VI SEO title/description. Public routes ignore `?v=` and retain
+their current published content and metadata; this is a scoped V13 regression
+gate, not full localization acceptance.
+
 The public header keeps compact search and an accessible navigation sheet through
 1024px; full navigation starts at 1280px to leave room for EN/VI labels and
 theme/language controls. The [responsive header gate](./docs/specs/2026-11-16-cms-d6-header-responsive.md)

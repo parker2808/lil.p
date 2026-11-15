@@ -14,8 +14,10 @@ export function contactMetadata(input: {
 
 export function buildContactMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<Metadata> {
-  return buildPageMetadata('contact', params);
+  return buildPageMetadata('contact', params, searchParams);
 }
