@@ -224,16 +224,40 @@ The redacted Gitleaks scan of this retained rehearsal history reported zero
 findings; author metadata and the later integrated history still need private
 manual review before any push.
 
+**Combined-head rehearsal on #208 `59cc3b4f` (local only, 2026-11-15):**
+`git filter-repo --subdirectory-filter packages/cms-core` produced a 39-file
+package history at `857b15a`. On Node 22.21.1/pnpm 10.34.9, the standalone
+lockfile and frozen install, typecheck, lint, package-local dependency gate
+(3/3), build and unit tests (54 passed, 2 optional browser tests skipped) pass.
+The redacted history scan reports zero findings. The 26-file tarball contains
+only `dist/**`, README, LICENSE and package.json; no source, tests, scripts or
+lockfile. Installed from that tarball, `./contracts`, `./engine`, `./tree`,
+`./react` and `./react/server` resolve through ESM, CJS and declarations;
+`./theme.css` resolves as a file. The root `"."` is **not** exported, and both
+loaders reject it. No current consumer imports the root, so keep subpath-only
+usage unless the consumer owners explicitly request and review a real root
+entry; add a package export test to lock in the decision before C1.
+Four scratch consumers (`packages/contracts`, `apps/api`, `apps/web` and
+`examples/cms-core-fixture`) installed the tarball rather than the workspace
+package; contracts → web → API builds passed. The first attempt to remove the
+workspace package failed because web and the fixture still declared
+`workspace:*`; C3 must pin all four direct dependents, not just contracts/API.
+This head is not the final merged source. Manual retained-history metadata,
+dependency rights/notices, trusted installer auth, browser visual/E2E, Docker
+and deployment verification remain separate gates; no remote repo was created.
+
 ```sh
 # C1: authorized local extraction from an approved, integrated source SHA.
 SOURCE_CHECKOUT=/path/to/approved/local/lilp
-APPROVED_SHA=full-reviewed-integrated-sha
+APPROVED_SHA=replace-with-reviewed-40-character-integrated-sha
+test "${#APPROVED_SHA}" -eq 40
+git -C "$SOURCE_CHECKOUT" cat-file -e "${APPROVED_SHA}^{commit}"
 SCRATCH_DIR=$(mktemp -d /tmp/cms-core-c1-XXXXXX)
 git clone --no-local --no-checkout "$SOURCE_CHECKOUT" "$SCRATCH_DIR/source"
-git -C "$SCRATCH_DIR/source" fetch "$SOURCE_CHECKOUT" "$APPROVED_SHA"
-git -C "$SCRATCH_DIR/source" checkout --detach "$APPROVED_SHA"
-git -C "$SCRATCH_DIR/source" subtree split --quiet --prefix=packages/cms-core --branch extracted HEAD
-git clone --no-local --branch extracted "$SCRATCH_DIR/source" "$SCRATCH_DIR/core"
+git -C "$SCRATCH_DIR/source" checkout -B extraction "$APPROVED_SHA"
+command -v git-filter-repo
+git -C "$SCRATCH_DIR/source" filter-repo --subdirectory-filter packages/cms-core --force
+git clone --no-local --branch extraction "$SCRATCH_DIR/source" "$SCRATCH_DIR/core"
 # Verify the filtered tree contains the integrated, package-local config/scripts/tests/README/LICENSE.
 cd "$SCRATCH_DIR/core"
 pnpm install --lockfile-only
@@ -257,16 +281,18 @@ pnpm pack --dry-run --json
 # Review the v0.1.0 manifest, package files, checksum, standalone CI and approved distribution before any tag/publish.
 
 # C3: a separate reviewed lil.p consumer-switch PR, after Parker chooses an exact pinned source.
-# Replace each consumer's workspace:* with the approved exact pinned specifier in its manifest, then:
+# Replace workspace:* in packages/contracts, apps/api, apps/web and examples/cms-core-fixture.
+# Confirm the current list of direct consumers before changing the manifests, then:
 pnpm install --lockfile-only
 pnpm install --frozen-lockfile
 pnpm --filter @portfolio/contracts build
+pnpm --filter @portfolio/web build
 pnpm --filter @portfolio/api build
 pnpm --filter @portfolio/api deploy --prod --legacy /path/to/isolated-output
 # Validate installed ESM/CJS/types/theme paths, SSR boundary and platform build filters in trusted CI.
 ```
 
-Use the existing [C3 secret-location plan](#c3-consumer-switch-and-deploy-readiness-gate) for Parker's later read-only **variable names/locations only**; never place credentials in commands, manifests, git URLs or logs. These are instructions, not permission to run deployment, database migration or a new repository. **After D2–D6 and before any C1 release**, repeat the split from the final integrated SHA; compare retained history/author metadata, rerun redacted scans and license/notices review, standalone frozen install/lint/typecheck/dependency/unit/build, 24-file **policy** (not hard-coded file count), pack/consumer ESM+CJS/types/CSS export checks, bundle caps, D1 snapshot no-loss tests, EN/VI/AA/theme and SSR/public parity, and the authorized D6 verification. A `main` deploy with D2 DDL needs its own authorization and rollback-read proof.
+Use the existing [C3 secret-location plan](#c3-consumer-switch-and-deploy-readiness-gate) for Parker's later read-only **variable names/locations only**; never place credentials in commands, manifests, git URLs or logs. These are instructions, not permission to run deployment, database migration or a new repository. **After D2–D6 and before any C1 release**, repeat the split from the final integrated SHA; compare retained history/author metadata, rerun redacted scans and license/notices review, standalone frozen install/lint/typecheck/dependency/unit/build, and verify the pack allowlist (`dist/**`, README, LICENSE and package.json; 26 files on #208, including 23 under `dist/**`, but recount at the final integrated SHA). Check packed-consumer ESM+CJS/types/CSS exports, bundle caps, D1 snapshot no-loss tests, EN/VI/AA/theme and SSR/public parity, and the authorized D6 verification. A `main` deploy with D2 DDL remains **BLOCKED** until executable proof of the approved forward-only Stage A write freeze/drain (all old API instances drained before migration, new API verified before writes reopen); after migration, do not roll back to an old API—fix forward instead.
 
 ## C1 dry-run gap closure — proposed files, not applied
 
@@ -410,7 +436,7 @@ The current `pnpm-workspace.yaml` includes only `apps/*` and `packages/*`; root 
 
 ## C3: consumer switch and deploy-readiness gate
 
-In a separate reviewed lil.p PR, replace `workspace:*` with the **approved exact registry version, full Git SHA, or verified local tarball reference** for every actual consumer and regenerate the lockfile with a trusted frozen reinstall. Document `CMS_CORE_READ_TOKEN` as a **placeholder variable name only** for Parker's protected local package-manager/credential-helper configuration, trusted GitHub Actions repository/environment secret, Vercel project build setting and Render **build-time** secret mechanism (if the chosen installer needs one). A fork PR has no trusted credential; design a safe blocked/no-secret path. Never create, read or print credential values, tracked auth config, or a URL containing one. Confirm platform support before declaring the build path viable.
+In a separate reviewed lil.p PR, replace `workspace:*` with the **approved exact registry version, full Git SHA, or verified local tarball reference** for every actual consumer (currently contracts, API, web and the neutral fixture) and regenerate the lockfile with a trusted frozen reinstall. Document `CMS_CORE_READ_TOKEN` as a **placeholder variable name only** for Parker's protected local package-manager/credential-helper configuration, trusted GitHub Actions repository/environment secret, Vercel project build setting and Render **build-time** secret mechanism (if the chosen installer needs one). A fork PR has no trusted credential; design a safe blocked/no-secret path. Never create, read or print credential values, tracked auth config, or a URL containing one. Confirm platform support before declaring the build path viable.
 
 Acceptance is a tested matrix, not a deployment request: `apps/api/Dockerfile` deps stage can fetch the dependency without baking access into an image; a trusted `pnpm --filter @portfolio/api deploy --prod --legacy` produces a runner with the core's built CJS `./engine` and `./contracts` but **no credential**; the emitted Nest CJS import boots; web public SSR imports `./react/server` without editor bytes. Review `scripts/vercel-ignore-build.sh` and the web wrapper so package/lockfile-only changes rebuild only when branch policy permits, and `render.yaml`/dashboard build filters so package/lockfile changes trigger API rebuilds. Keep EN/VI, light/dark, 1440/390, WCAG AA, keyboard, no data loss, unchanged B1 goldens and neutral/token-only default theme regression evidence. `apps/api/docker-entrypoint.sh` can run `prisma migrate deploy`: C3 must introduce no migration; any deployment requires separate approval and rollback plan.
 
