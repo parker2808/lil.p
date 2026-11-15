@@ -8,6 +8,9 @@ semantics and retained version-row JSON hashes after reads and legacy restore;
 the historical legacy fixture intentionally omits SEO fields. Its route inventory
 is scoped to these two custom-page formats and their three HTTP read endpoints,
 **not** a claim that every site route or exact original wire bytes are inventoried.
+The HTTP matrix also reads nested unknown props from a current stored version,
+rejects a future block version on restore with a typed error and compares page
+state plus both immutable version-row hashes before and after rejection.
 
 `cms-builder-rollback-reader.e2e-spec.ts` uses a generated pre-D2 Prisma client
 against the migrated disposable database, reads five distinct published rows and
@@ -20,5 +23,5 @@ and operational no-overlap proof. No old-API rollback is safe.
 The CMS core snapshot unit test checks raw JSON preservation of nested unknown
 props for current versions and typed no-mutation rejection for future/invalid
 versions. Final integrated-head CI and independent review must precede any row
-PASS; V17's full route inventory and V21's HTTP/fixture matrix remain open if
+PASS; V17's full site inventory and V21's broader fixture/version matrix remain open if
 the narrower evidence here does not cover them.
