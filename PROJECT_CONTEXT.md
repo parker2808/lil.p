@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #208 next verification cut includes D2 `26ace408`, D5 `92fb84d4` (#263) and D6 `dd66938d` (#259). Do not inherit earlier #208 CI or source-green row scores: await new exact-head API/five-shard run and raw-artifact review. D5 dialog automation is bounded; D6 V05 revision-chain single fixture is bounded; manual spoken SR, V03/V06/V09/V10/V14 all-host/prod remain GAP. #208 DO NOT MERGE.
+
 - 2026-11-16 #208 verification-only cut integrates D2 `26ace408`, D5 `aaec9e62` and D6 `3b60df35`; 7/7 no-build gate passed after the D6 merge. Await exact combined-head API/five-shard CI and artifact review before rescoring; #256/#260 are not integrated. V03/V06/V09/V10/V14 and dialogs/manual SR remain open. DO NOT MERGE or deploy.
 - D5 V16 automated follow-up checks EN/VI keyboard trap/return for the delete dialog and compact Properties sheet, live deletion/local-draft status, and the disabled Publish reason. D5 has no publish/restore-version dialog; its integrated D6 dialog capture/a11y review and manual spoken VoiceOver/NVDA check remain GAP.
 
@@ -462,6 +464,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Normal-merged D5 `92fb84d4` automated dialog coverage and D6 `dd66938d` V05 revision-chain browser evidence into verification-only #208; no main merge or deploy.
 
 - 2026-11-16: Normal-merged D6 `3b60df35` (#261 dark banner, #258 restored UI) into verification-only #208 after D5 `aaec9e62` and D2 `26ace408`; preserved both histories and reran 7/7 no-build gates. Exact-head CI still required.
 - 2026-11-16: Extended registered D5 V16 browser coverage for real EN/VI dialog keyboard focus boundaries, return, and live announcements; documented disabled publishing and remaining integrated/manual scope in `docs/specs/2026-11-15-cms-d5-v16-automated-a11y.md`.
