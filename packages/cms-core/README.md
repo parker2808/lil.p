@@ -1,5 +1,7 @@
 # CMS core
 
+The package has no root `"."` export; import documented subpaths instead.
+
 `@parker2808/cms-core` exports independently built ESM/CJS subpaths:
 `./contracts`, `./engine`, `./react`, and `./react/server`. B4 provides generic Zod
 page/block/locale/snapshot contracts, `defineBlock`, `createRegistry`, and the
@@ -27,6 +29,14 @@ resolution and typed registry/errors. Depth, size and node limits are checked
 before recursive parsing; mobile grids may have one column. Hosts own persistence
 and must validate drafts separately from publication. See the
 [D1 spec](../../docs/specs/2026-11-11-cms-d1-versioned-tree.md).
+
+An empty tree is valid for `readTree` autosave, but `validateTreeForPublish` returns `HEADING_RULE` until exactly one H1 exists at every breakpoint. The host must not substitute the draft reader for publication.
+
+D5 adds `applyTreeOperation`, `createTreeHistory`/`commitTreeHistory`/`undoTreeHistory`/`redoTreeHistory` and `DraftAutosave` to `./tree`. Supply an explicit D1 component registry to operations, history and autosave for strict property validation; duplicate operations need a host ID allocator. History coalesces typing on one node/breakpoint/key only within 600ms and retains at most 50 operations by default. Autosave accepts a D2 transport (`save({tree, expectedRevision})` and `read()`) and an injected timer; revisions are decimal strings. `review()` reads the remote draft after a conflict or uncertain save but never overwrites local state. A valid legacy-mode `{tree: null}` response enters `legacy` review status and blocks further saves, retaining the local tree for host export/recovery. `resolveReviewed('acknowledge')` requires a matching builder tree; `resolveReviewed('reload', { discardLocalEdits: true })` requires explicit host confirmation and cannot load a null tree. There is no browser storage or live UI wiring in this package change; see the [D5 spec](../../docs/specs/2026-11-11-cms-d5-core-logic.md). D6 must supply all 20 host block schemas and test each type; the neutral core does not import portfolio definitions.
+
+Call `endTreeTyping(history)` on blur/explicit commit to close the current coalescing window; editing afterward starts a separate undo entry.
+
+D3 adds opt-in `renderTree({ input, createElement, labels, registry?, components?, resolveMedia? })` to `./react/server`. Both draft preview and public SSR use the same bounded draft reader; hosts separately call `validateTreeForPublish` when publishing. Invalid trees produce a localized typed fallback without partial output, while thrown host renderers return `RENDER_FAILED`. Core owns semantic headings: `components.heading` is rejected to prevent duplicate H1 elements. Heading level changes across breakpoints are allowed while editing drafts, but publishing or SSR rejects them with `HEADING_RULE` because each node has one semantic heading tag. Responsive rows and columns are covered by the `CMS_TREE_BROWSER=1` browser matrix; legacy block rendering remains the default until D2 dispatch and D6 route parity. See the [D3 spec](../../docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md).
 
 Build and check the browser gzip budgets with `pnpm build` from this package (or
 `pnpm --filter @parker2808/cms-core build` from the monorepo).

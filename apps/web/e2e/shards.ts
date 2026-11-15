@@ -1,8 +1,8 @@
-// CI runs web-e2e in {4} shards, each with its own MySQL. Playwright's built-in
+// CI runs web-e2e in 5 shards, each with its own MySQL. Playwright's built-in
 // `--shard` cannot pin files together, so files are assigned here instead:
-// the pixel (visual) and Lighthouse specs always share shard 1, and the rest
-// are balanced by measured CI duration. Order inside a shard follows SPECS.
-export const SHARD_COUNT = 4;
+// the pixel baseline and Lighthouse specs share shard 1, while the D6 visual
+// matrix's slowest group has a separate shard. Order inside a shard follows SPECS.
+export const SHARD_COUNT = 5;
 
 export const SPECS = [
   'public.spec.ts',
@@ -14,6 +14,7 @@ export const SPECS = [
   'a11y.spec.ts',
   'cms-u1-controls.spec.ts',
   'cms-u2-patterns.spec.ts',
+  'cms-u3-study.spec.ts',
   'lighthouse.spec.ts',
   'ux-overlay.spec.ts',
   'admin-scroll.spec.ts',
@@ -65,13 +66,27 @@ export const SPECS = [
   'u0-capture.spec.ts',
 ] as const;
 
-/** Specs that must run together in shard 1 (pixel baselines, Lighthouse scores). */
+/** Specs pinned for pixel baselines and Lighthouse scores. */
 const PINNED: Record<string, number> = {
   'visual.spec.ts': 1,
   'lighthouse.spec.ts': 1,
+  'admin-editors-r3.spec.ts': 4,
 };
 
-/** CI seconds per file, measured on run 41382787431; unknown files count as 4. */
+export function assertPinnedSpecs(pins: Readonly<Record<string, number>>): void {
+  for (const [file, shard] of Object.entries(pins)) {
+    if (!SPECS.includes(file as (typeof SPECS)[number])) {
+      throw new Error(`Pinned E2E spec is not registered: ${file}`);
+    }
+    if (!Number.isInteger(shard) || shard < 1 || shard > SHARD_COUNT) {
+      throw new Error(`Pinned E2E shard must be 1..${SHARD_COUNT}: ${file}=${shard}`);
+    }
+  }
+}
+
+assertPinnedSpecs(PINNED);
+
+/** Baseline CI seconds per file from run 41382787431; unknown files count as 4. */
 const WEIGHT: Record<string, number> = {
   'a11y.spec.ts': 63,
   'lighthouse.spec.ts': 58,
