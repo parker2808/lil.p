@@ -50,8 +50,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - 2026-11-16 V02: D5 #248 covers EN/VI keyboard invalid drop but intentionally disables publish. A separate D6 real-browser gate now exercises keyboard-only edit/reorder, live status/focus order, publish and reload with the published version/public tree; exact-head ready-e2e CI and manual screen-reader audio remain pending. No runtime, API, schema or production change.
 
+- 2026-11-16 D6 J07/V06 no-script gate: CI `43748537865` failed all eight new cases because public group-level loading streamed the main into a hidden segment requiring insertion scripts. Move the home skeleton into a dedicated group and remove only the shared fallback. Four five-host groups require EN/VI public v2 versus historical `?v=1` preview visible nested text at 390/768/1440, distinct changed H1-host labels/hashes, unchanged peer-host semantics, except empty CV, no overflow and paired screenshot manifests. This base-only fixture does not prove every host's responsive overrides; existing parity tests cover heading/paragraph overrides, API E2E covers immutable version/pointer invariants. J07/V06 remain GAP until exact-head CI, independent artifact review and remaining responsive coverage. See `docs/specs/2026-11-16-cms-d6-j07-v06-nojs.md`.
 - 2026-11-16 V13: D6 historical draft SEO title/description previously read the current draft while `?v=N` rendered a versioned tree. Shared metadata now uses the validated draft-only version for core and custom page routes; browser evidence must verify EN/VI old body/SEO versus current public body/SEO. Full V13 route/state localization remains GAP.
-
 - 2026-11-15 V09/V10 #239 first CI `43730577307` failed only shard 2: the page-header's actual Properties title labels are `Properties (EN)`/`Properties (VI)` (verified from Playwright error-context), not `title (EN)`/`title (VI)`. Fixture locators now assert the exact accessible names; new-head CI/visual evidence still pending, no assertion/threshold removed.
 - 2026-11-15 V09/V10 localized restore follow-up: test fixture changes to a bilingual page-header H1, requiring Vietnamese painted text in both public and preview captures at 390/768/1440, plus VI dark-theme paired captures. Exact-head five-shard CI and independent screenshot review remain pending; broader V09/V10, a11y and deployed parity remain GAP.
 - 2026-11-16 D6 header tablet overflow: move the shared public desktop-navigation breakpoint from 768px to 1280px, keeping the existing mobile sheet/keyboard flow at 768/1024; add EN/VI light/dark viewport/44px/keyboard screenshot evidence. Exact-head CI and raw image review pending; no broader V09/V10 signoff.
@@ -346,10 +346,19 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - 2026-11-16: Register the D6 EN/VI keyboard-only publish browser test in the five-shard manifest; compare saved draft, version snapshot and public tree after reload while recording zero pointer events. CI pending; no V02 full PASS until exact-head evidence and independent review.
 
+- 2026-11-16: #249 CI `43754309959` found page-header VI test content falling back to EN because the default title.vi is empty; fill both heading fields in the version fixture so the no-JS assertion proves VI rendering. Same run confirmed home OG metadata missing; fix committed before rerun.
+
+- 2026-11-16: #249 CI `43753130466` caught the home OG image disappearing after moving home into a route group; page metadata now explicitly includes the existing localized OG image for home and a unit assertion guards it. Recheck exact-head CI; no weaker metadata assertion.
+
+- 2026-11-16: Follow-up #249 historical version P2: publish v1 then a distinct visible H1-host label in v2 before comparing no-JS public v2 versus authenticated `?v=1` preview; assert API trees, text and props hashes diverge while the other four hosts remain unchanged. Exact-head CI pending.
+
+- 2026-11-16: Follow-up #249 review: require painted nested host text and visible main without scripts, request historical `?v=1` in draft preview, and keep the homepage skeleton in its own route group rather than reinstating the custom-page-blocking parent loading boundary. Add a unit guard for that boundary; exact-head five-shard CI pending.
+
+- 2026-11-16: Removed public route-group loading boundary that hid all custom no-script page bodies in streamed segments (`43748537865`); kept per-route skeletons and the strict no-script browser assertions. Explicitly scoped all-20 base-only coverage and pointer/override evidence; new exact-head five-shard CI required.
+- 2026-11-16: Added all-20 no-script host public/preview tests at three responsive widths and source-head screenshot manifests; registered the test on five-shard CI. No runtime, schema, golden-contract or production change; responsive signoff awaits exact-head artifacts and review.
 - 2026-11-16: V13 browser fixture follows the supported D2 transition (legacy publish → legacy SEO edit → tree activate/publish); prior exact-head run `43748389414` caught an invalid legacy PATCH after tree activation (409). Runtime version guard unchanged; next CI pending.
 
 - 2026-11-16: Propagate draft-only `?v=N` through shared core/custom SEO metadata, align parsing with tree rendering and add a real EN/VI versioned-browser regression; public query parameters cannot request historical metadata. CI/review pending.
-
 - 2026-11-15: Staged bilingual page-header fields and 18 public/preview screenshots (12 light EN/VI, 6 dark VI) in the real builder UI restore gate; kept CAS, pointer and restored-tree assertions, without runtime/schema changes. CI and independent review pending.
 - 2026-11-16: Keep public header's compact navigation until 1280px and gate 768/1024/1280 EN/VI light/dark viewport bounds, target sizes, keyboard order and screenshots; CI and independent visual review pending.
 
