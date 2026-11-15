@@ -1,10 +1,13 @@
 # Lessons
 
+- 2026-11-15: A matching focus rule does not establish painted contrast; verify the stronger host outline on exact-head CI before accepting V15. The separate D4 test owner is replacing obsolete study-only assertions on the live Properties route.
+
 - 2026-11-15: Emitted CSS is not proof of a visible focus ring: CI found a matching host toggle rule but a computed transparent shadow. Check cascade priority, connected/focused DOM state, paint-frame/transition timing, and the painted ≥3:1 contrast in the browser before claiming V15.
 
 - 2026-11-15: A computed-focus audit must parse all browser-emitted CSS color functions, including `oklab()` on box shadows; otherwise it can misreport a visible opaque ring as absent while a translucent outline fails 3:1. Check the actual shadow and adjacent painted surfaces without relaxing the contrast threshold.
 
 - 2026-11-15: Browser focus audits need keyboard modality before programmatically focusing each control: a modifier-only `Shift` press can leave `:focus-visible` unmatched even when the CSS rule is present. Use `Tab`, assert `:focus-visible`, and still measure each computed ring against adjacent surfaces at ≥3:1.
+- 2026-11-15: When syncing a D4 study base into the D5 host, take D5's live host and history commands rather than reverting to the provisional study route; carry forward base locale/focus fixes and retain both branches' documentation histories.
 - 2026-11-15: A core duplicate operation does not prove the V07 builder journey until a discoverable keyboard-accessible UI command generates fresh descendant IDs and the real browser preserves their order through undo/redo and a confirmed save.
 - 2026-11-15: A green duplicate/move history journey is only a V07 subset when insertion/edit undo-redo, copied text persistence, adapter bounds and failed-save/version boundaries are not asserted; keep the matrix row PARTIAL until these have exact-head evidence.
 
@@ -407,3 +410,6 @@
 - 2026-11-10: A flag-gated localized fixture needs localized, gated metadata too; derive the title from the same EN/VI copy and test both disabled and enabled states.
 - 2026-11-15: Unauthenticated 503 checks across direct API and Vercel ingress can detect a missing HTTP write freeze, but cannot prove old writers drained or D2 columns exist; require authenticated instance inventory and an authorized read-only schema check before migration or reopening. With locale-prefixed routing, accept only the expected same-origin root redirect and probe `/en` and `/vi` explicitly.
 - 2026-11-15: A four-shard visual matrix can hit the job time limit even while three peers finish quickly; measure actual job and Playwright step durations and keep per-shard provenance validation synchronized with the matrix size. Register an incoming spec before pinning it to a new shard—otherwise silent skips mask an incomplete gate. A separate failing accessibility assertion is not a throughput failure.
+- 2026-11-15: Pin validation catches a dangling pin but not an unpinned spec missing from an explicit Playwright shard manifest; compare every recursive `*.spec.ts` on disk against the registered list in CI and require exact-head browser evidence after fixing omissions.
+- 2026-11-15: Re-enabling an omitted Playwright spec can reveal stale selectors on a custom Radix combobox; exercise the visible option and assert the reloaded locale/cookie rather than relaxing downstream keyboard and axe checks.
+- 2026-11-15: Radix does not fire a locale change when selecting the active language; to prove cookie persistence, switch away and back when needed. Restore sheet-trigger focus after React removes the inert overlay in a layout effect, not competing animation frames referencing a cleared ref.

@@ -4,6 +4,7 @@ import type { TreeDocument, TreeNode } from '@parker2808/cms-core/tree';
 import { useLocale } from 'next-intl';
 import {
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   useSyncExternalStore,
@@ -276,16 +277,15 @@ export function BuilderShell({
     first?.focus();
   }, [visibleSheet]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (visibleSheet || !triggerRef.current) return;
     const trigger = triggerRef.current;
     triggerRef.current = null;
-    requestAnimationFrame(() => trigger.focus());
+    trigger.focus();
   }, [visibleSheet]);
 
   function closeSheet() {
     setSheet(null);
-    requestAnimationFrame(() => triggerRef.current?.focus());
   }
   function closeConfirmation(restoreTrigger = true) {
     setConfirmDelete(false);
