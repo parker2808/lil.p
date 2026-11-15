@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 D6 all-20 gallery: the previous neutral/lil.p visual pairs were almost entirely byte-identical despite a passing builder-accent token check. Adapt actual site palette only on the neutral host; require rendered hero colors and different images, then inspect exact-head public/preview CI artifacts. V03 starter components, V05 Properties and complete V14 real-tenant/combined-head evidence remain GAP.
+
 - 2026-11-16 D6 header tablet overflow: move the shared public desktop-navigation breakpoint from 768px to 1280px, keeping the existing mobile sheet/keyboard flow at 768/1024; add EN/VI light/dark viewport/44px/keyboard screenshot evidence. Exact-head CI and raw image review pending; no broader V09/V10 signoff.
 
 - 2026-11-15 D6 #241 CI 43737085933: dark public footer screenshot scrolls the no-script viewport to the bottom while preview omits that capture; reset to top before strict link geometry comparison. No threshold or runtime changes; new exact-head CI pending.
@@ -335,6 +337,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Mapped the neutral host's rendered site palette to core tokens without changing the lil.p palette; the 20-host browser gallery asserts a painted hero accent and distinguishable neutral/lil.p images while retaining axe and public/preview parity. Exact-head CI and visual acceptance pending.
 
 - 2026-11-16: Keep public header's compact navigation until 1280px and gate 768/1024/1280 EN/VI light/dark viewport bounds, target sizes, keyboard order and screenshots; CI and independent visual review pending.
 

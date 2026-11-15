@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A `--builder-accent` value change can pass while 476/480 neutral/branded host screenshots remain identical: host block renderers consume site palette tokens, so test computed painted text and actual image differences, not token presence alone.
+
 - 2026-11-16: A 768px CSS desktop breakpoint must match the JavaScript `matchMedia` breakpoint; a desktop header can overflow before the mobile sheet disappears, especially with VI navigation. Gate 768/1024 and the new desktop boundary in both languages and themes with real control bounds, touch sizes and keyboard order.
 
 - 2026-11-15: A painted footer using `color-mix` resolves to `color(srgb …)`, not the raw `rgb()` card token; compare the browser's computed blend against explicit light/dark shell inputs before attributing a screenshot gate failure to an incorrect theme.

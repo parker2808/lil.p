@@ -1,5 +1,12 @@
 # D6 parity matrix: isolated verification slice
 
+Follow-up: the `ba2fe0e8` exact-head gallery produced 476/480 identical
+neutral/lil.p host-image pairs despite passing builder-accent token assertions.
+The [neutral host correction](./2026-11-16-cms-d6-neutral-gallery.md) maps
+site palette tokens inside the neutral host and checks actual hero paint and
+image differences. Do not upgrade V03/V05/V14 until its new exact-head CI,
+independent screenshot review and the remaining real-tenant/fixture gates.
+
 Base: `feat/cms-d6-verify` (#202). Draft stacked branch:
 `test/cms-d6-parity-matrix`. No production database or deployment access.
 

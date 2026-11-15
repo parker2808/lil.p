@@ -1,5 +1,11 @@
 # lil.p
 
+The [D6 neutral host gallery](./docs/specs/2026-11-16-cms-d6-neutral-gallery.md)
+maps rendered site colors to core tokens only inside the neutral CMS host and
+checks a painted hero accent and brand-different screenshots in CI. The
+existing lil.p host palette stays unchanged; gallery evidence alone does not
+close V03/V05/V14 or prove a separate neutral SSR tenant.
+
 The public header keeps compact search and an accessible navigation sheet through
 1024px; full navigation starts at 1280px to leave room for EN/VI labels and
 theme/language controls. The [responsive header gate](./docs/specs/2026-11-16-cms-d6-header-responsive.md)

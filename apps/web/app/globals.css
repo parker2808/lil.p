@@ -6,6 +6,26 @@
   --subtle-foreground: #b5b1aa;
 }
 
+.cms-core-host[data-brand='neutral'] {
+  --background: var(--builder-chrome);
+  --foreground: var(--builder-text);
+  --card: var(--builder-surface);
+  --card-foreground: var(--builder-text);
+  --muted: var(--builder-raised);
+  --muted-foreground: var(--builder-muted);
+  --border: var(--builder-border);
+  --primary: var(--builder-accent);
+  --primary-foreground: var(--builder-accent-text);
+  --primary-hover: var(--builder-drop);
+  --primary-subtle: var(--builder-accent-soft);
+  --primary-subtle-foreground: var(--builder-accent);
+  --accent: var(--builder-accent-soft);
+  --accent-foreground: var(--builder-accent);
+  --ring: var(--builder-focus);
+  --brand-orange: var(--builder-accent);
+  --brand-green: var(--builder-success);
+}
+
 .cms-core-host[data-brand='lilp'] {
   --builder-accent: #a44520;
   --builder-accent-text: #fff;
