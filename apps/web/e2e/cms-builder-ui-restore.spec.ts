@@ -1,6 +1,7 @@
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
+import { switchBuilderLocale } from './helpers/builder-locale';
 
 const firstHeading = 'Original UI version heading';
 const secondHeading = 'Edited UI version heading';
@@ -112,6 +113,64 @@ test('UI publish, edit, restore and republish preserves EN/VI preview/public par
   expect((await secondVersion.json()).snapshot.tree).toEqual(edited.tree);
   expect(edited.tree).not.toEqual(original.tree);
 
+  await page.setViewportSize({ width: 390, height: 900 });
+  await switchBuilderLocale(page, 'vi');
+  await page.getByRole('button', { name: 'Lịch sử phiên bản' }).click();
+  await expect(page.getByText('Phiên bản 1', { exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Khôi phục bản nháp 1' }).click();
+  const rejectedDialog = page.getByRole('alertdialog', {
+    name: 'Khôi phục phiên bản này vào bản nháp?',
+  });
+  await expect(rejectedDialog).toBeVisible();
+  await expect(rejectedDialog).toContainText('không xuất bản hoặc xóa phiên bản');
+  const conflictingRestore = page.waitForResponse(
+    (item) =>
+      item.request().method() === 'POST' &&
+      item.url().endsWith(`/admin/pages/${key}/versions/1/builder/restore`),
+  );
+  let concurrentWriteStatus: number | undefined;
+  await page.route(`**/admin/pages/${key}/versions/1/builder/restore`, async (route) => {
+    const current = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+    expect(current.status()).toBe(200);
+    const draft = await current.json();
+    const changed = await page.request.put(`/api/admin/pages/${key}/builder/draft`, {
+      headers: { Origin: new URL(page.url()).origin },
+      data: { expectedRevision: draft.revision, tree: draft.tree },
+    });
+    concurrentWriteStatus = changed.status();
+    await route.continue();
+  });
+  await rejectedDialog.getByRole('button', { name: 'Khôi phục bản nháp', exact: true }).click();
+  const rejected = await conflictingRestore;
+  expect(concurrentWriteStatus).toBe(200);
+  expect(rejected.status(), await rejected.text()).toBe(409);
+  await expect(rejectedDialog).toBeVisible();
+  await expect(rejectedDialog.getByRole('alert')).toHaveText(
+    'Bản nháp máy chủ đã thay đổi · tải lại trước khi thử lại',
+  );
+  expect(await rejectedDialog.evaluate((dialog) => dialog.contains(document.activeElement))).toBe(
+    true,
+  );
+  await expect(
+    rejectedDialog.getByRole('button', { name: 'Khôi phục bản nháp', exact: true }),
+  ).toBeDisabled();
+  const afterConflict = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+  expect(afterConflict.status()).toBe(200);
+  expect((await afterConflict.json()).tree).toEqual(edited.tree);
+  const publicAfterConflict = await page.request.get(`/api/public/pages/${key}?locale=vi`);
+  expect(publicAfterConflict.status()).toBe(200);
+  expect((await publicAfterConflict.json()).tree).toEqual(edited.tree);
+  const versionsAfterConflict = await page.request.get(`/api/admin/pages/${key}/versions`);
+  expect(versionsAfterConflict.status()).toBe(200);
+  expect(
+    (await versionsAfterConflict.json()).map((row: { version: number }) => row.version),
+  ).toEqual([2, 1]);
+  await page.unroute(`**/admin/pages/${key}/versions/1/builder/restore`);
+  await rejectedDialog.getByRole('button', { name: 'Hủy' }).click();
+  await page.reload();
+  await switchBuilderLocale(page, 'en');
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(page.getByText('Draft saved', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Version history' }).click();
   await expect(page.getByText('Version 1', { exact: true })).toBeVisible();
   const restoredResponse = page.waitForResponse(
