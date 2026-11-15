@@ -10,4 +10,6 @@ The browser reselects the autosaved host by its persisted node ID after each loc
 
 For bilingual Properties fields, the journey waits for the real draft API to persist the EN edit and increment its revision before entering VI. It then requires both EN and VI edits in the draft before capturing any screenshot; rapid adjacent edits must not silently drop a locale.
 
+When a host offers an optional heading, the test requires its bilingual `heading.title` inputs by exact localized accessible name. It does not substitute the first bilingual textbox (which can be an optional eyebrow) for the required title.
+
 **Acceptance:** A green exact-head `ready-e2e` CI with all four shards demonstrates capture and automated blocking-axe coverage only. A design reviewer still needs to inspect all screenshots, verify visible host/Properties and VI wrapping/mobile layout, and disposition nonblocking axe findings. Contrast pairs, focus/keyboard, neutral branding and no-JS semantic content remain separate gates. Record actual CI run, source SHA, artifact and reviewer verdict only after they exist; never mark pending evidence PASS.

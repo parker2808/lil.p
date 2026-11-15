@@ -60,7 +60,8 @@ export function registerEditorHostJourney(shard: number): void {
       const addHeading = inspector.getByRole('button', {
         name: /^(?:Thêm tiêu đề|Thêm · Tiêu đề mục)$/,
       });
-      if (await addHeading.count()) await addHeading.click();
+      const headingAdded = (await addHeading.count()) > 0;
+      if (headingAdded) await addHeading.click();
 
       const englishValue = `Edited ${definition.type}`;
       const vietnameseValue = `Sửa ${definition.type}`;
@@ -68,17 +69,21 @@ export function registerEditorHostJourney(shard: number): void {
       if (['notes-browser', 'projects-browser'].includes(definition.type)) {
         await inspector.getByRole('switch', { name: 'showFeatured' }).click();
       } else {
-        const englishTitle = inspector.getByRole('textbox', {
-          name: /(?:heading )?title (?:\(EN\)|· Tiếng Anh)$/,
+        const headingEnglish = inspector.getByRole('textbox', {
+          name: /^(?:heading title \(EN\)|Tiêu đề mục · Tiêu đề · Tiếng Anh)$/,
         });
-        const english = (await englishTitle.count())
-          ? englishTitle.first()
+        const headingVietnamese = inspector.getByRole('textbox', {
+          name: /^(?:heading title \(VI\)|Tiêu đề mục · Tiêu đề · Tiếng Việt)$/,
+        });
+        if (headingAdded) {
+          await expect(headingEnglish).toHaveCount(1);
+          await expect(headingVietnamese).toHaveCount(1);
+        }
+        const english = (await headingEnglish.count())
+          ? headingEnglish
           : inspector.getByRole('textbox', { name: /(?:\(EN\)|· Tiếng Anh)$/ }).first();
-        const vietnameseTitle = inspector.getByRole('textbox', {
-          name: /(?:heading )?title (?:\(VI\)|· Tiếng Việt)$/,
-        });
-        const vietnamese = (await vietnameseTitle.count())
-          ? vietnameseTitle.first()
+        const vietnamese = (await headingVietnamese.count())
+          ? headingVietnamese
           : inspector.getByRole('textbox', { name: /(?:\(VI\)|· Tiếng Việt)$/ }).first();
         await expect(english).toBeVisible();
         await english.fill(englishValue);
