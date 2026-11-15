@@ -16,6 +16,7 @@ other tenant hosts keep neutral core tokens. Custom tree HTML is request-scoped
 (tagged API reads remain cacheable). It also checks nested no-script SSR, VI
 contact defaults and translated Properties labels; this does not by itself close
 the full V03/V14 visual matrix.
+The [V06 all-20 responsive gate](./docs/specs/2026-11-16-cms-d6-v06-all20-overrides.md) separately tests no-script EN/VI historical preview and current public layout/host overrides at 390/768/1440; exact-head CI captures and independent review are pending, not a full V06 signoff.
 The real-host no-script sample also checks OS-driven dark first paint and
 separately authored VI tree copy on both neutral and branded tenants; it does
 not certify all-20 dark neutral SSR or fully localized site content. A scoped

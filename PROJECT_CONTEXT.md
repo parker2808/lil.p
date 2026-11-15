@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V06 all-20 override follow-up: `cms-d6-v06-all20-overrides.spec.ts` adds a separately registered no-JS EN/VI × 390/768/1440 × public v2/historical preview v1 gate with nested row/grid layout, real responsive host props, computed active variant/hash checks and 48 review captures. Exact-head CI, independent visual review and combined-head signoff are pending. Data-backed/asset-empty hosts do not imply visible content changes; no production inventory or neutral-host signoff. See `docs/specs/2026-11-16-cms-d6-v06-all20-overrides.md`.
 - 2026-11-16 D6 J07/V06 no-script gate: CI `43748537865` failed all eight new cases because public group-level loading streamed the main into a hidden segment requiring insertion scripts. Move the home skeleton into a dedicated group and remove only the shared fallback. Four five-host groups require EN/VI public v2 versus historical `?v=1` preview visible nested text at 390/768/1440, distinct changed H1-host labels/hashes, unchanged peer-host semantics, except empty CV, no overflow and paired screenshot manifests. This base-only fixture does not prove every host's responsive overrides; existing parity tests cover heading/paragraph overrides, API E2E covers immutable version/pointer invariants. J07/V06 remain GAP until exact-head CI, independent artifact review and remaining responsive coverage. See `docs/specs/2026-11-16-cms-d6-j07-v06-nojs.md`.
 - 2026-11-16 V13: D6 historical draft SEO title/description previously read the current draft while `?v=N` rendered a versioned tree. Shared metadata now uses the validated draft-only version for core and custom page routes; browser evidence must verify EN/VI old body/SEO versus current public body/SEO. Full V13 route/state localization remains GAP.
 - 2026-11-15 V09/V10 #239 first CI `43730577307` failed only shard 2: the page-header's actual Properties title labels are `Properties (EN)`/`Properties (VI)` (verified from Playwright error-context), not `title (EN)`/`title (VI)`. Fixture locators now assert the exact accessible names; new-head CI/visual evidence still pending, no assertion/threshold removed.
@@ -342,6 +343,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Registered eight V06 all-20 responsive/no-script browser cases with real CAS-published historical versions, computed layout/effective prop assertions and versioned screenshot manifests; CI evidence and review pending, no runtime changes.
 - 2026-11-16: #249 CI `43754309959` found page-header VI test content falling back to EN because the default title.vi is empty; fill both heading fields in the version fixture so the no-JS assertion proves VI rendering. Same run confirmed home OG metadata missing; fix committed before rerun.
 
 - 2026-11-16: #249 CI `43753130466` caught the home OG image disappearing after moving home into a route group; page metadata now explicitly includes the existing localized OG image for home and a unit assertion guards it. Recheck exact-head CI; no weaker metadata assertion.
