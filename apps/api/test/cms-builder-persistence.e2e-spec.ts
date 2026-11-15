@@ -69,6 +69,10 @@ describe('builder draft persistence over disposable MySQL', () => {
           .send({ key, title: definition.type, locale: 'en', template: 'empty' })
           .expect(201);
         expect(created.body.key).toBe(key);
+        await admin
+          .patch(`/api/admin/pages/${key}`)
+          .send({ seoTitleVi: `VI ${definition.type}` })
+          .expect(200);
         const path = `/api/admin/pages/${key}/builder`;
         const activated = await admin
           .post(`${path}/activate`)

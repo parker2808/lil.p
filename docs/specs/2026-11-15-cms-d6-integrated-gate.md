@@ -11,3 +11,5 @@
 5. Run non-browser checks, regenerate Graphify, merge the validated scratch into the #202 topic branch without rewriting history and run exact-head ready-e2e CI.
 
 The browser palette currently exposes starter components, not all 20 host definitions. Therefore the per-type route and SSR matrix must **not** be described as all-20 Properties editor coverage. An editor-origin H1 journey plus the independent 20-type API/browser matrix are separate, explicit claims. J01–J09, all-20 Properties, visual/a11y, D2 migration/drain and deployment remain independently gated.
+
+The first exact-head API E2E failed because the generated custom pages had only English SEO: the existing locale-group fallback correctly returned `lang: en` for a Vietnamese request. The matrix now sets Vietnamese SEO through the authenticated page update before activation, so its `lang: vi` assertion tests a genuinely bilingual snapshot rather than changing the fallback contract. Re-run exact-head CI before accepting this gate.

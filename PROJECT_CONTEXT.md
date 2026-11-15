@@ -272,6 +272,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Corrected D6's all-20 API E2E bilingual fixture after exact-head CI found the intentional English SEO fallback; each custom page now sets Vietnamese SEO before publishing. No production locale fallback, golden contract or release gate changed; rerun exact-head CI.
+
 - 2026-11-15: Added real-API all-20 host E2E and a separate editor-origin autosave/preview/public bilingual SSR browser journey on the D6 stack. Golden contracts unchanged; final exact-head CI pending.
 
 - 2026-11-15: Added separate real-API all-20 host draft/publish E2E and editor-origin autosave/preview/public EN/VI SSR browser journey to the D6 stack. Preserved golden contracts and explicitly kept all-20 Properties/editor, migration/drain and visual/a11y approval separate; final exact-head CI pending.
