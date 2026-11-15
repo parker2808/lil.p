@@ -49,6 +49,11 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - #208 verification refresh merges D2 `8a800999` (#240), D5 `3ba001e3` (#221) and D6 `bcd949d8` (#234) in a fresh checkout. D5's invalid-input draft retention and ≥3:1 focus audit remain intact; D6 adds real-host SSR and VI nested labels without replacing D5's schema-derived editor. This is verification-only, not a production rollout; CI and independent full-row review must use the final combined SHA.
+- D2 #243 follow-up (2026-11-16): independent review found 4.11:1/3.69:1 CTA contrast during the transition, masked by a final-palette wait. Public primary buttons now switch both palette colors atomically while preserving transform motion; frame-by-frame EN/VI route checks precede axe. Exact-head CI pending; #199 is not re-green until this stacked PR lands.
+
+- D2 #199 exact-head CI follow-up (2026-11-15): shard 5 on `8a800999` measured a transitional primary CTA text color during the public test's manual light→dark switch (4.11/3.69:1). Await every public primary button's final dark computed foreground/background before running the unchanged axe gate; exact-head CI still required. No schema/migration/production change.
+
+- D2 write-reopen bootstrap follow-up (2026-11-15): a deferred entrypoint test proves `app.init()` precedes the read-only migration query and `listen()` waits for it; a failed query still listens with writes frozen. This does not replace the live old-instance drain and separate rollout approval.
 
 - D2 write-reopen bootstrap follow-up: an entrypoint test proves `app.init()` precedes migration verification and `listen()`; a failed query leaves writes frozen. This does not replace the live old-instance drain and separate rollout approval.
 - D2 V11/V12 negative matrix verifies unsafe rich text and populated draft/version/preview reads; HTTP 400 alone cannot attest to production log redaction. Final D6 publish and live log audit remain GAP.
@@ -415,6 +420,11 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Integrated D5 `8b0b3562` (#237 stale-CAS V07) after source run `43722753820` and D6 `169ebdff` (#232 version UI) after source run `43722565450` into verification-only #208 at `b58dd676`. Neither source run certifies combined behavior; exact-head five-shard CI and manual/operational gates remain OPEN. Retained Graphify report is an older topology snapshot; local load >25 precluded regenerating it during integration. No main merge/deploy.
 - 2026-11-15: Refreshed verification-only #208 with main `3162b973`, Stage A `2a5c32bf`, D2 `596f7dbb`, D5 `22b4b1c0` and D6 `e4e80da3`; retained D6 localized registry and D5 validated duplicate/history. Seven non-browser Node 22 checks passed. Exact combined-head CI, public/preview design, UI restore, manual SR and live Stage A drain remain open; DO NOT MERGE.
 - 2026-11-15: Restore top-of-page scroll before no-script public/preview link geometry assertions after full-page and footer screenshots; retain strict PNG/geometry checks. CI pending.
+- 2026-11-16: Prevent transient sub-AA contrast during public primary CTA theme changes by transitioning transform only; sample each rendered primary CTA through light/dark frames before the unchanged final-state axe gate.
+
+- 2026-11-15: Stabilize the #199 public accessibility gate after theme transitions by asserting the dark class and final computed foreground/background on every primary public button before axe. Preserve WCAG 4.5:1, all routes and screenshots; exact-head five-shard CI pending.
+
+- 2026-11-15: Added a D2 entrypoint bootstrap-order regression test for init → migration verification → listen, including fail-closed writes on a rejected schema query; no runtime behavior or release authorization changed.
 
 - 2026-11-15: Correct the #241 no-script footer assertion to compare the actual computed 93% shell-background/7% green blend against fixed light/dark inputs. Keep the dark shell fix and real-host screenshots unchanged; five-shard CI pending.
 

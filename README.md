@@ -66,6 +66,11 @@ against its independently resolved EN/VI props and verifies a historical preview
 after republishing. Dynamic hosts compare stable props and API data rather than
 transient HTML; data-dependent/empty-default hosts do not prove nonblank semantic
 text solely through this suite.
+Public primary buttons switch foreground and background atomically on a theme
+change, while retaining their hover transform. The EN/VI browser gate samples
+contrast during both theme changes before its final-state axe check; its 4.5:1
+WCAG AA threshold and light/dark route captures remain unchanged.
+
 The [D2 V11/V12 safety gate](./docs/specs/2026-11-15-cms-d2-v11-v12-gate.md) extends real-DB negative tree and capability checks. Final integrated D6 publication and authorized production log review remain separate gates.
 The [D6 tree parity gate](./docs/specs/2026-11-15-cms-d6-v04-v06-v09-v10-gate.md) adds serialized legacy/override assertions and paired EN/VI public/preview captures at three widths; visual review and the integrated UI restore path remain open.
 The [D6 UI restore gate](./docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md) stages a real UI publish → edit → 409 conflict → reload → restore → republish journey with paired responsive EN/VI captures. Its first green 5-shard run exposed blank visual artifacts, so painted-content validation, fresh exact-head CI and independent V09 review remain required.
