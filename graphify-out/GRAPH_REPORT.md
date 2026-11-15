@@ -1,7 +1,7 @@
 # Graph Report - fix-d5-design-p2  (2026-11-15)
 
 ## Corpus Check
-- 1613 files · ~651,821 words
+- 1613 files · ~651,821 words (last full corpus scan)
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 39 file(s) not represented in the graph (top: (none) 18, .css 16, .example 1)
 
@@ -11,9 +11,8 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `227e6f7e`
-- Run `git rev-parse HEAD` and compare to check if the graph is stale.
-- Run `graphify update .` after code changes (no API cost).
+- Re-clustered at code commit: `9d6cebc5` (topology unchanged after incremental update; original build `227e6f7e`).
+- Run `graphify update .` after further code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - @nestjs/common
@@ -339,16 +338,16 @@
 10. `apiServer()` - 81 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Highlights authored by Parker` --references--> `text()`  [INFERRED]
-  docs/case-studies/cfw-backoffice-portal.md → apps/api/prisma/seed/data/portfolio.mapper.ts
-- `Contract and acceptance` --references--> `pickGroup()`  [INFERRED]
-  docs/specs/2026-11-10-custom-page-locale-seo.md → apps/api/src/i18n/pick-locale.util.ts
 - `T50 · Media API: upload, variants, relations` --references--> `MediaService`  [INFERRED]
   docs/archive/plan/12-7-tasks-t46-users-admin-admin-only-change-own-pass.md → apps/api/src/modules/media/media.service.ts
 - `T50 · API media: upload, variant, quan hệ` --references--> `MediaService`  [INFERRED]
   docs/archive/plan-vi/14-7-cac-task-m5-realtime-media-publish.md → apps/api/src/modules/media/media.service.ts
 - `8. Owner tasks and out of scope` --references--> `MediaService`  [INFERRED]
   docs/PLAN.md → apps/api/src/modules/media/media.service.ts
+- `8. Việc của owner và ngoài phạm vi` --references--> `MediaService`  [INFERRED]
+  docs/PLAN.vi.md → apps/api/src/modules/media/media.service.ts
+- `T16 · Domain + project + metric (one-to-many)` --references--> `Hue`  [INFERRED]
+  docs/archive/plan-vi/08-7-cac-task-t14-site-shell-hero-cta-cua-home-tu-api.md → packages/contracts/src/domains/domains.enum.ts
 
 ## Import Cycles
 - None detected.
@@ -1452,23 +1451,23 @@ Cohesion: 0.67
 Nodes (3): lint-staged, *.{json,md,css,yml,yaml}, *.{ts,tsx,js,jsx,mjs,cjs}
 
 ## Knowledge Gaps
-- **17 isolated node(s):** `DATABASE_URL`, `./tsconfig.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json` (+12 more)
+- **17 isolated node(s):** `../../tsconfig.base.json`, `ANALYTICS_SALT_SECRET`, `API_PORT`, `API_URL`, `DATABASE_URL` (+12 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2323 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **48 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `@nestjs/common` connect `@nestjs/common` to `AppConfigService`, `apps_api_src_generated_prisma_client`, `api/package.json`, `ref_vitest`, `AuditService`, `RolesGuard`, `site-settings.service.ts`, `PostsService`, `index.ts`, `posts/posts.service.ts`, `profile-stats/profile-stats.service.ts`, `contact.service.ts`, `analytics.service.ts`, `SkillsService`, `page-versions.service.ts`, `content-migration.e2e-spec.ts`, `pages/pages.service.ts`, `dashboard/dashboard.service.ts`, `admin-pages.controller.ts`, `EventsService`, `PageVersionsService`?**
-  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+- **Why does `@storybook/react` connect `@storybook/react` to `MarkdownEditor.test.tsx`, `cn`, `ui/package.json`, `ref_react`, `04-4-components-and-layout.md`, `CaseCard.stories.tsx`, `Input`, `PageSkeleton`, `BlocksPage`, `Badge`, `StatBand.tsx`, `SkillGroup.tsx`, `ActionCards.tsx`, `EditorToolbar.tsx`, `ProjectsDetail.tsx`, `DomainCard.stories.tsx`, `posts.schema.ts`, `DataTable`, `CaseStudyHeader.tsx`, `devDependencies`, `principles.type.ts`, `SectionBoundary.stories.tsx`, `SortableList.tsx`, `ProcessFlow.tsx`, `experience.schema.ts`?**
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `cn()` (e.g. with `T04 · Design tokens + shadcn theme in `packages/ui`` and `T04 · Design token + shadcn theme trong `packages/ui``) actually correct?**
   _`cn()` has 2 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `DATABASE_URL`, `./tsconfig.json`, `../../tsconfig.base.json` to the rest of the system?**
+- **What connects `../../tsconfig.base.json`, `ANALYTICS_SALT_SECRET`, `API_PORT` to the rest of the system?**
   _17 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `@nestjs/common` be split into smaller, more focused modules?**
   _Cohesion score 0.03222468588322247 - nodes in this community are weakly interconnected._
 - **Why does `Button()` connect `ref_react` to `AdminSiteIndex.tsx`, `cn`, `AdminProjectsEditor.tsx`, `block-renderers.constant.ts`, `@storybook/react`, `AdminTable.tsx`, `04-4-components-and-layout.md`, `AdminInsightsAudit.test.tsx`, `@tanstack/react-query`, `Input`, `CaseCard`, `use-me.hook.tsx`, `PageSkeleton`, `Modules`, `AdminAboutExperienceEditor.tsx`, `next-intl`, `CaseCard.tsx`, `BuilderHost.tsx`, `SmallEntityIndex.tsx`, `EditorToolbar.tsx`, `ProjectsDetail.tsx`, `ref_testing_library_react`, `Topbar.tsx`, `about/services/skills.service.ts`, `AdminPagesIndex.tsx`, `DataTable`, `AdminUsersIndex.tsx`, `CaseStudyHeader.tsx`, `IconPicker.tsx`, `SortableList.tsx`, `PropertiesPanel.tsx`, `SiteFooter.tsx`?**
-  _High betweenness centrality (0.025) - this node is a cross-community bridge._
+  _High betweenness centrality (0.027) - this node is a cross-community bridge._
 - **Are the 12 inferred relationships involving `Button()` (e.g. with `4. Architecture at a glance` and `T12 · UI primitives matching Figma component sets`) actually correct?**
   _`Button()` has 12 INFERRED edges - model-reasoned connections that need verification._
 - **Should `AppConfigService` be split into smaller, more focused modules?**
