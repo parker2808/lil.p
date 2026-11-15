@@ -328,6 +328,32 @@ async function capture(
         surfaces,
         reached: true,
         visibleFocus: control.matches(':focus-visible'),
+        diagnostic: control.className.toString().includes('brandButton')
+          ? {
+              outline: focused.outline,
+              focusToken: focused.getPropertyValue('--builder-focus'),
+              coreMatch: control.matches('.cms-core :where(button):focus-visible'),
+              rules: Array.from(document.styleSheets).flatMap((sheet) => {
+                try {
+                  return Array.from(sheet.cssRules).flatMap((rule) =>
+                    rule instanceof CSSStyleRule &&
+                    rule.selectorText.includes('focus-visible') &&
+                    control.matches(rule.selectorText)
+                      ? [
+                          {
+                            selector: rule.selectorText,
+                            color: rule.style.getPropertyValue('outline-color'),
+                            priority: rule.style.getPropertyPriority('outline-color'),
+                          },
+                        ]
+                      : [],
+                  );
+                } catch {
+                  return [];
+                }
+              }),
+            }
+          : undefined,
       });
     }
     previous?.focus({ preventScroll: true });
@@ -360,7 +386,7 @@ async function capture(
           (_, surfaceIndex) => (focusContrast[`${index}/${colorIndex}/${surfaceIndex}`] ?? 0) >= 3,
         ),
       ),
-      `${options.state}/${focus.name} painted focus rings ${focus.colors
+      `${options.state}/${focus.name} ${JSON.stringify(focus.diagnostic)} painted focus rings ${focus.colors
         .map(
           (color, colorIndex) =>
             `${color}: ${focus.surfaces
