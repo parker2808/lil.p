@@ -210,6 +210,8 @@ for (const locale of ['en', 'vi'] as const) {
               body: pageImage,
               contentType: 'image/png',
             });
+            await visitor.evaluate(() => window.scrollTo(0, 0));
+            await expect.poll(() => visitor.evaluate(() => window.scrollY)).toBe(0);
             if (preview) {
               const bannerBox = await banner.boundingBox();
               expect(bannerBox).not.toBeNull();

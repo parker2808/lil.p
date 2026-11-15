@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 D6 #241 CI 43737085933: dark public footer screenshot scrolls the no-script viewport to the bottom while preview omits that capture; reset to top before strict link geometry comparison. No threshold or runtime changes; new exact-head CI pending.
+
 - 2026-11-15 D6 #241 no-script shell CI follow-up: shard 2 correctly found the footer blends 93% background with 7% green in `public-round3.css`, so an RGB-only assertion was incorrect even though it rendered dark. Assert the exact computed CSS mix from fixed light/dark inputs and keep raw header/footer screenshots, host tokens and parity. Exact-head CI pending.
 
 - 2026-11-15 D6 no-script dark shell follow-up: scope OS-dark shell tokens to no-script public pages, check computed header/footer styles and attach raw EN/VI neutral/lil.p dark captures. Exact-head CI and independent review pending; V03/V14/full VI remain GAP.
@@ -331,6 +333,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Restore top-of-page scroll before no-script public/preview link geometry assertions after full-page and footer screenshots; retain strict PNG/geometry checks. CI pending.
 
 - 2026-11-15: Correct the #241 no-script footer assertion to compare the actual computed 93% shell-background/7% green blend against fixed light/dark inputs. Keep the dark shell fix and real-host screenshots unchanged; five-shard CI pending.
 
