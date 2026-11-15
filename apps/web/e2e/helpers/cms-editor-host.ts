@@ -64,6 +64,7 @@ export function registerEditorHostJourney(shard: number): void {
 
       const englishValue = `Edited ${definition.type}`;
       const vietnameseValue = `Sửa ${definition.type}`;
+      const draftPath = `/api/admin/pages/${key}/builder/draft`;
       if (['notes-browser', 'projects-browser'].includes(definition.type)) {
         await inspector.getByRole('switch', { name: 'showFeatured' }).click();
       } else {
@@ -81,10 +82,26 @@ export function registerEditorHostJourney(shard: number): void {
           : inspector.getByRole('textbox', { name: /(?:\(VI\)|· Tiếng Việt)$/ }).first();
         await expect(english).toBeVisible();
         await english.fill(englishValue);
+        await expect
+          .poll(
+            async () => {
+              const response = await page.request.get(draftPath);
+              if (response.status() !== 200) return false;
+              const body = await response.json();
+              const host = body.tree?.root.sections[0]?.content.find(
+                (node: { componentType?: string }) => node.componentType === definition.type,
+              );
+              return (
+                Number(body.revision) > 1 &&
+                JSON.stringify(host?.responsive.base ?? {}).includes(englishValue)
+              );
+            },
+            { timeout: 30_000 },
+          )
+          .toBe(true);
         await vietnamese.fill(vietnameseValue);
       }
 
-      const draftPath = `/api/admin/pages/${key}/builder/draft`;
       await expect
         .poll(
           async () => {
