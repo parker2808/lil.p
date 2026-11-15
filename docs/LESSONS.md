@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-15: Test bootstrap-order migration verification separately from a middleware-only fixture: prevent HTTP listening before read-only schema checks and keep writes frozen when verification fails.
+- 2026-11-15: A D2 image must not inherit an always-frozen guard without a reviewed reopening mechanism; require migration history and physical columns, default to frozen, and reserve the explicit production reopen setting for after old frozen instances drain.
+- 2026-11-15: Auth rejection alone does not establish version/preview read capability or production log redaction; verify populated reads and retain a distinct log audit gate.
 - 2026-11-15: A scoped builder axe result cannot replace a full-page audit, and matching polite status text cannot prove what a screen reader actually speaks; record automated and manual V16 evidence separately.
 
 - 2026-11-15: A source-green builder restore gate must be rerun on the combined head; preserve both merge histories and label an interrupted Graphify refresh stale rather than fabricating current topology.

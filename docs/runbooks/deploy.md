@@ -75,7 +75,9 @@ Keep auto-deploy disabled and pin reviewed image commits throughout.
    elapsed time or a Render “Live” label alone.
 4. With a separately approved #199 rollout, deploy the reviewed **D2-aware
    image containing the Stage A guard**. Its startup runs
-   `prisma migrate deploy` while all earlier instances remain frozen. Check migration logs,
+   `prisma migrate deploy` while all earlier instances remain frozen. Leave
+   `CMS_PAGE_WRITE_FREEZE` unset or set to `1` on Render: the D2-aware API defaults
+   to frozen, and Stage A ignores `=0` in production. Check migration logs,
    `/api/health` returning `{status:"ok",db:"ok"}` via both ingresses, and
    rerun the probe. Health does **not** prove D2 schema: the release owner must
    use an authorized, read-only DB metadata query for columns `page.draftTree`
@@ -83,7 +85,16 @@ Keep auto-deploy disabled and pin reviewed image commits throughout.
    public schema endpoint or publish data. Keep freeze on until every Stage A
    instance has drained and the D2 migration/data gates pass.
 5. Reopen writes only with a separately approved D2-aware unfreeze release:
-   verify that every instance runs that reviewed commit, then perform a
+   after the read-only migration-history and physical-column check succeeds,
+   verify every frozen Stage A instance and all in-flight requests have drained.
+   Then set **only Render API** `CMS_PAGE_WRITE_FREEZE=0` and deploy the pinned
+   reviewed D2-aware image. This Render env change is itself a new deployment
+   requiring separate approval; no Vercel env change is needed. Before `listen`,
+   each D2-aware instance rechecks the applied migration and both columns; a
+   missing/failed check or any value other than exact `0` keeps 503. Never set
+   `=0` during the initial D2 migration deploy. Confirm the new instance identity,
+   direct and Vercel ingress, and complete drain of its prior frozen instances,
+   then perform a
    controlled authenticated save/restore/publish/activation CAS check on an
    approved disposable record through both ingresses, followed by an authorized
    read-back; verify expected stale-revision rejection and no unintended
