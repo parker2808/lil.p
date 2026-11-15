@@ -1,7 +1,7 @@
 # Graph Report - pre-d6-final-restack  (2026-11-15)
 
 ## Corpus Check
-- 1631 files · ~674,838 words
+- 1631 files · ~674,894 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 40 file(s) not represented in the graph (top: (none) 18, .css 17, .example 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d4f4ee2b`
+- Built from commit: `3a0cbaef`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1544,7 +1544,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `Roles` be split into smaller, more focused modules?**
   _Cohesion score 0.03953064479380269 - nodes in this community are weakly interconnected._
 - **Why does `@storybook/react` connect `@storybook/react` to `SectionNav.stories.tsx`, `TakeawaysCard.stories.tsx`, `Input`, `posts.schema.ts`, `Icon`, `SortableList.tsx`, `preview.tsx`, `ProjectsDetail.tsx`, `ui/package.json`, `MediaLibrary.test.tsx`, `Button`, `EditorShell`, `04-4-components-and-layout.md`, `AboutIntroBlock.tsx`, `Colors.stories.tsx`, `profile-stats.schema.ts`, `analytics.service.ts`, `CoverPlaceholder.stories.tsx`, `principles.type.ts`, `button.stories.tsx`, `experience.schema.ts`, `DomainCard.stories.tsx`, `Motion.stories.tsx`, `Typography.stories.tsx`, `devDependencies`, `AccentHeadline.stories.tsx`, `Callout.stories.tsx`, `ActionCards.tsx`, `ProcessFlow.tsx`, `SaveStatus.stories.tsx`, `Spacing.stories.tsx`, `KickerPill.stories.tsx`, `MediaUploader.stories.tsx`, `NotesDetail.tsx`, `SectionBoundary.stories.tsx`, `Prose.stories.tsx`, `RequirementColumns.stories.tsx`, `PageSkeleton`, `StatusPill.stories.tsx`, `badge.stories.tsx`?**
-  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+  _High betweenness centrality (0.037) - this node is a cross-community bridge._
 - **Are the 12 inferred relationships involving `Button()` (e.g. with `4. Architecture at a glance` and `T12 · UI primitives matching Figma component sets`) actually correct?**
   _`Button()` has 12 INFERRED edges - model-reasoned connections that need verification._
 - **Should `page-versions.service.ts` be split into smaller, more focused modules?**

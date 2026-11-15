@@ -268,7 +268,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
-- 2026-11-15: Prepared D6 scratch integration on the ordered main → D2 → D5 UI → D6 stack, retaining main's routing and D2/D5 behaviors while strengthening the all-20 real API/browser gate; no golden-contract changes, production deployment or PR branch update.
+- 2026-11-15: Prepared D6 scratch integration on the ordered main → D2 → D5 UI → D6 stack, retaining main's routing and D2/D5 behaviors while strengthening the all-20 real API/browser gate. The public-builder-byte scan excludes only the gated `r3-loading-test` fixture that imports an admin-only keyboard specimen; real public custom-page manifests stay mandatory. No golden-contract changes, production deployment or PR branch update.
 
 - 2026-11-15: Corrected #209's C1 pack checklist to the #208 26-file observation and path allowlist, and reconciled the C3 command sheet's four-consumer manifest and lockfile review; docs only, no package, runtime or golden-contract change.
 - 2026-11-15: Documented #208's isolated C1 rehearsal and corrected the future filter-repo/C3 consumer-switch instructions for all four current dependents; no package, runtime or contract change.
