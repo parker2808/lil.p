@@ -16,3 +16,9 @@ unwaived axe checks.
 Neutral SSR on a real tenant and review of the raw CI images remain separate
 release gates. V03 starter-component coverage and V05 Properties validation
 are not inferred from this gallery.
+
+Graphify freshness: `graphify update .` was attempted twice in the isolated
+worktree. Both scans reached full AST extraction, then stalled in path
+resolution; the local runs were interrupted without changing the tracked
+report. `graphify-out/GRAPH_REPORT.md` still attributes its graph to
+`0e50d605`, not to this fix. Do not present it as a fresh topology audit.
