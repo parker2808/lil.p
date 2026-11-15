@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- C1 combined-head rehearsal (#208 `59cc3b4f`, 2026-11-15): a local `git filter-repo` package extraction builds, lints, typechecks, passes the package boundary gate and 54 unit tests (two optional browser tests skipped), and packs only 26 allowlisted files. All five JS subpaths resolve from the tarball in ESM/CJS with types; CSS resolves, while the root `"."` is intentionally absent pending consumer-owner decision. A four-consumer scratch install and contracts → web → API build pass. The C3 command sheet must include web and the fixture; manual history/metadata/license and trusted install/deploy gates remain open. No repo, runtime or golden-contract change.
 - CMS U3 #178 post-D4 main sync (2026-11-15): keep the approved, flag-gated EN/VI design study distinct from the authenticated D4 canvas. Main includes D4 #198 at `fc22b9f`; neither route gains U3 persistence or publishing, and D5 host integration remains separate.
 - CMS U3 #178 current-main sync (2026-11-15): the approved, flag-gated EN/VI study also incorporates D5's pure tree state from main without importing builder behavior into its static route; D6 release evidence remains separate. No U3 persistence, API or golden changes.
 - CMS U3 #178 final main sync (2026-11-15): this remains the separate flag-gated, static EN/VI design study, not the live D4/D5 builder. It incorporates main's D3 shared renderer and responsive-heading safety without changing its own non-persistent palette, Layers, or mobile samples. D6 still owns end-to-end release proof; no U3 merge or deployment is authorized.
@@ -247,6 +248,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Documented #208's isolated C1 rehearsal and corrected the future filter-repo/C3 consumer-switch instructions for all four current dependents; no package, runtime or contract change.
 - 2026-11-15: Synced U3 #178 with main through D4 #198 (`fc22b9f`); preserved the static study and the independent flag-gated D4 canvas, both documentation histories and existing golden contracts. Regenerated Graphify; no merge to main or deployment authorized.
 - 2026-11-15: Synced U3 #178 with main through D5 #200, retaining the static sample boundary and both documentation histories; refreshed Graphify without changing CMS goldens or granting a merge.
 - 2026-11-15: Synced the approved, static U3 study with main's D3 renderer and heading-safety contracts while keeping both documentation histories and existing goldens; Graphify and non-browser checks were refreshed. U3 remains draft, non-persistent and unmerged; CI is the final browser gate.
