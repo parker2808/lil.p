@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A scoped builder axe result cannot replace a full-page audit, and matching polite status text cannot prove what a screen reader actually speaks; record automated and manual V16 evidence separately.
+
 - 2026-11-15: A source-green builder restore gate must be rerun on the combined head; preserve both merge histories and label an interrupted Graphify refresh stale rather than fabricating current topology.
 
 - 2026-11-15: A paired public/preview gallery and zero-axe assertions do not establish a distinct neutral tenant SSR or complete no-JavaScript nested content; preserve those gaps when integrating D6 parity. A data-backed streaming notes fallback also needs readable, keyboard-sized links and an existing interactive marker before capture.

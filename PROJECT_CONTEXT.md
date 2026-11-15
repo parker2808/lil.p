@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- V16 builder automation adds real-API EN/VI accessible-name, live announcement, keyboard focus, reduced-motion and whole-page axe coverage. Manual VoiceOver/NVDA output, public/preview heading order and independent screen-reader review remain OPEN; no release signoff from this subset.
+- D5 V07 stale publish CAS: the earlier post-recovery request reused the current revision and may publish successfully after D6 integration. The browser fix performs an intervening real draft PUT, then asserts stale publish 409 and unchanged draft/revision/versions; combined #208 run `43730174269` passes on head `698d3543`.
 - #208 verification-only merge integrates D6 `334fc202` (#233 painted public/preview UI restore gate) after D6 source run `43728880007` succeeded. The combined head needs its own API/five-shard CI and independent class-A scoring; #234 neutral first-paint/no-JS/VI, #221 focus AA and manual screen-reader review remain open. J09/V18 live freeze/drain and V19 deployed CDN bytes are post-deploy sequence gates, not conditions for the Stage A #210 merge. Graphify refresh interrupted at local load >25; report explicitly identifies its older source. Do not merge #208 or infer production approval.
 
 - #208 combined head `98f2dfdc` run `43726655844` failed API job `132849953616` and web shard 3 job `132850216592`: both D6 parity fixtures sent revision `0` after D2 advanced CAS for legacy changes (API legacy publish; web SEO update). Both combined-only fixtures now chain observed legacy/activate/save revisions and assert increments. Await new exact-head CI before promoting J/V rows; no production behavior or release authorization changes.
@@ -368,6 +370,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Integrated D5 `a8050708` (#238 automated V16) into verification-only #208 after combined head `698d3543` run `43730174269` passed API and five web shards; V16 manual screen-reader/public heading remains GAP, and this new merge requires its own exact-head CI. No production/main action.
 - 2026-11-15: Corrected #208's integrated API and browser parity fixtures to use and verify D2 revision progression instead of assuming legacy edits/publish leave revision zero; new exact-head API/five-shard CI is required, with no runtime or schema change.
 - 2026-11-15: Merged D6 parity source `509e16f7` into verification-only #208 while retaining D5 V07 stale-CAS, Stage A freeze and D2 safety histories; registered all incoming visual specs beside the existing U0 capture. Exact combined CI and independent design review remain required; no main merge or deploy.
 - 2026-11-15: Integrated D2 source `1278f12c` into verification-only #208 with Stage A #210 `c3d30b01`; retained separate pre-merge CI and post-merge live drain gates, with no main merge, deployment or production DB action.
@@ -383,6 +386,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Replaced obsolete D4 Properties fixture-textbox expectations with real D5 heading field persistence, responsive single-mount and focus assertions; updated the serialized capture check without changing production behavior. CI evidence pending.
 - 2026-11-15: Merged main `cb216865` into Stage A #210 while retaining the production write freeze and both Stage A and C1 documentation histories; exact-head five-shard CI and operational drain proof remain pending.
 - 2026-11-15: Reconciled Stage A #210 with main `3162b973`, preserving the production admin-page write freeze alongside five-shard CI and registered D4 keyboard/canvas specs. Exact-head CI and live old-instance drain remain separate gates.
+- 2026-11-15: Registered a real-browser D5 V16 automated accessibility subset for EN/VI tree-builder announcements, focus, reduced-motion and full-page axe. Manual screen-reader and public/preview checks remain open; no runtime or golden changes.
+
+- 2026-11-15: Corrected V07 real-browser publish-conflict setup to use an intervening server revision, retaining offline recovery and adding draft/version invariants; no runtime or golden change.
 
 - 2026-11-15: Synchronized D5 UI with `feat/cms-d-base` after #224, preserving the live D5 host and V07/V15 evidence, D4 sheet-focus handling and locale-safe browser tests. No migration, public route, or golden changes; final-head CI is required.
 
