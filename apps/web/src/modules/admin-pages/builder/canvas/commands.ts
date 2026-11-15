@@ -1,4 +1,11 @@
-import { readTree, type TreeDocument, type TreeNode } from '@parker2808/cms-core/tree';
+import {
+  applyTreeOperation,
+  readTree,
+  type TreeDocument,
+  type TreeNode,
+} from '@parker2808/cms-core/tree';
+
+import { builderRegistry } from '../properties/registry';
 
 import {
   findNode,
@@ -9,13 +16,12 @@ import {
   type CompositionResult,
   type Destination,
 } from './model';
-import { builderRegistry } from '../properties/registry';
-
 export type BuilderState = { document: TreeDocument; selectedId: string };
 export type BuilderCommand =
   | { type: 'insert'; node: TreeNode; destination: Destination }
   | { type: 'move'; id: string; destination: Destination }
   | { type: 'remove'; id: string }
+  | { type: 'duplicate'; id: string; ids: string[] }
   | { type: 'reorder'; id: string; direction: -1 | 1 }
   | { type: 'select'; id: string }
   | { type: 'replace'; document: TreeDocument; selectedId: string };
@@ -32,6 +38,17 @@ export function reduceBuilderCommand(
       return moveNode(document, command.id, command.destination, builderRegistry);
     case 'remove':
       return removeNode(document, command.id, builderRegistry);
+    case 'duplicate': {
+      let index = 0;
+      const result = applyTreeOperation(
+        document,
+        { kind: 'duplicate', nodeId: command.id, allocateId: () => command.ids[index++]! },
+        builderRegistry,
+      );
+      return result.ok && index === command.ids.length
+        ? { ok: true, document: result.value, selectedId: command.ids[0]! }
+        : { ok: false, document, reason: 'INVALID_TREE' };
+    }
     case 'reorder':
       return reorderNode(document, command.id, command.direction, builderRegistry);
     case 'select':

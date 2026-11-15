@@ -42,6 +42,7 @@ type Copy = {
   select: string;
   insert: string;
   move: string;
+  duplicate: string;
   remove: string;
   cancel: string;
   confirm: string;
@@ -80,6 +81,7 @@ const copy: Record<'en' | 'vi', Copy> = {
     select: 'Select',
     insert: 'Add',
     move: 'Move',
+    duplicate: 'Duplicate',
     remove: 'Delete',
     cancel: 'Cancel',
     confirm: 'Delete selected item?',
@@ -124,6 +126,7 @@ const copy: Record<'en' | 'vi', Copy> = {
     select: 'Chọn',
     insert: 'Thêm',
     move: 'Di chuyển',
+    duplicate: 'Nhân bản',
     remove: 'Xóa',
     cancel: 'Hủy',
     confirm: 'Xóa mục đã chọn?',
@@ -329,6 +332,18 @@ export function BuilderShell({
     } else
       setAnnouncement(result.reason === 'REQUIRED_COLUMN' ? text.requiredColumn : text.invalid);
     return result;
+  }
+  function duplicate(id: string) {
+    const node = findNode(document, id);
+    if (!node) return;
+    const ids: string[] = [];
+    const pending = [node];
+    while (pending.length) {
+      const current = pending.pop()!;
+      ids.push(crypto.randomUUID());
+      pending.push(...children(current));
+    }
+    apply({ type: 'duplicate', id, ids });
   }
   function locations(kind: PaletteKind): Destination[] {
     const node = newNode(kind, () => crypto.randomUUID(), locale);
@@ -744,6 +759,13 @@ export function BuilderShell({
             <>
               <button
                 type="button"
+                onClick={() => duplicate(node.id)}
+                aria-label={`${text.duplicate} ${label(node, text, hostLabel)}`}
+              >
+                ⧉
+              </button>
+              <button
+                type="button"
                 onClick={() => {
                   apply({ type: 'reorder', id: node.id, direction: -1 });
                 }}
@@ -944,6 +966,13 @@ export function BuilderShell({
         <span className={styles.selectionPath}>{selectedPath.join(' / ')}</span>
         {selectedId !== 'page' && (
           <>
+            <button
+              type="button"
+              onClick={() => duplicate(selectedId)}
+              aria-label={`${text.duplicate} ${selectedPath.at(-1)}`}
+            >
+              ⧉
+            </button>
             <button
               type="button"
               onClick={() => apply({ type: 'reorder', id: selectedId, direction: -1 })}

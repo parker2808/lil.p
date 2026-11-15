@@ -149,6 +149,13 @@ test('builder chrome and mobile sheets pass WCAG AA checks', async ({ page }) =>
   for (const locale of ['en', 'vi'] as const) {
     await page.setViewportSize({ width: 1440, height: 900 });
     await switchBuilderLocale(page, locale);
+    if (locale === 'vi')
+      await expect
+        .poll(
+          async () =>
+            (await page.context().cookies()).find((cookie) => cookie.name === 'NEXT_LOCALE')?.value,
+        )
+        .toBe(locale);
     await page.goto('/admin/builder/home');
     for (const theme of ['light', 'dark'] as const) {
       await page.setViewportSize({ width: 1440, height: 900 });

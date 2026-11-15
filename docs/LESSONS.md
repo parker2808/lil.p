@@ -10,6 +10,9 @@
 
 - 2026-11-15: When reconciling a verification PR after CI provenance changes on main, preserve both PR-head and synthetic-merge SHAs in artifact checks; a green older run cannot attest to the newly merged head.
 - 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
+- 2026-11-15: When syncing a D4 study base into the D5 host, take D5's live host and history commands rather than reverting to the provisional study route; carry forward base locale/focus fixes and retain both branches' documentation histories.
+- 2026-11-15: A core duplicate operation does not prove the V07 builder journey until a discoverable keyboard-accessible UI command generates fresh descendant IDs and the real browser preserves their order through undo/redo and a confirmed save.
+- 2026-11-15: A green duplicate/move history journey is only a V07 subset when insertion/edit undo-redo, copied text persistence, adapter bounds and failed-save/version boundaries are not asserted; keep the matrix row PARTIAL until these have exact-head evidence.
 
 - 2026-11-15: Audit every visible enabled builder control at desktop as well as compact widths; padding does not guarantee a 44px target, and a screenshot is not proof of focus visibility or absence of dialog overflow.
 
@@ -55,6 +58,8 @@
 - 2026-11-15: Checking legacy mode before a transaction's version insert or block mutation does not fence a later tree activation; claim both SQL-NULL mode and monotonic revision in the final page write, and roll back the whole transaction on a lost CAS.
 
 - 2026-11-15: An additive D2 schema lets a pre-D2 Prisma client alter a tree page's published pointer without bumping the draft revision. Parker approved forward-only recovery, not evidence of an old-writer drain; because the `main` API deploy runs the migration on startup, prove the page-write pause and complete Render drain before merging/deploying D2. A MySQL trigger cannot serve as a TiDB fence.
+- 2026-11-15: Restacking pure D5 tree state on the integrated D base requires preserving host-registry validation and the typed legacy restore/reload protections alongside main's independent fixture and package-local gates.
+- 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
 
 - 2026-11-15: Checkout self-resolution can pass when a distributable tarball is broken; install the packed package in a scratch consumer and assert both ESM/CJS subpath and root behavior in the regular CI unit job.
 - 2026-11-15: Lock a subpath-only package boundary with both a manifest-export assertion and ESM/CJS root resolution rejection; a tarball rehearsal alone does not prevent a future accidental root export.
@@ -91,6 +96,7 @@
 - 2026-11-11: Treat a concurrent restore from a builder tree to legacy mode as a distinct autosave conflict, preserving local unsaved content; a reload must require explicit discard acknowledgement and cannot interpret a null tree as an empty page.
 - 2026-11-11: A lazy editor can leave a valid-looking screenshot of its loading fallback; wait for an editor-specific visible element before capturing the visual matrix. Vite's `pnpm preview -- --port` forwards the extra `--` to Vite and silently serves its default port; invoke `pnpm exec vite preview --port` instead.
 - 2026-11-15: Restacking D5 UI on a newer core/main must carry both the D2 revision-aware restore and the pure engine's lossless legacy snapshot reader; update legacy restore test transactions to model the conditional revision claim, and verify the host Docker build order and CI shard lists together.
+
 - 2026-11-15: When a docs branch meets independently merged UI, SEO, core and contact fixes, preserve distinct README/context/lesson histories, deduplicate inherited entries, and regenerate Graphify rather than combining generated-report conflicts.
 - 2026-11-15: A feature PR can carry an additive migration through an ancestor branch even when its own UI diff does not edit Prisma; check full PR ancestry before scheduling a migration-last merge.
 - 2026-11-15: Keep the live stack ledger separate from dated historical snapshots; update merged SHAs and the final-head gate after every main integration without rewriting prior evidence.
@@ -340,6 +346,34 @@
 - 2026-11-11: Check exactly-one-H1 for every publish attempt, including a zero-component tree; draft permissiveness must not bypass publish policy.
 - 2026-11-11: A browser contrast test hidden behind an opt-in environment flag does not protect the visual gate; require Chromium in local/CI E2E and assert each rendered text, feedback border and indicator against its adjacent surface in both palettes.
 - 2026-11-11: An editor-only axe check misses route-specific gallery and unknown-content regressions; assert every fixture route and focused state across locale, theme, brand and viewport, and measure effective mobile hit areas, including labels wrapping checkboxes.
+
+- 2026-11-11: When a stacked design branch meets a reviewed base update, preserve both branches' documented lessons and regenerate generated graph reports rather than hand-merging graph data.
+- 2026-11-11: A builder nested inside an admin flex layout must size against the host main content box, not subtract guessed pixels from 100dvh; a fixed page-node minimum can hide builder navigation behind the host mobile bar.
+- 2026-11-11: Keep one owner of builder document/selection and dispatch validated atomic operations, so history/autosave can wrap edits; after deletion, announce only the actual result and focus a surviving node rather than a detached trigger.
+- 2026-11-11: A timed-out CAS save may already have committed; keep the attempted tree and newer local edits separately, read the remote revision before retry and require explicit review rather than blindly replaying with a new revision.
+- 2026-11-11: A nullable JSON column must distinguish SQL NULL legacy mode from a versioned empty builder tree; use a monotonic BIGINT compare-and-swap rather than timestamps to reject stale autosaves without dropping recovery blocks.
+- 2026-11-11: A historical legacy restore increments the same draft revision even with a null tree; account for that increment in subsequent activation and restore contract tests.
+- 2026-11-11: A transaction's earlier page read does not guard a later unconditional update against concurrent builder activation; claim the revision and SQL-null mode in a conditional update before replacing blocks, and reject legacy restore input that would drop malformed blocks.
+- 2026-11-11: When local browser sign-in fails with Prisma pool 45028 while CI is green, validate with a fresh locked tmpfs MySQL and rebuild Next against the same default API port; the isolated D2 full gate passed, but the earlier transient root cause is unproven.
+- 2026-11-11: Keep the D4 shell controlled and mount the schema-derived Properties panel once; a single host can atomically record composition and property edits while the revision-checked autosave controller preserves uncertainty without force-writing.
+- 2026-11-11: Responsive editor panels must use the same compact breakpoint as CSS; a tablet can hide a desktop inspector even when it is wider than the mobile preview breakpoint.
+- 2026-11-11: A modal Properties sheet must trap focus through textarea/select fields, and browser contrast audits must wait for button transitions and scope to the active dialog rather than the inert, dimmed canvas.
+- 2026-11-11: Conflict tests must change remote content, not just its revision; an identical remote tree may safely acknowledge a stale revision and retry without losing edits.
+- 2026-11-11: Schema enum values can remain stable storage keys while a host-owned Properties select localizes their user-facing EN/VI choices.
+- 2026-11-11: A mobile builder must retain a visible save-state indicator outside the Properties sheet; hiding a polite live status in responsive CSS also removes its screen-reader announcement.
+- 2026-11-11: Test dirty-reload recovery before the autosave debounce, not just after a successful save; abort the draft write and assert the server remains unchanged until the user explicitly restores local edits.
+- 2026-11-11: Match a responsive editor's JS mount boundary to the CSS visibility breakpoint; a 768px tablet can hide the desktop inspector while a device classification still reports “tablet,” leaving a modal sheet empty.
+- 2026-11-11: Capture a destructive confirmation's target ID at the initiating keyboard/pointer event, rather than reading a selected ID that may lag focus after a batched state update.
+- 2026-11-11: A controlled composition-to-history adapter should validate once for typed user feedback, commit one core operation against the original tree, and compare results; never apply the provisional composition tree and then the operation to it.
+- 2026-11-11: A draft activation response acknowledges only the submitted tree, not edits made while awaiting the server; replay the latest history into the new controller and never overwrite pending stored recovery before the user chooses restore or dismiss.
+- 2026-11-11: Test responsive sheet ownership while its dialog remains open across a breakpoint; closing the sheet before resizing hides stale-modal and focus-restoration failures.
+- 2026-11-11: A browser regression that changes locale/theme after shrinking to tablet can time out on desktop-only topbar controls; perform topbar setup at desktop width before exercising responsive transitions.
+- 2026-11-15: A flattened schema field path must be committed as a full immutable top-level tree property, preserving siblings; incomplete optional groups and invalid ID-list tokens stay local until host Zod validation succeeds, never silently coerce or autosave them.
+- 2026-11-15: Scope Playwright text assertions to the intended semantic element when a host inspector and embedded schema panel display the same component type; an unscoped exact-text locator fails strict mode despite correct UI behavior.
+- 2026-11-15: Keep invalid property inputs in a builder-lifetime, page/node/breakpoint-keyed draft rather than a keyed field subtree; otherwise switching selections or mounting a responsive sheet silently discards edits before schema validation.
+- 2026-11-15: A D5 browser journey must assert actual D2 draft revisions and tree contents after reload or failed publish; mocked draft GETs and canvas-only checks cannot prove live persistence or public SSR parity.
+- 2026-11-15: A keyboard-only design capture that asserts reduced-motion media must explicitly emulate that preference after page setup, just as the full visual matrix does; the runner default is not evidence of reduced-motion behavior.
+- 2026-11-15: For live builder E2E, drop onto the intended tree-item target instead of a canvas parent whose children can intercept the pointer; after reconnect, assert persisted content whether autosave retries automatically or exposes an explicit Retry control.
 - 2026-11-11: A timed-out CAS save may already have committed; keep the attempted tree and newer local edits separately, read the remote revision before retry and require explicit review rather than blindly replaying with a new revision.
 - 2026-11-11: A passing built CJS smoke proves package resolution but not that the API declares the package as a production dependency; defer Nest wiring rather than editing an unowned manifest or relying on a transitive install.
 - 2026-11-11: When merging parallel API packaging and pure engine branches, retain both documentation changes but regenerate Graphify; production CJS smoke must load the compiled host adapter, not just resolve the core subpath.
@@ -467,3 +501,6 @@
 - 2026-11-15: Pin validation catches a dangling pin but not an unpinned spec missing from an explicit Playwright shard manifest; compare every recursive `*.spec.ts` on disk against the registered list in CI and require exact-head browser evidence after fixing omissions.
 - 2026-11-15: Re-enabling an omitted Playwright spec can reveal stale selectors on a custom Radix combobox; exercise the visible option and assert the reloaded locale/cookie rather than relaxing downstream keyboard and axe checks.
 - 2026-11-15: Radix does not fire a locale change when selecting the active language; to prove cookie persistence, switch away and back when needed. Restore sheet-trigger focus after React removes the inert overlay in a layout effect, not competing animation frames referencing a cleared ref.
+
+- 2026-11-15: English API errors are not necessarily Vietnamese builder leaks: trace `ApiError` through activation catches, autosave HTTP-status handling and rendered EN/VI labels before changing contracts; audit new version actions separately.
+- 2026-11-15: When a study route is handed from a fixture component to the real builder host, update formerly registered browser specs against the actual editable panel; a fixture-only textbox can hide a deterministic shard failure despite a correctly mounted dialog.

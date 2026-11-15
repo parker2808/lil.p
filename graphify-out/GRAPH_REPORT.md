@@ -163,6 +163,9 @@
 - Deploy (Vercel + Render + TiDB + Cloudinary)
 - M3 — Write side
 - jobs
+- scripts
+- EmptyState
+- use-block-mutations.hook.ts
 - uses
 - compilerOptions
 - custom-public-pages.spec.ts
@@ -265,7 +268,9 @@
 - Portfolio notes — Central Food Wholesale CRM Portal (cfw-sales-crm-portal)
 - Portfolio notes — lil.p (this site)
 - Portfolio notes — Particula (particula-fe)
+- Kế hoạch triển khai portfolio
 - Round 3 PR 01 — brand foundation
+
 - R3-03 — Published custom pages
 - R3-04 — Create a page in the real admin
 - R3-06: reliable public email action
@@ -301,6 +306,7 @@
 - lint-staged
 - restore.sh
 - docker-entrypoint.sh
+
 - visual-update.sh
 - StatCard.stories.tsx
 - postcss.config.mjs
@@ -381,6 +387,7 @@
   docs/specs/2026-11-10-custom-page-locale-seo.md → apps/api/src/i18n/pick-locale.util.ts
 - `T50 · Media API: upload, variants, relations` --references--> `MediaService`  [INFERRED]
   docs/archive/plan/12-7-tasks-t46-users-admin-admin-only-change-own-pass.md → apps/api/src/modules/media/media.service.ts
+
 
 ## Import Cycles
 - None detected.
