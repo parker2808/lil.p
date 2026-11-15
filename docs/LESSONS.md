@@ -3,6 +3,10 @@
 - 2026-11-15: When reconciling a verification PR after CI provenance changes on main, preserve both PR-head and synthetic-merge SHAs in artifact checks; a green older run cannot attest to the newly merged head.
 - 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
 
+- 2026-11-15: Audit every visible enabled builder control at desktop as well as compact widths; padding does not guarantee a 44px target, and a screenshot is not proof of focus visibility or absence of dialog overflow.
+
+- 2026-11-15: A green browser test does not make screenshots reviewable from CI when captures remain only in the checkout; attach the exact-head manifest and PNGs to the existing Playwright blob report, and assert localized glyph bounds instead of inferring fit from button widths.
+
 - 2026-11-15: During D2+D6 integration, distinguish malformed persisted tree data (`INVALID_BLOCKS`) from publish lint (`VALIDATION_FAILED`); preserve a valid opaque legacy snapshot for admin recovery without allowing public or preview rendering of that node.
 
 - 2026-11-15: Body-parser oversized JSON may bypass Nest exception types; convert its typed size error into a redacted 413 with trace ID before normal middleware, assert unchanged DB rows, and retain the existing file-upload contract.
@@ -416,7 +420,6 @@
 
 - 2026-11-15: Scope Playwright text assertions to the intended semantic element when a host inspector and embedded schema panel display the same component type; an unscoped exact-text locator fails strict mode despite correct UI behavior.
 - 2026-11-15: Keep invalid property inputs in a builder-lifetime, page/node/breakpoint-keyed draft rather than a keyed field subtree; otherwise switching selections or mounting a responsive sheet silently discards edits before schema validation.
-
 - 2026-11-11: Test-local tree renderer mappings cannot certify deployed host pages; inject the same explicit host registry into draft, publish and snapshot reads, and verify actual Next components through the live API in both locales.
 - 2026-11-14: A full browser gate can expose an unrelated exact-scroll-pixel variance; preserve the failing evidence, leave out-of-scope layout code untouched, and require a fresh locked full-gate pass before calling the CMS route change green.
 - 2026-11-14: Record partial release evidence in a separate manifest with exact source, commands and blocked rows; a green live route gate must not silently become editor, migration or accessibility approval.
@@ -426,3 +429,6 @@
 - 2026-11-15: A Vietnamese URL does not guarantee Vietnamese SEO when the snapshot only has English fields; seed both locale groups before asserting `lang: vi` in live-route parity tests.
 - 2026-11-15: Unauthenticated 503 checks across direct API and Vercel ingress can detect a missing HTTP write freeze, but cannot prove old writers drained or D2 columns exist; require authenticated instance inventory and an authorized read-only schema check before migration or reopening. With locale-prefixed routing, accept only the expected same-origin root redirect and probe `/en` and `/vi` explicitly.
 - 2026-11-15: A browser test file outside the explicit `apps/web/e2e/shards.ts` list is not covered by green CI web shards; release matrices must cite an exact-head job and test declaration, and keep unlisted keyboard/canvas cases as gaps until registered and run.
+- 2026-11-15: A D5 browser journey must assert actual D2 draft revisions and tree contents after reload or failed publish; mocked draft GETs and canvas-only checks cannot prove live persistence or public SSR parity.
+- 2026-11-15: A keyboard-only design capture that asserts reduced-motion media must explicitly emulate that preference after page setup, just as the full visual matrix does; the runner default is not evidence of reduced-motion behavior.
+- 2026-11-15: For live builder E2E, drop onto the intended tree-item target instead of a canvas parent whose children can intercept the pointer; after reconnect, assert persisted content whether autosave retries automatically or exposes an explicit Retry control.

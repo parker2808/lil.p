@@ -50,6 +50,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - CI evidence provenance (2026-11-15): E2E artifacts identify both the PR head and the tested synthetic-merge checkout; the merged report verifies all four shard manifests against both SHAs before recording its provenance. Review screenshots against both SHAs, not only the run number. This does not change which ref runs, any required check or the Vercel build order. Exact-head CI remains the gate.
 
+- D5 live journeys (stacked test PR): CI-sharded browser cases use actual Next and D2 HTTP for no-H1 save/publish rejection, mouse/keyboard nested layout, invalid drop/delete, undo/redo, responsive draft persistence, divergent CAS conflict and offline recovery. The expanded design case attaches exact-head EN/VI neutral/lil.p light/dark 390/768/1440 empty/error/focus/saved/saving/conflict captures with axe, reduced-motion, 44px all-controls, visible focus and overflow checks. A desktop header action gains a 44px minimum. Only CI-proven assertions can close J/V sub-gates; successful tree publication/public SSR, manual screen reader and all-20 host-type writes remain D6 gaps. See `docs/specs/2026-11-15-cms-d5-live-journeys.md`.
+
+- D5 design P2 follow-up (stacked draft): two equal-width breakpoint columns wrap all four EN/VI labels within their buttons across mobile/desktop; the CI-listed design spec checks text geometry and attaches empty/invalid-field, keyboard-focus and neutral/lil.p comparison captures plus a source-SHA manifest to Playwright's existing report artifact. Existing checked-in 99-image captures predate this fix; review the labeled CI artifact at its exact head before promoting new images or claiming final WCAG AA evidence. No core/history/autosave/API/golden change.
+
 - 2026-11-15 #208 exact-head API E2E `43687009780` surfaced D2 safety/D6 host-registry contract collision: nine malformed stored-tree publish assertions returned `VALIDATION_FAILED` rather than `INVALID_BLOCKS`, and one opaque legacy snapshot was rejected by admin version read. Combined-only correction parses stored tree before publish lint and permits admin history/restore of valid opaque legacy nodes while public/preview remain fail-closed; exact-head rerun required. #208 DO NOT MERGE; propagate reviewed fix to owning branches before release.
 
 - 2026-11-15 #208 D2 safety refresh: integrated #199 `72019eb1` including #216's redacted oversized-body 413, real-DB invalid-tree/no-write inventory, missing-SEO/restore hashes and scoped role checks. J06/V11 have feature-level evidence; combined CI and D6 publication are pending. J09/V18 remain blocked on the authorized Stage A live drain; V12 still needs production log review.
@@ -305,6 +309,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - 2026-11-15: Synced verification-only #208 with main `7d7c2e33`, retaining #220's PR-head/tested-merge artifact provenance and the independent Stage A/D2/D5/D6 histories. No production migration, deployment or release; exact-head CI required.
 - 2026-11-15: Added PR-head and tested-merge SHAs to E2E build, shard and merged-report artifact names and provenance JSON, with four-shard verification before report attestation; no changes to test refs, checks, runtime or deployment.
+
+- 2026-11-15: Registered real-API D5 Playwright journeys in the four-shard CI list and extended exact-head design attachments to empty/error/focus/saved/saving/conflict states across locale, theme, brand and 390/768/1440 widths. A desktop header 44px minimum and all-controls geometry, focus, reduced-motion and axe assertions accompany structural HTTP/revision checks; no API, golden or migration changes. Exact-head CI evidence is required before assigning PASS to matrix rows.
+
+- 2026-11-15: Wrapped D5 Properties breakpoint controls in a responsive two-column grid and extended the CI design evidence with empty/error and geometry checks plus attached head-SHA screenshots/manifest; existing historical images are not relabeled. No D2, core, public or golden contract change.
 
 - 2026-11-15: Reconciled D2 stored-tree rejection and admin historical snapshot recovery with D6 public renderability fence on verification-only #208; added focused unit regression. No schema, golden, production deploy or release change; exact-head CI pending.
 
