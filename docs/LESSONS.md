@@ -296,3 +296,4 @@
 - 2026-11-10: Shard assignment can move content-creating specs ahead of clean-seed pixel tests; pin the mutator outside the visual shard instead of weakening snapshots.
 - 2026-11-10: Placeholder opacity can defeat an AA text token; measure the computed input contrast, and give Layers depth visible guides on desktop and mobile.
 - 2026-11-10: A flag-gated localized fixture needs localized, gated metadata too; derive the title from the same EN/VI copy and test both disabled and enabled states.
+- 2026-11-15: Unauthenticated 503 checks across direct API and Vercel ingress can detect a missing HTTP write freeze, but cannot prove old writers drained or D2 columns exist; require authenticated instance inventory and an authorized read-only schema check before migration or reopening.

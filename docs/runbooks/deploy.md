@@ -26,6 +26,63 @@ Vercel and Render both auto-deploy from the Git branch you connected
 (usually `main`). The API image entrypoint runs `prisma migrate deploy`
 before it starts, so new migrations apply on the next Render deploy.
 
+### Stage A → D2 page-write rollout (release owner only)
+
+This is a **forward-only** exception to ordinary rolling deploys. Do not deploy
+an API image predating Stage A after D2 migrates. Approval to merge a PR is not
+approval to deploy or migrate; obtain separate release-owner authorization.
+Keep auto-deploy disabled and pin reviewed image commits throughout.
+
+1. Before Stage A, inventory every Render API instance ID and commit using the
+   authenticated Render instance inventory and startup logs. Confirm the Stage A
+   image has no D2 migration. Deploy Stage A with page writes frozen by default.
+2. The release owner may run the following from an authorized terminal (Node 22):
+
+   ```sh
+   node scripts/probe-stage-a-d2.mjs --render-url https://<actual-render-host>
+   ```
+
+   The
+   Vercel origin defaults to `https://lil-p.vercel.app`. The actual Render host
+   is **not stored in tracked config**: `docs/DEPLOY.md` shows only an example;
+   obtain the public hostname from the approved Render service settings, not
+   from `.env` or a secret. This script makes unauthenticated GETs for `/`,
+   `/vi`, and `/api/health` (both API ingresses for health), then sends empty,
+   unauthenticated mutation requests to all ten legacy and four D2 paths via
+   direct Render and Vercel `/api`. It uses a nonexistent sentinel page key,
+   block ID 0, version 0, and invalid `{}` for creation; it never sends cookies
+   or bearer tokens. It demands the exact Stage A 503 body and
+   `Retry-After: 120`; a 401, redirect, 404 or other 503 is **FAIL**, not proof of freeze.
+   Stop on any failure. Do not use real page keys or authenticated credentials
+   with this script. It does not prove that every legacy writer is drained.
+
+3. Separately check every live API instance through authenticated
+   `/api/admin/deployment-state`, the Render instance inventory and startup /
+   termination logs. Record the approved commit and instance IDs; verify **all**
+   pre-Stage-A instance IDs have disappeared and their in-flight requests have
+   completed. The identity endpoint requires admin auth; there is no public
+   identity signal. If inventory, identity or ingress mapping is missing, **do
+   not migrate**. Repeat the public probe after drain. Never rely on health,
+   elapsed time or a Render “Live” label alone.
+4. With a separately approved #199 rollout, deploy the reviewed **D2-aware
+   image containing the Stage A guard**. Its startup runs
+   `prisma migrate deploy` while all earlier instances remain frozen. Check migration logs,
+   `/api/health` returning `{status:"ok",db:"ok"}` via both ingresses, and
+   rerun the probe. Health does **not** prove D2 schema: the release owner must
+   use an authorized, read-only DB metadata query for columns `page.draftTree`
+   and `page.draftTreeRevision` plus the Prisma migration history. Do not add a
+   public schema endpoint or publish data. Keep freeze on until every Stage A
+   instance has drained and the D2 migration/data gates pass.
+5. Reopen writes only with a separately approved D2-aware unfreeze release:
+   verify that every instance runs that reviewed commit, then perform a
+   controlled authenticated save/restore/publish/activation CAS check on an
+   approved disposable record through both ingresses, followed by an authorized
+   read-back; verify expected stale-revision rejection and no unintended
+   published change. Never use this unauthenticated probe as a reopen test.
+   If any gate fails, **hold freeze and roll forward**, never redeploy a pre-D2
+   writer. No seed, manual SQL, script or background page writer may bypass the
+   freeze during this window.
+
 ## Rollback
 
 - **Web:** Vercel → Deployments → Promote the previous production
@@ -33,7 +90,8 @@ before it starts, so new migrations apply on the next Render deploy.
 - **API:** Render → Manual Deploy of the previous successful build.
   Migrations are forward-only; do not restore an older image that expects
   fewer columns without a matching DB restore
-  ([restore.md](./restore.md)).
+  ([restore.md](./restore.md)). **After the D2 migration, never restore a
+  pre-D2 image:** retain Stage A freeze and roll forward instead.
 
 ## JWT rotation
 
