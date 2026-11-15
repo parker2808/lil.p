@@ -280,3 +280,5 @@
 - 2026-11-11: Test responsive sheet ownership while its dialog remains open across a breakpoint; closing the sheet before resizing hides stale-modal and focus-restoration failures.
 - 2026-11-11: A browser regression that changes locale/theme after shrinking to tablet can time out on desktop-only topbar controls; perform topbar setup at desktop width before exercising responsive transitions.
 - 2026-11-15: A flattened schema field path must be committed as a full immutable top-level tree property, preserving siblings; incomplete optional groups and invalid ID-list tokens stay local until host Zod validation succeeds, never silently coerce or autosave them.
+
+# 2026-11-15: Scope Playwright text assertions to the intended semantic element when a host inspector and embedded schema panel display the same component type; an unscoped exact-text locator fails strict mode despite correct UI behavior.

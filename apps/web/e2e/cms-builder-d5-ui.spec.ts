@@ -107,7 +107,9 @@ test('all 20 host Properties are visible through the gated builder in EN/VI and 
     for (const [index, definition] of types.entries()) {
       await layers.locator(`[data-tree-id="block-${index}"]`).click();
       await expect(
-        inspector.getByText(definition.type.replaceAll('-', ' '), { exact: true }),
+        inspector
+          .getByRole('paragraph')
+          .filter({ hasText: new RegExp(`^${definition.type.replaceAll('-', ' ')}$`) }),
       ).toBeVisible();
       await expect(
         inspector
