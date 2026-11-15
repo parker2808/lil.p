@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #208 Stage A refresh: integrated the #210 `8a674cdb` guard after main `59677dfa`, retaining the C1 root-export guard, #214 read-only probe and all ten legacy plus four D2 builder mutation routes under the fail-closed `/api/admin/pages` prefix. Neither checked routes nor passing CI prove live Render old-instance drain; #208 stays DO NOT MERGE.
+
 - 2026-11-15 #208 main #214 sync: retained the read-only, non-executing Stage A/D2 probe tests in `check:all` alongside the public-builder byte scan; the approved forward-only policy still requires live Render no-overlap proof, not just probe-kit unit checks. Exact-head CI after main/D2 merge remains required. DO NOT MERGE.
 
 - 2026-11-15 #208 D2 sync: merged #199 `db064d88` into the verification branch; builder restore retains D6 host registry and lossless legacy snapshot parser inside D2 read-committed revision CAS. Both D2 race tests and D6 bilingual fixture revisions require exact-head CI. Main #214 probe wiring must be incorporated before final verification; DO NOT MERGE and Render drain remain open.
@@ -293,6 +295,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Integrated reviewed Stage A #210 `8a674cdb` into verification-only #208, retaining the existing D2/D5/D6 histories, C1 root guard and #214 probe kit. Generated Graphify report will be rebuilt from the combined tree; no production operation or golden change.
 
 - 2026-11-15: Integrated main #214 `59677dfa` probe kit into verification-only #208; preserved both check-all steps, docs histories, D2 read-committed CAS and D6 host-aware restores. No production probe, migration or deploy; goldens unchanged.
 

@@ -35,6 +35,25 @@ shells or other deployments are **outside HTTP middleware**, so the release
 owner must prohibit these throughout the pause. This guard does not freeze
 unrelated admin resources.
 
+Re-audit against main `59677dfa` (including #214's probe-only changes) and
+D2 #199 `db064d88` (2026-11-15):
+`AdminPagesController` is the only page/version/SEO/block/builder mutation
+controller. On main, its ten writes are `POST /admin/pages`, `PATCH
+/admin/pages/:key` (including SEO), `POST /admin/pages/:key/blocks`, `PATCH
+/admin/pages/:key/blocks/order`, `PATCH /admin/pages/:key/blocks/:id`, `POST
+/admin/pages/:key/blocks/:id/duplicate`, `DELETE
+/admin/pages/:key/blocks/:id`, `POST /admin/pages/:key/publish`, `POST
+/admin/pages/:key/versions/:version/restore`, and `POST
+/admin/pages/:key/discard`. D2 adds four writes: `POST
+/admin/pages/:key/builder/activate`, `PUT /admin/pages/:key/builder/draft`,
+`POST /admin/pages/:key/builder/publish`, and `POST
+/admin/pages/:key/versions/:version/builder/restore`. These fourteen paths
+are represented in the HTTP freeze table, and all match the middleware's
+non-read `/api/admin/pages` prefix without enumerating route names. D2's `GET
+/admin/pages/:key/builder/draft`, existing admin page/version GETs, and public
+page GETs remain read paths. Re-audit any future page controller moved outside
+this prefix before deployment; the guard does not cover direct DB writers.
+
 `GET /api/admin/deployment-state` requires an admin session and returns only
 `pageWritesFrozen`, allowlisted Render commit, instance and service identifiers
 (or null); the existing health response remains unchanged. Startup logs contain

@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Audit a pre-schema fail-closed page-write guard against both legacy and new builder route tables, including shared SEO PATCH and builder restore, then preserve that audit when resolving stacked documentation conflicts; route tests cannot replace live old-instance drain proof.
+
 - 2026-11-15: A signed design/a11y review can find evidence gaps after combined-head CI passes: keep public/preview pairs, all-control hit/focus coverage, and actual screen-reader/reduced-motion checks OPEN until artifact and manual signoff are complete.
 
 - 2026-11-15: When a main probe-kit update and a builder-byte budget gate both modify check-all, keep both independent steps; read-only HTTP probes and clean CI cannot establish live instance drain or migration safety.
