@@ -26,7 +26,9 @@ The real-host no-script sample also checks OS-driven dark first paint and
 separately authored VI tree copy on both neutral and branded tenants; it does
 not certify all-20 dark neutral SSR or fully localized site content. A scoped
 no-script OS-dark shell rule keeps the public header/footer dark alongside the
-CMS tree; CI attaches raw header/footer captures on both real tenant hosts.
+CMS tree and pairs the preview banner with a dark warning surface; CI checks
+its computed text/background contrast at 4.5:1 and attaches raw captures on
+both real tenant hosts.
 The footer assertion preserves its existing 93% background/7% green blend
 rather than expecting the unmixed card color.
 
@@ -131,6 +133,8 @@ The [D5 builder UI spec](./docs/specs/2026-11-11-cms-d5-ui.md) records why its l
 The [V13/V05 follow-up](./docs/specs/2026-11-16-cms-d5-v13-v05.md) localizes admin page metadata and field validation without changing API codes, and captures a real persisted D5 editor draft at 768px. V05's same-revision editor→public→preview chain still requires D6 tree publishing; no public-route PASS follows from D5-only captures.
 
 The [CMS core ADR](./docs/specs/2026-11-10-cms-core-adr.md) defines U → B → D → verification → C, the neutral default theme and screenshot-backed design gates. The [D1–D6 builder](./docs/specs/2026-11-10-cms-builder-phase-d-draft.md) and [C1–C3 distribution](./docs/specs/2026-11-10-cms-core-distribution-c-draft.md) handoffs remain draft implementation plans. Parker approved naming or linking the private `@parker2808/cms-core` repository and declaring it as a dependency; see the [narrow public-repo exception](./docs/specs/2026-11-10-agents-private-cms-core-exception.md). Private source and credentials remain excluded from this public repository.
+
+Published CMS tree hosts without an explicit `data-theme` inherit the site root's dark class; a host's explicit theme takes precedence. The [V09/V10 restore gate](./docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md) checks public/preview painted content and WCAG AA in both modes; production parity still requires separate evidence.
 
 CMS draft handoff update (2026-11-11): B6b #193 `e12774e` exposes the opt-in neutral `@parker2808/cms-core/theme.css` with light/dark `--builder-*` tokens; D1 #194 `5c31773` exposes the typed `./tree` entry (`readTree`, `migrateTree`, `convertLegacySnapshot`) for the D2–D6 draft briefs. The [stack plan](./docs/specs/2026-11-10-cms-stack-integration-plan.md) preserves both manifest/tsup changes; B7 and D1 acceptance remain pending. This docs update neither imports the theme into the live app nor approves the D2 migration.
 
@@ -284,6 +288,8 @@ Core owns semantic headings in D3: a host `components.heading` override fails wi
 [D5 pure tree logic](./docs/specs/2026-11-11-cms-d5-core-logic.md) adds explicit-registry atomic edits, responsive overrides, bounded history and CAS autosave to `./tree` without shipping its editor UI. D6's release-gate extension checks all 20 host schemas and EN/VI SSR parity using test-local host render mappings; its follow-up injects the host-owned registry into live API draft/publish/snapshot validation and Next SSR with an all-20 browser parity gate. Dirty-reload UI remains blocked. #202 now carries #200 and must wait for both #199 and #200 approvals.
 
 The all-20 D6 live route gate passes on disposable MySQL in both locales; the complete locked `check:all --e2e` passes 13/13 after one unrelated admin-scroll exact-pixel variance on the first run. D4/D5 editor integration and reload safety still require their own release evidence.
+
+The [V09/V10 restored-version browser gate](./docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md) adds paired EN/VI light/dark mobile/tablet/desktop public and version-preview captures, content axe results and a keyboard-operated, localized 409/no-write confirmation. CI and independent review must pass before crediting these specific restore tuples; this does not prove the all-20 restore matrix or production parity.
 
 The [partial D6 live-route manifest](./docs/specs/2026-11-14-cms-d6-live-route-evidence.md) separates verified route behavior from blocked editor, visual and migration release gates.
 

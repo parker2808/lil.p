@@ -42,6 +42,9 @@
 
 - 2026-11-15: A paired public/preview gallery and zero-axe assertions do not establish a distinct neutral tenant SSR or complete no-JavaScript nested content; preserve those gaps when integrating D6 parity. A data-backed streaming notes fallback also needs readable, keyboard-sized links and an existing interactive marker before capture.
 - 2026-11-15: A combined D5/D6 merge must retain the D6 host-label argument on every canvas control, not just the inspector, and the D5 duplicate command must use the host registry; full typecheck catches a missed accessible-label call.
+- 2026-11-16: A root dark class does not recolor an independently scoped CMS tree unless it explicitly inherits that theme; assert the computed card background before axe, and preserve a host's explicit light-theme override.
+- 2026-11-16: No-script dark shell tokens must include warning surfaces as well as foreground/background; otherwise a pale preview banner with inherited light text can pass route checks while failing legibility. Assert computed text-to-surface contrast in both locales and hosts.
+
 - 2026-11-16: D19 resolves a block's entire localized props to EN when even one populated EN field lacks VI; no-JS version fixtures must localize the page-header title as well as its eyebrow to assert actual VI output.
 
 - 2026-11-16: Moving the home page into a nested route group can remove the inherited file-convention OG image from its metadata; explicitly preserve the home OpenGraph image and gate it in SEO tests.
@@ -645,6 +648,7 @@
 - 2026-11-15: Locale-specific visual evidence needs a bilingual block fixture and an assertion on painted localized text on both public and preview routes; merely switching the page locale with a shared heading string proves neither localized content nor dark-mode rendering.
 - 2026-11-16: A green source-branch restore journey can fail after D5/D6 integration when accessible Properties labels change; use exact labels from the failed CI accessibility snapshot and retain the saved-tree and painted-page assertions.
 - 2026-11-16: Layers reinitializes with only the Page expanded after a builder reload; expand each nested ancestor by keyboard before checking a reloaded heading in the accessible tree, while separately comparing the saved draft and revision.
+- 2026-11-16: A successful restored-version API equality and EN/VI light screenshots do not prove dark-theme public/preview parity after republish; compare painted content crops and unwaived axe in all locale/theme/width tuples, keeping the preview banner outside the crop and asserting real 409 focus, live feedback and no writes.
 - 2026-11-16 V02: sau reload, Layers thu gọn Section dù draft/published tree còn nguyên; test keyboard phải mở Section bằng ArrowRight rồi mới xác nhận các node con hiện ra, không đồng nhất trạng thái UI thu gọn với mất dữ liệu.
 
 - 2026-11-16 V02: Alt+ArrowDown trên sibling cuối là no-op; phải assert order trước/sau một Alt+ArrowUp thật, dùng Tab/Shift+Tab thay Playwright `.focus()` để chứng minh keyboard reachability.

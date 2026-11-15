@@ -1,7 +1,9 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Locator, type Page, type TestInfo } from '@playwright/test';
 
 import { signIn } from './helpers/auth';
 import { switchBuilderLocale } from './helpers/builder-locale';
+import { imageDifference } from './helpers/d6-visual-matrix';
 
 const firstHeading = 'Original UI version heading';
 const firstVietnameseHeading = 'Tiêu đề phiên bản gốc';
@@ -104,6 +106,18 @@ async function attachPaintedPage(
   await testInfo.attach(name, { body: screenshot, contentType: 'image/png' });
 }
 
+async function assertAccessible(page: Page, testInfo: TestInfo, selector: string, name: string) {
+  const result = await new AxeBuilder({ page })
+    .include(selector)
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
+    .analyze();
+  await testInfo.attach(`${name}-axe.json`, {
+    body: JSON.stringify(result.violations),
+    contentType: 'application/json',
+  });
+  expect(result.violations, `${name} unwaived WCAG violations`).toEqual([]);
+}
+
 async function pairedPublishedCapture(
   page: Page,
   testInfo: TestInfo,
@@ -119,9 +133,7 @@ async function pairedPublishedCapture(
     expect(preview.status()).toBe(200);
     expect(publicPage.status()).toBe(200);
     expect(await preview.json()).toEqual({ ...(await publicPage.json()), invalidBlocks: [] });
-    for (const theme of (locale === 'vi' ? ['light', 'dark'] : ['light']) as Array<
-      'light' | 'dark'
-    >) {
+    for (const theme of ['light', 'dark'] as const) {
       for (const width of [390, 768, 1440] as const) {
         await page.setViewportSize({ width, height: 900 });
         const path = `/${locale}/${key}`;
@@ -137,15 +149,48 @@ async function pairedPublishedCapture(
           await expect(page.locator('html')).toHaveClass(new RegExp(`\\b${theme}\\b`));
           await expect(heading).toBeVisible();
         }).toPass({ timeout: 30_000 });
+        const section = page.locator('main.cms-core .cms-tree__section').first();
+        await expect(section).toHaveCSS(
+          'background-color',
+          theme === 'dark' ? 'rgb(32, 39, 53)' : 'rgb(255, 255, 255)',
+        );
+        await expect(page.locator('main.cms-core')).toHaveCSS('color-scheme', theme);
         const publicMarkup = await page.locator('main.cms-core').innerHTML();
         const name = `${locale}-${theme === 'dark' ? 'dark-' : ''}${width}-restored`;
         await attachPaintedPage(page, heading, testInfo, `${name}-public`, theme);
+        await assertAccessible(page, testInfo, 'main.cms-core', `${name}-public`);
+        const publicImage = await page
+          .locator('main.cms-core')
+          .screenshot({ animations: 'disabled' });
+        await testInfo.attach(`${name}-main-public.png`, {
+          body: publicImage,
+          contentType: 'image/png',
+        });
         await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
         await page.goto(`${path}?v=${version}`);
+        await expect(page.locator('html')).toHaveAttribute('lang', locale);
         await expect(page.locator('html')).toHaveClass(new RegExp(`\\b${theme}\\b`));
         await expect(heading).toBeVisible();
+        await expect(section).toHaveCSS(
+          'background-color',
+          theme === 'dark' ? 'rgb(32, 39, 53)' : 'rgb(255, 255, 255)',
+        );
+        await expect(page.locator('main.cms-core')).toHaveCSS('color-scheme', theme);
         expect(await page.locator('main.cms-core').innerHTML()).toBe(publicMarkup);
         await attachPaintedPage(page, heading, testInfo, `${name}-preview`, theme);
+        await assertAccessible(page, testInfo, 'main.cms-core', `${name}-preview`);
+        const previewImage = await page.locator('main.cms-core').screenshot({
+          animations: 'disabled',
+        });
+        await testInfo.attach(`${name}-main-preview.png`, {
+          body: previewImage,
+          contentType: 'image/png',
+        });
+        const difference = await imageDifference(page, publicImage, previewImage);
+        expect(
+          difference.differingPixels / difference.totalPixels,
+          `${name} restored version ${version} main preview/public pixel parity`,
+        ).toBeLessThanOrEqual(0.005);
         await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
       }
     }
@@ -155,7 +200,7 @@ async function pairedPublishedCapture(
 test('UI publish, edit, restore and republish preserves EN/VI preview/public parity', async ({
   page,
 }, testInfo) => {
-  test.setTimeout(240_000);
+  test.setTimeout(360_000);
   await signIn(page);
   const key = `builder-ui-restore-${Date.now()}-${testInfo.retry}`;
   const created = await page.request.post('/api/admin/pages', {
@@ -232,7 +277,8 @@ test('UI publish, edit, restore and republish preserves EN/VI preview/public par
     concurrentWriteStatus = changed.status();
     await route.continue();
   });
-  await rejectedDialog.getByRole('button', { name: 'Khôi phục bản nháp', exact: true }).click();
+  await rejectedDialog.getByRole('button', { name: 'Khôi phục bản nháp', exact: true }).focus();
+  await page.keyboard.press('Enter');
   const rejected = await conflictingRestore;
   expect(concurrentWriteStatus).toBe(200);
   expect(rejected.status(), await rejected.text()).toBe(409);
@@ -241,6 +287,7 @@ test('UI publish, edit, restore and republish preserves EN/VI preview/public par
     'Bản nháp máy chủ đã thay đổi · tải lại trước khi thử lại',
   );
   await expect(rejectedDialog.getByRole('button', { name: 'Hủy' })).toBeFocused();
+  await assertAccessible(page, testInfo, '[role="alertdialog"]', 'vi-restore-409-dialog');
   await expect(
     rejectedDialog.getByRole('button', { name: 'Khôi phục bản nháp', exact: true }),
   ).toBeDisabled();

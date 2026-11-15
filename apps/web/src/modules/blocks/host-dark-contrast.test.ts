@@ -6,7 +6,9 @@ import { expect, it } from 'vitest';
 const root = resolve(import.meta.dirname, '../../../../..');
 
 function color(css: string, selector: string, token: string) {
-  const block = css.split(`${selector} {`)[1]?.split('}')[0];
+  const start =
+    css.indexOf(`${selector},`) >= 0 ? css.indexOf(`${selector},`) : css.indexOf(`${selector} {`);
+  const block = start < 0 ? undefined : css.slice(css.indexOf('{', start) + 1).split('}')[0];
   const value = block?.match(new RegExp(`--${token}: (#[0-9a-f]{6});`))?.[1];
   expect(value, `${selector} --${token}`).toBeDefined();
   return value!;
@@ -36,4 +38,12 @@ it('keeps dark host subtle text AA on neutral and branded card surfaces', () => 
       (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05),
     ).toBeGreaterThanOrEqual(4.5);
   }
+});
+
+it('inherits the root dark theme on public hosts without overriding explicit host themes', () => {
+  const host = readFileSync(resolve(root, 'apps/web/app/globals.css'), 'utf8');
+  const core = readFileSync(resolve(root, 'packages/cms-core/src/theme/theme.css'), 'utf8');
+  expect(core).toContain('.dark .cms-core:not([data-theme]),');
+  expect(host).toContain('.dark .cms-core-host:not([data-theme]) {');
+  expect(host).toContain(".dark .cms-core-host[data-brand='lilp']:not([data-theme]) {");
 });
