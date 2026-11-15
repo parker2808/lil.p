@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #208 final-cut verification: code head `e13790ae` includes D2 `15a4a3a`, D5 `7e91f61`, D6 `ba2fe0e`; exact-head CI `43742443333` passed API/unit/build and all five web shards. Scored pre-merge 15/28 PASS, 13/28 GAP; J09/V18/V19 deferred to the approved rollout's live gates. V16's automated subset is the approved gate; manual SR remains documented limitation, not WCAG certification. #239 is not integrated; #208 DO NOT MERGE. See combined matrix spec for row IDs/owners.
+
 - #208 verification refresh merges D2 `8a800999` (#240), D5 `3ba001e3` (#221) and D6 `bcd949d8` (#234) in a fresh checkout. D5's invalid-input draft retention and ≥3:1 focus audit remain intact; D6 adds real-host SSR and VI nested labels without replacing D5's schema-derived editor. This is verification-only, not a production rollout; CI and independent full-row review must use the final combined SHA.
 - D2 #243 follow-up (2026-11-16): independent review found 4.11:1/3.69:1 CTA contrast during the transition, masked by a final-palette wait. Public primary buttons now switch both palette colors atomically while preserving transform motion; frame-by-frame EN/VI route checks precede axe. Exact-head CI pending; #199 is not re-green until this stacked PR lands.
 - #221 V15 passed exact-head CI `43732468521` at `b2671d6c` and independent review found no P0–P2. Graphify was regenerated against the merged D5 code head; V16 remains a separate manual screen-reader GAP (VoiceOver/NVDA spoken output, public/preview reading/H1 order, EN/VI review) despite automated builder checks.
@@ -413,6 +415,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Scored #208's final integration cut against run `43742443333` and independent scoped reviews, refreshed Graphify source `e13790ae`; no runtime, schema, production or merge action. Thirteen pre-merge rows and three post-deploy gates remain open.
 
 - 2026-11-15: Added D2 entrypoint bootstrap-order regression for init → migration verification → listen, with fail-closed writes on query rejection; rollout authorization remains separate.
 - 2026-11-15: Integrated D2 write-reopen guard over #199: retained Stage A route/method and 503 semantics, added read-only startup migration/column checks and explicit production `CMS_PAGE_WRITE_FREEZE=0` switch. Live drain and ingress proof remain release-owner gates.
