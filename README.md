@@ -5,6 +5,14 @@ add legacy/tree route and missing-SEO snapshot checks, nested-field core
 preservation, and an offline deployed-public-asset parity verifier. They do not
 authorize deployment or close the V18 live drain and V19 CDN parity gates.
 
+The [builder version actions](./docs/specs/2026-11-15-cms-builder-version-actions.md)
+use D2's revision-checked publish and restore endpoints in the gated builder:
+publish requires a fully acknowledged server draft, history lists immutable
+versions, and restoring one requires confirmation before replacing the draft.
+Uncertain writes or CAS conflicts keep local content and block further version
+changes until review; restoration never automatically republishes. This is a
+feature-branch UI gate, not authorization for the D2 production migration.
+
 The D6 host-registry integration is staged on a scratch branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and
 publish, then EN/VI version preview and public SSR. This is route evidence, not
@@ -32,6 +40,8 @@ The [CMS U3 builder design study](./docs/specs/2026-11-10-cms-u3-builder-design.
 The [CMS U0 route/control baseline](./docs/audits/2026-11-10-cms-u0-route-control-baseline.md) maps the current public/admin routes, redirect and role boundaries, control ownership, and existing behavior/visual tests before UI standardization. It records uncovered live/visual states separately from executed focused tests; U0 changes no runtime behavior.
 
 The [CMS core package](./packages/cms-core/README.md) runs its own dependency-boundary check in CI, independent of the monorepo root check, so extraction cannot silently drop this gate. Its React and theme tests import the package-local bundle measure, so the same tests run after extraction. The [C1 runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md) retains the final integration and authorization requirements.
+
+The [D5 live-journey spec](./docs/specs/2026-11-15-cms-d5-live-journeys.md#d4-sheet-integration-regression) tracks the shard-5 Properties correction after the study route switched to the real builder host; the EN/VI responsive single-mount and focus gate needs exact-head CI.
 
 ### CMS U1 shared controls
 

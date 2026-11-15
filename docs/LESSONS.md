@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Legacy CMS publish/restore hooks do not carry D2's draft revision; a tree builder must use the dedicated CAS endpoints, verify a fully acknowledged server draft, and reread the revision after publish before allowing another edit. A confirmed restore replaces only the draft, not the published pointer.
+
 - 2026-11-15: A preview/public JSON equality check alone cannot prove breakpoint rendering or reviewable visual parity; attach paired browser screenshots at each locale and viewport while keeping the missing UI restore control an explicit GAP.
 - 2026-11-15: An incremental Graphify run can report no topology changes while retaining its earlier built-from SHA; record the verified code head separately rather than presenting the old graph as newly rebuilt.
 
@@ -411,4 +413,8 @@
 - 2026-11-15: Re-enabling an omitted Playwright spec can reveal stale selectors on a custom Radix combobox; exercise the visible option and assert the reloaded locale/cookie rather than relaxing downstream keyboard and axe checks.
 - 2026-11-15: Radix does not fire a locale change when selecting the active language; to prove cookie persistence, switch away and back when needed. Restore sheet-trigger focus after React removes the inert overlay in a layout effect, not competing animation frames referencing a cleared ref.
 - 2026-11-15: A base merge may auto-merge the Playwright manifest and builder UI while context conflicts; preserve both histories and run the complete five-shard registry/unit and exact-head browser gates rather than inheriting either parent's green status.
+- 2026-11-15: A modal restore failure must be announced inside the active alert dialog; a header status behind the modal does not give keyboard or screen-reader users actionable feedback.
+- 2026-11-15: When a study route is handed from a fixture component to the real builder host, update formerly registered browser specs against the actual editable panel; a fixture-only textbox can hide a deterministic shard failure despite a correctly mounted dialog.
 - 2026-11-15: When a study route becomes the live builder host, test the selected editable heading across responsive Properties surfaces rather than a fixture-only ID; avoid merging divergent D5 runtime solely to repair a D6 test.
+- 2026-11-15: When a stacked UI branch and its base independently repair the same browser fixture, merge test code normally and preserve both context histories; rerun exact-head shards on the merged base instead of inheriting either prior green run.
+- 2026-11-15: When a restore conflict disables the focused confirmation action, explicitly focus the enabled Cancel button inside the still-open alert dialog; a visible localized error alone does not preserve keyboard focus.
