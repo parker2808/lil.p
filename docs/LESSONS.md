@@ -1,8 +1,11 @@
 # Lessons
 
+- 2026-11-16: Restacking a test PR after a visual fix requires preserving both the old test's artifact provenance and the base's contrast assertion; the old 17/17 run does not verify the combined head.
+
 - 2026-11-16: A 390px Properties sheet can have valid nested fields below its scroll viewport; attach both its top and scrolled final-field captures, and require that field to enter the viewport before calling the mobile evidence reviewable.
 
 - 2026-11-16: A localized Properties control passing client validation is not evidence of the saved/public value: serialize nested EN/VI edits against real draft GETs, then compare the exact revision's immutable snapshot with public and preview rendered copy at each breakpoint.
+- 2026-11-16: No-script dark shell tokens must include warning surfaces as well as foreground/background; otherwise a pale preview banner with inherited light text can pass route checks while failing legibility. Assert computed text-to-surface contrast in both locales and hosts.
 
 - 2026-11-16: D19 resolves a block's entire localized props to EN when even one populated EN field lacks VI; no-JS version fixtures must localize the page-header title as well as its eyebrow to assert actual VI output.
 
