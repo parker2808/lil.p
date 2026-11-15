@@ -293,3 +293,4 @@
 - 2026-11-10: Shard assignment can move content-creating specs ahead of clean-seed pixel tests; pin the mutator outside the visual shard instead of weakening snapshots.
 - 2026-11-10: Placeholder opacity can defeat an AA text token; measure the computed input contrast, and give Layers depth visible guides on desktop and mobile.
 - 2026-11-10: A flag-gated localized fixture needs localized, gated metadata too; derive the title from the same EN/VI copy and test both disabled and enabled states.
+- 2026-11-15: Zero-downtime deploy health cannot prove all pre-migration writers are gone; freeze page mutations in a separate pre-schema release, enumerate old instances until drained, and retain a fail-closed guard across the migrating release.

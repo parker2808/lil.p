@@ -1,11 +1,13 @@
 import 'reflect-metadata';
 
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
 import { setupSwagger } from './common/swagger/setup-swagger';
 import { AppConfigService } from './config/app-config.service';
+import { deploymentState } from './modules/health/deployment-state.controller';
 
 /**
  * Bootstrap is the first file that runs. It:
@@ -34,6 +36,7 @@ async function bootstrap(): Promise<void> {
   app.enableShutdownHooks();
 
   await app.listen(config.port, config.host);
+  Logger.log(JSON.stringify(deploymentState()), 'DeploymentState');
 }
 
 void bootstrap();
