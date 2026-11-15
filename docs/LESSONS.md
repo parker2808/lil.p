@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A scoped builder axe result cannot replace a full-page audit, and matching polite status text cannot prove what a screen reader actually speaks; record automated and manual V16 evidence separately.
+
 - 2026-11-15: A D2 tree-publish endpoint that always returns 409 cannot supply a genuine tree version for a restore test; gate the rejected publish and draft preservation honestly, and leave V10 version-restore coverage open until a real publication path exists.
 - 2026-11-15: When syncing a D4 study base into the D5 host, take D5's live host and history commands rather than reverting to the provisional study route; carry forward base locale/focus fixes and retain both branches' documentation histories.
 
