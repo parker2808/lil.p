@@ -1,10 +1,13 @@
 # Lessons
 
+- 2026-11-16: A base can advance again during a V05 restack; compare the remote feature SHA immediately before push and require combined-head CI instead of trusting the previous successful test-head run.
+
 - 2026-11-16: Restacking a test PR after a visual fix requires preserving both the old test's artifact provenance and the base's contrast assertion; the old 17/17 run does not verify the combined head.
 
 - 2026-11-16: A 390px Properties sheet can have valid nested fields below its scroll viewport; attach both its top and scrolled final-field captures, and require that field to enter the viewport before calling the mobile evidence reviewable.
 
 - 2026-11-16: A localized Properties control passing client validation is not evidence of the saved/public value: serialize nested EN/VI edits against real draft GETs, then compare the exact revision's immutable snapshot with public and preview rendered copy at each breakpoint.
+- 2026-11-16: A root dark class does not recolor an independently scoped CMS tree unless it explicitly inherits that theme; assert the computed card background before axe, and preserve a host's explicit light-theme override.
 - 2026-11-16: No-script dark shell tokens must include warning surfaces as well as foreground/background; otherwise a pale preview banner with inherited light text can pass route checks while failing legibility. Assert computed text-to-surface contrast in both locales and hosts.
 
 - 2026-11-16: D19 resolves a block's entire localized props to EN when even one populated EN field lacks VI; no-JS version fixtures must localize the page-header title as well as its eyebrow to assert actual VI output.
@@ -488,6 +491,7 @@
 - 2026-11-16: The builder palette creates headings at level 2 for valid editable drafts, while publication requires exactly one H1; keyboard publish evidence must set Heading level to 1 through Properties and verify the saved draft before pressing Publish.
 - 2026-11-15: For D19 whole-block localization, setting only `page-header.title.vi` leaves the block in English if its default `eyebrow.vi` is empty. A bilingual browser fixture must populate and verify every localized field with an English value before asserting a VI rendered H1.
 - 2026-11-15: Locale-specific visual evidence needs a bilingual block fixture and an assertion on painted localized text on both public and preview routes; merely switching the page locale with a shared heading string proves neither localized content nor dark-mode rendering.
+- 2026-11-16: A successful restored-version API equality and EN/VI light screenshots do not prove dark-theme public/preview parity after republish; compare painted content crops and unwaived axe in all locale/theme/width tuples, keeping the preview banner outside the crop and asserting real 409 focus, live feedback and no writes.
 
 - 2026-11-16 V02: sau reload, Layers thu gọn Section dù draft/published tree còn nguyên; test keyboard phải mở Section bằng ArrowRight rồi mới xác nhận các node con hiện ra, không đồng nhất trạng thái UI thu gọn với mất dữ liệu.
 
