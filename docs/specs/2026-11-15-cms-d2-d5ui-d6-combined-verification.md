@@ -1,6 +1,48 @@
 # D2 → D5 UI → D6 combined verification (DO NOT MERGE)
 
-## 2026-11-15 integration cut — CI awaiting push
+## 2026-11-15 exact-head integration cut — reviewed CI checkpoint
+
+#208 head `fa0b8bfc9a71d32c9bd1bec5cc2dd2f122095d8b` incorporates D2 `8a800999`, D5 `3ba001e3` and D6 `bcd949d8` by normal merge. [Ready-e2e run 43736639118](https://github.com/parker2808/lil.p/actions/runs/43736639118) **SUCCESS, 17/17 checks** on this exact head; tested merge `3d899b7504069e62b1c1353b9d7f96a44358c2b6`. Job legend: API `132880589223`, unit `132880589515`, build `132880626607`, web W1–W5 `132880842090` / `132880842131` / `132880842096` / `132880842125` / `132880842136` (W5: 55 passed, two unrelated skips). Blob reports 1–5 and merged Playwright report name both head and tested-merge SHA. `public-bundle-fa0b8bfc...` records matching source/checkout SHA and 90,260/102,400 gzip bytes; this is build-time evidence, **not** deployed CDN parity. No new manual inspection of the full screenshot set or production action is claimed.
+
+The scores below are **pre-merge class-A scope**, not release approval. A PASS means the mapped test ran green on this head and its applicable independent review found no P0–P2 for that scope; source-green alone does not override a known issue. Existing independent #221 V15 review accepted the D5 measured 44px/3:1 subset (source run `43732468521`), but #199's separate dark contact CTA contrast P2 is still on the source branch; #243 `25415c59` passed source run `43736809734` but has **not** merged into D2 or this head. Independent D5 review at `3ba001e3` found two P2s (separate typing sessions collapse into one Undo; Clear override leaves invalid input visible). The #239 raw-image review at `69a025f` / `43735760421` found VI 768px public/preview LocaleSwitch/ThemeToggle clipped; green source CI does **not** close V09. #239 remains on its own PR, not this cut. A separate independent design review of all current screenshots has not been recorded.
+
+| Row | Class | Score    | Exact-head subset / missing acceptance (owner)                                                                                                                  |
+| --- | ----- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| J01 | A     | PASS     | W3 live save/rejection + API persistence; earlier reviewed journey scope.                                                                                       |
+| J02 | A     | PASS     | W3 composition/keyboard + registered D4 canvas/keyboard; manual SR belongs to V16.                                                                              |
+| J03 | A     | PASS     | W3 live + W4 keyboard cancel/focus; manual spoken announcement remains V16.                                                                                     |
+| J04 | A     | GAP      | U + W1–W4 all-20 inspector green; D5 Clear override invalid-input P2 prevents full inspector acceptance (#204/D5).                                              |
+| J05 | A     | GAP      | W3/W5 offline/conflict green; D5 separated typing Undo P2 remains (#204/D5).                                                                                    |
+| J06 | A     | PASS     | API unsafe/no-write and core unit negative matrix; #226 scoped review accepted.                                                                                 |
+| J07 | A     | GAP      | API + W1–W4 editor journey and #234 bounded no-JS sample green; not all 20 semantic no-JS hosts (D6/#234).                                                      |
+| J08 | A     | PASS     | API historical/missing-SEO restore hashes; #225 reviewed scope accepted.                                                                                        |
+| J09 | B     | GAP      | Live 503 write/200 read through both ingresses and Render old-instance drain only during Stage A (#210/chain).                                                  |
+| V01 | A     | PASS     | W3 mouse composition and persisted API tree; separate Undo sessions scored under V07.                                                                           |
+| V02 | A     | GAP      | W3/W4 keyboard subset green; spoken invalid-drop and SR/focus manual proof missing (D5/a11y).                                                                   |
+| V03 | A     | GAP      | W1–W5 gallery and #234 host/no-JS bounded sample green; full neutral/dark design distinction and visible CV not signed off (D6/#234/design).                    |
+| V04 | A     | PASS     | Unit migrator serialized round-trip/unknown-field fixtures; #227 scope reviewed.                                                                                |
+| V05 | A     | GAP      | W1–W4 editor-origin captures green; D5 Clear override P2 and full 20-host public visual approval open (D5/D6/design).                                           |
+| V06 | A     | GAP      | Unit responsive props + W4 parity subset; final published 390/768/1440 review missing (D6/design).                                                              |
+| V07 | A     | GAP      | W1 history genuine stale PUT→409/no-write green and #237 reviewed, but D5 typing Undo P2 remains (#204/D5).                                                     |
+| V08 | A     | PASS     | W3 offline/conflict/retry and API revision checks; scoped recovery review accepted.                                                                             |
+| V09 | A     | GAP (P2) | W2/W4 public/preview subsets green; #239 `43735760421` raw VI 768 public/preview images clip header controls. Fix header, recapture, review (#239/shared UI).   |
+| V10 | A     | GAP      | W5 real UI CAS publish/version/restore green; full public/preview visual acceptance blocked by V09, wider matrix pending (D6/#239).                             |
+| V11 | A     | PASS     | API negative unsafe publish/no-write and core unit; #226 reviewed scope accepted.                                                                               |
+| V12 | A     | GAP      | API capability/read checks green; production redacted-log audit absent (D2/chain).                                                                              |
+| V13 | A     | GAP      | W5 builder axe/locale green; full VI routes/help/metadata review absent (D5/D6/design).                                                                         |
+| V14 | A     | GAP      | W1–W5 gallery and #234 no-JS sample green; full neutral/brand dark gallery, public markup and VI content acceptance open (D6/#234/design).                      |
+| V15 | A     | GAP      | W5 measured ≥44px/≥3:1 builder audit green; #221 scoped ACCEPT, but #199 dark CTA contrast P2 needs #243 integrated and exact combined rerun (D2/#243, design). |
+| V16 | A     | GAP      | W5 automated keyboard/reduced-motion subset green; manual VoiceOver/NVDA and public H1/reading order remain (a11y/#238).                                        |
+| V17 | A     | GAP      | API golden/routes green; complete pre-D2 raw inventory/semantic diff not certified (c5ae9d67).                                                                  |
+| V18 | B     | GAP      | Live Stage A freeze/old-instance drain and migration no-overlap; CI cannot prove this (#210/chain).                                                             |
+| V19 | B     | GAP      | Build bundle 90,260/102,400 gzip green; deployed CDN/chunk byte equality not measured (chain).                                                                  |
+| V20 | A     | GAP      | Aggregate independent design/a11y/release signoff blocked by remaining P2 and manual/operational gates (coordinator).                                           |
+| V21 | A     | GAP      | Core/API unknown nested fixtures green; broader raw version/route inventory missing (c5ae9d67).                                                                 |
+| V22 | A     | PASS     | API historical raw hash/missing-SEO restore and golden; #225 reviewed scope accepted.                                                                           |
+
+**This cut: 10/28 class-A PASS, 18/28 GAP; 0/3 class-B PASS.** Class B is verified stepwise during the approved main sequence, not a precondition to merge Stage A itself: #210 → live 503/200 + drain → #199 → #204 → #202 → controlled write reopening. Stop when live evidence is unavailable. Do not merge #208. The historical `698d3543` comment has a counting typo: its explicitly listed 13 PASS + 15 GAP sum to 28, not the displayed “12/28”; the present 10/28 score is independently recalculated for `fa0b8bfc` and its outstanding P2s.
+
+## 2026-11-15 integration cut — historical pre-CI note
 
 Verification-only #208 now includes D2 `8a800999` (#240), D5 `3ba001e3` (#221) and D6 `bcd949d8` (#234) through normal merges. Stage A keeps page/version writes frozen by default while reads stay available; D2 reopens writes only after read-only migration/column verification and an explicit operational switch. The D5 schema-derived Properties panel retains invalid partial edits in memory and its unweakened 44px/3:1 focus audit; D6 adds host-selected first-paint SSR, a bounded EN/VI no-script nested sample and localized nested labels. Node 22 `pnpm check:all --no-build` passed 7/7, including unit/typecheck; no local Playwright or production action was run. This local result **does not** promote any new matrix row until an exact-head GitHub API E2E/five-shard run and independent review finish.
 

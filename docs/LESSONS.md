@@ -584,3 +584,4 @@
 - 2026-11-15: A successful builder restore reports its own “restored to draft, publish separately” status, not the autosave “Draft saved” message; assert the correct UI status and restored API tree together to avoid masking a real publish/restore failure.
 - 2026-11-15: A browser heading can satisfy `toBeVisible()` while full-page visual evidence is blank at the captured viewport; center the target before capture and assert painted pixels inside its screenshot box, then independently inspect the paired artifacts.
 - 2026-11-15: A base that merges while a stacked visual run is active invalidates its mergeability and exact-head evidence; preserve both version-action and visual histories, regenerate the graph and rerun all shards on the new head.
+- 2026-11-15: An exact-head green matrix must still exclude rows affected by independently reviewed P2s; count explicit PASS/GAP row IDs instead of carrying forward an older summary total.
