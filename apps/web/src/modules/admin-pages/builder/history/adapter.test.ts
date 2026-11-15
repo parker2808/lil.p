@@ -160,4 +160,85 @@ describe('D4 and D5 history adapter', () => {
     expect(rejected.result.ok).toBe(false);
     expect(rejected.history).toBe(copied.history);
   });
+
+  it('rejects duplicate operations at the row slot and tree node limits without changing history', () => {
+    const rowHistory = createTreeHistory({
+      ...empty,
+      root: {
+        ...empty.root,
+        sections: [
+          {
+            id: 'section',
+            type: 'section' as const,
+            responsive: { base: {} },
+            content: [
+              {
+                id: 'row',
+                type: 'row' as const,
+                responsive: { base: {} },
+                columns: Array.from({ length: 4 }, (_, index) => ({
+                  id: `column-${index}`,
+                  type: 'column' as const,
+                  responsive: { base: { span: 1 } },
+                  content: [],
+                })),
+              },
+            ],
+          },
+        ],
+      },
+    });
+    const rowRejected = commitComposition(rowHistory, {
+      type: 'duplicate',
+      id: 'column-0',
+      ids: ['column-overflow'],
+    });
+    expect(rowRejected.result.ok).toBe(false);
+    expect(rowRejected.history).toBe(rowHistory);
+
+    const fullHistory = createTreeHistory({
+      ...empty,
+      root: {
+        ...empty.root,
+        sections: Array.from({ length: 499 }, (_, index) => ({
+          id: `section-${index}`,
+          type: 'section' as const,
+          responsive: { base: {} },
+          content: [],
+        })),
+      },
+    });
+    const sizeRejected = commitComposition(fullHistory, {
+      type: 'duplicate',
+      id: 'section-0',
+      ids: ['section-overflow'],
+    });
+    expect(sizeRejected.result.ok).toBe(false);
+    expect(sizeRejected.history).toBe(fullHistory);
+  });
+
+  it('caps the actual adapter undo stack at 50 commits and never undoes the retained baseline', () => {
+    let history = createTreeHistory(empty, 'page');
+    for (let index = 0; index < 51; index++) {
+      const inserted = commitComposition(history, {
+        type: 'insert',
+        node: {
+          id: `section-${index}`,
+          type: 'section',
+          responsive: { base: {} },
+          content: [],
+        },
+        destination: { parentId: 'page', slot: 'sections', index },
+      });
+      expect(inserted.result.ok).toBe(true);
+      history = inserted.history;
+    }
+    expect(history.past).toHaveLength(50);
+    for (let index = 0; index < 50; index++) history = undoTreeHistory(history);
+    expect(history.document.root.sections.map((section) => section.id)).toEqual(['section-0']);
+    expect(undoTreeHistory(history)).toBe(history);
+    for (let index = 0; index < 50; index++) history = redoTreeHistory(history);
+    expect(history.document.root.sections).toHaveLength(51);
+    expect(redoTreeHistory(history)).toBe(history);
+  });
 });

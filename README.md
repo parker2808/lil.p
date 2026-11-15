@@ -37,7 +37,7 @@ The [CMS core package](./packages/cms-core/README.md) runs its own dependency-bo
 
 ### CMS D5 history gate (V07)
 
-The stacked [D5 V07 gate](./docs/specs/2026-11-15-cms-d5-v07-gate.md) verifies recursive duplicate IDs, undo/redo for duplicate and move, and a real-API save/reload of node order. **V07 remains partial:** insertion/edit undo-redo, copied text persistence, size/slot bounds at the adapter, and failed-save/version history boundaries still need proof. Duplicate is keyboard-accessible in EN/VI and uses the validated core operation.
+The stacked [D5 V07 gate](./docs/specs/2026-11-15-cms-d5-v07-gate.md) verifies recursive duplicate IDs and real-API duplicate/move undo/redo and save/reload. Follow-up tests cover insertion/edit undo-redo, copied-content equality, adapter bounds/history caps, and failed-save retry/rejected-publish preservation; #229 head `b5eeadd6` passed exact-head CI run `43711670856`. The restacked D5 head needs its own CI before integrated evidence is claimed. D2 does not publish tree versions, so V10 version-restore history remains a separate D6 GAP. Duplicate is keyboard-accessible in EN/VI and uses the validated core operation.
 
 The [D5 live-journey spec](./docs/specs/2026-11-15-cms-d5-live-journeys.md#d4-sheet-integration-regression) tracks the shard-5 Properties correction after the study route switched to the real builder host; the EN/VI responsive single-mount and focus gate needs exact-head CI.
 
