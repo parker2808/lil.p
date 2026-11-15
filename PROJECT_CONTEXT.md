@@ -348,7 +348,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
-- 2026-11-15: Integrated D5 `8b0b3562` (#237 stale-CAS V07) after source run `43722753820` and D6 `169ebdff` (#232 version UI) after source run `43722565450` into verification-only #208. Neither source run certifies combined behavior; exact-head five-shard CI and manual/operational gates remain OPEN. No main merge/deploy.
+- 2026-11-15: Integrated D5 `8b0b3562` (#237 stale-CAS V07) after source run `43722753820` and D6 `169ebdff` (#232 version UI) after source run `43722565450` into verification-only #208 at `b58dd676`. Neither source run certifies combined behavior; exact-head five-shard CI and manual/operational gates remain OPEN. Retained Graphify report is an older topology snapshot; local load >25 precluded regenerating it during integration. No main merge/deploy.
 - 2026-11-15: Refreshed verification-only #208 with main `3162b973`, Stage A `2a5c32bf`, D2 `596f7dbb`, D5 `22b4b1c0` and D6 `e4e80da3`; retained D6 localized registry and D5 validated duplicate/history. Seven non-browser Node 22 checks passed. Exact combined-head CI, public/preview design, UI restore, manual SR and live Stage A drain remain open; DO NOT MERGE.
 - 2026-11-15: Announce failed revision-aware restore inside the active EN/VI confirmation dialog, retaining focus, local edits and blocked uncertain state; add dialog-scoped tests without changing API contracts.
 - 2026-11-15: Replaced obsolete D4 Properties fixture-textbox expectations with real D5 heading field persistence, responsive single-mount and focus assertions; updated the serialized capture check without changing production behavior. CI evidence pending.
