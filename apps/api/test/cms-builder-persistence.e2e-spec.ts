@@ -324,8 +324,27 @@ describe('builder draft persistence over disposable MySQL', () => {
     });
     const hashes = [rawHash(legacy.snapshot), rawHash(treeVersion.snapshot)];
     const before = await persistedState(prisma, pageId);
-    await admin.get('/api/admin/pages/ideas/versions/1').expect(200);
-    await admin.get('/api/admin/preview/pages/ideas?locale=vi&version=1').expect(200);
+    const historicalVersion = await admin.get('/api/admin/pages/ideas/versions/1').expect(200);
+    expect(historicalVersion.body.snapshot).toEqual({
+      seo: {
+        seoTitleEn: null,
+        seoTitleVi: 'Lưu trữ',
+        seoDescriptionEn: null,
+        seoDescriptionVi: null,
+      },
+      blocks: [],
+    });
+    const historicalPreview = await admin
+      .get('/api/admin/preview/pages/ideas?locale=vi&version=1')
+      .expect(200);
+    expect(historicalPreview.body).toMatchObject({
+      seo: { title: 'Lưu trữ', lang: 'vi' },
+      blocks: [],
+      invalidBlocks: [],
+    });
+    expect(
+      rawHash((await prisma.pageVersion.findUniqueOrThrow({ where: { id: legacy.id } })).snapshot),
+    ).toBe(hashes[0]);
     expect(
       (await admin.get('/api/admin/pages/ideas/versions/2').expect(200)).body.snapshot.tree,
     ).toEqual(tree);

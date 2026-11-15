@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-16: A tracked seed/SQL inventory is not a production inventory; gate the source-writer list and compare normalized responses with original stored JSON hashes before claiming legacy version safety.
 - 2026-11-16: Revalidation failure logs must omit both caller-derived cache tags and upstream error strings; custom page keys and transport errors can carry private data even when HTTP request logs are redacted.
 
 - 2026-11-16: A redacted HTTP response does not imply safe server logs: avoid raw request URLs, caller-supplied trace IDs, exception stacks and stored block identifiers; assert actual populated reads plus capability denials against captured logger calls, then review production logs separately after deployment.

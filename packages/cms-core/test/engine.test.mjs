@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { test } from 'node:test';
+import { URL } from 'node:url';
 
 import { createRegistry, defineBlock } from '@parker2808/cms-core/contracts';
 import {
@@ -201,6 +203,47 @@ test('raw legacy bytes survive read and migration while unsupported envelopes re
     assert.deepEqual(readSnapshot(invalid, registry).reason, reason);
     assert.equal(hash(invalid), unchanged);
     assert.equal(hash(raw), before);
+  }
+});
+
+test('V21 raw fixture inventory preserves nested data or rejects every unsupported shape without edits', () => {
+  const current = JSON.parse(
+    readFileSync(new URL('./fixtures/raw-snapshot-inventory.json', import.meta.url), 'utf8'),
+  );
+  const rawHash = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+  const originalHash = rawHash(current);
+  const read = readSnapshot(current, registry);
+  assert.equal(read.ok, true);
+  assert.equal(rawHash(read.snapshot), originalHash);
+  assert.notStrictEqual(read.snapshot.blocks[0].props, current.blocks[0].props);
+  const migrated = migrateSnapshot(current, registry);
+  assert.equal(migrated.ok, true);
+  assert.deepEqual(
+    migrated.snapshot.blocks[0].props.unrecognized,
+    current.blocks[0].props.unrecognized,
+  );
+  assert.equal(migrated.snapshot.blocks[0].schemaVersion, definition.version);
+  assert.equal(rawHash(current), originalHash);
+
+  const cases = [
+    [{ ...current, seo: { ...current.seo, extra: 'raw' } }, 'INVALID_SNAPSHOT'],
+    [{ ...current, extra: { nested: true } }, 'INVALID_SNAPSHOT'],
+    [{ ...current, schemaVersion: 2 }, 'FUTURE_VERSION'],
+    [{ ...current, blocks: [{ ...current.blocks[0], type: 'future-block' }] }, 'UNKNOWN_TYPE'],
+    [{ ...current, blocks: [{ ...current.blocks[0], schemaVersion: 4 }] }, 'FUTURE_VERSION'],
+    [{ ...current, blocks: [{ ...current.blocks[0], extra: { nested: true } }] }, 'INVALID_BLOCK'],
+    [{ ...current, blocks: [null] }, 'INVALID_SNAPSHOT'],
+    [{ ...current, seo: { seoTitleEn: 'missing fields' } }, 'INVALID_SNAPSHOT'],
+  ];
+  for (const [raw, reason] of cases) {
+    const before = rawHash(raw);
+    for (const operation of [readSnapshot, migrateSnapshot]) {
+      const result = operation(raw, registry);
+      assert.equal(result.ok, false);
+      assert.equal(result.reason, reason);
+      assert.equal(rawHash(raw), before);
+    }
+    assert.equal(rawHash(current), originalHash);
   }
 });
 
