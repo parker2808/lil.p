@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- D5 V07 stale publish CAS: the earlier post-recovery request reused the current revision and may publish successfully after D6 integration. A stacked browser fix performs an intervening real draft PUT, then asserts stale publish 409 and unchanged draft/revision/versions; exact-head CI and combined #208 rerun remain pending.
+
 - 2026-11-15 D5 builder error localization: D2's English `message` remains in the API response but current D5 builder status/recovery UI uses only typed HTTP outcomes and EN/VI labels. Verify the new D6 publish/version controls independently; other admin/API i18n remains out of scope. See `docs/specs/2026-11-11-cms-d5-ui.md`.
 - D5 shard-5 correction: #204 `6a48a4cc` CI `43712324642` exposed D4 canvas tests targeting a `BuilderStudy`-only Selected item ID textbox after the route switched to real `BuilderHost`/`PropertiesPanel`. A stacked test-only fix verifies a composed heading's real EN/VI Text value across 768/1100/1440, theme changes and sheet focus; #204 head `22b4b1c0` passed CI `43716297284` and ready-e2e `43716429537` (API E2E and five web shards). This does not waive the combined/release gate: #208 run `43717182977` fails V07's historical 409 expectation after D6 enables publishing. No runtime change here.
 
@@ -281,6 +283,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Corrected V07 real-browser publish-conflict setup to use an intervening server revision, retaining offline recovery and adding draft/version invariants; no runtime or golden change.
 
 - 2026-11-15: Recorded #204 exact-head CI `43716297284`/`43716429537`, clarified invalid Properties input survives remount only (not reload), and separated the failing #208 V07 publish expectation from the D5 feature-head evidence. Docs only; no release signoff.
 
