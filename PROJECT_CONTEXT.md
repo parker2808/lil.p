@@ -342,6 +342,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: #249 CI `43753130466` caught the home OG image disappearing after moving home into a route group; page metadata now explicitly includes the existing localized OG image for home and a unit assertion guards it. Recheck exact-head CI; no weaker metadata assertion.
+
 - 2026-11-16: Follow-up #249 historical version P2: publish v1 then a distinct visible H1-host label in v2 before comparing no-JS public v2 versus authenticated `?v=1` preview; assert API trees, text and props hashes diverge while the other four hosts remain unchanged. Exact-head CI pending.
 
 - 2026-11-16: Follow-up #249 review: require painted nested host text and visible main without scripts, request historical `?v=1` in draft preview, and keep the homepage skeleton in its own route group rather than reinstating the custom-page-blocking parent loading boundary. Add a unit guard for that boundary; exact-head five-shard CI pending.

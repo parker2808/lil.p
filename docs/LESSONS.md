@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: Moving the home page into a nested route group can remove the inherited file-convention OG image from its metadata; explicitly preserve the home OpenGraph image and gate it in SEO tests.
+
 - 2026-11-16: A `?v=1` preview test against a page published only once cannot distinguish a historical version from the current page; publish a second distinct visible version and require both DOM and API to differ.
 
 - 2026-11-16: A shared route-group loading fallback can break no-script custom pages, while deleting it also removes the home skeleton; give home a nested route-group loading boundary and gate visible painted text rather than raw `textContent` in no-script browser tests.
