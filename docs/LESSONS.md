@@ -8,6 +8,9 @@
 
 - 2026-11-15: A forward-compatible additive schema does not make an older writer safe: an old Prisma client can publish a legacy snapshot over a tree publication pointer without changing the draft revision; block release until a write fence or approved no-old-writer rollback is proven against disposable MySQL.
 
+- 2026-11-15: Describe D2 deploy readiness as executable proof of forward-only Stage A write freeze/drain, not rollback-read proof; once migrated, an old API rollback is unsafe and recovery must roll forward.
+- 2026-11-15: Treat a rehearsal's pack count as evidence for that source SHA, not a timeless policy; enumerate the allowlisted paths and review all four direct consumer manifests and their lockfile diff before a C3 pin.
+- 2026-11-15: Before removing a workspace package in a tarball rehearsal, search every workspace manifest for direct `workspace:*` consumers; web and the neutral fixture can block a frozen install even when contracts and API are pinned.
 - 2026-11-15: Reconciling a static study after an independent canvas lands requires describing both routes separately in host documentation; integrate chronological lessons from both lanes and regenerate Graphify rather than hand-merging generated output.
 - 2026-11-15: When a static design-study branch absorbs a newer pure-state core release, preserve both histories while keeping the study's e2e flag and non-persistence boundary unchanged.
 - 2026-11-15: A static U3 design branch can integrate later renderer work without becoming a live builder; keep its no-persistence boundary explicit, retain both chronological context histories, and regenerate Graphify from the combined head instead of hand-merging reports.
