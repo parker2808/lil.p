@@ -49,6 +49,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - 2026-11-16 #208 verification-only cut integrates D2 `26ace408`, D5 `aaec9e62` and D6 `3b60df35`; 7/7 no-build gate passed after the D6 merge. Await exact combined-head API/five-shard CI and artifact review before rescoring; #256/#260 are not integrated. V03/V06/V09/V10/V14 and dialogs/manual SR remain open. DO NOT MERGE or deploy.
+- D5 V16 automated follow-up checks EN/VI keyboard trap/return for the delete dialog and compact Properties sheet, live deletion/local-draft status, and the disabled Publish reason. D5 has no publish/restore-version dialog; its integrated D6 dialog capture/a11y review and manual spoken VoiceOver/NVDA check remain GAP.
+
+- D5 design review at `24fc51b2` / CI `43759739138`: 197 captures across 24 EN/VI × light/dark × neutral/lil.p × 390/768/1440 combinations show raw English component names in the Vietnamese Properties inspector. The small label fix derives all 20 host names from existing translation metadata and shares them with canvas/Layers. Await exact-head CI and a refreshed visual review; D5 intentionally disables publish, so publish/restore dialog evidence belongs to combined D6. Manual V16 screen-reader review remains open.
 
 - 2026-11-16 #208 current D5 sync: #262 localized host/starter labels now need combined D6 keyboard-publish and Properties exact-head proof; no source-only matrix promotion.
 - 2026-11-16 #208 D6 V02 refresh: integrate reviewed #254 from D6 `1b2037d2`; source keyboard-publish CI is not combined proof. Await exact-head #208 API/five-shard run; manual spoken SR remains a documented V16 limitation.
@@ -460,6 +463,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 9. Changelog
 
 - 2026-11-16: Normal-merged D6 `3b60df35` (#261 dark banner, #258 restored UI) into verification-only #208 after D5 `aaec9e62` and D2 `26ace408`; preserved both histories and reran 7/7 no-build gates. Exact-head CI still required.
+- 2026-11-16: Extended registered D5 V16 browser coverage for real EN/VI dialog keyboard focus boundaries, return, and live announcements; documented disabled publishing and remaining integrated/manual scope in `docs/specs/2026-11-15-cms-d5-v16-automated-a11y.md`.
+
+- 2026-11-16: Localize builder canvas/Layers/Properties component names through existing host metadata keys and starter field labels; tighten EN/VI browser assertions to reject raw type fallbacks. Scope and evidence: `docs/specs/2026-11-16-cms-d5-design-labels.md`.
 
 - 2026-11-16: Normal-merged D5 `aaec9e62` (#262 label localization) into verification-only #208, preserving D6 version controls and localized Layers/canvas/Properties; new exact-head CI required. No main merge/deploy.
 - 2026-11-16: Integrated D6 `1b2037d2` (#254 keyboard publish) into verification-only #208 after D2/D5 refresh; exact combined-head CI/review required before V02 scoring. No main merge/deploy.
