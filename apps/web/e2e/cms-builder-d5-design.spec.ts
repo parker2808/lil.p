@@ -711,7 +711,8 @@ test('EN/VI core and token-only lil.p builder states are visually and accessibly
         .getByRole('complementary', {
           name: locale === 'vi' ? 'Thuộc tính' : 'Properties',
         })
-        .getByText(locale === 'vi' ? 'Tiêu đề' : 'Heading', { exact: true }),
+        .getByRole('paragraph')
+        .filter({ hasText: locale === 'vi' ? /^Tiêu đề$/ : /^Heading$/ }),
     ).toBeVisible();
     await expect(page.getByText(locale === 'vi' ? 'Đã lưu bản nháp' : 'Draft saved')).toBeVisible({
       timeout: 15_000,
