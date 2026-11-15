@@ -20,5 +20,6 @@ are not inferred from this gallery.
 Graphify freshness: `graphify update .` was attempted twice in the isolated
 worktree. Both scans reached full AST extraction, then stalled in path
 resolution; the local runs were interrupted without changing the tracked
-report. `graphify-out/GRAPH_REPORT.md` still attributes its graph to
-`0e50d605`, not to this fix. Do not present it as a fresh topology audit.
+report. After synchronizing with D6 base `6b09962f`, the retained
+`graphify-out/GRAPH_REPORT.md` attributes its graph to `69a025f7`, not to
+this fix. Do not present it as a fresh topology audit.
