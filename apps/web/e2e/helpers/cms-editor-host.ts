@@ -1,7 +1,7 @@
 import { BLOCK_REGISTRY } from '@portfolio/contracts';
 import { expect, test } from '@playwright/test';
 
-import viMessages from '../../i18n/locales/vi.json';
+import viMessages from '../../i18n/locales/vi.json' with { type: 'json' };
 import { BLOCK_EDITOR_META } from '../../src/modules/admin-pages/constants/block-editor-meta.constant';
 import { signIn } from './auth';
 
@@ -98,10 +98,35 @@ export function registerEditorHostJourney(shard: number): void {
       const draft = await read.json();
       expect(read.status()).toBe(200);
       expect(draft.revision).not.toBe('1');
+      const dynamic = ['notes-browser', 'projects-browser', 'contact-form'].includes(
+        definition.type,
+      );
+      const draftRender = new Map<string, { hash: string; html: string | null }>();
       for (const locale of ['en', 'vi']) {
         const preview = await page.request.get(`/api/admin/preview/pages/${key}?locale=${locale}`);
         expect(preview.status(), `${definition.type}/${locale}: ${await preview.text()}`).toBe(200);
         expect((await preview.json()).tree).toEqual(draft.tree);
+        const path = `/${locale}/${key}`;
+        await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
+        const draftResponse = await page.goto(path);
+        expect(draftResponse?.status()).toBe(200);
+        expect(await draftResponse?.text()).toContain(`data-host-block-type="${definition.type}"`);
+        const draftHost = page.locator(`[data-host-block-type="${definition.type}"]`);
+        await expect(draftHost).toHaveCount(1);
+        if (
+          ['hero', 'page-header', 'contact-form', 'cta-band', 'prose', 'about-intro'].includes(
+            definition.type,
+          )
+        ) {
+          await expect(draftHost).toContainText(locale === 'en' ? englishValue : vietnameseValue);
+        }
+        const hash = await draftHost.getAttribute('data-host-props-hash');
+        expect(hash).toMatch(/^[a-f0-9]{64}$/);
+        draftRender.set(locale, {
+          hash: hash ?? '',
+          html: dynamic ? null : await page.locator('main.cms-core').innerHTML(),
+        });
+        await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
       }
       const published = await page.request.post(`/api/admin/pages/${key}/builder/publish`, {
         headers,
@@ -125,10 +150,9 @@ export function registerEditorHostJourney(shard: number): void {
         await expect(host).toHaveCount(1);
         const publishedHash = await host.getAttribute('data-host-props-hash');
         expect(publishedHash).toMatch(/^[a-f0-9]{64}$/);
-        const dynamic = ['notes-browser', 'projects-browser', 'contact-form'].includes(
-          definition.type,
-        );
+        expect(publishedHash).toBe(draftRender.get(locale)?.hash);
         const publicHtml = dynamic ? null : await page.locator('main.cms-core').innerHTML();
+        if (publicHtml !== null) expect(publicHtml).toBe(draftRender.get(locale)?.html);
         await page.goto(`/api/draft?path=${encodeURIComponent(`/${locale}/${key}`)}`);
         await page.goto(`/${locale}/${key}?v=1`);
         await expect(host).toHaveCount(1);
