@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A no-script dark CMS tree can still sit between light public header/footer because Next theme classes require JavaScript; test the surrounding shell's computed tokens and painted footer on real hosts, not only the main tree's accent.
+
 - 2026-11-15: A post-hydration brand toggle cannot prove real-host dark first paint; with scripts disabled, use the OS color preference and assert computed host tokens, raw public/preview captures, and genuinely VI-authored tree copy instead of English text on a VI route.
 
 - 2026-11-15: The admin topbar locale combobox is desktop-only; change language before resizing to 390px (or use the actual mobile account menu) so a browser gate tests the responsive journey rather than waiting indefinitely on a hidden control.

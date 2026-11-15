@@ -166,6 +166,32 @@ for (const locale of ['en', 'vi'] as const) {
             if (theme === 'dark') {
               await expect(root).toHaveCSS('color-scheme', 'dark');
             }
+            const shell = visitor.locator('.public-site');
+            const header = shell.locator('header.site-header');
+            const footer = shell.locator('footer.site-footer');
+            await expect(header).toBeVisible();
+            await expect(footer).toBeVisible();
+            expect(
+              await shell.evaluate((element) =>
+                getComputedStyle(element).getPropertyValue('--background').trim(),
+              ),
+              `${locale}-${theme}-${brand} no-script shell background`,
+            ).toBe(theme === 'dark' ? '#111318' : '#f6f3ec');
+            await expect(shell).toHaveCSS('color-scheme', theme === 'dark' ? 'dark' : 'normal');
+            await expect(footer).toHaveCSS(
+              'background-color',
+              theme === 'dark' ? 'rgb(24, 27, 34)' : 'rgb(252, 250, 246)',
+            );
+            if (theme === 'dark' && !preview) {
+              await testInfo.attach(`${locale}-${brand}-nojs-dark-header.png`, {
+                body: await header.screenshot({ animations: 'disabled' }),
+                contentType: 'image/png',
+              });
+              await testInfo.attach(`${locale}-${brand}-nojs-dark-footer.png`, {
+                body: await footer.screenshot({ animations: 'disabled' }),
+                contentType: 'image/png',
+              });
+            }
             const banner = visitor.locator('[data-slot="draft-banner"]');
             if (preview) {
               await expect(banner).toBeVisible();
