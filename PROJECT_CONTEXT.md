@@ -49,6 +49,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - 2026-11-16 V03/V14 real-tenant SSR extension: EN/VI × light/dark × 390/768/1440 no-JS public/preview captures now assert more than 2% painted CTA pixel difference between actual neutral/branded hosts, with exact same-host preview parity. The all-20 host first-paint matrix, WCAG AA and manual review remain GAP pending exact-head CI and independent review; no runtime or schema changes.
+- 2026-11-16 V05: A focused D6 editor-origin page-header test edits nested EN/VI title and eyebrow in Properties, waits for each real autosaved draft value, then pairs the saved revision with version snapshot and EN/VI public/version-preview render captures at 390/768/1440. Prior head `957b907a` passed run `43761699036` (5/5 web shards); the merged D6 banner/contrast and V09/V10 base requires new exact-head CI and independent screenshot review. Full 20-schema validation/errors remain GAP. See `docs/specs/2026-11-16-cms-d6-v05-revision-chain.md`.
 - 2026-11-16 V09/V10 restore dark-host correction: #258 CI `43759532114` found a real 2.22:1 eyebrow/card contrast failure because the published tree omitted `data-theme` while `html.dark` changed foreground tokens. Scoped implicit `.dark` inheritance to core hosts without explicit theme, retained explicit theme opt-out and unwaived axe; new exact-head five-shard CI/artifact review pending. No API/schema/golden edits; production and all-20 restoration remain GAP.
 
 - 2026-11-16 V09/V10 restore evidence branch: extend the real builder UI restore journey to the missing EN-dark 390/768/1440 tuples; compare actual republished version-3 public/preview content pixels and unwaived axe for all 12 locale/theme/width tuples, plus keyboard 409 no-write, focus and dialog live announcement. Exact-head five-shard CI and independent raw-artifact review pending; all-20 restore and production parity remain GAP.
@@ -351,11 +352,15 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 9. Changelog
 
 - 2026-11-16: Broadened the D6 real-host no-JS nested-tree browser sample to three widths and measured tenant CTA paint (over 2% pixel difference), retaining EN/VI, light/dark and strict public/preview parity; no product or data changes. CI and visual review pending.
+- 2026-11-16: Expanded V05 Properties evidence to include scrolled mobile/tablet title fields; initial run `43759329807` passed 18/18 at `561fe6ed`, and strengthened run `43760729931` passed five shards at `f8d3d14d`. The combined V02 base still needs exact-new-head CI.
+
+- 2026-11-16: Registered a V05 browser gate for nested bilingual Properties → revisioned draft → UI publish → immutable snapshot → paired preview/public text and viewport captures; no runtime or golden contract change.
 - 2026-11-16: Inherit dark core/brand tokens for an otherwise unthemed public tree beneath `html.dark`; assert real public/preview card background and color-scheme in the restore browser matrix without relaxing axe or screenshot thresholds.
 
 - 2026-11-16: Add V09/V10 restored-version EN/VI × light/dark × 390/768/1440 public/preview content-pixel and WCAG-AA evidence, keyboard 409 focus/live/no-write checks; no API/schema/golden changes. Exact-head CI pending.
 
 - 2026-11-16: Pair the no-script dark public preview banner with the dark warning surface and gate computed EN/VI neutral/branded text contrast at WCAG AA 4.5:1 without changing public/preview content parity or visual thresholds.
+- 2026-11-16: Restacked V05 browser evidence over D6 banner/contrast without altering its editor-to-render assertions; exact combined-head five-shard CI and screenshot re-review are required.
 - 2026-11-16: Register the D6 EN/VI keyboard-only publish browser test in the five-shard manifest; compare saved draft, version snapshot and public tree after reload while recording zero pointer events. CI pending; no V02 full PASS until exact-head evidence and independent review.
 
 - 2026-11-16: #249 CI `43754309959` found page-header VI test content falling back to EN because the default title.vi is empty; fill both heading fields in the version fixture so the no-JS assertion proves VI rendering. Same run confirmed home OG metadata missing; fix committed before rerun.
