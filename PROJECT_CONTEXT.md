@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- Stage A #210 after main `676c5a20`: retain the production write freeze, read/health access and independent timer regression from main. Exact-head CI and independent review remain required; production old-writer drain, migration and rollout are not authorized.
+
 - Stage A #210 after main `cb216865`: retained the freeze guard and merged the C1 history guidance; exact-head five-shard/API CI and independent review remain required. Production drain and rollout are not authorized.
 - Stage A #210 after main `3162b973`: the production admin-page write freeze remains unchanged, and five-shard E2E registry/keyboard coverage from main is retained. Exact-head CI is required; production old-writer drain and authorized deploy are still unproven.
 
@@ -58,6 +60,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - Stage A #210 main reconciliation (2026-11-15): preserved the C1 root-export guard, #214 rollout probe and Stage A histories after main `59677dfa`; re-audited all ten main page/SEO/block/version write routes and four D2 #199 `db064d88` builder writes against the non-read `/api/admin/pages` guard. No mutation route escapes that prefix; live drain and migration remain blocked pending separate authorization.
 - Pre-D2 Stage A page-write freeze (2026-11-15): a separate API branch blocks all admin-page mutations in production before service access, with unchanged public/read routes and an admin-only sanitized instance identity. D2's startup migration remains **blocked** until a separately authorized Stage A deploy proves all pre-freeze instances drained and direct/Vercel probes pass; no Render production proof or D2 migration is included here. See `docs/specs/2026-11-15-cms-pre-d2-write-freeze.md`.
 - Stage A follow-up: boot the actual AppModule with stubbed DB/page services to catch removal of its write-freeze middleware; bespoke route tests alone cannot prove the production registration. Live ingress and old-instance drain remain unverified.
+- 2026-11-16: The shared MarkdownEditor preview callback uses an independent 500ms timer per editor. #260's unit run `43767645840` observed only two callbacks when the test waited for the second body; a focused test fix waits for all three rendered bodies and all three callback invocations without relaxing the count. The fix is based on `main`, with no V06 runtime changes; exact-head CI remains the merge gate.
+
 - C1 retained-history identity review (2026-11-15): the local #208 `4df25c52` filtered rehearsal has 86 commits across two anonymized author/committer pairs. At 20:46 ICT, the coordinator under Parker approval `t250u` and delegated rule `12:26` decided to keep both reviewed identities unchanged: no rewrite or `.mailmap`, preserving provenance in Parker's own private destination. Re-audit the final integrated tree and stop on any new pair before a private push; see the C1 runbook.
 
 - E2E registry completeness (2026-11-15): both existing D4 canvas and keyboard browser specs were absent from `SPECS` and silently skipped by the Playwright shard matcher. Register both on the five-shard line and compare the full recursive spec inventory with the manifest in a unit test, rejecting missing, stale and duplicate names. First real CI exposed obsolete native-select interactions; the next run exposed selecting already-active EN without a cookie and intermittent Escape focus restoration. Exercise actual Radix locale transitions and persist the cookie; restore focus in the sheet-close layout effect without competing animation frames. Re-run exact-head `ready-e2e` before claiming J03/J05/V02/V20 coverage; the #217 visual group 4 pin must still move to shard 5 after registration.
@@ -269,6 +273,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Restack #210 onto main `676c5a20`, preserving the production 503 page-write freeze and main's MarkdownEditor callback-count test. No release or data operation; exact-head CI pending.
+
 - 2026-11-15: Merged main `cb216865` into Stage A #210 while retaining the production write freeze and both Stage A and C1 documentation histories; exact-head five-shard CI and operational drain proof remain pending.
 - 2026-11-15: Reconciled Stage A #210 with main `3162b973`, preserving the production admin-page write freeze alongside five-shard CI and registered D4 keyboard/canvas specs. Exact-head CI and live old-instance drain remain separate gates.
 
@@ -279,6 +285,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Reconciled Stage A page-write freeze with main and documented current/D2 mutation-route coverage without changing guard behavior or running production migrations.
 - 2026-11-15: Added real-AppModule HTTP regression for the pre-D2 page write freeze, with stubbed services and no DB access; no production rollout or migration.
 - 2026-11-15: Prepared the production-default pre-D2 admin-page write freeze, future-path/override HTTP regressions and nonsecret instance identity; documented the no-deploy old-instance drain gate. No schema, golden, production DB or deployment change.
+- 2026-11-16: Make the three-editor Write/Preview unit test await every debounced preview and retain its exact three-call assertion; no editor behavior, API, or threshold changes.
+
 - 2026-11-15: Recorded the coordinator's 20:46 ICT C1 decision to retain the two reviewed identity pairs without a rewrite or `.mailmap`; final-history audit remains required. Docs only, no private push.
 
 - 2026-11-15: Documented anonymized C1 rehearsal identity categories and the owner-only keep-or-normalize gate; no metadata rewrite, private repository creation or release.

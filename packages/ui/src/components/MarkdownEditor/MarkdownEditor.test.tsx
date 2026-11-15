@@ -189,8 +189,15 @@ describe('MarkdownEditorGroup', () => {
     );
     expect(document.querySelectorAll('.ProseMirror')).toHaveLength(0);
     expect(screen.queryAllByRole('toolbar')).toHaveLength(0);
-    expect(await screen.findByText('Second body', {}, { timeout: 2000 })).toBeInTheDocument();
-    expect(renderPreview).toHaveBeenCalledTimes(3);
+    await waitFor(
+      () => {
+        for (const body of ['First body', 'Second body', 'Third body']) {
+          expect(screen.getByText(body)).toBeInTheDocument();
+        }
+        expect(renderPreview).toHaveBeenCalledTimes(3);
+      },
+      { timeout: 5000 },
+    );
 
     await userEvent.click(screen.getByRole('tab', { name: editorLabels.write }));
     expect(document.querySelectorAll('.ProseMirror')).toHaveLength(3);
