@@ -34,6 +34,8 @@ D5 adds `applyTreeOperation`, `createTreeHistory`/`commitTreeHistory`/`undoTreeH
 
 Call `endTreeTyping(history)` on blur/explicit commit to close the current coalescing window; editing afterward starts a separate undo entry.
 
+D3 adds opt-in `renderTree({ input, createElement, labels, registry?, components?, resolveMedia? })` to `./react/server`. Draft preview and public SSR use the same bounded tree reader; the host separately calls `validateTreeForPublish` before publishing. Invalid trees fail closed with typed errors, and semantic headings remain limited to one H1 across responsive breakpoints. Legacy block rendering remains the default until route dispatch is integrated. See the [D3 renderer spec](../../docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md).
+
 Build and check the browser gzip budgets with `pnpm build` from this package (or
 `pnpm --filter @parker2808/cms-core build` from the monorepo).
 Run `pnpm check:deps` in either location to reject workspace/host dependencies

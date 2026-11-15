@@ -4,6 +4,22 @@ import { createRequire } from 'node:module';
 import { test } from 'node:test';
 import { URL } from 'node:url';
 
+test('root package specifier is not exported for ESM or CommonJS', () => {
+  const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
+  assert.deepEqual(Object.keys(manifest.exports).sort(), [
+    './contracts',
+    './engine',
+    './react',
+    './react/server',
+    './theme.css',
+    './tree',
+  ]);
+  const specifier = '@parker2808/cms-core';
+  const require = createRequire(import.meta.url);
+  assert.throws(() => import.meta.resolve(specifier), { code: 'ERR_PACKAGE_PATH_NOT_EXPORTED' });
+  assert.throws(() => require.resolve(specifier), { code: 'ERR_PACKAGE_PATH_NOT_EXPORTED' });
+});
+
 test('built subpaths resolve independently with their expected exports', async () => {
   const require = createRequire(import.meta.url);
   for (const subpath of ['contracts', 'engine', 'tree', 'react']) {

@@ -262,7 +262,9 @@ async function capture(
     }
     function shadowColors(value: string) {
       return value.split(/,(?![^()]*\))/).flatMap((shadow) => {
-        const color = shadow.match(/(?:rgba?|hsla?|oklch|color)\([^)]*\)|#[\da-f]{3,8}/i)?.[0];
+        const color = shadow.match(
+          /(?:rgba?|hsla?|oklch|oklab|lab|lch|color)\([^)]*\)|#[\da-f]{3,8}/i,
+        )?.[0];
         if (!color) return [];
         const offsets = shadow
           .replace(color, '')
@@ -331,6 +333,7 @@ async function capture(
         diagnostic: control.className.toString().includes('brandButton')
           ? {
               outline: focused.outline,
+              boxShadow: focused.boxShadow,
               focusToken: focused.getPropertyValue('--builder-focus'),
               coreMatch: control.matches('.cms-core :where(button):focus-visible'),
               rules: Array.from(document.styleSheets).flatMap((sheet) => {
