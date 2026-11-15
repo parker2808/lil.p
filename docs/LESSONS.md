@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-15: A D2 tree-publish endpoint that always returns 409 cannot supply a genuine tree version for a restore test; gate the rejected publish and draft preservation honestly, and leave V10 version-restore coverage open until a real publication path exists.
 - 2026-11-15: When syncing a D4 study base into the D5 host, take D5's live host and history commands rather than reverting to the provisional study route; carry forward base locale/focus fixes and retain both branches' documentation histories.
 
 - 2026-11-15: A core duplicate operation does not prove the V07 builder journey until a discoverable keyboard-accessible UI command generates fresh descendant IDs and the real browser preserves their order through undo/redo and a confirmed save.
