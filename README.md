@@ -1,5 +1,10 @@
 # lil.p
 
+The [V17–V22 focused evidence gates](./docs/specs/2026-11-15-cms-v17-v22-evidence-gates.md)
+add legacy/tree route and missing-SEO snapshot checks, nested-field core
+preservation, and an offline deployed-public-asset parity verifier. They do not
+authorize deployment or close the V18 live drain and V19 CDN parity gates.
+
 The D6 host-registry integration is staged on a scratch branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and
 publish, then EN/VI version preview and public SSR. This is route evidence, not
