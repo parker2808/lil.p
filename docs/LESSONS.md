@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A combined D2/D6 historical metadata fixture must read the persisted builder revision after legacy publish and SEO edits before activation; a hardcoded zero masks the correct CAS boundary and fails exact-head CI.
+
 - 2026-11-16: A D5 keyboard navigation branch can miss a newly required D6 localized host-label callback; run combined typecheck before push and keep live announcement assertions intact.
 - 2026-11-16: A D5 editor screenshot can attest to a saved draft revision but cannot prove editor→public→preview parity when the D5 publish endpoint intentionally returns CONFLICT; keep that combined D6 journey visibly GAP instead of substituting a mocked public response.
 
@@ -40,6 +42,17 @@
 
 - 2026-11-15: A paired public/preview gallery and zero-axe assertions do not establish a distinct neutral tenant SSR or complete no-JavaScript nested content; preserve those gaps when integrating D6 parity. A data-backed streaming notes fallback also needs readable, keyboard-sized links and an existing interactive marker before capture.
 - 2026-11-15: A combined D5/D6 merge must retain the D6 host-label argument on every canvas control, not just the inspector, and the D5 duplicate command must use the host registry; full typecheck catches a missed accessible-label call.
+- 2026-11-16: D19 resolves a block's entire localized props to EN when even one populated EN field lacks VI; no-JS version fixtures must localize the page-header title as well as its eyebrow to assert actual VI output.
+
+- 2026-11-16: Moving the home page into a nested route group can remove the inherited file-convention OG image from its metadata; explicitly preserve the home OpenGraph image and gate it in SEO tests.
+
+- 2026-11-16: A `?v=1` preview test against a page published only once cannot distinguish a historical version from the current page; publish a second distinct visible version and require both DOM and API to differ.
+
+- 2026-11-16: A shared route-group loading fallback can break no-script custom pages, while deleting it also removes the home skeleton; give home a nested route-group loading boundary and gate visible painted text rather than raw `textContent` in no-script browser tests.
+
+- 2026-11-16: A route-group `loading.tsx` can stream custom page content into a hidden React segment only revealed by client insertion scripts; no-JavaScript checks must require the actual visible main, not a matching hidden wrapper. Three-width base-only fixtures do not establish breakpoint override semantics for every host.
+
+- 2026-11-16: A published host wrapper in raw HTML does not prove its nested async content survives without React patch scripts; exercise each host with JavaScript disabled, compare public/version-preview text at every width and keep explicitly empty data states distinct from visible content.
 - 2026-11-16: The D2 builder rejects legacy SEO PATCH once a tree draft is active (409 revision-aware boundary). To test historical SEO changes through supported APIs, publish a legacy snapshot first, update SEO in legacy mode, then activate and publish a tree snapshot.
 
 - 2026-11-16: Historical draft previews need the same validated version passed to both body and metadata fetches; `getPage` silently ignores versions on public routes, so test current public SEO and body with `?v=N` as well as EN/VI historical preview.

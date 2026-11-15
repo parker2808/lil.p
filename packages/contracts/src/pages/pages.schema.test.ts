@@ -10,7 +10,10 @@ describe('createPageSchema', () => {
   it('reserves every one-segment public route, including craft', () => {
     const siteRoot = resolve(import.meta.dirname, '../../../../apps/web/app/[locale]/(site)');
     const routeSlugs = readdirSync(siteRoot, { withFileTypes: true })
-      .filter((entry) => entry.isDirectory() && !entry.name.startsWith('['))
+      .filter(
+        (entry) =>
+          entry.isDirectory() && !entry.name.startsWith('[') && !entry.name.startsWith('('),
+      )
       .map((entry) => entry.name.replace(/\..*$/, ''));
     expect(RESERVED_PUBLIC_PAGE_SLUGS).toEqual(
       expect.arrayContaining(['home', 'index', 'craft', ...routeSlugs]),
