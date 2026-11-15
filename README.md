@@ -1,5 +1,30 @@
 # lil.p
 
+The [D6 parity matrix](./docs/specs/2026-11-15-cms-d6-parity-matrix.md) adds
+lossless nested-tree migration fixtures, real-API legacy/tree snapshot and route
+checks, and EN/VI preview/public SSR, hydration and screenshot pairs at
+390/768/1440. Tree publishing in the builder UI remains disabled; API publish
+and the separate legacy UI publish/version/restore journey are not proof of a
+tree UI publish/restore flow or of production rollout readiness.
+The four-group, five-shard all-20 published-host matrix now attempts EN/VI, light/dark,
+390/768/1440 and both neutral-core and explicit lil.p tokens, with paired
+public/preview screenshots and WCAG axe per tuple. Neutral is selected on the
+real host DOM in a browser fixture, not via a separate published tenant. CI
+and independent visual review remain required before V03/V14 can pass.
+The matrix checks the seeded CV empty state with labeled host-context images
+rather than pretending an invisible CV wrapper is rendered. Education writes invalidate
+the public read cache before returning so published and preview hosts see the
+same collection. Captures exclude fixed site chrome, not block content.
+The notes browser host retains lazy client loading with a data-backed SSR
+fallback (localized note links or empty text), rather than the textless
+client-chunk skeleton; dark host cards use an AA-contrast subtle text token
+for both neutral and branded captures. #217 head `d4d098aa` passed five-shard
+CI and the public-bundle budget; the new combined head still needs exact-head
+checks and independent visual review before V03/V14 can pass.
+Async host block wrappers and props are resolved before tree rendering, but
+React may stream nested content after the initial HTML chunk. The current gate
+proves initial block inventory and props, hydrated preview/public parity and
+screen-reader checks; complete no-JavaScript tree text remains unverified.
 The [V17–V22 focused evidence gates](./docs/specs/2026-11-15-cms-v17-v22-evidence-gates.md)
 add legacy/tree route and missing-SEO snapshot checks, nested-field core
 preservation, and an offline deployed-public-asset parity verifier. They do not
@@ -16,7 +41,7 @@ feature-branch UI gate, not authorization for the D2 production migration.
 The D6 host-registry integration is staged on a scratch branch: all 20 registered
 component types must pass real authenticated draft activation, save, read and
 publish, then EN/VI version preview and public SSR. This is route evidence, not
-all-20 editor-origin parity until its exact-head four-shard CI passes. Visual/a11y
+all-20 editor-origin parity until its exact-head five-shard CI passes. Visual/a11y
 approval and permission to deploy D2 remain separate gates. The editor-origin suite
 searches Vietnamese host tile labels, edits valid bilingual Properties, and opens
 the real EN/VI Next draft route before publish. The follow-up checks each host
@@ -200,6 +225,8 @@ The D6 all-20 browser spec runs last on an existing web E2E shard; adding it doe
 The [D6 integrated gate plan](./docs/specs/2026-11-15-cms-d6-integrated-gate.md) adds 20 real-API host activation/save/read/publish and bilingual preview/public cycles, plus an editor-origin H1 journey and four CI-sharded editor-origin host journeys (five types each). Each exercises palette insertion, applicable Properties editing, real draft autosave/read, publish and EN/VI preview/public API and SSR parity. Notes/projects browsers have numeric/toggle Properties but no localized fields; every other type exercises EN/VI text. Exact-head CI is required before these become evidence; migration/drain, visual/a11y and release approval remain separate.
 
 The [D6 editor-origin visual matrix](./docs/specs/2026-11-15-cms-d6-editor-visual.md) attaches all 20 builder-origin hosts at EN/VI × light/dark × 390/1440, with screenshot digests and axe findings tied to the exact CI source head. Captures need independent design review; they do not substitute for deployment or full WCAG approval.
+
+The [D6 published/preview parity matrix](./docs/specs/2026-11-15-cms-d6-parity-matrix.md) pairs all 20 host blocks across EN/VI, light/dark, core/brand and 390/768/1440 with semantic, screenshot and unwaived axe checks. Notes fallback links provide 24px targets, and contact forms must hydrate before capture; exact-head CI and visual review still gate V03/V14 acceptance.
 
 The [R3-11 spec](./docs/specs/2026-11-03-r3-11-real-content-seed.md) requires private source evidence for every factual claim and project cover. Keep source paths, source text, and contact details out of git and logs. The staged migration check is `env -u DATABASE_URL bash apps/api/prisma/seed/migration-gate.sh`; it creates a random, tmpfs-only MySQL container, compares the five built-in page rows across the old and current migrations, checks page constraints and Prisma schema drift, then removes the container. It refuses to run when `DATABASE_URL` is already set.
 
