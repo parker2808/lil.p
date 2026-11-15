@@ -49,7 +49,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - 2026-11-15 D5 builder error localization: D2's English `message` remains in the API response but current D5 builder status/recovery UI uses only typed HTTP outcomes and EN/VI labels. Verify the new D6 publish/version controls independently; other admin/API i18n remains out of scope. See `docs/specs/2026-11-11-cms-d5-ui.md`.
-- D5 shard-5 correction: #204 `6a48a4cc` CI `43712324642` exposed D4 canvas tests targeting a `BuilderStudy`-only Selected item ID textbox after the route switched to real `BuilderHost`/`PropertiesPanel`. A stacked test-only fix verifies a composed heading's real EN/VI Text value across 768/1100/1440, theme changes and sheet focus; exact-head CI remains required. No runtime or release gate is waived.
+- D5 shard-5 correction: #204 `6a48a4cc` CI `43712324642` exposed D4 canvas tests targeting a `BuilderStudy`-only Selected item ID textbox after the route switched to real `BuilderHost`/`PropertiesPanel`. A stacked test-only fix verifies a composed heading's real EN/VI Text value across 768/1100/1440, theme changes and sheet focus; #204 head `22b4b1c0` passed CI `43716297284` and ready-e2e `43716429537` (API E2E and five web shards). This does not waive the combined/release gate: #208 run `43717182977` fails V07's historical 409 expectation after D6 enables publishing. No runtime change here.
 
 - 2026-11-15 D5 base synchronization: merge current D base into the isolated D5 integration branch without replacing D5's host, V07 duplicate/history coverage or V15 design assertions. Preserve D4 focus restoration and locale helper fixes; #221's separate focus-ring audit remains blocked pending its own exact-head CI.
 
@@ -59,7 +59,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - D5 design P2 follow-up (stacked draft): two equal-width breakpoint columns wrap all four EN/VI labels within their buttons across mobile/desktop; the CI-listed design spec checks text geometry and attaches empty/invalid-field, keyboard-focus and neutral/lil.p comparison captures plus a source-SHA manifest to Playwright's existing report artifact. Existing checked-in 99-image captures predate this fix; review the labeled CI artifact at its exact head before promoting new images or claiming final WCAG AA evidence. No core/history/autosave/API/golden change.
 
-- D5 all-block Properties (stacked draft): the gated host editor derives controls for all 20 portfolio definitions from their own Zod schemas, retaining nested siblings and invalid partial input per page/node/breakpoint across sheet remounts in EN/VI. The browser fixture mocks an active D2 draft: D2's `readTree` has no host registry and returns `UNKNOWN_TYPE` for host components, so D6's live API+public SSR gate is blocked pending host-aware validation. Optional base groups can be added; removing one requires a future core delete-property operation. See `docs/specs/2026-11-15-cms-d5-all-block-properties.md`.
+- D5 all-block Properties (stacked draft): the gated host editor derives controls for all 20 portfolio definitions from their own Zod schemas, retaining nested siblings and invalid partial input per page/node/breakpoint across sheet remounts in EN/VI. Invalid partial input lives only in an in-memory Map while the builder stays mounted; it is **not** recovered after reload, unlike valid autosaved edits. The browser fixture mocks an active D2 draft: D2's `readTree` has no host registry and returns `UNKNOWN_TYPE` for host components, so D6's live API+public SSR gate is blocked pending host-aware validation. Optional base groups can be added; removing one requires a future core delete-property operation. See `docs/specs/2026-11-15-cms-d5-all-block-properties.md`.
 
 - D5 design/a11y evidence: 99 captured EN/VI × light/dark × neutral/lil.p responsive and editor states, a keyboard edit/history/focus path, zero axe violations and measured AA token contrasts are recorded in `docs/specs/2026-11-14-cms-d5-design-evidence.md`. This passes the gated D5 editor review only; D6 still owns the combined journey, all 20 definitions, preview/public parity and release approvals.
 
@@ -281,6 +281,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Recorded #204 exact-head CI `43716297284`/`43716429537`, clarified invalid Properties input survives remount only (not reload), and separated the failing #208 V07 publish expectation from the D5 feature-head evidence. Docs only; no release signoff.
 
 - 2026-11-15: Expanded D5 V07 tests for real-builder insert/edit/duplicate history and failed-save retry, adapter slot/node/history limits, and explicit rejected-publish preservation; kept tree version restore open because the D2 publish API returns 409. No product runtime change.
 - 2026-11-15: Audited D2 builder-draft English error messages against D5 activation, autosave and recovery UI; no verbatim message is displayed. Documented the D6 version-actions follow-up without changing API, runtime, tests, schema or golden contracts.
