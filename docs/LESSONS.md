@@ -1,5 +1,16 @@
 # Lessons
 
+- 2026-11-16: D19 resolves a block's entire localized props to EN when even one populated EN field lacks VI; no-JS version fixtures must localize the page-header title as well as its eyebrow to assert actual VI output.
+
+- 2026-11-16: Moving the home page into a nested route group can remove the inherited file-convention OG image from its metadata; explicitly preserve the home OpenGraph image and gate it in SEO tests.
+
+- 2026-11-16: A `?v=1` preview test against a page published only once cannot distinguish a historical version from the current page; publish a second distinct visible version and require both DOM and API to differ.
+
+- 2026-11-16: A shared route-group loading fallback can break no-script custom pages, while deleting it also removes the home skeleton; give home a nested route-group loading boundary and gate visible painted text rather than raw `textContent` in no-script browser tests.
+
+- 2026-11-16: A route-group `loading.tsx` can stream custom page content into a hidden React segment only revealed by client insertion scripts; no-JavaScript checks must require the actual visible main, not a matching hidden wrapper. Three-width base-only fixtures do not establish breakpoint override semantics for every host.
+
+- 2026-11-16: A published host wrapper in raw HTML does not prove its nested async content survives without React patch scripts; exercise each host with JavaScript disabled, compare public/version-preview text at every width and keep explicitly empty data states distinct from visible content.
 - 2026-11-16: The D2 builder rejects legacy SEO PATCH once a tree draft is active (409 revision-aware boundary). To test historical SEO changes through supported APIs, publish a legacy snapshot first, update SEO in legacy mode, then activate and publish a tree snapshot.
 
 - 2026-11-16: Historical draft previews need the same validated version passed to both body and metadata fetches; `getPage` silently ignores versions on public routes, so test current public SEO and body with `?v=N` as well as EN/VI historical preview.
