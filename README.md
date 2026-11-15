@@ -14,6 +14,10 @@ The [CMS U0 route/control baseline](./docs/audits/2026-11-10-cms-u0-route-contro
 
 The [CMS core package](./packages/cms-core/README.md) runs its own dependency-boundary check in CI, independent of the monorepo root check, so extraction cannot silently drop this gate. Its React and theme tests import the package-local bundle measure, so the same tests run after extraction. The [C1 runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md) retains the final integration and authorization requirements.
 
+### CMS D5 history gate (V07)
+
+The stacked [D5 V07 gate](./docs/specs/2026-11-15-cms-d5-v07-gate.md) verifies real builder edit/duplicate/move history, unique descendant IDs, undo/redo, and the confirmed-save reload boundary. Duplicate is keyboard-accessible in EN/VI and uses the validated core operation; unconfirmed E2E coverage is not a PASS.
+
 ### CMS U1 shared controls
 
 The stacked [CMS U1 shared-controls spec](./docs/specs/2026-11-10-cms-u1-shared-controls.md) tracks the shadcn Select/RadioGroup migration, normalized checkbox/switch/menu states, EN/VI field labels, behavior tests, and the comparison against U0. Its review fixes preserve contact fields typed before hydration, keep the optional topic clearable to an empty payload, and test radio Tab/focus without changing selection. SchemaForm's registry coverage runs once per block, making slow editor forms identifiable without raising test timeouts. The existing test-only loading fixture serves a radio variant only with `R3_E2E_STATES=1` and otherwise returns 404. U0 stays the before reference; U1 does not change the API or database.
