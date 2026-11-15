@@ -6,9 +6,11 @@ publish, then EN/VI version preview and public SSR. This is route evidence, not
 all-20 editor-origin parity until its exact-head four-shard CI passes. Visual/a11y
 approval and permission to deploy D2 remain separate gates. The editor-origin suite
 searches Vietnamese host tile labels, edits valid bilingual Properties, and opens
-the real EN/VI Next draft route before publish. Dynamic hosts compare stable props
-and API data rather than transient HTML; data-dependent/empty-default hosts do not
-prove nonblank semantic text solely through this suite.
+the real EN/VI Next draft route before publish. The follow-up checks each host
+against its independently resolved EN/VI props and verifies a historical preview
+after republishing. Dynamic hosts compare stable props and API data rather than
+transient HTML; data-dependent/empty-default hosts do not prove nonblank semantic
+text solely through this suite.
 
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 

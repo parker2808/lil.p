@@ -69,6 +69,30 @@ it.each(Object.keys(BLOCK_REGISTRY))('renders Properties for host component %s',
   cleanup();
 });
 
+it('shows the translated host name in the Properties heading', () => {
+  const host = newNode('page-header', () => 'host') as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(
+    <PropertiesPanel
+      state={hostState}
+      locale="vi"
+      onEdit={vi.fn()}
+      hostLabel={() => 'Đầu trang'}
+    />,
+  );
+  expect(screen.getByText('Đầu trang')).toBeInTheDocument();
+  expect(screen.queryByText('page-header')).toBeNull();
+});
+
 it('submits bilingual nested host values as one validated root property', () => {
   const onEdit = vi.fn();
   const host = newNode('hero', () => 'host') as Extract<TreeNode, { type: 'component' }>;

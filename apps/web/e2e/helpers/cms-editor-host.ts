@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 import { BLOCK_REGISTRY, resolveBlockLocale } from '@portfolio/contracts';
 import { expect, test } from '@playwright/test';
 
@@ -51,6 +53,7 @@ export function registerEditorHostJourney(shard: number): void {
       const hostTile = palette.getByRole('button', { name: hostName, exact: true });
       await expect(hostTile).toBeVisible();
       await hostTile.click();
+      await expect(inspector.getByText(hostName, { exact: true })).toBeVisible();
       const addHeading = inspector.getByRole('button', { name: 'Thêm tiêu đề' });
       if (await addHeading.count()) await addHeading.click();
 
@@ -129,7 +132,12 @@ export function registerEditorHostJourney(shard: number): void {
           await expect(draftHost).toContainText(editedText);
         }
         const hash = await draftHost.getAttribute('data-host-props-hash');
-        expect(hash).toMatch(/^[a-f0-9]{64}$/);
+        const resolved = resolveBlockLocale(savedHost.responsive.base, locale as 'en' | 'vi');
+        expect(hash).toBe(
+          createHash('sha256')
+            .update(JSON.stringify({ props: resolved.props, lang: resolved.lang }))
+            .digest('hex'),
+        );
         draftRender.set(locale, {
           hash: hash ?? '',
           editedText,
@@ -167,6 +175,54 @@ export function registerEditorHostJourney(shard: number): void {
         expect(await host.getAttribute('data-host-props-hash')).toBe(publishedHash);
         if (editedText) await expect(host).toContainText(editedText);
         await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(`/${locale}/${key}`)}`);
+      }
+      if (definition.type === 'hero') {
+        const current = await (await page.request.get(draftPath)).json();
+        const nextTree = structuredClone(draft.tree);
+        const nextHost = nextTree.root.sections[0].content.find(
+          (node: { componentType?: string }) => node.componentType === definition.type,
+        );
+        nextHost.responsive.base.showDiagram = false;
+        const updated = await page.request.put(draftPath, {
+          headers,
+          data: { expectedRevision: current.revision, tree: nextTree },
+        });
+        expect(updated.status(), await updated.text()).toBe(200);
+        const secondPublish = await page.request.post(`/api/admin/pages/${key}/builder/publish`, {
+          headers,
+          data: { expectedRevision: (await updated.json()).revision },
+        });
+        expect(secondPublish.status(), await secondPublish.text()).toBe(200);
+        for (const locale of ['en', 'vi']) {
+          const path = `/${locale}/${key}`;
+          const currentPublic = await page.request.get(`/api/public/pages/${key}?locale=${locale}`);
+          const oldPreview = await page.request.get(
+            `/api/admin/preview/pages/${key}?locale=${locale}&version=1`,
+          );
+          expect((await currentPublic.json()).tree).toEqual(nextTree);
+          expect((await oldPreview.json()).tree).toEqual(draft.tree);
+          await expect(async () => {
+            await page.goto(path);
+            const currentHash = await page
+              .locator('[data-host-block-type="hero"]')
+              .getAttribute('data-host-props-hash');
+            const resolved = resolveBlockLocale(nextHost.responsive.base, locale as 'en' | 'vi');
+            expect(currentHash).toBe(
+              createHash('sha256')
+                .update(JSON.stringify({ props: resolved.props, lang: resolved.lang }))
+                .digest('hex'),
+            );
+            expect(currentHash).not.toBe(draftRender.get(locale)?.hash);
+          }).toPass({ timeout: 30_000 });
+          await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
+          await page.goto(`${path}?v=1`);
+          expect(
+            await page
+              .locator('[data-host-block-type="hero"]')
+              .getAttribute('data-host-props-hash'),
+          ).toBe(draftRender.get(locale)?.hash);
+          await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
+        }
       }
     });
   }

@@ -277,10 +277,12 @@ export function PropertiesPanel({
   state,
   locale,
   onEdit,
+  hostLabel,
 }: {
   state: BuilderState;
   locale: 'en' | 'vi';
   onEdit: (operation: TreeOperation, typing?: boolean) => string | undefined;
+  hostLabel?: (type: BlockType) => string;
 }) {
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('base');
   const node = findNode(state.document, state.selectedId);
@@ -340,8 +342,10 @@ export function PropertiesPanel({
       <p className={styles.heading}>
         {node
           ? node.type === 'component'
-            ? (nodeNames[locale][node.componentType as keyof typeof nodeNames.en] ??
-              node.componentType)
+            ? node.componentType in BLOCK_REGISTRY
+              ? (hostLabel?.(node.componentType as BlockType) ?? node.componentType)
+              : (nodeNames[locale][node.componentType as keyof typeof nodeNames.en] ??
+                node.componentType)
             : nodeNames[locale][node.type]
           : text.empty}
       </p>
