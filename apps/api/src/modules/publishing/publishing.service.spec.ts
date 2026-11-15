@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { PublishingService } from './publishing.service';
@@ -5,6 +6,7 @@ import { PublishingService } from './publishing.service';
 describe('PublishingService', () => {
   beforeEach(() => {
     vi.unstubAllGlobals();
+    vi.restoreAllMocks();
   });
 
   it('posts tags once when the web answers 200', async () => {
@@ -34,6 +36,25 @@ describe('PublishingService', () => {
     } as never);
     await expect(service.revalidate(['site'])).resolves.toBeUndefined();
     expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not log page keys, secrets, or upstream errors after both retries fail', async () => {
+    const marker = 'draft-tree-token-private-marker';
+    const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
+    const fetchMock = vi
+      .fn()
+      .mockRejectedValueOnce(new Error(`first ${marker}`))
+      .mockRejectedValueOnce(new Error(`second ${marker}`));
+    vi.stubGlobal('fetch', fetchMock);
+    const service = new PublishingService({
+      webInternalUrl: 'http://localhost:3000/',
+      revalidateSecret: marker,
+    } as never);
+
+    await expect(service.revalidate([`page:${marker}`])).resolves.toBeUndefined();
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(warn).toHaveBeenCalledWith('Revalidate failed after retry');
+    expect(JSON.stringify(warn.mock.calls)).not.toContain(marker);
   });
 
   it('skips when the secret or URL is missing', async () => {
