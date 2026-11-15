@@ -1,5 +1,7 @@
 # lil.p
 
+The [D2 V11/V12 safety gate](./docs/specs/2026-11-15-cms-d2-v11-v12-gate.md) extends real-DB negative tree and capability checks. Final integrated D6 publication and authorized production log review remain separate gates.
+
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 
 The same runbook records a local #208 tarball rehearsal: its 26-file pack contains only built `dist/**`, README, LICENSE and package.json. The package remains subpath-only; package-local tests reject the root `"."` specifier for ESM and CJS both in the checkout and from an installed tarball, where all six subpaths resolve. A future C3 consumer switch must pin all four direct dependents (contracts, API, web and the neutral fixture). Recount the pack at the final integrated SHA; final merge, rights and distribution authorization remain separate gates.
