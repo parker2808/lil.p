@@ -5,6 +5,8 @@
 - 2026-11-15: A computed-focus audit must parse all browser-emitted CSS color functions, including `oklab()` on box shadows; otherwise it can misreport a visible opaque ring as absent while a translucent outline fails 3:1. Check the actual shadow and adjacent painted surfaces without relaxing the contrast threshold.
 
 - 2026-11-15: Browser focus audits need keyboard modality before programmatically focusing each control: a modifier-only `Shift` press can leave `:focus-visible` unmatched even when the CSS rule is present. Use `Tab`, assert `:focus-visible`, and still measure each computed ring against adjacent surfaces at ≥3:1.
+- 2026-11-15: A core duplicate operation does not prove the V07 builder journey until a discoverable keyboard-accessible UI command generates fresh descendant IDs and the real browser preserves their order through undo/redo and a confirmed save.
+- 2026-11-15: A green duplicate/move history journey is only a V07 subset when insertion/edit undo-redo, copied text persistence, adapter bounds and failed-save/version boundaries are not asserted; keep the matrix row PARTIAL until these have exact-head evidence.
 
 - 2026-11-15: Audit every visible enabled builder control at desktop as well as compact widths; padding does not guarantee a 44px target, and a screenshot is not proof of focus visibility or absence of dialog overflow.
 
