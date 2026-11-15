@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- D5 Properties blur/clear follow-up: rapid text edits separated by blur must remain separate undo steps, and clearing an override must discard invalid local input and its error; EN/VI unit and real-builder browser regressions are added. Exact-head ready-e2e CI and independent review remain OPEN.
+
 - #221 run `43729842098` reached two deterministic V15 failures: the focus audit moved focus off Heading before keyboard Delete, and the 768px Properties sheet's fixed backdrop was wrongly clipped to the builder parent's overflow boundary. Restore pre-audit focus and stop clipping beyond the fixed backdrop; exact-head five-shard CI and independent review remain OPEN.
 
 - V16 builder automation adds real-API EN/VI accessible-name, live announcement, keyboard focus, reduced-motion and whole-page axe coverage. Manual VoiceOver/NVDA output, public/preview heading order and independent screen-reader review remain OPEN; no release signoff from this subset.
@@ -300,6 +302,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Ended property typing coalescence on input blur without scheduling an extra autosave; successful Clear override removes all pending, raw input and error state for its responsive property. Added EN/VI unit and real-API keyboard browser regressions.
 
 - 2026-11-15: Restored V15 keyboard-journey focus after capture and fixed overlay hit-area clipping at the fixed-position backdrop; kept ≥44px targets and ≥3:1 focus contrast, pending exact-head CI.
 

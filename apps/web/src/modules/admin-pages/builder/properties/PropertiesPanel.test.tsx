@@ -2,18 +2,23 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   applyTreeOperation,
+  createTreeHistory,
+  endTreeTyping,
   readTree,
+  undoTreeHistory,
   type TreeDocument,
   type TreeNode,
   type TreeOperation,
 } from '@parker2808/cms-core/tree';
 import { BLOCK_REGISTRY } from '@portfolio/contracts';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { useState } from 'react';
 
 import type { BuilderState } from '../canvas/commands';
 import { propertyFields } from './editor-model';
 import { PropertiesPanel, type PropertyDraft } from './PropertiesPanel';
 import { builderRegistry } from './registry';
+import { commitProperty } from '../history/adapter';
 
 const state = {
   selectedId: 'heading',
@@ -49,7 +54,81 @@ beforeEach(() => {
 afterEach(() => {
   cleanup();
   Element.prototype.scrollIntoView = scrollIntoView;
+  vi.restoreAllMocks();
 });
+
+it.each(['en', 'vi'] as const)(
+  'ends the %s keyboard property history session on blur even within 600ms',
+  (locale) => {
+    vi.spyOn(Date, 'now').mockReturnValue(1000);
+    let history = createTreeHistory(state.document, 'heading');
+    function Editor() {
+      const [current, setCurrent] = useState(history.document);
+      return (
+        <PropertiesPanel
+          state={{ document: current, selectedId: 'heading' }}
+          locale={locale}
+          onEdit={(operation, typing) => {
+            const result = commitProperty(history, operation, typing);
+            history = result.history;
+            setCurrent(history.document);
+            return result.error;
+          }}
+          onEndTyping={() => {
+            history = endTreeTyping(history);
+          }}
+        />
+      );
+    }
+    render(<Editor />);
+    const input = screen.getByRole('textbox', { name: locale === 'vi' ? 'Văn bản' : 'Text' });
+    fireEvent.change(input, { target: { value: 'First' } });
+    fireEvent.blur(input);
+    vi.mocked(Date.now).mockReturnValue(1100);
+    fireEvent.focus(input);
+    fireEvent.change(input, { target: { value: 'Second' } });
+    expect(history.past).toHaveLength(2);
+    const firstUndo = undoTreeHistory(history);
+    expect(firstUndo.document.root.sections[0]!.content[0]!.responsive.base.text).toBe('First');
+    expect(
+      undoTreeHistory(firstUndo).document.root.sections[0]!.content[0]!.responsive.base.text,
+    ).toBe('Hello');
+  },
+);
+
+it.each(['en', 'vi'] as const)(
+  'clears the %s invalid responsive input and error with the override',
+  (locale) => {
+    const initial: BuilderState = structuredClone(state);
+    const heading = initial.document.root.sections[0]!.content[0]!;
+    if (heading.type !== 'component') throw new Error('Expected heading');
+    heading.responsive.mobile = { ...heading.responsive.mobile, level: 3 };
+    const onEdit = vi.fn((operation: TreeOperation) => {
+      if (operation.kind !== 'clear-override') return;
+      delete heading.responsive.mobile?.level;
+      return undefined;
+    });
+    const view = render(<PropertiesPanel state={initial} locale={locale} onEdit={onEdit} />);
+    fireEvent.click(screen.getByRole('button', { name: locale === 'vi' ? 'Di động' : 'Mobile' }));
+    const level = screen.getByRole('spinbutton', {
+      name: locale === 'vi' ? 'Cấp tiêu đề' : 'Heading level',
+    });
+    fireEvent.change(level, { target: { value: '99' } });
+    expect(level).toHaveValue(99);
+    expect(level).toHaveAttribute('aria-invalid', 'true');
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: new RegExp(
+          locale === 'vi' ? 'Xóa ghi đè.*Cấp tiêu đề' : 'Clear override.*Heading level',
+        ),
+      }),
+    );
+    view.rerender(<PropertiesPanel state={{ ...initial }} locale={locale} onEdit={onEdit} />);
+    expect(level).toHaveValue(2);
+    expect(level).toHaveAttribute('aria-invalid', 'false');
+    expect(screen.queryByRole('alert')).toBeNull();
+  },
+);
 
 it('uses localized labels and submits base, mobile and clear-override operations', () => {
   const onEdit = vi.fn();
