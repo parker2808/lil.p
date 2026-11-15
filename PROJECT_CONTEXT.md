@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #202 integrated gate preparation: D2-free live publish/preview parity is infeasible because Page draft and revision columns back CAS and transactionally published snapshots. Local D6 scratch `e960c117` includes D2 and main `98f045f` but not #204 UI. A locked, disposable migration-only forward/drift gate passed; rollback-reader and combined J01–J09, visual/SSR, final-head CI remain blocked. See `docs/specs/2026-11-15-cms-d6-integrated-gate-prep.md`.
+
 - D6 #202 scratch reconciliation against main after #198: preserve the opt-in tree publish/preview/public parity guard, all 20 host schemas, D4/D5 state and legacy readers. The branch carries D2's additive migration, so a clean static gate alone cannot authorize merging before #199's migration gate; full J01–J09 and migration release remain blocked. See `docs/specs/2026-11-11-cms-d6-route-parity.md` and `docs/specs/2026-11-14-cms-d6-live-route-evidence.md`.
 
 - CMS U3 #178 post-D4 main sync (2026-11-15): keep the approved, flag-gated EN/VI design study distinct from the authenticated D4 canvas. Main includes D4 #198 at `fc22b9f`; neither route gains U3 persistence or publishing, and D5 host integration remains separate.
@@ -248,6 +250,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Prepared #199 → #204 → #202 disposable-only integrated gate commands and recorded the scratch D2 forward/drift PASS with explicit rollback-reader and visual/J01–J09 gaps; no PR push, production DB, or release claim.
 
 - 2026-11-15: Reconciled D6's opt-in preview/public tree parity and all-host route gate with #198's D4 canvas and main's D5 pure state without changing B1 goldens. Preserved both documentation histories and regenerated Graphify. Scratch-only integration pending #199 migration approval and #204 ordering; no production database or deploy action.
 - 2026-11-15: Synced U3 #178 with main through D4 #198 (`fc22b9f`); preserved the static study and the independent flag-gated D4 canvas, both documentation histories and existing golden contracts. Regenerated Graphify; no merge to main or deployment authorized.
