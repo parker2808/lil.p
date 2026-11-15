@@ -266,13 +266,18 @@ async function capture(
   for (const definition of blocks) {
     const locator = main.locator(`[data-host-block-type="${definition.type}"]`);
     await expect(locator).toHaveCount(1);
-    const image = await locator.screenshot({
+    const emptyCv = definition.type === 'cv-download';
+    if (emptyCv) {
+      await expect(locator).toBeEmpty();
+      await expect(locator).toBeHidden();
+    }
+    const image = await (emptyCv ? main : locator).screenshot({
       animations: 'disabled',
       style: '.hero-stage canvas, .site-header, .locale-toast { visibility: hidden !important; }',
     });
     images.set(definition.type, image);
     await testInfo.attach(
-      `${label}-${definition.type}-${publicCapture ? 'preview' : 'public'}.png`,
+      `${label}-${definition.type}${emptyCv ? '-empty-host-context' : ''}-${publicCapture ? 'preview' : 'public'}.png`,
       { body: image, contentType: 'image/png' },
     );
   }

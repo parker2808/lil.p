@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- #217 run `43701640505` exposed a zero-size `cv-download` wrapper when the seeded profile has no resume: Playwright waited for visibility while screenshotting that empty wrapper. Capture labeled empty host-context public/preview pairs, retain empty SSR/hydration/hidden-wrapper assertions and axe; visible CV, neutral SSR tenant, exact-head five-shard CI and visual review remain GAP.
+
 - #217 exact-head `cccc2286` CI run `43698675563` passed build/API E2E and web shards 1–3, but shard 4 reached its 20-minute job timeout without a test failure or artifact. The visual matrix is now split into four independently retried locale/theme cases per group (all 24 tuples and axe/pixel checks retained) with bounded per-case timeouts and per-test CI progress. Final four-shard CI, full visual review, distinct neutral SSR tenant and visible CV remain GAP.
 
 - #217 follow-up: dark host subtle labels fell below AA on neutral cards and notes-browser returned a textless client-chunk skeleton in initial SSR. Scoped a contrast-safe dark host token. Eager notes rendering exceeded the public bundle cap, so retained the lazy chunk with a data-backed server suspense fallback; V03/V14 remain GAP until exact-head four-shard CI and independent artifact review. Complete no-script nested tree content, separate neutral SSR tenant and visible CV remain unproven.
@@ -286,6 +288,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: #217 replaces impossible screenshots of an intentionally empty CV wrapper with labeled host-context pairs; the CV remains asserted empty/hidden and is not represented as a visible rendered block.
 
 - 2026-11-15: Restacked #217 onto D6 editor-origin visual base; retained both docs histories and regenerated Graphify. Split each 24-tuple visual shard into four locale/theme tests with six tuples apiece and CI per-test progress to make 20-minute cancellations diagnosable; no assertions, screenshot tuples, accessibility checks or job budget removed.
 
