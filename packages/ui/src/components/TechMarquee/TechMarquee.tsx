@@ -39,7 +39,7 @@ export function TechMarquee({
   const chips = items.map((item) => (
     <span
       key={item.slug}
-      className="text-eyebrow text-muted-foreground border-border bg-card inline-flex h-7 items-center rounded-full border px-3 font-mono whitespace-nowrap"
+      className="text-eyebrow text-muted-foreground border-border bg-card inline-flex min-h-11 items-center rounded-full border px-3 font-mono whitespace-nowrap"
     >
       {item.name}
     </span>
@@ -89,7 +89,7 @@ export function TechMarquee({
         aria-pressed={paused}
         aria-label={paused ? labels.play : labels.pause}
         onClick={() => setPaused((value) => !value)}
-        className="border-border bg-card text-muted-foreground hover:text-foreground inline-flex size-8 shrink-0 items-center justify-center rounded-md border"
+        className="border-border bg-card text-muted-foreground hover:text-foreground inline-flex size-11 shrink-0 items-center justify-center rounded-md border"
       >
         {paused ? (
           <Play className="size-3.5" aria-hidden />

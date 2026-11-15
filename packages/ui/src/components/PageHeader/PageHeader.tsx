@@ -36,7 +36,7 @@ export function PageHeader({
       href={back.href}
       aria-label={back.ariaLabel}
       className={cn(
-        'text-ui text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-11 items-center gap-1.5 rounded-md outline-none focus-visible:ring-2',
+        'text-ui text-muted-foreground hover:text-foreground focus-visible:ring-ring inline-flex min-h-11 min-w-11 items-center gap-1.5 rounded-md outline-none focus-visible:ring-2',
         inline ? 'shrink-0' : 'self-start sm:hidden',
       )}
     >

@@ -9,14 +9,14 @@ export function Switch({ className, ...props }: ComponentProps<typeof SwitchPrim
     <SwitchPrimitive.Root
       data-slot="switch"
       className={cn(
-        'focus-visible:ring-ring data-[state=checked]:bg-primary data-[state=unchecked]:bg-muted inline-flex h-5 w-8 shrink-0 items-center rounded-full border border-transparent transition-colors focus-visible:ring-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50',
+        'data-[state=checked]:before:bg-primary data-[state=unchecked]:before:bg-muted hover:before:ring-primary focus-visible:ring-ring aria-invalid:before:ring-destructive relative inline-flex size-11 shrink-0 items-center justify-center rounded-full before:absolute before:h-5 before:w-8 before:rounded-full before:transition-colors hover:before:ring-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:before:ring-2',
         className,
       )}
       {...props}
     >
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
-        className="bg-background pointer-events-none block size-4 rounded-full shadow-sm transition-transform data-[state=checked]:translate-x-3 data-[state=unchecked]:translate-x-0"
+        className="bg-background pointer-events-none relative block size-4 rounded-full shadow-sm transition-transform data-[state=checked]:translate-x-1.5 data-[state=unchecked]:-translate-x-1.5"
       />
     </SwitchPrimitive.Root>
   );

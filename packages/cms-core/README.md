@@ -1,14 +1,13 @@
-# CMS core package scaffold
+# CMS core
 
 `@parker2808/cms-core` exports independently built ESM/CJS subpaths:
 `./contracts`, `./engine`, `./react`, and `./react/server`. B4 provides generic Zod
 page/block/locale/snapshot contracts, `defineBlock`, `createRegistry`, and the
 host-keyed page-allowance predicate through `./contracts`. The host keeps all
 20 block definitions and composes its finite block-type schema from them.
-`./engine` provides B5's pure registry-injected policy findings, stable ordering,
-strict snapshots and version migrations, plus typed host ports; it does not
-start transactions or call ports. The Nest adapter remains host-owned and is
-not wired by B5 pending approval for the direct API production dependency.
+`./engine` provides B5's pure registry-injected policy, stable ordering,
+strict snapshots, version migrations and typed host ports. The Nest adapter
+remains host-owned; B5b wires it through a direct API production dependency.
 B6's `./react/server` contains headless ordered
 block dispatch with host-supplied renderers, grouping, wrappers, and draft-only
 unknown notices; it imports no client form/widget code. `./react` exposes Zod
@@ -21,18 +20,38 @@ missing labels are errors. Core maps only generic widget kinds, while hosts
 register domain widgets through `widgetKinds` and supply their own controls.
 React 19, React DOM 19 and Zod 4 are peers (also local development dependencies for package tests).
 
-D1's opt-in `./tree` entry exports `treeDocumentSchema`, `legacyTreeDocumentSchema`, `readTree` (autosave-safe draft validation), `validateTreeForPublish` (H1 and required-content gates), `migrateTree`, `convertLegacySnapshot`, `resolveResponsive`, `TREE_LIMITS`, `TREE_VERSION`, `treeIdSchema`, `responsiveSchema`, `starterComponentSchemas` and typed tree/registry/error contracts. Its strict Page → Section → row/column or grid → component slots and 5-depth/500-node/256-KiB bounds reject unknown versions/types/fields and duplicate IDs; tree/props depth and node count are checked iteratively before Zod parsing. Columns and grids contain components only, so every legal layout can hold content within the five-level depth budget. Grid mobile overrides may use a single column; desktop requires at least two. Host components register their own Zod props. The converter preserves unknown legacy block types as opaque `legacy-component` data, separate from SEO; it never writes to the database. D2 must explicitly adopt the tree path after B7 approval, calling the publish validator only at publish time. The new tree test enforces the combined contracts+engine+tree 60-KiB limit without changing the B6 budget script.
+D1's opt-in `./tree` ESM/CJS/types subpath exports bounded versioned tree
+schemas, `readTree` for incomplete drafts, `validateTreeForPublish` for H1 and
+required content, migration and lossless legacy conversion helpers, responsive
+resolution and typed registry/errors. Depth, size and node limits are checked
+before recursive parsing; mobile grids may have one column. Hosts own persistence
+and must validate drafts separately from publication. See the
+[D1 spec](../../docs/specs/2026-11-11-cms-d1-versioned-tree.md).
 
-An empty tree is valid for `readTree` autosave, but `validateTreeForPublish` returns `HEADING_RULE` until exactly one H1 exists. Multiple H1s also fail; the host must not substitute the draft reader for publication.
+D3 adds opt-in `renderTree({ input, createElement, labels, registry?, components?, resolveMedia? })` to `./react/server`. Both draft preview and public SSR use the same bounded draft reader; hosts separately call `validateTreeForPublish` when publishing. Invalid trees produce a localized typed fallback without partial output, while thrown host renderers return `RENDER_FAILED`. Core owns semantic headings: `components.heading` is rejected to prevent duplicate H1 elements. Heading level changes across breakpoints are allowed while editing drafts, but publishing or SSR rejects them with `HEADING_RULE` because each node has one semantic heading tag. Responsive rows and columns are covered by the `CMS_TREE_BROWSER=1` browser matrix; legacy block rendering remains the default until D2 dispatch and D6 route parity. See the [D3 spec](../../docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md).
 
-Build and check the browser gzip budgets with `pnpm --filter @parker2808/cms-core test` (which builds and checks the D1 combined cap).
+Build and check the browser gzip budgets with `pnpm build` from this package (or
+`pnpm --filter @parker2808/cms-core build` from the monorepo).
+Run `pnpm check:deps` in either location to reject workspace/host dependencies
+and imports from outside this package; CI runs this package-local gate after
+the monorepo static checks. Its focused tests cover static imports, re-exports,
+type imports, literal dynamic imports and CommonJS imports. Nonliteral computed
+imports still require manual review during extraction.
 The build runs `scripts/measure-cms-core.mjs` and fails above 60 KiB combined
-contracts+engine or 35 KiB combined `./react` + `./react/server`. These are **minified ESM artifact gzip sums**
+contracts+engine+tree or 35 KiB combined `./react` + `./react/server`. These are **minified ESM artifact gzip sums**
 (excluding only declared React/React DOM/Zod peer imports), not a claim about
-downstream app tree-shaking. See the [B4 spec](../../docs/specs/2026-11-10-cms-b4-contracts-registry.md)
-for the measured extraction baseline and rollback. All block definitions, host
-policy, API routes and EN/VI UI remain in lil.p.
-See the [B6 spec](../../docs/specs/2026-11-11-cms-core-b6-react.md) for the split and tests.
+downstream app tree-shaking. The package is private and `UNLICENSED`; only
+`dist/**`, this README, the license notice and the manifest belong in its archive.
+All block definitions, host policy, API routes and EN/VI UI remain in lil.p.
+See the [B4 spec](../../docs/specs/2026-11-10-cms-b4-contracts-registry.md)
+for the measured extraction baseline and rollback and the
+[B6 spec](../../docs/specs/2026-11-11-cms-core-b6-react.md) for the React split and tests.
+
+For a standalone extraction, run `pnpm install --lockfile-only` once with pnpm
+10.34.9, commit the resulting package-root `pnpm-lock.yaml` in the private
+repository, then require `pnpm install --frozen-lockfile` in CI. The monorepo
+uses its root lockfile instead; do not copy that workspace lockfile into this
+package or add a second lockfile to the public monorepo.
 
 ## Neutral default theme
 
