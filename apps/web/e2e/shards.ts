@@ -15,6 +15,8 @@ export const SPECS = [
   'cms-u1-controls.spec.ts',
   'cms-u2-patterns.spec.ts',
   'cms-u3-study.spec.ts',
+  'cms-builder-canvas.spec.ts',
+  'cms-builder-keyboard.spec.ts',
   'lighthouse.spec.ts',
   'ux-overlay.spec.ts',
   'admin-scroll.spec.ts',
