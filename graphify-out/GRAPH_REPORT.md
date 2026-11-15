@@ -1,7 +1,7 @@
 # Graph Report - test-cms-d6-vi-restore-captures  (2026-11-15)
 
 ## Corpus Check
-- 1670 files · ~702,233 words
+- 1670 files · ~702,417 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 40 file(s) not represented in the graph (top: (none) 18, .css 17, .example 1)
 
@@ -11,8 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0aa2886c`
-- Working-tree extraction includes the corrected page-header accessible field locators and #239 CI diagnosis before their commit; the marker identifies the preceding PR head, not this next commit.
+- Built from commit: `db053973`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

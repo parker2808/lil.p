@@ -5,6 +5,7 @@ import { switchBuilderLocale } from './helpers/builder-locale';
 
 const firstHeading = 'Original UI version heading';
 const firstVietnameseHeading = 'Tiêu đề phiên bản gốc';
+const vietnameseEyebrow = 'Dự án';
 const secondHeading = 'Edited UI version heading';
 const secondVietnameseHeading = 'Tiêu đề phiên bản đã sửa';
 
@@ -21,7 +22,11 @@ async function savedHeading(
       if (response.status() !== 200) return null;
       const draft = await response.json();
       const heading = draft.tree?.root.sections[0]?.content[0]?.responsive.base;
-      return heading?.title?.en === english && heading?.title?.vi === vietnamese ? draft : null;
+      return heading?.title?.en === english &&
+        heading?.title?.vi === vietnamese &&
+        (vietnamese === '' || heading?.eyebrow?.vi === vietnameseEyebrow)
+        ? draft
+        : null;
     })
     .not.toBeNull();
   await expect(page.getByText(status, { exact: true })).toBeVisible();
@@ -168,11 +173,17 @@ test('UI publish, edit, restore and republish preserves EN/VI preview/public par
   const inspector = page.getByRole('complementary', { name: 'Properties' });
   const englishTitle = inspector.getByRole('textbox', { name: 'Properties (EN)', exact: true });
   const vietnameseTitle = inspector.getByRole('textbox', { name: 'Properties (VI)', exact: true });
+  const vietnameseEyebrowField = inspector.getByRole('textbox', {
+    name: 'eyebrow (VI)',
+    exact: true,
+  });
   await expect(englishTitle).toHaveCount(1);
   await expect(vietnameseTitle).toHaveCount(1);
+  await expect(vietnameseEyebrowField).toHaveCount(1);
   await englishTitle.fill(firstHeading);
   await savedHeading(page, key, firstHeading, '');
   await vietnameseTitle.fill(firstVietnameseHeading);
+  await vietnameseEyebrowField.fill(vietnameseEyebrow);
   const original = await savedHeading(page, key, firstHeading, firstVietnameseHeading);
   const firstPublished = await publishFromUi(page, key);
   expect(firstPublished.publishedVersion).toBe(1);
