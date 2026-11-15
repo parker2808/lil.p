@@ -344,6 +344,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Refreshed verification-only #208 with main `3162b973`, Stage A `2a5c32bf`, D2 `596f7dbb`, D5 `22b4b1c0` and D6 `e4e80da3`; retained D6 localized registry and D5 validated duplicate/history. Seven non-browser Node 22 checks passed. Exact combined-head CI, public/preview design, UI restore, manual SR and live Stage A drain remain open; DO NOT MERGE.
+
 - 2026-11-15: Integrated D6 `e4e80da3` converter, route-snapshot, editor and public-bundle guard tests into #208 alongside D2/Stage A; retained both independent core raw-preservation cases. No golden, schema, migration, production deploy or release authorization change; exact combined-head CI required.
 
 - 2026-11-15: Integrated D2 #199 V11/V12 real-DB negative/read cases and main's five-shard registry into #208; preserved D6 host registry imports and tightened claims to HTTP 400 redaction only. No schema/migration/runtime or release authorization change.
