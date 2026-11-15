@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: Filtering keyboard move destinations to valid slots prevents testing or announcing a rejected drop; expose an explicit Page-root attempt while retaining normal valid Arrow destinations, then verify unchanged server revision and restored keyboard focus.
+
 - 2026-11-15: Graphify freshness must name the integrated code head, not an intermediate branch commit; a docs-only report commit changes HEAD again, so document its exact source SHA and keep manual V16 screen-reader signoff separate from green automated V15 evidence.
 
 - 2026-11-15: A design capture that tabs through controls must restore its entry focus before continuing a keyboard-only edit; a fixed overlay escapes non-containing-block ancestor overflow, so stop clipping at the fixed backdrop while keeping strict 44px checks.
@@ -435,3 +437,4 @@
 - 2026-11-15: A focus outline may contrast with the parent while disappearing against the focused button itself; use two opaque paint stripes and assess each adjacent background separately at ≥3:1.
 - 2026-11-15: A publish-conflict regression needs an intervening server-side draft write and an old expectedRevision; asserting 409 with the current revision only tests a feature-disable fallback, not revision CAS.
 - 2026-11-15: An undo coalescing window is not an editing session boundary: end the history typing key when a Properties input blurs, without treating metadata-only history changes as document edits; clearing a responsive override must clear all descendant raw/error drafts, not just the validated pending value.
+- 2026-11-16: Layers reinitializes with only the Page expanded after a builder reload; expand each nested ancestor by keyboard before checking a reloaded heading in the accessible tree, while separately comparing the saved draft and revision.

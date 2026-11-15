@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- V02 D5 keyboard negative path: EN/VI real-draft browser coverage exercises keyboard-only insertion, Page-root invalid drop, polite live-region rejection, focus restoration and identical saved revision/tree after reload. Await exact-head CI and independent review; D5 cannot complete successful publish, and manual spoken screen-reader verification remains V16 GAP.
+
 - #221 V15 passed exact-head CI `43732468521` at `b2671d6c` and independent review found no P0–P2. Graphify was regenerated against the merged D5 code head; V16 remains a separate manual screen-reader GAP (VoiceOver/NVDA spoken output, public/preview reading/H1 order, EN/VI review) despite automated builder checks.
 - D5 Properties blur/clear follow-up: rapid text edits separated by blur remain separate undo steps, and clearing an override discards invalid local input and its error. #244 passed exact-head CI `43737324989` (API E2E and five web shards) and independent review ACCEPT; combined release and manual V16 remain OPEN.
 
@@ -303,6 +305,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Added keyboard Home root-drop attempt with localized rejection and EN/VI browser assertions for focus, live status and unchanged persisted tree/revision; full V02 publish remains pending integrated D6 evidence.
 
 - 2026-11-15: Documented the V16 manual matrix GAP after #221 and refreshed Graphify against the integrated D5 head; no runtime, golden, or screen-reader acceptance change.
 - 2026-11-15: Ended property typing coalescence on input blur without scheduling an extra autosave; successful Clear override removes all pending, raw input and error state for its responsive property. Added EN/VI unit and real-API keyboard browser regressions.
