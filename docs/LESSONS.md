@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
+
 - 2026-11-15: Checkout self-resolution can pass when a distributable tarball is broken; install the packed package in a scratch consumer and assert both ESM/CJS subpath and root behavior in the regular CI unit job.
 - 2026-11-15: Lock a subpath-only package boundary with both a manifest-export assertion and ESM/CJS root resolution rejection; a tarball rehearsal alone does not prevent a future accidental root export.
 - 2026-11-15: Describe D2 deploy readiness as executable proof of forward-only Stage A write freeze/drain, not rollback-read proof; once migrated, an old API rollback is unsafe and recovery must roll forward.

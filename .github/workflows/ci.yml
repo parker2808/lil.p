@@ -21,6 +21,10 @@ concurrency:
   group: ci-${{ github.event.pull_request.number || github.ref }}-${{ github.event.action == 'labeled' && github.event.label.name || 'code' }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
+env:
+  PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  TESTED_MERGE_SHA: ${{ github.sha }}
+
 jobs:
   changes:
     if: github.event.action != 'labeled'
@@ -175,10 +179,16 @@ jobs:
           tar -I 'zstd -1 -T0' -cf e2e-build.tar.zst
           --exclude=apps/web/.next/cache --exclude=apps/web/.next/standalone
           packages/cms-core/dist packages/contracts/dist apps/api/dist apps/web/.next
+      - name: Record build provenance
+        run: |
+          test "$(git rev-parse HEAD)" = "$TESTED_MERGE_SHA"
+          printf '{"prHeadSha":"%s","testedMergeSha":"%s"}\n' "$PR_HEAD_SHA" "$TESTED_MERGE_SHA" > e2e-build-provenance.json
       - uses: actions/upload-artifact@v4
         with:
-          name: e2e-build
-          path: e2e-build.tar.zst
+          name: e2e-build-head-${{ env.PR_HEAD_SHA }}-merge-${{ env.TESTED_MERGE_SHA }}
+          path: |
+            e2e-build.tar.zst
+            e2e-build-provenance.json
           compression-level: 0
           retention-days: 1
 
@@ -234,9 +244,13 @@ jobs:
           (cd apps/web && pnpm exec playwright $cmd > /tmp/pw-install.log 2>&1; echo $? > /tmp/pw-install.done) > /dev/null 2>&1 &
       - uses: actions/download-artifact@v4
         with:
-          name: e2e-build
+          name: e2e-build-head-${{ env.PR_HEAD_SHA }}-merge-${{ env.TESTED_MERGE_SHA }}
           path: .
       - run: tar -I zstd -xf e2e-build.tar.zst
+      - name: Verify build provenance
+        run: |
+          test "$(git rev-parse HEAD)" = "$TESTED_MERGE_SHA"
+          node -e 'const p = require("./e2e-build-provenance.json"); if (p.prHeadSha !== process.env.PR_HEAD_SHA || p.testedMergeSha !== process.env.TESTED_MERGE_SHA) process.exit(1)'
       - name: Database env and wait for MySQL
         run: |
           user=app
@@ -273,10 +287,15 @@ jobs:
         run: |
           pnpm --filter @parker2808/cms-core-fixture build
           pnpm --filter @parker2808/cms-core-fixture test:e2e
+      - name: Record shard provenance
+        if: always()
+        run: |
+          mkdir -p apps/web/blob-report
+          printf '{"prHeadSha":"%s","testedMergeSha":"%s","shard":%s}\n' "$PR_HEAD_SHA" "$TESTED_MERGE_SHA" '${{ matrix.shard }}' > apps/web/blob-report/provenance-shard-${{ matrix.shard }}.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: blob-report-${{ matrix.shard }}
+          name: blob-report-${{ matrix.shard }}-head-${{ env.PR_HEAD_SHA }}-merge-${{ env.TESTED_MERGE_SHA }}
           path: apps/web/blob-report
           retention-days: 1
 
@@ -300,10 +319,15 @@ jobs:
       - name: Merge shard reports
         if: always() && needs.web-e2e-shard.result != 'skipped' && needs.build-e2e.outputs.playwright != ''
         run: npx -y playwright@${{ needs.build-e2e.outputs.playwright }} merge-reports --reporter html ./all-blob-reports
+      - name: Record merged report provenance
+        if: always() && needs.web-e2e-shard.result != 'skipped'
+        run: |
+          mkdir -p playwright-report
+          printf '{"prHeadSha":"%s","testedMergeSha":"%s"}\n' "$PR_HEAD_SHA" "$TESTED_MERGE_SHA" > playwright-report/provenance.json
       - uses: actions/upload-artifact@v4
         if: always() && needs.web-e2e-shard.result != 'skipped'
         with:
-          name: playwright-report
+          name: playwright-report-head-${{ env.PR_HEAD_SHA }}-merge-${{ env.TESTED_MERGE_SHA }}
           path: playwright-report
           retention-days: 7
       - name: Require the build and every shard to pass
