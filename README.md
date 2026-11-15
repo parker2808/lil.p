@@ -45,6 +45,11 @@ Async host block wrappers and props are resolved before tree rendering, but
 React may stream nested content after the initial HTML chunk. The combined
 gate checks nested no-JavaScript text on the real neutral and branded hosts;
 its exact-head CI and visual review remain pending.
+The all-20 no-script public/preview gate removes the public route-group loading
+fallback that hid custom-page content behind React insertion scripts; route-level
+loading states remain. Its EN/VI three-width base-props captures and no-overflow
+assertions complement explicit heading/paragraph breakpoint-override tests, not
+all-20 responsive override or human visual approval.
 The [V17–V22 focused evidence gates](./docs/specs/2026-11-15-cms-v17-v22-evidence-gates.md)
 add legacy/tree route and missing-SEO snapshot checks, nested-field core
 preservation, and an offline deployed-public-asset parity verifier. They do not

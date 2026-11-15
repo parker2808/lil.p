@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A route-group `loading.tsx` can stream custom page content into a hidden React segment only revealed by client insertion scripts; no-JavaScript checks must require the actual visible main, not a matching hidden wrapper. Three-width base-only fixtures do not establish breakpoint override semantics for every host.
+
 - 2026-11-16: A published host wrapper in raw HTML does not prove its nested async content survives without React patch scripts; exercise each host with JavaScript disabled, compare public/version-preview text at every width and keep explicitly empty data states distinct from visible content.
 
 - 2026-11-16: A 768px CSS desktop breakpoint must match the JavaScript `matchMedia` breakpoint; a desktop header can overflow before the mobile sheet disappears, especially with VI navigation. Gate 768/1024 and the new desktop boundary in both languages and themes with real control bounds, touch sizes and keyboard order.
