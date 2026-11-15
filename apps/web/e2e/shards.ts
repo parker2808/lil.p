@@ -1,8 +1,8 @@
-// CI runs web-e2e in {4} shards, each with its own MySQL. Playwright's built-in
+// CI runs web-e2e in 5 shards, each with its own MySQL. Playwright's built-in
 // `--shard` cannot pin files together, so files are assigned here instead:
-// the pixel (visual) and Lighthouse specs always share shard 1, and the rest
-// are balanced by measured CI duration. Order inside a shard follows SPECS.
-export const SHARD_COUNT = 4;
+// the pixel baseline and Lighthouse specs share shard 1, while the D6 visual
+// matrix's slowest group has a separate shard. Order inside a shard follows SPECS.
+export const SHARD_COUNT = 5;
 
 export const SPECS = [
   'public.spec.ts',
@@ -66,14 +66,15 @@ export const SPECS = [
   'u0-capture.spec.ts',
 ] as const;
 
-/** Specs that must run together in shard 1 (pixel baselines, Lighthouse scores). */
+/** Specs pinned for pixel baselines, Lighthouse and the incoming D6 visual group. */
 const PINNED: Record<string, number> = {
   'visual.spec.ts': 1,
   'lighthouse.spec.ts': 1,
   'admin-editors-r3.spec.ts': 4,
+  'cms-d6-visual-4.spec.ts': 5,
 };
 
-/** CI seconds per file, measured on run 41382787431; unknown files count as 4. */
+/** Baseline CI seconds per file from run 41382787431; unknown files count as 4. */
 const WEIGHT: Record<string, number> = {
   'a11y.spec.ts': 63,
   'lighthouse.spec.ts': 58,
@@ -98,6 +99,7 @@ function assign(): Map<string, number> {
   const load = Array.from({ length: SHARD_COUNT }, () => 0);
   const out = new Map<string, number>();
   for (const [file, shard] of Object.entries(PINNED)) {
+    if (!SPECS.includes(file as (typeof SPECS)[number])) continue;
     out.set(file, shard);
     load[shard - 1] = (load[shard - 1] ?? 0) + (WEIGHT[file] ?? 4);
   }
