@@ -61,6 +61,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15 #208 D6 refresh: integrated `5ea3d3c4`'s real 20-type activate/CAS save/read/publish API test and separate editor-origin H1 autosave→preview→publish→EN/VI SSR browser journey. Neither proves all-20 Properties editor parity; final combined-head CI and Render drain remain open. DO NOT MERGE.
 
 - 2026-11-15 #208 main sync: merged `b3ee1b30` (#212) into verification-only combined branch, retaining C1 packed export/root rejection and the D2/D5/D6/Stage A evidence. Previous 16/16 run `43674791230` belongs to superseded `9a0a2f15`; new head requires its own CI. Design P2, combined journeys and Render drain remain open. DO NOT MERGE.
+- 2026-11-15 V19 public-bundle guard on the D6 feature stack: CI builds the PR head, rejects builder/editor client modules and emitted bytes for every production `(site)` route, retains the `r3-loading-test` exclusion and asserts the published-tree catch-all by exact manifest path, enforces a 100 KiB unique-chunk gzip cap against the 90,291-byte #202 baseline, and uploads an exact-head route/chunk JSON artifact with the published-tree subset and gzip total. V19 remains OPEN until exact-head CI proves it; final combined-head and deployed bundle parity remain separate gates. No runtime or golden change. See `docs/specs/2026-11-15-cms-public-bundle-guard.md`.
 
 - 2026-11-15 D6 integrated gate adds an API E2E matrix of 20 real authenticated activate/CAS-save/read/publish/EN-VI preview-public cycles and a browser editor-origin H1 autosave → draft preview → publish → EN/VI SSR journey. Exact-head CI remains required; starter palette does not certify all-20 Properties. D2 migration/drain, visual/a11y, J01–J09 and release stay blocked. See `docs/specs/2026-11-15-cms-d6-integrated-gate.md`.
 
@@ -313,6 +314,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Integrated D6 real-HTTP 20-type cycle and editor-origin H1 browser journey into verification-only #208; preserved both documentation histories and existing goldens. No DB or deployment operation.
 
 - 2026-11-15: Synced #208 verification with main #212, preserving both documentation histories and C1 export-boundary tests; Graphify regenerated separately, golden contracts untouched. No release, database or deployment action.
+- 2026-11-15: Added V19 production public-route bundle gzip cap and exact-head CI chunk graph artifact, without changing public or admin runtime output.
 - 2026-11-15: Corrected D6's all-20 API E2E bilingual fixture after exact-head CI found the intentional English SEO fallback; each custom page now sets Vietnamese SEO before publishing. No production locale fallback, golden contract or release gate changed; rerun exact-head CI.
 
 - 2026-11-15: Added real-API all-20 host E2E and a separate editor-origin autosave/preview/public bilingual SSR browser journey on the D6 stack. Golden contracts unchanged; final exact-head CI pending.

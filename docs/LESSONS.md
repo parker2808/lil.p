@@ -2,6 +2,11 @@
 
 - 2026-11-15: Body-parser oversized JSON may bypass Nest exception types; convert its typed size error into a redacted 413 with trace ID before normal middleware, assert unchanged DB rows, and retain the existing file-upload contract.
 - 2026-11-15: Green D2 disposable-DB rejection tests do not certify live old-instance drain; preserve anonymous freeze-probe evidence separately from authenticated Render inventory and read-only schema proof.
+- 2026-11-15: Derive public-route gzip budgets from the production chunk graph on the owning feature head, count shared chunks once, and attach the exact-head graph with a named published-tree catch-all subset to CI; a green package-size cap alone does not prove the public JS boundary.
+
+- 2026-11-15: Test host-only CMS blocks through authenticated activation, revision-checked save/read and publish before EN/VI preview/public SSR; a mocked editor GET or schema-only registry count cannot catch an API boundary dropping the host registry.
+- 2026-11-15: Keep public bundle leak checks strict for actual public routes, but exclude explicitly gated browser-test fixture routes that intentionally import admin controls; retain a mandatory assertion for the production catch-all page.
+- 2026-11-15: Preserve both the Stage A/D2 freeze and D6 public-bundle guard checks when merging their independent CI jobs; source-head green checks cannot certify the combined artifact or a live Render drain.
 
 - 2026-11-15: Audit a pre-schema fail-closed page-write guard against both legacy and new builder route tables, including shared SEO PATCH and builder restore, then preserve that audit when resolving stacked documentation conflicts; route tests cannot replace live old-instance drain proof.
 
