@@ -7,6 +7,57 @@ cookies, bearer tokens, real page keys or personal data. A successful HTTP
 probe is **not** proof that all old instances have drained; a Render “Live”
 deploy or repeated 503 responses is not proof either.
 
+## Read-only inventory worksheet (prepare before requesting a deploy)
+
+These commands are **read-only** and intended for the release owner's
+already-authorized Render/Vercel sessions. Do not paste credentials on the
+command line, in logs or in a PR. Never run a deploy, restart, migration,
+DB command or the mutation probes below merely to fill this worksheet.
+
+```sh
+# Set RENDER_SERVICE_ID, WINDOW_START, WINDOW_END and VERCEL_DEPLOYMENT
+# locally from the authorized dashboards; never print values in a PR.
+render services instances "$RENDER_SERVICE_ID"
+render deploys list "$RENDER_SERVICE_ID"
+# Review only a bounded window; logs can contain sensitive data.
+render logs --resources "$RENDER_SERVICE_ID" --start "$WINDOW_START" --end "$WINDOW_END"
+
+# Run from the already-linked, authorized Vercel project (or supply its name).
+vercel list --environment production
+vercel inspect "$VERCEL_DEPLOYMENT"
+```
+
+Render [CLI instance/deploy/log commands](https://render.com/docs/cli-reference)
+and Vercel [list](https://vercel.com/docs/cli/list) /
+[inspect](https://vercel.com/docs/cli/inspect) are read-only; verify the
+CLI's active workspace/project **before** trusting the output. If the CLI is
+unavailable, use the corresponding authenticated dashboard views, not guessed
+API endpoints. Do not publish raw instance IDs, origins, headers or unredacted
+logs; keep the detailed worksheet in the release owner's private evidence
+channel and share only a redacted summary.
+
+| Evidence point      | Release-owner record (private)                                                                                                                                                                                              | STOP if                                                                                                                             |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Before Stage A      | Capture time, service/deploy IDs, approved image SHA, complete active instance-ID set **B** and ingress mapping. Check other page writers/jobs and Render startup/pre-deploy commands.                                      | Missing instance/commit association, unknown writer or ingress, or auto-deploy still enabled.                                       |
+| After Stage A       | Capture time, Stage A deploy ID/SHA, complete active instance-ID set **A**, each image identity and shutdown/in-flight completion events for every ID in **B**.                                                             | `B ∩ A` is nonempty, any instance is not Stage A, shutdown/in-flight state is unknown or roster completeness cannot be established. |
+| Before D2 migration | Confirm reviewed D2 image **retains the freeze**; inventory every writer, scheduled job, one-off command and startup/pre-deploy hook. The tracked Docker entrypoint runs `prisma migrate deploy` **before** the API starts. | An old unfrozen writer survives, migration might run before drain, or an unaccounted job can write pages. Do not deploy D2.         |
+| Vercel `/api`       | Record active production deployment/commit and verify `/api/:path*` rewrite points at the approved Render service.                                                                                                          | Alias/deployment or rewrite target differs, or another API ingress is unaccounted for.                                              |
+
+The CLI roster is a point-in-time observation, not proof of finished requests:
+correlate deployment events, shutdown/in-flight evidence and repeated complete
+inventories. The admin `deployment-state` read samples **one** API instance,
+not the fleet. If Render cannot attest the full fleet or all ingress paths,
+keep Stage A frozen rather than guessing from a timer, health check or green CI.
+
+**Local repository inventory performed (2026-11-16, read-only):**
+`render.yaml` declares one Docker web service with `/api/health` health check;
+`apps/api/Dockerfile` invokes `apps/api/docker-entrypoint.sh`, which runs
+`prisma migrate deploy` at startup; `apps/web/next.config.ts` rewrites
+`/api/:path*` to the configured API origin. These tracked files cannot reveal
+live Render instance IDs, active commits, Vercel alias or outside writers.
+Render/Vercel CLI production inventory and all HTTP probes remain
+**unexecuted**; Stage A stays **HOLD**.
+
 ## Before the Stage A deploy
 
 1. Pin the approved pre-D2 Stage A image commit and confirm it includes the
@@ -99,3 +150,15 @@ read-availability checks here.
    checklist is preparation, not a production drain attestation or migration
    approval; keep the freeze and use the forward-only sequence in the
    [Stage A spec](../specs/2026-11-15-cms-pre-d2-write-freeze.md).
+
+## Reopen and failure path (separate approval)
+
+After independently authorized D2 migration/data checks, keep writes frozen
+until the full roster contains only the reviewed D2-aware image and the release
+owner explicitly approves a D2-aware reopen. Then perform controlled,
+authenticated save/restore/publish/activation CAS verification on an approved
+disposable record via **both** Render and Vercel ingress, with read-back; the
+unauthenticated sentinel probes above are **not** a reopen test. On any missing
+evidence or failed gate, **do not reopen**: retain the freeze and roll forward
+to a corrected D2-aware image. Never roll back to a pre-D2 API writer after
+the migration. See the [deploy runbook](./deploy.md#stage-a--d2-page-write-rollout-release-owner-only).

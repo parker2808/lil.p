@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- Stage A #210 read-only worksheet (2026-11-16): checked tracked Render Docker startup migration and Vercel `/api` rewrite, and documented authenticated Render/Vercel inventory, before/after instance-set comparison, two-ingress probes and separate D2-aware reopen. No live inventory, HTTP probe, migration, DB access or deployment; Stage A HOLD pending release-owner evidence and authorization.
+
 - Stage A #210 after main `676c5a20`: retain the production write freeze, read/health access and independent timer regression from main. Exact-head CI and independent review remain required; production old-writer drain, migration and rollout are not authorized.
 
 - Stage A #210 after main `cb216865`: retained the freeze guard and merged the C1 history guidance; exact-head five-shard/API CI and independent review remain required. Production drain and rollout are not authorized.
@@ -272,6 +274,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Added a docs-only Stage A drain evidence worksheet with verified read-only CLI commands, explicit STOP conditions and forward-only failure path; tracked-config inventory only, no production action.
 
 - 2026-11-16: Restack #210 onto main `676c5a20`, preserving the production 503 page-write freeze and main's MarkdownEditor callback-count test. No release or data operation; exact-head CI pending.
 
