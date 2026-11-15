@@ -80,6 +80,22 @@ test('real invalid draft block is localized only in EN/VI preview, without diagn
     data: { key, title: 'Invalid preview fixture', locale: 'en', template: 'starter' },
   });
   expect(created.status(), await created.text()).toBe(201);
+  const prose = (await created.json()).blocks.find(
+    (block: { type: string }) => block.type === 'prose',
+  );
+  expect(prose).toBeDefined();
+  const filled = await page.request.patch(`/api/admin/pages/${key}/blocks/${prose.id}`, {
+    headers,
+    data: {
+      props: {
+        body: {
+          en: 'Published English body copy for the invalid preview fixture.',
+          vi: 'Nội dung công khai tiếng Việt cho bản xem trước không hợp lệ.',
+        },
+      },
+    },
+  });
+  expect(filled.status(), await filled.text()).toBe(200);
   const seo = await page.request.patch(`/api/admin/pages/${key}`, {
     headers,
     data: {

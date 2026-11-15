@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A starter page's empty prose fails the real publish gate even when SEO exists; populate visible EN/VI copy before publishing the snapshot that an invalid-draft preview test must preserve.
+
 - 2026-11-16: When a D6 restack conflicts only in narrative docs and a generated graph report, retain both review histories while keeping the report's prior source commit explicit; old green source CI cannot score the new merge head.
 
 - 2026-11-16: A tree-backed page without explicit SEO must derive title from the same validated, locale-resolved H1 rendered in public and preview; never show raw server issue text in a translated invalid-block notice or reuse the empty-page label.

@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- 2026-11-16 V13 F4 integration: add a guarded disposable-MySQL legacy draft fixture and real EN/VI API, SSR, hydrated browser and public-route assertions. Exact-head CI and independent review remain pending; full V13 remains GAP.
+- 2026-11-16 V13 F4 integration: add a guarded disposable-MySQL legacy draft fixture and real EN/VI API, SSR, hydrated browser and public-route assertions. CI `43776544095` exposed the starter's empty-body publish rejection; fill bilingual prose before publishing the immutable public baseline, then corrupt only the draft. Exact-head CI and independent review remain pending; full V13 remains GAP.
 
 - 2026-11-16 V13 F3/F4: D6 no-SEO tree metadata now takes the rendered EN/VI page-header H1/intro (or native heading H1) for public and authorized preview; invalid legacy preview blocks get localized recovery help without raw diagnostics. Exact-head browser CI and combined-head route/state review pending; full V13 remains GAP.
 
@@ -361,6 +361,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Populate valid EN/VI prose before publishing the F4 disposable legacy-preview fixture; retain the strict publish guard and unchanged public snapshot, then seed only the invalid draft. Exact-head CI pending.
 - 2026-11-16: Register real invalid-draft EN/VI browser evidence backed by local disposable MySQL; published snapshot and golden/schema contracts unchanged. CI pending.
 
 - 2026-11-16: Add no-SEO tree H1/description fallback, sanitized bilingual invalid-block notice and real admin API EN/VI draft/public metadata test; no CMS core/API/schema/golden changes. CI pending.
