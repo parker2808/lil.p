@@ -4,16 +4,24 @@ import { signIn } from './helpers/auth';
 import { switchBuilderLocale } from './helpers/builder-locale';
 
 const firstHeading = 'Original UI version heading';
+const firstVietnameseHeading = 'Tiêu đề phiên bản gốc';
 const secondHeading = 'Edited UI version heading';
+const secondVietnameseHeading = 'Tiêu đề phiên bản đã sửa';
 
-async function savedHeading(page: Page, key: string, text: string, status = 'Draft saved') {
+async function savedHeading(
+  page: Page,
+  key: string,
+  english: string,
+  vietnamese: string,
+  status = 'Draft saved',
+) {
   await expect
     .poll(async () => {
       const response = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
       if (response.status() !== 200) return null;
       const draft = await response.json();
       const heading = draft.tree?.root.sections[0]?.content[0]?.responsive.base;
-      return heading?.text === text && heading?.level === 1 ? draft : null;
+      return heading?.title?.en === english && heading?.title?.vi === vietnamese ? draft : null;
     })
     .not.toBeNull();
   await expect(page.getByText(status, { exact: true })).toBeVisible();
@@ -36,7 +44,13 @@ async function publishFromUi(page: Page, key: string) {
   return result.json();
 }
 
-async function attachPaintedPage(page: Page, heading: Locator, testInfo: TestInfo, name: string) {
+async function attachPaintedPage(
+  page: Page,
+  heading: Locator,
+  testInfo: TestInfo,
+  name: string,
+  theme: 'light' | 'dark',
+) {
   let screenshot: Buffer<ArrayBufferLike> = Buffer.alloc(0);
   await expect(async () => {
     await heading.evaluate((element) => element.scrollIntoView({ block: 'center' }));
@@ -45,8 +59,8 @@ async function attachPaintedPage(page: Page, heading: Locator, testInfo: TestInf
     expect(box.y).toBeGreaterThan(64);
     expect(box.y + box.height).toBeLessThan(900);
     screenshot = await page.screenshot({ animations: 'disabled' });
-    const darkPixels = await page.evaluate(
-      async ({ png, rect }) => {
+    const foregroundPixels = await page.evaluate(
+      async ({ png, rect, theme }) => {
         const bytes = Uint8Array.from(atob(png), (char) => char.charCodeAt(0));
         const image = await createImageBitmap(
           new Blob([bytes.buffer as ArrayBuffer], { type: 'image/png' }),
@@ -69,18 +83,18 @@ async function attachPaintedPage(page: Page, heading: Locator, testInfo: TestInf
         for (let offset = 0; offset < pixels.length; offset += 4) {
           if (
             pixels[offset + 3]! > 200 &&
-            pixels[offset]! < 140 &&
-            pixels[offset + 1]! < 140 &&
-            pixels[offset + 2]! < 140
+            (theme === 'dark'
+              ? pixels[offset]! > 180 && pixels[offset + 1]! > 180 && pixels[offset + 2]! > 180
+              : pixels[offset]! < 140 && pixels[offset + 1]! < 140 && pixels[offset + 2]! < 140)
           ) {
             count++;
           }
         }
         return count;
       },
-      { png: screenshot.toString('base64'), rect: box },
+      { png: screenshot.toString('base64'), rect: box, theme },
     );
-    expect(darkPixels).toBeGreaterThan(30);
+    expect(foregroundPixels).toBeGreaterThan(30);
   }).toPass({ timeout: 15_000 });
   await testInfo.attach(name, { body: screenshot, contentType: 'image/png' });
 }
@@ -90,7 +104,7 @@ async function pairedPublishedCapture(
   testInfo: TestInfo,
   key: string,
   version: number,
-  expectedHeading: string,
+  expectedHeadings: { en: string; vi: string },
 ) {
   for (const locale of ['en', 'vi'] as const) {
     const preview = await page.request.get(
@@ -100,25 +114,35 @@ async function pairedPublishedCapture(
     expect(preview.status()).toBe(200);
     expect(publicPage.status()).toBe(200);
     expect(await preview.json()).toEqual({ ...(await publicPage.json()), invalidBlocks: [] });
-    for (const width of [390, 768, 1440] as const) {
-      await page.setViewportSize({ width, height: 900 });
-      const path = `/${locale}/${key}`;
-      const heading = page.locator('main.cms-core').getByRole('heading', {
-        name: expectedHeading,
-        level: 1,
-      });
-      await expect(async () => {
+    for (const theme of (locale === 'vi' ? ['light', 'dark'] : ['light']) as Array<
+      'light' | 'dark'
+    >) {
+      for (const width of [390, 768, 1440] as const) {
+        await page.setViewportSize({ width, height: 900 });
+        const path = `/${locale}/${key}`;
         await page.goto(path);
+        await page.evaluate((value) => localStorage.setItem('theme', value), theme);
+        const heading = page.locator('main.cms-core').getByRole('heading', {
+          name: expectedHeadings[locale],
+          level: 1,
+        });
+        await expect(async () => {
+          await page.goto(path);
+          await expect(page.locator('html')).toHaveAttribute('lang', locale);
+          await expect(page.locator('html')).toHaveClass(new RegExp(`\\b${theme}\\b`));
+          await expect(heading).toBeVisible();
+        }).toPass({ timeout: 30_000 });
+        const publicMarkup = await page.locator('main.cms-core').innerHTML();
+        const name = `${locale}-${theme === 'dark' ? 'dark-' : ''}${width}-restored`;
+        await attachPaintedPage(page, heading, testInfo, `${name}-public`, theme);
+        await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
+        await page.goto(`${path}?v=${version}`);
+        await expect(page.locator('html')).toHaveClass(new RegExp(`\\b${theme}\\b`));
         await expect(heading).toBeVisible();
-      }).toPass({ timeout: 30_000 });
-      const publicMarkup = await page.locator('main.cms-core').innerHTML();
-      await attachPaintedPage(page, heading, testInfo, `${locale}-${width}-restored-public`);
-      await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
-      await page.goto(`${path}?v=${version}`);
-      await expect(heading).toBeVisible();
-      expect(await page.locator('main.cms-core').innerHTML()).toBe(publicMarkup);
-      await attachPaintedPage(page, heading, testInfo, `${locale}-${width}-restored-preview`);
-      await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
+        expect(await page.locator('main.cms-core').innerHTML()).toBe(publicMarkup);
+        await attachPaintedPage(page, heading, testInfo, `${name}-preview`, theme);
+        await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
+      }
     }
   }
 }
@@ -140,19 +164,24 @@ test('UI publish, edit, restore and republish preserves EN/VI preview/public par
 
   const palette = page.getByRole('complementary', { name: 'Components' });
   await palette.getByRole('button', { name: 'Section', exact: true }).click();
-  await palette.getByRole('button', { name: 'Heading', exact: true }).click();
+  await palette.getByRole('button', { name: 'Page header', exact: true }).click();
   const inspector = page.getByRole('complementary', { name: 'Properties' });
-  await inspector.getByRole('textbox', { name: 'Text' }).fill(firstHeading);
-  await inspector.getByRole('spinbutton', { name: 'Heading level' }).fill('1');
-  const original = await savedHeading(page, key, firstHeading);
+  const englishTitle = inspector.getByRole('textbox', { name: 'title (EN)' });
+  const vietnameseTitle = inspector.getByRole('textbox', { name: 'title (VI)' });
+  await englishTitle.fill(firstHeading);
+  await savedHeading(page, key, firstHeading, '');
+  await vietnameseTitle.fill(firstVietnameseHeading);
+  const original = await savedHeading(page, key, firstHeading, firstVietnameseHeading);
   const firstPublished = await publishFromUi(page, key);
   expect(firstPublished.publishedVersion).toBe(1);
   const firstVersion = await page.request.get(`/api/admin/pages/${key}/versions/1`);
   expect(firstVersion.status(), await firstVersion.text()).toBe(200);
   expect((await firstVersion.json()).snapshot.tree).toEqual(original.tree);
 
-  await inspector.getByRole('textbox', { name: 'Text' }).fill(secondHeading);
-  const edited = await savedHeading(page, key, secondHeading);
+  await englishTitle.fill(secondHeading);
+  await savedHeading(page, key, secondHeading, firstVietnameseHeading);
+  await vietnameseTitle.fill(secondVietnameseHeading);
+  const edited = await savedHeading(page, key, secondHeading, secondVietnameseHeading);
   const secondPublished = await publishFromUi(page, key);
   expect(secondPublished.publishedVersion).toBe(2);
   const secondVersion = await page.request.get(`/api/admin/pages/${key}/versions/2`);
@@ -234,6 +263,7 @@ test('UI publish, edit, restore and republish preserves EN/VI preview/public par
     page,
     key,
     firstHeading,
+    firstVietnameseHeading,
     'Version restored to draft · publish separately to make it public',
   );
   expect(restoredDraft.tree).toEqual(original.tree);
@@ -247,5 +277,8 @@ test('UI publish, edit, restore and republish preserves EN/VI preview/public par
   const version = await page.request.get(`/api/admin/pages/${key}/versions/3`);
   expect(version.status(), await version.text()).toBe(200);
   expect((await version.json()).snapshot.tree).toEqual(original.tree);
-  await pairedPublishedCapture(page, testInfo, key, 3, firstHeading);
+  await pairedPublishedCapture(page, testInfo, key, 3, {
+    en: firstHeading,
+    vi: firstVietnameseHeading,
+  });
 });
