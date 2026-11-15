@@ -10,6 +10,7 @@
 8. The release owner records timestamps, deployment/image identifiers, inventory before/after and independent DB read-only snapshot hashes in a private evidence record; redact instance identifiers and connection details before public reporting. Missing evidence, disagreement or resumed writes means STOP.
 9. Only after #210 is deployed, page writes are frozen and old writers are drained may #199's startup migration occur; reopening requires D2-aware instances and a separate explicit approval. Roll forward on failure: never downgrade an old writer against tree pages or drop draft columns.
 10. CI cannot prove a production drain, forward-only approval or D6 tree publication. J09/V18 remain BLOCKED pending live evidence; no local simulated probe is a PASS.
+11. Oversized JSON is a typed 413 `VALIDATION_FAILED` body error with a request ID; the preexisting file-upload size error remains 400. Both must avoid echoing raw request bodies.
 
 ## Evidence boundaries
 

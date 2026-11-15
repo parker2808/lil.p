@@ -257,7 +257,7 @@ describe('builder draft persistence over disposable MySQL', () => {
       .send({ expectedRevision: '0', tree: emptyTree })
       .expect(200);
     const before = await persistedState(prisma, pageId);
-    await admin
+    const oversized = await admin
       .put('/api/admin/pages/ideas/builder/draft')
       .send({
         expectedRevision: '1',
@@ -266,6 +266,12 @@ describe('builder draft persistence over disposable MySQL', () => {
         ]),
       })
       .expect(413);
+    expect(oversized.body).toMatchObject({
+      code: 'VALIDATION_FAILED',
+      requestId: expect.any(String),
+      fieldErrors: { body: ['Request body too large'] },
+    });
+    expect(oversized.headers['x-request-id']).toBe(oversized.body.requestId);
     expect(await persistedState(prisma, pageId)).toEqual(before);
     const publish = await admin
       .post('/api/admin/pages/ideas/builder/publish')
