@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Restacking a forward-only D2 migration onto the public freeze-probe kit requires carrying both documentation histories and distinguishing anonymous 503 evidence from authenticated instance drain and schema proof; keep the #210 → #199 → approved reopen → #204 → #202 release order separate from PR merges.
+
 - 2026-11-15: Audit every transaction that can lose a page revision CAS, not just the first reproduced route: default repeatable-read can make SEO, block writes and builder restore return an obsolete revision after a real concurrent winner. A read-committed reread plus real-DB interleaving proves both the conflict envelope and transaction rollback.
 
 - 2026-11-15: A revision CAS can reject a lost race while the transaction's repeatable-read snapshot still reports the old revision; interleave a real second DB connection in API E2E and use read committed for the conflict reread before claiming the returned revision is current.
@@ -306,3 +308,4 @@
 - 2026-11-10: Shard assignment can move content-creating specs ahead of clean-seed pixel tests; pin the mutator outside the visual shard instead of weakening snapshots.
 - 2026-11-10: Placeholder opacity can defeat an AA text token; measure the computed input contrast, and give Layers depth visible guides on desktop and mobile.
 - 2026-11-10: A flag-gated localized fixture needs localized, gated metadata too; derive the title from the same EN/VI copy and test both disabled and enabled states.
+- 2026-11-15: Unauthenticated 503 checks across direct API and Vercel ingress can detect a missing HTTP write freeze, but cannot prove old writers drained or D2 columns exist; require authenticated instance inventory and an authorized read-only schema check before migration or reopening. With locale-prefixed routing, accept only the expected same-origin root redirect and probe `/en` and `/vi` explicitly.
