@@ -157,6 +157,7 @@
 - contracts.test.mjs
 - uses
 - steps
+- Timeline.tsx
 - ui/components.json
 - Deploying main to Vercel and re-running CI
 - .file
@@ -171,6 +172,7 @@
 - P4-6 T24: hero stats from site settings
 - create-lowlight.ts
 - devDependencies
+- resolve-block.util.ts
 - services
 - check-placeholders.mjs
 - r3-12-e2e-gate.sh
@@ -195,6 +197,7 @@
 - ci-ok
 - with
 - cms-core/package.json
+- ContentProgress
 - u0-capture.spec.ts
 - toc.util.ts
 - AdminSiteProfile.test.tsx
@@ -379,30 +382,6 @@
 - @tiptap/starter-kit
 - @tiptap/suggestion
 - vaul
-
-## God Nodes (most connected - your core abstractions)
-1. `cn()` - 273 edges
-2. `@nestjs/common` - 173 edges
-3. `Button()` - 169 edges
-4. `next-intl` - 143 edges
-5. `Locale` - 132 edges
-6. `apiClient()` - 109 edges
-7. `next` - 106 edges
-8. `PrismaService` - 95 edges
-9. `Badge()` - 86 edges
-10. `apiServer()` - 81 edges
-
-## Surprising Connections (you probably didn't know these)
-- `Highlights authored by Parker` --references--> `text()`  [INFERRED]
-  docs/case-studies/cfw-backoffice-portal.md → apps/api/prisma/seed/data/portfolio.mapper.ts
-- `Contract and acceptance` --references--> `pickGroup()`  [INFERRED]
-  docs/specs/2026-11-10-custom-page-locale-seo.md → apps/api/src/i18n/pick-locale.util.ts
-- `8. Việc của owner và ngoài phạm vi` --references--> `MediaService`  [INFERRED]
-  docs/PLAN.vi.md → apps/api/src/modules/media/media.service.ts
-- `Plan` --references--> `assertWithinLimit()`  [INFERRED]
-  docs/specs/2026-11-10-pages-duplicate-limit.md → apps/api/src/modules/pages/pages-rules.util.ts
-- `Where does it go?` --references--> `RoleGate()`  [INFERRED]
-  STRUCTURE.md → apps/web/src/modules/admin-core/components/RoleGate/RoleGate.tsx
 
 ## Import Cycles
 - None detected.
@@ -689,7 +668,7 @@ Nodes (20): Entry, Locale, OUTPUT, ROUTES, messageList(), row(), Capture, Locale
 Cohesion: 0.22
 Nodes (9): 7.1 Home — `home.html`, 7.2 Projects list — `projects.html`, 7.3 Case study — `case-study.html`, 7.4 About / CV — `about.html`, 7.5 Contact — `contact.html`, 7.6 Notes list — `notes.html`, 7.7 Post reader — `post.html`, 7.8 Admin — `admin-*.html` (+1 more)
 
-### Community 71 - "db-test"
+### Community 70 - "db-test"
 Cohesion: 0.07
 Nodes (35): depends_on, environment, image, ports, command, condition, environment, healthcheck (+27 more)
 
@@ -1291,7 +1270,7 @@ Nodes (5): collection, compilerOptions, deleteOutDir, $schema, sourceRoot
 
 ### Community 229 - "Foundations.stories.tsx"
 Cohesion: 0.33
-Nodes (5): Admin, Foundations(), meta, Public, Story
+Nodes (5): Down, Flat, meta, Story, Up
 
 ### Community 230 - "check-all.mjs"
 Cohesion: 0.33
@@ -1523,7 +1502,7 @@ Nodes (3): 0. Scope, constraints, how to review, 12. Open questions and risks, U
 
 ### Community 291 - "DiffStat.stories.tsx"
 Cohesion: 0.40
-Nodes (4): Diff, meta, Story, Value
+Nodes (4): Default, Grid, meta, Story
 
 ### Community 293 - "KickerPill.stories.tsx"
 Cohesion: 0.40
@@ -1579,7 +1558,7 @@ Nodes (3): extends, include, ../../tsconfig.base.json
 
 ### Community 313 - "Eyebrow.stories.tsx"
 Cohesion: 0.50
-Nodes (3): meta, Story, Tones
+Nodes (3): exclude, extends, ./tsconfig.json
 
 ### Community 314 - "AddBlockDialog.tsx"
 Cohesion: 0.20
