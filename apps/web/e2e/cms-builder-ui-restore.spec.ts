@@ -148,9 +148,7 @@ test('UI publish, edit, restore and republish preserves EN/VI preview/public par
   await expect(rejectedDialog.getByRole('alert')).toHaveText(
     'Bản nháp máy chủ đã thay đổi · tải lại trước khi thử lại',
   );
-  expect(await rejectedDialog.evaluate((dialog) => dialog.contains(document.activeElement))).toBe(
-    true,
-  );
+  await expect(rejectedDialog.getByRole('button', { name: 'Hủy' })).toBeFocused();
   await expect(
     rejectedDialog.getByRole('button', { name: 'Khôi phục bản nháp', exact: true }),
   ).toBeDisabled();

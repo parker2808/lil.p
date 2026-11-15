@@ -13,7 +13,7 @@ import {
   AlertDialogTitle,
 } from '@portfolio/ui/components/ui/alert-dialog';
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@portfolio/ui/components/ui/sheet';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { listAdminPageVersions } from '../services/admin-pages.service';
 
@@ -79,6 +79,11 @@ export function BuilderVersionActions({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [refresh, setRefresh] = useState(0);
+  const cancelRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (restoreFailed && !pending) cancelRef.current?.focus();
+  }, [restoreFailed, pending]);
 
   useEffect(() => {
     if (!open) return;
@@ -197,7 +202,9 @@ export function BuilderVersionActions({
             </p>
           )}
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={pending}>{text.cancel}</AlertDialogCancel>
+            <AlertDialogCancel ref={cancelRef} disabled={pending}>
+              {text.cancel}
+            </AlertDialogCancel>
             <AlertDialogAction
               disabled={!canRestore || pending}
               onClick={(event) => {
