@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #208 exact-head `72573ed8` CI `43692772530` exposed a cross-branch test mismatch: D6 localizes the Properties host heading, while D5's all-host assertion expected raw `hero`; D6 editor-origin VI locators also still expect `(EN)/(VI)` rather than `Tiếng Anh/Tiếng Việt`. The D5 assertion now derives the EN/VI label from metadata and translations; the D6 owner supplied a separate correction. New exact-head CI is required; J04/J07/V05 remain GAP. DO NOT MERGE.
+
 - CI evidence provenance (2026-11-15): E2E artifacts identify both the PR head and the tested synthetic-merge checkout; the merged report verifies all four shard manifests against both SHAs before recording its provenance. Review screenshots against both SHAs, not only the run number. This does not change which ref runs, any required check or the Vercel build order. Exact-head CI remains the gate.
 
 - D5 live journeys (stacked test PR): CI-sharded browser cases use actual Next and D2 HTTP for no-H1 save/publish rejection, mouse/keyboard nested layout, invalid drop/delete, undo/redo, responsive draft persistence, divergent CAS conflict and offline recovery. The expanded design case attaches exact-head EN/VI neutral/lil.p light/dark 390/768/1440 empty/error/focus/saved/saving/conflict captures with axe, reduced-motion, 44px all-controls, visible focus and overflow checks. A desktop header action gains a 44px minimum. Only CI-proven assertions can close J/V sub-gates; successful tree publication/public SSR, manual screen reader and all-20 host-type writes remain D6 gaps. See `docs/specs/2026-11-15-cms-d5-live-journeys.md`.
@@ -309,6 +311,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-15: Corrected the combined D5 all-host browser assertion to compare the translated EN/VI Properties heading after D6 integration. CI `43692772530` failed this and the D6 VI field-label tests; a new exact-head green run remains required.
 
 - 2026-11-15: Integrated #215 editor-origin all-20 D6 feature head with #219 D5 live journeys on verification-only #208. Preserved D5 Properties pending edits, D6 localized host labels, four pinned browser shards and both histories; no production DB/deploy or release. Exact-head CI pending.
 
