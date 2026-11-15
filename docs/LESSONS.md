@@ -163,6 +163,8 @@
 
 - 2026-11-15: An additive D2 schema lets a pre-D2 Prisma client alter a tree page's published pointer without bumping the draft revision. Parker approved forward-only recovery, not evidence of an old-writer drain; because the `main` API deploy runs the migration on startup, prove the page-write pause and complete Render drain before merging/deploying D2. A MySQL trigger cannot serve as a TiDB fence.
 - 2026-11-15: Restacking pure D5 tree state on the integrated D base requires preserving host-registry validation and the typed legacy restore/reload protections alongside main's independent fixture and package-local gates.
+- 2026-11-16: When several editors schedule independent preview timers, waiting for one rendered preview does not prove the others have completed; await all three rendered bodies and retain the exact callback-count assertion.
+
 - 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
 
 - 2026-11-15: Checkout self-resolution can pass when a distributable tarball is broken; install the packed package in a scratch consumer and assert both ESM/CJS subpath and root behavior in the regular CI unit job.
@@ -671,3 +673,5 @@
 - 2026-11-16: D5 host-label props must be shared across D6 version-enabled shell, canvas, Layers and Properties when normal-merging; preserve both localization and publish controls, then run exact combined-head CI.
 - 2026-11-16: Test actual keyboard Tab/Shift+Tab boundaries and focus return in existing dialogs, but never claim D5 publish/restore-version dialogs or manual spoken screen-reader acceptance when that UI exists only on the integrated D6 branch.
 - 2026-11-16: An integration-only browser fixture must follow the current accessible localized label exactly; do not weaken persisted revision/publish/public checks to hide an obsolete Properties locator.
+- 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
+- 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
