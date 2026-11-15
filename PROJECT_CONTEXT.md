@@ -49,6 +49,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - 2026-11-15 D5 builder error localization: D2's English `message` remains in the API response but current D5 builder status/recovery UI uses only typed HTTP outcomes and EN/VI labels. Verify the new D6 publish/version controls independently; other admin/API i18n remains out of scope. See `docs/specs/2026-11-11-cms-d5-ui.md`.
+- D5 shard-5 correction: #204 `6a48a4cc` CI `43712324642` exposed D4 canvas tests targeting a `BuilderStudy`-only Selected item ID textbox after the route switched to real `BuilderHost`/`PropertiesPanel`. A stacked test-only fix verifies a composed heading's real EN/VI Text value across 768/1100/1440, theme changes and sheet focus; exact-head CI remains required. No runtime or release gate is waived.
 
 - 2026-11-15 D5 base synchronization: merge current D base into the isolated D5 integration branch without replacing D5's host, V07 duplicate/history coverage or V15 design assertions. Preserve D4 focus restoration and locale helper fixes; #221's separate focus-ring audit remains blocked pending its own exact-head CI.
 
@@ -282,6 +283,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 9. Changelog
 
 - 2026-11-15: Audited D2 builder-draft English error messages against D5 activation, autosave and recovery UI; no verbatim message is displayed. Documented the D6 version-actions follow-up without changing API, runtime, tests, schema or golden contracts.
+- 2026-11-15: Replaced obsolete D4 Properties fixture-textbox expectations with real D5 heading field persistence, responsive single-mount and focus assertions; updated the serialized capture check without changing production behavior. CI evidence pending.
 
 - 2026-11-15: Synchronized D5 UI with `feat/cms-d-base` after #224, preserving the live D5 host and V07/V15 evidence, D4 sheet-focus handling and locale-safe browser tests. No migration, public route, or golden changes; final-head CI is required.
 
