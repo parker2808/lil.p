@@ -142,21 +142,26 @@ for (const locale of ['en', 'vi'] as const) {
             contentType: 'image/png',
           });
           if (preview) {
-            await visitor.addStyleTag({
-              content: '[data-slot="draft-banner"] { display: none !important; }',
-            });
-            await expect(banner).toBeHidden();
+            const bannerBox = await banner.boundingBox();
+            expect(bannerBox).not.toBeNull();
+            const box = await action.boundingBox();
+            expect(box).not.toBeNull();
+            expect(
+              { ...box!, y: box!.y - bannerBox!.height },
+              `${locale}-${brand} content geometry without preview chrome`,
+            ).toEqual(publicLinkBoxes.get(`${locale}/${brand}`));
           }
           const box = await action.boundingBox();
           expect(box).not.toBeNull();
-          if (preview) {
-            expect(box, `${tuple} content geometry without preview chrome`).toEqual(
-              publicLinkBoxes.get(`${locale}/${brand}`),
-            );
-          } else {
+          if (!preview) {
             publicLinkBoxes.set(`${locale}/${brand}`, box!);
           }
-          const screenshot = await action.screenshot({ animations: 'disabled' });
+          const screenshot = await action.screenshot({
+            animations: 'disabled',
+            ...(preview
+              ? { style: '[data-slot="draft-banner"] { display: none !important; }' }
+              : {}),
+          });
           await testInfo.attach(`${tuple}-link.png`, {
             body: screenshot,
             contentType: 'image/png',

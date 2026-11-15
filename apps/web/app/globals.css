@@ -2,7 +2,11 @@
 @source '../src';
 @source '../../../packages/ui/src';
 
-.cms-core[data-brand='lilp'] {
+.cms-core-host[data-theme='dark'] {
+  --subtle-foreground: #b5b1aa;
+}
+
+.cms-core-host[data-brand='lilp'] {
   --builder-accent: #a94623;
   --builder-accent-text: #fff;
   --builder-accent-soft: #fff0e8;
@@ -14,7 +18,7 @@
   --builder-art-ink: #24684b;
 }
 
-.dark .cms-core[data-brand='lilp'] {
+.cms-core-host[data-brand='lilp'][data-theme='dark'] {
   --builder-accent: #ffb694;
   --builder-accent-text: #312019;
   --builder-accent-soft: #473026;
@@ -23,7 +27,7 @@
   --builder-drop: #ffb694;
   --builder-success: #9bdfb2;
   --builder-art: #293c32;
-  --builder-art-ink: #a8dfb7;
+  --subtle-foreground: #b5b1aa;
 }
 
 /* Next streams resolved server content into hidden siblings; expose it when scripts cannot run. */
