@@ -251,6 +251,24 @@ This head is not the final merged source. Manual retained-history metadata,
 dependency rights/notices, trusted installer auth, browser visual/E2E, Docker
 and deployment verification remain separate gates; no remote repo was created.
 
+**Retained-identity disposition (local #208 `4df25c52` rehearsal; not final C1):**
+the 86 filtered commits at `19dc846c` contain two distinct author/committer
+identity pairs. In 71 commits, author and committer match and both use the same
+non-noreply consumer-email identity; in 15, the author uses a GitHub noreply
+address while the distinct committer uses a GitHub service address. These are
+counts and categories only: do not publish names, addresses or a raw metadata
+dump in issues, PRs, CI artifacts or the package. A zero-finding redacted
+Gitleaks scan does **not** clear Git author/committer PII. Recommend a private
+owner review of the final filtered history and an explicit keep-or-normalize
+decision **before any private push**. A `.mailmap` changes display attribution
+but leaves original commit objects intact, so it cannot sanitize an address.
+If the owner requires removal, seek separate approval for a controlled local
+history rewrite (author and committer), keep the original-to-new provenance
+mapping outside the repo, and rerun the complete metadata, secrets, license
+and artifact audit on the rewritten final tree. No normalization or rewrite
+was performed in this rehearsal; a private destination alone is not PII
+clearance.
+
 ```sh
 # C1: authorized local extraction from an approved, integrated source SHA.
 SOURCE_CHECKOUT=/path/to/approved/local/lilp
