@@ -1,4 +1,6 @@
 import type { InvalidPreviewBlock, PublicBlock } from '../contracts';
+export type { TreeRenderOptions, TreeRenderResult } from './tree-renderer/render';
+export { renderTree } from './tree-renderer/render';
 
 export type ServerRendererProps<Block extends PublicBlock, Context, Node, Entry> = {
   blocks: Block[];
