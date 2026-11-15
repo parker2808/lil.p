@@ -21,6 +21,7 @@ import {
 import { Switch } from '@portfolio/ui/components/ui/switch';
 import { Textarea } from '@portfolio/ui/components/ui/textarea';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { z } from 'zod';
 
 import { findNode } from '../canvas/model';
@@ -285,13 +286,21 @@ export function PropertiesPanel({
   hostLabel?: (type: BlockType) => string;
 }) {
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('base');
+  const translate = useTranslations();
   const node = findNode(state.document, state.selectedId);
   const schema = node && schemaFor(node);
   const text = fields[locale];
   const descriptors = schema
     ? schemaToFields(schema, {
-        labelFor: (path) =>
-          path in text ? text[path as keyof typeof text] : path.replaceAll('.', ' '),
+        labelFor: (path, key) => {
+          if (key?.startsWith('admin.blocks.'))
+            return translate(key as Parameters<typeof translate>[0]);
+          if (key) return key;
+          const leaf = path.split('.').at(-1)!;
+          return leaf in text
+            ? text[leaf as keyof typeof text]
+            : leaf.replaceAll(/([a-z])([A-Z])/g, '$1 $2');
+        },
       })
     : [];
   const current =
@@ -308,7 +317,9 @@ export function PropertiesPanel({
       return (['en', 'vi'] as const).map((language) => ({
         ...field,
         path: `${field.path}.${language}`,
-        label: `${field.label} (${language.toUpperCase()})`,
+        label: field.path.startsWith('heading.')
+          ? `${locale === 'vi' ? 'Tiêu đề mục' : 'Section heading'} · ${field.label} · ${language === 'en' ? (locale === 'vi' ? 'Tiếng Anh' : 'English') : locale === 'vi' ? 'Tiếng Việt' : 'Vietnamese'}`
+          : `${field.label} (${language.toUpperCase()})`,
         kind: field.kind === 'localized-text' ? 'text' : 'textarea',
       }));
     }

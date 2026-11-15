@@ -48,6 +48,13 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-15 #234 follow-up: real neutral/lil.p hosts now have a bounded EN/VI × light/dark no-script nested-tree gate with VI-authored copy and scoped dark OS-preference CSS; strict preview geometry/link PNG parity and raw full-page attachments remain. Exact-head CI and independent visual review pending. V03/V14 all-20 neutral dark and full VI content remain GAP; no golden/API/schema changes.
+
+- 2026-11-15 D6 SSR/i18n gate: host-specific custom-tree rendering is request-scoped (no shared HTML ISR), while API fetch tags remain cached. Neutral tenant SSR, no-script nested content, VI contact defaults and translated nested inspector labels require exact-head five-shard CI and review. V03/V14/full VI remain GAP; no golden or V10 files changed. See `docs/specs/2026-11-15-cms-d6-ssr-i18n-gate.md`.
+- 2026-11-15 D6 SSR capture correction: CI 43719165429 exposed repeatable 20-pixel rounded-corner raster differences in preview link captures shifted by the 60px preview banner. Preserve unmodified full-page artifacts, hide only the banner for the strict content crop, and require matching bounding boxes and PNG bytes; new exact-head CI and visual review remain pending.
+- 2026-11-15 D6 all-20 editor-origin compatibility: the same CI shard 4 timed out locating the untranslated `showFeatured` switch after nested Properties labels were localized. Use the VI message label; keep the persisted toggle assertion and rerun all five shards on the new head.
+- 2026-11-15 D6 SSR/i18n restack: merge D6 `509e16f7` and preserve #217 parity tests, host contrast tokens and both documentation histories. Old-head CI `43724276975` traced the no-script EN/VI timeout to `addStyleTag`; replace it with screenshot-scoped CSS and measured banner geometry without changing exact PNG parity. Exact-new-head CI and independent visual review remain required; V03/V14/full VI stay GAP.
+- 2026-11-15 D6 conflict correction: CI `43727197181` shards 1/2/3/5 found branded accent `#a94623`/`#ffb694` overwritten during CSS conflict resolution; preserve the reviewed D6 brand token values `#a44520`/`#ffb587` and rerun exact-head 5-shard evidence. This is not a threshold change.
 - 2026-11-15 V09 P1 visual evidence: #233 head `ac6e4bbf` passed all 17 checks in run `43723336640`, but its 12 paired captures were blank below the header. Repaired head `d5fc8af0` passed 17/17 in `43725358516`; independent review confirmed painted H1 in all 12 raw captures. Broader V09 (localized content/dark/accessibility/deployed parity) and V10 full signoff remain GAP pending combined-head review.
 - 2026-11-15 D6 V09/V10 UI restore browser gate: register a real builder publish/edit/version-history restore/republish journey, VI mobile 409 confirmation from a real concurrent API write, EN desktop recovery, and paired EN/VI responsive screenshots; exact-head CI and independent V09 visual review remain pending. See `docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md`.
 - 2026-11-15 V10 browser evidence: after a successful UI restore the header intentionally says “Version restored to draft · publish separately to make it public,” not the ordinary autosave “Draft saved”; assert the restore-specific status alongside the unchanged tree/version/pointer checks. Exact-head five-shard CI remains pending.
@@ -321,6 +328,13 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-15: Added no-script OS-dark first-paint host tokens and EN/VI authored nested-tree public/preview sample on real neutral/lil.p hosts; maintained exact link PNG parity and preserved all golden contracts. Full V03/V14 and VI acceptance still need separate evidence.
+
+- 2026-11-15: Staged D6 tenant-host SSR brand selection and neutral/lil.p token separation with no-script nested route and VI contact/Properties regressions; golden contracts unchanged, exact-head CI pending.
+- 2026-11-15: Aligned no-script public/preview content screenshot coordinates by hiding only preview chrome after capturing its original full-page artifact; retained strict PNG equality and added exact geometry assertion. V03/V14 and full VI remain GAP.
+- 2026-11-15: Adapted the existing all-20 builder-origin browser switch locator to the VI translated metadata label; did not alter the underlying schema field or saved-value check.
+- 2026-11-15: Merged D6 parity base `509e16f7` into the isolated SSR/i18n gate, preserving both browser registrations and docs; replaced the CI-proven no-script `addStyleTag` hang with screenshot-only CSS and exact measured geometry. No visual/pass claim before new five-shard evidence.
+- 2026-11-15: Reconciled overlapping brand CSS by retaining the base's tested light/dark lil.p token values; adding neutral SSR host selection must not silently replace the visual matrix's token contract.
 - 2026-11-15: Replaced blank-prone main-element captures with centered-heading viewport screenshots and a painted-pixel check across all 12 EN/VI public/preview captures; no runtime or contract changes.
 - 2026-11-15: Aligned the V10 browser gate with the explicit post-restore EN status while preserving real revision/CAS, restored tree and public-pointer assertions; no runtime or golden-contract change.
 - 2026-11-15: Staged the D6 builder UI version-restore browser gate and five-shard registration, with 12 EN/VI paired responsive captures. No runtime/schema or golden-contract change; exact-head CI and V09 human review remain pending.

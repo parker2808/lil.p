@@ -128,6 +128,28 @@ describe('tree route SSR', () => {
       expect(preview).toBe(published);
       expect(preview).toContain('<h1>Hello &lt;script&gt;</h1>');
       expect(preview).not.toContain('<script>');
+      expect(preview).toContain('data-brand="lilp"');
     },
   );
+
+  it('retains the neutral tenant on public and preview first paint', async () => {
+    const page = {
+      key: 'ideas',
+      seo: { title: 'Ideas', description: null, lang: 'en' as const },
+      tree,
+    };
+    vi.mocked(getPage).mockResolvedValue(page).mockResolvedValueOnce(page);
+    vi.mocked(draftMode)
+      .mockResolvedValueOnce({ isEnabled: false } as never)
+      .mockResolvedValueOnce({ isEnabled: true } as never);
+    const publicHtml = renderToStaticMarkup(
+      await BlocksPage({ pageKey: 'ideas', locale: 'en', brand: 'neutral' }),
+    );
+    const previewHtml = renderToStaticMarkup(
+      await BlocksPage({ pageKey: 'ideas', locale: 'en', brand: 'neutral' }),
+    );
+    expect(previewHtml).toBe(publicHtml);
+    expect(publicHtml).toContain('data-brand="neutral"');
+    expect(publicHtml).toContain('<h1>Hello &lt;script&gt;</h1>');
+  });
 });
