@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: Derive public-route gzip budgets from the production chunk graph on the owning feature head, count shared chunks once, and attach the exact-head graph with a named published-tree catch-all subset to CI; a green package-size cap alone does not prove the public JS boundary.
+
 - 2026-11-15: Test host-only CMS blocks through authenticated activation, revision-checked save/read and publish before EN/VI preview/public SSR; a mocked editor GET or schema-only registry count cannot catch an API boundary dropping the host registry.
 - 2026-11-15: Keep public bundle leak checks strict for actual public routes, but exclude explicitly gated browser-test fixture routes that intentionally import admin controls; retain a mandatory assertion for the production catch-all page.
 
