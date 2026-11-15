@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V12 split: pre-deploy route-template logging, request-ID fingerprinting and stack-free 500 logging now have unit tests; disposable-DB populated draft/version/preview and denied-mutation tests capture and reject content/token/PII markers in logs. Exact-head CI and independent review pending. Authorized read-only Render log audit is DEFERRED until after deploy; no operational signoff or production calls here.
+
 - D2 #243 follow-up (2026-11-16): independent review found 4.11:1/3.69:1 CTA contrast during the transition, masked by a final-palette wait. Public primary buttons now switch both palette colors atomically while preserving transform motion; frame-by-frame EN/VI route checks precede axe. Exact-head CI pending; #199 is not re-green until this stacked PR lands.
 
 - D2 #199 exact-head CI follow-up (2026-11-15): shard 5 on `8a800999` measured a transitional primary CTA text color during the public test's manual light→dark switch (4.11/3.69:1). Await every public primary button's final dark computed foreground/background before running the unchanged axe gate; exact-head CI still required. No schema/migration/production change.
@@ -273,6 +275,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Redact HTTP request logs (route template and request-ID fingerprint only), omit raw exception stacks and invalid published-block identifiers, and assert real populated CMS reads and denied mutations never log synthetic content/token/PII markers. No schema/golden changes; production log audit remains deferred.
 
 - 2026-11-16: Prevent transient sub-AA contrast during public primary CTA theme changes by transitioning transform only; sample each rendered primary CTA through light/dark frames before the unchanged final-state axe gate.
 

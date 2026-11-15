@@ -238,7 +238,7 @@ describe('PagesService', () => {
     };
 
     const service = new PagesService(prisma as never);
-    const page = await service.getPublic('home', 'vi', 'req-test');
+    const page = await service.getPublic('home', 'vi');
     expect(page.key).toBe('home');
     expect(page.blocks).toHaveLength(1);
     expect(page.blocks[0]?.type).toBe('hero');
