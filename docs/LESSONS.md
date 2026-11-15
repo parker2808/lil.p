@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: When a main probe-kit update and a builder-byte budget gate both modify check-all, keep both independent steps; read-only HTTP probes and clean CI cannot establish live instance drain or migration safety.
+
 - 2026-11-15: When rebasing D6 host-aware snapshots onto D2 CAS improvements, retain the host registry and lossless legacy parser inside the new read-committed builder restore transaction; a whole-side merge choice silently loses one guarantee.
 
 - 2026-11-15: Assert rendered VI breakpoint glyph bounds at 390 and 1440 rather than inferring fit from button widths; attach exact-head screenshots and their manifest to the Playwright artifact so reviewers can inspect empty, error and focus states.
@@ -405,3 +407,4 @@
 - 2026-11-15: A 20-type HTTP/SSR gate cannot substitute for client autosave; exercise an editor-origin change against the real server separately, and never label starter-palette coverage as all-20 Properties editing.
 - 2026-11-15: A legacy page metadata PATCH advances the D2 builder CAS revision even before activation; API journey fixtures must read the draft after PATCH and pass each returned revision to the next mutation rather than assuming a newly created page remains at revision zero.
 - 2026-11-15: A Vietnamese URL does not guarantee Vietnamese SEO when the snapshot only has English fields; seed both locale groups before asserting `lang: vi` in live-route parity tests.
+- 2026-11-15: Unauthenticated 503 checks across direct API and Vercel ingress can detect a missing HTTP write freeze, but cannot prove old writers drained or D2 columns exist; require authenticated instance inventory and an authorized read-only schema check before migration or reopening. With locale-prefixed routing, accept only the expected same-origin root redirect and probe `/en` and `/vi` explicitly.
