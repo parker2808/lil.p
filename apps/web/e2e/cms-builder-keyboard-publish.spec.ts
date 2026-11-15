@@ -121,7 +121,7 @@ for (const locale of ['en', 'vi'] as const) {
     await expect(publish).toBeEnabled();
     await history.focus();
     await expect(history).toBeFocused();
-    await page.keyboard.press('Tab');
+    await page.keyboard.press('Shift+Tab');
     await expect(publish).toBeFocused();
     const publishing = page.waitForResponse(
       (response) =>
