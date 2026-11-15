@@ -57,7 +57,9 @@ export function registerEditorHostJourney(shard: number): void {
       await expect(
         inspector.getByText(hostName, { exact: true }).and(inspector.locator('p')),
       ).toBeVisible();
-      const addHeading = inspector.getByRole('button', { name: 'Thêm tiêu đề' });
+      const addHeading = inspector.getByRole('button', {
+        name: /^(?:Thêm tiêu đề|Thêm · Tiêu đề mục)$/,
+      });
       if (await addHeading.count()) await addHeading.click();
 
       const englishValue = `Edited ${definition.type}`;
@@ -110,7 +112,15 @@ export function registerEditorHostJourney(shard: number): void {
         (node: { componentType?: string }) => node.componentType === definition.type,
       );
       expect(savedHost).toBeDefined();
-      await captureEditorHostVisuals(page, context, testInfo, key, definition.type, draft.revision);
+      await captureEditorHostVisuals(
+        page,
+        context,
+        testInfo,
+        key,
+        definition.type,
+        savedHost.id,
+        draft.revision,
+      );
       const visibleEdit = [
         'hero',
         'page-header',

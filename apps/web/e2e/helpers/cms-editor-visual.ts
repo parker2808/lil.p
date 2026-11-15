@@ -13,6 +13,7 @@ export async function captureEditorHostVisuals(
   testInfo: TestInfo,
   key: string,
   componentType: string,
+  hostId: string,
   revision: string,
 ): Promise<void> {
   const entries: Array<{
@@ -32,8 +33,11 @@ export async function captureEditorHostVisuals(
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(`/admin/builder/${key}`);
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
-    await expect(page.locator('[data-node-type="component"]')).toHaveCount(1);
-    await page.locator('[data-node-type="component"] button[data-canvas-id]').click();
+    const hostNode = page.locator(
+      `[data-node-type="component"] button[data-canvas-id="${hostId}"]`,
+    );
+    await expect(hostNode).toHaveCount(1);
+    await hostNode.click();
 
     for (const theme of ['light', 'dark'] as const) {
       await page.evaluate(
@@ -43,7 +47,7 @@ export async function captureEditorHostVisuals(
       await expect(page.locator('.cms-core')).toHaveAttribute('data-theme', theme);
       for (const width of [1440, 390] as const) {
         await page.setViewportSize({ width, height: 900 });
-        await expect(page.locator('[data-node-type="component"]')).toHaveCount(1);
+        await expect(hostNode).toHaveCount(1);
         const screenshot = await page.screenshot({ fullPage: true, animations: 'disabled' });
         const file = `${componentType}-${locale}-${theme}-${width}.png`;
         await testInfo.attach(file, { body: screenshot, contentType: 'image/png' });
