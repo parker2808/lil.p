@@ -668,3 +668,4 @@
 - 2026-11-16: A translated property field does not imply its component heading is translated; test canvas, Layers and Properties labels against host metadata and reject raw type fallbacks in Vietnamese captures.
 - 2026-11-16: D5 host-label props must be shared across D6 version-enabled shell, canvas, Layers and Properties when normal-merging; preserve both localization and publish controls, then run exact combined-head CI.
 - 2026-11-16: Test actual keyboard Tab/Shift+Tab boundaries and focus return in existing dialogs, but never claim D5 publish/restore-version dialogs or manual spoken screen-reader acceptance when that UI exists only on the integrated D6 branch.
+- 2026-11-16: An integration-only browser fixture must follow the current accessible localized label exactly; do not weaken persisted revision/publish/public checks to hide an obsolete Properties locator.

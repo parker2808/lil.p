@@ -73,7 +73,7 @@ test('V05 editor nested Properties persist one revision into EN/VI preview and p
 
   for (const locale of ['en', 'vi'] as const) {
     for (const property of ['title', 'eyebrow'] as const) {
-      const label = `${property === 'title' ? 'Title' : 'Eyebrow'} (${locale.toUpperCase()})`;
+      const label = `${property === 'title' ? 'Title' : 'Eyebrow'} · ${locale === 'en' ? 'English' : 'Vietnamese'}`;
       const field = inspector.getByRole('textbox', { name: label, exact: true });
       await expect(field).toHaveCount(1);
       await field.fill(copy[locale][property]);

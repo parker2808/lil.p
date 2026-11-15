@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #208 integration-only V05 browser fixture: localized Properties now names the English/Vietnamese fields with a middle dot, so the prior parenthesized locator fails before persistence assertions. Preserve the publish/revision/public assertions and require a new exact-head five-shard run; no release or production claim.
+
 - 2026-11-16 #208 next verification cut includes D2 `26ace408`, D5 `92fb84d4` (#263) and D6 `dd66938d` (#259). Do not inherit earlier #208 CI or source-green row scores: await new exact-head API/five-shard run and raw-artifact review. D5 dialog automation is bounded; D6 V05 revision-chain single fixture is bounded; manual spoken SR, V03/V06/V09/V10/V14 all-host/prod remain GAP. #208 DO NOT MERGE.
 
 - 2026-11-16 #208 verification-only cut integrates D2 `26ace408`, D5 `aaec9e62` and D6 `3b60df35`; 7/7 no-build gate passed after the D6 merge. Await exact combined-head API/five-shard CI and artifact review before rescoring; #256/#260 are not integrated. V03/V06/V09/V10/V14 and dialogs/manual SR remain open. DO NOT MERGE or deploy.
