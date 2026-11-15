@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: Waiting for theme transitions to settle can conceal a real WCAG contrast failure; switch paired primary CTA foreground/background atomically and sample successive rendered frames before axe instead of changing its threshold.
+
 - 2026-11-15: A screenshot immediately after manually toggling dark mode can leave button `transition-colors` midway through foreground interpolation; require the final computed button palette before axe so transient test timing cannot masquerade as a stable 4.5:1 violation.
 
 - 2026-11-15: Verify startup gates with a deferred bootstrap test, not only a middleware fixture: hold `app.init()` and the schema query separately to prove no HTTP listen precedes verification and a failed check retains the freeze.
