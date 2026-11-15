@@ -3,6 +3,7 @@
 import {
   createTreeHistory,
   DraftAutosave,
+  endTreeTyping,
   redoTreeHistory,
   undoTreeHistory,
   type AutosaveState,
@@ -236,6 +237,10 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
     [changed],
   );
 
+  const onEndTyping = useCallback(() => {
+    history.current = endTreeTyping(history.current);
+  }, []);
+
   const travel = useCallback(
     (direction: 'undo' | 'redo') => {
       const next =
@@ -409,6 +414,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
             state={state}
             locale={locale}
             onEdit={onEdit}
+            onEndTyping={onEndTyping}
             pageKey={pageKey}
             propertyDrafts={propertyDrafts}
           />
