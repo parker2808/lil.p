@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-15: A signed design/a11y review can find evidence gaps after combined-head CI passes: keep public/preview pairs, all-control hit/focus coverage, and actual screen-reader/reduced-motion checks OPEN until artifact and manual signoff are complete.
+
 - 2026-11-15: When a main probe-kit update and a builder-byte budget gate both modify check-all, keep both independent steps; read-only HTTP probes and clean CI cannot establish live instance drain or migration safety.
 
 - 2026-11-15: When rebasing D6 host-aware snapshots onto D2 CAS improvements, retain the host registry and lossless legacy parser inside the new read-committed builder restore transaction; a whole-side merge choice silently loses one guarantee.
