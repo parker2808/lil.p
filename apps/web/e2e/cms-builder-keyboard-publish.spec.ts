@@ -156,6 +156,11 @@ for (const locale of ['en', 'vi'] as const) {
     const publicPage = await page.request.get(`/api/public/pages/${key}?locale=${locale}`);
     expect(publicPage.status()).toBe(200);
     expect((await publicPage.json()).tree).toEqual(saved.tree);
+    const section = tree.getByRole('treeitem', { name: new RegExp(copy.section) });
+    await section.focus();
+    await expect(section).toBeFocused();
+    await page.keyboard.press('ArrowRight');
+    await expect(section).toHaveAttribute('aria-expanded', 'true');
     await expect(tree.getByRole('treeitem', { name: new RegExp(copy.paragraph) })).toBeVisible();
     await expect(tree.getByRole('treeitem', { name: new RegExp(copy.heading) })).toBeVisible();
     const reloadedHistory = page.getByRole('button', { name: copy.history });

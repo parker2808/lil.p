@@ -470,3 +470,5 @@
 - 2026-11-16: The builder palette creates headings at level 2 for valid editable drafts, while publication requires exactly one H1; keyboard publish evidence must set Heading level to 1 through Properties and verify the saved draft before pressing Publish.
 - 2026-11-15: For D19 whole-block localization, setting only `page-header.title.vi` leaves the block in English if its default `eyebrow.vi` is empty. A bilingual browser fixture must populate and verify every localized field with an English value before asserting a VI rendered H1.
 - 2026-11-15: Locale-specific visual evidence needs a bilingual block fixture and an assertion on painted localized text on both public and preview routes; merely switching the page locale with a shared heading string proves neither localized content nor dark-mode rendering.
+
+- 2026-11-16 V02: sau reload, Layers thu gọn Section dù draft/published tree còn nguyên; test keyboard phải mở Section bằng ArrowRight rồi mới xác nhận các node con hiện ra, không đồng nhất trạng thái UI thu gọn với mất dữ liệu.
