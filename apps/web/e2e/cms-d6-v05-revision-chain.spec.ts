@@ -146,7 +146,7 @@ test('V05 editor nested Properties persist one revision into EN/VI preview and p
           : page.getByRole('dialog', { name: properties });
       if (width !== 1440) await trigger.click();
       for (const property of ['title', 'eyebrow'] as const) {
-        const label = `${property === 'title' ? (locale === 'en' ? 'Title' : 'Tiêu đề') : locale === 'en' ? 'Eyebrow' : 'Dòng dẫn'} (${locale.toUpperCase()})`;
+        const label = `${property === 'title' ? (locale === 'en' ? 'Title' : 'Tiêu đề') : locale === 'en' ? 'Eyebrow' : 'Dòng dẫn'} · ${locale === 'en' ? 'English' : 'Tiếng Việt'}`;
         await expect(panel.getByRole('textbox', { name: label, exact: true })).toHaveValue(
           copy[locale][property],
         );
@@ -163,7 +163,7 @@ test('V05 editor nested Properties persist one revision into EN/VI preview and p
         sha256: createHash('sha256').update(inspectorImage).digest('hex'),
       });
       if (width !== 1440) {
-        const titleLabel = `${locale === 'en' ? 'Title' : 'Tiêu đề'} (${locale.toUpperCase()})`;
+        const titleLabel = locale === 'en' ? 'Title · English' : 'Tiêu đề · Tiếng Việt';
         const titleField = panel.getByRole('textbox', { name: titleLabel, exact: true });
         await titleField.scrollIntoViewIfNeeded();
         await expect(titleField).toBeInViewport();

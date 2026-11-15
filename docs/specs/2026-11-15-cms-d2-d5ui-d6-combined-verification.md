@@ -393,3 +393,7 @@ Normal merges on verification-only #208 preserve D5 #262 localized canvas/Layers
 ### Pending successor cut — D2 `26ace408`, D5 `92fb84d4`, D6 `dd66938d` (2026-11-16 ICT)
 
 Normal merges add #263 EN/VI D5 delete/compact-Properties dialog keyboard and live-status automation and #259 D6 single-fixture editor→revisioned draft→publish→public/version-preview proof. These are **bounded subsets**, not full V05 all-20/dark, D6 publish/restore dialog screenshots, or manual spoken V16 signoff. The previous cut's CI `43767558967` cannot score this successor; require its own exact-head API + five web shards and artifact provenance before revising any row. #256/#260/#264 remain separate. J09/V18/V19 remain post-deploy; #208 must not merge.
+
+### Current integration failure — `5936f75d` / `43772762149` (2026-11-16 ICT)
+
+D2 `26ace408`, D5 `f8a53d2c` and D6 `26662811` are merged only on verification branch #208. Exact-head API, unit, build and W1–W4 passed; W5 failed at `cms-d6-v05-revision-chain.spec.ts:150` on both attempts because post-reload/mobile Properties expected `Title (EN)` after D5 renamed the accessible field to `Title · English`. The adjacent scroll-to-title locator also still used the parenthesized label. Correct both locators to the localized labels without modifying revision, immutable snapshot or public/version-preview assertions. The dependent aggregate web job also failed. This run is **not** combined green; no matrix row is promoted until a fresh exact-head API + W1–W5 run and review. #208 DO NOT MERGE; Stage A HOLD.

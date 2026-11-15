@@ -645,3 +645,4 @@
 - 2026-11-16: An integration-only browser fixture must follow the current accessible localized label exactly; do not weaken persisted revision/publish/public checks to hide an obsolete Properties locator.
 - 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
 - 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
+- 2026-11-16: When a combined browser journey reopens localized Properties after reload, update both value and scroll-to-field locators for the new accessible labels; earlier successful edits do not prove the later mobile assertions.

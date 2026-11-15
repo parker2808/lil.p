@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #208 `5936f75d` / `43772762149` failed only W5: V05's post-reload/mobile textbox checks still used parenthesized language labels after D5 localization. Both assertions now use localized accessible labels, with draft revision, publish snapshot and public/preview comparisons untouched; exact-new-head CI required before rescoring.
+
 - 2026-11-16 #208 current verification cut: D2 `26ace408`, D5 `f8a53d2c`, D6 `26662811` (including #256 and main #265). The V05 locator correction preserves draft/publish/public assertions; all J/V scores require exact combined-head CI and independent evidence. V03/V14 all-host, V06 overrides, V09/V10 broader restore, V16 manual speech and Stage A live drain remain OPEN; #208 DO NOT MERGE.
 
 - 2026-11-16 #208 integration-only V05 browser fixture: localized Properties now names the English/Vietnamese fields with a middle dot, so the prior parenthesized locator fails before persistence assertions. Preserve the publish/revision/public assertions and require a new exact-head five-shard run; no release or production claim.
@@ -469,6 +471,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Corrected two integration-only V05 post-reload/mobile field locators on #208 after exact-head W5 failure `43772762149`; no runtime, API, schema, or acceptance threshold changed. Await fresh API/five-shard CI; no main merge or deploy.
 - 2026-11-16: Normal-merged D5 `92fb84d4` automated dialog coverage and D6 `dd66938d` V05 revision-chain browser evidence into verification-only #208; no main merge or deploy.
 - 2026-11-16: Normal-merged D6 `3b60df35` (#261 dark banner, #258 restored UI) into verification-only #208 after D5 `aaec9e62` and D2 `26ace408`; preserved both histories and reran 7/7 no-build gates. Exact-head CI still required.
 - 2026-11-16: Extended registered D5 V16 browser coverage for real EN/VI dialog keyboard focus boundaries, return, and live announcements; documented disabled publishing and remaining integrated/manual scope in `docs/specs/2026-11-15-cms-d5-v16-automated-a11y.md`.
