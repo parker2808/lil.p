@@ -242,6 +242,8 @@ Core owns semantic headings in D3: a host `components.heading` override fails wi
 
 The all-20 D6 live route gate passes on disposable MySQL in both locales; the complete locked `check:all --e2e` passes 13/13 after one unrelated admin-scroll exact-pixel variance on the first run. D4/D5 editor integration and reload safety still require their own release evidence.
 
+The [V09/V10 restored-version browser gate](./docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md) adds paired EN/VI light/dark mobile/tablet/desktop public and version-preview captures, content axe results and a keyboard-operated, localized 409/no-write confirmation. CI and independent review must pass before crediting these specific restore tuples; this does not prove the all-20 restore matrix or production parity.
+
 The [partial D6 live-route manifest](./docs/specs/2026-11-14-cms-d6-live-route-evidence.md) separates verified route behavior from blocked editor, visual and migration release gates.
 
 The D6 all-20 browser spec runs last on an existing web E2E shard; adding it does not reshuffle earlier tests or contaminate visual baselines with newly published test pages. A throwaway D4+D5+D6 scratch merge passes non-browser checks (8/8), the all-20 live route case (1/1) and focused editor autosave/reload, navigation-failure guard and restore cases (3/3) on disposable MySQL. Full J01–J09, all-20 editor interaction, visual/a11y and migration release gates remain blocked in the D6 evidence manifest.
