@@ -3,13 +3,10 @@ import { join, resolve } from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-const migrations = resolve(import.meta.dirname, '../../../prisma/migrations');
+const migrations = resolve(__dirname, '../../../prisma/migrations');
 const historicalMigration = '20261027150000_portfolio_content';
 const sql = readFileSync(join(migrations, historicalMigration, 'migration.sql'), 'utf8');
-const seed = readFileSync(
-  resolve(import.meta.dirname, '../../../prisma/seed/data/pages.data.ts'),
-  'utf8',
-);
+const seed = readFileSync(resolve(__dirname, '../../../prisma/seed/data/pages.data.ts'), 'utf8');
 
 describe('V17 pre-D2 tracked raw page inventory (not a production DB inventory)', () => {
   it('accounts for every migration that seeds page rows, blocks or versions', () => {
@@ -26,7 +23,7 @@ describe('V17 pre-D2 tracked raw page inventory (not a production DB inventory)'
     expect(snapshots).toHaveLength(5);
     let blockCount = 0;
     for (const [, literal] of snapshots) {
-      const raw = JSON.parse(literal.replaceAll("''", "'")) as {
+      const raw = JSON.parse(literal!.replaceAll("''", "'")) as {
         seo: Record<string, unknown>;
         blocks: Array<Record<string, unknown>>;
       };
