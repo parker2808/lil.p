@@ -246,6 +246,7 @@ test('active builder supports a keyboard-only nested edit, history and focus jou
 }) => {
   await signIn(page);
   const { key } = await createActivePage(page, 'en');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await mkdir(directory, { recursive: true });
   const palette = page.getByRole('complementary', { name: 'Components' });
   for (const name of ['Section', 'Columns', 'Heading']) {

@@ -118,7 +118,7 @@ test('J03/V02/V07: keyboard nesting, invalid drop, delete rejection and undo/red
       'heading',
   );
   const before = await readDraft(page, key);
-  await heading.dragTo(page.locator('[data-node-type="page"]'));
+  await heading.dragTo(tree.locator('[data-tree-id="page"]'));
   await expect(page.getByRole('status')).toContainText('does not accept');
   expect(await readDraft(page, key)).toEqual(before);
   await tree.getByRole('treeitem', { name: /^Columns / }).focus();
@@ -202,19 +202,28 @@ test('J05/V06/V08: responsive edits, divergent 409 and offline recovery retain t
   await expect(page.getByText('Offline · your edits are kept locally')).toBeVisible();
   await expect(page.locator('[data-node-type="component"]')).toHaveCount(2);
   await context.setOffline(false);
-  await page.getByRole('button', { name: 'Retry' }).first().click();
-  await savedWith(
-    page,
-    key,
-    (draft) =>
-      draft.tree.root.sections[0]?.content.some(
-        (item) =>
-          item.componentType === 'divider' ||
-          item.columns?.some((column) =>
-            column.content.some((component) => component.componentType === 'divider'),
-          ),
-      ) ?? false,
-  );
+  await expect
+    .poll(
+      async () => {
+        const retry = page.getByRole('button', { name: 'Retry', exact: true }).first();
+        if (await retry.isVisible()) await retry.click();
+        const draft = await readDraft(page, key);
+        return (
+          draft.tree.root.sections[0]?.content.some(
+            (item) =>
+              item.componentType === 'divider' ||
+              item.columns?.some((column) =>
+                column.content.some((component) => component.componentType === 'divider'),
+              ),
+          ) ?? false
+        );
+      },
+      { timeout: 30_000 },
+    )
+    .toBe(true);
+  await expect(page.getByText('Draft saved')).toBeVisible();
+  await page.reload();
+  await expect(page.locator('[data-node-type="component"]')).toHaveCount(2);
 });
 
 test('V13/V15 subsets: real draft chrome is localized, keyboard reachable and accessible at 390/1440', async ({
