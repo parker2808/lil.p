@@ -62,6 +62,8 @@ The [D2 persistence checklist](./docs/specs/2026-11-11-cms-d2-persistence-design
 
 The [C1 extraction readiness refresh](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-readiness-refresh-at-d-base-3bbd1b2-2026-11-11-local-only) isolates the D-base package in a disposable local copy: standalone unit/build/types/lint and tarball exports pass after package-local config and measurement adjustments. The pack excludes host assets; the root `.` export is absent and its need remains undecided. Final D2–D6 history, browser theme and hosted distribution remain unverified. Parker approved a future private, `UNLICENSED` repository only after verification and merges; none has been created.
 
+The later #208 C1 tarball rehearsal checks the neutral fixture's client/server directives against the installed `./react` export, so the same assertions work for workspace and packed consumers. This is not final-main extraction or hosted-distribution approval.
+
 ## Stack
 
 | Layer     | What runs                                                                                                                                                                 |

@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { readdirSync, readFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 
 import { createRegistry, isBlockAllowedOnPage } from '@parker2808/cms-core/contracts';
 import {
@@ -37,7 +37,7 @@ describe('standalone built-package consumer', () => {
       expect(require(`@parker2808/cms-core/${entry}`)).toBeTruthy();
     }
     expect(typeof renderBlocks).toBe('function');
-    const core = join(import.meta.dirname, '../../../packages/cms-core/dist');
+    const core = dirname(require.resolve('@parker2808/cms-core/react'));
     for (const extension of ['js', 'cjs']) {
       expect(readFileSync(join(core, `react.${extension}`), 'utf8')).toMatch(
         /^['"]use client['"];?/,
