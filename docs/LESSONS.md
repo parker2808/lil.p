@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A Next route can nest its `.public-notes` wrapper inside the site shell's `main#content`; inspect the actual component tree before adding a loaded-content selector, then wait for a visible H1 as well as the absence of the route skeleton.
+
 - 2026-11-16: A successful metadata assertion can accompany an all-skeleton route screenshot when streamed content is pending; wait for a visible content heading before capture. A builder header can fit button boxes but clip their text at intermediate widths; require non-overlapping, fully contained controls and untruncated labels in browser evidence.
 
 - 2026-11-16: An admin builder can render its entire accessible UI yet return HTTP 404 when the proxy omits its section from the route allowlist; assert response status as well as the visible region, and preserve the unknown-section 404 contract.

@@ -73,7 +73,7 @@ test('EN/VI public and draft route metadata, fallback and capture inventory', as
         );
         if (route === '/notes') {
           await expect(page.locator('.public-route-skeleton')).toHaveCount(0);
-          const notes = page.locator('.public-notes main');
+          const notes = page.locator('main#content .public-notes');
           await expect(notes).toBeVisible();
           await expect(notes.getByRole('heading', { level: 1 })).toBeVisible();
         }
