@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V13 final pre-deploy evidence: extend the existing EN/VI route matrix to the admin index and all five built-in page editors with exact localized titles, visible actions and capture inventory. Complementary historical metadata and editor empty/error/conflict gates already exist; exact-head CI and independent raw-image review are pending. Manual screen-reader inspection belongs to V16 and production parity to the post-deploy worksheet; do not infer either from this gate.
+
 - 2026-11-16 V13 route/state matrix: registered EN/VI public/draft five-route metadata plus localized public/admin 404 and admin editor/builder captures with a 30-image CI inventory. Runs `43796922246` and `43799733836` exposed missing descriptions and identical seeded EN/VI home titles; `43803678290` found the builder proxy's missing allowlist entry. Exact-head `43805811458` passed 17/17, but independent review of artifact `14199056215` found a notes skeleton capture and overlapping builder action labels. Wait for real notes content and wrap the builder actions; gate both with browser assertions. After merging D6 `1f8fcf09`, new five-shard CI and raw-image review remain required. Manual accessibility, production parity and exhaustive conflict/error states remain GAP. See `docs/specs/2026-11-16-cms-d6-v13-route-matrix.md`.
 
 - 2026-11-16 V05 all-20 follow-up: extend the four existing editor-origin shard groups with exact saved-revision/snapshot equality and EN/VI × light/dark × 390/768/1440 public/version-preview captures for each host. Require viewport-visible painted host content (including real CV media), exact-head five-shard CI and independent raw-image review; invalid-property states and production remain separate gaps. See `docs/specs/2026-11-16-cms-d6-v05-revision-chain.md`.
@@ -425,6 +427,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Complete V13 pre-deploy admin page route/locale inventory for the index and five built-in editors, keeping existing public/preview, builder and missing assertions and separate editor-state and historical-preview suites intact.
 
 - 2026-11-16: Merge D6 V05 all-20 evidence into the V13 branch, retain both histories, and repair the V13 notes screenshot timing and builder action overflow found by independent raw-image review; require new exact-head CI and image review.
 

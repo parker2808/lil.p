@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A five-route public locale inventory does not cover matching admin page editors: assert every built-in editor's exact locale-dependent SSR title and a visible action before attaching EN/VI screenshots; cross-reference existing empty/error/conflict and historical preview suites instead of duplicating them.
+
 - 2026-11-16: A Next route can nest its `.public-notes` wrapper inside the site shell's `main#content`; inspect the actual component tree before adding a loaded-content selector, then wait for a visible H1 as well as the absence of the route skeleton.
 
 - 2026-11-16: A successful metadata assertion can accompany an all-skeleton route screenshot when streamed content is pending; wait for a visible content heading before capture. A builder header can fit button boxes but clip their text at intermediate widths; require non-overlapping, fully contained controls and untruncated labels in browser evidence.

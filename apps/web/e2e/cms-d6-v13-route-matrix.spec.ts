@@ -116,7 +116,7 @@ test('EN/VI admin page, builder help and missing-state metadata inventory', asyn
   page,
   context,
 }, testInfo) => {
-  test.setTimeout(120_000);
+  test.setTimeout(180_000);
   await signIn(page);
   const origin = new URL(page.url()).origin;
   const key = `v13-matrix-${Date.now()}-${testInfo.retry}`;
@@ -128,9 +128,32 @@ test('EN/VI admin page, builder help and missing-state metadata inventory', asyn
   const entries: Entry[] = [];
   for (const locale of ['en', 'vi'] as const) {
     await context.addCookies([{ name: 'NEXT_LOCALE', value: locale, url: origin }]);
-    for (const route of ['/admin/pages/home', '/admin/pages/about']) {
+    const pageNames =
+      locale === 'en'
+        ? { home: 'Home', about: 'About', contact: 'Contact', projects: 'Projects', notes: 'Notes' }
+        : {
+            home: 'Trang chủ',
+            about: 'Giới thiệu',
+            contact: 'Liên hệ',
+            projects: 'Dự án',
+            notes: 'Ghi chú',
+          };
+    await page.goto('/admin/pages');
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(
+      locale === 'en' ? 'Pages' : 'Trang',
+    );
+    await expect(page).toHaveTitle(locale === 'en' ? 'Pages · Admin' : 'Trang · Quản trị');
+    await capture(page, testInfo, entries, locale, 'admin', '/admin/pages');
+    for (const [key, name] of Object.entries(pageNames)) {
+      const route = `/admin/pages/${key}`;
       const response = await page.goto(route);
       expect(response?.status(), route).toBe(200);
+      await expect(page).toHaveTitle(
+        locale === 'en' ? `Edit ${name} page · Admin` : `Chỉnh sửa trang ${name} · Quản trị`,
+      );
+      await expect(
+        page.getByRole('link', { name: locale === 'en' ? 'Open page' : 'Mở trang' }),
+      ).toBeVisible();
       await capture(page, testInfo, entries, locale, 'admin', route);
     }
     const builder = `/admin/builder/${key}`;
@@ -188,9 +211,9 @@ test('EN/VI admin page, builder help and missing-state metadata inventory', asyn
     ).toHaveAttribute('href', '/admin');
     await capture(page, testInfo, entries, locale, 'admin-missing', missing);
   }
-  expect(entries).toHaveLength(8);
-  for (let index = 0; index < 2; index++) {
-    expect(entries[index]!.title).not.toBe(entries[index + 4]!.title);
+  expect(entries).toHaveLength(16);
+  for (let index = 0; index < 6; index++) {
+    expect(entries[index]!.title).not.toBe(entries[index + 8]!.title);
   }
   await inventory(testInfo, entries);
 });
