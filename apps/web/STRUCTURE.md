@@ -20,6 +20,8 @@ components.json           # shadcn: points at packages/ui
 
 Content (every visible string about Parker or the site) comes from the API. Shared visual components live in `packages/ui`, and request/response types come from `@portfolio/contracts`.
 
+Goal B's opt-in `blocks/services/pages.service.ts` CMS Page reader is server-only and published-only; `CMS_PAGE_READ_SOURCE` defaults to `legacy`. It validates a versioned Page envelope and uses `cms:page:<key>:<locale>` tags. The separate `app/api/cms/revalidate/route.ts` verifies raw-body HMAC before expiring both locale tags/paths. Draft/preview and all non-Page services stay on the legacy API; production rollout is blocked pending the durable replay and last-good gates in the [spec](../../docs/specs/2026-11-16-cms-public-reader.md).
+
 ## Module layout
 
 ```text

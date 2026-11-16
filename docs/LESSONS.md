@@ -722,3 +722,4 @@
 - 2026-11-16: Coordinator production logs report main `b0de5340` LIVE with the `Page.draftTree` migration applied at 17:05:43 ICT; an unauthenticated admin POST returning 401 rather than freeze 503 signals only that this request was not frozen, not that authenticated writes are accepted.
 - 2026-11-16: A legacy published snapshot can contain unvalidated block type, key and props; public-read warning logs must use a fixed message rather than interpolate dropped-block details or request context.
 - 2026-11-16: Splitting an admin UI alone does not isolate CMS data; require a separate database/credential boundary and a reviewed read-only export plus forward-only cutover before retiring the original CMS writer.
+- 2026-11-16: A signed publish webhook cannot guarantee cross-instance replay safety using a process-local map; keep the new Page reader default-off and require durable atomic delivery/version state and cold-instance last-good before production cutover.
