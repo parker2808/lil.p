@@ -33,14 +33,17 @@ provides an additional release-owner checklist. Neither it nor the public
 probe substitutes for the complete pre-/post-deploy Render instance roster.
 
 This is a **forward-only** exception to ordinary rolling deploys. The required
-release order is **#210 Stage A freeze and old-instance drain → separately
-approved #199 D2 migration/startup verification (automatic reopen after check)
-→ authenticated write verification → #204 → #202**.
-Review/merge of each PR is a separate decision from its production deploy;
-neither a green PR nor merging to `main` authorizes the next step. Do not deploy
-an API image predating Stage A after D2 migrates. Approval to merge a PR is not
-approval to deploy or migrate; obtain separate release-owner authorization.
-Keep auto-deploy disabled and pin reviewed image commits throughout.
+release order is **#210 Stage A freeze and old-instance drain → #199 D2 migration
+and verification → D2-aware reopen and verification → #202**. The existing
+forward-only rollout approval covers this sequence; the merge chain and
+coordinator advance only when the preceding stage is verified. Do not deploy
+an API image predating Stage A after D2 migrates. Keep Render auto-deploy ON:
+merging #210 and #199 to `main` triggers their API deploys. Keep `main` quiet
+until reopen: any other `apps/api/**` or `packages/contracts/**` merge in this
+window could also deploy. Review the exact commit and instance roster at each
+stage before merging the next.
+The verification-only #208 branch is not deployment authorization; record
+each gate's evidence and keep the reviewed image commits pinned.
 
 1. Before Stage A, inventory every Render API instance ID and commit using the
    authenticated Render instance inventory and startup logs. Confirm the Stage A
@@ -74,36 +77,28 @@ Keep auto-deploy disabled and pin reviewed image commits throughout.
    identity signal. If inventory, identity or ingress mapping is missing, **do
    not migrate**. Repeat the public probe after drain. Never rely on health,
    elapsed time or a Render “Live” label alone.
-4. **Before** a separately approved #199 rollout, verify every Stage A instance
-   and its in-flight requests have drained. Do not rely on Render's rolling
-   replacement or an automatic deploy for this gate. Deploy the reviewed
-   **D2-aware image containing the Stage A guard** only after drain evidence is
-   recorded. Its startup runs `prisma migrate deploy`; before `listen`, each
-   instance checks the applied migration history and both page columns.
-   With `CMS_PAGE_WRITE_FREEZE` unset or any value other than `1`, writes open
-   automatically when that check succeeds. `CMS_PAGE_WRITE_FREEZE=1` explicitly
-   keeps writes frozen; a failed check freezes regardless of configuration.
-   No Render/Vercel env change is needed or assumed for reopening. If `=1` is
-   already set, changing it would require a separate authorized Render deploy;
-   do not silently treat this runbook as approval to change it. Check migration
-   logs and `/api/health` `{status:"ok",db:"ok"}` via both ingresses. Health
-   does **not** prove D2 schema: use authorized read-only DB metadata for both
-   columns and migration history. Do not add a public schema endpoint.
-5. Confirm new instance identity and both ingresses, then perform a
+4. After the full old-instance drain and 503/200 probes pass, merge #199 to
+   deploy the reviewed **D2-aware image containing the Stage A guard**. Its
+   startup runs `prisma migrate deploy` while all earlier instances remain frozen. Check migration logs,
+   `/api/health` returning `{status:"ok",db:"ok"}` via both ingresses, and
+   rerun the probe. Health does **not** prove D2 schema: the release owner must
+   use an authorized, read-only DB metadata query for columns `page.draftTree`
+   and `page.draftTreeRevision` plus the Prisma migration history. Do not add a
+   public schema endpoint or publish data. Keep freeze on until every Stage A
+   instance has drained and the D2 migration/data gates pass.
+5. Reopen writes through the reviewed D2-aware unfreeze release after the
+   migration/data and instance gates pass:
+   verify that every instance runs that reviewed commit, then perform a
    controlled authenticated save/restore/publish/activation CAS check on an
    approved disposable record through both ingresses, followed by an authorized
    read-back; verify expected stale-revision rejection and no unintended
    published change. Never use this unauthenticated probe as a reopen test.
-   If any gate fails, **stop and roll forward**, never redeploy a pre-D2
-   writer. The explicit `=1` kill-switch requires authorized Render access and
-   a deployment; nobody should claim it was applied without that evidence.
-   No seed, manual SQL, script or background page writer may bypass the gate.
-   The unauthenticated freeze probe cannot prove reopened writes.
-6. Only after the CAS/data gates are signed off, consider #204 and
-   then #202 in that order, with each reviewed final head and independent
-   merge/deploy approval. Keep Render auto-deploy disabled while ordering the
-   releases; a merge is not a drain, migration verification or permission to
-   reopen writes.
+   If any gate fails, **hold freeze and roll forward**, never redeploy a pre-D2
+   writer. No seed, manual SQL, script or background page writer may bypass the
+   freeze during this window.
+6. Only after the reopen and CAS/data gates are signed off, proceed with #202
+   on its reviewed final head. Do not merge another API-bearing change during
+   the freeze; a merge is not a drain or migration verification.
 
 ## Rollback
 

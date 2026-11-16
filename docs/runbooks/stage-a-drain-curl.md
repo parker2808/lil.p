@@ -1,8 +1,13 @@
 # Stage A curl and instance-drain checklist (release owner only)
 
-**Prepared only; do not run against production without separate deployment and
-verification approval.** This checklist sends unauthenticated requests with an
-invalid body, nonexistent page key and invalid numeric IDs. It must not send
+Parker's **forward-only rollout approval (“OK”, 2026-11-15 08:54 ICT)** covers
+the ordered #210 freeze/deploy, post-freeze probes and drain, #199 migration,
+D2 verification, D2-aware reopen and verification, then #202. The merge chain
+(1125a5b3) and coordinator execute each stage only after the preceding gate
+passes; no additional approval is required for these steps. **Do not send
+mutation probes until the Stage A freeze is live.** This checklist sends
+unauthenticated requests with an invalid body, nonexistent page key and invalid
+numeric IDs. It must not send
 cookies, bearer tokens, real page keys or personal data. A successful HTTP
 probe is **not** proof that all old instances have drained; a Render “Live”
 deploy or repeated 503 responses is not proof either.
@@ -22,9 +27,11 @@ the connector, without publishing credentials or raw responses):
 
 1. `GET /v1/services/{serviceId}`: confirm workspace, region, branch, build
    filter, auto-deploy setting, Docker configuration and configured instance
-   count. **Disable auto-deploy by separately approved action before any Stage A
-   merge**: the currently configured build filter includes `apps/api/**`, so a
-   code-bearing #210 merge can otherwise deploy before the drain inventory.
+   count. **Keep Render auto-deploy ON**: merging #210 and #199 to `main` with
+   `apps/api/**` changes triggers their deploys. Complete the pre-merge
+   inventory before #210 and verify each stage before merging the next. Keep
+   `main` quiet until reopen: another `apps/api/**` or `packages/contracts/**`
+   merge during this window could also deploy an API image.
 2. `GET /v1/services/{serviceId}/deploys` (follow every pagination cursor),
    then `GET /v1/services/{serviceId}/deploys/{deployId}` for the live and
    adjacent deploys: record commit, status, timestamps and prior deactivation.
@@ -42,8 +49,8 @@ The coordinator's read-only observation at 12:48 ICT, 2026-11-16 found the
 direct Render API health endpoint at HTTP 200, with one instance configured
 and the prior deploy still live. This is **not** a pre/post Stage A instance
 inventory, a drain proof, or permission to send writes. The approved direct
-origin stays in the coordinator's private worksheet; after the separately
-authorized #210 deploy, supply it as `--render-url` to
+origin stays in the coordinator's private worksheet; after the #210 merge has
+deployed the live freeze, supply it as `--render-url` to
 `scripts/probe-stage-a-d2.mjs` for the direct leg alongside Vercel `/api`.
 
 ```sh
@@ -64,7 +71,7 @@ only a redacted summary.
 
 | Evidence point      | Release-owner record (private)                                                                                                                                                                                              | STOP if                                                                                                                             |
 | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| Before Stage A      | Capture time, service/deploy IDs, approved image SHA, complete active instance-ID set **B** and ingress mapping. Check other page writers/jobs and Render startup/pre-deploy commands.                                      | Missing instance/commit association, unknown writer or ingress, or auto-deploy still enabled.                                       |
+| Before Stage A      | Capture time, service/deploy IDs, reviewed image SHA, complete active instance-ID set **B** and ingress mapping. Check other page writers/jobs and Render startup/pre-deploy commands.                                      | Missing instance/commit association, unknown writer or ingress, or another API-bearing merge to `main` during the rollout.          |
 | After Stage A       | Capture time, Stage A deploy ID/SHA, complete active instance-ID set **A**, each image identity and shutdown/in-flight completion events for every ID in **B**.                                                             | `B ∩ A` is nonempty, any instance is not Stage A, shutdown/in-flight state is unknown or roster completeness cannot be established. |
 | Before D2 migration | Confirm reviewed D2 image **retains the freeze**; inventory every writer, scheduled job, one-off command and startup/pre-deploy hook. The tracked Docker entrypoint runs `prisma migrate deploy` **before** the API starts. | An old unfrozen writer survives, migration might run before drain, or an unaccounted job can write pages. Do not deploy D2.         |
 | Vercel `/api`       | Record active production deployment/commit and verify `/api/:path*` rewrite points at the approved Render service.                                                                                                          | Alias/deployment or rewrite target differs, or another API ingress is unaccounted for.                                              |
@@ -87,9 +94,9 @@ Stage A stays **HOLD**.
 
 ## Before the Stage A deploy
 
-1. Pin the approved pre-D2 Stage A image commit and confirm it includes the
-   write-freeze middleware but **no D2 migration**. The release owner must
-   separately authorize the deploy and keep auto-deploy disabled.
+1. Pin the reviewed pre-D2 Stage A image commit and confirm it includes the
+   write-freeze middleware but **no D2 migration**. Keep auto-deploy on;
+   merge #210 to `main` only after the pre-merge inventory is complete.
 2. In the authenticated Render service view, record the **complete set** of
    active API instance IDs and their image commits before deploying. Also
    record the service ID, deploy ID and capture time, without copying session
@@ -174,16 +181,16 @@ read-availability checks here.
    timestamp, approved SHA, deploy ID, **redacted** before/after instance-ID
    comparison and 33/33 HTTP result in the release owner's private evidence
    channel. If any observation is incomplete, **do not deploy D2**. This
-   checklist is preparation, not a production drain attestation or migration
-   approval; keep the freeze and use the forward-only sequence in the
+   checklist is preparation, not a production drain attestation; keep the freeze
+   and use the forward-only sequence in the
    [Stage A spec](../specs/2026-11-15-cms-pre-d2-write-freeze.md).
 
-## Reopen and failure path (separate approval)
+## Reopen and failure path
 
-After independently authorized D2 migration/data checks, keep writes frozen
-until the full roster contains only the reviewed D2-aware image and the release
-owner explicitly approves a D2-aware reopen. Then perform controlled,
-authenticated save/restore/publish/activation CAS verification on an approved
+After the D2 migration/data checks pass, keep writes frozen until the full
+roster contains only the reviewed D2-aware image. The merge chain then deploys
+the D2-aware reopen and performs controlled, authenticated
+save/restore/publish/activation CAS verification on an approved
 disposable record via **both** Render and Vercel ingress, with read-back; the
 unauthenticated sentinel probes above are **not** a reopen test. On any missing
 evidence or failed gate, **do not reopen**: retain the freeze and roll forward

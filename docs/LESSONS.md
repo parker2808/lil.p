@@ -1,6 +1,7 @@
 # Lessons
 
-- 2026-11-16: A configured single Render instance and one successful direct health GET cannot prove fleet drain; capture complete pre/post instance rosters through the authorized API and disable matching auto-deploy before merging a code-bearing freeze branch.
+- 2026-11-16: A configured single Render instance and one successful direct health GET cannot prove fleet drain; capture complete pre/post instance rosters through the authorized API before merging a code-bearing freeze branch. Keep Render auto-deploy on for the staged merges and keep other API-bearing merges off `main` until reopen.
+- 2026-11-16: An already approved forward-only rollout does not need new approval at every probe or reopen; gate each automatic deploy and next merge on the preceding stage's verified 503/200, complete old-instance drain, and migration evidence.
 - 2026-11-16: A green source-branch all-host image manifest is not combined-head evidence; carry its reviewed source/tested-merge provenance into the verification cut and recheck exact-head shard artifacts before changing a matrix row.
 
 - 2026-11-16: A props hash and registry count do not prove that each host painted: require viewport-intersecting bounds and visible text inside the host, crop the actual host for the PNG, and provide real disposable media for data-dependent CV before claiming all-20 visual coverage.
