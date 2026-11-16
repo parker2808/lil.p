@@ -60,8 +60,8 @@ public/preview screenshots and WCAG axe per tuple. The visual matrix selects
 neutral on the hydrated host DOM; the separate SSR gate selects the real
 neutral host before first paint. Exact-head CI
 and independent visual review remain required before V03/V14 can pass.
-The matrix checks the seeded CV empty state with labeled host-context images
-rather than pretending an invisible CV wrapper is rendered. Education writes invalidate
+The matrix gives the CV host a disposable EN/VI resume and captures its visible
+localized link and component (not the previously empty host context). Education writes invalidate
 the public read cache before returning so published and preview hosts see the
 same collection. Captures exclude fixed site chrome, not block content.
 The notes browser host retains lazy client loading with a data-backed SSR

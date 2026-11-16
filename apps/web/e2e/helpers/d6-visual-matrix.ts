@@ -1,5 +1,5 @@
 import AxeBuilder from '@axe-core/playwright';
-import { BLOCK_REGISTRY } from '@portfolio/contracts';
+import { BLOCK_REGISTRY, MARKDOWN_IMAGE_PREFIX } from '@portfolio/contracts';
 import { expect, test, type Page, type TestInfo } from '@playwright/test';
 
 import { signIn } from './auth';
@@ -94,96 +94,157 @@ export function registerVisualMatrix(group: number) {
             ],
           },
         };
-        const created = await page.request.post('/api/admin/pages', {
-          headers,
-          data: { key: pageKey, title: `Visual group ${group}`, locale: 'en', template: 'empty' },
-        });
-        expect(created.status(), await created.text()).toBe(201);
-        const activated = await page.request.post(`/api/admin/pages/${pageKey}/builder/activate`, {
-          headers,
-          data: { expectedRevision: '0', tree },
-        });
-        expect(activated.status(), await activated.text()).toBe(200);
-        const published = await page.request.post(`/api/admin/pages/${pageKey}/builder/publish`, {
-          headers,
-          data: { expectedRevision: '1' },
-        });
-        expect(published.status(), await published.text()).toBe(200);
+        const savedProfile = blocks.some(({ type }) => type === 'cv-download')
+          ? await page.request.get('/api/admin/profile')
+          : null;
+        let uploadedMediaId: number | undefined;
+        let resumeFileName: string | undefined;
+        try {
+          if (savedProfile) {
+            expect(savedProfile.status()).toBe(200);
+            const uploaded = await page.request.post('/api/admin/media', {
+              headers,
+              multipart: {
+                file: {
+                  name: 'e2e-resume.pdf',
+                  mimeType: 'application/pdf',
+                  buffer: Buffer.from('%PDF-1.4\n1 0 obj<</Type/Catalog>>endobj\n%%EOF\n'),
+                },
+              },
+            });
+            expect(uploaded.status(), await uploaded.text()).toBe(201);
+            const media = (await uploaded.json()) as { id: number; fileName: string };
+            uploadedMediaId = media.id;
+            resumeFileName = media.fileName;
+            expect(resumeFileName).toBeTruthy();
+            const updated = await page.request.patch('/api/admin/profile', {
+              headers,
+              data: { resumeEnId: uploadedMediaId, resumeViId: uploadedMediaId },
+            });
+            expect(updated.status(), await updated.text()).toBe(200);
+          }
+          const created = await page.request.post('/api/admin/pages', {
+            headers,
+            data: { key: pageKey, title: `Visual group ${group}`, locale: 'en', template: 'empty' },
+          });
+          expect(created.status(), await created.text()).toBe(201);
+          const activated = await page.request.post(
+            `/api/admin/pages/${pageKey}/builder/activate`,
+            {
+              headers,
+              data: { expectedRevision: '0', tree },
+            },
+          );
+          expect(activated.status(), await activated.text()).toBe(200);
+          const published = await page.request.post(`/api/admin/pages/${pageKey}/builder/publish`, {
+            headers,
+            data: { expectedRevision: '1' },
+          });
+          expect(published.status(), await published.text()).toBe(200);
 
-        const manifest: Array<{
-          locale: string;
-          theme: string;
-          brand: string;
-          width: number;
-          types: string[];
-        }> = [];
-        const neutralHeroImages = new Map<number, Buffer>();
-        const path = `/${locale}/${pageKey}`;
-        const publicData = await page.request.get(`/api/public/pages/${pageKey}?locale=${locale}`);
-        const previewData = await page.request.get(
-          `/api/admin/preview/pages/${pageKey}?locale=${locale}&version=1`,
-        );
-        expect(publicData.status()).toBe(200);
-        expect(previewData.status()).toBe(200);
-        expect(await previewData.json()).toEqual({
-          ...(await publicData.json()),
-          invalidBlocks: [],
-        });
+          const manifest: Array<{
+            locale: string;
+            theme: string;
+            brand: string;
+            width: number;
+            types: string[];
+          }> = [];
+          const neutralHeroImages = new Map<number, Buffer>();
+          const path = `/${locale}/${pageKey}`;
+          const publicData = await page.request.get(
+            `/api/public/pages/${pageKey}?locale=${locale}`,
+          );
+          const previewData = await page.request.get(
+            `/api/admin/preview/pages/${pageKey}?locale=${locale}&version=1`,
+          );
+          expect(publicData.status()).toBe(200);
+          expect(previewData.status()).toBe(200);
+          expect(await previewData.json()).toEqual({
+            ...(await publicData.json()),
+            invalidBlocks: [],
+          });
 
-        await page.goto(path);
-        await page.evaluate((value) => localStorage.setItem('theme', value), theme);
-        for (const brand of brands) {
-          for (const width of widths) {
-            await page.setViewportSize({ width, height: 900 });
-            const label = `${locale}-${theme}-${brand}-${width}-group${group}`;
-            const publicCapture = await capture(page, path, theme, brand, blocks, label, testInfo);
-            if (group === 0) {
-              const heroImage = publicCapture.images.get('hero')!;
-              if (brand === 'neutral') {
-                neutralHeroImages.set(width, heroImage);
-              } else {
-                const neutralImage = neutralHeroImages.get(width)!;
-                const difference = await imageDifference(page, neutralImage, heroImage);
-                expect(
-                  difference.differingPixels,
-                  `${label} painted neutral/brand hero`,
-                ).toBeGreaterThan(0);
-              }
-            }
-            await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
-            const previewCapture = await capture(
-              page,
-              `${path}?v=1`,
-              theme,
-              brand,
-              blocks,
-              label,
-              testInfo,
-              publicCapture,
-            );
-            expect(previewCapture.blocks, `${label} public/preview DOM semantics`).toEqual(
-              publicCapture.blocks,
-            );
-            for (const definition of blocks) {
-              const difference = await imageDifference(
+          await page.goto(path);
+          await page.evaluate((value) => localStorage.setItem('theme', value), theme);
+          for (const brand of brands) {
+            for (const width of widths) {
+              await page.setViewportSize({ width, height: 900 });
+              const label = `${locale}-${theme}-${brand}-${width}-group${group}`;
+              const publicCapture = await capture(
                 page,
-                publicCapture.images.get(definition.type)!,
-                previewCapture.images.get(definition.type)!,
+                path,
+                theme,
+                brand,
+                blocks,
+                label,
+                testInfo,
+                undefined,
+                resumeFileName,
               );
-              expect(
-                difference.differingPixels / difference.totalPixels,
-                `${label}/${definition.type} public/preview pixels`,
-              ).toBeLessThanOrEqual(0.005);
+              if (group === 0) {
+                const heroImage = publicCapture.images.get('hero')!;
+                if (brand === 'neutral') {
+                  neutralHeroImages.set(width, heroImage);
+                } else {
+                  const neutralImage = neutralHeroImages.get(width)!;
+                  const difference = await imageDifference(page, neutralImage, heroImage);
+                  expect(
+                    difference.differingPixels,
+                    `${label} painted neutral/brand hero`,
+                  ).toBeGreaterThan(0);
+                }
+              }
+              await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
+              const previewCapture = await capture(
+                page,
+                `${path}?v=1`,
+                theme,
+                brand,
+                blocks,
+                label,
+                testInfo,
+                publicCapture,
+                resumeFileName,
+              );
+              expect(previewCapture.blocks, `${label} public/preview DOM semantics`).toEqual(
+                publicCapture.blocks,
+              );
+              for (const definition of blocks) {
+                const difference = await imageDifference(
+                  page,
+                  publicCapture.images.get(definition.type)!,
+                  previewCapture.images.get(definition.type)!,
+                );
+                expect(
+                  difference.differingPixels / difference.totalPixels,
+                  `${label}/${definition.type} public/preview pixels`,
+                ).toBeLessThanOrEqual(0.005);
+              }
+              await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
+              manifest.push({ locale, theme, brand, width, types: blocks.map(({ type }) => type) });
             }
-            await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
-            manifest.push({ locale, theme, brand, width, types: blocks.map(({ type }) => type) });
+          }
+          expect(manifest).toHaveLength(6);
+          await testInfo.attach(`d6-group-${group}-${locale}-${theme}-manifest.json`, {
+            body: JSON.stringify({ pageKey, tuples: manifest }),
+            contentType: 'application/json',
+          });
+        } finally {
+          if (savedProfile?.ok()) {
+            const profile = await savedProfile.json();
+            const restored = await page.request.patch('/api/admin/profile', {
+              headers,
+              data: { resumeEnId: profile.resumeEnId, resumeViId: profile.resumeViId },
+            });
+            expect(restored.status(), await restored.text()).toBe(200);
+            if (uploadedMediaId) {
+              const deleted = await page.request.delete(`/api/admin/media/${uploadedMediaId}`, {
+                headers,
+              });
+              expect(deleted.status()).toBe(204);
+            }
           }
         }
-        expect(manifest).toHaveLength(6);
-        await testInfo.attach(`d6-group-${group}-${locale}-${theme}-manifest.json`, {
-          body: JSON.stringify({ pageKey, tuples: manifest }),
-          contentType: 'application/json',
-        });
       });
     }
   }
@@ -201,6 +262,7 @@ async function capture(
     blocks: Array<{ type: string | null; hash: string | null; text: string | undefined }>;
     images: Map<string, Buffer>;
   },
+  resumeFileName?: string,
 ) {
   const serverResponse = await page.request.get(route);
   expect(serverResponse.status(), route).toBe(200);
@@ -283,15 +345,21 @@ async function capture(
     `${label} SSR/hydration block contract`,
   ).toEqual(serverBlocks.map(({ type, hash }) => ({ type, hash })));
   for (const block of serverBlocks) {
-    if (block.type === 'cv-download') {
-      expect(block.text, `${label}/cv-download initial SSR with no configured resume`).toBe('');
-      expect(
-        hydratedBlocks.find(({ type }) => type === block.type)?.text,
-        `${label}/cv-download hydrated with no configured resume`,
-      ).toBe('');
-    } else {
-      expect(block.text, `${label}/${block.type} initial SSR text`).toBeTruthy();
-    }
+    expect(block.text, `${label}/${block.type} initial SSR text`).toBeTruthy();
+  }
+  if (blocks.some(({ type }) => type === 'cv-download')) {
+    expect(resumeFileName, `${label}/cv-download fixture`).toBeTruthy();
+    const cv = main.locator('[data-host-block-type="cv-download"]');
+    await expect(cv, `${label}/cv-download painted`).toBeVisible();
+    const link = cv.getByRole('link', {
+      name: new URL(route, page.url()).pathname.startsWith('/vi/') ? 'Tải CV' : 'Download CV',
+    });
+    await expect(link).toBeVisible();
+    await expect(link).toHaveAttribute('href', `${MARKDOWN_IMAGE_PREFIX}${resumeFileName}`);
+    expect(
+      hydratedBlocks.find(({ type }) => type === 'cv-download')?.text,
+      `${label}/cv-download hydrated text`,
+    ).toBe(serverBlocks.find(({ type }) => type === 'cv-download')?.text);
   }
   const axe = await new AxeBuilder({ page })
     .include('main.cms-core-host')
@@ -306,18 +374,14 @@ async function capture(
   for (const definition of blocks) {
     const locator = main.locator(`[data-host-block-type="${definition.type}"]`);
     await expect(locator).toHaveCount(1);
-    const emptyCv = definition.type === 'cv-download';
-    if (emptyCv) {
-      await expect(locator).toBeEmpty();
-      await expect(locator).toBeHidden();
-    }
-    const image = await (emptyCv ? main : locator).screenshot({
+    await expect(locator, `${label}/${definition.type} painted component`).toBeVisible();
+    const image = await locator.screenshot({
       animations: 'disabled',
       style: '.hero-stage canvas, .site-header, .locale-toast { visibility: hidden !important; }',
     });
     images.set(definition.type, image);
     await testInfo.attach(
-      `${label}-${definition.type}${emptyCv ? '-empty-host-context' : ''}-${publicCapture ? 'preview' : 'public'}.png`,
+      `${label}-${definition.type}-${publicCapture ? 'preview' : 'public'}.png`,
       { body: image, contentType: 'image/png' },
     );
   }

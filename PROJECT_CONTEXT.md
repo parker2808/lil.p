@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #208 verification-only refresh adds D6 `ffbf1181` (#269 reviewed populated-CV V09 gate). Source #202 exact-head CI and new #208 combined API/five-shard artifacts are required before rescoring V09. #268 V13 and #270 V05 are still open and unmerged; V05/V13/V20 remain GAP, #208 DO NOT MERGE.
+- 2026-11-16 V09 painted gallery: replace empty `cv-download` host-context captures with a disposable bilingual PDF profile fixture; require real localized visible CV link, initial SSR text, and directly paired public/version-preview component PNGs for all 20 types across existing tuples. Preserve axe and 0.5% pixel bound; exact-head five-shard CI and independent raw-image review pending, so V09 remains GAP.
 - 2026-11-16 V06 CI `43787871304` on `3af053d` overcounted hidden SSR variants' unresolved grid tracks; the reviewed fix requires exactly one painted nested stat/card, <=2 visible tracks, readable labels and viewport bounds. #260 merged D6 at `b5f78c30` with scoped visual P2 ACCEPT; combined #208 replay and full-row signoff remain open.
 - 2026-11-16 V06 all-20 override evidence: `cms-d6-v06-all20-overrides.spec.ts` covers EN/VI no-JS public v2 vs historical preview v1 at 390/768/1440 with effective responsive hashes, nested tracks and captures. Prior overflow/crushed-text failures led to column-sized stats, wrapping card descriptions and stacked process steps. Asset-empty/data-backed, production and neutral-host proof remain separate GAPs; see `docs/specs/2026-11-16-cms-d6-v06-all20-overrides.md`.
 
@@ -528,6 +530,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Normal-merged D6 `ffbf1181` (#269 populated CV gallery) into verification-only #208; preserved current J/V row evidence, pending exact combined-head API + W1–W5 before V09 score change. #268/#270 remain separate.
+- 2026-11-16: Stage V09 real CV media/profile fixture and restore cleanup for the all-20 public/preview matrix, capturing each visible component instead of `main` on empty CV; no runtime/golden/threshold changes. CI and image review pending.
 - 2026-11-16: Integrated reviewed D6 #260 no-JS responsive/legibility assertions and narrow-column wrapping into verification-only #208; requires its own exact-head CI and image review before any V06 score change.
 - 2026-11-16: Preserved D6 history of V06 computed painted-grid assertions after the failed hidden-variant count; no bounds relaxation.
 

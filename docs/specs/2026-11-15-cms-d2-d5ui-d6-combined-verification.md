@@ -442,3 +442,7 @@ The normal merge of D6 `dc9f6373464b9446747f3e6610bdf39178ec6d80` includes the i
 - V12 PASS pre-deploy and V13 GAP full route/state (#208 comment `6906016638`); V17/V21 PASS pre-deploy tracked inventory and disposable-DB scope (#208 comment `6905989697`). V03/V14 were GAP on that cut because it lacked #264; await 28b6caa1's verdict on a new green combined head.
 
 V20 stays GAP unless every other pre-deploy class-A row has independently signed PASS on the new exact head. Production-only tasks remain unverified in #210; no #208 merge or Stage A action.
+
+### Pending V09 successor — D6 `ffbf1181` (#269)
+
+The normal verification-only merge includes independently scoped #269 `bb9f2524` / ready-e2e `43798697968` (17/17) and raw W5 artifact `14195972756`: populated bilingual CV media, visible localized link and component-level public/version-preview captures replace the empty/hidden default. The #269 independent raw-image ACCEPT is comment `6906811343`; it does **not** score V09 on #208 until the merged #208 exact head passes API + W1–W5 and its SHA-matched gallery is reviewed. #268 V13 and #270 V05 remain open/unmerged (the latter's nullable/zero-size host screenshot P2 is unresolved); therefore V05 and V13 stay GAP. V20 remains GAP while either row is GAP. Do not infer deployed parity, production inventory, manual SR, a merge authorization or a new 28-row total from source CI. #208 DO NOT MERGE; Stage A HOLD.
