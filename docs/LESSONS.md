@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: Desktop builder has a visible named region but hides its mobile navigation; assert the accessible region for desktop route-state evidence instead of a hidden mobile-only navigation landmark.
+
 - 2026-11-16: The demo site intentionally shares an EN/VI SEO title, so verify localized homepage descriptions rather than inventing title differences. A guarded builder can paint under HTTP 404 when the E2E route flag is set only at runtime; set it for the shared E2E build too, then require HTTP 200 on a created custom-page builder.
 
 - 2026-11-16: Public/admin 404 and admin pages need not emit a description tag; an unconditional Playwright `getAttribute` waits until timeout. Inventory the absent tag as null, but continue requiring a nonempty description on every tested public/preview content route.
@@ -627,3 +629,4 @@
 - 2026-11-16: A legacy CMS page sits inside SiteShell `main#content`, not the tree-only `main.cms-core`; parse the actual semantic main from the raw SSR response before asserting preview notice isolation, rather than silently accepting an absent node.
 - 2026-11-16: When reconciling D5 host Properties with D6 translated labels, retain both data-preserving invalid-input behavior and exact accessible names; an optional localized heading with empty required English text must remain local until the user provides valid content, not auto-save fabricated defaults.
 - 2026-11-16: Independently streamed SSR may assign different numeric React Suspense `<template id="B:N">` IDs without changing host content; normalize only those request-local IDs while retaining a full markup comparison. An axe-only JS context must match the no-script host's computed palette and wait for color transitions before enforcing unwaived WCAG AA, especially in dark OS mode.
+- 2026-11-16: A screenshot of `main` cannot prove a hidden or empty component painted; seed the missing public dependency and assert a visible, localized link to the exact disposable media before capturing the component itself, then restore profile data in `finally`.

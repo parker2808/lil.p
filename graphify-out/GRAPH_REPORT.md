@@ -1,17 +1,17 @@
 # Graph Report - test-cms-v13-route-matrix  (2026-11-16)
 
 ## Corpus Check
-- 1723 files · ~745,962 words
+- 1723 files · ~746,280 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 40 file(s) not represented in the graph (top: (none) 18, .css 17, .example 1)
 
 ## Summary
-- 8145 nodes · 25256 edges · 345 communities (285 shown, 60 thin omitted)
+- 8145 nodes · 25257 edges · 345 communities (285 shown, 60 thin omitted)
 - Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 2248 edges (avg confidence: 0.93)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b17ec5a7`
+- Built from commit: `e8aa2888`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -1535,7 +1535,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `ref_playwright_test` be split into smaller, more focused modules?**
   _Cohesion score 0.03504043126684636 - nodes in this community are weakly interconnected._
 - **Why does `next-intl` connect `ref_vitest` to `AdminPostsEditor.tsx`, `7. Open items`, `ref_node_path`, `AdminSiteIndex.tsx`, `@tanstack/react-query`, `Badge`, `block-renderers.constant.ts`, `ErrorState`, `Modules`, `admin-core/components/CommandPalette/CommandPalette.tsx`, `getSite`, `AdminSidebar.tsx`, `AdminPagesEditor.tsx`, `(site)/[...rest]/page.tsx`, `ProjectsDetail.tsx`, `SiteHeader.tsx`, `AdminPostsIndex.tsx`, `AdminMediaIndex.tsx`, `ActionCards.tsx`, `Prose`, `cn`, `BuilderShell.tsx`, `ProjectsBrowser.tsx`, `Button`, `04-4-components-and-layout.md`, `Topbar.tsx`, `BuilderHost.tsx`, `[locale]/layout.tsx`, `next`, `PublicErrorState.tsx`, `BlocksPage.tsx`, `IconPicker.tsx`, `ApiError`, `web/package.json`, `dependencies`, `AdminAboutExperienceEditor.tsx`, `AdminAuthLogin.tsx`, `SiteShell.tsx`, `AdminPagesEditor.tsx`, `PropertiesPanel.tsx`, `cms-u3-study/page.tsx`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+  _High betweenness centrality (0.032) - this node is a cross-community bridge._
 - **Are the 12 inferred relationships involving `Button()` (e.g. with `4. Architecture at a glance` and `T12 · UI primitives matching Figma component sets`) actually correct?**
   _`Button()` has 12 INFERRED edges - model-reasoned connections that need verification._
 - **Should `AdminPostsEditor.tsx` be split into smaller, more focused modules?**

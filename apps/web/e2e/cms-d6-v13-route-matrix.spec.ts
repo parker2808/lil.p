@@ -131,7 +131,7 @@ test('EN/VI admin page, builder help and missing-state metadata inventory', asyn
     const response = await page.goto(builder);
     expect(response?.status()).toBe(200);
     await expect(
-      page.getByRole('navigation', {
+      page.getByRole('region', {
         name: locale === 'en' ? 'Page builder' : 'Trình dựng trang',
       }),
     ).toBeVisible();
