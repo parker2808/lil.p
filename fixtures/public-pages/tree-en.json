@@ -1,0 +1,64 @@
+{
+  "contractVersion": 1,
+  "publishedVersion": 1,
+  "page": {
+    "key": "home",
+    "seo": {
+      "title": "Home",
+      "description": null,
+      "lang": "en"
+    },
+    "tree": {
+      "schemaVersion": 1,
+      "root": {
+        "id": "page",
+        "type": "page",
+        "responsive": {
+          "base": {}
+        },
+        "sections": [
+          {
+            "id": "section",
+            "type": "section",
+            "responsive": {
+              "base": {}
+            },
+            "content": [
+              {
+                "id": "hero",
+                "type": "component",
+                "componentType": "hero",
+                "responsive": {
+                  "base": {
+                    "primaryCta": {
+                      "label": {
+                        "en": "Projects",
+                        "vi": "Dự án"
+                      },
+                      "href": "/projects"
+                    },
+                    "showDiagram": true,
+                    "showAvailability": true
+                  }
+                }
+              },
+              {
+                "id": "prose",
+                "type": "component",
+                "componentType": "prose",
+                "responsive": {
+                  "base": {
+                    "body": {
+                      "en": "English body",
+                      "vi": "Nội dung Việt"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

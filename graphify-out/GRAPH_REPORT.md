@@ -9,6 +9,8 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
+
+- Goal B published Page reader branch (2026-11-16): `graphify update .` was attempted twice after the adapter/webhook changes; both timed out after AST extraction (90s/180s) before writing a new graph. The graph below is **stale for this branch**; inspect `apps/web/src/modules/blocks/services/pages.service.ts` and `apps/web/app/api/cms/revalidate/route.ts` directly. Regenerate before treating topology as verified.
 - Built from commit: `6d70b9fd`
 - Incrementally verified against committed source `27caf731` with `graphify update . --force`; topology was unchanged, so the original build SHA remains.
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
