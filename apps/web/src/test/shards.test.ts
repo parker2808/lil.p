@@ -33,6 +33,6 @@ describe('web E2E shard registry', () => {
     expect(() => assertPinnedSpecs({ [SPECS[0]]: SHARD_COUNT + 1 })).toThrow(
       `Pinned E2E shard must be 1..${SHARD_COUNT}`,
     );
-    expect(() => assertPinnedSpecs({ [SPECS[0]]: 5 })).not.toThrow();
+    expect(() => assertPinnedSpecs({ [SPECS[0]]: SHARD_COUNT })).not.toThrow();
   });
 });

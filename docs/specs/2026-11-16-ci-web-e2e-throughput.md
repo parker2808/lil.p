@@ -1,0 +1,12 @@
+# Web E2E throughput (2026-11-16)
+
+## Baseline and scope
+
+Ten successful five-shard D6/#208 GitHub Actions runs (`43801042488` through `43821569457`) took 813–1046 seconds from web build start through aggregate completion (median 926 seconds). Build-job median was 58 seconds; shard 5 consistently finished last (704–930 seconds; median 823). On run `43821569457`, shard 5's Playwright step alone took 789 seconds. Its raw blob `report-5.zip` attributes 392 seconds to `cms-builder-d5-design.spec.ts`, 107 to `cms-d6-visual-4.spec.ts`, and 49 to `cms-d6-v06-all20-overrides.spec.ts`: a single long spec sets a lower bound that file-level sharding cannot beat. Across those ten runs, shard setup median was 20 seconds, browser cache lookup 3 seconds, MySQL wait 10 seconds, and Playwright-install wait 2 seconds. The main baseline `43824115680` uses the same five-shard workflow but has fewer E2E files; its individual blob reports show Lighthouse 58 seconds, visual 30 seconds, admin editors 78 seconds, a11y 48 seconds, and admin collections 45 seconds. Those are _one-run per-spec samples_, not ten-run medians. Main's full run took about five minutes, whereas the pending D6 stack has substantially more visual/SSR specs.
+
+## Change and acceptance
+
+- Split independent Playwright file lists across eight free GitHub-hosted jobs, preserving one worker and one private MySQL instance **per shard**. Keep the pixel/Lighthouse pin, fixture/WCAG/AA gate, registration guard, and all test assertions intact.
+- Rebalance measured file weights; unknown files still receive a conservative default. Keep the existing pnpm store, Next build cache, Playwright browser cache and single build artifact; avoid a second build or database shared across workers.
+- Preserve exact head/tested merge provenance for every shard and the aggregate; the required `web-e2e` check must require every shard. Do not increase Playwright workers inside a shard while tests share a database.
+- Validate the shard registry unit tests and all eight shards on an exact-head `ready-e2e` PR into main. Compare aggregate wall-clock with the five-shard main baseline and report the measured before/after run IDs; stack branches require rebasing their extra spec pins onto the new shard count after landing. Do not claim D6 throughput improvement until that integration is measured; splitting the 392-second spec safely is separate work.

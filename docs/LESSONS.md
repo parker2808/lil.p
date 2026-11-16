@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: Measure build-to-aggregate and per-file Playwright timings before adding cache or workers; with cached build/browser and a shared per-shard database, redistributing complete specs across isolated runners is safer than parallelizing tests inside one database.
+
 - 2026-11-16: Audit an extracted package's complete peer list against the frozen installed manifests and license files, not just its own `UNLICENSED` field; an MIT-compatible private tarball still needs final-head notice, history and hosted-distribution review.
 
 - 2026-11-16: When several editors schedule independent preview timers, waiting for one rendered preview does not prove the others have completed; await all three rendered bodies and retain the exact callback-count assertion.

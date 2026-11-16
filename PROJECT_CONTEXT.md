@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 CI throughput: ten green D6/#208 five-shard runs had median web build-to-aggregate 926 seconds, with shard 5 consistently critical (median 823 seconds); one D6 spec alone took 392 seconds in run `43821569457`. Main already caches pnpm/Next/Playwright and shares one build artifact. Proposed isolated main PR uses eight free shards with per-file timing weights, one worker and MySQL per shard, and retains every required gate. D6's additional visual/SSR pins require reconciliation after the frozen Stage A stack; compare exact-head post-change CI before claiming speedup. See `docs/specs/2026-11-16-ci-web-e2e-throughput.md`.
+
 - 2026-11-16 C1 tarball rehearsal at #208 `4227e3e`: standalone core and all four consumer builds passed, but the fixture unit gate used a monorepo-relative `packages/cms-core/dist` path and failed when the package came from its tarball. Resolving through installed `./react` retained both client/server directive assertions and passed 9/9 fixture tests in the disposable tarball consumer (Node 22). Rerun all C1 checks on final main after the stack lands; no repository created.
 
 - 2026-11-16 C1 dependency-rights audit (docs only): #208 `539c4f1c` filtered package has no runtime dependencies; frozen peer installs React/React DOM 19.3.1 and Zod 4.6.7 carry MIT license files. No observed peer-license conflict with a private `UNLICENSED` core; ownership/notices, final-main history and consumer/hosted installer evidence remain separate gates. The extraction runbook records exact final-main steps. No repository, package, credential or deployment created.
@@ -264,6 +266,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Spread web E2E files over eight isolated free-runner shards, preserving pixel/Lighthouse pin, fixture/WCAG/AA tests, complete registry and aggregate/provenance checks; refreshed observed file weights. No assertions, retry/timeout thresholds, or build/cache gates removed.
 
 - 2026-11-16: Resolve the neutral fixture's client/server directive checks against the installed core package instead of assuming a sibling workspace build; retain both ESM and CJS assertions. No package/runtime behavior or export-map change.
 
