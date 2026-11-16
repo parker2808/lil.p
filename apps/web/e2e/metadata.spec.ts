@@ -163,6 +163,10 @@ test('real invalid draft block is localized only in EN/VI preview, without diagn
     expect(await page.content()).not.toContain('f4-internal-legacy-type');
     await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', description);
     expect(await page.title()).toContain(title);
+    await testInfo.attach(`${locale}-invalid-preview.png`, {
+      body: await page.screenshot({ animations: 'disabled' }),
+      contentType: 'image/png',
+    });
 
     await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
     const publicResponse = await page.goto(path);
@@ -295,7 +299,7 @@ test('EN/VI historical draft SEO matches the versioned body; public query stays 
 
 test('EN/VI tree page without SEO derives public and draft metadata from the visible H1', async ({
   page,
-}) => {
+}, testInfo) => {
   test.setTimeout(120_000);
   await signIn(page);
   const key = `metadata-tree-${Date.now()}`;
@@ -362,6 +366,10 @@ test('EN/VI tree page without SEO derives public and draft metadata from the vis
     await expect(page.getByRole('heading', { name: heading, level: 1 })).toBeVisible();
     expect(await page.title()).toContain(heading);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', description);
+    await testInfo.attach(`${locale}-no-seo-preview.png`, {
+      body: await page.screenshot({ animations: 'disabled' }),
+      contentType: 'image/png',
+    });
     await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
   }
   const published = await page.request.post(`/api/admin/pages/${key}/builder/publish`, {
@@ -377,5 +385,9 @@ test('EN/VI tree page without SEO derives public and draft metadata from the vis
     await expect(page.getByRole('heading', { name: heading, level: 1 })).toBeVisible();
     expect(await page.title()).toContain(heading);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', description);
+    await testInfo.attach(`${locale}-no-seo-public.png`, {
+      body: await page.screenshot({ animations: 'disabled' }),
+      contentType: 'image/png',
+    });
   }
 });

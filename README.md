@@ -7,7 +7,7 @@ The [D5 live journey spec](./docs/specs/2026-11-15-cms-d5-live-journeys.md) regi
 
 The stacked [D5 all-block Properties spec](./docs/specs/2026-11-15-cms-d5-all-block-properties.md) registers all 20 host block contracts in the gated builder. Its EN/VI editor derives nested/localized, numeric, array, optional-group and responsive controls from the host schemas; invalid partial edits remain local across node, breakpoint and sheet changes. Blurring a text field separates its next undo step; clearing a responsive override discards the invalid local value and error for that property. D6's editor-origin suite exercises all 20 through the real draft API and SSR; exact-head CI passed, but semantic/visual review and forward-only rollout evidence remain open. This draft verification branch must not merge.
 
-The [V13 D6 metadata/preview fix](./docs/specs/2026-11-16-cms-d6-v13-metadata.md)
+The [V13 route/state capture inventory](./docs/specs/2026-11-16-cms-d6-v13-route-matrix.md) extends EN/VI public, preview and admin metadata coverage; notes captures must show loaded content and builder controls must not clip, with new CI and independent artifact review required before V13 signoff. The [V13 D6 metadata/preview fix](./docs/specs/2026-11-16-cms-d6-v13-metadata.md)
 derives missing tree SEO from the visible bilingual H1 on public and draft routes,
 and displays localized recovery help instead of raw invalid-block diagnostics.
 Real EN/VI browser evidence runs in the existing metadata shard; full V13 signoff

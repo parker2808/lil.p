@@ -3,7 +3,19 @@
 - 2026-11-16: A configured single Render instance and one successful direct health GET cannot prove fleet drain; capture complete pre/post instance rosters through the authorized API before merging a code-bearing freeze branch. Keep Render auto-deploy on for the staged merges and keep other API-bearing merges off `main` until reopen.
 - 2026-11-16: An already approved forward-only rollout does not need new approval at every probe or reopen; gate each automatic deploy and next merge on the preceding stage's verified 503/200, complete old-instance drain, and migration evidence.
 - 2026-11-16: A green source-branch all-host image manifest is not combined-head evidence; carry its reviewed source/tested-merge provenance into the verification cut and recheck exact-head shard artifacts before changing a matrix row.
+- 2026-11-16: A Next route can nest its `.public-notes` wrapper inside the site shell's `main#content`; inspect the actual component tree before adding a loaded-content selector, then wait for a visible H1 as well as the absence of the route skeleton.
 
+- 2026-11-16: A successful metadata assertion can accompany an all-skeleton route screenshot when streamed content is pending; wait for a visible content heading before capture. A builder header can fit button boxes but clip their text at intermediate widths; require non-overlapping, fully contained controls and untruncated labels in browser evidence.
+
+- 2026-11-16: An admin builder can render its entire accessible UI yet return HTTP 404 when the proxy omits its section from the route allowlist; assert response status as well as the visible region, and preserve the unknown-section 404 contract.
+
+- 2026-11-16: Desktop builder has a visible named region but hides its mobile navigation; assert the accessible region for desktop route-state evidence instead of a hidden mobile-only navigation landmark.
+
+- 2026-11-16: The demo site intentionally shares an EN/VI SEO title, so verify localized homepage descriptions rather than inventing title differences. A guarded builder can paint under HTTP 404 even with the E2E route flag set for both build and runtime when the admin proxy omits its section; require HTTP 200 on a created custom-page builder.
+
+- 2026-11-16: Public/admin 404 and admin pages need not emit a description tag; an unconditional Playwright `getAttribute` waits until timeout. Inventory the absent tag as null, but continue requiring a nonempty description on every tested public/preview content route.
+
+- 2026-11-16: A localized metadata subset can pass while another route/state lacks reviewable evidence; attach a route/locale/state inventory beside the actual browser screenshots and review it against the existing historical, invalid-preview and builder suites before scoring V13.
 - 2026-11-16: A props hash and registry count do not prove that each host painted: require viewport-intersecting bounds and visible text inside the host, crop the actual host for the PNG, and provide real disposable media for data-dependent CV before claiming all-20 visual coverage.
 - 2026-11-16: An all-host editor-origin draft/render gate needs an immutable version snapshot and a manifest tying each locale/theme/viewport public-preview image to the same saved draft revision; post-publish route parity alone cannot establish this provenance.
 - 2026-11-16: On a docs-only base sync, preserve both branches' release caveats and historical lessons, regenerate the generated Graphify report from the combined tree, and gate the new exact head rather than reusing earlier branch CI.
