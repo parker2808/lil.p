@@ -1,5 +1,10 @@
 # Lessons
 
+- 2026-11-16: No-JS responsive SSR retains hidden host variants; only a painted variant's resolved grid tracks can establish the current layout, while text wrapping and actual host/document width need independent assertions.
+- 2026-11-16: A viewport-safe capture may still crush nested stat labels or ellipsize featured text; size to the CMS column, inspect raw public/preview PNGs, and keep readable text assertions at each viewport.
+- 2026-11-16: Persisted tree key order can differ from pre-save fixture order; calculate rendered responsive hashes from the saved tree and serialized `{ props, lang }` envelope rather than loosening hash checks.
+- 2026-11-16: An all-host base-only no-script fixture is not breakpoint proof; calculate locale-effective responsive values and check the computed painted variant independently of asset-empty hosts.
+
 - 2026-11-16: A docs-only D2 provenance sync can conflict with combined release notes without changing runtime; keep both histories and compare schema/migration files before carrying source CI evidence forward.
 - 2026-11-16: A generated Graphify source SHA describes the extracted code snapshot, not a later docs-only commit; annotate that distinction instead of treating every HEAD change as a code-graph change.
 

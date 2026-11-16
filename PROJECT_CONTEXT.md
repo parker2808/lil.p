@@ -48,6 +48,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V06 CI `43787871304` on `3af053d` overcounted hidden SSR variants' unresolved grid tracks; the reviewed fix requires exactly one painted nested stat/card, <=2 visible tracks, readable labels and viewport bounds. #260 merged D6 at `b5f78c30` with scoped visual P2 ACCEPT; combined #208 replay and full-row signoff remain open.
+- 2026-11-16 V06 all-20 override evidence: `cms-d6-v06-all20-overrides.spec.ts` covers EN/VI no-JS public v2 vs historical preview v1 at 390/768/1440 with effective responsive hashes, nested tracks and captures. Prior overflow/crushed-text failures led to column-sized stats, wrapping card descriptions and stacked process steps. Asset-empty/data-backed, production and neutral-host proof remain separate GAPs; see `docs/specs/2026-11-16-cms-d6-v06-all20-overrides.md`.
+
 - 2026-11-16 #208 exact head `4425657d`/run `43790500467` passed API + all five web shards; 31-row scoped cut comment `6905640320` scores 16/28 class-A PASS, 12 GAP, 3 post-deploy DEFERRED. Successor must merge D2 `2c4bf185` (#267 docs-only Graphify provenance) and D6 `b5f78c30` (#260 scoped responsive proof), rerun exact-head gates, and keep #264 unmerged pending its own gate. #208 DO NOT MERGE; Stage A HOLD.
 - D2 #199 Graphify P3 (2026-11-16): re-extracted topology from reviewed source `aeb3c2d62787a5d0ea2ec22ab97f5c62c7249181`; the docs-only provenance follow-up does not change migration/API/goldens. Stage A drain and approval remain open.
 
@@ -520,6 +523,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Integrated reviewed D6 #260 no-JS responsive/legibility assertions and narrow-column wrapping into verification-only #208; requires its own exact-head CI and image review before any V06 score change.
+- 2026-11-16: Preserved D6 history of V06 computed painted-grid assertions after the failed hidden-variant count; no bounds relaxation.
 
 - 2026-11-16: Preserved D2 #199 Graphify source provenance `aeb3c2d6` and its docs-only follow-up while refreshing #208; no D2 runtime, schema or migration change.
 - 2026-11-16: Scored #208 `4425657d` exact-head 17/17 in a row-by-row PR comment; successor cut integrates D2 `2c4bf185` and D6 `b5f78c30` without inferring new row PASS or release authorization.

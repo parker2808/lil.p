@@ -288,6 +288,15 @@
   min-width: 0;
 }
 
+.cms-core .cms-tree__column .cms-tree__component {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.cms-core .cms-tree__column [data-slot='principle-list'] {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+}
+
 .cms-core .cms-tree__component + .cms-tree__component {
   margin-block-start: var(--builder-space-4);
 }
