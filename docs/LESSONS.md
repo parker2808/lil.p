@@ -1,5 +1,8 @@
 # Lessons
 
+- 2026-11-16: A docs-only D2 provenance sync can conflict with combined release notes without changing runtime; keep both histories and compare schema/migration files before carrying source CI evidence forward.
+- 2026-11-16: A generated Graphify source SHA describes the extracted code snapshot, not a later docs-only commit; annotate that distinction instead of treating every HEAD change as a code-graph change.
+
 - 2026-11-16: A legacy SEO PATCH can advance the builder draft revision even before tree activation; read the persisted revision in the F3 real-route browser fixture rather than hardcoding zero or weakening CAS.
 
 - 2026-11-16: In combined D5/D6 journeys, host localized property fields expose names such as `Title (EN)`/`Tiêu đề (VI)` and `Eyebrow (VI)`; update stale locators in both restore and revision-chain fixtures without weakening persistence/parity checks.

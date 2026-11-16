@@ -48,6 +48,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #208 exact head `4425657d`/run `43790500467` passed API + all five web shards; 31-row scoped cut comment `6905640320` scores 16/28 class-A PASS, 12 GAP, 3 post-deploy DEFERRED. Successor must merge D2 `2c4bf185` (#267 docs-only Graphify provenance) and D6 `b5f78c30` (#260 scoped responsive proof), rerun exact-head gates, and keep #264 unmerged pending its own gate. #208 DO NOT MERGE; Stage A HOLD.
+- D2 #199 Graphify P3 (2026-11-16): re-extracted topology from reviewed source `aeb3c2d62787a5d0ea2ec22ab97f5c62c7249181`; the docs-only provenance follow-up does not change migration/API/goldens. Stage A drain and approval remain open.
+
 - #208 combined head `ef4c74c3`/run `43788589025` W3 F3 fixture hit a correct CAS 409 after clearing legacy SEO advanced the draft revision. Verification-only metadata test now reads the persisted revision before activation, preserving the EN/VI public/draft H1 and description assertions; require new exact-head API/five-shard CI and artifact review before scoring.
 
 - 2026-11-16 #208 verification-only normal-merge of D6 `bebe5656` (#255 accepted F4) after successful prior #208 run `43786515505`; preserve the previous code-cut evidence, but require new exact-head API/five-shard CI and independent row review before rescoring. No #208 merge/deploy.
@@ -517,6 +520,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Preserved D2 #199 Graphify source provenance `aeb3c2d6` and its docs-only follow-up while refreshing #208; no D2 runtime, schema or migration change.
+- 2026-11-16: Scored #208 `4425657d` exact-head 17/17 in a row-by-row PR comment; successor cut integrates D2 `2c4bf185` and D6 `b5f78c30` without inferring new row PASS or release authorization.
 
 - 2026-11-16: Corrected #208 F3 no-SEO browser fixture to read the post-SEO draft revision instead of hardcoding zero; no API/interlock/runtime change, Stage A HOLD.
 
