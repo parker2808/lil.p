@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 C1 tarball rehearsal at #208 `4227e3e`: standalone core and all four consumer builds passed, but the fixture unit gate used a monorepo-relative `packages/cms-core/dist` path and failed when the package came from its tarball. Resolving through installed `./react` retained both client/server directive assertions and passed 9/9 fixture tests in the disposable tarball consumer (Node 22). Rerun all C1 checks on final main after the stack lands; no repository created.
+
 - 2026-11-16 C1 dependency-rights audit (docs only): #208 `539c4f1c` filtered package has no runtime dependencies; frozen peer installs React/React DOM 19.3.1 and Zod 4.6.7 carry MIT license files. No observed peer-license conflict with a private `UNLICENSED` core; ownership/notices, final-main history and consumer/hosted installer evidence remain separate gates. The extraction runbook records exact final-main steps. No repository, package, credential or deployment created.
 
 - 2026-11-16: The shared MarkdownEditor preview callback uses an independent 500ms timer per editor. #260's unit run `43767645840` observed only two callbacks when the test waited for the second body; a focused test fix waits for all three rendered bodies and all three callback invocations without relaxing the count. The fix is based on `main`, with no V06 runtime changes; exact-head CI remains the merge gate.
@@ -262,6 +264,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Resolve the neutral fixture's client/server directive checks against the installed core package instead of assuming a sibling workspace build; retain both ESM and CJS assertions. No package/runtime behavior or export-map change.
 
 - 2026-11-16: Recorded the scoped C1 peer-license audit and final-main consumer/hosted checklist; regenerated Graphify for this docs-only change. No package/runtime/golden change or release authorization.
 
