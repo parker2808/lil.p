@@ -59,6 +59,7 @@
     --warning-subtle: #3a2f18;
     --card: #181b22;
     --card-foreground: #eee9df;
+    --card-glass: rgb(17 24 23 / 0.72);
     --primary: #ff8f74;
     --primary-foreground: #16181f;
     --muted-foreground: #b7b2a8;
