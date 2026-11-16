@@ -24,7 +24,15 @@ async function capture(
   const title = await page.title();
   expect(title, route).toBeTruthy();
   await expect(page.locator('html'), route).toHaveAttribute('lang', locale);
-  const description = await page.locator('meta[name="description"]').getAttribute('content');
+  const descriptionTag = page.locator('meta[name="description"]');
+  const description = (await descriptionTag.count())
+    ? await descriptionTag.getAttribute('content')
+    : null;
+  if (state === 'public' || state === 'preview') {
+    expect(description, route).toBeTruthy();
+  } else {
+    expect(await descriptionTag.count(), route).toBe(0);
+  }
   const image = `${locale}-${state}-${entries.length}.png`;
   await testInfo.attach(image, {
     body: await page.screenshot({ animations: 'disabled' }),
@@ -65,7 +73,6 @@ test('EN/VI public and draft route metadata, fallback and capture inventory', as
         );
         await capture(page, testInfo, entries, locale, state, path);
         const title = entries.at(-1)!.title;
-        expect(entries.at(-1)!.description, path).toBeTruthy();
         expect(titles.has(title), path).toBe(false);
         titles.add(title);
       }

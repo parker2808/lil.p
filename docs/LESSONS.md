@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: Public/admin 404 and admin pages need not emit a description tag; an unconditional Playwright `getAttribute` waits until timeout. Inventory the absent tag as null, but continue requiring a nonempty description on every tested public/preview content route.
+
 - 2026-11-16: A localized metadata subset can pass while another route/state lacks reviewable evidence; attach a route/locale/state inventory beside the actual browser screenshots and review it against the existing historical, invalid-preview and builder suites before scoring V13.
 
 - 2026-11-16: A no-JS dark shell can inherit the light translucent card-glass token even while its main/card tokens are dark; axe on a JS-capable inspection context can miss this when streamed SSR siblings stay hidden. Compare painted per-card colors and visible block text in both contexts before unwaived axe.
