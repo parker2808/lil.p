@@ -346,3 +346,4 @@
 - 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
 - 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
 - 2026-11-15: A docs-only main sync can conflict with D2's release-gate notes; keep both histories and verify the schema/migration diff is empty before relying on the prior disposable-MySQL proof.
+- 2026-11-16: Graphify's generated source SHA names the code snapshot, not the later docs-only commit; refresh extracted topology before claiming freshness and state that distinction explicitly.
