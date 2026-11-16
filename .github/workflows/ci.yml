@@ -56,11 +56,19 @@ jobs:
     if: github.event.action != 'labeled'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      CMS_RAW_INVENTORY_DIR: ${{ github.workspace }}/cms-raw-inventory
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm --filter @portfolio/contracts... build
       - run: pnpm -r --if-present test
+      - name: Upload V17/V21 unit inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: cms-v17-v21-unit-${{ env.PR_HEAD_SHA }}-${{ env.TESTED_MERGE_SHA }}
+          path: ${{ env.CMS_RAW_INVENTORY_DIR }}/unit.json
+          if-no-files-found: error
       - name: SchemaForm per-case performance evidence
         run: pnpm --filter @portfolio/web exec vitest run src/modules/admin-core/components/SchemaForm/SchemaForm.test.tsx --reporter=verbose
 
@@ -114,6 +122,7 @@ jobs:
           --health-timeout=5s
           --health-retries=60
     env:
+      CMS_RAW_INVENTORY_DIR: ${{ github.workspace }}/cms-raw-inventory
       NODE_ENV: test
       API_PORT: 4001
       API_HOST: 127.0.0.1
@@ -140,6 +149,12 @@ jobs:
       - uses: ./.github/actions/setup
       - run: pnpm --filter @portfolio/contracts... build
       - run: pnpm --filter @portfolio/api test:e2e
+      - name: Upload V17/V21 API inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: cms-v17-v21-api-${{ env.PR_HEAD_SHA }}-${{ env.TESTED_MERGE_SHA }}
+          path: ${{ env.CMS_RAW_INVENTORY_DIR }}/api.json
+          if-no-files-found: error
 
   build-e2e:
     # Builds contracts, api and web once for every web-e2e shard.

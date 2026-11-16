@@ -47,6 +47,8 @@ function pageRow(over: Record<string, unknown> = {}) {
     publishedVersionId: null,
     publishedVersion: null,
     publishedAt: null,
+    draftTree: null,
+    draftTreeRevision: 0n,
     updatedAt: new Date('2026-01-01T00:00:00.000Z'),
     blocks: [hero],
     ...over,
@@ -55,7 +57,11 @@ function pageRow(over: Record<string, unknown> = {}) {
 
 describe('PageVersionsService', () => {
   let prisma: {
-    page: { findUnique: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn> };
+    page: {
+      findUnique: ReturnType<typeof vi.fn>;
+      update: ReturnType<typeof vi.fn>;
+      updateMany: ReturnType<typeof vi.fn>;
+    };
     pageVersion: {
       findMany: ReturnType<typeof vi.fn>;
       findUnique: ReturnType<typeof vi.fn>;
@@ -69,7 +75,11 @@ describe('PageVersionsService', () => {
 
   beforeEach(() => {
     prisma = {
-      page: { findUnique: vi.fn(), update: vi.fn() },
+      page: {
+        findUnique: vi.fn(),
+        update: vi.fn(),
+        updateMany: vi.fn().mockResolvedValue({ count: 1 }),
+      },
       pageVersion: {
         findMany: vi.fn(),
         findUnique: vi.fn(),
@@ -156,6 +166,10 @@ describe('PageVersionsService', () => {
     prisma.page.update.mockResolvedValue({});
     await service.restore('home', 1);
     expect(prisma.$transaction).toHaveBeenCalledTimes(1);
+    expect(prisma.page.updateMany).toHaveBeenCalledWith({
+      where: expect.objectContaining({ id: 10, draftTreeRevision: 0n }),
+      data: { draftTreeRevision: { increment: 1 } },
+    });
     expect(prisma.pageBlock.createMany).toHaveBeenCalledWith({
       data: [
         expect.objectContaining({
@@ -228,6 +242,51 @@ describe('PageVersionsService', () => {
       response: { code: 'INVALID_BLOCKS' },
     });
     expect(prisma.pageVersion.create).not.toHaveBeenCalled();
+  });
+
+  it('loses a publish-versus-activation race without moving the published pointer', async () => {
+    const page = pageRow();
+    let draftTree: unknown = null;
+    let draftTreeRevision = 0n;
+    prisma.page.findUnique.mockImplementation(async () => ({
+      ...page,
+      draftTree,
+      draftTreeRevision,
+    }));
+    prisma.pageVersion.aggregate.mockResolvedValue({ _max: { version: null } });
+    let versionCreated = false;
+    prisma.pageVersion.create.mockImplementation(async () => {
+      versionCreated = true;
+      return { id: 41 };
+    });
+    prisma.$transaction.mockImplementation(
+      async (work: (tx: typeof prisma) => Promise<unknown>) => {
+        try {
+          return await work(prisma);
+        } catch (error) {
+          versionCreated = false;
+          throw error;
+        }
+      },
+    );
+    prisma.page.updateMany.mockImplementationOnce(async () => {
+      draftTree = { schemaVersion: 1, root: { id: 'root' } };
+      draftTreeRevision = 1n;
+      return { count: 0 };
+    });
+    const audit = { record: vi.fn() };
+    service = new PageVersionsService(prisma as never, undefined, undefined, audit as never);
+
+    await expect(service.publish('home', {}, 1)).rejects.toMatchObject({
+      response: { code: 'CONFLICT', mode: 'tree', revision: '1' },
+    });
+    expect(prisma.page.updateMany).toHaveBeenCalledWith({
+      where: expect.objectContaining({ id: 10, draftTreeRevision: 0n }),
+      data: expect.objectContaining({ draftTreeRevision: { increment: 1 } }),
+    });
+    expect(page.publishedVersionId).toBeNull();
+    expect(versionCreated).toBe(false);
+    expect(audit.record).not.toHaveBeenCalled();
   });
 
   it.each([

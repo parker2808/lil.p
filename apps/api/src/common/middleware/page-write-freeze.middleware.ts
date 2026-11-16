@@ -1,12 +1,43 @@
 import { Injectable, type NestMiddleware } from '@nestjs/common';
 import type { NextFunction, Request, Response } from 'express';
 
+import type { PrismaService } from '../../prisma/prisma.service';
 import type { RequestWithId } from './request-id.middleware';
 
+const draftTreeMigration = '20261111043000_add_page_draft_tree';
+let migrationReady = false;
+
+export async function verifyPageDraftMigration(
+  prisma: Pick<PrismaService, '$queryRaw'>,
+): Promise<void> {
+  migrationReady = false;
+  try {
+    const applied = (await prisma.$queryRaw`
+      SELECT migration_name FROM _prisma_migrations
+      WHERE migration_name = ${draftTreeMigration} AND finished_at IS NOT NULL
+        AND rolled_back_at IS NULL LIMIT 1
+    `) as { migration_name: string }[];
+    if (applied.length !== 1 || applied[0]?.migration_name !== draftTreeMigration) return;
+    const columns = (await prisma.$queryRaw`
+      SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'page'
+        AND COLUMN_NAME IN ('draftTree', 'draftTreeRevision')
+    `) as { COLUMN_NAME: string }[];
+    migrationReady =
+      Array.isArray(columns) &&
+      columns.length === 2 &&
+      columns.some((column) => column.COLUMN_NAME === 'draftTree') &&
+      columns.some((column) => column.COLUMN_NAME === 'draftTreeRevision');
+  } catch {
+    migrationReady = false;
+  }
+}
+
 export function pageWritesFrozen(): boolean {
-  return process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'test'
-    ? true
-    : process.env.CMS_PAGE_WRITE_FREEZE === '1';
+  if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+    return process.env.CMS_PAGE_WRITE_FREEZE === '1';
+  }
+  return process.env.CMS_PAGE_WRITE_FREEZE === '1' || !migrationReady;
 }
 
 function isPageAdminPath(rawUrl: string): boolean {

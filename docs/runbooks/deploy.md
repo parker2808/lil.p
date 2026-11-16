@@ -33,20 +33,20 @@ provides an additional release-owner checklist. Neither it nor the public
 probe substitutes for the complete pre-/post-deploy Render instance roster.
 
 This is a **forward-only** exception to ordinary rolling deploys. The required
-release order is **#210 Stage A freeze and old-instance drain → #199 D2 migration
-and verification → D2-aware reopen and verification → #202**. The existing
-forward-only policy approval sets the safety requirements for this sequence,
-but does not itself establish authorization for #210 production merge/deploy,
-mutation probes, #199 migration or D2-aware reopen and verification. Obtain
-separate release-owner authorization before each production action; the merge
-chain and coordinator advance only when the preceding stage is verified. Do
-not deploy an API image predating Stage A after D2 migrates. Keep Render
-auto-deploy ON as configured: merging #210 and #199 to `main` triggers their
-API deploys, but the configuration does not authorize those merges. Keep
-`main` quiet
-until reopen: any other `apps/api/**` or `packages/contracts/**` merge in this
-window could also deploy. Review the exact commit and instance roster at each
-stage before merging the next.
+release order is **#210 Stage A freeze and old-instance drain → separately
+approved #199 D2 migration/startup verification (automatic reopen after check)
+→ authenticated write verification → #204 → #202**.
+The existing forward-only policy approval does not authorize a production
+merge/deploy, mutation probe, migration or reopening. Obtain separate
+release-owner authorization for each action and its preceding gates. In
+particular, authorizing #199's merge must explicitly cover its automatic
+reopening after a successful startup check; there is no separate unfreeze
+release by default. Do not deploy an API image predating Stage A after D2
+migrates. Keep Render auto-deploy ON as configured: merging #199 to `main`
+triggers its API deployment, but configuration alone does not authorize the
+merge. Keep other `apps/api/**` and `packages/contracts/**` merges off `main`
+until reopening is verified; review the exact commit and complete instance
+roster at each stage.
 
 1. Before Stage A, inventory every Render API instance ID and commit using the
    authenticated Render instance inventory and startup logs. Confirm the Stage A
@@ -83,30 +83,37 @@ stage before merging the next.
    identity signal. If inventory, identity or ingress mapping is missing, **do
    not migrate**. Repeat the public probe after drain. Never rely on health,
    elapsed time or a Render “Live” label alone.
-4. Only after the full old-instance drain and 503/200 probes pass and separate
-   #199 merge/migration authorization is confirmed, merge #199 to deploy the
-   reviewed **D2-aware image containing the Stage A guard**. Its
-   startup runs `prisma migrate deploy` while all earlier instances remain frozen. Check migration logs,
-   `/api/health` returning `{status:"ok",db:"ok"}` via both ingresses, and
-   rerun the probe. Health does **not** prove D2 schema: the release owner must
-   use an authorized, read-only DB metadata query for columns `page.draftTree`
-   and `page.draftTreeRevision` plus the Prisma migration history. Do not add a
-   public schema endpoint or publish data. Keep freeze on until every Stage A
-   instance has drained and the D2 migration/data gates pass.
-5. After separate reopen and verification authorization, reopen writes through
-   the reviewed D2-aware unfreeze release once the migration/data and instance
-   gates pass:
-   verify that every instance runs that reviewed commit, then perform a
+4. **Before** a separately approved #199 merge/deploy, verify every pre-Stage-A
+   instance and its in-flight requests have drained, and the Stage A 503/200
+   ingress probes pass. Do not rely on Render's rolling replacement or an
+   automatic deploy for this gate. The reviewed **D2-aware image containing
+   the Stage A guard** runs `prisma migrate deploy`; before `listen`, each
+   instance checks applied migration history and both page columns.
+   With `CMS_PAGE_WRITE_FREEZE` unset or any value other than `1`, writes open
+   automatically when that check succeeds. `CMS_PAGE_WRITE_FREEZE=1` explicitly
+   keeps writes frozen; a failed check freezes regardless of configuration.
+   No Render/Vercel env change is needed or assumed for reopening. If `=1` is
+   already set, changing it would require a separate authorized Render deploy;
+   do not silently treat this runbook as approval to change it. Check migration
+   logs and `/api/health` `{status:"ok",db:"ok"}` via both ingresses. Health
+   does **not** prove D2 schema: use authorized read-only DB metadata for both
+   columns and migration history. Do not add a public schema endpoint.
+5. Confirm every new instance runs the reviewed commit, the complete roster
+   has no old writer, and both ingresses route to that commit. After separate
+   authorization for an authenticated reopen verification, perform a
    controlled authenticated save/restore/publish/activation CAS check on an
    approved disposable record through both ingresses, followed by an authorized
    read-back; verify expected stale-revision rejection and no unintended
    published change. Never use this unauthenticated probe as a reopen test.
-   If any gate fails, **hold freeze and roll forward**, never redeploy a pre-D2
-   writer. No seed, manual SQL, script or background page writer may bypass the
-   freeze during this window.
-6. Only after the reopen and CAS/data gates are signed off, proceed with #202
-   on its reviewed final head. Do not merge another API-bearing change during
-   the freeze; a merge is not a drain or migration verification.
+   If any gate fails, **stop and roll forward**, never redeploy a pre-D2
+   writer. The explicit `=1` kill-switch requires authorized Render access and
+   a deployment; nobody should claim it was applied without that evidence.
+   No seed, manual SQL, script or background page writer may bypass the gate.
+   The unauthenticated freeze probe cannot prove reopened writes.
+6. Only after the CAS/data gates are signed off, consider #204 and
+   then #202 in that order, with each reviewed final head and independent
+   merge/deploy approval. Keep other API-bearing changes off `main` during
+   the staged sequence; a merge is not drain or migration verification.
 
 ## Rollback
 
