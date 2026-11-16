@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- 2026-11-16 V13 F4 integration: add a guarded disposable-MySQL legacy draft fixture and real EN/VI API, SSR, hydrated browser and public-route assertions. CI `43776544095` exposed the starter's empty-body publish rejection; fill bilingual prose before publishing the immutable public baseline, then corrupt only the draft. CI `43778369699` reached the public route but caught a false positive from Next's serialized locale catalog containing preview-only strings: restrict notice isolation to parsed SSR main and hydrated DOM, retaining full-response raw diagnostic exclusion. Exact-head CI and independent review remain pending; full V13 remains GAP.
+- 2026-11-16 V13 F4 integration: add a guarded disposable-MySQL legacy draft fixture and real EN/VI API, SSR, hydrated browser and public-route assertions. CI `43776544095` exposed the starter's empty-body publish rejection; fill bilingual prose before publishing the immutable public baseline, then corrupt only the draft. CI `43778369699` reached the public route but caught a false positive from Next's serialized locale catalog containing preview-only strings: restrict notice isolation to parsed SSR main and hydrated DOM, retaining full-response raw diagnostic exclusion. CI `43781124688` caught an incorrect tree-only selector on this legacy route: parse `.public-site main#content` in the raw SSR response instead. Exact-head CI and independent review remain pending; full V13 remains GAP.
 
 - 2026-11-16 V13 F3/F4: D6 no-SEO tree metadata now takes the rendered EN/VI page-header H1/intro (or native heading H1) for public and authorized preview; invalid legacy preview blocks get localized recovery help without raw diagnostics. Exact-head browser CI and combined-head route/state review pending; full V13 remains GAP.
 
@@ -363,6 +363,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Correct F4 real-route SSR preview/public assertions to parse the actual SiteShell `main#content` in both EN/VI, preserving localized notice isolation and raw diagnostic exclusions; exact-head CI pending.
 - 2026-11-16: Restrict the V13 public invalid-preview notice isolation assertion to parsed SSR main and hydrated DOM because Next's locale catalog includes translated notice strings in RSC scripts; keep raw diagnostics excluded from the whole response. Exact-head CI pending.
 - 2026-11-16: Populate valid EN/VI prose before publishing the F4 disposable legacy-preview fixture; retain the strict publish guard and unchanged public snapshot, then seed only the invalid draft. Exact-head CI pending.
 - 2026-11-16: Register real invalid-draft EN/VI browser evidence backed by local disposable MySQL; published snapshot and golden/schema contracts unchanged. CI pending.

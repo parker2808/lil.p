@@ -148,8 +148,9 @@ test('real invalid draft block is localized only in EN/VI preview, without diagn
     const previewHtml = await previewResponse!.text();
     const previewMain = await page.evaluate(
       (html) =>
-        new DOMParser().parseFromString(html, 'text/html').querySelector('main.cms-core')
-          ?.innerHTML,
+        new DOMParser()
+          .parseFromString(html, 'text/html')
+          .querySelector('.public-site main#content')?.innerHTML,
       previewHtml,
     );
     expect(previewMain).toBeTruthy();
@@ -168,8 +169,9 @@ test('real invalid draft block is localized only in EN/VI preview, without diagn
     expect(publicResponse?.status()).toBe(200);
     const publicMain = await page.evaluate(
       (html) =>
-        new DOMParser().parseFromString(html, 'text/html').querySelector('main.cms-core')
-          ?.innerHTML,
+        new DOMParser()
+          .parseFromString(html, 'text/html')
+          .querySelector('.public-site main#content')?.innerHTML,
       await publicResponse!.text(),
     );
     expect(publicMain).toBeTruthy();
