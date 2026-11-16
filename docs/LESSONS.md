@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: On a docs-only base sync, preserve both branches' release caveats and historical lessons, regenerate the generated Graphify report from the combined tree, and gate the new exact head rather than reusing earlier branch CI.
+
 - 2026-11-16: A passing nested-snapshot test is not an independently diffable combined-head inventory; emit source-file byte hashes separately from normalized DB JSON byte hashes and pair each with tested-merge provenance, never claiming production inventory from disposable fixtures.
 
 - 2026-11-16: A tracked seed/SQL inventory is not a production inventory; gate the source-writer list and compare normalized responses with original stored JSON hashes before claiming legacy version safety.
@@ -34,6 +36,7 @@
 - 2026-11-15: Checking legacy mode before a transaction's version insert or block mutation does not fence a later tree activation; claim both SQL-NULL mode and monotonic revision in the final page write, and roll back the whole transaction on a lost CAS.
 
 - 2026-11-15: An additive D2 schema lets a pre-D2 Prisma client alter a tree page's published pointer without bumping the draft revision. Parker approved forward-only recovery, not evidence of an old-writer drain; because the `main` API deploy runs the migration on startup, prove the page-write pause and complete Render drain before merging/deploying D2. A MySQL trigger cannot serve as a TiDB fence.
+- 2026-11-16: Audit an extracted package's complete peer list against the frozen installed manifests and license files, not just its own `UNLICENSED` field; an MIT-compatible private tarball still needs final-head notice, history and hosted-distribution review.
 - 2026-11-16: When several editors schedule independent preview timers, waiting for one rendered preview does not prove the others have completed; await all three rendered bodies and retain the exact callback-count assertion.
 
 - 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.

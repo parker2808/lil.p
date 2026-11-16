@@ -48,11 +48,14 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #199 main sync after #271: retain the D2 release/drain gates alongside C1 license history, without touching Prisma schema or migration; exact merged-head API and five-shard CI remain required before consideration. No production action.
+
 - D2 #199 Graphify P3 (2026-11-16): re-extracted code topology from reviewed head `aeb3c2d62787a5d0ea2ec22ab97f5c62c7249181`; the docs-only follow-up changes report provenance, not migration, API behavior or goldens. Release still HOLD on Stage A drain and separate approvals.
 
 - 2026-11-16 V17/V21 raw inventory: tracked migration/seed page writers and raw fixture variants are gated in tests; V17 still requires authorized read-only production inventory and final-head route/golden comparison. V21 requires final integrated-head evidence; see `docs/specs/2026-11-16-cms-d2-v17-v21-raw-inventory.md`.
 - 2026-11-16 V17/V21 combined artifact follow-up: unit/API CI emit source-byte and canonical disposable-DB JSON byte/hash manifests with head/merge provenance. Review these on the integrated #208 head and final main before closing the code evidence; production inventory stays deferred. No runtime/schema/golden change.
 - 2026-11-16 V12 split: pre-deploy route-template logging, request-ID fingerprinting, stack-free 500 logging and retry-exhausted revalidation warning redaction now have unit tests; disposable-DB populated draft/version/preview and denied-mutation tests capture and reject content/token/PII markers in logs. New exact-head CI and independent review pending. Authorized read-only Render log audit is DEFERRED until after deploy; no operational signoff or production calls here.
+- 2026-11-16 C1 dependency-rights audit (docs only): #208 `539c4f1c` filtered package has no runtime dependencies; frozen peer installs React/React DOM 19.3.1 and Zod 4.6.7 carry MIT license files. No observed peer-license conflict with a private `UNLICENSED` core; ownership/notices, final-main history and consumer/hosted installer evidence remain separate gates. The extraction runbook records exact final-main steps. No repository, package, credential or deployment created.
 - 2026-11-16: The shared MarkdownEditor preview callback uses an independent 500ms timer per editor. #260's unit run `43767645840` observed only two callbacks when the test waited for the second body; a focused test fix waits for all three rendered bodies and all three callback invocations without relaxing the count. The fix is based on `main`, with no V06 runtime changes; exact-head CI remains the merge gate.
 
 - C1 retained-history identity review (2026-11-15): the local #208 `4df25c52` filtered rehearsal has 86 commits across two anonymized author/committer pairs. At 20:46 ICT, the coordinator under Parker approval `t250u` and delegated rule `12:26` decided to keep both reviewed identities unchanged: no rewrite or `.mailmap`, preserving provenance in Parker's own private destination. Re-audit the final integrated tree and stop on any new pair before a private push; see the C1 runbook.
@@ -286,6 +289,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Reconciled #199 with main `26fca2d` after docs #271, retaining both D2 and C1 histories; regenerated Graphify from the combined tree. No Prisma schema/migration or production change.
+
 - 2026-11-16: Refreshed D2 #199 Graphify from source code commit `aeb3c2d6` and recorded the provenance-only follow-up explicitly; no runtime or schema changes.
 
 - 2026-11-16: Add CI-uploaded V17/V21 source fixture and disposable-DB version/route hash inventories, including rejected future version routes and before/after canonical byte comparisons; no production DB access, runtime/schema/golden change or V17 operational signoff.
@@ -320,6 +325,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Hardened D2 legacy publish's published-pointer CAS and audited sibling SEO and five block mutations; deterministic activation-race unit coverage covers publish and delete rollback. Merged main `69f4806` preserving both documentation histories; no migration or production action in this change.
 
 - 2026-11-15: Reconciled #199 D2 persistence onto main, retaining main's CMS engine, VI-only SEO golden and both documentation histories. Recorded Parker's forward-only approval separately from the outstanding Render drain gate; preserved the pre-D2 rollback-reader reproduction as a known unsafe-writer test. The `main` API deploy runs the additive migration on startup, so no merge/deploy until the no-overlap gate is verified.
+- 2026-11-16: Recorded the scoped C1 peer-license audit and final-main consumer/hosted checklist; regenerated Graphify for this docs-only change. No package/runtime/golden change or release authorization.
 - 2026-11-16: Make the three-editor Write/Preview unit test await every debounced preview and retain its exact three-call assertion; no editor behavior, API, or threshold changes.
 
 - 2026-11-15: Recorded the coordinator's 20:46 ICT C1 decision to retain the two reviewed identity pairs without a rewrite or `.mailmap`; final-history audit remains required. Docs only, no private push.
