@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- D2 #199 Graphify P3 (2026-11-16): re-extracted code topology from reviewed head `aeb3c2d62787a5d0ea2ec22ab97f5c62c7249181`; the docs-only follow-up changes report provenance, not migration, API behavior or goldens. Release still HOLD on Stage A drain and separate approvals.
+
 - 2026-11-16 V17/V21 raw inventory: tracked migration/seed page writers and raw fixture variants are gated in tests; V17 still requires authorized read-only production inventory and final-head route/golden comparison. V21 requires final integrated-head evidence; see `docs/specs/2026-11-16-cms-d2-v17-v21-raw-inventory.md`.
 - 2026-11-16 V17/V21 combined artifact follow-up: unit/API CI emit source-byte and canonical disposable-DB JSON byte/hash manifests with head/merge provenance. Review these on the integrated #208 head and final main before closing the code evidence; production inventory stays deferred. No runtime/schema/golden change.
 - 2026-11-16 V12 split: pre-deploy route-template logging, request-ID fingerprinting, stack-free 500 logging and retry-exhausted revalidation warning redaction now have unit tests; disposable-DB populated draft/version/preview and denied-mutation tests capture and reject content/token/PII markers in logs. New exact-head CI and independent review pending. Authorized read-only Render log audit is DEFERRED until after deploy; no operational signoff or production calls here.
@@ -283,6 +285,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Refreshed D2 #199 Graphify from source code commit `aeb3c2d6` and recorded the provenance-only follow-up explicitly; no runtime or schema changes.
 
 - 2026-11-16: Add CI-uploaded V17/V21 source fixture and disposable-DB version/route hash inventories, including rejected future version routes and before/after canonical byte comparisons; no production DB access, runtime/schema/golden change or V17 operational signoff.
 
