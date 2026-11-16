@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: No-JS responsive SSR keeps mobile/tablet/desktop host variants in the DOM. A hidden `auto-fit` grid can return an unresolved computed-style expression whose space-separated tokens are not painted tracks; assert exactly one laid-out variant and inspect that variant's computed grid and text without relaxing bounds.
+
 - 2026-11-16: Viewport-safe no-JS captures can still hide mid-word stat labels and ellipsized featured descriptions inside CMS columns; size nested stats to their container and assert readable labels and wrapping text in both public and historical preview.
 
 - 2026-11-16: Bounding boxes can pass viewport checks while text is broken into single letters by `overflow-wrap: anywhere` and viewport-based multi-column layouts inside a narrow CMS column; assert computed inner tracks/step direction and review raw paired PNGs for reading quality.

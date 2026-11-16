@@ -323,23 +323,25 @@ for (const group of [0, 1, 2, 3]) {
               const statLayout = await main
                 .locator('.cms-tree__column [data-slot="stat-band"]')
                 .evaluateAll((bands) =>
-                  bands.map((band) => ({
-                    tracks: getComputedStyle(band).gridTemplateColumns.split(' ').length,
-                    labels: Array.from(
-                      band.querySelectorAll('[data-slot="stat-item"] > span:last-child'),
-                    )
-                      .filter((label) => /^\S+$/.test(label.textContent?.trim() ?? ''))
-                      .map((label) => {
-                        const range = document.createRange();
-                        range.selectNodeContents(label);
-                        return {
-                          text: label.textContent?.trim(),
-                          lines: range.getClientRects().length,
-                        };
-                      }),
-                  })),
+                  bands
+                    .filter((band) => band.getClientRects().length > 0)
+                    .map((band) => ({
+                      tracks: getComputedStyle(band).gridTemplateColumns.split(' ').length,
+                      labels: Array.from(
+                        band.querySelectorAll('[data-slot="stat-item"] > span:last-child'),
+                      )
+                        .filter((label) => /^\S+$/.test(label.textContent?.trim() ?? ''))
+                        .map((label) => {
+                          const range = document.createRange();
+                          range.selectNodeContents(label);
+                          return {
+                            text: label.textContent?.trim(),
+                            lines: range.getClientRects().length,
+                          };
+                        }),
+                    })),
                 );
-              expect(statLayout.length, 'nested stat-band is present').toBeGreaterThan(0);
+              expect(statLayout, 'one visible nested stat-band').toHaveLength(1);
               for (const band of statLayout) {
                 expect(band.tracks, 'nested stat-band columns').toBeLessThanOrEqual(2);
                 expect(band.labels.length, 'single-word stat labels are present').toBeGreaterThan(
@@ -352,18 +354,20 @@ for (const group of [0, 1, 2, 3]) {
               const cardResults = await main
                 .locator('.cms-tree__column [data-slot="case-card"] .project-card-result')
                 .evaluateAll((results) =>
-                  results.map((result) => {
-                    const range = document.createRange();
-                    range.selectNodeContents(result);
-                    const textEnd = Array.from(range.getClientRects()).at(-1)?.right ?? 0;
-                    return {
-                      whiteSpace: getComputedStyle(result).whiteSpace,
-                      textEnd,
-                      right: result.getBoundingClientRect().right,
-                    };
-                  }),
+                  results
+                    .filter((result) => result.getClientRects().length > 0)
+                    .map((result) => {
+                      const range = document.createRange();
+                      range.selectNodeContents(result);
+                      const textEnd = Array.from(range.getClientRects()).at(-1)?.right ?? 0;
+                      return {
+                        whiteSpace: getComputedStyle(result).whiteSpace,
+                        textEnd,
+                        right: result.getBoundingClientRect().right,
+                      };
+                    }),
                 );
-              expect(cardResults.length, 'nested featured card is present').toBeGreaterThan(0);
+              expect(cardResults, 'one visible nested featured card').toHaveLength(1);
               for (const result of cardResults) {
                 expect(result.whiteSpace, 'featured description wraps').toBe('normal');
                 expect(
