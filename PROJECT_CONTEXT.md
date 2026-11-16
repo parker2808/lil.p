@@ -53,6 +53,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-16 V13 F3/F4: D6 no-SEO tree metadata now takes the rendered EN/VI page-header H1/intro (or native heading H1) for public and authorized preview; invalid legacy preview blocks get localized recovery help without raw diagnostics. Exact-head browser CI and combined-head route/state review pending; full V13 remains GAP.
 
 - 2026-11-16 V13: D6 historical draft SEO title/description previously read the current draft while `?v=N` rendered a versioned tree. Shared metadata now uses the validated draft-only version for core and custom page routes; browser evidence must verify EN/VI old body/SEO versus current public body/SEO. Full V13 route/state localization remains GAP.
+
+- 2026-11-16 D6 all-20 gallery: the previous neutral/lil.p visual pairs were almost entirely byte-identical despite a passing builder-accent token check. Adapt actual site palette only on the neutral host; require rendered hero colors and different images, then inspect exact-head public/preview CI artifacts. V03 starter components, V05 Properties and complete V14 real-tenant/combined-head evidence remain GAP.
 - 2026-11-16 V16 D6 version-dialog gate: register EN/VI × light/dark real-API keyboard publish and Restore confirmation tests (trap, Escape/Cancel/confirm return, ARIA, polite status, unwaived axe). CI `43769180422` found the History sheet missing `aria-modal`; CI `43770356436` found focus was not returned after dismissing the controlled Restore alertdialog. Scope modal semantics and explicit nested-dialog focus return, then rerun. Publish has no confirmation dialog in D6; manual VoiceOver/NVDA and public-route V16 remain GAP even if CI passes. See `docs/specs/2026-11-16-cms-d6-v16-version-dialog.md`.
 - 2026-11-16 V03/V14 real-tenant SSR extension: EN/VI × light/dark × 390/768/1440 no-JS public/preview captures now assert more than 2% painted CTA pixel difference between actual neutral/branded hosts, with exact same-host preview parity. The all-20 host first-paint matrix, WCAG AA and manual review remain GAP pending exact-head CI and independent review; no runtime or schema changes.
 - 2026-11-16 V05: A focused D6 editor-origin page-header test edits nested EN/VI title and eyebrow in Properties, waits for each real autosaved draft value, then pairs the saved revision with version snapshot and EN/VI public/version-preview render captures at 390/768/1440. Prior head `957b907a` passed run `43761699036` (5/5 web shards); the merged D6 banner/contrast and V09/V10 base requires new exact-head CI and independent screenshot review. Full 20-schema validation/errors remain GAP. See `docs/specs/2026-11-16-cms-d6-v05-revision-chain.md`.
@@ -361,14 +363,16 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Restrict the V13 public invalid-preview notice isolation assertion to parsed SSR main and hydrated DOM because Next's locale catalog includes translated notice strings in RSC scripts; keep raw diagnostics excluded from the whole response. Exact-head CI pending.
 - 2026-11-16: Populate valid EN/VI prose before publishing the F4 disposable legacy-preview fixture; retain the strict publish guard and unchanged public snapshot, then seed only the invalid draft. Exact-head CI pending.
 - 2026-11-16: Register real invalid-draft EN/VI browser evidence backed by local disposable MySQL; published snapshot and golden/schema contracts unchanged. CI pending.
 
 - 2026-11-16: Add no-SEO tree H1/description fallback, sanitized bilingual invalid-block notice and real admin API EN/VI draft/public metadata test; no CMS core/API/schema/golden changes. CI pending.
+
+- 2026-11-16: Mapped the neutral host's rendered site palette to core tokens without changing the lil.p palette; the 20-host browser gallery asserts a painted hero accent and distinguishable neutral/lil.p images while retaining axe and public/preview parity. Exact-head CI and visual acceptance pending.
 - 2026-11-16: Restore keyboard focus to the originating version-row action after Escape/Cancel and to Version history after successful nested Restore closes the sheet; preserve strict EN/VI dialog browser checks.
 
 - 2026-11-16: Add a sharded D6 real-API version-action keyboard/ARIA/axe browser gate, fix the scoped modal semantics identified by CI, and explicitly preserve manual screen-reader and missing Publish-dialog limitations; no golden, schema or API changes.
-
 - 2026-11-16: Broadened the D6 real-host no-JS nested-tree browser sample to three widths and measured tenant CTA paint (over 2% pixel difference), retaining EN/VI, light/dark and strict public/preview parity; no product or data changes. CI and visual review pending.
 - 2026-11-16: Expanded V05 Properties evidence to include scrolled mobile/tablet title fields; initial run `43759329807` passed 18/18 at `561fe6ed`, and strengthened run `43760729931` passed five shards at `f8d3d14d`. The combined V02 base still needs exact-new-head CI.
 

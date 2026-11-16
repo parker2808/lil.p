@@ -8,6 +8,11 @@ still requires combined-head route/state review.
 Its F4 integration fixture uses only the disposable Playwright database to check
 real invalid draft previews against the unchanged published snapshot.
 
+The [D6 neutral host gallery](./docs/specs/2026-11-16-cms-d6-neutral-gallery.md)
+maps rendered site colors to core tokens only inside the neutral CMS host and
+checks a painted hero accent and brand-different screenshots in CI. The
+existing lil.p host palette stays unchanged; gallery evidence alone does not
+close V03/V05/V14 or prove a separate neutral SSR tenant.
 Historical CMS previews (`?v=N`) now read the same version for the rendered
 tree and EN/VI SEO title/description. Public routes ignore `?v=` and retain
 their current published content and metadata; this is a scoped V13 regression
