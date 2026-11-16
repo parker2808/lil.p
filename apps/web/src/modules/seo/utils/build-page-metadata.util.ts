@@ -8,6 +8,7 @@ import { getSite } from '@/modules/core/services/site.service';
 
 import { fallbackMetadata } from './fallback-metadata.util';
 import { pageMetadata } from './page-metadata.util';
+import { firstTreeHeading } from './tree-heading.util';
 
 export async function buildPageMetadata(
   key: PageKey,
@@ -19,9 +20,28 @@ export async function buildPageMetadata(
     const typed = locale as Locale;
     const version = (await draftMode()).isEnabled ? previewVersion(await searchParams) : undefined;
     const [site, page] = await Promise.all([getSite(typed), getPage(key, typed, version)]);
+    const heading = 'tree' in page ? firstTreeHeading(page.tree, typed) : null;
     return pageMetadata({
       site,
-      page: 'tree' in page ? { ...page, blocks: [] } : page,
+      page:
+        heading?.title || heading?.intro
+          ? {
+              ...page,
+              blocks: [
+                {
+                  id: 0,
+                  key: 'metadata-heading',
+                  type: 'page-header',
+                  layout: 'ONE',
+                  surface: 'PLAIN',
+                  props: heading,
+                  lang: typed,
+                },
+              ],
+            }
+          : 'tree' in page
+            ? { ...page, blocks: [] }
+            : page,
       locale: typed,
       path: publicPagePathForKey(key),
     });
