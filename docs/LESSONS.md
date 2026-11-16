@@ -6,6 +6,7 @@
 - 2026-11-16: A no-JS full-page Playwright screenshot can stall before producing any artifact even after successful SSR assertions; capture the measured full content rectangle via Chromium protocol and verify PNG dimensions before reviewing any visual gate.
 
 - 2026-11-16: A no-JS all-host visual test can consume its entire four-minute case and then a shard's 20-minute budget on retries; split by viewport and balance registered specs across all shards, keeping each public/preview pair, raw screenshots and unwaived axe intact.
+- 2026-11-16: When merging D5 documentation into D6, preserve the historical D5 publishing limitation only in its scoped section; the current integrated builder description must reflect the D6 admin publish, version history and draft-only restore controls.
 
 - 2026-11-16: When a gallery PR restacks over new D6 no-JS and revision tests, preserve both histories and the narrow hydrated-palette evidence claim; an AST-complete Graphify attempt that stalls before report generation is not a fresh provenance claim.
 
