@@ -256,9 +256,11 @@ test('EN/VI historical draft SEO matches the versioned body; public query stays 
   expect(legacyPublished.status(), await legacyPublished.text()).toBe(200);
   expect((await legacyPublished.json()).publishedVersion).toBe(1);
   await setSeo('Current');
+  const draft = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+  expect(draft.status(), await draft.text()).toBe(200);
   const activated = await page.request.post(`/api/admin/pages/${key}/builder/activate`, {
     headers,
-    data: { expectedRevision: '0', tree: currentTree },
+    data: { expectedRevision: (await draft.json()).revision, tree: currentTree },
   });
   expect(activated.status(), await activated.text()).toBe(200);
   const published = await page.request.post(`/api/admin/pages/${key}/builder/publish`, {
@@ -347,9 +349,11 @@ test('EN/VI tree page without SEO derives public and draft metadata from the vis
       ],
     },
   };
+  const draft = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+  expect(draft.status(), await draft.text()).toBe(200);
   const activated = await page.request.post(`/api/admin/pages/${key}/builder/activate`, {
     headers,
-    data: { expectedRevision: '0', tree },
+    data: { expectedRevision: (await draft.json()).revision, tree },
   });
   expect(activated.status(), await activated.text()).toBe(200);
   for (const [locale, heading, description] of [

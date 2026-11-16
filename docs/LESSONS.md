@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: Changed-file subtraction is not tree equivalence for a stacked landing: compare blob contents and provenance against combined verification, bring over API-returned CAS revisions after legacy SEO writes, and retain stronger landing-base waits and current UI labels where the combined branch is stale.
+
 - 2026-11-16: A five-route public locale inventory does not cover matching admin page editors: assert every built-in editor's exact locale-dependent SSR title and a visible action before attaching EN/VI screenshots; cross-reference existing empty/error/conflict and historical preview suites instead of duplicating them.
 
 - 2026-11-16: A Next route can nest its `.public-notes` wrapper inside the site shell's `main#content`; inspect the actual component tree before adding a loaded-content selector, then wait for a visible H1 as well as the absence of the route skeleton.

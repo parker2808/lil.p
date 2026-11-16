@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #274/#208 tree reconciliation: 21 non-#210/#199 file differences include post-D2 CAS fixture progression, two D2-only test files, stale combined-only locators/labels, and documentation. Prepared test-only revision chaining, pinned editor-host shards and bilingual optional-heading checks locally; do not push this commit to D-base or score tree parity until #210 then #199 land and exact-head CI passes. Keep the stricter contact wait and current D6 builder documentation rather than copying stale #208 blobs.
+
 - 2026-11-16 #274 landing preparation: #202 merged into D-base `d3cc08f7`; sync main `6825ee58` without importing unmerged #199. Draft landing stays blocked until #210/#199 are separately authorized, D2 is integrated, and the final tree/CI/review are verified.
 
 - 2026-11-16 V13 final pre-deploy evidence: extend the existing EN/VI route matrix to the admin index and all five built-in page editors with exact localized titles, visible actions and capture inventory. Complementary historical metadata and editor empty/error/conflict gates already exist; exact-head CI and independent raw-image review are pending. Manual screen-reader inspection belongs to V16 and production parity to the post-deploy worksheet; do not infer either from this gate.
@@ -434,6 +436,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Prepare local-only #274 parity test fixes for post-D2 CAS progression, pinned editor-host shards and bilingual optional-heading validation; no runtime, remote branch, migration or deployment changes.
 
 - 2026-11-16: Prepare draft #274 landing after #202 merged into D-base, preserving D5/D6 and main's C1 fixture history. #199 D2 is not an ancestor; sync it only after the authorized #210 → #199 main sequence. No production operation or landing approval.
 

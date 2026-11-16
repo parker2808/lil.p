@@ -90,20 +90,28 @@ test('real EN/VI preview-public SSR, hydration and pixel pairs at 390/768/1440',
     data: { seoTitleVi: 'Kiểm chứng tương đồng' },
   });
   expect(seo.status(), await seo.text()).toBe(200);
+  const legacyDraft = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+  expect(legacyDraft.status(), await legacyDraft.text()).toBe(200);
+  const legacyRevision = (await legacyDraft.json()).revision as string;
+  expect(legacyRevision).toBe('1');
   const activated = await page.request.post(`/api/admin/pages/${key}/builder/activate`, {
     headers,
-    data: { expectedRevision: '0', tree },
+    data: { expectedRevision: legacyRevision, tree },
   });
   expect(activated.status(), await activated.text()).toBe(200);
+  const activatedRevision = (await activated.json()).revision as string;
+  expect(activatedRevision).toBe((BigInt(legacyRevision) + 1n).toString());
   const saved = await page.request.put(`/api/admin/pages/${key}/builder/draft`, {
     headers,
-    data: { expectedRevision: '1', tree },
+    data: { expectedRevision: activatedRevision, tree },
   });
   expect(saved.status(), await saved.text()).toBe(200);
-  expect((await saved.json()).tree.root.sections[0].content[0].responsive).toEqual(responsive);
+  const savedDraft = await saved.json();
+  expect(savedDraft.revision).toBe((BigInt(activatedRevision) + 1n).toString());
+  expect(savedDraft.tree.root.sections[0].content[0].responsive).toEqual(responsive);
   const published = await page.request.post(`/api/admin/pages/${key}/builder/publish`, {
     headers,
-    data: { expectedRevision: '2' },
+    data: { expectedRevision: savedDraft.revision },
   });
   expect(published.status(), await published.text()).toBe(200);
   expect((await published.json()).publishedVersion).toBe(1);

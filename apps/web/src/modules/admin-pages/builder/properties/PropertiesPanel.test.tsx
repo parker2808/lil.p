@@ -189,7 +189,13 @@ it('uses translated heading and language names for optional nested VI fields', (
 });
 
 it('offers valid optional bilingual heading for a host with empty defaults', () => {
-  const onEdit = vi.fn();
+  let updated: BuilderState;
+  const onEdit = vi.fn((operation: TreeOperation) => {
+    const result = applyTreeOperation(updated.document, operation, builderRegistry);
+    if (!result.ok) return result.code;
+    updated = { ...updated, document: result.value };
+    return undefined;
+  });
   const host = newNode('cv-download', () => 'host') as Extract<TreeNode, { type: 'component' }>;
   const hostState: BuilderState = {
     selectedId: 'host',
@@ -201,16 +207,22 @@ it('offers valid optional bilingual heading for a host with empty defaults', () 
       },
     },
   };
-  render(<PropertiesPanel state={hostState} locale="en" onEdit={onEdit} />);
+  updated = hostState;
+  const { rerender } = render(<PropertiesPanel state={updated} locale="en" onEdit={onEdit} />);
   fireEvent.click(screen.getByRole('button', { name: 'Add heading' }));
   expect(onEdit).not.toHaveBeenCalled();
   fireEvent.change(screen.getByRole('textbox', { name: 'Section heading · Tiêu đề · English' }), {
     target: { value: 'Section heading' },
   });
+  rerender(<PropertiesPanel state={updated} locale="en" onEdit={onEdit} />);
+  fireEvent.change(
+    screen.getByRole('textbox', { name: 'Section heading · Tiêu đề · Vietnamese' }),
+    { target: { value: 'Tiêu đề mục' } },
+  );
   expect(onEdit).toHaveBeenCalledWith(
     expect.objectContaining({
       key: 'heading',
-      value: { title: { en: 'Section heading', vi: '' } },
+      value: { title: { en: 'Section heading', vi: 'Tiêu đề mục' } },
     }),
     true,
   );

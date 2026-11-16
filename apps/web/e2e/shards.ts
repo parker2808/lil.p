@@ -149,6 +149,7 @@ export function assertPinnedSpecs(pins: Readonly<Record<string, number>>): void 
 }
 
 assertPinnedSpecs(PINNED);
+assertPinnedSpecs(Object.fromEntries(EDITOR_HOST_SPECS.map((file, index) => [file, index + 1])));
 
 /** Baseline CI seconds per file from run 41382787431; unknown files count as 4. */
 const WEIGHT: Record<string, number> = {
