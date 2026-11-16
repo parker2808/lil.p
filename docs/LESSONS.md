@@ -1,8 +1,10 @@
 # Lessons
 
+- 2026-11-16: An admin builder can render its entire accessible UI yet return HTTP 404 when the proxy omits its section from the route allowlist; assert response status as well as the visible region, and preserve the unknown-section 404 contract.
+
 - 2026-11-16: Desktop builder has a visible named region but hides its mobile navigation; assert the accessible region for desktop route-state evidence instead of a hidden mobile-only navigation landmark.
 
-- 2026-11-16: The demo site intentionally shares an EN/VI SEO title, so verify localized homepage descriptions rather than inventing title differences. A guarded builder can paint under HTTP 404 when the E2E route flag is set only at runtime; set it for the shared E2E build too, then require HTTP 200 on a created custom-page builder.
+- 2026-11-16: The demo site intentionally shares an EN/VI SEO title, so verify localized homepage descriptions rather than inventing title differences. A guarded builder can paint under HTTP 404 even with the E2E route flag set for both build and runtime when the admin proxy omits its section; require HTTP 200 on a created custom-page builder.
 
 - 2026-11-16: Public/admin 404 and admin pages need not emit a description tag; an unconditional Playwright `getAttribute` waits until timeout. Inventory the absent tag as null, but continue requiring a nonempty description on every tested public/preview content route.
 
