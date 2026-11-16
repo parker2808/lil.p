@@ -48,15 +48,12 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-<<<<<<< HEAD
 - Stage A #210 sync with main `6825ee58` (2026-11-16): retain the freeze worksheet and C1 tarball rehearsal history; the runtime guard and probe kit remain unchanged. Production drain, migration and deploy remain HOLD.
 
 - Stage A #210 (2026-11-16 12:48 ICT): coordinator's read-only Render connector saw direct API health 200, a configured single instance and the earlier live deploy; no authenticated before/after instance drain evidence or freeze probes. The worksheet now uses coordinator-run Render GET API requests rather than a missing local CLI and calls out that the API build filter can auto-deploy on #210 merge. Stage A HOLD.
 - 2026-11-16 #208 verification-only pending refresh: normal-merged main `26fca2d3`, #210 `8e8022df`, D2 #199 `5018b1ac`, and D6 `df6b7c48` (including reviewed #270 V05 and scoped #268 V13). New exact-head API/five-shard CI and SHA-matched artifact review are required before rescoring V05/V09/V13; V20 remains GAP until each class-A pre-deploy row is signed. Preserve #210 post-deploy worksheet, #208 DO NOT MERGE and Stage A HOLD.
 - 2026-11-16 V13 route/state matrix: registered EN/VI public/draft five-route metadata plus localized public/admin 404 and admin editor/builder captures with a 30-image CI inventory. Runs `43796922246` and `43799733836` exposed missing descriptions and identical seeded EN/VI home titles; `43803678290` found the builder proxy's missing allowlist entry. Exact-head `43805811458` passed 17/17, but independent review of artifact `14199056215` found a notes skeleton capture and overlapping builder action labels. Wait for real notes content and wrap the builder actions; gate both with browser assertions. After merging D6 `1f8fcf09`, new five-shard CI and raw-image review remain required. Manual accessibility, production parity and exhaustive conflict/error states remain GAP. See `docs/specs/2026-11-16-cms-d6-v13-route-matrix.md`.
-=======
 - 2026-11-16 #199 main sync after #271: retain the D2 release/drain gates alongside C1 license history, without touching Prisma schema or migration; exact merged-head API and five-shard CI remain required before consideration. No production action.
->>>>>>> 52f1dea47ae94efd8eb08895a6595e1b8091dd36
 - 2026-11-16 C1 tarball rehearsal at #208 `4227e3e`: standalone core and all four consumer builds passed, but the fixture unit gate used a monorepo-relative `packages/cms-core/dist` path and failed when the package came from its tarball. Resolving through installed `./react` retained both client/server directive assertions and passed 9/9 fixture tests in the disposable tarball consumer (Node 22). Rerun all C1 checks on final main after the stack lands; no repository created.
 
 - 2026-11-16 C1 dependency-rights audit (docs only): #208 `539c4f1c` filtered package has no runtime dependencies; frozen peer installs React/React DOM 19.3.1 and Zod 4.6.7 carry MIT license files. No observed peer-license conflict with a private `UNLICENSED` core; ownership/notices, final-main history and consumer/hosted installer evidence remain separate gates. The extraction runbook records exact final-main steps. No repository, package, credential or deployment created.
@@ -557,7 +554,6 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
-<<<<<<< HEAD
 - 2026-11-16: Synced Stage A #210 with main `6825ee58` after #273, preserving the freeze worksheet and C1 tarball fixture history. No freeze runtime, probes, or production action changed.
 
 - 2026-11-16: Corrected Stage A rollout docs to distinguish the reported forward-only policy approval from separate production authorization: keep Render auto-deploy on as configured, keep other API-bearing merges off `main` until reopen, and authorize each #210 → #199 → reopen → #202 action only after its preceding freeze/drain/migration/health gate passes. No runtime or production action.
@@ -574,10 +570,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-16: Restacked Stage A #210 onto main `26fca2d3` while preserving both documentation histories and regenerating Graphify; no freeze behavior, probe logic or production action changed.
 - 2026-11-16: Added a docs-only Stage A drain evidence worksheet with verified read-only CLI commands, explicit STOP conditions and forward-only failure path; tracked-config inventory only, no production action.
 - 2026-11-16: Restack #210 onto main `676c5a20`, preserving the production 503 page-write freeze and main's MarkdownEditor callback-count test. No release or data operation; exact-head CI pending.
-=======
 - 2026-11-16: Synced #199 with main `6825ee58` after #273, retaining D2 and C1 histories; regenerated Graphify from the merged tree. No Prisma schema/migration or production change.
 - 2026-11-16: Reconciled #199 with main `26fca2d` after docs #271, retaining both D2 and C1 histories; regenerated Graphify from the combined tree. No Prisma schema/migration or production change.
->>>>>>> 52f1dea47ae94efd8eb08895a6595e1b8091dd36
 - 2026-11-16: Resolve the neutral fixture's client/server directive checks against the installed core package instead of assuming a sibling workspace build; retain both ESM and CJS assertions. No package/runtime behavior or export-map change.
 
 
@@ -593,14 +587,11 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Prepared the production-default pre-D2 admin-page write freeze, future-path/override HTTP regressions and nonsecret instance identity; documented the no-deploy old-instance drain gate. No schema, golden, production DB or deployment change.
 - 2026-11-16: Resolve the neutral fixture's client/server directive checks against the installed core package instead of assuming a sibling workspace build; retain both ESM and CJS assertions. No package/runtime behavior or export-map change.
 - 2026-11-16: Recorded the scoped C1 peer-license audit and final-main consumer/hosted checklist; regenerated Graphify for this docs-only change. No package/runtime/golden change or release authorization.
-<<<<<<< HEAD
 - 2026-11-16: Make the three-editor Write/Preview unit test await every debounced preview and retain its exact three-call assertion; no editor behavior, API, or threshold changes.
 - 2026-11-16: Normal-merged D6 `ffbf1181` (#269 populated CV gallery) into verification-only #208; preserved current J/V row evidence, pending exact combined-head API + W1–W5 before V09 score change. #268/#270 remain separate.
 - 2026-11-16: Stage V09 real CV media/profile fixture and restore cleanup for the all-20 public/preview matrix, capturing each visible component instead of `main` on empty CV; no runtime/golden/threshold changes. CI and image review pending.
 - 2026-11-16: Integrated reviewed D6 #260 no-JS responsive/legibility assertions and narrow-column wrapping into verification-only #208; requires its own exact-head CI and image review before any V06 score change.
 - 2026-11-16: Preserved D6 history of V06 computed painted-grid assertions after the failed hidden-variant count; no bounds relaxation.
-=======
->>>>>>> 52f1dea47ae94efd8eb08895a6595e1b8091dd36
 
 - 2026-11-16: Preserved D2 #199 Graphify source provenance `aeb3c2d6` and its docs-only follow-up while refreshing #208; no D2 runtime, schema or migration change.
 - 2026-11-16: Scored #208 `4425657d` exact-head 17/17 in a row-by-row PR comment; successor cut integrates D2 `2c4bf185` and D6 `b5f78c30` without inferring new row PASS or release authorization.

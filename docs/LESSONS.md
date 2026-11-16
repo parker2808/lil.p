@@ -693,7 +693,6 @@
 - 2026-11-15: A clean D5 stale-revision test and a D6 CAS publish UI can merge with only import conflicts, but their individual green runs cannot certify the combined editor; retain both imports and rerun exact-head checks.
 - 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
 - 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
-<<<<<<< HEAD
 - 2026-11-16: For a pre-migration freeze, document the complete before/after instance roster and startup migration separately from HTTP probes; a read-only CLI snapshot or green CI cannot establish drained in-flight writers or authorize reopening.
 - 2026-11-15: Merging documentation-only main changes can conflict with active release notes without changing runtime; retain both histories and request exact-head CI rather than treating a single security check as a full gate.
 - 2026-11-15: When rebasing the pre-migration write freeze on five-shard main, preserve both Stage A drain instructions and newly registered keyboard/canvas E2E coverage; a clean merge of runtime files alone does not prove production instances have drained.
@@ -754,9 +753,6 @@
 - 2026-11-16: A four-consumer tarball rehearsal can pass builds but fail a fixture test that inspects `../../../packages/cms-core/dist`; resolve package artifacts via the installed subpath export so the same directive assertions cover workspace and tarball installs.
 - 2026-11-16: After an independent fixture fix lands on main, preserve both its tarball lesson and the Stage A drain lesson when restacking the freeze branch; documentation reconciliation does not alter or verify the live guard.
 - 2026-11-16: After #273, pause unrelated merges into main until the separately authorized Stage A freeze, migration and D2-aware reopen sequence is verified; a green restack is not production authorization.
-=======
 - 2026-11-15: A docs-only main sync can conflict with D2's release-gate notes; keep both histories and verify the schema/migration diff is empty before relying on the prior disposable-MySQL proof.
 - 2026-11-16: Graphify's generated source SHA names the code snapshot, not the later docs-only commit; refresh extracted topology before claiming freshness and state that distinction explicitly.
-- 2026-11-16: A four-consumer tarball rehearsal can pass builds but fail a fixture test that inspects `../../../packages/cms-core/dist`; resolve package artifacts via the installed subpath export so the same directive assertions cover workspace and tarball installs.
 - 2026-11-16: When a docs-only D2 sync meets a C1 tarball fix, retain both decision histories and check Prisma schema/migration bytes against the pre-merge branch before reusing migration evidence.
->>>>>>> 52f1dea47ae94efd8eb08895a6595e1b8091dd36
