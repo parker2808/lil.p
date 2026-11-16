@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V05 all-20 follow-up: extend the four existing editor-origin shard groups with exact saved-revision/snapshot equality and EN/VI × light/dark × 390/768/1440 public/version-preview captures for each host. Require viewport-visible painted host content (including real CV media), exact-head five-shard CI and independent raw-image review; invalid-property states and production remain separate gaps. See `docs/specs/2026-11-16-cms-d6-v05-revision-chain.md`.
 - 2026-11-16 V09 painted gallery: replace empty `cv-download` host-context captures with a disposable bilingual PDF profile fixture; require real localized visible CV link, initial SSR text, and directly paired public/version-preview component PNGs for all 20 types across existing tuples. Preserve axe and 0.5% pixel bound; exact-head five-shard CI and independent raw-image review pending, so V09 remains GAP.
 - 2026-11-16 V03/V14 raw review on #264 `f2aabedc`/CI `43788335192` found no-JS dark 390px process cards with near-white text on pale glass (~1.61:1) despite axe returning zero. Align the no-JS dark card-glass token with hydrated dark, reveal the same streamed SSR siblings in the axe inspection context and compare visible block text/card paints before unwaived axe. Prior green head is not signoff; exact-new-head CI and independent image review remain required.
 - 2026-11-16 V03/V14 follow-up: CI `43784478603` exposed request-local Suspense `B:N` IDs in independently rendered SSR mains and transient 1.08:1 CTA contrast in a dark 390px axe inspection context. Preserve byte-exact remaining SSR markup, no-JS visitor captures, painted-color equivalence and unwaived axe while normalizing only those IDs and waiting for the inspection context's palette/transition to settle. Restack on D6 `bebe5656` (#255); exact-head five-shard CI and raw-image review remain required.
@@ -423,6 +424,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Added all-20 host V05 revision/snapshot and 24-capture per-type public/version-preview matrix to the existing four editor-origin CI shards; now require viewport-visible painted host content including real CV media. No runtime or API change. Exact-head CI/review pending.
 - 2026-11-16: Stage V09 real CV media/profile fixture and restore cleanup for the all-20 public/preview matrix, capturing each visible component instead of `main` on empty CV; no runtime/golden/threshold changes. CI and image review pending.
 - 2026-11-16: Align no-script dark card glass with hydrated dark and require axe inspection of the same visible streamed block text and card colors; retain unwaived WCAG and original screenshot/SSR assertions. Exact-new-head CI pending.
 - 2026-11-16: Normalize only request-local Suspense template IDs for strict SSR main comparison; match settled dark host/CTA colors against the real no-JS visitor before unwaived axe. Restacked on merged V13 without altering golden contracts; exact-head CI pending.

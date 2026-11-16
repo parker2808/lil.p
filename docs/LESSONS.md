@@ -1,5 +1,9 @@
 # Lessons
 
+- 2026-11-16: A props hash and registry count do not prove that each host painted: require viewport-intersecting bounds and visible text inside the host, crop the actual host for the PNG, and provide real disposable media for data-dependent CV before claiming all-20 visual coverage.
+
+- 2026-11-16: An all-host editor-origin draft/render gate needs an immutable version snapshot and a manifest tying each locale/theme/viewport public-preview image to the same saved draft revision; post-publish route parity alone cannot establish this provenance.
+
 - 2026-11-16: A no-JS dark shell can inherit the light translucent card-glass token even while its main/card tokens are dark; axe on a JS-capable inspection context can miss this when streamed SSR siblings stay hidden. Compare painted per-card colors and visible block text in both contexts before unwaived axe.
 - 2026-11-16: Separate SSR requests can allocate different React Suspense template IDs despite identical host markup; normalize just those per-request IDs, and compare settled dark CTA colors with the no-JS capture before unwaived axe rather than testing a transient theme transition.
 - 2026-11-16: Axe cannot inject into a Playwright context created with `javaScriptEnabled: false`; retain no-JS host paint/capture there, and audit the identical SSR main in a separate page whose scripts are disabled only for navigation and enabled for axe.
