@@ -5,7 +5,7 @@
 3. Keep GET/HEAD reads, public routes and `/api/health` available; expose only nonsecret deployment identity and freeze state.
 4. Test every current page/version mutation, prospective builder paths, alternate ingress and override headers; assert no writes reach services.
    Also boot the real `AppModule` with stubbed services so removing its middleware registration fails the HTTP gate. Keep cold import/compile/init in a bounded setup hook, separate from the normally timed 503 request assertion.
-5. Keep auto-deploy off and deploy a pinned Stage A commit only with the release owner's separate approval.
+5. Keep Render auto-deploy on; inventory first, then merge the reviewed Stage A commit to `main` to deploy the freeze. Keep other API-bearing merges off `main` until reopen.
 6. Verify that every pre-freeze instance has terminated, not merely that Stage A is Live; then permit D2's startup migration with freeze still enabled.
 7. Keep freeze throughout D2 and D6 validation; unfreeze only via a later D2-aware deploy after all old instances drain.
 8. On failure, hold the freeze; do not revert to a pre-D2 writer or run seed/one-off page writes during the pause.
@@ -61,24 +61,25 @@ the same sanitized state, not environment dumps or credentials. A missing or
 malformed identity is a **stop**, not evidence of drain. The HTTP tests simulate
 direct and Vercel-forwarded ingress; they are not a live CDN proof.
 
-## Forward-only deployment checklist (release owner, separate authorization)
+## Forward-only deployment checklist (merge chain and coordinator)
 
 The [curl-only ingress and read-only Render drain checklist](../runbooks/stage-a-drain-curl.md)
-is prepared for the release owner. Its probes cannot substitute for complete
-authenticated instance inventory or separate deploy/migration approval.
+is prepared for the merge chain and coordinator. Its probes cannot substitute
+for complete authenticated instance inventory or migration verification.
 
-1. Disable API auto-deploy and pin the exact approved Stage A commit; inventory
+1. Keep API auto-deploy ON and pin the exact reviewed Stage A commit; inventory
    every existing API service/instance ID and commit before deploying. Confirm
    Stage A's image contains **no D2 migration**. Render's zero-downtime release
    leaves old instances accepting writes temporarily; no free maintenance-mode
    assumption is permitted. Never start D2 while any pre-Stage-A writer lives.
-2. Deploy Stage A; record its commit and each instance ID from the authenticated
-   state endpoint, startup logs and the Render service instance inventory. Probe
-   authenticated page POST/PATCH/DELETE paths over both the direct API hostname
-   and the Vercel `/api` rewrite: each must be `503` with `Retry-After` and no
-   DB mutation. Confirm page GET, version GET, public EN/VI reads and health
-   remain `200`. Probe all ten current routes and builder future routes; use
-   disposable test records only, never create test data in production.
+2. Merge #210 to `main` to deploy Stage A; record its commit and each instance
+   ID from the authenticated state endpoint, startup logs and the Render service
+   instance inventory. Once
+   the freeze is live, probe empty unauthenticated page POST/PATCH/DELETE requests
+   over both the direct API hostname and the Vercel `/api` rewrite: each must
+   be `503` with `Retry-After`. Confirm authorized page/version GETs and public
+   EN/VI reads and health remain `200`. Probe all ten current routes and builder
+   future routes with nonexistent keys; never create test data in production.
 3. Wait for **every pre-Stage-A instance ID** to disappear from the Render
    instance inventory and for its shutdown/in-flight-request window to finish;
    match each successor's commit/instance identity. An HTTP health response,
@@ -86,7 +87,7 @@ authenticated instance inventory or separate deploy/migration approval.
    this. Keep a timestamped redacted list of old IDs and removal observations;
    verify no unexpected ingress or workers bypass the API. If the inventory,
    identity or complete traffic mapping is unavailable, **BLOCK D2**.
-4. Only after Step 3 and a separately approved migration decision, deploy the
+4. Only after Step 3 and the two-ingress 503/200 checks, merge #199 to deploy the
    D2-aware image. Restack #199 onto the merged Stage A guard first and verify
    the same freeze HTTP tests on its **final head**; an independent D2 image
    without this middleware is unsafe. Its entrypoint runs `prisma migrate deploy` **before** its
@@ -97,8 +98,8 @@ authenticated instance inventory or separate deploy/migration approval.
    manual SQL, unreviewed jobs or other page writers during the freeze.
 5. If any deployment fails, **hold freeze** and do not roll back to an
    unguarded pre-D2 image or resume writers. An unfreeze requires a distinct
-   D2-aware code release and fresh approval after the drain and data gates.
+   D2-aware code release after the drain and data gates.
 
 No Render instance-drain or direct/Vercel production evidence exists in this
 branch. The integration owner's disposable migration/old-client test and
-final-head CI must pass separately; this runbook is not permission to deploy.
+final-head CI must pass separately. Do not advance on incomplete evidence.

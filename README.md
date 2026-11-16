@@ -310,7 +310,7 @@ After `git pull`, run `pnpm install`, `pnpm --filter @portfolio/contracts build`
 
 Live hosting is **Vercel (web) + Render (API) + TiDB Cloud (MySQL) + Cloudinary (media)**. First-time provisioning, every env var, and the admin bootstrap are in [docs/DEPLOY.md](./docs/DEPLOY.md) ([Tiếng Việt](./docs/DEPLOY.vi.md)). Rollback and secret rotation: [docs/runbooks/deploy.md](./docs/runbooks/deploy.md), [docs/runbooks/secrets.md](./docs/runbooks/secrets.md).
 
-The exceptional Stage A → D2 forward-only rollout uses the [release-owner probe and drain checklist](./docs/runbooks/deploy.md#stage-a--d2-page-write-rollout-release-owner-only) and its [curl-only ingress/instance evidence sheet](./docs/runbooks/stage-a-drain-curl.md). `scripts/probe-stage-a-d2.mjs` checks public health and unauthenticated page-write freeze across direct Render and Vercel ingress; neither probe can certify old-instance drain or migration by itself. Never run either against production without release-owner authorization.
+The approved Stage A → D2 forward-only rollout uses the [release-owner probe and drain checklist](./docs/runbooks/deploy.md#stage-a--d2-page-write-rollout-release-owner-only) and its [curl-only ingress/instance evidence sheet](./docs/runbooks/stage-a-drain-curl.md). `scripts/probe-stage-a-d2.mjs` checks public health and unauthenticated page-write freeze across direct Render and Vercel ingress; neither probe can certify old-instance drain or migration by itself. Run the mutation probes only after the Stage A freeze is live; the merge chain and coordinator verify each stage before proceeding.
 
 ### How a change reaches production
 
