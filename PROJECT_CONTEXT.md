@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #202 integration README now distinguishes the D5 historical disabled-publish host from the D6 admin publish/version/restore UI. Combined-head lint and five-shard CI must re-green after the documentation fix; V03/V14 remain separate evidence gates.
 - 2026-11-16 D5→D6 integration: preserve D5 invalid/raw property drafts, blur-separated undo and localized schema labels alongside D6 version publish/restore and component registry. The 95 focused builder unit tests pass locally; prior #202 run `43776914010` failed only `/vi` mobile Lighthouse TBT (307/325ms versus 300ms), not a combined-head pass. Exact-head API and five web shards plus independent review remain required; V03/V14 and deploy signoff remain separate.
 - 2026-11-16 V16 D6 version-dialog gate: register EN/VI × light/dark real-API keyboard publish and Restore confirmation tests (trap, Escape/Cancel/confirm return, ARIA, polite status, unwaived axe). CI `43769180422` found the History sheet missing `aria-modal`; CI `43770356436` found focus was not returned after dismissing the controlled Restore alertdialog. Scope modal semantics and explicit nested-dialog focus return, then rerun. Publish has no confirmation dialog in D6; manual VoiceOver/NVDA and public-route V16 remain GAP even if CI passes. See `docs/specs/2026-11-16-cms-d6-v16-version-dialog.md`.
 - D5 V16 automated follow-up checks EN/VI keyboard trap/return for the delete dialog and compact Properties sheet, live deletion/local-draft status, and the disabled Publish reason. D5 has no publish/restore-version dialog; its integrated D6 dialog capture/a11y review and manual spoken VoiceOver/NVDA check remain GAP.
@@ -408,6 +409,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Corrected integrated web README publishing/version-history/restore description while retaining the historical D5 disabled-publish section; #202 exact-head CI is required before acceptance.
 - 2026-11-16: Merged #204 D5 builder into D6 without discarding D6 publish/restore, localized properties or D5 invalid-input/undo preservation; updated integration tests to select actual localized control names and to persist a newly added optional heading only after valid English text.
 - 2026-11-16: Mapped the neutral host's rendered site palette to core tokens without changing the lil.p palette; the 20-host browser gallery asserts a painted hero accent and distinguishable neutral/lil.p images while retaining axe and public/preview parity. Exact-head CI and visual acceptance pending.
 - 2026-11-16: Restore keyboard focus to the originating version-row action after Escape/Cancel and to Version history after successful nested Restore closes the sheet; preserve strict EN/VI dialog browser checks.
