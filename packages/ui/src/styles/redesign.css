@@ -391,6 +391,19 @@ html:root {
 .block-heading > :last-child {
   grid-row: 1 / span 2;
 }
+.public-site .cms-tree__column .block-heading {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+.public-site .cms-tree__column .block-heading > * {
+  grid-column: 1;
+}
+.public-site .cms-tree__column .block-heading > :last-child {
+  grid-row: auto;
+}
+.public-site .cms-tree__column .block-heading > :first-child:not(:last-child) {
+  grid-row: auto;
+}
 [data-block-type='hero'] {
   padding-top: clamp(48px, 6vw, 96px);
   padding-bottom: clamp(48px, 6vw, 96px);
@@ -1147,6 +1160,9 @@ html:root {
 }
 .public-site .redesign-process-flow {
   gap: 24px;
+}
+.public-site .cms-tree__column .redesign-process-flow {
+  flex-direction: column;
 }
 .public-site .redesign-process-flow li > div:last-child {
   border: 0;

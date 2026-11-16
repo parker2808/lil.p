@@ -290,7 +290,7 @@
 
 .cms-core .cms-tree__column .cms-tree__component {
   min-width: 0;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .cms-core .cms-tree__column [data-slot='principle-list'] {

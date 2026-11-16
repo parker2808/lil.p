@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: Bounding boxes can pass viewport checks while text is broken into single letters by `overflow-wrap: anywhere` and viewport-based multi-column layouts inside a narrow CMS column; assert computed inner tracks/step direction and review raw paired PNGs for reading quality.
+
 - 2026-11-16: Full-page screenshots can silently widen past the requested browser viewport while layout/hash assertions pass; compare document scroll width and visible host bounds to the actual viewport, and size nested host content to its column rather than the window breakpoint.
 
 - 2026-11-16: A saved tree may preserve semantic props while changing JSON key order; compute SSR host hashes from the persisted API tree after the same tree parse as the renderer, not from the pre-save fixture object. CI `43765148714` exposed the false-negative in V06 without weakening its per-host hash assertion.

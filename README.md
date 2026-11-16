@@ -21,7 +21,7 @@ other tenant hosts keep neutral core tokens. Custom tree HTML is request-scoped
 (tagged API reads remain cacheable). It also checks nested no-script SSR, VI
 contact defaults and translated Properties labels; this does not by itself close
 the full V03/V14 visual matrix.
-The [V06 all-20 responsive gate](./docs/specs/2026-11-16-cms-d6-v06-all20-overrides.md) separately tests no-script EN/VI historical preview and current public layout/host overrides at 390/768/1440. Raw review of head `b2f91937` exposed horizontal overflow in narrow nested columns despite green CI; the test now requires document and host bounds within each viewport. The scoped wrapping fix needs exact-new-head CI and independent capture review before V06 signoff.
+The [V06 all-20 responsive gate](./docs/specs/2026-11-16-cms-d6-v06-all20-overrides.md) separately tests no-script EN/VI historical preview and current public layout/host overrides at 390/768/1440. Raw reviews exposed horizontal overflow at `b2f91937` and unreadable narrow-column text at `3f014d63`; the gate now checks viewport bounds, full-width nested headings and vertically stacked process steps. Exact-new-head CI and independent capture review remain required before V06 signoff.
 The real-host no-script sample also checks OS-driven dark first paint and
 separately authored VI tree copy on both neutral and branded tenants; it does
 so at 390/768/1440, asserting a painted CTA difference across actual tenant

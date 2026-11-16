@@ -293,6 +293,32 @@ for (const group of [0, 1, 2, 3]) {
             expect(ratio, `${locale}/${width} row track ratio`).toBeLessThan(
               name === 'mobile' ? 1.05 : 2.1,
             );
+            const nestedLayout = await main
+              .locator(
+                '.cms-tree__column .block-heading, .cms-tree__column [data-slot="process-flow"]',
+              )
+              .evaluateAll((elements) =>
+                elements
+                  .filter((element) => element.getClientRects().length > 0)
+                  .map((element) => ({
+                    kind: element.classList.contains('block-heading') ? 'heading' : 'process',
+                    tracks: getComputedStyle(element).gridTemplateColumns.split(' ').length,
+                    direction: getComputedStyle(element).flexDirection,
+                    textWidth: element.lastElementChild?.getBoundingClientRect().width ?? 0,
+                    width: element.getBoundingClientRect().width,
+                  })),
+              );
+            expect(nestedLayout.some((layout) => layout.kind === 'heading')).toBe(true);
+            for (const layout of nestedLayout) {
+              if (layout.kind === 'heading') {
+                expect(layout.tracks, `${locale}/${width} narrow heading`).toBe(1);
+                expect(layout.textWidth, `${locale}/${width} heading text space`).toBeGreaterThan(
+                  layout.width * 0.75,
+                );
+              } else {
+                expect(layout.direction, `${locale}/${width} narrow process steps`).toBe('column');
+              }
+            }
             const screenshot = await visitor.screenshot({ fullPage: true, animations: 'disabled' });
             const screenshotName = `${locale}-group${group}-${width}-${preview ? 'preview-v1' : 'public-v2'}.png`;
             await testInfo.attach(screenshotName, { body: screenshot, contentType: 'image/png' });
