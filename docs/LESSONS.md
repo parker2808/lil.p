@@ -1,5 +1,15 @@
 # Lessons
 
+- 2026-11-16: No-JS responsive SSR keeps mobile/tablet/desktop host variants in the DOM. A hidden `auto-fit` grid can return an unresolved computed-style expression whose space-separated tokens are not painted tracks; assert exactly one laid-out variant and inspect that variant's computed grid and text without relaxing bounds.
+
+- 2026-11-16: Viewport-safe no-JS captures can still hide mid-word stat labels and ellipsized featured descriptions inside CMS columns; size nested stats to their container and assert readable labels and wrapping text in both public and historical preview.
+
+- 2026-11-16: Bounding boxes can pass viewport checks while text is broken into single letters by `overflow-wrap: anywhere` and viewport-based multi-column layouts inside a narrow CMS column; assert computed inner tracks/step direction and review raw paired PNGs for reading quality.
+
+- 2026-11-16: Full-page screenshots can silently widen past the requested browser viewport while layout/hash assertions pass; compare document scroll width and visible host bounds to the actual viewport, and size nested host content to its column rather than the window breakpoint.
+
+- 2026-11-16: A saved tree may preserve semantic props while changing JSON key order; compute SSR host hashes from the persisted API tree after the same tree parse as the renderer, not from the pre-save fixture object. CI `43765148714` exposed the false-negative in V06 without weakening its per-host hash assertion.
+- 2026-11-16: A no-script host-hash assertion must hash the renderer's serialized `{ props, lang }` envelope after locale resolution, not just localized props; CI `43762556788` exposed the mismatch without changing any production host behavior.
 - 2026-11-16: Next SSR can serialize the complete locale catalog in its RSC scripts, including preview-only notices on a valid public page. Assert notice isolation inside parsed server-rendered `.public-site main#content` and hydrated visible DOM, not across the entire HTML response; keep raw diagnostic exclusion across the full response.
 
 - 2026-11-16: A starter page's empty prose fails the real publish gate even when SEO exists; populate visible EN/VI copy before publishing the snapshot that an invalid-draft preview test must preserve.
@@ -576,10 +586,10 @@
 - 2026-11-16: The builder palette creates headings at level 2 for valid editable drafts, while publication requires exactly one H1; keyboard publish evidence must set Heading level to 1 through Properties and verify the saved draft before pressing Publish.
 - 2026-11-15: For D19 whole-block localization, setting only `page-header.title.vi` leaves the block in English if its default `eyebrow.vi` is empty. A bilingual browser fixture must populate and verify every localized field with an English value before asserting a VI rendered H1.
 - 2026-11-15: Locale-specific visual evidence needs a bilingual block fixture and an assertion on painted localized text on both public and preview routes; merely switching the page locale with a shared heading string proves neither localized content nor dark-mode rendering.
+- 2026-11-16: An all-host no-script fixture with only base props proves routing, not breakpoint behavior; independently calculate locale-effective hashes and assert the computed active variant and nested layout at each width, while treating asset-empty hosts honestly.
 - 2026-11-16: For real-tenant no-script SSR, compare painted content-element pixels across actual hostnames at each viewport, not whole-page screenshot bytes: shell chrome alone can make two blank or unstyled CMS blocks appear different.
 - 2026-11-16: A successful restored-version API equality and EN/VI light screenshots do not prove dark-theme public/preview parity after republish; compare painted content crops and unwaived axe in all locale/theme/width tuples, keeping the preview banner outside the crop and asserting real 409 focus, live feedback and no writes.
 - 2026-11-16: When D6 no-script SSR and restored-version visual evidence land in parallel, keep both audit trails and regenerate graph provenance after merging the base; neither parent's green CI proves their combined head.
-
 - 2026-11-16 V02: sau reload, Layers thu gọn Section dù draft/published tree còn nguyên; test keyboard phải mở Section bằng ArrowRight rồi mới xác nhận các node con hiện ra, không đồng nhất trạng thái UI thu gọn với mất dữ liệu.
 
 - 2026-11-16 V02: Alt+ArrowDown trên sibling cuối là no-op; phải assert order trước/sau một Alt+ArrowUp thật, dùng Tab/Shift+Tab thay Playwright `.focus()` để chứng minh keyboard reachability.
