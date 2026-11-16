@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- Stage A #210 sync with main `26fca2d3` (2026-11-16): retain the C1 dependency-rights audit alongside the release-owner worksheet; freeze behavior and the 33-probe kit remain unchanged. Production drain, probes, migration and deploy remain HOLD pending separate authorization.
+
 - Stage A #210 read-only worksheet (2026-11-16): checked tracked Render Docker startup migration and Vercel `/api` rewrite, and documented authenticated Render/Vercel inventory, before/after instance-set comparison, two-ingress probes and separate D2-aware reopen. No live inventory, HTTP probe, migration, DB access or deployment; Stage A HOLD pending release-owner evidence and authorization.
 
 - Stage A #210 after main `676c5a20`: retain the production write freeze, read/health access and independent timer regression from main. Exact-head CI and independent review remain required; production old-writer drain, migration and rollout are not authorized.
@@ -62,6 +64,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - Stage A #210 main reconciliation (2026-11-15): preserved the C1 root-export guard, #214 rollout probe and Stage A histories after main `59677dfa`; re-audited all ten main page/SEO/block/version write routes and four D2 #199 `db064d88` builder writes against the non-read `/api/admin/pages` guard. No mutation route escapes that prefix; live drain and migration remain blocked pending separate authorization.
 - Pre-D2 Stage A page-write freeze (2026-11-15): a separate API branch blocks all admin-page mutations in production before service access, with unchanged public/read routes and an admin-only sanitized instance identity. D2's startup migration remains **blocked** until a separately authorized Stage A deploy proves all pre-freeze instances drained and direct/Vercel probes pass; no Render production proof or D2 migration is included here. See `docs/specs/2026-11-15-cms-pre-d2-write-freeze.md`.
 - Stage A follow-up: boot the actual AppModule with stubbed DB/page services to catch removal of its write-freeze middleware; bespoke route tests alone cannot prove the production registration. Live ingress and old-instance drain remain unverified.
+- 2026-11-16 C1 dependency-rights audit (docs only): #208 `539c4f1c` filtered package has no runtime dependencies; frozen peer installs React/React DOM 19.3.1 and Zod 4.6.7 carry MIT license files. No observed peer-license conflict with a private `UNLICENSED` core; ownership/notices, final-main history and consumer/hosted installer evidence remain separate gates. The extraction runbook records exact final-main steps. No repository, package, credential or deployment created.
+
 - 2026-11-16: The shared MarkdownEditor preview callback uses an independent 500ms timer per editor. #260's unit run `43767645840` observed only two callbacks when the test waited for the second body; a focused test fix waits for all three rendered bodies and all three callback invocations without relaxing the count. The fix is based on `main`, with no V06 runtime changes; exact-head CI remains the merge gate.
 
 - C1 retained-history identity review (2026-11-15): the local #208 `4df25c52` filtered rehearsal has 86 commits across two anonymized author/committer pairs. At 20:46 ICT, the coordinator under Parker approval `t250u` and delegated rule `12:26` decided to keep both reviewed identities unchanged: no rewrite or `.mailmap`, preserving provenance in Parker's own private destination. Re-audit the final integrated tree and stop on any new pair before a private push; see the C1 runbook.
@@ -275,6 +279,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Restacked Stage A #210 onto main `26fca2d3` while preserving both documentation histories and regenerating Graphify; no freeze behavior, probe logic or production action changed.
+
 - 2026-11-16: Added a docs-only Stage A drain evidence worksheet with verified read-only CLI commands, explicit STOP conditions and forward-only failure path; tracked-config inventory only, no production action.
 
 - 2026-11-16: Restack #210 onto main `676c5a20`, preserving the production 503 page-write freeze and main's MarkdownEditor callback-count test. No release or data operation; exact-head CI pending.
@@ -289,6 +295,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Reconciled Stage A page-write freeze with main and documented current/D2 mutation-route coverage without changing guard behavior or running production migrations.
 - 2026-11-15: Added real-AppModule HTTP regression for the pre-D2 page write freeze, with stubbed services and no DB access; no production rollout or migration.
 - 2026-11-15: Prepared the production-default pre-D2 admin-page write freeze, future-path/override HTTP regressions and nonsecret instance identity; documented the no-deploy old-instance drain gate. No schema, golden, production DB or deployment change.
+- 2026-11-16: Recorded the scoped C1 peer-license audit and final-main consumer/hosted checklist; regenerated Graphify for this docs-only change. No package/runtime/golden change or release authorization.
+
 - 2026-11-16: Make the three-editor Write/Preview unit test await every debounced preview and retain its exact three-call assertion; no editor behavior, API, or threshold changes.
 
 - 2026-11-15: Recorded the coordinator's 20:46 ICT C1 decision to retain the two reviewed identity pairs without a rewrite or `.mailmap`; final-history audit remains required. Docs only, no private push.

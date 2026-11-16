@@ -7,6 +7,8 @@
 - 2026-11-15: A cold dynamic import and full Nest AppModule bootstrap inside a 5-second HTTP test can time out under parallel suite load without implicating the middleware; budget that setup separately and keep the request/assertion on the normal test deadline.
 
 - 2026-11-15: A broad pre-schema admin-pages write guard remains valid across D2 only after auditing both controller route tables, including SEO's shared PATCH and builder restore; preserve both histories in context conflicts and regenerate the graph from the combined tree.
+- 2026-11-16: Audit an extracted package's complete peer list against the frozen installed manifests and license files, not just its own `UNLICENSED` field; an MIT-compatible private tarball still needs final-head notice, history and hosted-distribution review.
+
 - 2026-11-16: When several editors schedule independent preview timers, waiting for one rendered preview does not prove the others have completed; await all three rendered bodies and retain the exact callback-count assertion.
 
 - 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
