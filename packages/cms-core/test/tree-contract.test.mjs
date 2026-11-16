@@ -490,6 +490,17 @@ test('opt-in legacy conversion preserves SEO, every block field, unknown type an
     converted.value.tree.root.sections.map((section) => section.content[0].responsive.base.block),
     blocks,
   );
+  const restored = {
+    seo: converted.value.seo,
+    blocks: converted.value.tree.root.sections.map(
+      (section) => section.content[0].responsive.base.block,
+    ),
+  };
+  assert.equal(JSON.stringify(restored), JSON.stringify(snapshot));
+  assert.equal(
+    JSON.stringify(snapshot.blocks[0].props.nested),
+    JSON.stringify({ data: ['vi', 1] }),
+  );
   assert.deepEqual(
     converted.value.tree.root.sections.map((section) => section.id),
     ['legacy-section-first', 'legacy-section-second'],
@@ -509,6 +520,40 @@ test('opt-in legacy conversion preserves SEO, every block field, unknown type an
     'INVALID_TREE',
   );
   assert.deepEqual(convertLegacySnapshot({ ...snapshot, extra: 1 }).code, 'INVALID_TREE');
+});
+
+test('responsive base and three overrides survive serialization without replacing inherited props', () => {
+  const tree = page([
+    {
+      ...heading,
+      responsive: {
+        base: { text: 'Base', level: 1 },
+        mobile: { text: 'Mobile' },
+        tablet: { text: 'Tablet' },
+        desktop: { text: 'Desktop' },
+      },
+    },
+  ]);
+  const parsed = readTree(JSON.parse(JSON.stringify(tree)));
+  assert.equal(parsed.ok, true);
+  assert.equal(JSON.stringify(parsed.value), JSON.stringify(tree));
+  for (const [breakpoint, text] of [
+    ['mobile', 'Mobile'],
+    ['tablet', 'Tablet'],
+    ['desktop', 'Desktop'],
+  ]) {
+    assert.deepEqual(
+      resolveResponsive(parsed.value.root.sections[0].content[0].responsive, breakpoint),
+      {
+        text,
+        level: 1,
+      },
+    );
+  }
+  assert.deepEqual(parsed.value.root.sections[0].content[0].responsive.base, {
+    text: 'Base',
+    level: 1,
+  });
 });
 
 test('combined contracts+engine+tree gzip stays under unchanged 60 KiB cap', () => {

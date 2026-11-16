@@ -6,11 +6,15 @@ import {
   SchemaForm as CoreSchemaForm,
 } from '@parker2808/cms-core/react';
 import { useForm } from '@tanstack/react-form';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { ZodType } from 'zod';
 
 import { editorLabelsFromMessages } from '@/modules/admin-core/utils/editor-labels.util';
+import {
+  localizeFieldIssue,
+  localizeValidationIssue,
+} from '@/modules/admin-core/utils/localize-validation.util';
 import { schemaToFields, type SchemaField } from '@/modules/admin-core/utils/schema-to-fields.util';
 
 import { ArrayWidget } from './widgets/ArrayWidget';
@@ -32,6 +36,7 @@ export function SchemaForm({
   onValuesChange?: (values: Record<string, unknown>) => void;
 }) {
   const t = useTranslations();
+  const locale = useLocale() === 'vi' ? 'vi' : 'en';
   const editorT = useTranslations('admin.editor');
   const contentT = useTranslations('content');
   const fieldT = useTranslations('admin.blocks.field');
@@ -65,7 +70,7 @@ export function SchemaForm({
         for (const issue of parsed.error.issues) {
           const key = issue.path.join('.');
           if (key && !errors[key]) {
-            errors[key] = issue.message;
+            errors[key] = localizeValidationIssue(issue, locale);
           }
         }
       }
@@ -76,7 +81,7 @@ export function SchemaForm({
       sync(form.store.state.values as Record<string, unknown>);
     });
     return typeof unsubscribe === 'function' ? unsubscribe : undefined;
-  }, [form.store, onValuesChange, schema]);
+  }, [form.store, onValuesChange, schema, locale]);
 
   const editorLabels = editorLabelsFromMessages((key) => editorT(key, { count: '{count}' }));
   const previewLabels: PreviewLabels = {
@@ -114,7 +119,7 @@ export function SchemaForm({
               <SchemaFieldControl
                 field={field}
                 value={api.state.value}
-                issue={api.state.meta.errors[0]}
+                issue={localizeFieldIssue(api.state.meta.errors[0], locale)}
                 readOnly={Boolean(readOnly)}
                 fieldErrors={{ ...zodErrors, ...fieldErrors }}
                 label={field.label}

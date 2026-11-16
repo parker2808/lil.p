@@ -1,0 +1,491 @@
+import { readFileSync } from 'node:fs';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
+
+import AxeBuilder from '@axe-core/playwright';
+import { expect, test } from '@playwright/test';
+import { BLOCK_REGISTRY } from '@portfolio/contracts';
+
+import { signIn } from './helpers/auth';
+import { BLOCK_EDITOR_META } from '../src/modules/admin-pages/constants/block-editor-meta.constant';
+
+const labels = Object.fromEntries(
+  (['en', 'vi'] as const).map((locale) => [
+    locale,
+    (
+      JSON.parse(
+        readFileSync(resolve(import.meta.dirname, `../i18n/locales/${locale}.json`), 'utf8'),
+      ) as { admin: { pages: { types: Record<string, string> } } }
+    ).admin.pages.types,
+  ]),
+) as Record<'en' | 'vi', Record<string, string>>;
+
+const captures = resolve(import.meta.dirname, '../../../docs/specs/screenshots/cms-d5-ui');
+const manifest: Array<{
+  locale: string;
+  theme: string;
+  width: number;
+  state: string;
+  file: string;
+}> = [];
+
+async function captureDraftState(
+  page: import('@playwright/test').Page,
+  state: 'active' | 'conflict',
+  theme: 'light' | 'dark',
+) {
+  await mkdir(captures, { recursive: true });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.evaluate(
+    (value) => document.documentElement.classList.toggle('dark', value === 'dark'),
+    theme,
+  );
+  await expect(
+    page
+      .locator('[data-theme]')
+      .filter({ has: page.getByRole('heading', { name: 'Page builder' }) }),
+  ).toHaveAttribute('data-theme', theme);
+  for (const width of [1440, 768, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await expect(page.locator('[data-node-type="section"]')).toHaveCount(1);
+    await page.evaluate(async () => {
+      await Promise.all(
+        document
+          .getAnimations()
+          .filter((animation) => animation instanceof CSSTransition)
+          .map((animation) => animation.finished.catch(() => undefined)),
+      );
+    });
+    const violations = await new AxeBuilder({ page })
+      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+      .analyze();
+    expect(violations.violations).toEqual([]);
+    const file = `en-${theme}-${width}-${state}.png`;
+    await page.screenshot({ path: join(captures, file), animations: 'disabled' });
+    manifest.push({ locale: 'en', theme, width, state, file });
+  }
+  await page.setViewportSize({ width: 1440, height: 900 });
+}
+
+test.setTimeout(240_000);
+
+test('all 20 host Properties are visible through the gated builder in EN/VI and accessible at mobile/desktop', async ({
+  page,
+  context,
+}) => {
+  await signIn(page);
+  const key = 'all-host-properties-fixture';
+  const types = Object.values(BLOCK_REGISTRY);
+  expect(types).toHaveLength(20);
+  const tree = {
+    schemaVersion: 1,
+    root: {
+      id: 'page',
+      type: 'page',
+      responsive: { base: {} },
+      sections: [
+        {
+          id: 'section',
+          type: 'section',
+          responsive: { base: {} },
+          content: types.map((definition, index) => ({
+            id: `block-${index}`,
+            type: 'component',
+            componentType: definition.type,
+            responsive: { base: definition.props.parse(definition.defaults) },
+          })),
+        },
+      ],
+    },
+  };
+  await page.route(`**/admin/pages/${key}/builder/draft`, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ mode: 'tree', revision: '1', tree }),
+    }),
+  );
+  for (const locale of ['en', 'vi'] as const) {
+    await context.addCookies([
+      { name: 'NEXT_LOCALE', value: locale, url: new URL(page.url()).origin, sameSite: 'Lax' },
+    ]);
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(`/admin/builder/${key}`);
+    await expect(page.locator('[data-node-type="component"]')).toHaveCount(20);
+    const layers = page.getByRole('complementary', { name: locale === 'en' ? 'Layers' : 'Lớp' });
+    await layers.getByRole('treeitem', { name: /Section|Phần/ }).press('ArrowRight');
+    const inspector = page.getByRole('complementary', {
+      name: locale === 'en' ? 'Properties' : 'Thuộc tính',
+    });
+    for (const [index, definition] of types.entries()) {
+      await layers.locator(`[data-tree-id="block-${index}"]`).click();
+      const labelKey = BLOCK_EDITOR_META[definition.type].labelKey.split('.').at(-1)!;
+      const localized = labels[locale][labelKey];
+      expect(localized, `${locale}/${definition.type} translation`).toBeTruthy();
+      const expected = localized!.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      await expect(
+        inspector.getByRole('paragraph').filter({ hasText: new RegExp(`^${expected}$`) }),
+      ).toBeVisible();
+      await expect(layers.locator(`[data-tree-id="block-${index}"]`)).toContainText(localized!);
+      await expect(
+        inspector
+          .locator(
+            'input,textarea,button[role="switch"],button[role="combobox"],button:has-text("Add"),button:has-text("Thêm")',
+          )
+          .first(),
+      ).toBeVisible();
+    }
+    for (const theme of ['light', 'dark'] as const) {
+      await page.evaluate(
+        (value) => document.documentElement.classList.toggle('dark', value === 'dark'),
+        theme,
+      );
+      for (const width of [1440, 390]) {
+        await page.setViewportSize({ width, height: 900 });
+        if (width === 390) {
+          await page
+            .getByRole('navigation', {
+              name: locale === 'en' ? 'Page builder' : 'Trình dựng trang',
+            })
+            .getByRole('button', { name: locale === 'en' ? 'Properties' : 'Thuộc tính' })
+            .click();
+        }
+        const panel =
+          width === 390
+            ? page.getByRole('dialog', { name: locale === 'en' ? 'Properties' : 'Thuộc tính' })
+            : inspector;
+        await expect(
+          panel.getByRole('button', { name: locale === 'en' ? 'Desktop' : 'Máy tính bàn' }),
+        ).toBeVisible();
+        const audit = await new AxeBuilder({ page })
+          .include(width === 390 ? '[role="dialog"]' : '.cms-core')
+          .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+          .analyze();
+        expect(audit.violations, `${locale}/${theme}/${width}`).toEqual([]);
+        await test.info().attach(`properties-${locale}-${theme}-${width}`, {
+          body: await page.screenshot({ animations: 'disabled' }),
+          contentType: 'image/png',
+        });
+        if (width === 390) await page.keyboard.press('Escape');
+      }
+    }
+  }
+});
+
+test('Properties remains editable at 1100 and 768 after desktop', async ({ page }) => {
+  await signIn(page);
+  await page.setViewportSize({ width: 1101, height: 900 });
+  await page.goto('/admin/builder/home');
+  const palette = page.getByRole('complementary', { name: 'Components' });
+  await palette.getByRole('button', { name: 'Section', exact: true }).click();
+  await palette.getByRole('button', { name: 'Heading', exact: true }).click();
+  await expect(
+    page.getByRole('complementary', { name: 'Properties' }).getByRole('textbox', { name: 'Text' }),
+  ).toHaveCount(1);
+
+  await page.setViewportSize({ width: 1100, height: 900 });
+  await expect(page.getByRole('complementary', { name: 'Properties' })).toHaveCount(0);
+  const navigation = page.getByRole('navigation', { name: 'Page builder' });
+  await navigation.getByRole('button', { name: 'Properties' }).click();
+  const sheet = page.getByRole('dialog', { name: 'Properties' });
+  await expect(sheet.getByRole('textbox', { name: 'Text' })).toHaveCount(1);
+  await page.setViewportSize({ width: 768, height: 900 });
+  await expect(sheet.getByRole('textbox', { name: 'Text' })).toHaveCount(1);
+  await sheet.getByRole('textbox', { name: 'Text' }).fill('Tablet heading');
+  await sheet.press('Escape');
+  await expect(sheet).toHaveCount(0);
+  await page.setViewportSize({ width: 1101, height: 900 });
+  await expect(
+    page.getByRole('complementary', { name: 'Properties' }).getByRole('textbox', { name: 'Text' }),
+  ).toHaveValue('Tablet heading');
+});
+
+test('an open active draft Properties sheet closes at desktop width without double mounting', async ({
+  page,
+}) => {
+  await signIn(page);
+  const key = `d5-sheet-transition-${Date.now()}`;
+  const origin = new URL(page.url()).origin;
+  const created = await page.request.post('/api/admin/pages', {
+    headers: { Origin: origin },
+    data: { title: 'D5 sheet transition', key, locale: 'en', template: 'starter' },
+  });
+  expect(created.status(), await created.text()).toBe(201);
+  await page.goto(`/admin/builder/${key}`);
+  await page.getByRole('button', { name: 'Activate tree draft' }).click();
+  await expect(page.getByText('Draft saved')).toBeVisible();
+  const palette = page.getByRole('complementary', { name: 'Components' });
+  await palette.getByRole('button', { name: 'Section', exact: true }).click();
+  await palette.getByRole('button', { name: 'Heading', exact: true }).click();
+  await page.setViewportSize({ width: 768, height: 900 });
+  const trigger = page
+    .getByRole('navigation', { name: 'Page builder' })
+    .getByRole('button', { name: 'Properties' });
+  await trigger.click();
+  const sheet = page.getByRole('dialog', { name: 'Properties' });
+  const inspector = page.getByRole('complementary', { name: 'Properties' });
+  await expect(sheet.getByRole('textbox', { name: 'Text' })).toHaveCount(1);
+  await expect(inspector).toHaveCount(0);
+  await sheet.getByRole('textbox', { name: 'Text' }).fill('Saved across the breakpoint');
+  await page.setViewportSize({ width: 1100, height: 900 });
+  await expect(sheet.getByRole('textbox', { name: 'Text' })).toHaveCount(1);
+  await expect(inspector).toHaveCount(0);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await expect(sheet).toHaveCount(0);
+  await expect(inspector.getByRole('textbox', { name: 'Text' })).toHaveValue(
+    'Saved across the breakpoint',
+  );
+  await expect(page.getByRole('textbox', { name: 'Text' })).toHaveCount(1);
+  await expect(inspector).toBeFocused();
+  await page.setViewportSize({ width: 768, height: 900 });
+  await expect(inspector).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+  await trigger.click();
+  await expect(sheet.getByRole('textbox', { name: 'Text' })).toHaveValue(
+    'Saved across the breakpoint',
+  );
+  await page.keyboard.press('Escape');
+  await expect(sheet).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+});
+
+test('reload before autosave retains the unsaved tree for explicit restoration', async ({
+  page,
+}) => {
+  await signIn(page);
+  const key = `d5-recovery-${Date.now()}`;
+  const origin = new URL(page.url()).origin;
+  const created = await page.request.post('/api/admin/pages', {
+    headers: { Origin: origin },
+    data: { title: 'D5 recovery', key, locale: 'en', template: 'starter' },
+  });
+  expect(created.status(), await created.text()).toBe(201);
+  await page.goto(`/admin/builder/${key}`);
+  await page.getByRole('button', { name: 'Activate tree draft' }).click();
+  await expect(page.getByText('Draft saved')).toBeVisible();
+  await page.route(`**/admin/pages/${key}/builder/draft`, (route) =>
+    route.request().method() === 'PUT' ? route.abort('failed') : route.continue(),
+  );
+  await page
+    .getByRole('complementary', { name: 'Components' })
+    .getByRole('button', { name: 'Section', exact: true })
+    .click();
+  await expect
+    .poll(() =>
+      page.evaluate((pageKey) => {
+        const recoveryKey = Object.keys(localStorage).find(
+          (key) => key.startsWith('cms-builder-recovery:') && key.endsWith(`:${pageKey}`),
+        );
+        return recoveryKey ? localStorage.getItem(recoveryKey) : null;
+      }, key),
+    )
+    .not.toBeNull();
+  await page.reload();
+  const recovery = page.getByRole('region', { name: 'Restore local edits' });
+  await expect(recovery).toBeVisible();
+  await expect(page.locator('[data-node-type="section"]')).toHaveCount(0);
+  const remote = await (await page.request.get(`/api/admin/pages/${key}/builder/draft`)).json();
+  expect(remote.tree.root.sections).toHaveLength(0);
+  await page.unroute(`**/admin/pages/${key}/builder/draft`);
+  await recovery.getByRole('button', { name: 'Restore local edits' }).click();
+  await expect(page.locator('[data-node-type="section"]')).toHaveCount(1);
+  await expect
+    .poll(async () => {
+      const response = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+      return (await response.json()).tree.root.sections.length;
+    })
+    .toBe(1);
+  await expect(page.getByText('Draft saved')).toBeVisible({ timeout: 15_000 });
+});
+
+test('custom page edits autosave, reload, undo and review conflict without losing local changes', async ({
+  page,
+  context,
+}) => {
+  await signIn(page);
+  const key = `d5-${Date.now()}`;
+  const origin = new URL(page.url()).origin;
+  const created = await page.request.post('/api/admin/pages', {
+    headers: { Origin: origin },
+    data: { title: 'D5 builder', key, locale: 'en', template: 'starter' },
+  });
+  expect(created.status(), await created.text()).toBe(201);
+  await page.goto(`/admin/builder/${key}`);
+  await expect(page.getByText('Local study · activate to save')).toBeVisible();
+  await page.getByRole('button', { name: 'Activate tree draft' }).click();
+  await expect(page.getByText('Draft saved')).toBeVisible();
+  const palette = page.getByRole('complementary', { name: 'Components' });
+  await palette.getByRole('button', { name: 'Section', exact: true }).click();
+  await palette.getByRole('button', { name: 'Heading', exact: true }).click();
+  const inspector = page.getByRole('complementary', { name: 'Properties' });
+  await inspector.getByRole('textbox', { name: 'Text' }).fill('Saved builder heading');
+  await expect
+    .poll(async () => {
+      const response = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+      return JSON.stringify((await response.json()).tree).includes('Saved builder heading');
+    })
+    .toBe(true);
+  await expect(page.getByText('Draft saved')).toBeVisible({ timeout: 15_000 });
+  await page.reload();
+  await expect(inspector.getByRole('textbox', { name: 'Text' })).not.toBeVisible();
+  await page.getByRole('treeitem', { name: /Section/ }).focus();
+  await page.keyboard.press('ArrowRight');
+  await page.getByRole('treeitem', { name: /Heading/ }).click();
+  await expect(inspector.getByRole('textbox', { name: 'Text' })).toHaveValue(
+    'Saved builder heading',
+  );
+  await palette.getByRole('button', { name: 'Paragraph', exact: true }).click();
+  await page.getByRole('button', { name: 'Undo' }).click();
+  await expect(page.locator('[data-node-type="component"]')).toHaveCount(1);
+  await page.keyboard.press('Control+Shift+z');
+  await expect(page.locator('[data-node-type="component"]')).toHaveCount(2);
+  await expect
+    .poll(async () => {
+      const response = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+      return (await response.json()).tree.root.sections[0].content.length;
+    })
+    .toBe(2);
+  await expect(page.getByText('Draft saved')).toBeVisible({ timeout: 15_000 });
+
+  await captureDraftState(page, 'active', 'light');
+  const remote = await (await page.request.get(`/api/admin/pages/${key}/builder/draft`)).json();
+  remote.tree.root.sections[0].content[0].responsive.base.text = 'Concurrent heading';
+  const concurrent = await page.request.put(`/api/admin/pages/${key}/builder/draft`, {
+    headers: { Origin: origin },
+    data: { tree: remote.tree, expectedRevision: remote.revision },
+  });
+  expect(concurrent.ok(), await concurrent.text()).toBeTruthy();
+  await palette.getByRole('button', { name: 'Divider', exact: true }).click();
+  await expect(page.getByText('Conflict · your edits are kept locally')).toBeVisible({
+    timeout: 15_000,
+  });
+  await captureDraftState(page, 'conflict', 'dark');
+  expect(
+    (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze())
+      .violations,
+  ).toEqual([]);
+  await expect(page.locator('[data-node-type="component"]')).toHaveCount(3);
+  await page.getByRole('button', { name: 'Review changes' }).click();
+  await expect(
+    page
+      .getByRole('region', { name: 'Review changes' })
+      .getByRole('button', { name: 'Export local draft' }),
+  ).toBeVisible();
+  await page
+    .getByRole('region', { name: 'Review changes' })
+    .getByRole('button', { name: 'Retry' })
+    .click();
+  await expect(page.locator('[data-node-type="component"]')).toHaveCount(3);
+  await expect(
+    page.locator('header').getByText('Conflict · your edits are kept locally'),
+  ).toBeVisible();
+  await page
+    .getByRole('region', { name: 'Review changes' })
+    .getByRole('button', { name: 'Discard local edits and reload server draft' })
+    .click();
+  await context.setOffline(true);
+  await palette.getByRole('button', { name: 'Spacer', exact: true }).click();
+  await expect(page.getByText('Offline · your edits are kept locally')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Retry' }).first()).toBeVisible({
+    timeout: 15_000,
+  });
+  expect(
+    (await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze())
+      .violations,
+  ).toEqual([]);
+  await context.setOffline(false);
+  await page.getByRole('button', { name: 'Retry' }).first().click();
+  await expect(page.getByText('Draft saved')).toBeVisible({ timeout: 15_000 });
+});
+
+test('offline edits remain recoverable; EN/VI light/dark responsive chrome is accessible', async ({
+  page,
+  context,
+}) => {
+  await signIn(page);
+  await mkdir(captures, { recursive: true });
+  for (const locale of ['en', 'vi'] as const) {
+    await context.addCookies([
+      { name: 'NEXT_LOCALE', value: locale, url: new URL(page.url()).origin, sameSite: 'Lax' },
+    ]);
+    for (const theme of ['light', 'dark'])
+      for (const width of [1440, 768, 390]) {
+        await page.setViewportSize({ width, height: 900 });
+        await page.goto('/admin/builder/home');
+        await page.evaluate((value) => localStorage.setItem('theme', value), theme);
+        await page.reload();
+        await expect(
+          page.getByText(locale === 'en' ? 'Local study · not saved' : 'Bản mẫu cục bộ · chưa lưu'),
+        ).toBeVisible();
+        const mobile = width <= 1100;
+        if (mobile)
+          await page
+            .getByRole('navigation', {
+              name: locale === 'en' ? 'Page builder' : 'Trình dựng trang',
+            })
+            .getByRole('button', { name: locale === 'en' ? 'Components' : 'Thành phần' })
+            .click();
+        const palette = mobile
+          ? page.getByRole('dialog', { name: locale === 'en' ? 'Components' : 'Thành phần' })
+          : page.getByRole('complementary', {
+              name: locale === 'en' ? 'Components' : 'Thành phần',
+            });
+        await palette
+          .getByRole('button', { name: locale === 'en' ? 'Section' : 'Phần', exact: true })
+          .click();
+        if (mobile)
+          await page
+            .getByRole('navigation', {
+              name: locale === 'en' ? 'Page builder' : 'Trình dựng trang',
+            })
+            .getByRole('button', { name: locale === 'en' ? 'Components' : 'Thành phần' })
+            .click();
+        await (
+          mobile
+            ? page.getByRole('dialog', { name: locale === 'en' ? 'Components' : 'Thành phần' })
+            : palette
+        )
+          .getByRole('button', { name: locale === 'en' ? 'Heading' : 'Tiêu đề', exact: true })
+          .click();
+        if (mobile)
+          await page
+            .getByRole('navigation', {
+              name: locale === 'en' ? 'Page builder' : 'Trình dựng trang',
+            })
+            .getByRole('button', { name: locale === 'en' ? 'Properties' : 'Thuộc tính' })
+            .click();
+        const panel = mobile
+          ? page.getByRole('dialog', { name: locale === 'en' ? 'Properties' : 'Thuộc tính' })
+          : page.getByRole('complementary', {
+              name: locale === 'en' ? 'Properties' : 'Thuộc tính',
+            });
+        if (mobile)
+          await expect(panel.getByRole('status')).toHaveText(
+            locale === 'en' ? 'Local study · not saved' : 'Bản mẫu cục bộ · chưa lưu',
+          );
+        await panel.getByRole('button', { name: locale === 'en' ? 'Mobile' : 'Di động' }).click();
+        await panel.evaluate(async (element) => {
+          await Promise.all(
+            Array.from(element.querySelectorAll('button'))
+              .flatMap((button) => button.getAnimations())
+              .map((animation) => animation.finished),
+          );
+        });
+        const buttons = await panel.getByRole('button').all();
+        for (const button of buttons) {
+          const box = await button.boundingBox();
+          if (box) {
+            expect(box.width).toBeGreaterThanOrEqual(44);
+            expect(box.height).toBeGreaterThanOrEqual(44);
+          }
+        }
+        const audit = new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']);
+        const violations = await (mobile ? audit.include('[role="dialog"]') : audit).analyze();
+        expect(violations.violations).toEqual([]);
+        const file = `${locale}-${theme}-${width}-properties.png`;
+        await page.screenshot({ path: join(captures, file), animations: 'disabled' });
+        manifest.push({ locale, theme, width, state: 'properties', file });
+      }
+  }
+  await writeFile(join(captures, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
+});

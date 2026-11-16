@@ -173,6 +173,44 @@ test('strict snapshots reject unknown/future/invalid blocks instead of dropping 
   });
 });
 
+test('current nested unknown props survive raw reads; future and malformed versions reject without mutation', () => {
+  const current = {
+    seo,
+    blocks: [
+      {
+        ...block,
+        schemaVersion: 3,
+        props: { title: 'Start', nested: { future: ['one', { two: 2 }] } },
+      },
+    ],
+  };
+  const bytes = JSON.stringify(current);
+  const digest = createHash('sha256').update(bytes).digest('hex');
+  const read = readSnapshot(current, registry);
+  assert.equal(read.ok, true);
+  if (read.ok) {
+    assert.equal(JSON.stringify(read.snapshot), bytes);
+    read.snapshot.blocks[0].props.nested.future[1].two = 99;
+    assert.equal(JSON.stringify(current), bytes);
+  }
+  const cases = [
+    [{ ...current, schemaVersion: 2 }, 'FUTURE_VERSION', undefined],
+    [{ ...current, blocks: [{ ...current.blocks[0], schemaVersion: 4 }] }, 'FUTURE_VERSION', 0],
+    [{ ...current, blocks: [{ ...current.blocks[0], extra: true }] }, 'INVALID_BLOCK', 0],
+    [{ ...current, seo: { ...seo, future: true } }, 'INVALID_SNAPSHOT', undefined],
+  ];
+  for (const [candidate, reason, index] of cases) {
+    const original = JSON.stringify(candidate);
+    assert.deepEqual(readSnapshot(candidate, registry), {
+      ok: false,
+      reason,
+      ...(index === undefined ? {} : { index }),
+    });
+    assert.equal(JSON.stringify(candidate), original);
+  }
+  assert.equal(createHash('sha256').update(JSON.stringify(current)).digest('hex'), digest);
+});
+
 test('raw legacy bytes survive read and migration while unsupported envelopes reject without edits', () => {
   const raw = {
     seo,

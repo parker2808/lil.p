@@ -141,6 +141,7 @@ describe('PageVersionsService', () => {
     expect(prisma.pageBlock.deleteMany).not.toHaveBeenCalled();
     expect(prisma.pageBlock.createMany).not.toHaveBeenCalled();
     expect(prisma.page.update).not.toHaveBeenCalled();
+    expect(prisma.page.updateMany).not.toHaveBeenCalled();
     expect(audit.record).not.toHaveBeenCalled();
   });
 
@@ -201,6 +202,8 @@ describe('PageVersionsService', () => {
     for (const locale of ['en', 'vi'] as const) {
       const preview = await service.getPreview('home', locale, 1);
       expect(preview.seo.title).toBe('Legacy home');
+      expect('blocks' in preview).toBe(true);
+      if (!('blocks' in preview)) throw new Error('Expected a legacy block preview');
       expect(preview.blocks.map(({ type, key }) => ({ type, key }))).toEqual([
         { type: 'hero', key: 'hero' },
       ]);
@@ -321,6 +324,7 @@ describe('PageVersionsService', () => {
       });
       prisma.page.findUnique.mockResolvedValue(row);
       const preview = await service.getPreview('ideas', locale);
+      if (!('blocks' in preview)) throw new Error('Expected legacy preview');
       expect(preview.invalidBlocks).toEqual([]);
       expect(preview.blocks[1]).toMatchObject({
         type: 'prose',
@@ -436,6 +440,7 @@ describe('PageVersionsService', () => {
     const vi = await service.getPreview('ideas', 'vi');
     const en = await service.getPreview('ideas', 'en');
     for (const page of [vi, en]) {
+      if (!('blocks' in page)) throw new Error('Expected legacy preview');
       expect(page.seo).toMatchObject({ title: 'Ý tưởng', lang: 'vi' });
       expect(page.blocks[0]).toMatchObject({ props: { title: 'Ý tưởng' }, lang: 'vi' });
       expect(page.invalidBlocks).toEqual([]);

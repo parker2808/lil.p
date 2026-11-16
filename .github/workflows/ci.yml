@@ -78,6 +78,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: ./.github/actions/setup
       - name: Cache Next.js build
         uses: actions/cache@v4
@@ -87,6 +89,20 @@ jobs:
           restore-keys: |
             next-${{ runner.os }}-build-${{ hashFiles('pnpm-lock.yaml') }}-
       - run: pnpm build
+      - name: Test public bundle guard
+        run: node --test scripts/check-public-builder-bytes.test.mjs scripts/check-deployed-public-assets.test.mjs
+      - name: Check exact-head public bundle bytes and gzip cap
+        run: node scripts/check-public-builder-bytes.mjs
+        env:
+          PUBLIC_BUNDLE_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          PUBLIC_BUNDLE_REPORT: ${{ runner.temp }}/public-bundle-report.json
+      - name: Attach public route chunk graph
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-bundle-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/public-bundle-report.json
+          if-no-files-found: error
+          retention-days: 7
       - name: Build Storybook (only when packages/ui changes)
         if: needs.changes.outputs.ui == 'true' || github.event_name != 'pull_request'
         run: pnpm --filter @portfolio/ui build-storybook
@@ -166,6 +182,7 @@ jobs:
       playwright: ${{ steps.pw.outputs.version }}
     env:
       NODE_ENV: production
+      R3_E2E_STATES: '1'
       API_URL: http://127.0.0.1:4000
       WEB_ORIGIN: http://localhost:3000
       WEB_INTERNAL_URL: http://localhost:3000
@@ -230,6 +247,7 @@ jobs:
       WEB_ORIGIN: http://localhost:3000
       WEB_INTERNAL_URL: http://localhost:3000
       NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      E2E_SOURCE_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - uses: actions/checkout@v4
       - name: Start MySQL (tmpfs, in background)

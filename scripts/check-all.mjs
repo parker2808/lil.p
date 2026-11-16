@@ -18,6 +18,8 @@ if (!args.has('--static')) steps.push(['test', 'pnpm test']);
 steps.push(['content', 'pnpm check:content'], ['deps', 'pnpm check:deps']);
 steps.push(['stage-a-probe', 'node --test scripts/probe-stage-a-d2.test.mjs']);
 if (!args.has('--static') && !args.has('--no-build')) steps.push(['build', 'pnpm build']);
+if (!args.has('--static') && !args.has('--no-build'))
+  steps.push(['public-builder-bytes', 'node scripts/check-public-builder-bytes.mjs']);
 if (!args.has('--static') && args.has('--e2e')) {
   steps.push([
     'cms-theme-browser',

@@ -39,6 +39,11 @@
 .shell button:disabled {
   cursor: not-allowed;
 }
+.shell :where(button, a[href], input, textarea, select, [tabindex]):focus-visible {
+  outline: 3px solid var(--builder-focus) !important;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--builder-focus-contrast) !important;
+}
 .header {
   display: flex;
   align-items: center;
@@ -65,13 +70,23 @@
   display: flex;
   gap: 16px;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 .status,
 .hint {
   color: var(--builder-muted);
   font-size: 12px;
 }
+.publishReason {
+  max-width: 175px;
+  color: var(--builder-muted);
+  font-size: 12px;
+  line-height: 1.25;
+}
 .headerActions button {
+  flex-shrink: 0;
+  min-height: 44px;
   background: var(--builder-raised);
   color: var(--builder-muted);
   border: 1px solid var(--builder-border);
@@ -83,6 +98,11 @@
   color: var(--builder-accent);
   background: var(--builder-accent-soft);
   min-height: 44px;
+}
+.headerActions .brandButton:focus-visible {
+  outline: 3px solid var(--builder-focus) !important;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--builder-focus-contrast) !important;
 }
 .headerActions .propertiesTrigger {
   min-height: 44px;
@@ -361,6 +381,10 @@
   color: var(--builder-accent);
   padding: 0 10px;
 }
+.nodeBar button:focus-visible {
+  outline: 3px solid var(--builder-focus) !important;
+  outline-offset: 2px;
+}
 .nodeBar button:hover {
   background: var(--builder-accent-soft);
 }
@@ -447,6 +471,15 @@
 .sheetTitle h2 {
   font-size: 18px;
   margin: 0;
+}
+.sheetHeading {
+  display: grid;
+  gap: 3px;
+}
+.sheetStatus {
+  color: var(--builder-muted);
+  font-size: 12px;
+  font-weight: 600;
 }
 .sheetTitle button {
   min-width: 44px;
@@ -575,7 +608,15 @@
     font-size: 17px;
   }
   .status {
-    display: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 4px 8px;
+    border: 1px solid var(--builder-border);
+    border-radius: var(--builder-radius-sm);
+    background: var(--builder-raised);
+    color: var(--builder-text);
+    font-weight: 650;
   }
   .propertiesTrigger {
     display: none;
@@ -585,6 +626,10 @@
   }
 }
 @media (max-width: 450px) {
+  .status {
+    order: -1;
+    flex-basis: 100%;
+  }
   .palette {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -605,5 +650,75 @@
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+.host {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+}
+.loading {
+  display: grid;
+  place-items: center;
+  min-height: 240px;
+  color: var(--builder-text);
+  background: var(--builder-surface);
+}
+.hostActions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.hostActions button {
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--builder-text);
+  background: var(--builder-raised);
+  border: 1px solid var(--builder-border);
+}
+.recovery {
+  position: absolute;
+  z-index: 30;
+  inset: auto 12px 12px auto;
+  max-width: min(420px, calc(100% - 24px));
+  padding: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  background: var(--builder-surface);
+  color: var(--builder-text);
+  border: 2px solid var(--builder-accent);
+  border-radius: var(--builder-radius-lg);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 20%);
+}
+.recovery p {
+  flex-basis: 100%;
+  margin: 0;
+}
+.recovery button {
+  min-height: 44px;
+  color: var(--builder-text);
+  background: var(--builder-raised);
+  border: 1px solid var(--builder-border);
+}
+@media (max-width: 1440px) {
+  .header {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 9px 12px;
+  }
+  .headerActions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .hostActions {
+    gap: 4px;
+  }
+  .hostActions button {
+    padding: 6px 10px;
   }
 }

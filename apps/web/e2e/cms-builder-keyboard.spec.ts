@@ -50,6 +50,106 @@ test('keyboard-only insertion and nested placement identifies the destination', 
   await expect(tree.getByRole('treeitem', { name: /Heading/ })).toBeFocused();
 });
 
+for (const locale of ['en', 'vi'] as const) {
+  test(`${locale} keyboard-only invalid page drop announces rejection without changing the saved tree`, async ({
+    page,
+    context,
+  }) => {
+    await signIn(page);
+    const origin = new URL(page.url()).origin;
+    await context.addCookies([{ name: 'NEXT_LOCALE', value: locale, url: origin }]);
+    const key = `v02-keyboard-${locale}-${Date.now()}`;
+    const created = await page.request.post('/api/admin/pages', {
+      headers: { Origin: origin },
+      data: { title: `V02 ${locale}`, key, locale, template: 'starter' },
+    });
+    expect(created.status(), await created.text()).toBe(201);
+    await page.goto(`/admin/builder/${key}`);
+    await expect(page.locator('html')).toHaveAttribute('lang', locale);
+    await page.evaluate(() => {
+      document.documentElement.dataset.pointerDownCount = '0';
+      document.addEventListener('pointerdown', () => {
+        document.documentElement.dataset.pointerDownCount = String(
+          Number(document.documentElement.dataset.pointerDownCount) + 1,
+        );
+      });
+    });
+    const activate = page.getByRole('button', {
+      name: locale === 'vi' ? 'Kích hoạt bản nháp cây' : 'Activate tree draft',
+    });
+    await activate.focus();
+    await page.keyboard.press('Enter');
+    const palette = page.getByRole('complementary', {
+      name: locale === 'vi' ? 'Thành phần' : 'Components',
+    });
+    for (const name of locale === 'vi'
+      ? ['Phần', 'Cột', 'Tiêu đề']
+      : ['Section', 'Columns', 'Heading']) {
+      await palette.getByRole('button', { name, exact: true }).focus();
+      await page.keyboard.press('Enter');
+    }
+    const tree = page
+      .getByRole('complementary', { name: locale === 'vi' ? 'Lớp' : 'Layers' })
+      .getByRole('tree');
+    const heading = tree.getByRole('treeitem', {
+      name: locale === 'vi' ? /Tiêu đề/ : /Heading/,
+    });
+    const announcement = page.locator('.cms-core [role="status"][aria-live="polite"]').last();
+    await expect
+      .poll(async () => {
+        const response = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+        expect(response.status()).toBe(200);
+        const draft = (await response.json()) as {
+          tree: { root: { sections: Array<{ content: Array<{ columns?: unknown[] }> }> } };
+        };
+        return draft.tree.root.sections[0]?.content[0]?.columns?.length;
+      })
+      .toBe(2);
+    await expect(page.getByText(locale === 'vi' ? 'Đã lưu bản nháp' : 'Draft saved')).toBeVisible();
+    const beforeResponse = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+    expect(beforeResponse.status()).toBe(200);
+    const before = await beforeResponse.json();
+    await heading.focus();
+    await page.keyboard.press('Space');
+    await expect(announcement).toContainText(locale === 'vi' ? 'Đã nhấc mục' : 'Picked up item');
+    await page.keyboard.press('Home');
+    await expect(
+      tree.getByRole('treeitem', { name: locale === 'vi' ? /Trang/ : /Page/ }),
+    ).toBeFocused();
+    await expect(announcement).toContainText(
+      locale === 'vi' ? 'Vị trí: Trang' : 'Destination: Page',
+    );
+    await page.keyboard.press('Enter');
+    await expect(announcement).toHaveText(
+      locale === 'vi'
+        ? 'Vùng này không nhận mục này hoặc đã đạt giới hạn'
+        : 'This slot does not accept this item or is at its limit',
+    );
+    await expect(heading).toBeFocused();
+    await expect(page.locator('html')).toHaveAttribute('data-pointer-down-count', '0');
+    await expect(
+      tree.getByRole('treeitem', { name: locale === 'vi' ? /Tiêu đề/ : /Heading/ }),
+    ).toHaveCount(1);
+    const afterResponse = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+    expect(afterResponse.status()).toBe(200);
+    expect(await afterResponse.json()).toEqual(before);
+    await page.reload();
+    for (const level of [2, 3, 4]) {
+      const parent = tree.locator(`[role="treeitem"][aria-level="${level}"]`).first();
+      await expect(parent).toBeVisible();
+      await parent.focus();
+      await page.keyboard.press('ArrowRight');
+      await expect(parent).toHaveAttribute('aria-expanded', 'true');
+    }
+    await expect(
+      tree.getByRole('treeitem', { name: locale === 'vi' ? /Tiêu đề/ : /Heading/ }),
+    ).toHaveCount(1);
+    const reloadedResponse = await page.request.get(`/api/admin/pages/${key}/builder/draft`);
+    expect(reloadedResponse.status()).toBe(200);
+    expect(await reloadedResponse.json()).toEqual(before);
+  });
+}
+
 test('delete moves focus to the surviving selection and announces typed rejections', async ({
   page,
 }) => {
@@ -149,6 +249,13 @@ test('builder chrome and mobile sheets pass WCAG AA checks', async ({ page }) =>
   for (const locale of ['en', 'vi'] as const) {
     await page.setViewportSize({ width: 1440, height: 900 });
     await switchBuilderLocale(page, locale);
+    if (locale === 'vi')
+      await expect
+        .poll(
+          async () =>
+            (await page.context().cookies()).find((cookie) => cookie.name === 'NEXT_LOCALE')?.value,
+        )
+        .toBe(locale);
     await page.goto('/admin/builder/home');
     for (const theme of ['light', 'dark'] as const) {
       await page.setViewportSize({ width: 1440, height: 900 });

@@ -1,0 +1,2482 @@
+{
+  "sourceSha": "b1b9d37bb1c1dcf2333dc051fc2ec418753e5e81",
+  "browser": "Chromium",
+  "lock": "lilp-e2e.lock",
+  "entries": [
+    {
+      "route": "/admin/builder/d5-design-en-1794678668106",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 1440,
+      "state": "keyboard-focus",
+      "input": "keyboard",
+      "file": "en-light-neutral-1440-keyboard-focus.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 1440,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "en-light-neutral-1440-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 768,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "en-light-neutral-768-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 768,
+      "state": "palette",
+      "input": "pointer",
+      "file": "en-light-neutral-768-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 768,
+      "state": "layers",
+      "input": "pointer",
+      "file": "en-light-neutral-768-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 768,
+      "state": "properties",
+      "input": "pointer",
+      "file": "en-light-neutral-768-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 390,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "en-light-neutral-390-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 390,
+      "state": "palette",
+      "input": "pointer",
+      "file": "en-light-neutral-390-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 390,
+      "state": "layers",
+      "input": "pointer",
+      "file": "en-light-neutral-390-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 390,
+      "state": "properties",
+      "input": "pointer",
+      "file": "en-light-neutral-390-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 1440,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "en-light-lilp-1440-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 768,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "en-light-lilp-768-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 768,
+      "state": "palette",
+      "input": "pointer",
+      "file": "en-light-lilp-768-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 768,
+      "state": "layers",
+      "input": "pointer",
+      "file": "en-light-lilp-768-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 768,
+      "state": "properties",
+      "input": "pointer",
+      "file": "en-light-lilp-768-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 390,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "en-light-lilp-390-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 390,
+      "state": "palette",
+      "input": "pointer",
+      "file": "en-light-lilp-390-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 390,
+      "state": "layers",
+      "input": "pointer",
+      "file": "en-light-lilp-390-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 390,
+      "state": "properties",
+      "input": "pointer",
+      "file": "en-light-lilp-390-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 1440,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "en-dark-neutral-1440-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 768,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "en-dark-neutral-768-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 768,
+      "state": "palette",
+      "input": "pointer",
+      "file": "en-dark-neutral-768-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 768,
+      "state": "layers",
+      "input": "pointer",
+      "file": "en-dark-neutral-768-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 768,
+      "state": "properties",
+      "input": "pointer",
+      "file": "en-dark-neutral-768-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 390,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "en-dark-neutral-390-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 390,
+      "state": "palette",
+      "input": "pointer",
+      "file": "en-dark-neutral-390-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 390,
+      "state": "layers",
+      "input": "pointer",
+      "file": "en-dark-neutral-390-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 390,
+      "state": "properties",
+      "input": "pointer",
+      "file": "en-dark-neutral-390-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 1440,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "en-dark-lilp-1440-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 768,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "en-dark-lilp-768-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 768,
+      "state": "palette",
+      "input": "pointer",
+      "file": "en-dark-lilp-768-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 768,
+      "state": "layers",
+      "input": "pointer",
+      "file": "en-dark-lilp-768-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 768,
+      "state": "properties",
+      "input": "pointer",
+      "file": "en-dark-lilp-768-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 390,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "en-dark-lilp-390-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 390,
+      "state": "palette",
+      "input": "pointer",
+      "file": "en-dark-lilp-390-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 390,
+      "state": "layers",
+      "input": "pointer",
+      "file": "en-dark-lilp-390-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 390,
+      "state": "properties",
+      "input": "pointer",
+      "file": "en-dark-lilp-390-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 390,
+      "state": "saving",
+      "input": "pointer",
+      "file": "en-dark-lilp-390-saving.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 1440,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "en-light-neutral-1440-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 768,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "en-light-neutral-768-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 390,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "en-light-neutral-390-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 1440,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "en-light-lilp-1440-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 768,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "en-light-lilp-768-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 390,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "en-light-lilp-390-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 1440,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "en-dark-neutral-1440-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 768,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "en-dark-neutral-768-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 390,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "en-dark-neutral-390-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 1440,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "en-dark-lilp-1440-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 768,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "en-dark-lilp-768-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-en-1794678669402",
+      "pageLocale": "en",
+      "uiLocale": "en",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 390,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "en-dark-lilp-390-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 1440,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "vi-light-neutral-1440-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 768,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "vi-light-neutral-768-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 768,
+      "state": "palette",
+      "input": "pointer",
+      "file": "vi-light-neutral-768-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 768,
+      "state": "layers",
+      "input": "pointer",
+      "file": "vi-light-neutral-768-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 768,
+      "state": "properties",
+      "input": "pointer",
+      "file": "vi-light-neutral-768-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 390,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "vi-light-neutral-390-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 390,
+      "state": "palette",
+      "input": "pointer",
+      "file": "vi-light-neutral-390-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 390,
+      "state": "layers",
+      "input": "pointer",
+      "file": "vi-light-neutral-390-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 390,
+      "state": "properties",
+      "input": "pointer",
+      "file": "vi-light-neutral-390-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 1440,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "vi-light-lilp-1440-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 768,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "vi-light-lilp-768-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 768,
+      "state": "palette",
+      "input": "pointer",
+      "file": "vi-light-lilp-768-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 768,
+      "state": "layers",
+      "input": "pointer",
+      "file": "vi-light-lilp-768-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 768,
+      "state": "properties",
+      "input": "pointer",
+      "file": "vi-light-lilp-768-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 390,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "vi-light-lilp-390-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 390,
+      "state": "palette",
+      "input": "pointer",
+      "file": "vi-light-lilp-390-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 390,
+      "state": "layers",
+      "input": "pointer",
+      "file": "vi-light-lilp-390-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 390,
+      "state": "properties",
+      "input": "pointer",
+      "file": "vi-light-lilp-390-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 1440,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "vi-dark-neutral-1440-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 768,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "vi-dark-neutral-768-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 768,
+      "state": "palette",
+      "input": "pointer",
+      "file": "vi-dark-neutral-768-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 768,
+      "state": "layers",
+      "input": "pointer",
+      "file": "vi-dark-neutral-768-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 768,
+      "state": "properties",
+      "input": "pointer",
+      "file": "vi-dark-neutral-768-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 390,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "vi-dark-neutral-390-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 390,
+      "state": "palette",
+      "input": "pointer",
+      "file": "vi-dark-neutral-390-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 390,
+      "state": "layers",
+      "input": "pointer",
+      "file": "vi-dark-neutral-390-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 390,
+      "state": "properties",
+      "input": "pointer",
+      "file": "vi-dark-neutral-390-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 1440,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "vi-dark-lilp-1440-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 768,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "vi-dark-lilp-768-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 768,
+      "state": "palette",
+      "input": "pointer",
+      "file": "vi-dark-lilp-768-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 768,
+      "state": "layers",
+      "input": "pointer",
+      "file": "vi-dark-lilp-768-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 768,
+      "state": "properties",
+      "input": "pointer",
+      "file": "vi-dark-lilp-768-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 390,
+      "state": "canvas-saved",
+      "input": "pointer",
+      "file": "vi-dark-lilp-390-canvas-saved.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 390,
+      "state": "palette",
+      "input": "pointer",
+      "file": "vi-dark-lilp-390-palette.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 390,
+      "state": "layers",
+      "input": "pointer",
+      "file": "vi-dark-lilp-390-layers.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 390,
+      "state": "properties",
+      "input": "pointer",
+      "file": "vi-dark-lilp-390-properties.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 390,
+      "state": "saving",
+      "input": "pointer",
+      "file": "vi-dark-lilp-390-saving.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 1440,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "vi-light-neutral-1440-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 768,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "vi-light-neutral-768-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "neutral",
+      "width": 390,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "vi-light-neutral-390-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.21,
+        "accentButton": 6,
+        "successSurface": 5.56,
+        "selectionSurface": 4.8,
+        "focusSurface": 6
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 1440,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "vi-light-lilp-1440-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 768,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "vi-light-lilp-768-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "light",
+      "brand": "lilp",
+      "width": 390,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "vi-light-lilp-390-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 15.07,
+        "mutedSurface": 5.44,
+        "accentSoft": 5.47,
+        "accentButton": 6.09,
+        "successSurface": 6.22,
+        "selectionSurface": 5.37,
+        "focusSurface": 6.09
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 1440,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "vi-dark-neutral-1440-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 768,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "vi-dark-neutral-768-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "neutral",
+      "width": 390,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "vi-dark-neutral-390-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 5.69,
+        "accentButton": 7.52,
+        "successSurface": 8.92,
+        "selectionSurface": 7.74,
+        "focusSurface": 9.28
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 1440,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "vi-dark-lilp-1440-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 768,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "vi-dark-lilp-768-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    },
+    {
+      "route": "/admin/builder/d5-design-vi-1794678690148",
+      "pageLocale": "vi",
+      "uiLocale": "vi",
+      "theme": "dark",
+      "brand": "lilp",
+      "width": 390,
+      "state": "conflict",
+      "input": "pointer",
+      "file": "vi-dark-lilp-390-conflict.png",
+      "axe": {
+        "serious": 0,
+        "critical": 0,
+        "other": 0
+      },
+      "contrast": {
+        "textSurface": 13.58,
+        "mutedSurface": 7.84,
+        "accentSoft": 6.61,
+        "accentButton": 8.79,
+        "successSurface": 9.41,
+        "selectionSurface": 9.66,
+        "focusSurface": 9.66
+      }
+    }
+  ]
+}
