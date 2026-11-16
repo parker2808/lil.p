@@ -1,5 +1,13 @@
 # lil.p
 
+The [V13 D6 metadata/preview fix](./docs/specs/2026-11-16-cms-d6-v13-metadata.md)
+derives missing tree SEO from the visible bilingual H1 on public and draft routes,
+and displays localized recovery help instead of raw invalid-block diagnostics.
+Real EN/VI browser evidence runs in the existing metadata shard; full V13 signoff
+still requires combined-head route/state review.
+Its F4 integration fixture uses only the disposable Playwright database to check
+real invalid draft previews against the unchanged published snapshot.
+
 The [D6 neutral host gallery](./docs/specs/2026-11-16-cms-d6-neutral-gallery.md)
 maps rendered site colors to core tokens only inside the neutral CMS host and
 checks a painted hero accent and brand-different screenshots in CI. The
