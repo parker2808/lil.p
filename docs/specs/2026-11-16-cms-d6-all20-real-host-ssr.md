@@ -43,6 +43,17 @@ execution disabled through CDP during navigation; assert the raw SSR main
 markup exactly matches the primary visitor, then enable execution only for
 the unwaived axe analysis. The second context is not a replacement for any
 no-JS capture or public/preview parity assertion.
+Independent SSR requests can assign different numeric IDs to React Suspense
+`<template id="B:N">` placeholders. Canonicalize only those request-local
+numbers (preserving each request's distinct-ID order), then compare the entire
+remaining raw main markup byte-for-byte before running axe; no host structure,
+text, prop hash or visible parity assertion is omitted.
+The JS-capable axe context starts with script execution disabled but must
+select the same OS dark palette as the no-script visitor before enabling axe.
+Assert computed host colors and semantic tokens match the captured visitor,
+wait for any finite host transitions to finish, then reassert those colors
+before the unwaived WCAG analysis. This avoids evaluating an unrelated
+mid-transition light-to-dark palette in the accessibility context.
 Check the neutral/brand accent at first paint and run unwaived WCAG A/AA axe
 against the content (including minor/moderate violations). Attach all JSON
 results and screenshot SHA-256 values to a provenance manifest. The preview

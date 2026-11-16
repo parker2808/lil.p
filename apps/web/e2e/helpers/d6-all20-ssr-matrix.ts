@@ -13,6 +13,31 @@ const themes = ['light', 'dark'] as const;
 const brands = ['neutral', 'lilp'] as const;
 const modes = ['public', 'preview'] as const;
 
+function normalizeSuspenseTemplateIds(markup: string) {
+  const templateIds = new Map<string, number>();
+  return markup.replace(
+    /(<template id="B:)(\d+)(")/g,
+    (_, prefix: string, id: string, suffix: string) => {
+      if (!templateIds.has(id)) templateIds.set(id, templateIds.size);
+      return `${prefix}${templateIds.get(id)}${suffix}`;
+    },
+  );
+}
+
+function hostPalette(element: Element) {
+  const styles = getComputedStyle(element);
+  return {
+    color: styles.color,
+    background: styles.backgroundColor,
+    colorScheme: styles.colorScheme,
+    primary: styles.getPropertyValue('--primary').trim(),
+    primaryForeground: styles.getPropertyValue('--primary-foreground').trim(),
+    subtleForeground: styles.getPropertyValue('--subtle-foreground').trim(),
+    builderAccent: styles.getPropertyValue('--builder-accent').trim(),
+    builderAccentText: styles.getPropertyValue('--builder-accent-text').trim(),
+  };
+}
+
 function treeFor(group: number, locale: 'en' | 'vi') {
   const definitions = Object.values(BLOCK_REGISTRY);
   const headings = definitions.filter((definition) => definition.role === 'h1');
@@ -317,16 +342,63 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                   }
                 }
                 console.log(`[all20-ssr] ${label}: axe-start`);
+                const ssrPalette = await main.evaluate(hostPalette);
+                const ssrButtons = await main.locator('.redesign-button').evaluateAll((elements) =>
+                  elements.map((element) => ({
+                    color: getComputedStyle(element).color,
+                    background: getComputedStyle(element).backgroundColor,
+                  })),
+                );
                 await axeContext.addCookies(await context.cookies());
                 const axeResponse = await axePage.goto(url.href);
                 expect(axeResponse?.status(), `${label} axe SSR response`).toBe(200);
                 const axeMain = axePage.locator('#content > main.cms-core-host:visible');
                 await expect(axeMain).toHaveCount(1);
                 expect(
-                  await axeMain.evaluate((element) => element.outerHTML),
-                  `${label} identical unhydrated SSR main for axe`,
-                ).toBe(ssrMarkup);
+                  normalizeSuspenseTemplateIds(
+                    await axeMain.evaluate((element) => element.outerHTML),
+                  ),
+                  `${label} identical unhydrated SSR main except request-local Suspense template IDs`,
+                ).toBe(normalizeSuspenseTemplateIds(ssrMarkup));
+                await axePage.evaluate((dark) => {
+                  document.documentElement.classList.toggle('dark', dark);
+                }, theme === 'dark');
+                expect(
+                  await axeMain.evaluate(hostPalette),
+                  `${label} identical no-script host palette`,
+                ).toEqual(ssrPalette);
                 await axeSession.send('Emulation.setScriptExecutionDisabled', { value: false });
+                await expect
+                  .poll(
+                    () =>
+                      axeMain
+                        .locator('.redesign-button')
+                        .evaluateAll((elements) =>
+                          elements.reduce(
+                            (count, element) =>
+                              count +
+                              element
+                                .getAnimations({ subtree: true })
+                                .filter((animation) => animation.playState === 'running').length,
+                            0,
+                          ),
+                        ),
+                    { timeout: 5_000 },
+                  )
+                  .toBe(0);
+                expect(
+                  await axeMain.evaluate(hostPalette),
+                  `${label} stable axe host palette`,
+                ).toEqual(ssrPalette);
+                expect(
+                  await axeMain.locator('.redesign-button').evaluateAll((elements) =>
+                    elements.map((element) => ({
+                      color: getComputedStyle(element).color,
+                      background: getComputedStyle(element).backgroundColor,
+                    })),
+                  ),
+                  `${label} same painted CTA colors as no-script visitor`,
+                ).toEqual(ssrButtons);
                 const axe = await new AxeBuilder({ page: axePage })
                   .include('#content > main.cms-core-host')
                   .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
