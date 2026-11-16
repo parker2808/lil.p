@@ -4,6 +4,9 @@
 
 - 2026-11-16: A saved tree may preserve semantic props while changing JSON key order; compute SSR host hashes from the persisted API tree after the same tree parse as the renderer, not from the pre-save fixture object. CI `43765148714` exposed the false-negative in V06 without weakening its per-host hash assertion.
 - 2026-11-16: A no-script host-hash assertion must hash the renderer's serialized `{ props, lang }` envelope after locale resolution, not just localized props; CI `43762556788` exposed the mismatch without changing any production host behavior.
+- 2026-11-16: When a gallery PR restacks over new D6 no-JS and revision tests, preserve both histories and the narrow hydrated-palette evidence claim; an AST-complete Graphify attempt that stalls before report generation is not a fresh provenance claim.
+
+- 2026-11-16: A `--builder-accent` value change can pass while 476/480 neutral/branded host screenshots remain identical: host block renderers consume site palette tokens, so test computed painted text and actual image differences, not token presence alone.
 - 2026-11-16: A base can advance again during a V05 restack; compare the remote feature SHA immediately before push and require combined-head CI instead of trusting the previous successful test-head run.
 
 - 2026-11-16: Restacking a test PR after a visual fix requires preserving both the old test's artifact provenance and the base's contrast assertion; the old 17/17 run does not verify the combined head.
