@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A docs/test-only main merge can conflict with Stage A release notes despite nonoverlapping runtime code; retain both sets of notes and independently verify the write-freeze behavior before interpreting exact-head CI.
+- 2026-11-15: Anonymous 503s on direct and rewritten page mutations show the HTTP freeze at sampled ingresses, not fleet-wide drain; compare pre-deploy instance IDs to an authoritative active roster and fail closed when identity, shutdown or in-flight evidence is missing.
 - 2026-11-16: No-JS responsive SSR retains hidden host variants; only a painted variant's resolved grid tracks can establish the current layout, while text wrapping and actual host/document width need independent assertions.
 - 2026-11-16: A viewport-safe capture may still crush nested stat labels or ellipsize featured text; size to the CMS column, inspect raw public/preview PNGs, and keep readable text assertions at each viewport.
 - 2026-11-16: Persisted tree key order can differ from pre-save fixture order; calculate rendered responsive hashes from the saved tree and serialized `{ props, lang }` envelope rather than loosening hash checks.
@@ -11,6 +13,7 @@
 
 - 2026-11-16: A no-JS full-page Playwright screenshot can stall before producing any artifact even after successful SSR assertions; capture the measured full content rectangle via Chromium protocol and verify PNG dimensions before reviewing any visual gate.
 
+- 2026-11-15: A broad pre-schema admin-pages write guard remains valid across D2 only after auditing both controller route tables, including SEO's shared PATCH and builder restore; preserve both histories in context conflicts and regenerate the graph from the combined tree.
 - 2026-11-16: A no-JS all-host visual test can consume its entire four-minute case and then a shard's 20-minute budget on retries; split by viewport and balance registered specs across all shards, keeping each public/preview pair, raw screenshots and unwaived axe intact.
 - 2026-11-16: No-JS responsive SSR keeps mobile/tablet/desktop host variants in the DOM. A hidden `auto-fit` grid can return an unresolved computed-style expression whose space-separated tokens are not painted tracks; assert exactly one laid-out variant and inspect that variant's computed grid and text without relaxing bounds.
 
@@ -670,6 +673,7 @@
 - 2026-11-15: A clean D5 stale-revision test and a D6 CAS publish UI can merge with only import conflicts, but their individual green runs cannot certify the combined editor; retain both imports and rerun exact-head checks.
 - 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
 - 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
+- 2026-11-16: For a pre-migration freeze, document the complete before/after instance roster and startup migration separately from HTTP probes; a read-only CLI snapshot or green CI cannot establish drained in-flight writers or authorize reopening.
 - 2026-11-15: Merging documentation-only main changes can conflict with active release notes without changing runtime; retain both histories and request exact-head CI rather than treating a single security check as a full gate.
 - 2026-11-15: When rebasing the pre-migration write freeze on five-shard main, preserve both Stage A drain instructions and newly registered keyboard/canvas E2E coverage; a clean merge of runtime files alone does not prove production instances have drained.
 - 2026-11-15: When restacking the Stage A freeze after a docs-only C1 merge, keep both histories; clean HTTP guards and a conflict-free runtime are not evidence that old production writers drained.
