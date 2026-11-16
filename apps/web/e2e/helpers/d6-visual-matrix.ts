@@ -117,6 +117,7 @@ export function registerVisualMatrix(group: number) {
           width: number;
           types: string[];
         }> = [];
+        const neutralHeroImages = new Map<number, Buffer>();
         const path = `/${locale}/${pageKey}`;
         const publicData = await page.request.get(`/api/public/pages/${pageKey}?locale=${locale}`);
         const previewData = await page.request.get(
@@ -136,6 +137,19 @@ export function registerVisualMatrix(group: number) {
             await page.setViewportSize({ width, height: 900 });
             const label = `${locale}-${theme}-${brand}-${width}-group${group}`;
             const publicCapture = await capture(page, path, theme, brand, blocks, label, testInfo);
+            if (group === 0) {
+              const heroImage = publicCapture.images.get('hero')!;
+              if (brand === 'neutral') {
+                neutralHeroImages.set(width, heroImage);
+              } else {
+                const neutralImage = neutralHeroImages.get(width)!;
+                const difference = await imageDifference(page, neutralImage, heroImage);
+                expect(
+                  difference.differingPixels,
+                  `${label} painted neutral/brand hero`,
+                ).toBeGreaterThan(0);
+              }
+            }
             await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
             const previewCapture = await capture(
               page,
@@ -225,6 +239,13 @@ async function capture(
       `${label} contact form hydrated before semantic and visual capture`,
     ).toBeVisible();
   }
+  const viewport = await page.evaluate(() => ({
+    width: window.innerWidth,
+    documentWidth: document.documentElement.scrollWidth,
+  }));
+  expect(viewport.documentWidth, `${label} document horizontal overflow`).toBeLessThanOrEqual(
+    viewport.width,
+  );
   const accent = await main.evaluate((element) =>
     getComputedStyle(element).getPropertyValue('--builder-accent').trim(),
   );
@@ -237,6 +258,19 @@ async function capture(
         ? '#a44520'
         : '#ffb587',
   );
+  if (blocks.some(({ type }) => type === 'hero')) {
+    const heroAccent = main.locator('[data-host-block-type="hero"] .headline-accent');
+    await expect(heroAccent, `${label} painted hero accent`).toHaveCSS(
+      'color',
+      brand === 'neutral'
+        ? theme === 'light'
+          ? 'rgb(37, 92, 206)'
+          : 'rgb(152, 184, 255)'
+        : theme === 'light'
+          ? 'rgb(179, 50, 26)'
+          : 'rgb(255, 143, 116)',
+    );
+  }
   const hydratedBlocks = await main.locator('[data-host-block-type]').evaluateAll((elements) =>
     elements.map((element) => ({
       type: element.getAttribute('data-host-block-type'),

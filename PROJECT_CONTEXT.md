@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+<<<<<<< HEAD
 - 2026-11-16 D5→D6 integration: preserve D5 invalid/raw property drafts, blur-separated undo and localized schema labels alongside D6 version publish/restore and component registry. The 95 focused builder unit tests pass locally; prior #202 run `43776914010` failed only `/vi` mobile Lighthouse TBT (307/325ms versus 300ms), not a combined-head pass. Exact-head API and five web shards plus independent review remain required; V03/V14 and deploy signoff remain separate.
 - 2026-11-16 V16 D6 version-dialog gate: register EN/VI × light/dark real-API keyboard publish and Restore confirmation tests (trap, Escape/Cancel/confirm return, ARIA, polite status, unwaived axe). CI `43769180422` found the History sheet missing `aria-modal`; CI `43770356436` found focus was not returned after dismissing the controlled Restore alertdialog. Scope modal semantics and explicit nested-dialog focus return, then rerun. Publish has no confirmation dialog in D6; manual VoiceOver/NVDA and public-route V16 remain GAP even if CI passes. See `docs/specs/2026-11-16-cms-d6-v16-version-dialog.md`.
 - D5 V16 automated follow-up checks EN/VI keyboard trap/return for the delete dialog and compact Properties sheet, live deletion/local-draft status, and the disabled Publish reason. D5 has no publish/restore-version dialog; its integrated D6 dialog capture/a11y review and manual spoken VoiceOver/NVDA check remain GAP.
@@ -101,6 +102,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - D5 design/a11y evidence: 99 captured EN/VI × light/dark × neutral/lil.p responsive and editor states, a keyboard edit/history/focus path, zero axe violations and measured AA token contrasts are recorded in `docs/specs/2026-11-14-cms-d5-design-evidence.md`. This passes the gated D5 editor review only; D6 still owns the combined journey, all 20 definitions, preview/public parity and release approvals.
 
+=======
+- 2026-11-16 D6 all-20 gallery: the previous neutral/lil.p visual pairs were almost entirely byte-identical despite a passing builder-accent token check. Adapt actual site palette only on the neutral host; require rendered hero colors and different images, then inspect exact-head public/preview CI artifacts. V03 starter components, V05 Properties and complete V14 real-tenant/combined-head evidence remain GAP.
+- 2026-11-16 V16 D6 version-dialog gate: register EN/VI × light/dark real-API keyboard publish and Restore confirmation tests (trap, Escape/Cancel/confirm return, ARIA, polite status, unwaived axe). CI `43769180422` found the History sheet missing `aria-modal`; CI `43770356436` found focus was not returned after dismissing the controlled Restore alertdialog. Scope modal semantics and explicit nested-dialog focus return, then rerun. Publish has no confirmation dialog in D6; manual VoiceOver/NVDA and public-route V16 remain GAP even if CI passes. See `docs/specs/2026-11-16-cms-d6-v16-version-dialog.md`.
+>>>>>>> origin/feat/cms-d6-verify
 - 2026-11-16 V03/V14 real-tenant SSR extension: EN/VI × light/dark × 390/768/1440 no-JS public/preview captures now assert more than 2% painted CTA pixel difference between actual neutral/branded hosts, with exact same-host preview parity. The all-20 host first-paint matrix, WCAG AA and manual review remain GAP pending exact-head CI and independent review; no runtime or schema changes.
 - 2026-11-16 V05: A focused D6 editor-origin page-header test edits nested EN/VI title and eyebrow in Properties, waits for each real autosaved draft value, then pairs the saved revision with version snapshot and EN/VI public/version-preview render captures at 390/768/1440. Prior head `957b907a` passed run `43761699036` (5/5 web shards); the merged D6 banner/contrast and V09/V10 base requires new exact-head CI and independent screenshot review. Full 20-schema validation/errors remain GAP. See `docs/specs/2026-11-16-cms-d6-v05-revision-chain.md`.
 - 2026-11-16 V09/V10 restore dark-host correction: #258 CI `43759532114` found a real 2.22:1 eyebrow/card contrast failure because the published tree omitted `data-theme` while `html.dark` changed foreground tokens. Scoped implicit `.dark` inheritance to core hosts without explicit theme, retained explicit theme opt-out and unwaived axe; new exact-head five-shard CI/artifact review pending. No API/schema/golden edits; production and all-20 restoration remain GAP.
@@ -407,7 +412,11 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+<<<<<<< HEAD
 - 2026-11-16: Merged #204 D5 builder into D6 without discarding D6 publish/restore, localized properties or D5 invalid-input/undo preservation; updated integration tests to select actual localized control names and to persist a newly added optional heading only after valid English text.
+=======
+- 2026-11-16: Mapped the neutral host's rendered site palette to core tokens without changing the lil.p palette; the 20-host browser gallery asserts a painted hero accent and distinguishable neutral/lil.p images while retaining axe and public/preview parity. Exact-head CI and visual acceptance pending.
+>>>>>>> origin/feat/cms-d6-verify
 - 2026-11-16: Restore keyboard focus to the originating version-row action after Escape/Cancel and to Version history after successful nested Restore closes the sheet; preserve strict EN/VI dialog browser checks.
 - 2026-11-16: Extended registered D5 V16 browser coverage for real EN/VI dialog keyboard focus boundaries, return, and live announcements; documented disabled publishing and remaining integrated/manual scope in `docs/specs/2026-11-15-cms-d5-v16-automated-a11y.md`.
 
@@ -463,7 +472,6 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Captured and reviewed 99 D5 builder states at 390/768/1440 with a D6-format manifest, axe A/AA and measured token contrast; corrected the keyboard-focus capture to its named 1440×900 viewport. The keyboard journey covers nested add/move/delete, undo/redo and focus restoration. The route remains flag gated with Publish disabled; D6 release proof remains pending.
 
 - 2026-11-16: Add a sharded D6 real-API version-action keyboard/ARIA/axe browser gate, fix the scoped modal semantics identified by CI, and explicitly preserve manual screen-reader and missing Publish-dialog limitations; no golden, schema or API changes.
-
 - 2026-11-16: Broadened the D6 real-host no-JS nested-tree browser sample to three widths and measured tenant CTA paint (over 2% pixel difference), retaining EN/VI, light/dark and strict public/preview parity; no product or data changes. CI and visual review pending.
 - 2026-11-16: Expanded V05 Properties evidence to include scrolled mobile/tablet title fields; initial run `43759329807` passed 18/18 at `561fe6ed`, and strengthened run `43760729931` passed five shards at `f8d3d14d`. The combined V02 base still needs exact-new-head CI.
 
