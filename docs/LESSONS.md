@@ -31,6 +31,14 @@
 - 2026-11-15: A source-green builder restore gate must be rerun on the combined head; preserve both merge histories and label an interrupted Graphify refresh stale rather than fabricating current topology.
 - 2026-11-15: A paired public/preview gallery and zero-axe assertions do not establish a distinct neutral tenant SSR or complete no-JavaScript nested content; preserve those gaps when integrating D6 parity. A data-backed streaming notes fallback also needs readable, keyboard-sized links and an existing interactive marker before capture.
 - 2026-11-15: A combined D5/D6 merge must retain the D6 host-label argument on every canvas control, not just the inspector, and the D5 duplicate command must use the host registry; full typecheck catches a missed accessible-label call.
+
+- 2026-11-16: Next SSR can serialize the complete locale catalog in its RSC scripts, including preview-only notices on a valid public page. Assert notice isolation inside parsed server-rendered `.public-site main#content` and hydrated visible DOM, not across the entire HTML response; keep raw diagnostic exclusion across the full response.
+
+- 2026-11-16: A starter page's empty prose fails the real publish gate even when SEO exists; populate visible EN/VI copy before publishing the snapshot that an invalid-draft preview test must preserve.
+
+- 2026-11-16: When a D6 restack conflicts only in narrative docs and a generated graph report, retain both review histories while keeping the report's prior source commit explicit; old green source CI cannot score the new merge head.
+
+- 2026-11-16: A tree-backed page without explicit SEO must derive title from the same validated, locale-resolved H1 rendered in public and preview; never show raw server issue text in a translated invalid-block notice or reuse the empty-page label.
 - 2026-11-16: When merging D5 documentation into D6, preserve the historical D5 publishing limitation only in its scoped section; the current integrated builder description must reflect the D6 admin publish, version history and draft-only restore controls.
 
 - 2026-11-16: When a gallery PR restacks over new D6 no-JS and revision tests, preserve both histories and the narrow hydrated-palette evidence claim; an AST-complete Graphify attempt that stalls before report generation is not a fresh provenance claim.
@@ -691,4 +699,6 @@
 - 2026-11-16: Test actual keyboard Tab/Shift+Tab boundaries and focus return in existing dialogs, but never claim D5 publish/restore-version dialogs or manual spoken screen-reader acceptance when that UI exists only on the integrated D6 branch.
 - 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
 - 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
+- 2026-11-16: For invalid-preview evidence, seed a corrupted draft row only in a guarded disposable database after publishing a valid snapshot; compare real preview API, SSR/hydrated browser and unchanged public routes instead of trusting mocked render tests.
+- 2026-11-16: A legacy CMS page sits inside SiteShell `main#content`, not the tree-only `main.cms-core`; parse the actual semantic main from the raw SSR response before asserting preview notice isolation, rather than silently accepting an absent node.
 - 2026-11-16: When reconciling D5 host Properties with D6 translated labels, retain both data-preserving invalid-input behavior and exact accessible names; an optional localized heading with empty required English text must remain local until the user provides valid content, not auto-save fabricated defaults.

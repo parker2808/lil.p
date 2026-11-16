@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #208 verification-only normal-merge of D6 `bebe5656` (#255 accepted F4) after successful prior #208 run `43786515505`; preserve the previous code-cut evidence, but require new exact-head API/five-shard CI and independent row review before rescoring. No #208 merge/deploy.
+
 - #208 head `c791c449` CI `43785034108` failed W2/W3 at obsolete D5-style accessible labels in the revision-chain and restored UI tests after D6 host field labels were integrated. Verification-only tests now target D6 exact EN/VI field names without changing state, publish, restore, or parity assertions; a fresh exact-head run is required.
 
 - #208 verification-only refresh merges D6 `6f8f74d3` after D-base `a6f053ce`; builder imports, host field labels and bilingual optional-heading behavior were reconciled under Node 22 nonbuild checks. Exact combined-head CI and matrix review remain required; #208 must not merge or deploy.
@@ -62,6 +64,14 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-16 #208 integration-only V05 browser fixture: localized Properties now names the English/Vietnamese fields with a middle dot, so the prior parenthesized locator fails before persistence assertions. Preserve the publish/revision/public assertions and require a new exact-head five-shard run; no release or production claim.
 - 2026-11-16 #208 next verification cut includes D2 `26ace408`, D5 `92fb84d4` (#263) and D6 `dd66938d` (#259). Do not inherit earlier #208 CI or source-green row scores: await new exact-head API/five-shard run and raw-artifact review. D5 dialog automation is bounded; D6 V05 revision-chain single fixture is bounded; manual spoken SR, V03/V06/V09/V10/V14 all-host/prod remain GAP. #208 DO NOT MERGE.
 - 2026-11-16 #208 verification-only cut integrates D2 `26ace408`, D5 `aaec9e62` and D6 `3b60df35`; 7/7 no-build gate passed after the D6 merge. Await exact combined-head API/five-shard CI and artifact review before rescoring; #256/#260 are not integrated. V03/V06/V09/V10/V14 and dialogs/manual SR remain open. DO NOT MERGE or deploy.
+
+- 2026-11-16 V13 F4 integration: add a guarded disposable-MySQL legacy draft fixture and real EN/VI API, SSR, hydrated browser and public-route assertions. CI `43776544095` exposed the starter's empty-body publish rejection; fill bilingual prose before publishing the immutable public baseline, then corrupt only the draft. CI `43778369699` reached the public route but caught a false positive from Next's serialized locale catalog containing preview-only strings: restrict notice isolation to parsed SSR main and hydrated DOM, retaining full-response raw diagnostic exclusion. CI `43781124688` caught an incorrect tree-only selector on this legacy route: parse `.public-site main#content` in the raw SSR response instead. Exact-head CI and independent review remain pending; full V13 remains GAP.
+
+- 2026-11-16 V13 F3/F4: D6 no-SEO tree metadata now takes the rendered EN/VI page-header H1/intro (or native heading H1) for public and authorized preview; invalid legacy preview blocks get localized recovery help without raw diagnostics. Exact-head browser CI and combined-head route/state review pending; full V13 remains GAP.
+
+- 2026-11-16 V13: D6 historical draft SEO title/description previously read the current draft while `?v=N` rendered a versioned tree. Shared metadata now uses the validated draft-only version for core and custom page routes; browser evidence must verify EN/VI old body/SEO versus current public body/SEO. Full V13 route/state localization remains GAP.
+
+- 2026-11-16 D6 all-20 gallery: the previous neutral/lil.p visual pairs were almost entirely byte-identical despite a passing builder-accent token check. Adapt actual site palette only on the neutral host; require rendered hero colors and different images, then inspect exact-head public/preview CI artifacts. V03 starter components, V05 Properties and complete V14 real-tenant/combined-head evidence remain GAP.
 - 2026-11-16 #202 integration README now distinguishes the D5 historical disabled-publish host from the D6 admin publish/version/restore UI. Combined-head lint and five-shard CI must re-green after the documentation fix; V03/V14 remain separate evidence gates.
 - 2026-11-16 D5→D6 integration: preserve D5 invalid/raw property drafts, blur-separated undo and localized schema labels alongside D6 version publish/restore and component registry. The 95 focused builder unit tests pass locally; prior #202 run `43776914010` failed only `/vi` mobile Lighthouse TBT (307/325ms versus 300ms), not a combined-head pass. Exact-head API and five web shards plus independent review remain required; V03/V14 and deploy signoff remain separate.
 - 2026-11-16 V16 D6 version-dialog gate: register EN/VI × light/dark real-API keyboard publish and Restore confirmation tests (trap, Escape/Cancel/confirm return, ARIA, polite status, unwaived axe). CI `43769180422` found the History sheet missing `aria-modal`; CI `43770356436` found focus was not returned after dismissing the controlled Restore alertdialog. Scope modal semantics and explicit nested-dialog focus return, then rerun. Publish has no confirmation dialog in D6; manual VoiceOver/NVDA and public-route V16 remain GAP even if CI passes. See `docs/specs/2026-11-16-cms-d6-v16-version-dialog.md`.
@@ -506,6 +516,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Normal-merged D6 `bebe5656` V13 F4 into #208 after prior combined cut passed 17/17; held scoring until fresh exact-head CI. No production action.
+
 - 2026-11-16: Corrected stale accessible-field locators in combined restore and V05 revision-chain browser fixtures after #208 W2/W3 integration failures; no runtime or persistence changes.
 
 - 2026-11-16: Reconciled D5/D6 builder/property test and documentation conflicts in the #208 verification checkout; held release scoring pending exact-head five-shard CI and independent artifact review.
@@ -514,6 +526,14 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-16: Corrected two integration-only V05 post-reload/mobile field locators on #208 after exact-head W5 failure `43772762149`; no runtime, API, schema, or acceptance threshold changed. Await fresh API/five-shard CI; no main merge or deploy.
 - 2026-11-16: Normal-merged D5 `92fb84d4` automated dialog coverage and D6 `dd66938d` V05 revision-chain browser evidence into verification-only #208; no main merge or deploy.
 - 2026-11-16: Normal-merged D6 `3b60df35` (#261 dark banner, #258 restored UI) into verification-only #208 after D5 `aaec9e62` and D2 `26ace408`; preserved both histories and reran 7/7 no-build gates. Exact-head CI still required.
+
+- 2026-11-16: Correct F4 real-route SSR preview/public assertions to parse the actual SiteShell `main#content` in both EN/VI, preserving localized notice isolation and raw diagnostic exclusions; exact-head CI pending.
+- 2026-11-16: Restrict the V13 public invalid-preview notice isolation assertion to parsed SSR main and hydrated DOM because Next's locale catalog includes translated notice strings in RSC scripts; keep raw diagnostics excluded from the whole response. Exact-head CI pending.
+- 2026-11-16: Populate valid EN/VI prose before publishing the F4 disposable legacy-preview fixture; retain the strict publish guard and unchanged public snapshot, then seed only the invalid draft. Exact-head CI pending.
+- 2026-11-16: Register real invalid-draft EN/VI browser evidence backed by local disposable MySQL; published snapshot and golden/schema contracts unchanged. CI pending.
+
+- 2026-11-16: Add no-SEO tree H1/description fallback, sanitized bilingual invalid-block notice and real admin API EN/VI draft/public metadata test; no CMS core/API/schema/golden changes. CI pending.
+
 - 2026-11-16: Corrected integrated web README publishing/version-history/restore description while retaining the historical D5 disabled-publish section; #202 exact-head CI is required before acceptance.
 - 2026-11-16: Merged #204 D5 builder into D6 without discarding D6 publish/restore, localized properties or D5 invalid-input/undo preservation; updated integration tests to select actual localized control names and to persist a newly added optional heading only after valid English text.
 - 2026-11-16: Mapped the neutral host's rendered site palette to core tokens without changing the lil.p palette; the 20-host browser gallery asserts a painted hero accent and distinguishable neutral/lil.p images while retaining axe and public/preview parity. Exact-head CI and visual acceptance pending.

@@ -6,6 +6,15 @@ The [D5 V02 keyboard gate](./docs/specs/2026-11-15-cms-d5-live-journeys.md) test
 The [D5 live journey spec](./docs/specs/2026-11-15-cms-d5-live-journeys.md) registers CI-sharded browser tests against the real D2 draft API for composition, keyboard navigation, reload, responsive properties and conflict/offline recovery. V07 verifies a stale publish revision after a real intervening draft write. The exact-head design artifact spans EN/VI, light/dark, neutral/lil.p and mobile/tablet/desktop empty/error/focus/saved/saving/conflict states; the [V15 follow-up](./docs/specs/2026-11-15-cms-d5-v15-target-focus.md) audits the full admin-builder chrome for 44px targets, focus, overflow, axe and computed focus-ring/background contrast ≥3:1. The [V16 automated subset](./docs/specs/2026-11-15-cms-d5-v16-automated-a11y.md) checks EN/VI builder announcements and full-page axe; V16 still requires manual VoiceOver/NVDA and public/preview reading-order review. Incomplete publication is rejected; successful publish/public SSR parity and combined D6 verification remain separate gates.
 
 The stacked [D5 all-block Properties spec](./docs/specs/2026-11-15-cms-d5-all-block-properties.md) registers all 20 host block contracts in the gated builder. Its EN/VI editor derives nested/localized, numeric, array, optional-group and responsive controls from the host schemas; invalid partial edits remain local across node, breakpoint and sheet changes. Blurring a text field separates its next undo step; clearing a responsive override discards the invalid local value and error for that property. D6's editor-origin suite exercises all 20 through the real draft API and SSR; exact-head CI passed, but semantic/visual review and forward-only rollout evidence remain open. This draft verification branch must not merge.
+
+The [V13 D6 metadata/preview fix](./docs/specs/2026-11-16-cms-d6-v13-metadata.md)
+derives missing tree SEO from the visible bilingual H1 on public and draft routes,
+and displays localized recovery help instead of raw invalid-block diagnostics.
+Real EN/VI browser evidence runs in the existing metadata shard; full V13 signoff
+still requires combined-head route/state review.
+Its F4 integration fixture uses only the disposable Playwright database to check
+real invalid draft previews against the unchanged published snapshot.
+
 The [D6 neutral host gallery](./docs/specs/2026-11-16-cms-d6-neutral-gallery.md)
 maps rendered site colors to core tokens only inside the neutral CMS host and
 checks a painted hero accent and brand-different screenshots in CI. The
