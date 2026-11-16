@@ -1,14 +1,13 @@
 'use client';
 
-import { schemaToFields, type SchemaField } from '@parker2808/cms-core/react';
+import type { SchemaField } from '@parker2808/cms-core/react';
 import {
   resolveResponsive,
-  starterComponentSchemas,
   type Breakpoint,
   type TreeNode,
   type TreeOperation,
 } from '@parker2808/cms-core/tree';
-import { BLOCK_REGISTRY, type BlockType } from '@portfolio/contracts';
+import { BLOCK_REGISTRY } from '@portfolio/contracts';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Input } from '@portfolio/ui/components/ui/input';
 import {
@@ -20,257 +19,395 @@ import {
 } from '@portfolio/ui/components/ui/select';
 import { Switch } from '@portfolio/ui/components/ui/switch';
 import { Textarea } from '@portfolio/ui/components/ui/textarea';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { z } from 'zod';
 
-import { findNode } from '../canvas/model';
 import type { BuilderState } from '../canvas/commands';
+import { findNode } from '../canvas/model';
+import {
+  candidateProperty,
+  initialValue,
+  optionalGroups,
+  propertyFields,
+  propertyJson,
+  propertyLabel,
+  propertySchema,
+  schemaAt,
+  setAt,
+  valueAt,
+} from './editor-model';
 import styles from './properties.module.css';
 
-const fields = {
+const copy = {
   en: {
     title: 'Properties',
     base: 'Base',
-    tablet: 'Tablet',
     mobile: 'Mobile',
+    tablet: 'Tablet',
+    desktop: 'Desktop',
+    empty: 'Select a component to edit its properties.',
+    unavailable: 'This component has no editable properties.',
+    invalid: 'Invalid value; your edit is kept here and has not been saved.',
     inherited: 'Inherited from base',
     override: 'Overridden here',
     clear: 'Clear override',
-    empty: 'Select a component to edit its properties.',
-    invalid: 'This value is not valid for this component.',
-    unavailable: 'This component has no editable properties.',
-    text: 'Text',
-    level: 'Heading level',
-    src: 'Image URL',
-    alt: 'Alternative text',
-    label: 'Button label',
-    href: 'Link URL',
-    size: 'Spacing',
-    columns: 'Columns',
-    span: 'Column span',
+    add: 'Add',
+    english: 'English',
+    vietnamese: 'Vietnamese',
+    ids: 'Numeric IDs separated by commas',
   },
   vi: {
     title: 'Thuộc tính',
     base: 'Cơ bản',
-    tablet: 'Máy tính bảng',
     mobile: 'Di động',
+    tablet: 'Máy tính bảng',
+    desktop: 'Máy tính bàn',
+    empty: 'Chọn thành phần để chỉnh sửa thuộc tính.',
+    unavailable: 'Thành phần này không có thuộc tính chỉnh sửa.',
+    invalid: 'Giá trị không hợp lệ; thay đổi được giữ tại đây và chưa được lưu.',
     inherited: 'Kế thừa từ cơ bản',
     override: 'Đã ghi đè ở đây',
     clear: 'Xóa ghi đè',
-    empty: 'Chọn thành phần để chỉnh sửa thuộc tính.',
-    invalid: 'Giá trị này không hợp lệ cho thành phần.',
-    unavailable: 'Thành phần này không có thuộc tính chỉnh sửa.',
-    text: 'Văn bản',
-    level: 'Cấp tiêu đề',
-    src: 'URL hình ảnh',
-    alt: 'Văn bản thay thế',
-    label: 'Nhãn nút',
-    href: 'URL liên kết',
-    size: 'Khoảng cách',
-    columns: 'Số cột',
-    span: 'Độ rộng cột',
+    add: 'Thêm',
+    english: 'Tiếng Anh',
+    vietnamese: 'Tiếng Việt',
+    ids: 'ID dạng số, cách nhau bằng dấu phẩy',
   },
 } as const;
-const nodeNames = {
-  en: {
-    page: 'Page',
-    section: 'Section',
-    row: 'Row',
-    column: 'Column',
-    grid: 'Grid',
-    heading: 'Heading',
-    paragraph: 'Paragraph',
-    'rich-text': 'Rich text',
-    image: 'Image',
-    button: 'Button',
-    divider: 'Divider',
-    spacer: 'Spacer',
-    'legacy-component': 'Legacy component',
-  },
-  vi: {
-    page: 'Trang',
-    section: 'Phần',
-    row: 'Hàng',
-    column: 'Cột',
-    grid: 'Lưới',
-    heading: 'Tiêu đề',
-    paragraph: 'Đoạn văn',
-    'rich-text': 'Văn bản phong phú',
-    image: 'Hình ảnh',
-    button: 'Nút',
-    divider: 'Đường kẻ',
-    spacer: 'Khoảng cách',
-    'legacy-component': 'Thành phần cũ',
-  },
-} as const;
+
 const spacingNames = {
   en: { sm: 'Small', md: 'Medium', lg: 'Large' },
   vi: { sm: 'Nhỏ', md: 'Vừa', lg: 'Lớn' },
 } as const;
+const choiceNames = {
+  en: {
+    latest: 'Latest',
+    featured: 'Featured',
+    manual: 'Manual',
+    default: 'Default',
+    compact: 'Compact',
+  },
+  vi: {
+    latest: 'Mới nhất',
+    featured: 'Nổi bật',
+    manual: 'Thủ công',
+    default: 'Mặc định',
+    compact: 'Thu gọn',
+  },
+} as const;
 
-const layoutSchemas = {
-  grid: z.strictObject({ columns: z.number().int().min(1).max(4) }),
-  column: z.strictObject({ span: z.number().int().min(1).max(4) }),
+export type PropertyDraft = {
+  pending: Record<string, unknown>;
+  inputs: Record<string, string>;
+  errors: Record<string, boolean>;
 };
 
-function schemaFor(node: TreeNode) {
-  if (node.type === 'component')
-    return node.componentType in BLOCK_REGISTRY
-      ? BLOCK_REGISTRY[node.componentType as BlockType].props
-      : starterComponentSchemas[node.componentType as keyof typeof starterComponentSchemas];
-  if (node.type === 'grid' || node.type === 'column') return layoutSchemas[node.type];
-  return undefined;
-}
-
-function nestedValue(props: Record<string, unknown>, path: string): unknown {
-  return path
-    .split('.')
-    .reduce<unknown>(
-      (value, part) =>
-        value && typeof value === 'object' ? (value as Record<string, unknown>)[part] : undefined,
-      props,
-    );
-}
-
-function propertyChange(
-  props: Record<string, unknown>,
-  path: string,
-  value: string | number | boolean,
-): { key: string; value: Extract<TreeOperation, { kind: 'property' }>['value'] } {
-  const [key, ...parts] = path.split('.');
-  if (!key) throw new Error('Property path must not be empty');
-  if (!parts.length) return { key, value };
-  const root = structuredClone(props[key] ?? {}) as Record<string, unknown>;
-  let target = root;
-  for (const part of parts.slice(0, -1)) {
-    target[part] = structuredClone(target[part] ?? {});
-    target = target[part] as Record<string, unknown>;
-  }
-  target[parts[parts.length - 1]!] = value;
-  return { key, value: root as Extract<TreeOperation, { kind: 'property' }>['value'] };
-}
-
-function EditorField({
+function Fields({
   node,
-  field,
   breakpoint,
   locale,
   onEdit,
+  onEndTyping,
+  drafts,
+  draftKey,
 }: {
   node: TreeNode;
-  field: SchemaField;
   breakpoint: Breakpoint;
   locale: 'en' | 'vi';
   onEdit: (operation: TreeOperation, typing?: boolean) => string | undefined;
+  onEndTyping?: () => void;
+  drafts: Map<string, PropertyDraft>;
+  draftKey: string;
 }) {
-  const text = fields[locale];
-  const key = field.path;
-  const current =
-    breakpoint === 'base' ? node.responsive.base : resolveResponsive(node.responsive, breakpoint);
-  const [rootKey] = key.split('.');
-  const value = nestedValue(current, key);
-  const overridden =
-    breakpoint !== 'base' && Object.hasOwn(node.responsive[breakpoint] ?? {}, rootKey!);
-  const [draft, setDraft] = useState<{ source: string; input: string } | null>(null);
-  const [error, setError] = useState('');
-  const source = String(value ?? '');
-  const shown = draft?.source === source ? draft.input : source;
-  function update(next: string | number | boolean, typing = false) {
-    setDraft({ source, input: String(next) });
-    setError(
-      onEdit(
-        { kind: 'property', nodeId: node.id, breakpoint, ...propertyChange(current, key, next) },
-        typing,
+  const schema = propertySchema(node);
+  const text = copy[locale];
+  const translate = useTranslations();
+  const isHost = node.type === 'component' && node.componentType in BLOCK_REGISTRY;
+  const descriptors = schema
+    ? propertyFields(
+        schema,
+        locale,
+        isHost ? (key) => translate(key as Parameters<typeof translate>[0]) : undefined,
       )
-        ? text.invalid
-        : '',
+    : [];
+  const json = schema && propertyJson(schema);
+  const effective =
+    breakpoint === 'base' ? node.responsive.base : resolveResponsive(node.responsive, breakpoint);
+  const [pending, setPending] = useState<Record<string, unknown>>(
+    () => drafts.get(draftKey)?.pending ?? {},
+  );
+  const [inputs, setInputs] = useState<Record<string, string>>(
+    () => drafts.get(draftKey)?.inputs ?? {},
+  );
+  const [errors, setErrors] = useState<Record<string, boolean>>(
+    () => drafts.get(draftKey)?.errors ?? {},
+  );
+
+  useEffect(() => {
+    drafts.set(draftKey, { pending, inputs, errors });
+  }, [drafts, draftKey, pending, inputs, errors]);
+
+  function edit(path: string, next: unknown, typing: boolean, leaf?: string, raw?: string) {
+    const key = path.split('.')[0]!;
+    const candidate = candidateProperty(node, breakpoint, path, next, pending[key]);
+    if (leaf && raw !== undefined) setInputs((previous) => ({ ...previous, [leaf]: raw }));
+    const parsed = schema!.safeParse({ ...effective, [key]: candidate.value });
+    if (!parsed.success) {
+      setPending((previous) => ({ ...previous, [key]: candidate.value }));
+      setErrors((previous) => ({ ...previous, [leaf ?? path]: true }));
+      return;
+    }
+    const failure = onEdit(
+      {
+        kind: 'property',
+        nodeId: node.id,
+        breakpoint,
+        key,
+        value: candidate.value as Extract<TreeOperation, { kind: 'property' }>['value'],
+      },
+      typing,
     );
+    setPending((previous) => {
+      const updated = { ...previous };
+      if (failure) updated[key] = candidate.value;
+      else delete updated[key];
+      return updated;
+    });
+    setErrors((previous) => ({
+      ...Object.fromEntries(
+        Object.entries(previous).filter(
+          ([entry]) => entry !== path && !entry.startsWith(`${path}.`),
+        ),
+      ),
+      [leaf ?? path]: !!failure,
+    }));
+    if (!failure)
+      setInputs((previous) =>
+        Object.fromEntries(
+          Object.entries(previous).filter(
+            ([entry]) => entry !== path && !entry.startsWith(`${path}.`),
+          ),
+        ),
+      );
   }
-  const id = `builder-field-${node.id}-${breakpoint}-${key}`;
+
+  function addGroup(path: string) {
+    const key = path.split('.')[0]!;
+    const initial = initialValue(schemaAt(json!, path)!);
+    const value =
+      path === key ? initial : setAt({ [key]: pending[key] ?? effective[key] }, path, initial);
+    if (schema!.safeParse({ ...effective, [key]: value }).success) edit(path, initial, false);
+    else setPending((previous) => ({ ...previous, [key]: value }));
+  }
+
+  function renderField(field: SchemaField) {
+    const path = field.path;
+    const key = path.split('.')[0]!;
+    const current = {
+      ...effective,
+      ...(Object.hasOwn(pending, key) ? { [key]: pending[key] } : {}),
+    };
+    const missing = optionalGroups(json!, path).find(
+      (group) => valueAt(current, group) === undefined,
+    );
+    if (missing)
+      return {
+        group: missing,
+        element: (
+          <Button
+            key={missing}
+            type="button"
+            variant="outline"
+            className={styles.control}
+            onClick={() => addGroup(missing)}
+          >
+            {isHost && missing === 'heading'
+              ? locale === 'vi'
+                ? 'Thêm tiêu đề'
+                : 'Add heading'
+              : `${text.add} · ${propertyLabel(missing, locale)}`}
+          </Button>
+        ),
+      };
+    const overridden =
+      breakpoint !== 'base' && Object.hasOwn(node.responsive[breakpoint] ?? {}, key);
+    const value = valueAt(current, path);
+    const localized = ['localized-text', 'localized-textarea', 'markdown'].includes(field.kind);
+    const languages: ('en' | 'vi' | undefined)[] = localized ? ['en', 'vi'] : [undefined];
+    const controls = languages.map((language) => {
+      const leaf = language ? `${path}.${language}` : path;
+      const languageLabel = language === 'en' ? text.english : text.vietnamese;
+      const label = language
+        ? isHost
+          ? path.startsWith('heading.')
+            ? `${locale === 'vi' ? 'Tiêu đề mục' : 'Section heading'} · ${field.label} · ${languageLabel}`
+            : `${field.label} (${language.toUpperCase()})`
+          : `${field.label} · ${languageLabel}`
+        : field.label;
+      const id = `builder-field-${node.id}-${breakpoint}-${leaf}`;
+      const content = language ? valueAt(current, leaf) : value;
+      const input =
+        inputs[leaf] ?? (Array.isArray(content) ? content.join(', ') : String(content ?? ''));
+      const hasError = errors[leaf];
+      function change(next: unknown, typing = false, raw?: string) {
+        if (language) {
+          const pair = value && typeof value === 'object' ? value : { en: '', vi: '' };
+          edit(path, { ...(pair as Record<string, unknown>), [language]: next }, typing, leaf, raw);
+        } else edit(path, next, typing, leaf, raw);
+      }
+      return (
+        <div className={styles.field} key={leaf}>
+          <div className={styles.fieldHead}>
+            <label htmlFor={id}>{label}</label>
+            {breakpoint !== 'base' && (
+              <span className={styles.source}>{overridden ? text.override : text.inherited}</span>
+            )}
+          </div>
+          {field.kind === 'select' ? (
+            <Select value={String(content ?? '')} onValueChange={(next) => change(next)}>
+              <SelectTrigger id={id} aria-label={label} className={styles.control}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {field.enum?.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {key === 'size' && option in spacingNames[locale]
+                      ? spacingNames[locale][option as keyof typeof spacingNames.en]
+                      : option in choiceNames[locale]
+                        ? choiceNames[locale][option as keyof typeof choiceNames.en]
+                        : option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : field.kind === 'switch' ? (
+            <Switch
+              id={id}
+              checked={Boolean(content)}
+              onCheckedChange={(next) => change(next)}
+              className={styles.switch}
+            />
+          ) : field.kind === 'textarea' ||
+            field.kind === 'markdown' ||
+            field.kind === 'localized-textarea' ||
+            (field.kind === 'text' && path === 'text') ? (
+            <Textarea
+              id={id}
+              value={input}
+              onChange={(event) => change(event.target.value, true, event.target.value)}
+              onBlur={onEndTyping}
+              aria-invalid={!!hasError}
+              aria-describedby={hasError ? `${id}-error` : undefined}
+              className={styles.control}
+            />
+          ) : (
+            <Input
+              id={id}
+              type={field.kind === 'number' ? 'number' : 'text'}
+              min={field.min}
+              max={field.max}
+              value={input}
+              onBlur={onEndTyping}
+              onChange={(event) => {
+                const raw = event.target.value;
+                if (field.kind === 'array')
+                  change(
+                    raw.trim()
+                      ? raw.split(',').map((part) => {
+                          const token = part.trim();
+                          return /^(0|[1-9]\d*)$/.test(token) ? Number(token) : NaN;
+                        })
+                      : [],
+                    true,
+                    raw,
+                  );
+                else if (field.kind === 'number')
+                  change(
+                    raw === '' && schemaAt(json!, path)?.anyOf?.some((item) => item.type === 'null')
+                      ? null
+                      : Number(raw),
+                    true,
+                    raw,
+                  );
+                else change(raw, true, raw);
+              }}
+              aria-invalid={!!hasError}
+              aria-describedby={hasError ? `${id}-error` : undefined}
+              placeholder={field.kind === 'array' ? text.ids : undefined}
+              className={styles.control}
+            />
+          )}
+          {hasError && (
+            <p className={styles.error} id={`${id}-error`} role="alert">
+              {text.invalid}
+            </p>
+          )}
+        </div>
+      );
+    });
+    return {
+      group: undefined,
+      element: (
+        <div key={path} className={styles.group}>
+          {controls}
+          {overridden && (
+            <Button
+              type="button"
+              variant="ghost"
+              className={styles.clear}
+              onClick={() => {
+                const failure = onEdit({
+                  kind: 'clear-override',
+                  nodeId: node.id,
+                  breakpoint,
+                  key,
+                });
+                if (failure) {
+                  setErrors((previous) => ({ ...previous, [path]: true }));
+                  return;
+                }
+                setPending((previous) => {
+                  const updated = { ...previous };
+                  delete updated[key];
+                  return updated;
+                });
+                setInputs((previous) =>
+                  Object.fromEntries(
+                    Object.entries(previous).filter(
+                      ([entry]) => entry !== key && !entry.startsWith(`${key}.`),
+                    ),
+                  ),
+                );
+                setErrors((previous) =>
+                  Object.fromEntries(
+                    Object.entries(previous).filter(
+                      ([entry]) => entry !== key && !entry.startsWith(`${key}.`),
+                    ),
+                  ),
+                );
+              }}
+            >
+              {text.clear} · {field.label}
+            </Button>
+          )}
+        </div>
+      ),
+    };
+  }
+
+  const seen = new Set<string>();
   return (
-    <div className={styles.field}>
-      <div className={styles.fieldHead}>
-        <label htmlFor={id}>{field.label}</label>
-        {breakpoint !== 'base' && (
-          <span className={styles.source}>{overridden ? text.override : text.inherited}</span>
-        )}
-      </div>
-      {field.kind === 'select' ? (
-        <Select value={String(value ?? '')} onValueChange={(next) => update(next)}>
-          <SelectTrigger id={id} aria-label={field.label} className={styles.control}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {field.enum?.map((option) => (
-              <SelectItem key={option} value={option}>
-                {key === 'size' && option in spacingNames[locale]
-                  ? spacingNames[locale][option as keyof (typeof spacingNames)['en']]
-                  : option}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      ) : field.kind === 'switch' ? (
-        <Switch
-          id={id}
-          checked={Boolean(value)}
-          onCheckedChange={(next) => update(next)}
-          className={styles.switch}
-        />
-      ) : field.kind === 'textarea' || (field.kind === 'text' && key === 'text') ? (
-        <Textarea
-          id={id}
-          value={shown}
-          onChange={(event) => update(event.target.value, true)}
-          onBlur={() => setDraft(null)}
-          aria-invalid={!!error}
-          aria-describedby={error ? `${id}-error` : undefined}
-          className={styles.control}
-        />
-      ) : (
-        <Input
-          id={id}
-          type={field.kind === 'number' ? 'number' : 'text'}
-          min={field.min}
-          max={field.max}
-          value={shown}
-          onChange={(event) =>
-            update(
-              field.kind === 'number' ? Number(event.target.value) : event.target.value,
-              field.kind !== 'number',
-            )
-          }
-          onBlur={() => setDraft(null)}
-          aria-invalid={!!error}
-          aria-describedby={error ? `${id}-error` : undefined}
-          className={styles.control}
-        />
-      )}
-      {error && (
-        <p className={styles.error} id={`${id}-error`} role="alert">
-          {error}
-        </p>
-      )}
-      {overridden && (
-        <Button
-          type="button"
-          variant="ghost"
-          className={styles.clear}
-          onClick={() => {
-            onEdit({
-              kind: 'clear-override',
-              nodeId: node.id,
-              breakpoint: breakpoint as Exclude<Breakpoint, 'base'>,
-              key: rootKey!,
-            });
-            setDraft(null);
-          }}
-        >
-          {text.clear} · {field.label}
-        </Button>
-      )}
-    </div>
+    <>
+      {!descriptors.length && <p className={styles.helper}>{text.unavailable}</p>}
+      {descriptors.map((field) => {
+        const result = renderField(field);
+        if (result.group) {
+          if (seen.has(result.group)) return null;
+          seen.add(result.group);
+        }
+        return result.element;
+      })}
+    </>
   );
 }
 
@@ -278,58 +415,24 @@ export function PropertiesPanel({
   state,
   locale,
   onEdit,
-  hostLabel,
+  onEndTyping,
+  pageKey = '',
+  propertyDrafts,
+  componentLabels,
 }: {
   state: BuilderState;
   locale: 'en' | 'vi';
   onEdit: (operation: TreeOperation, typing?: boolean) => string | undefined;
-  hostLabel?: (type: BlockType) => string;
+  onEndTyping?: () => void;
+  pageKey?: string;
+  propertyDrafts?: Map<string, PropertyDraft>;
+  componentLabels?: Record<string, string>;
 }) {
   const [breakpoint, setBreakpoint] = useState<Breakpoint>('base');
-  const translate = useTranslations();
+  const [localDrafts] = useState(() => new Map<string, PropertyDraft>());
+  const drafts = propertyDrafts ?? localDrafts;
   const node = findNode(state.document, state.selectedId);
-  const schema = node && schemaFor(node);
-  const text = fields[locale];
-  const descriptors = schema
-    ? schemaToFields(schema, {
-        labelFor: (path, key) => {
-          if (key?.startsWith('admin.blocks.'))
-            return translate(key as Parameters<typeof translate>[0]);
-          if (key) return key;
-          const leaf = path.split('.').at(-1)!;
-          return leaf in text
-            ? text[leaf as keyof typeof text]
-            : leaf.replaceAll(/([a-z])([A-Z])/g, '$1 $2');
-        },
-      })
-    : [];
-  const current =
-    node &&
-    (breakpoint === 'base' ? node.responsive.base : resolveResponsive(node.responsive, breakpoint));
-  const editable = descriptors.flatMap((field) => {
-    if (
-      field.kind === 'array' ||
-      (field.path.includes('.') &&
-        nestedValue(current ?? {}, field.path.split('.').slice(0, -1).join('.')) === undefined)
-    )
-      return [];
-    if (['localized-text', 'localized-textarea', 'markdown'].includes(field.kind)) {
-      return (['en', 'vi'] as const).map((language) => ({
-        ...field,
-        path: `${field.path}.${language}`,
-        label: field.path.startsWith('heading.')
-          ? `${locale === 'vi' ? 'Tiêu đề mục' : 'Section heading'} · ${field.label} · ${language === 'en' ? (locale === 'vi' ? 'Tiếng Anh' : 'English') : locale === 'vi' ? 'Tiếng Việt' : 'Vietnamese'}`
-          : `${field.label} (${language.toUpperCase()})`,
-        kind: field.kind === 'localized-text' ? 'text' : 'textarea',
-      }));
-    }
-    return [field];
-  });
-  const canAddHeading =
-    node?.type === 'component' &&
-    node.componentType in BLOCK_REGISTRY &&
-    descriptors.some((field) => field.path === 'heading.title') &&
-    nestedValue(current ?? {}, 'heading') === undefined;
+  const text = copy[locale];
   return (
     <div className={styles.panel} aria-label={text.title}>
       <div
@@ -337,7 +440,7 @@ export function PropertiesPanel({
         role="group"
         aria-label={locale === 'vi' ? 'Điểm ngắt' : 'Breakpoint'}
       >
-        {(['base', 'tablet', 'mobile'] as const).map((size) => (
+        {(['base', 'mobile', 'tablet', 'desktop'] as const).map((size) => (
           <Button
             key={size}
             type="button"
@@ -353,44 +456,24 @@ export function PropertiesPanel({
       <p className={styles.heading}>
         {node
           ? node.type === 'component'
-            ? node.componentType in BLOCK_REGISTRY
-              ? (hostLabel?.(node.componentType as BlockType) ?? node.componentType)
-              : (nodeNames[locale][node.componentType as keyof typeof nodeNames.en] ??
-                node.componentType)
-            : nodeNames[locale][node.type]
+            ? (componentLabels?.[node.componentType] ?? propertyLabel(node.componentType, locale))
+            : propertyLabel(node.type, locale)
           : text.empty}
       </p>
-      {!editable.length && !canAddHeading && (
-        <p className={styles.helper}>{node ? text.unavailable : text.empty}</p>
+      {node ? (
+        <Fields
+          key={`${node.id}-${breakpoint}`}
+          node={node}
+          breakpoint={breakpoint}
+          locale={locale}
+          onEdit={onEdit}
+          onEndTyping={onEndTyping}
+          drafts={drafts}
+          draftKey={`${pageKey}:${node.id}:${breakpoint}`}
+        />
+      ) : (
+        <p className={styles.helper}>{text.empty}</p>
       )}
-      {canAddHeading && (
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() =>
-            onEdit({
-              kind: 'property',
-              nodeId: node.id,
-              breakpoint,
-              key: 'heading',
-              value: { title: { en: 'Section heading', vi: 'Tiêu đề mục' } },
-            })
-          }
-        >
-          {locale === 'vi' ? 'Thêm tiêu đề' : 'Add heading'}
-        </Button>
-      )}
-      {node &&
-        editable.map((field) => (
-          <EditorField
-            key={`${node.id}-${breakpoint}-${field.path}`}
-            node={node}
-            field={field}
-            breakpoint={breakpoint}
-            locale={locale}
-            onEdit={onEdit}
-          />
-        ))}
     </div>
   );
 }

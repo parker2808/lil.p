@@ -14,4 +14,14 @@ describe('mapFieldErrors', () => {
   it('returns an empty object when there are no field errors', () => {
     expect(mapFieldErrors(undefined)).toEqual({});
   });
+
+  it('localizes API validation without changing field paths or hiding unknown failures', () => {
+    expect(
+      mapFieldErrors({ fieldErrors: { 'props.title.vi': ['Required'], key: ['Taken'] } }, 'vi'),
+    ).toEqual({ 'props.title.vi': 'Bắt buộc', key: 'Giá trị không hợp lệ' });
+  });
+
+  it('keeps an empty server field message empty instead of inventing an error', () => {
+    expect(mapFieldErrors({ fieldErrors: { key: [] } }, 'vi')).toEqual({ key: '' });
+  });
 });

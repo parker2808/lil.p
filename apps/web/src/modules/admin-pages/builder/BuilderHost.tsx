@@ -3,6 +3,7 @@
 import {
   createTreeHistory,
   DraftAutosave,
+  endTreeTyping,
   redoTreeHistory,
   undoTreeHistory,
   type AutosaveState,
@@ -16,10 +17,11 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 import { useMe } from '@/modules/admin-core/hooks/use-me.hook';
+import { BLOCK_EDITOR_META } from '@/modules/admin-pages/constants/block-editor-meta.constant';
 
-import { BLOCK_EDITOR_META } from '../constants/block-editor-meta.constant';
-import { BuilderShell } from './BuilderShell';
+import { BuilderShell, builderNodeLabels } from './BuilderShell';
 import { BuilderVersionActions } from './BuilderVersionActions';
+import type { PropertyDraft } from './properties/PropertiesPanel';
 import {
   activateBuilderDraft,
   readBuilderDraft,
@@ -132,10 +134,17 @@ const canonicalTree = (tree: TreeDocument) =>
 export function BuilderHost({ pageKey }: { pageKey: string }) {
   const locale = useLocale() === 'vi' ? 'vi' : 'en';
   const translate = useTranslations();
+  const componentLabels = {
+    ...builderNodeLabels(locale),
+    ...Object.fromEntries(
+      Object.entries(BLOCK_EDITOR_META).map(([type, meta]) => [type, translate(meta.labelKey)]),
+    ),
+  };
   const text = labels[locale];
   const { id: userId, role } = useMe();
   const key = recoveryKey(userId, pageKey);
   const history = useRef<TreeHistory>(createTreeHistory(empty, 'page'));
+  const [propertyDrafts] = useState(() => new Map<string, PropertyDraft>());
   const [state, setState] = useState({ document: empty, selectedId: 'page' });
   const [historySize, setHistorySize] = useState({ past: 0, future: 0 });
   const [mode, setMode] = useState<'local' | 'loading' | 'legacy' | 'active' | 'unavailable'>(
@@ -273,6 +282,10 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
     },
     [changed, versionBlocked],
   );
+
+  const onEndTyping = useCallback(() => {
+    history.current = endTreeTyping(history.current);
+  }, []);
 
   const travel = useCallback(
     (direction: 'undo' | 'redo') => {
@@ -490,6 +503,7 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
   return (
     <div className={styles.host}>
       <BuilderShell
+        componentLabels={componentLabels}
         pageKey={pageKey}
         state={state}
         onDispatch={onDispatch}
@@ -552,7 +566,10 @@ export function BuilderHost({ pageKey }: { pageKey: string }) {
             state={state}
             locale={locale}
             onEdit={onEdit}
-            hostLabel={(type) => translate(BLOCK_EDITOR_META[type].labelKey)}
+            onEndTyping={onEndTyping}
+            pageKey={pageKey}
+            propertyDrafts={propertyDrafts}
+            componentLabels={componentLabels}
           />
         )}
       />

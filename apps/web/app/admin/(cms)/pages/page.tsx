@@ -1,5 +1,7 @@
 import { adminPageListItemSchema, qk } from '@portfolio/contracts';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { getTranslations } from 'next-intl/server';
+import { cookies } from 'next/headers';
 
 import { AdminPagesIndex } from '@/modules/admin-pages/views/AdminPagesIndex';
 import { apiServer } from '@/modules/core/services/api-server.service';
@@ -25,6 +27,8 @@ export default async function AdminPagesPage() {
   );
 }
 
-export function generateMetadata() {
-  return { title: 'Pages' };
+export async function generateMetadata() {
+  const locale = (await cookies()).get('NEXT_LOCALE')?.value === 'vi' ? 'vi' : 'en';
+  const t = await getTranslations({ locale, namespace: 'admin.pages' });
+  return { title: t('title') };
 }
