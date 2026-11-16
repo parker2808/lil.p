@@ -1,5 +1,7 @@
 # lil.p
 
+The [Goal B independent admin pointer](./docs/plans/cms-admin-separation.md) tracks a separate CMS backend, admin site and **new database** as a proposed, unexecuted follow-up.
+
 Web E2E CI distributes registered specs over eight free runners with isolated databases, preserving the required aggregate, visual/AA/WCAG gates and build provenance; see the [throughput measurements](./docs/specs/2026-11-16-ci-web-e2e-throughput.md). The integrated D6 spec registry and pins are included in this eight-shard assignment.
 
 The [V13 route/state capture inventory](./docs/specs/2026-11-16-cms-d6-v13-route-matrix.md) covers EN/VI public/preview and all five built-in admin page editors with localized metadata, plus builder and missing states; separate historical/invalid-preview and empty/error/conflict suites complete the pre-deploy evidence map. Exact-head CI and independent image review are required before V13 signoff; production parity and manual screen-reader inspection remain separate gates. The [V13 D6 metadata/preview fix](./docs/specs/2026-11-16-cms-d6-v13-metadata.md)
