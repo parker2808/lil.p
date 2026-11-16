@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 C1 dependency-rights audit (docs only): #208 `539c4f1c` filtered package has no runtime dependencies; frozen peer installs React/React DOM 19.3.1 and Zod 4.6.7 carry MIT license files. No observed peer-license conflict with a private `UNLICENSED` core; ownership/notices, final-main history and consumer/hosted installer evidence remain separate gates. The extraction runbook records exact final-main steps. No repository, package, credential or deployment created.
+- 2026-11-16: The shared MarkdownEditor preview callback uses an independent 500ms timer per editor. #260's unit run `43767645840` observed only two callbacks when the test waited for the second body; a focused test fix waits for all three rendered bodies and all three callback invocations without relaxing the count. The fix is based on `main`, with no V06 runtime changes; exact-head CI remains the merge gate.
 - 2026-11-16 #208 verification-only refresh adds D6 `ffbf1181` (#269 reviewed populated-CV V09 gate). Source #202 exact-head CI and new #208 combined API/five-shard artifacts are required before rescoring V09. #268 V13 and #270 V05 are still open and unmerged; V05/V13/V20 remain GAP, #208 DO NOT MERGE.
 - 2026-11-16 V09 painted gallery: replace empty `cv-download` host-context captures with a disposable bilingual PDF profile fixture; require real localized visible CV link, initial SSR text, and directly paired public/version-preview component PNGs for all 20 types across existing tuples. Preserve axe and 0.5% pixel bound; exact-head five-shard CI and independent raw-image review pending, so V09 remains GAP.
 - 2026-11-16 V06 CI `43787871304` on `3af053d` overcounted hidden SSR variants' unresolved grid tracks; the reviewed fix requires exactly one painted nested stat/card, <=2 visible tracks, readable labels and viewport bounds. #260 merged D6 at `b5f78c30` with scoped visual P2 ACCEPT; combined #208 replay and full-row signoff remain open.
@@ -530,6 +532,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Recorded the scoped C1 peer-license audit and final-main consumer/hosted checklist; regenerated Graphify for this docs-only change. No package/runtime/golden change or release authorization.
+- 2026-11-16: Make the three-editor Write/Preview unit test await every debounced preview and retain its exact three-call assertion; no editor behavior, API, or threshold changes.
 - 2026-11-16: Normal-merged D6 `ffbf1181` (#269 populated CV gallery) into verification-only #208; preserved current J/V row evidence, pending exact combined-head API + W1–W5 before V09 score change. #268/#270 remain separate.
 - 2026-11-16: Stage V09 real CV media/profile fixture and restore cleanup for the all-20 public/preview matrix, capturing each visible component instead of `main` on empty CV; no runtime/golden/threshold changes. CI and image review pending.
 - 2026-11-16: Integrated reviewed D6 #260 no-JS responsive/legibility assertions and narrow-column wrapping into verification-only #208; requires its own exact-head CI and image review before any V06 score change.
