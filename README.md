@@ -1,6 +1,6 @@
 # lil.p
 
-The [V13 D6 metadata/preview fix](./docs/specs/2026-11-16-cms-d6-v13-metadata.md)
+The [V13 route/state capture inventory](./docs/specs/2026-11-16-cms-d6-v13-route-matrix.md) extends EN/VI public, preview and admin metadata coverage; notes captures must show loaded content and builder controls must not clip, with new CI and independent artifact review required before V13 signoff. The [V13 D6 metadata/preview fix](./docs/specs/2026-11-16-cms-d6-v13-metadata.md)
 derives missing tree SEO from the visible bilingual H1 on public and draft routes,
 and displays localized recovery help instead of raw invalid-block diagnostics.
 Real EN/VI browser evidence runs in the existing metadata shard; full V13 signoff

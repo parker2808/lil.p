@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V13 route/state matrix: registered EN/VI public/draft five-route metadata plus localized public/admin 404 and admin editor/builder captures with a 30-image CI inventory. Runs `43796922246` and `43799733836` exposed missing descriptions and identical seeded EN/VI home titles; `43803678290` found the builder proxy's missing allowlist entry. Exact-head `43805811458` passed 17/17, but independent review of artifact `14199056215` found a notes skeleton capture and overlapping builder action labels. Wait for real notes content and wrap the builder actions; gate both with browser assertions. After merging D6 `1f8fcf09`, new five-shard CI and raw-image review remain required. Manual accessibility, production parity and exhaustive conflict/error states remain GAP. See `docs/specs/2026-11-16-cms-d6-v13-route-matrix.md`.
+
 - 2026-11-16 V05 all-20 follow-up: extend the four existing editor-origin shard groups with exact saved-revision/snapshot equality and EN/VI × light/dark × 390/768/1440 public/version-preview captures for each host. Require viewport-visible painted host content (including real CV media), exact-head five-shard CI and independent raw-image review; invalid-property states and production remain separate gaps. See `docs/specs/2026-11-16-cms-d6-v05-revision-chain.md`.
 - 2026-11-16 V09 painted gallery: replace empty `cv-download` host-context captures with a disposable bilingual PDF profile fixture; require real localized visible CV link, initial SSR text, and directly paired public/version-preview component PNGs for all 20 types across existing tuples. Preserve axe and 0.5% pixel bound; exact-head five-shard CI and independent raw-image review pending, so V09 remains GAP.
 - 2026-11-16 V03/V14 raw review on #264 `f2aabedc`/CI `43788335192` found no-JS dark 390px process cards with near-white text on pale glass (~1.61:1) despite axe returning zero. Align the no-JS dark card-glass token with hydrated dark, reveal the same streamed SSR siblings in the axe inspection context and compare visible block text/card paints before unwaived axe. Prior green head is not signoff; exact-new-head CI and independent image review remain required.
@@ -423,6 +425,10 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Merge D6 V05 all-20 evidence into the V13 branch, retain both histories, and repair the V13 notes screenshot timing and builder action overflow found by independent raw-image review; require new exact-head CI and image review.
+
+- 2026-11-16: Add a real-browser V13 EN/VI route/state matrix with attached screenshot inventory across public, preview, admin builder and localized not-found states; allow the gated builder through the admin proxy as HTTP 200 while retaining 404 for unknown sections. Require independent exact-head artifact review before signoff.
 
 - 2026-11-16: Added all-20 host V05 revision/snapshot and 24-capture per-type public/version-preview matrix to the existing four editor-origin CI shards; now require viewport-visible painted host content including real CV media. No runtime or API change. Exact-head CI/review pending.
 - 2026-11-16: Stage V09 real CV media/profile fixture and restore cleanup for the all-20 public/preview matrix, capturing each visible component instead of `main` on empty CV; no runtime/golden/threshold changes. CI and image review pending.

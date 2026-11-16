@@ -13,6 +13,7 @@ const handleI18n = createMiddleware(routing);
 const adminRoutes = new Set([
   'analytics',
   'audit',
+  'builder',
   'domains',
   'education',
   'experience',
