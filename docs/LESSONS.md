@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A legacy SEO PATCH can advance the builder draft revision even before tree activation; read the persisted revision in the F3 real-route browser fixture rather than hardcoding zero or weakening CAS.
+
 - 2026-11-16: In combined D5/D6 journeys, host localized property fields expose names such as `Title (EN)`/`Tiêu đề (VI)` and `Eyebrow (VI)`; update stale locators in both restore and revision-chain fixtures without weakening persistence/parity checks.
 - 2026-11-16: A normal D5/D6 builder merge can silently drop imports in auto-merged files and retain obsolete localized field selectors; run integrated typecheck and focused Properties tests before trusting source-green checks.
 - 2026-11-16: A scoped D5 keyboard dialog gate and D6 single-fixture revision chain need a fresh combined-head run; preserve their source histories without promoting manual spoken SR or all-host design acceptance.

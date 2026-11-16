@@ -1,7 +1,7 @@
 # Graph Report - chore-cms-208-restack-final  (2026-11-16)
 
 ## Corpus Check
-- 1725 files · ~772,665 words
+- 1725 files · ~772,781 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 40 file(s) not represented in the graph (top: (none) 18, .css 17, .example 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `8e396acc`
+- Built from commit: `ef4c74c3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

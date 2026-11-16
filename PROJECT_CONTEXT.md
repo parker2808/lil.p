@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- #208 combined head `ef4c74c3`/run `43788589025` W3 F3 fixture hit a correct CAS 409 after clearing legacy SEO advanced the draft revision. Verification-only metadata test now reads the persisted revision before activation, preserving the EN/VI public/draft H1 and description assertions; require new exact-head API/five-shard CI and artifact review before scoring.
+
 - 2026-11-16 #208 verification-only normal-merge of D6 `bebe5656` (#255 accepted F4) after successful prior #208 run `43786515505`; preserve the previous code-cut evidence, but require new exact-head API/five-shard CI and independent row review before rescoring. No #208 merge/deploy.
 
 - #208 head `c791c449` CI `43785034108` failed W2/W3 at obsolete D5-style accessible labels in the revision-chain and restored UI tests after D6 host field labels were integrated. Verification-only tests now target D6 exact EN/VI field names without changing state, publish, restore, or parity assertions; a fresh exact-head run is required.
@@ -515,6 +517,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Corrected #208 F3 no-SEO browser fixture to read the post-SEO draft revision instead of hardcoding zero; no API/interlock/runtime change, Stage A HOLD.
 
 - 2026-11-16: Normal-merged D6 `bebe5656` V13 F4 into #208 after prior combined cut passed 17/17; held scoring until fresh exact-head CI. No production action.
 
