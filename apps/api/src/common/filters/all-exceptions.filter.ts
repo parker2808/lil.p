@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import {
   type ArgumentsHost,
   Catch,
@@ -10,6 +12,7 @@ import type { ApiErrorBody, ErrorCode } from '@portfolio/contracts';
 import type { Request, Response } from 'express';
 
 import { Prisma } from '../../generated/prisma/client';
+import { requestLogContext } from '../utils/request-log.util';
 
 type RequestWithId = Request & { requestId?: string };
 
@@ -62,15 +65,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<RequestWithId>();
-    const requestId = request.requestId ?? 'unknown';
+    const requestId = request.requestId ?? randomUUID();
+    if (!request.requestId) response.setHeader('x-request-id', requestId);
 
     const body = this.toBody(exception, requestId);
 
     if (body.statusCode >= 500) {
-      this.logger.error(
-        `${request.method} ${request.url} ${body.code} ${requestId}`,
-        exception instanceof Error ? exception.stack : String(exception),
-      );
+      this.logger.error(`${requestLogContext(request, requestId)} ${body.code}`);
     }
 
     response.status(body.statusCode).json(body);
@@ -79,6 +80,22 @@ export class AllExceptionsFilter implements ExceptionFilter {
   toBody(exception: unknown, requestId: string): ApiErrorBody {
     if (exception instanceof HttpException) {
       return this.fromHttp(exception, requestId);
+    }
+
+    if (
+      exception instanceof Error &&
+      'type' in exception &&
+      exception.type === 'entity.too.large' &&
+      'status' in exception &&
+      exception.status === HttpStatus.PAYLOAD_TOO_LARGE
+    ) {
+      return {
+        statusCode: HttpStatus.PAYLOAD_TOO_LARGE,
+        code: 'VALIDATION_FAILED',
+        message: 'Request body too large',
+        requestId,
+        fieldErrors: { body: ['Request body too large'] },
+      };
     }
 
     if (
@@ -142,6 +159,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         code: ErrorCode;
         message?: string;
         fieldErrors?: Record<string, string[]>;
+        mode?: 'legacy' | 'tree';
+        revision?: string;
       };
       return {
         statusCode,
@@ -149,6 +168,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
         message: payload.message ?? exception.message,
         requestId,
         fieldErrors: payload.fieldErrors,
+        ...(statusCode === HttpStatus.CONFLICT && payload.mode && payload.revision
+          ? { mode: payload.mode, revision: payload.revision }
+          : {}),
       };
     }
 

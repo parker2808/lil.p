@@ -1,18 +1,48 @@
 import {
+  type ArgumentsHost,
   BadRequestException,
   HttpException,
   HttpStatus,
+  Logger,
   NotFoundException,
   PayloadTooLargeException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { Prisma } from '../../generated/prisma/client';
 import { AllExceptionsFilter } from './all-exceptions.filter';
 
 describe('AllExceptionsFilter', () => {
   const filter = new AllExceptionsFilter();
+
+  it('does not log exception stacks, URL parameters or request identifiers on a 500', () => {
+    const error = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => {});
+    const json = vi.fn();
+    const host = {
+      switchToHttp: () => ({
+        getResponse: () => ({ status: () => ({ json }), setHeader: vi.fn() }),
+        getRequest: () => ({
+          method: 'POST',
+          url: '/api/admin/pages/pii-marker/builder/draft?token=token-marker',
+          route: { path: '/api/admin/pages/:key/builder/draft' },
+          requestId: 'token-marker',
+        }),
+      }),
+    } as ArgumentsHost;
+    try {
+      filter.catch(new Error('draft-marker token-marker pii-marker'), host);
+      expect(error).toHaveBeenCalledOnce();
+      expect(String(error.mock.calls[0]?.[0])).toContain('INTERNAL');
+      expect(JSON.stringify(error.mock.calls)).not.toMatch(/draft-marker|token-marker|pii-marker/);
+      expect(json.mock.calls[0]?.[0]).toMatchObject({
+        message: 'Something went wrong',
+        requestId: 'token-marker',
+      });
+    } finally {
+      error.mockRestore();
+    }
+  });
 
   it('maps a thrown Error to 500 INTERNAL with no stack', () => {
     const body = filter.toBody(new Error('secret stack'), 'req-1');
@@ -102,6 +132,23 @@ describe('AllExceptionsFilter', () => {
     expect(body.statusCode).toBe(400);
     expect(body.code).toBe('VALIDATION_FAILED');
     expect(body.fieldErrors?.file).toEqual(['Must be 10 MB or smaller']);
+  });
+
+  it('maps only body-parser oversized JSON errors to a redacted 413 on body', () => {
+    const error = Object.assign(new Error('private request payload'), {
+      type: 'entity.too.large',
+      status: 413,
+    });
+    expect(filter.toBody(error, 'req-body')).toEqual({
+      statusCode: 413,
+      code: 'VALIDATION_FAILED',
+      message: 'Request body too large',
+      requestId: 'req-body',
+      fieldErrors: { body: ['Request body too large'] },
+    });
+    expect(
+      filter.toBody(Object.assign(new Error('different'), { type: 'entity.too.large' }), 'req'),
+    ).toMatchObject({ statusCode: 500, code: 'INTERNAL' });
   });
 
   it('maps a 403 without a code to FORBIDDEN and 429 to RATE_LIMITED', () => {

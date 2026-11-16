@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 
 import { PagesService } from './pages.service';
@@ -9,6 +10,55 @@ const heroProps = {
 };
 
 describe('PagesService', () => {
+  it('rolls back a legacy block delete when tree activation wins the page CAS', async () => {
+    const block = { id: 42, type: 'prose', key: 'prose', sortOrder: 1 };
+    const page = {
+      id: 1,
+      key: 'IDEAS',
+      draftTree: null as unknown,
+      draftTreeRevision: 0n,
+      blocks: [block],
+    };
+    let deleted = false;
+    const tx = {
+      page: {
+        findUnique: vi.fn(async () => ({ ...page })),
+        updateMany: vi.fn(async () => {
+          page.draftTree = { schemaVersion: 1 };
+          page.draftTreeRevision = 1n;
+          return { count: 0 };
+        }),
+      },
+      pageBlock: {
+        delete: vi.fn(async () => {
+          deleted = true;
+        }),
+      },
+    };
+    const prisma = {
+      $transaction: vi.fn(async (work: (db: typeof tx) => Promise<unknown>) => {
+        try {
+          return await work(tx);
+        } catch (error) {
+          deleted = false;
+          throw error;
+        }
+      }),
+    };
+    const audit = { record: vi.fn() };
+    const service = new PagesService(prisma as never, audit as never);
+
+    await expect(service.deleteBlock('ideas', block.id)).rejects.toMatchObject({
+      response: { code: 'CONFLICT', mode: 'tree', revision: '1' },
+    });
+    expect(tx.page.updateMany).toHaveBeenCalledWith({
+      where: expect.objectContaining({ draftTreeRevision: 0n }),
+      data: expect.objectContaining({ draftTreeRevision: { increment: 1 } }),
+    });
+    expect(deleted).toBe(false);
+    expect(audit.record).not.toHaveBeenCalled();
+  });
+
   it('rejects duplicating a limit-one block before any write', async () => {
     const block = { id: 42, type: 'hero', key: 'hero', sortOrder: 0 };
     const tx = {
@@ -147,11 +197,11 @@ describe('PagesService', () => {
       expect(h.prisma.page.findUnique).not.toHaveBeenCalled();
     },
   );
-  it('serves the published snapshot and drops unknown snapshot blocks', async () => {
+  it('serves the published snapshot without logging dropped block or request identifiers', async () => {
     const prisma = {
       page: {
         findUnique: vi.fn().mockResolvedValue({
-          key: 'HOME',
+          key: 'SENSITIVE-PAGE-MARKER',
           publishedVersion: {
             snapshot: {
               seo: {
@@ -172,12 +222,12 @@ describe('PagesService', () => {
                   sortOrder: 0,
                 },
                 {
-                  type: 'nope',
-                  key: 'broken',
+                  type: 'sensitive-type-marker',
+                  key: 'sensitive-block-marker',
                   layout: 'ONE',
                   surface: 'PLAIN',
                   schemaVersion: 1,
-                  props: {},
+                  props: { private: 'sensitive-props-marker' },
                   isVisible: true,
                   sortOrder: 1,
                 },
@@ -188,12 +238,25 @@ describe('PagesService', () => {
       },
     };
 
-    const service = new PagesService(prisma as never);
-    const page = await service.getPublic('home', 'vi', 'req-test');
-    expect(page.key).toBe('home');
-    expect(page.blocks).toHaveLength(1);
-    expect(page.blocks[0]?.type).toBe('hero');
-    expect(page.blocks[0]?.lang).toBe('vi');
+    const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
+    try {
+      const service = new PagesService(prisma as never);
+      const page = await service.getPublic(
+        'sensitive-page-marker',
+        'vi',
+        'sensitive-request-marker',
+      );
+      if (!('blocks' in page)) throw new Error('Expected legacy page');
+      expect(page.key).toBe('sensitive-page-marker');
+      expect(page.blocks).toHaveLength(1);
+      expect(page.blocks[0]?.type).toBe('hero');
+      expect(page.blocks[0]?.lang).toBe('vi');
+      expect(warn).toHaveBeenCalledTimes(1);
+      expect(warn).toHaveBeenCalledWith('Dropped invalid published block');
+      expect(JSON.stringify(warn.mock.calls)).not.toContain('sensitive-');
+    } finally {
+      warn.mockRestore();
+    }
   });
 
   it.each(['en', 'vi'] as const)(
@@ -261,6 +324,7 @@ describe('PagesService', () => {
     };
     const service = new PagesService(prisma as never);
     const page = await service.getPublic('home', 'en');
+    if (!('blocks' in page)) throw new Error('Expected legacy page');
     expect(page.blocks).toEqual([]);
   });
 

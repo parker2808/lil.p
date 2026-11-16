@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict';
+import { Buffer } from 'node:buffer';
+import { createHash } from 'node:crypto';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { join } from 'node:path';
 import { test } from 'node:test';
+import { URL } from 'node:url';
 
 import { createRegistry, defineBlock } from '@parker2808/cms-core/contracts';
 import {
@@ -166,6 +171,161 @@ test('strict snapshots reject unknown/future/invalid blocks instead of dropping 
     reason: 'INVALID_BLOCK',
     index: 0,
   });
+});
+
+test('current nested unknown props survive raw reads; future and malformed versions reject without mutation', () => {
+  const current = {
+    seo,
+    blocks: [
+      {
+        ...block,
+        schemaVersion: 3,
+        props: { title: 'Start', nested: { future: ['one', { two: 2 }] } },
+      },
+    ],
+  };
+  const bytes = JSON.stringify(current);
+  const digest = createHash('sha256').update(bytes).digest('hex');
+  const read = readSnapshot(current, registry);
+  assert.equal(read.ok, true);
+  if (read.ok) {
+    assert.equal(JSON.stringify(read.snapshot), bytes);
+    read.snapshot.blocks[0].props.nested.future[1].two = 99;
+    assert.equal(JSON.stringify(current), bytes);
+  }
+  const cases = [
+    [{ ...current, schemaVersion: 2 }, 'FUTURE_VERSION', undefined],
+    [{ ...current, blocks: [{ ...current.blocks[0], schemaVersion: 4 }] }, 'FUTURE_VERSION', 0],
+    [{ ...current, blocks: [{ ...current.blocks[0], extra: true }] }, 'INVALID_BLOCK', 0],
+    [{ ...current, seo: { ...seo, future: true } }, 'INVALID_SNAPSHOT', undefined],
+  ];
+  for (const [candidate, reason, index] of cases) {
+    const original = JSON.stringify(candidate);
+    assert.deepEqual(readSnapshot(candidate, registry), {
+      ok: false,
+      reason,
+      ...(index === undefined ? {} : { index }),
+    });
+    assert.equal(JSON.stringify(candidate), original);
+  }
+  assert.equal(createHash('sha256').update(JSON.stringify(current)).digest('hex'), digest);
+});
+
+test('raw legacy bytes survive read and migration while unsupported envelopes reject without edits', () => {
+  const raw = {
+    seo,
+    blocks: [{ ...block, props: { title: 'Start', nested: { future: [1, { keep: true }] } } }],
+  };
+  const hash = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+  const before = hash(raw);
+  const read = readSnapshot(raw, registry);
+  assert.equal(read.ok, true);
+  if (read.ok) {
+    assert.equal(hash(read.snapshot), before);
+    assert.notStrictEqual(read.snapshot.blocks[0].props, raw.blocks[0].props);
+    read.snapshot.blocks[0].props.nested.future[1].keep = false;
+    assert.equal(hash(raw), before);
+  }
+  const migrated = migrateSnapshot(raw, registry);
+  assert.equal(migrated.ok, true);
+  if (migrated.ok) {
+    assert.deepEqual(migrated.snapshot.blocks[0].props.nested, raw.blocks[0].props.nested);
+    assert.equal(migrated.snapshot.blocks[0].schemaVersion, definition.version);
+  }
+  for (const [invalid, reason] of [
+    [{ ...raw, schemaVersion: 2 }, 'FUTURE_VERSION'],
+    [{ ...raw, unknown: { future: true } }, 'INVALID_SNAPSHOT'],
+    [{ ...raw, blocks: [{ ...raw.blocks[0], schemaVersion: 4 }] }, 'FUTURE_VERSION'],
+    [{ ...raw, blocks: [{ ...raw.blocks[0], extra: true }] }, 'INVALID_BLOCK'],
+    [{ ...raw, blocks: [{ ...raw.blocks[0], type: 'unknown' }] }, 'UNKNOWN_TYPE'],
+  ]) {
+    const unchanged = hash(invalid);
+    assert.deepEqual(readSnapshot(invalid, registry).reason, reason);
+    assert.equal(hash(invalid), unchanged);
+    assert.equal(hash(raw), before);
+  }
+});
+
+test('V21 raw fixture inventory preserves nested data or rejects every unsupported shape without edits', () => {
+  const fixtureBytes = readFileSync(
+    new URL('./fixtures/raw-snapshot-inventory.json', import.meta.url),
+  );
+  const current = JSON.parse(fixtureBytes.toString('utf8'));
+  const rawHash = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+  const originalHash = rawHash(current);
+  const read = readSnapshot(current, registry);
+  assert.equal(read.ok, true);
+  assert.equal(rawHash(read.snapshot), originalHash);
+  assert.notStrictEqual(read.snapshot.blocks[0].props, current.blocks[0].props);
+  const migrated = migrateSnapshot(current, registry);
+  assert.equal(migrated.ok, true);
+  assert.deepEqual(
+    migrated.snapshot.blocks[0].props.unrecognized,
+    current.blocks[0].props.unrecognized,
+  );
+  assert.equal(migrated.snapshot.blocks[0].schemaVersion, definition.version);
+  assert.equal(rawHash(current), originalHash);
+
+  const cases = [
+    ['unknown-seo', { ...current, seo: { ...current.seo, extra: 'raw' } }, 'INVALID_SNAPSHOT'],
+    ['unknown-top-level', { ...current, extra: { nested: true } }, 'INVALID_SNAPSHOT'],
+    ['future-envelope', { ...current, schemaVersion: 2 }, 'FUTURE_VERSION'],
+    [
+      'unknown-block-type',
+      { ...current, blocks: [{ ...current.blocks[0], type: 'future-block' }] },
+      'UNKNOWN_TYPE',
+    ],
+    [
+      'future-block-version',
+      { ...current, blocks: [{ ...current.blocks[0], schemaVersion: 4 }] },
+      'FUTURE_VERSION',
+    ],
+    [
+      'unknown-block-field',
+      { ...current, blocks: [{ ...current.blocks[0], extra: { nested: true } }] },
+      'INVALID_BLOCK',
+    ],
+    ['null-block', { ...current, blocks: [null] }, 'INVALID_SNAPSHOT'],
+    ['missing-seo', { ...current, seo: { seoTitleEn: 'missing fields' } }, 'INVALID_SNAPSHOT'],
+  ];
+  const rejected = [];
+  for (const [name, raw, reason] of cases) {
+    const before = rawHash(raw);
+    for (const operation of [readSnapshot, migrateSnapshot]) {
+      const result = operation(raw, registry);
+      assert.equal(result.ok, false);
+      assert.equal(result.reason, reason);
+      assert.equal(rawHash(raw), before);
+    }
+    assert.equal(rawHash(current), originalHash);
+    rejected.push({
+      name,
+      reason,
+      inputBytes: Buffer.byteLength(JSON.stringify(raw)),
+      inputSha256: before,
+    });
+  }
+  if (process.env.CMS_RAW_INVENTORY_DIR) {
+    mkdirSync(process.env.CMS_RAW_INVENTORY_DIR, { recursive: true });
+    writeFileSync(
+      join(process.env.CMS_RAW_INVENTORY_DIR, 'unit.json'),
+      `${JSON.stringify(
+        {
+          prHeadSha: process.env.PR_HEAD_SHA ?? null,
+          testedMergeSha: process.env.TESTED_MERGE_SHA ?? null,
+          fixture: 'raw-snapshot-inventory.json',
+          fixtureBytes: fixtureBytes.length,
+          fixtureSha256: createHash('sha256').update(fixtureBytes).digest('hex'),
+          canonicalSha256: originalHash,
+          readSha256: rawHash(read.snapshot),
+          migratedNestedPreserved: true,
+          rejected,
+        },
+        null,
+        2,
+      )}\n`,
+    );
+  }
 });
 
 test('Nest CommonJS consumer loads built engine and contracts without host definitions', () => {

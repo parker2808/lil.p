@@ -8,6 +8,7 @@ test.describe('contact', () => {
     page,
   }) => {
     await page.goto('/en/contact');
+    await expect(page.locator('form[data-interactive="true"]')).toBeVisible();
     await page.getByRole('button', { name: /send message/i }).click();
 
     for (const name of ['name', 'email', 'message']) {
@@ -23,6 +24,7 @@ test.describe('contact', () => {
 
   test('submits a message from the public form', async ({ page }) => {
     await page.goto('/en/contact');
+    await expect(page.locator('form[data-interactive="true"]')).toBeVisible();
     await expect(page.getByRole('heading', { name: /talk about your product/i })).toBeVisible();
     await expect(page.locator('form[data-interactive="true"]')).toBeVisible();
     await page.locator('#name').fill(E2E_VISITOR.name);

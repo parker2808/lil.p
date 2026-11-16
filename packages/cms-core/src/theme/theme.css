@@ -17,6 +17,7 @@
   --builder-selection: #346ddd;
   --builder-drop: #3461b5;
   --builder-focus: #255cce;
+  --builder-focus-contrast: #fff;
   --builder-art: #dae8f3;
   --builder-art-ink: #37547e;
   --builder-font-body:
@@ -44,6 +45,7 @@
 }
 
 :where([data-theme='dark']) .cms-core,
+.dark .cms-core:not([data-theme]),
 .cms-core[data-theme='dark'] {
   --builder-chrome: #171c26;
   --builder-canvas: #111722;
@@ -62,6 +64,7 @@
   --builder-selection: #9bbaff;
   --builder-drop: #9bbaff;
   --builder-focus: #b4ccff;
+  --builder-focus-contrast: #0b1220;
   --builder-art: #293e58;
   --builder-art-ink: #9cbbe1;
   --builder-shadow: 0 22px 65px rgb(0 0 0 / 25%);
@@ -283,6 +286,15 @@
 
 .cms-core .cms-tree__column {
   min-width: 0;
+}
+
+.cms-core .cms-tree__column .cms-tree__component {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+
+.cms-core .cms-tree__column [data-slot='principle-list'] {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
 }
 
 .cms-core .cms-tree__component + .cms-tree__component {

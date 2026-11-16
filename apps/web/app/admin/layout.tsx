@@ -18,12 +18,11 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
-export const metadata = {
-  title: {
-    default: 'Admin',
-    template: '%s · Admin',
-  },
-};
+export async function generateMetadata() {
+  const isVietnamese = (await cookies()).get('NEXT_LOCALE')?.value === 'vi';
+  const admin = isVietnamese ? 'Quản trị' : 'Admin';
+  return { title: { default: admin, template: `%s · ${admin}` } };
+}
 
 export default async function AdminRootLayout({ children }: { children: ReactNode }) {
   const nonce = await requestNonce();

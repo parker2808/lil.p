@@ -40,6 +40,8 @@ type MockPage = {
   publishedVersionId: number | null;
   publishedVersion: { version: number } | null;
   publishedAt: Date | null;
+  draftTree: null;
+  draftTreeRevision: bigint;
   updatedAt: Date;
   blocks: MockBlock[];
 };
@@ -94,6 +96,8 @@ describe('real page services over Nest HTTP with transactional Prisma state', ()
             publishedVersionId: null,
             publishedVersion: null,
             publishedAt: null,
+            draftTree: null,
+            draftTreeRevision: 0n,
             updatedAt: new Date('2026-11-03T00:00:00Z'),
             blocks: [],
           };
@@ -104,6 +108,31 @@ describe('real page services over Nest HTTP with transactional Prisma state', ()
         if (page) Object.assign(page, data, { publishedVersion: { version: versionCount } });
         return page;
       }),
+      updateMany: vi.fn(
+        async ({
+          where,
+          data,
+        }: {
+          where: { id: number; draftTreeRevision: bigint };
+          data: {
+            publishedVersionId: number;
+            publishedAt: Date;
+            updatedAt: Date;
+            draftTreeRevision: { increment: number };
+          };
+        }) => {
+          if (!page || page.id !== where.id || page.draftTreeRevision !== where.draftTreeRevision)
+            return { count: 0 };
+          Object.assign(page, {
+            publishedVersionId: data.publishedVersionId,
+            publishedVersion: { version: versionCount },
+            publishedAt: data.publishedAt,
+            updatedAt: data.updatedAt,
+            draftTreeRevision: page.draftTreeRevision + BigInt(data.draftTreeRevision.increment),
+          });
+          return { count: 1 };
+        },
+      ),
     },
     pageBlock: {
       createMany: vi.fn(async ({ data }: { data: Array<Omit<MockBlock, 'id' | 'updatedAt'>> }) => {
@@ -122,10 +151,12 @@ describe('real page services over Nest HTTP with transactional Prisma state', ()
     },
     $transaction: vi.fn(async (work: (tx: typeof db) => Promise<unknown>) => {
       const before = page ? structuredClone(page) : null;
+      const previousVersionCount = versionCount;
       try {
         return await work(db);
       } catch (error) {
         page = before;
+        versionCount = previousVersionCount;
         throw error;
       }
     }),

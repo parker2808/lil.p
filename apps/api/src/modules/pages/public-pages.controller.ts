@@ -3,8 +3,10 @@ import { pageKeySchema, type PublicPage } from '@portfolio/contracts';
 import type { Request } from 'express';
 
 import { Public } from '../../common/decorators/public.decorator';
+import { requestLogContext } from '../../common/utils/request-log.util';
 import { Locale } from '../../i18n/locale.decorator';
 import { PagesService } from './pages.service';
+import type { TreePage } from './tree-page.util';
 
 type RequestWithId = Request & { requestId?: string };
 
@@ -18,11 +20,11 @@ export class PublicPagesController {
     @Param('key') rawKey: string,
     @Locale() locale: 'en' | 'vi',
     @Req() request: RequestWithId,
-  ): Promise<PublicPage> {
+  ): Promise<PublicPage | TreePage> {
     const parsed = pageKeySchema.safeParse(rawKey);
     if (!parsed.success) {
       throw new NotFoundException({ code: 'NOT_FOUND', message: `Page ${rawKey} was not found` });
     }
-    return this.pages.getPublic(parsed.data, locale, request.requestId);
+    return this.pages.getPublic(parsed.data, locale, requestLogContext(request));
   }
 }

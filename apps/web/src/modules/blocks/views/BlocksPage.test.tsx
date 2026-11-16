@@ -1,0 +1,187 @@
+import { draftMode } from 'next/headers';
+import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
+import { renderToStaticMarkup } from 'react-dom/server';
+import { describe, expect, it, vi } from 'vitest';
+
+import en from '../../../../i18n/locales/en.json';
+import viStrings from '../../../../i18n/locales/vi.json';
+
+import { BlockRenderer } from '../components/BlockRenderer/BlockRenderer';
+import { getPage } from '../services/pages.service';
+import { BlocksPage } from './BlocksPage';
+
+vi.mock('next/headers', () => ({ draftMode: vi.fn() }));
+vi.mock('next/navigation', () => ({
+  notFound: vi.fn(() => {
+    throw new Error('NOT_FOUND');
+  }),
+}));
+vi.mock('server-only', () => ({}));
+vi.mock('next-intl/server', () => ({
+  getTranslations: vi.fn(async () => (key: string) => key),
+}));
+vi.mock('../services/pages.service', () => ({ getPage: vi.fn() }));
+vi.mock('../constants/block-renderers.constant', () => ({
+  BLOCK_RENDERERS: {
+    'tech-marquee': {
+      component: async () => <span>Resolved async host content</span>,
+      skeleton: () => null,
+    },
+  },
+}));
+vi.mock('../components/BlockRenderer/BlockRenderer', () => ({ BlockRenderer: vi.fn(() => null) }));
+
+const tree = {
+  schemaVersion: 1,
+  root: {
+    id: 'page-root',
+    type: 'page',
+    responsive: { base: {} },
+    sections: [
+      {
+        id: 'section-one',
+        type: 'section',
+        responsive: { base: {} },
+        content: [
+          {
+            id: 'heading-one',
+            type: 'component',
+            componentType: 'heading',
+            responsive: { base: { text: 'Hello <script>', level: 1 } },
+          },
+        ],
+      },
+    ],
+  },
+};
+
+describe('tree route SSR', () => {
+  it.each([
+    ['en', en.states],
+    ['vi', viStrings.states],
+  ] as const)(
+    'passes the %s invalid-preview notice instead of empty-page copy',
+    async (locale, states) => {
+      vi.mocked(getPage).mockResolvedValueOnce({
+        key: 'ideas',
+        seo: { title: null, description: null, lang: locale },
+        blocks: [],
+        invalidBlocks: [{ id: 3, key: 'broken', type: 'unknown', issues: ['Raw diagnostic'] }],
+      });
+      vi.mocked(draftMode).mockResolvedValueOnce({ isEnabled: true } as never);
+      vi.mocked(getTranslations).mockResolvedValueOnce(
+        ((key: keyof typeof states) => states[key]) as never,
+      );
+      renderToStaticMarkup(await BlocksPage({ pageKey: 'ideas', locale }));
+      const labels = vi.mocked(BlockRenderer).mock.lastCall?.[0].labels;
+      expect(labels).toMatchObject({
+        empty: states.empty,
+        unknown: states.unknownBlock,
+        unknownHelp: states.unknownBlockHelp,
+      });
+      expect(labels?.unknown).not.toBe(labels?.empty);
+    },
+  );
+
+  it.each(['en', 'vi'] as const)(
+    'includes async host content in the initial %s HTML',
+    async (locale) => {
+      vi.mocked(getPage).mockResolvedValueOnce({
+        key: 'ideas',
+        seo: { title: 'Ideas', description: null, lang: locale },
+        tree: {
+          ...tree,
+          root: {
+            ...tree.root,
+            sections: [
+              {
+                ...tree.root.sections[0]!,
+                content: [
+                  ...tree.root.sections[0]!.content,
+                  {
+                    id: 'async-host',
+                    type: 'component',
+                    componentType: 'tech-marquee',
+                    responsive: { base: {} },
+                  },
+                ],
+              },
+            ],
+          },
+        },
+      });
+      vi.mocked(draftMode).mockResolvedValueOnce({ isEnabled: false } as never);
+      const html = renderToStaticMarkup(await BlocksPage({ pageKey: 'ideas', locale }));
+      expect(html).toContain('Resolved async host content');
+      expect(html).toContain('data-host-block-type="tech-marquee"');
+    },
+  );
+
+  it('does not serve a warning as HTTP 200 for an unrenderable tree', async () => {
+    vi.mocked(getPage).mockResolvedValueOnce({
+      key: 'ideas',
+      seo: { title: 'Ideas', description: null, lang: 'en' },
+      tree: {
+        ...tree,
+        root: {
+          ...tree.root,
+          sections: [
+            {
+              ...tree.root.sections[0]!,
+              content: [
+                ...tree.root.sections[0]!.content,
+                { id: 'legacy', type: 'legacy-component', responsive: { base: { block: {} } } },
+              ],
+            },
+          ],
+        },
+      },
+    });
+    vi.mocked(draftMode).mockResolvedValueOnce({ isEnabled: false } as never);
+    await expect(BlocksPage({ pageKey: 'ideas', locale: 'en' })).rejects.toThrow('NOT_FOUND');
+    expect(notFound).toHaveBeenCalledOnce();
+  });
+
+  it.each(['en', 'vi'] as const)(
+    'renders identical public and authorized preview HTML in %s',
+    async (locale) => {
+      const publicPage = {
+        key: 'ideas',
+        seo: { title: 'Ideas', description: null, lang: locale },
+        tree,
+      };
+      vi.mocked(getPage).mockResolvedValueOnce(publicPage);
+      vi.mocked(draftMode).mockResolvedValueOnce({ isEnabled: false } as never);
+      const published = renderToStaticMarkup(await BlocksPage({ pageKey: 'ideas', locale }));
+      vi.mocked(getPage).mockResolvedValueOnce({ ...publicPage, invalidBlocks: [] });
+      vi.mocked(draftMode).mockResolvedValueOnce({ isEnabled: true } as never);
+      const preview = renderToStaticMarkup(await BlocksPage({ pageKey: 'ideas', locale }));
+      expect(preview).toBe(published);
+      expect(preview).toContain('<h1>Hello &lt;script&gt;</h1>');
+      expect(preview).not.toContain('<script>');
+      expect(preview).toContain('data-brand="lilp"');
+    },
+  );
+
+  it('retains the neutral tenant on public and preview first paint', async () => {
+    const page = {
+      key: 'ideas',
+      seo: { title: 'Ideas', description: null, lang: 'en' as const },
+      tree,
+    };
+    vi.mocked(getPage).mockResolvedValue(page).mockResolvedValueOnce(page);
+    vi.mocked(draftMode)
+      .mockResolvedValueOnce({ isEnabled: false } as never)
+      .mockResolvedValueOnce({ isEnabled: true } as never);
+    const publicHtml = renderToStaticMarkup(
+      await BlocksPage({ pageKey: 'ideas', locale: 'en', brand: 'neutral' }),
+    );
+    const previewHtml = renderToStaticMarkup(
+      await BlocksPage({ pageKey: 'ideas', locale: 'en', brand: 'neutral' }),
+    );
+    expect(previewHtml).toBe(publicHtml);
+    expect(publicHtml).toContain('data-brand="neutral"');
+    expect(publicHtml).toContain('<h1>Hello &lt;script&gt;</h1>');
+  });
+});
