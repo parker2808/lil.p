@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- Stage A #210 (2026-11-16 12:48 ICT): coordinator's read-only Render connector saw direct API health 200, a configured single instance and the earlier live deploy; no authenticated before/after instance drain evidence or freeze probes. The worksheet now uses coordinator-run Render GET API requests rather than a missing local CLI and calls out that the API build filter can auto-deploy on #210 merge. Stage A HOLD.
 - 2026-11-16 #208 verification-only pending refresh: normal-merged main `26fca2d3`, #210 `c396c4ba`, D2 #199 `5018b1ac`, and D6 `1f8fcf09` (#270 independently scoped V05 ACCEPT). New exact-head API/five-shard CI and SHA-matched artifact review are required before rescoring V05/V09; #268 V13 remains unmerged/open and V20 GAP. Preserve #210 post-deploy worksheet, #208 DO NOT MERGE and Stage A HOLD.
 
 - 2026-11-16 V05 all-20 follow-up: extend the four existing editor-origin shard groups with exact saved-revision/snapshot equality and EN/VI × light/dark × 390/768/1440 public/version-preview captures for each host. Require viewport-visible painted host content (including real CV media), exact-head five-shard CI and independent raw-image review; invalid-property states and production remain separate gaps. See `docs/specs/2026-11-16-cms-d6-v05-revision-chain.md`.
@@ -542,6 +543,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Replaced unavailable Render CLI inventory examples with coordinator-run read-only Render API requests in Stage A worksheet; retained privately approved origin for post-merge probes and no-production-write gate. No runtime change.
 - 2026-11-16: Refreshed #208 with reviewed main, Stage A worksheet, D2 and D6/V05 histories via normal merges; reconciled context/lessons and regenerated Graphify. No production or merge-chain action; exact combined-head CI and row review pending.
 
 - 2026-11-16: Added all-20 host V05 revision/snapshot and 24-capture per-type public/version-preview matrix to the existing four editor-origin CI shards; now require viewport-visible painted host content including real CV media. No runtime or API change. Exact-head CI/review pending.
