@@ -144,15 +144,11 @@ If production breaks, open a `hotfix/*` PR; only those branches get preview depl
   This does not rebuild and does not count as a new build.
 - **Code:** open a `hotfix/*` PR that reverts the bad merge
   (`git revert -m 1 <merge-sha>`), let CI pass, merge. Never force-push `main`.
-- **After D2 migration:** never roll back or redeploy a pre-D2 API, even if it
-  starts against the additive schema. A genuine old Prisma-client transaction
-  can overwrite a published tree pointer without the new revision CAS (test
-  `350ac169`, 1 pass / 1 deliberate safety failure on disposable MySQL; not
-  proof the old HTTP route accepts it). Keep page/version writes paused and
-  fix forward with a D2-aware API build; a web-only rollback is safe only if
-  the serving API stays D2-aware. No TiDB-specific database fence is planned.
-  The forward-only policy and brief outage are approved; the actual Render
-  no-overlap evidence must still be obtained before #199 deploy.
+- **D2 API after migration:** never redeploy or revert to a pre-D2 API, even
+  when it can read the additive schema: its old Prisma client can change a
+  tree page's published pointer without revision CAS. Pause page writes and
+  roll forward to a D2-aware fix; a web-only rollback must keep the D2-aware
+  API. Database recovery requires separate Parker approval.
 - **Database:** migrations are not rolled back automatically. Any data or schema
   fix on TiDB needs Parker's approval and is done by Parker.
 - After a rollback, auto-promotion of new `main` deploys may be paused; promote

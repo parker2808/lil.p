@@ -173,41 +173,6 @@ test('strict snapshots reject unknown/future/invalid blocks instead of dropping 
   });
 });
 
-test('raw legacy bytes survive read and migration while unsupported envelopes reject without edits', () => {
-  const raw = {
-    seo,
-    blocks: [{ ...block, props: { title: 'Start', nested: { future: [1, { keep: true }] } } }],
-  };
-  const hash = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
-  const before = hash(raw);
-  const read = readSnapshot(raw, registry);
-  assert.equal(read.ok, true);
-  if (read.ok) {
-    assert.equal(hash(read.snapshot), before);
-    assert.notStrictEqual(read.snapshot.blocks[0].props, raw.blocks[0].props);
-    read.snapshot.blocks[0].props.nested.future[1].keep = false;
-    assert.equal(hash(raw), before);
-  }
-  const migrated = migrateSnapshot(raw, registry);
-  assert.equal(migrated.ok, true);
-  if (migrated.ok) {
-    assert.deepEqual(migrated.snapshot.blocks[0].props.nested, raw.blocks[0].props.nested);
-    assert.equal(migrated.snapshot.blocks[0].schemaVersion, definition.version);
-  }
-  for (const [invalid, reason] of [
-    [{ ...raw, schemaVersion: 2 }, 'FUTURE_VERSION'],
-    [{ ...raw, unknown: { future: true } }, 'INVALID_SNAPSHOT'],
-    [{ ...raw, blocks: [{ ...raw.blocks[0], schemaVersion: 4 }] }, 'FUTURE_VERSION'],
-    [{ ...raw, blocks: [{ ...raw.blocks[0], extra: true }] }, 'INVALID_BLOCK'],
-    [{ ...raw, blocks: [{ ...raw.blocks[0], type: 'unknown' }] }, 'UNKNOWN_TYPE'],
-  ]) {
-    const unchanged = hash(invalid);
-    assert.deepEqual(readSnapshot(invalid, registry).reason, reason);
-    assert.equal(hash(invalid), unchanged);
-    assert.equal(hash(raw), before);
-  }
-});
-
 test('current nested unknown props survive raw reads; future and malformed versions reject without mutation', () => {
   const current = {
     seo,
@@ -244,6 +209,41 @@ test('current nested unknown props survive raw reads; future and malformed versi
     assert.equal(JSON.stringify(candidate), original);
   }
   assert.equal(createHash('sha256').update(JSON.stringify(current)).digest('hex'), digest);
+});
+
+test('raw legacy bytes survive read and migration while unsupported envelopes reject without edits', () => {
+  const raw = {
+    seo,
+    blocks: [{ ...block, props: { title: 'Start', nested: { future: [1, { keep: true }] } } }],
+  };
+  const hash = (value) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+  const before = hash(raw);
+  const read = readSnapshot(raw, registry);
+  assert.equal(read.ok, true);
+  if (read.ok) {
+    assert.equal(hash(read.snapshot), before);
+    assert.notStrictEqual(read.snapshot.blocks[0].props, raw.blocks[0].props);
+    read.snapshot.blocks[0].props.nested.future[1].keep = false;
+    assert.equal(hash(raw), before);
+  }
+  const migrated = migrateSnapshot(raw, registry);
+  assert.equal(migrated.ok, true);
+  if (migrated.ok) {
+    assert.deepEqual(migrated.snapshot.blocks[0].props.nested, raw.blocks[0].props.nested);
+    assert.equal(migrated.snapshot.blocks[0].schemaVersion, definition.version);
+  }
+  for (const [invalid, reason] of [
+    [{ ...raw, schemaVersion: 2 }, 'FUTURE_VERSION'],
+    [{ ...raw, unknown: { future: true } }, 'INVALID_SNAPSHOT'],
+    [{ ...raw, blocks: [{ ...raw.blocks[0], schemaVersion: 4 }] }, 'FUTURE_VERSION'],
+    [{ ...raw, blocks: [{ ...raw.blocks[0], extra: true }] }, 'INVALID_BLOCK'],
+    [{ ...raw, blocks: [{ ...raw.blocks[0], type: 'unknown' }] }, 'UNKNOWN_TYPE'],
+  ]) {
+    const unchanged = hash(invalid);
+    assert.deepEqual(readSnapshot(invalid, registry).reason, reason);
+    assert.equal(hash(invalid), unchanged);
+    assert.equal(hash(raw), before);
+  }
 });
 
 test('V21 raw fixture inventory preserves nested data or rejects every unsupported shape without edits', () => {

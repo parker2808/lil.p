@@ -11,8 +11,8 @@ import {
   type TreeOperation,
 } from '@parker2808/cms-core/tree';
 import { BLOCK_REGISTRY } from '@portfolio/contracts';
-import { useState } from 'react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { useState } from 'react';
 
 import type { BuilderState } from '../canvas/commands';
 import { newNode } from '../palette/catalog';
@@ -158,7 +158,7 @@ it('translates nested labels in the VI inspector without changing stored paths',
     },
   };
   render(<PropertiesPanel state={hostState} locale="vi" onEdit={vi.fn()} />);
-  expect(screen.getByRole('combobox', { name: 'URL liên kết' })).toBeInTheDocument();
+  expect(screen.getByLabelText('URL liên kết')).toBeInTheDocument();
   expect(screen.queryByText('primaryCta href')).toBeNull();
 });
 
@@ -217,9 +217,7 @@ it('offers valid optional bilingual heading for a host with empty defaults', () 
   rerender(<PropertiesPanel state={updated} locale="en" onEdit={onEdit} />);
   fireEvent.change(
     screen.getByRole('textbox', { name: 'Section heading · Tiêu đề · Vietnamese' }),
-    {
-      target: { value: 'Tiêu đề mục' },
-    },
+    { target: { value: 'Tiêu đề mục' } },
   );
   expect(onEdit).toHaveBeenCalledWith(
     expect.objectContaining({

@@ -58,7 +58,7 @@ const labels = {
     src: 'URL hình ảnh',
     alt: 'Văn bản thay thế',
     label: 'Nhãn',
-    href: 'URL liên kết',
+    href: 'Đường dẫn',
     size: 'Khoảng cách',
     columns: 'Số cột',
     span: 'Độ rộng cột',

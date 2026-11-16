@@ -163,7 +163,7 @@ test('V05 editor nested Properties persist one revision into EN/VI preview and p
         sha256: createHash('sha256').update(inspectorImage).digest('hex'),
       });
       if (width !== 1440) {
-        const titleLabel = locale === 'en' ? 'Title (EN)' : 'Tiêu đề (VI)';
+        const titleLabel = `${locale === 'en' ? 'Title' : 'Tiêu đề'} (${locale.toUpperCase()})`;
         const titleField = panel.getByRole('textbox', { name: titleLabel, exact: true });
         await titleField.scrollIntoViewIfNeeded();
         await expect(titleField).toBeInViewport();

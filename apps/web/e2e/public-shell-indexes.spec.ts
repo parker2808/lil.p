@@ -140,14 +140,6 @@ test('real public indexes, filters, contact and captures in EN/VI', async ({ pag
           { message: `${locale}/${route} dark primary buttons settle before axe` },
         )
         .toBe(true);
-      await page.evaluate(async () => {
-        await Promise.all(
-          document
-            .getAnimations()
-            .filter((animation) => animation instanceof CSSTransition)
-            .map((animation) => animation.finished.catch(() => undefined)),
-        );
-      });
       await expectNoSeriousAxeIssues(page);
       if (route === 'projects') {
         const card = page.locator('.projects-results .redesign-case-card').first();

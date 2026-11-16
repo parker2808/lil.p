@@ -15,6 +15,7 @@ import {
   type Destination,
 } from './model';
 import { builderRegistry } from '../properties/registry';
+
 export type BuilderState = { document: TreeDocument; selectedId: string };
 export type BuilderCommand =
   | { type: 'insert'; node: TreeNode; destination: Destination }

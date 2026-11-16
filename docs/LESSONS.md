@@ -1,8 +1,14 @@
 # Lessons
 
+- 2026-11-16: The authorized #274 landing reached main `5ea13342` with Vercel SUCCESS and Render LIVE on that exact SHA, after #210/#199 and the D-base/D6 chain; production freeze is lifted. Health/route 200s alone did not establish deploy identity, and the historical #208 verification score still requires a new exact-main run rather than inheriting source-branch CI.
+
 - 2026-11-16: A configured single Render instance and one successful direct health GET cannot prove fleet drain; capture complete pre/post instance rosters through the authorized API before merging a code-bearing freeze branch. Keep Render auto-deploy on for the staged merges and keep other API-bearing merges off `main` until reopen.
 - 2026-11-16: Forward-only policy approval does not authorize individual production actions; gate each deploy and next merge on separate authorization and verified 503/200, old-instance drain, and migration evidence.
 - 2026-11-16: A green source-branch all-host image manifest is not combined-head evidence; carry its reviewed source/tested-merge provenance into the verification cut and recheck exact-head shard artifacts before changing a matrix row.
+- 2026-11-16: A D2→D6 merge can retain the happy-path restore while losing strict rejection of malformed legacy snapshots and admin recovery of opaque historical trees; compare the verification cut's negative tests, retain both validation paths and correlate request logs only by fingerprint.
+
+- 2026-11-16: Changed-file subtraction is not tree equivalence for a stacked landing: compare blob contents and provenance against combined verification, bring over API-returned CAS revisions after legacy SEO writes, and retain stronger landing-base waits and current UI labels where the combined branch is stale.
+
 - 2026-11-16: A five-route public locale inventory does not cover matching admin page editors: assert every built-in editor's exact locale-dependent SSR title and a visible action before attaching EN/VI screenshots; cross-reference existing empty/error/conflict and historical preview suites instead of duplicating them.
 
 - 2026-11-16: A Next route can nest its `.public-notes` wrapper inside the site shell's `main#content`; inspect the actual component tree before adding a loaded-content selector, then wait for a visible H1 as well as the absence of the route skeleton.
@@ -188,6 +194,44 @@
 - 2026-11-15: A green browser test does not make screenshots reviewable from CI when captures remain only in the checkout; attach the exact-head manifest and PNGs to the existing Playwright blob report, and assert localized glyph bounds instead of inferring fit from button widths.
 
 - 2026-11-15: During D2+D6 integration, distinguish malformed persisted tree data (`INVALID_BLOCKS`) from publish lint (`VALIDATION_FAILED`); preserve a valid opaque legacy snapshot for admin recovery without allowing public or preview rendering of that node.
+- 2026-11-15: Restacking D5 UI on a newer core/main must carry both the D2 revision-aware restore and the pure engine's lossless legacy snapshot reader; update legacy restore test transactions to model the conditional revision claim, and verify the host Docker build order and CI shard lists together.
+
+- 2026-11-15: Restacking pure D5 tree state on the integrated D base requires preserving host-registry validation and the typed legacy restore/reload protections alongside main's independent fixture and package-local gates.
+- 2026-11-16: On a docs-only base sync, preserve both branches' release caveats and historical lessons, regenerate the generated Graphify report from the combined tree, and gate the new exact head rather than reusing earlier branch CI.
+- 2026-11-16: A configured single Render instance and one successful direct health GET cannot prove fleet drain; capture complete pre/post instance rosters through the authorized API before merging a code-bearing freeze branch. Keep Render auto-deploy on for the staged merges and keep other API-bearing merges off `main` until reopen.
+
+- 2026-11-16: A coordinator's paraphrase of forward-only policy approval is not proof of authorization for each production merge, deploy, mutation probe, migration or reopen; confirm the separate grant and preceding 503/200, drain and migration evidence. Auto-deploy being ON does not authorize a merge.
+
+- 2026-11-16: A docs/test-only main merge can conflict with Stage A release notes despite nonoverlapping runtime code; retain both sets of notes and independently verify the write-freeze behavior before interpreting exact-head CI.
+
+- 2026-11-15: Anonymous 503s on direct and rewritten page mutations show the HTTP freeze at sampled ingresses, not fleet-wide drain; compare pre-deploy instance IDs to an authoritative active roster and fail closed when identity, shutdown or in-flight evidence is missing.
+
+- 2026-11-15: A cold dynamic import and full Nest AppModule bootstrap inside a 5-second HTTP test can time out under parallel suite load without implicating the middleware; budget that setup separately and keep the request/assertion on the normal test deadline.
+
+- 2026-11-15: A broad pre-schema admin-pages write guard remains valid across D2 only after auditing both controller route tables, including SEO's shared PATCH and builder restore; preserve both histories in context conflicts and regenerate the graph from the combined tree.
+- 2026-11-16: Audit an extracted package's complete peer list against the frozen installed manifests and license files, not just its own `UNLICENSED` field; an MIT-compatible private tarball still needs final-head notice, history and hosted-distribution review.
+- 2026-11-16: When Stage A's permanent pre-D2 freeze meets D2's verified startup reopening, retain both test suites and spell out that an auto-deploy of #199 can open writes as soon as migration and column checks pass; the release owner must authorize that transition before merging.
+
+- 2026-11-16: A passing nested-snapshot test is not an independently diffable combined-head inventory; emit source-file byte hashes separately from normalized DB JSON byte hashes and pair each with tested-merge provenance, never claiming production inventory from disposable fixtures.
+
+- 2026-11-16: A tracked seed/SQL inventory is not a production inventory; gate the source-writer list and compare normalized responses with original stored JSON hashes before claiming legacy version safety.
+- 2026-11-16: Revalidation failure logs must omit both caller-derived cache tags and upstream error strings; custom page keys and transport errors can carry private data even when HTTP request logs are redacted.
+
+- 2026-11-16: A redacted HTTP response does not imply safe server logs: avoid raw request URLs, caller-supplied trace IDs, exception stacks and stored block identifiers; assert actual populated reads plus capability denials against captured logger calls, then review production logs separately after deployment.
+
+- 2026-11-16: Search every general deployment checklist for an obsolete separate-unfreeze step when changing D2 startup defaults; a correct phase-specific runbook alone can leave unsafe contradictory instructions.
+
+- 2026-11-16: A D2 reopening plan dependent on a Render env edit is not executable without authorized write access; gate writes on read-only startup migration verification, reserve exact `CMS_PAGE_WRITE_FREEZE=1` as an explicit kill-switch, and prove all pre-D2 writers drained before deploying an image that may automatically reopen.
+
+- 2026-11-16: Waiting for theme transitions to settle can conceal a real WCAG contrast failure; switch paired primary CTA foreground/background atomically and sample successive rendered frames before axe instead of changing its threshold.
+
+- 2026-11-15: A screenshot immediately after manually toggling dark mode can leave button `transition-colors` midway through foreground interpolation; require the final computed button palette before axe so transient test timing cannot masquerade as a stable 4.5:1 violation.
+
+- 2026-11-15: Verify startup gates with a deferred bootstrap test, not only a middleware fixture: hold `app.init()` and the schema query separately to prove no HTTP listen precedes verification and a failed check retains the freeze.
+
+- 2026-11-15: A D2 image must not inherit an always-frozen guard without a reviewed reopening mechanism; require applied migration history and physical columns before listening, default to frozen, and reserve the Render-only `=0` env deployment for after old frozen instances drain.
+
+- 2026-11-15: A 401/403 mutation test does not establish preview/version read capabilities or server log redaction; check both on real HTTP and retain a separate production-instance audit gate.
 
 - 2026-11-15: Body-parser oversized JSON may bypass Nest exception types; convert its typed size error into a redacted 413 with trace ID before normal middleware, assert unchanged DB rows, and retain the existing file-upload contract.
 - 2026-11-15: Green D2 disposable-DB rejection tests do not certify live old-instance drain; preserve anonymous freeze-probe evidence separately from authenticated Render inventory and read-only schema proof.
@@ -225,6 +269,7 @@
 - 2026-11-15: Describe D2 deploy readiness as executable proof of forward-only Stage A write freeze/drain, not rollback-read proof; once migrated, an old API rollback is unsafe and recovery must roll forward.
 - 2026-11-15: Treat a rehearsal's pack count as evidence for that source SHA, not a timeless policy; enumerate the allowlisted paths and review all four direct consumer manifests and their lockfile diff before a C3 pin.
 - 2026-11-15: Before removing a workspace package in a tarball rehearsal, search every workspace manifest for direct `workspace:*` consumers; web and the neutral fixture can block a frozen install even when contracts and API are pinned.
+- 2026-11-15: An additive D2 schema lets a pre-D2 Prisma client alter a tree page's published pointer without bumping the draft revision. Parker approved forward-only recovery, not evidence of an old-writer drain; because the `main` API deploy runs the migration on startup, prove the page-write pause and complete Render drain before merging/deploying D2. A MySQL trigger cannot serve as a TiDB fence.
 - 2026-11-15: Reconciling a static study after an independent canvas lands requires describing both routes separately in host documentation; integrate chronological lessons from both lanes and regenerate Graphify rather than hand-merging generated output.
 - 2026-11-15: When a static design-study branch absorbs a newer pure-state core release, preserve both histories while keeping the study's e2e flag and non-persistence boundary unchanged.
 - 2026-11-15: A static U3 design branch can integrate later renderer work without becoming a live builder; keep its no-persistence boundary explicit, retain both chronological context histories, and regenerate Graphify from the combined head instead of hand-merging reports.
@@ -661,6 +706,14 @@
 - 2026-11-15: A green combined-head CI validates only its executed automated subsets; bind every J/V evidence row to that exact SHA and keep live drain, deployed asset parity, and human visual/screen-reader signoff open until independently observed.
 - 2026-11-15: Independently reviewed screenshots and builder-scoped axe summaries establish visual/a11y subsets, not full WCAG or screen-reader signoff; preserve unregistered keyboard-spec, public-preview, and measured focus-ring gaps in the exact-head matrix.
 - 2026-11-15: When J/V gate ownership moves between feature threads, update only matrix owners; retain exact-head evidence and GAP status until the new owner's PR and independent signoff are verified.
+- 2026-11-15: A seeded CV without a resume renders a zero-size wrapper; asserting its empty SSR/hydrated state is valid, but locator screenshots wait forever for visibility. Capture the surrounding visible host as an explicitly labeled empty-state pair, never claim a visible CV screenshot.
+- 2026-11-15: Browser tests can retain a VI UI preference after EN/VI public journeys; assert the localized builder canvas while keeping the exact restored heading, and use a per-attempt page key so a failed first attempt does not turn a retry into a slug collision.
+- 2026-11-15: When restacking parity evidence after a separately merged D6 converter and restore gate, keep their API/visual contracts and both documentation histories; fresh exact-head browser CI is needed before attributing prior screenshots to the combined tree.
+- 2026-11-15: An emitted public-bundle gzip cap does not prove CDN parity; record hashes of emitted bytes on the exact build head and compare every deployed chunk after an authorized deployment, without treating offline verifier tests as live evidence.
+- 2026-11-15: Zero-downtime deploy health cannot prove all pre-migration writers are gone; freeze page mutations in a separate pre-schema release, enumerate old instances until drained, and retain a fail-closed guard across the migrating release.
+- 2026-11-15: A bespoke HTTP test module can pass even if the production AppModule drops a middleware; boot real module wiring with stubbed services and assert 503 before page publish access.
+- 2026-11-15: Unauthenticated 503 checks across direct API and Vercel ingress can detect a missing HTTP write freeze, but cannot prove old writers drained or D2 columns exist; require authenticated instance inventory and an authorized read-only schema check before migration or reopening. With locale-prefixed routing, accept only the expected same-origin root redirect and probe `/en` and `/vi` explicitly.
+- 2026-11-15: A 400 validation response never enters the exception filter's >=500 error-log branch; a spy with zero calls cannot prove log redaction. Label 400 checks HTTP-only, and require populated draft/version/preview response assertions to substantiate read capabilities.
 - 2026-11-15: A four-shard visual matrix can hit the job time limit even while three peers finish quickly; measure actual job and Playwright step durations and keep per-shard provenance validation synchronized with the matrix size. Register an incoming spec before pinning it to a new shard—otherwise silent skips mask an incomplete gate. A separate failing accessibility assertion is not a throughput failure.
 - 2026-11-15: When merging five-shard CI onto a combined branch, keep every branch-specific browser spec registered and its intended pin; verify the merged registry before treating the new head as evidence.
 - 2026-11-15: A successful five-shard combined run can refresh a SHA-matched build budget subset, but does not transfer earlier human screenshot reviews or prove deployed asset parity; keep release-level gates open until independently reviewed.
@@ -758,3 +811,20 @@
 - 2026-11-15: A docs-only main sync can conflict with D2's release-gate notes; keep both histories and verify the schema/migration diff is empty before relying on the prior disposable-MySQL proof.
 - 2026-11-16: Graphify's generated source SHA names the code snapshot, not the later docs-only commit; refresh extracted topology before claiming freshness and state that distinction explicitly.
 - 2026-11-16: When a docs-only D2 sync meets a C1 tarball fix, retain both decision histories and check Prisma schema/migration bytes against the pre-merge branch before reusing migration evidence.
+
+- 2026-11-16: A four-consumer tarball rehearsal can pass builds but fail a fixture test that inspects `../../../packages/cms-core/dist`; resolve package artifacts via the installed subpath export so the same directive assertions cover workspace and tarball installs.
+- 2026-11-16: A landing branch that contains D5/D6 but not D2 must preserve both branches' docs while syncing current main; a draft PR and green CI do not authorize merging it before the separately approved freeze/migration sequence.
+- 2026-11-15: Reconcile stacked D2 safety tests and main's restored browser registry by retaining both documentation histories; green exact-head CI and independent drain proof remain distinct from a clean textual merge.
+- 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
+- 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
+- 2026-11-15: A docs-only main sync can conflict with D2's release-gate notes; keep both histories and verify the schema/migration diff is empty before relying on the prior disposable-MySQL proof.
+- 2026-11-16: Graphify's generated source SHA names the code snapshot, not the later docs-only commit; refresh extracted topology before claiming freshness and state that distinction explicitly.
+- 2026-11-16: A four-consumer tarball rehearsal can pass builds but fail a fixture test that inspects `../../../packages/cms-core/dist`; resolve package artifacts via the installed subpath export so the same directive assertions cover workspace and tarball installs.
+- 2026-11-16: When a docs-only D2 sync meets a C1 tarball fix, retain both decision histories and check Prisma schema/migration bytes against the pre-merge branch before reusing migration evidence.
+- 2026-11-15: When rebasing the pre-migration write freeze on five-shard main, preserve both Stage A drain instructions and newly registered keyboard/canvas E2E coverage; a clean merge of runtime files alone does not prove production instances have drained.
+- 2026-11-15: When restacking the Stage A freeze after a docs-only C1 merge, keep both histories; clean HTTP guards and a conflict-free runtime are not evidence that old production writers drained.
+- 2026-11-16: For a pre-migration freeze, document the complete before/after instance roster and startup migration separately from HTTP probes; a read-only CLI snapshot or green CI cannot establish drained in-flight writers or authorize reopening.
+- 2026-11-16: After an independent fixture fix lands on main, preserve both its tarball lesson and the Stage A drain lesson when restacking the freeze branch; documentation reconciliation does not alter or verify the live guard.
+- 2026-11-16: After #273, pause unrelated merges into main until the separately authorized Stage A freeze, migration and D2-aware reopen sequence is verified; a green restack is not production authorization.
+- 2026-11-16: Coordinator production logs report main `b0de5340` LIVE with the `Page.draftTree` migration applied at 17:05:43 ICT; an unauthenticated admin POST returning 401 rather than freeze 503 signals only that this request was not frozen, not that authenticated writes are accepted.
+- 2026-11-16: A legacy published snapshot can contain unvalidated block type, key and props; public-read warning logs must use a fixed message rather than interpolate dropped-block details or request context.

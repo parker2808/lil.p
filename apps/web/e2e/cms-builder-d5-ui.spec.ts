@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 
@@ -5,10 +6,19 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 import { BLOCK_REGISTRY } from '@portfolio/contracts';
 
-import enMessages from '../i18n/locales/en.json' with { type: 'json' };
-import viMessages from '../i18n/locales/vi.json' with { type: 'json' };
-import { BLOCK_EDITOR_META } from '../src/modules/admin-pages/constants/block-editor-meta.constant';
 import { signIn } from './helpers/auth';
+import { BLOCK_EDITOR_META } from '../src/modules/admin-pages/constants/block-editor-meta.constant';
+
+const labels = Object.fromEntries(
+  (['en', 'vi'] as const).map((locale) => [
+    locale,
+    (
+      JSON.parse(
+        readFileSync(resolve(import.meta.dirname, `../i18n/locales/${locale}.json`), 'utf8'),
+      ) as { admin: { pages: { types: Record<string, string> } } }
+    ).admin.pages.types,
+  ]),
+) as Record<'en' | 'vi', Record<string, string>>;
 
 const captures = resolve(import.meta.dirname, '../../../docs/specs/screenshots/cms-d5-ui');
 const manifest: Array<{
@@ -109,10 +119,8 @@ test('all 20 host Properties are visible through the gated builder in EN/VI and 
     });
     for (const [index, definition] of types.entries()) {
       await layers.locator(`[data-tree-id="block-${index}"]`).click();
-      const labelKey = BLOCK_EDITOR_META[definition.type].labelKey
-        .split('.')
-        .at(-1) as keyof typeof enMessages.admin.pages.types;
-      const localized = (locale === 'en' ? enMessages : viMessages).admin.pages.types[labelKey];
+      const labelKey = BLOCK_EDITOR_META[definition.type].labelKey.split('.').at(-1)!;
+      const localized = labels[locale][labelKey];
       expect(localized, `${locale}/${definition.type} translation`).toBeTruthy();
       const expected = localized!.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       await expect(

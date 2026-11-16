@@ -102,7 +102,12 @@ export class PagesService {
     @Optional() private readonly publishing?: PublishingService,
   ) {}
 
-  async getPublic(key: PageKey, locale: Locale): Promise<PublicPage | TreePage> {
+  async getPublic(
+    key: PageKey,
+    locale: Locale,
+    requestContext = 'unknown',
+  ): Promise<PublicPage | TreePage> {
+    void requestContext;
     const row = await this.prisma.page.findUnique({
       where: { key: toPrismaPageKey(key) },
       include: { publishedVersion: true },

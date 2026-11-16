@@ -100,7 +100,7 @@ describe('pre-D2 Stage A page write freeze', () => {
     vi.unstubAllEnvs();
   });
 
-  it('cannot reopen before the production migration check', () => {
+  it('cannot be unfrozen by a production environment override', () => {
     vi.stubEnv('NODE_ENV', 'production');
     vi.stubEnv('CMS_PAGE_WRITE_FREEZE', '0');
     expect(pageWritesFrozen()).toBe(true);
