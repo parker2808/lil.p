@@ -49,11 +49,16 @@ export function hasSnapshotFormat(value: unknown): boolean {
   return value !== null && typeof value === 'object' && ('format' in value || 'tree' in value);
 }
 
-export function readTreeVersionSnapshot(value: unknown): TreeVersionSnapshot | null {
+export function readTreeVersionSnapshot(
+  value: unknown,
+  allowUnrenderable = false,
+): TreeVersionSnapshot | null {
   const parsed = treeVersionSnapshotSchema.safeParse(value);
   if (!parsed.success) return null;
   const tree = readTree(parsed.data.tree, HOST_TREE_REGISTRY);
-  return tree.ok && isTreeRenderable(tree.value) ? { ...parsed.data, tree: tree.value } : null;
+  return tree.ok && (allowUnrenderable || isTreeRenderable(tree.value))
+    ? { ...parsed.data, tree: tree.value }
+    : null;
 }
 
 export function isTreeRenderable(tree: TreeDocument): boolean {
@@ -98,7 +103,8 @@ export function buildPageSnapshot(page: PageWithAllBlocks): PageSnapshot {
 }
 
 export function readRestorableSnapshot(value: unknown): PageSnapshot | null {
-  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  if (!value || typeof value !== 'object' || Array.isArray(value) || hasSnapshotFormat(value))
+    return null;
   const raw = value as { seo?: unknown };
   const seo = Object.hasOwn(raw, 'seo') ? raw.seo : {};
   if (!seo || typeof seo !== 'object' || Array.isArray(seo)) return null;
@@ -137,8 +143,29 @@ export function readPageSnapshot(value: unknown): PageSnapshot | null {
 }
 
 export function readRestorablePageSnapshot(value: unknown): PageSnapshot | null {
-  if (hasSnapshotFormat(value)) return null;
-  return readRestorableSnapshot(value);
+  if (!value || typeof value !== 'object' || hasSnapshotFormat(value)) return null;
+  const raw = value as { seo?: unknown; blocks?: unknown };
+  const seoKeys = ['seoTitleEn', 'seoTitleVi', 'seoDescriptionEn', 'seoDescriptionVi'];
+  if (
+    Object.keys(raw).some((key) => key !== 'seo' && key !== 'blocks') ||
+    (raw.seo !== undefined &&
+      (raw.seo === null ||
+        typeof raw.seo !== 'object' ||
+        Array.isArray(raw.seo) ||
+        Object.entries(raw.seo).some(
+          ([key, entry]) => !seoKeys.includes(key) || (entry !== null && typeof entry !== 'string'),
+        )))
+  ) {
+    return null;
+  }
+  if (
+    !Array.isArray(raw.blocks) ||
+    raw.blocks.some((block) => !pageSnapshotBlockSchema.strict().safeParse(block).success)
+  ) {
+    return null;
+  }
+  const snapshot = readRestorableSnapshot(value);
+  return snapshot?.blocks.length === raw.blocks.length ? snapshot : null;
 }
 
 function asNullableString(source: unknown, key: string): string | null {

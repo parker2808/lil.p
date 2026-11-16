@@ -1,0 +1,23 @@
+{
+  "seo": {
+    "seoTitleEn": "Historical title",
+    "seoTitleVi": null,
+    "seoDescriptionEn": null,
+    "seoDescriptionVi": null
+  },
+  "blocks": [
+    {
+      "type": "header",
+      "key": "header",
+      "schemaVersion": 1,
+      "props": {
+        "title": "Original",
+        "unrecognized": { "locale": { "vi": null, "en": [0, false, { "keep": "raw" }] } }
+      },
+      "layout": "ONE",
+      "surface": "PLAIN",
+      "isVisible": true,
+      "sortOrder": 0
+    }
+  ]
+}

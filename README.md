@@ -107,18 +107,28 @@ The [D5 V02 keyboard gate](./docs/specs/2026-11-15-cms-d5-live-journeys.md) test
 The [D5 live journey spec](./docs/specs/2026-11-15-cms-d5-live-journeys.md) registers CI-sharded browser tests against the real D2 draft API for composition, keyboard navigation, reload, responsive properties and conflict/offline recovery. V07 verifies a stale publish revision after a real intervening draft write. The exact-head design artifact spans EN/VI, light/dark, neutral/lil.p and mobile/tablet/desktop empty/error/focus/saved/saving/conflict states; the [V15 follow-up](./docs/specs/2026-11-15-cms-d5-v15-target-focus.md) audits the full admin-builder chrome for 44px targets, focus, overflow, axe and computed focus-ring/background contrast ≥3:1. The [V16 automated subset](./docs/specs/2026-11-15-cms-d5-v16-automated-a11y.md) checks EN/VI builder announcements and full-page axe; V16 still requires manual VoiceOver/NVDA and public/preview reading-order review. Incomplete publication is rejected; successful publish/public SSR parity and combined D6 verification remain separate gates.
 
 The stacked [D5 all-block Properties spec](./docs/specs/2026-11-15-cms-d5-all-block-properties.md) registers all 20 host block contracts in the gated builder. Its EN/VI editor derives nested/localized, numeric, array, optional-group and responsive controls from the host schemas; invalid partial edits remain local across node, breakpoint and sheet changes. Blurring a text field separates its next undo step, and clearing a responsive override discards the invalid local value and error for that property. This is draft-only: D2's API currently rejects host types without a registry, so D6's live-API all-20 release gate and approval remain blocked.
+Public primary buttons switch foreground and background atomically on a theme
+change, while retaining their hover transform. The EN/VI browser gate samples
+contrast during both theme changes before its final-state axe check; its 4.5:1
+WCAG AA threshold and light/dark route captures remain unchanged.
+
+The [D2 V11/V12 safety gate](./docs/specs/2026-11-15-cms-d2-v11-v12-gate.md) extends real-DB negative tree and capability checks. Pre-deploy V12 log tests also cover failed revalidation without logging page keys or upstream errors; they do not replace the deferred, authorized read-only production log audit after deploy. Final integrated D6 publication remains a separate gate.
 The shared MarkdownEditor group regression waits for all three independently debounced previews before asserting their exact callback count; this stabilizes the unit gate without changing editor behavior or visual evidence.
 
 The [C1 extraction runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md#c1-standalone-document-drafts-not-yet-files-in-an-extracted-repository) includes draft standalone README, unreleased changelog and proprietary LICENSE text. These templates need final-source and rights review; this documentation creates no repository or release.
 
 The same runbook records a local tarball rehearsal: the subpath-only package rejects root imports in ESM and CJS while all six installed subpaths resolve. Recount the pack at the final integrated SHA; distribution and rights authorization remain separate gates.
+The same runbook records a local #208 tarball rehearsal: its 26-file pack contains only built `dist/**`, README, LICENSE and package.json. The package remains subpath-only; package-local tests reject the root `"."` specifier for ESM and CJS both in the checkout and from an installed tarball, where all six subpaths resolve. A future C3 consumer switch must pin all four direct dependents (contracts, API, web and the neutral fixture). Recount the pack at the final integrated SHA; final merge, rights and distribution authorization remain separate gates.
+
+The [V17/V21 evidence gate](./docs/specs/2026-11-16-cms-d2-v17-v21-raw-inventory.md#combined-head-evidence-artifacts) emits source-byte and disposable-DB canonical-byte hash manifests from CI unit/API tests, tagged with PR head and tested merge SHA. A combined-head artifact review and authorized production inventory are still separate gates.
+
 The contact form retains name, email, and message typed before hydration, synchronizes them on mount, and sends one client request. The server action remains available without JavaScript; see the [hydration regression spec](./docs/specs/2026-11-11-contact-hydration-readiness.md).
 
 The stacked [CMS U2 site/admin pattern spec](./docs/specs/2026-11-10-cms-u2-site-admin-patterns.md) and [43-route ledger](./docs/audits/2026-11-10-cms-u2-route-pattern-ledger.md) track shared navigation, forms, tables, feedback, loading/error/empty states, 44px target sizes, focus styles and EN/VI light/dark screenshot/a11y reviews. A clean disposable-MySQL run passed all 336 route/theme/viewport captures with no tagged WCAG A/AA or undersized-target findings; eight [privacy-safe reviewed screenshots](./docs/specs/assets/cms-u2/) complement the full local matrices. U2 adds retry to existing admin load errors and icon spacing to status badges while keeping API/database behavior unchanged. [Shared UI](./packages/ui/README.md) documents host-owned controls and table chrome; the EN/VI table shortcut help reflects selection-first archive/delete and active-row fallback.
 
 The [CMS U0 route/control baseline](./docs/audits/2026-11-10-cms-u0-route-control-baseline.md) maps the current public/admin routes, redirect and role boundaries, control ownership, and existing behavior/visual tests before UI standardization. It records uncovered live/visual states separately from executed focused tests; U0 changes no runtime behavior.
 
-The [CMS core package](./packages/cms-core/README.md) runs its own dependency-boundary check in CI, independent of the monorepo root check, so extraction cannot silently drop this gate. Its React and theme tests import the package-local bundle measure, so the same tests run after extraction. The [C1 runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md) retains the final integration and authorization requirements.
+The [CMS core package](./packages/cms-core/README.md) runs its own dependency-boundary check in CI, independent of the monorepo root check, so extraction cannot silently drop this gate. Its React and theme tests import the package-local bundle measure, so the same tests run after extraction. The [C1 runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md) retains the final integration and authorization requirements. The [V17/V21 tracked raw inventory](./docs/specs/2026-11-16-cms-d2-v17-v21-raw-inventory.md) is not a production DB inventory.
 
 ### CMS D5 history gate (V07)
 
@@ -170,6 +180,15 @@ The [reconciled Phase D draft](./docs/specs/2026-11-10-cms-builder-phase-d-draft
 
 Portfolio monorepo: Next.js public site + admin (`apps/web`), NestJS API (`apps/api`), design system (`packages/ui`), and shared zod contracts (`packages/contracts`).
 
+The [pre-D2 Stage A page-write freeze](./docs/specs/2026-11-15-cms-pre-d2-write-freeze.md)
+is a separate, production-default API guard; it does not ship D2 storage or
+authorize a deploy. Release owners must verify every old writer has drained
+before the later D2 migration, and keep the freeze until D2-aware unfreeze.
+The API test boots the production `AppModule` with stubbed services to catch a
+missing middleware registration. Its cold module bootstrap is a separate setup
+step; the 503 HTTP assertion retains the normal per-test timeout. This is not
+proof of live Render drain.
+
 The Round 3 integration branch contains the verified PR #169 head and all eleven earlier Round 3 branch tips. It is a review PR to `main`; the stacked PRs remain open. See the [integration handoff](./docs/specs/2026-11-03-r3-stack-integration.md) and [Round 3 audit](./docs/specs/2026-11-03-r3-12-real-flow-audit.md) for scope and checks.
 
 Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./docs/PLAN.md).
@@ -205,6 +224,8 @@ sampled EN/VI pages resolve their own locale-prefixed component links.
 [CMS D3 shared SSR renderer](./docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md) adds opt-in `renderTree` to the core's server-only React entry. Breakpoint-specific row spans and one semantic heading per node are covered by a required browser matrix; heading levels must stay stable across breakpoints at publish/SSR, while drafts may vary. Host `components.heading` overrides return a typed failure. Existing routes remain legacy until D2 authorizes tree dispatch and publish validation; D6 owns route parity.
 
 **D2 forward-only rollout (policy approved 2026-11-15 08:54 ICT; operational gate pending):** the additive `Page.draftTree` migration does not fence a pre-D2 API writer. Never redeploy a pre-D2 API after that migration. The `main` API deployment runs migrations at startup, so pause page/version writes, drain every old API instance before migration and verify only D2-aware instances serve before resuming writes or activating drafts. If this no-overlap gate cannot be demonstrated, do not merge/deploy D2. On failure, keep writes paused and roll forward with a D2-aware fix; do not roll back the API. See the [D2 rollback-reader gate](./docs/specs/2026-11-11-cms-d2-persistence.md#rollback-reader-gate) and [deployment runbook](./docs/DEPLOY_AND_CI_RERUN.md#7-rollback). No TiDB database fence is claimed.
+
+Legacy publish, SEO and block edits now claim the observed builder revision and legacy mode in the same transaction as their writes; a competing tree activation yields a 409 instead of an overwritten pointer or stale legacy edit. Builder restore also claims its observed tree revision. Disposable-MySQL API E2E interleaves activation after legacy publish, SEO, each block mutation and delete reads, and a concurrent save after the builder restore read; each conflict reports the winning revision and rolls back the losing writes. These CAS transactions use read committed so a post-CAS reread sees the winner. This protects D2-aware instances only; the forward-only deployment drain above is still required.
 
 ### Public site
 
@@ -460,6 +481,13 @@ After `git pull`, run `pnpm install`, `pnpm --filter @portfolio/contracts build`
 ## Production
 
 Live hosting is **Vercel (web) + Render (API) + TiDB Cloud (MySQL) + Cloudinary (media)**. First-time provisioning, every env var, and the admin bootstrap are in [docs/DEPLOY.md](./docs/DEPLOY.md) ([Tiếng Việt](./docs/DEPLOY.vi.md)). Rollback and secret rotation: [docs/runbooks/deploy.md](./docs/runbooks/deploy.md), [docs/runbooks/secrets.md](./docs/runbooks/secrets.md).
+
+The forward-only policy-approved Stage A → D2 sequence uses the [release-owner probe and drain checklist](./docs/runbooks/deploy.md#stage-a--d2-page-write-rollout-release-owner-only) and its [curl-only ingress/instance evidence sheet](./docs/runbooks/stage-a-drain-curl.md). Policy approval is not separate production authorization for #210 deploy/probes, #199 migration or D2-aware reopen and verification. `scripts/probe-stage-a-d2.mjs` checks public health and unauthenticated page-write freeze across direct Render and Vercel ingress; neither probe can certify old-instance drain or migration by itself. Run mutation probes only after separate authorization and after the Stage A freeze is live; the merge chain and coordinator verify each stage before proceeding.
+
+The D2-aware API retains Stage A's page-write 503 response until startup verifies the applied `Page.draftTree` migration and both physical page columns before listening. With `CMS_PAGE_WRITE_FREEZE` unset (or any value other than `1`), writes open automatically after that check; `CMS_PAGE_WRITE_FREEZE=1` explicitly keeps them frozen. A failed check remains frozen. The pre-D2 Stage A API always freezes production writes. **Do not deploy D2 until the release owner has proved the Stage A freeze and complete old-instance/in-flight-request drain**: no Render env change is needed or assumed for reopening, and an automatic deployment can reopen writes immediately after the check. No Vercel env change opens API writes.
+
+The [stacked D2 safety matrix](./docs/specs/2026-11-15-cms-d2-safety-matrix.md) pairs disposable-MySQL rejection/no-write and missing-SEO snapshot-hash checks with a forward-only release protocol. Its old-client pointer-clobber reproduction is a **known unsafe** writer, not a passing rollback test. J09/V18 cannot pass on CI alone; the release owner must prove the live Stage A freeze and drain before D2 migration.
+Oversized JSON builder requests return a redacted `413 VALIDATION_FAILED` response with a `body` field error and request ID; this does not change the existing upload-size response.
 
 ### How a change reaches production
 

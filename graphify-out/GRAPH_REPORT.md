@@ -158,7 +158,6 @@
 - brand-foundation.spec.ts
 - contracts.test.mjs
 - Even the Stars Know Your Name
-- jobs
 - scripts
 - SectionBoundary.tsx
 - analytics.service.ts
@@ -247,7 +246,6 @@
 - education/loading.tsx
 - experience/loading.tsx
 - CMS B3 — package skeleton and measured browser budgets
-- CMS U2 — public/admin interaction patterns
 - Vercel CMS-core build graph hotfix
 - build-e2e
 - CaseCard.stories.tsx
@@ -321,6 +319,7 @@
 - RequirementColumns.stories.tsx
 - tsconfig.build.json
 - Phase C — private CMS core distribution (draft-ahead specification)
+- r3-site-error-test/page.tsx
 - D integration base — B7 + D1
 - D6 integrated editor and host-route gate
 - D5 V13 metadata/error localization and V05 editor evidence

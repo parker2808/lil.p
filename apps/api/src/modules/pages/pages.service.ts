@@ -105,7 +105,7 @@ export class PagesService {
   async getPublic(
     key: PageKey,
     locale: Locale,
-    requestId = 'unknown',
+    requestContext = 'unknown',
   ): Promise<PublicPage | TreePage> {
     const row = await this.prisma.page.findUnique({
       where: { key: toPrismaPageKey(key) },
@@ -134,7 +134,7 @@ export class PagesService {
 
     return snapshotToPublicPage(key, snapshot, locale, ({ blockId, type, reason }) => {
       this.logger.warn(
-        `Dropped block ${blockId} type=${type} page=${key} reason=${reason} ${requestId}`,
+        `Dropped block ${blockId} type=${type} page=${key} reason=${reason} ${requestContext}`,
       );
     });
   }
@@ -245,66 +245,86 @@ export class PagesService {
 
   async reorderBlocks(rawKey: string, ids: number[]): Promise<AdminPage> {
     const key = parsePageKey(rawKey);
-    const result = await this.prisma.$transaction(async (tx) => {
-      const page = await this.requirePage(tx, key);
-      this.assertLegacyDraft(page);
-      const h1 = page.blocks.find((block) => definitionOf(block.type)?.role === 'h1');
-      if (h1 && ids[0] !== h1.id) {
-        throw new ConflictException({
-          code: 'BLOCK_LOCKED',
-          message: 'The H1 block must stay first',
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        const page = await this.requirePage(tx, key);
+        this.assertLegacyDraft(page);
+        const h1 = page.blocks.find((block) => definitionOf(block.type)?.role === 'h1');
+        if (h1 && ids[0] !== h1.id) {
+          throw new ConflictException({
+            code: 'BLOCK_LOCKED',
+            message: 'The H1 block must stay first',
+          });
+        }
+        await applyReorder(tx.pageBlock, ids, { pageId: page.id });
+        await this.touchPage(tx, page, key);
+        await this.audit?.record(tx, {
+          action: 'UPDATE',
+          entityType: 'page',
+          entityId: key,
+          summary: `Reordered blocks on ${key}`,
         });
-      }
-      await applyReorder(tx.pageBlock, ids, { pageId: page.id });
-      await this.touchPage(tx, page.id);
-      await this.audit?.record(tx, {
-        action: 'UPDATE',
-        entityType: 'page',
-        entityId: key,
-        summary: `Reordered blocks on ${key}`,
-      });
-      return toAdminPage(await this.requirePage(tx, key));
-    });
+        return toAdminPage(await this.requirePage(tx, key));
+      },
+      { isolationLevel: PrismaValue.TransactionIsolationLevel.ReadCommitted },
+    );
     return result;
   }
 
   async updatePage(rawKey: string, input: PageUpdateInput): Promise<AdminPage> {
     const key = parsePageKey(rawKey);
-    const result = await this.prisma.$transaction(async (tx) => {
-      const page = await this.requirePage(tx, key);
-      this.assertLegacyDraft(page);
-      assertFresh(page.updatedAt, input.updatedAt);
-      try {
-        await tx.page.update({
-          where: { id: page.id, draftTree: { equals: PrismaValue.DbNull } },
-          data: {
-            seoTitleEn: input.seoTitleEn,
-            seoTitleVi: input.seoTitleVi,
-            seoDescriptionEn: input.seoDescriptionEn,
-            seoDescriptionVi: input.seoDescriptionVi,
-            updatedAt: new Date(),
-          },
-        });
-      } catch (error) {
-        if (error instanceof PrismaValue.PrismaClientKnownRequestError && error.code === 'P2025') {
-          const current = await this.requirePage(tx, key);
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        const page = await this.requirePage(tx, key);
+        this.assertLegacyDraft(page);
+        assertFresh(page.updatedAt, input.updatedAt);
+        if (page.draftTreeRevision === 9223372036854775807n) {
           throw new ConflictException({
             code: 'CONFLICT',
-            message: 'Builder draft requires revision-aware editing',
-            mode: current.draftTree == null ? 'legacy' : 'tree',
-            revision: current.draftTreeRevision.toString(),
+            message: 'Builder revision limit reached',
           });
         }
-        throw error;
-      }
-      await this.audit?.record(tx, {
-        action: 'UPDATE',
-        entityType: 'page',
-        entityId: key,
-        summary: `Updated ${key} SEO`,
-      });
-      return toAdminPage(await this.requirePage(tx, key));
-    });
+        try {
+          await tx.page.update({
+            where: {
+              id: page.id,
+              draftTreeRevision: page.draftTreeRevision,
+              draftTree: { equals: PrismaValue.DbNull },
+            },
+            data: {
+              seoTitleEn: input.seoTitleEn,
+              seoTitleVi: input.seoTitleVi,
+              seoDescriptionEn: input.seoDescriptionEn,
+              seoDescriptionVi: input.seoDescriptionVi,
+              updatedAt: new Date(),
+              draftTreeRevision: { increment: 1 },
+            },
+          });
+        } catch (error) {
+          if (
+            error instanceof PrismaValue.PrismaClientKnownRequestError &&
+            error.code === 'P2025'
+          ) {
+            const current = await this.requirePage(tx, key);
+            throw new ConflictException({
+              code: 'CONFLICT',
+              message: 'Builder draft requires revision-aware editing',
+              mode: current.draftTree == null ? 'legacy' : 'tree',
+              revision: current.draftTreeRevision.toString(),
+            });
+          }
+          throw error;
+        }
+        await this.audit?.record(tx, {
+          action: 'UPDATE',
+          entityType: 'page',
+          entityId: key,
+          summary: `Updated ${key} SEO`,
+        });
+        return toAdminPage(await this.requirePage(tx, key));
+      },
+      { isolationLevel: PrismaValue.TransactionIsolationLevel.ReadCommitted },
+    );
     return result;
   }
 
@@ -318,198 +338,210 @@ export class PagesService {
       });
     }
 
-    const result = await this.prisma.$transaction(async (tx) => {
-      const page = await this.requirePage(tx, key);
-      this.assertLegacyDraft(page);
-      assertAllowedOnPage(definition, key);
-      const count = page.blocks.filter((block) => block.type === definition.type).length;
-      assertWithinLimit(definition, count);
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        const page = await this.requirePage(tx, key);
+        this.assertLegacyDraft(page);
+        assertAllowedOnPage(definition, key);
+        const count = page.blocks.filter((block) => block.type === definition.type).length;
+        assertWithinLimit(definition, count);
 
-      const after = input.afterId ? this.requireBlock(page, input.afterId) : undefined;
-      const sortOrder = insertSortOrder(after, page.blocks);
-      assertInsertKeepsH1First(sortOrder, page.blocks);
+        const after = input.afterId ? this.requireBlock(page, input.afterId) : undefined;
+        const sortOrder = insertSortOrder(after, page.blocks);
+        assertInsertKeepsH1First(sortOrder, page.blocks);
 
-      const keyName = nextBlockKey(
-        definition.type,
-        page.blocks.map((block) => block.key),
-      );
-      const layout = definition.layouts[0];
-      if (!layout) {
-        throw new BadRequestException({
-          code: 'VALIDATION_FAILED',
-          message: 'Validation failed',
-          fieldErrors: { layout: ['This block type has no layouts'] },
+        const keyName = nextBlockKey(
+          definition.type,
+          page.blocks.map((block) => block.key),
+        );
+        const layout = definition.layouts[0];
+        if (!layout) {
+          throw new BadRequestException({
+            code: 'VALIDATION_FAILED',
+            message: 'Validation failed',
+            fieldErrors: { layout: ['This block type has no layouts'] },
+          });
+        }
+
+        await tx.pageBlock.updateMany({
+          where: { pageId: page.id, sortOrder: { gte: sortOrder } },
+          data: { sortOrder: { increment: 1 } },
         });
-      }
-
-      await tx.pageBlock.updateMany({
-        where: { pageId: page.id, sortOrder: { gte: sortOrder } },
-        data: { sortOrder: { increment: 1 } },
-      });
-      const created = await tx.pageBlock.create({
-        data: {
-          pageId: page.id,
-          type: definition.type,
-          key: keyName,
-          schemaVersion: definition.version,
-          props: definition.defaults as Prisma.InputJsonValue,
-          layout,
-          surface: 'PLAIN',
-          sortOrder,
-          isVisible: true,
-        },
-      });
-      await this.touchPage(tx, page.id);
-      await this.audit?.record(tx, {
-        action: 'CREATE',
-        entityType: 'page',
-        entityId: key,
-        summary: `Created block ${keyName} on ${key}`,
-      });
-      return toAdminBlock(created);
-    });
+        const created = await tx.pageBlock.create({
+          data: {
+            pageId: page.id,
+            type: definition.type,
+            key: keyName,
+            schemaVersion: definition.version,
+            props: definition.defaults as Prisma.InputJsonValue,
+            layout,
+            surface: 'PLAIN',
+            sortOrder,
+            isVisible: true,
+          },
+        });
+        await this.touchPage(tx, page, key);
+        await this.audit?.record(tx, {
+          action: 'CREATE',
+          entityType: 'page',
+          entityId: key,
+          summary: `Created block ${keyName} on ${key}`,
+        });
+        return toAdminBlock(created);
+      },
+      { isolationLevel: PrismaValue.TransactionIsolationLevel.ReadCommitted },
+    );
     return result;
   }
 
   async updateBlock(rawKey: string, id: number, input: BlockUpdateInput): Promise<AdminBlock> {
     const key = parsePageKey(rawKey);
-    const result = await this.prisma.$transaction(async (tx) => {
-      const page = await this.requirePage(tx, key);
-      this.assertLegacyDraft(page);
-      const current = this.requireBlock(page, id);
-      assertFresh(current.updatedAt, input.updatedAt);
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        const page = await this.requirePage(tx, key);
+        this.assertLegacyDraft(page);
+        const current = this.requireBlock(page, id);
+        assertFresh(current.updatedAt, input.updatedAt);
 
-      const definition = definitionOf(current.type);
-      if (input.isVisible === false && definition) {
-        assertCanHide(definition);
-      }
-      if (input.layout) {
-        if (!definition) {
-          throw new BadRequestException({
-            code: 'VALIDATION_FAILED',
-            message: 'Validation failed',
-            fieldErrors: { layout: ['Unknown block type'] },
-          });
+        const definition = definitionOf(current.type);
+        if (input.isVisible === false && definition) {
+          assertCanHide(definition);
         }
-        assertLayoutAllowed(definition, input.layout);
-      }
+        if (input.layout) {
+          if (!definition) {
+            throw new BadRequestException({
+              code: 'VALIDATION_FAILED',
+              message: 'Validation failed',
+              fieldErrors: { layout: ['Unknown block type'] },
+            });
+          }
+          assertLayoutAllowed(definition, input.layout);
+        }
 
-      const data: Prisma.PageBlockUncheckedUpdateInput = {};
-      if (input.layout) {
-        data.layout = input.layout;
-      }
-      if (input.surface) {
-        data.surface = input.surface;
-      }
-      if (input.isVisible !== undefined) {
-        data.isVisible = input.isVisible;
-      }
-      if (input.key !== undefined) {
-        data.key = input.key;
-      }
-      if (input.props !== undefined) {
-        if (!definition) {
-          throw new BadRequestException({
-            code: 'VALIDATION_FAILED',
-            message: 'Validation failed',
-            fieldErrors: { props: ['Unknown block type'] },
-          });
+        const data: Prisma.PageBlockUncheckedUpdateInput = {};
+        if (input.layout) {
+          data.layout = input.layout;
         }
-        const parsed = definition.props.safeParse(input.props);
-        if (!parsed.success) {
-          throw new BadRequestException({
-            code: 'VALIDATION_FAILED',
-            message: 'Validation failed',
-            fieldErrors: propsFieldErrors(parsed.error),
-          });
+        if (input.surface) {
+          data.surface = input.surface;
         }
-        await this.assertRefsExist(tx, definition, parsed.data);
-        data.props = parsed.data as Prisma.InputJsonValue;
-      }
+        if (input.isVisible !== undefined) {
+          data.isVisible = input.isVisible;
+        }
+        if (input.key !== undefined) {
+          data.key = input.key;
+        }
+        if (input.props !== undefined) {
+          if (!definition) {
+            throw new BadRequestException({
+              code: 'VALIDATION_FAILED',
+              message: 'Validation failed',
+              fieldErrors: { props: ['Unknown block type'] },
+            });
+          }
+          const parsed = definition.props.safeParse(input.props);
+          if (!parsed.success) {
+            throw new BadRequestException({
+              code: 'VALIDATION_FAILED',
+              message: 'Validation failed',
+              fieldErrors: propsFieldErrors(parsed.error),
+            });
+          }
+          await this.assertRefsExist(tx, definition, parsed.data);
+          data.props = parsed.data as Prisma.InputJsonValue;
+        }
 
-      const updated = await tx.pageBlock.update({
-        where: { id: current.id },
-        data,
-      });
-      await this.touchPage(tx, page.id);
-      await this.audit?.record(tx, {
-        action: 'UPDATE',
-        entityType: 'page',
-        entityId: key,
-        summary: `Updated block ${updated.key} on ${key}`,
-      });
-      return toAdminBlock(updated);
-    });
+        const updated = await tx.pageBlock.update({
+          where: { id: current.id },
+          data,
+        });
+        await this.touchPage(tx, page, key);
+        await this.audit?.record(tx, {
+          action: 'UPDATE',
+          entityType: 'page',
+          entityId: key,
+          summary: `Updated block ${updated.key} on ${key}`,
+        });
+        return toAdminBlock(updated);
+      },
+      { isolationLevel: PrismaValue.TransactionIsolationLevel.ReadCommitted },
+    );
     return result;
   }
 
   async duplicateBlock(rawKey: string, id: number): Promise<AdminBlock> {
     const key = parsePageKey(rawKey);
-    const result = await this.prisma.$transaction(async (tx) => {
-      const page = await this.requirePage(tx, key);
-      this.assertLegacyDraft(page);
-      const current = this.requireBlock(page, id);
-      const definition = definitionOf(current.type);
-      if (definition) {
-        const count = page.blocks.filter((block) => block.type === definition.type).length;
-        assertWithinLimit(definition, count);
-      }
-      const sortOrder = current.sortOrder + 1;
-      assertInsertKeepsH1First(sortOrder, page.blocks);
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        const page = await this.requirePage(tx, key);
+        this.assertLegacyDraft(page);
+        const current = this.requireBlock(page, id);
+        const definition = definitionOf(current.type);
+        if (definition) {
+          const count = page.blocks.filter((block) => block.type === definition.type).length;
+          assertWithinLimit(definition, count);
+        }
+        const sortOrder = current.sortOrder + 1;
+        assertInsertKeepsH1First(sortOrder, page.blocks);
 
-      const keyName = nextBlockKey(
-        current.type,
-        page.blocks.map((block) => block.key),
-      );
-      await tx.pageBlock.updateMany({
-        where: { pageId: page.id, sortOrder: { gte: sortOrder } },
-        data: { sortOrder: { increment: 1 } },
-      });
-      const created = await tx.pageBlock.create({
-        data: {
-          pageId: page.id,
-          type: current.type,
-          key: keyName,
-          schemaVersion: current.schemaVersion,
-          props: current.props as Prisma.InputJsonValue,
-          layout: current.layout,
-          surface: current.surface,
-          sortOrder,
-          isVisible: current.isVisible,
-        },
-      });
-      await this.touchPage(tx, page.id);
-      await this.audit?.record(tx, {
-        action: 'CREATE',
-        entityType: 'page',
-        entityId: key,
-        summary: `Duplicated block ${keyName} on ${key}`,
-      });
-      return toAdminBlock(created);
-    });
+        const keyName = nextBlockKey(
+          current.type,
+          page.blocks.map((block) => block.key),
+        );
+        await tx.pageBlock.updateMany({
+          where: { pageId: page.id, sortOrder: { gte: sortOrder } },
+          data: { sortOrder: { increment: 1 } },
+        });
+        const created = await tx.pageBlock.create({
+          data: {
+            pageId: page.id,
+            type: current.type,
+            key: keyName,
+            schemaVersion: current.schemaVersion,
+            props: current.props as Prisma.InputJsonValue,
+            layout: current.layout,
+            surface: current.surface,
+            sortOrder,
+            isVisible: current.isVisible,
+          },
+        });
+        await this.touchPage(tx, page, key);
+        await this.audit?.record(tx, {
+          action: 'CREATE',
+          entityType: 'page',
+          entityId: key,
+          summary: `Duplicated block ${keyName} on ${key}`,
+        });
+        return toAdminBlock(created);
+      },
+      { isolationLevel: PrismaValue.TransactionIsolationLevel.ReadCommitted },
+    );
     return result;
   }
 
   async deleteBlock(rawKey: string, id: number): Promise<AdminBlock> {
     const key = parsePageKey(rawKey);
-    const result = await this.prisma.$transaction(async (tx) => {
-      const page = await this.requirePage(tx, key);
-      this.assertLegacyDraft(page);
-      const current = this.requireBlock(page, id);
-      const definition = definitionOf(current.type);
-      if (definition) {
-        assertCanDelete(definition);
-      }
-      await tx.pageBlock.delete({ where: { id: current.id } });
-      await this.touchPage(tx, page.id);
-      await this.audit?.record(tx, {
-        action: 'ARCHIVE',
-        entityType: 'page',
-        entityId: key,
-        summary: `Deleted block ${current.key} on ${key}`,
-      });
-      return toAdminBlock(current);
-    });
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        const page = await this.requirePage(tx, key);
+        this.assertLegacyDraft(page);
+        const current = this.requireBlock(page, id);
+        const definition = definitionOf(current.type);
+        if (definition) {
+          assertCanDelete(definition);
+        }
+        await tx.pageBlock.delete({ where: { id: current.id } });
+        await this.touchPage(tx, page, key);
+        await this.audit?.record(tx, {
+          action: 'ARCHIVE',
+          entityType: 'page',
+          entityId: key,
+          summary: `Deleted block ${current.key} on ${key}`,
+        });
+        return toAdminBlock(current);
+      },
+      { isolationLevel: PrismaValue.TransactionIsolationLevel.ReadCommitted },
+    );
     return result;
   }
 
@@ -546,11 +578,31 @@ export class PagesService {
     return block;
   }
 
-  private async touchPage(tx: Tx, pageId: number): Promise<void> {
-    await tx.page.update({
-      where: { id: pageId },
-      data: { updatedAt: new Date() },
+  private async touchPage(
+    tx: Tx,
+    page: Awaited<ReturnType<PagesService['requirePage']>>,
+    key: PageKey,
+  ): Promise<void> {
+    if (page.draftTreeRevision === 9223372036854775807n) {
+      throw new ConflictException({ code: 'CONFLICT', message: 'Builder revision limit reached' });
+    }
+    const changed = await tx.page.updateMany({
+      where: {
+        id: page.id,
+        draftTreeRevision: page.draftTreeRevision,
+        draftTree: { equals: PrismaValue.DbNull },
+      },
+      data: { updatedAt: new Date(), draftTreeRevision: { increment: 1 } },
     });
+    if (changed.count !== 1) {
+      const current = await this.requirePage(tx, key);
+      throw new ConflictException({
+        code: 'CONFLICT',
+        message: 'Builder draft changed; reload before editing',
+        mode: current.draftTree == null ? 'legacy' : 'tree',
+        revision: current.draftTreeRevision.toString(),
+      });
+    }
   }
 
   private async assertRefsExist(

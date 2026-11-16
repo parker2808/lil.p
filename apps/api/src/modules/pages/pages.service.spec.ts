@@ -9,6 +9,55 @@ const heroProps = {
 };
 
 describe('PagesService', () => {
+  it('rolls back a legacy block delete when tree activation wins the page CAS', async () => {
+    const block = { id: 42, type: 'prose', key: 'prose', sortOrder: 1 };
+    const page = {
+      id: 1,
+      key: 'IDEAS',
+      draftTree: null as unknown,
+      draftTreeRevision: 0n,
+      blocks: [block],
+    };
+    let deleted = false;
+    const tx = {
+      page: {
+        findUnique: vi.fn(async () => ({ ...page })),
+        updateMany: vi.fn(async () => {
+          page.draftTree = { schemaVersion: 1 };
+          page.draftTreeRevision = 1n;
+          return { count: 0 };
+        }),
+      },
+      pageBlock: {
+        delete: vi.fn(async () => {
+          deleted = true;
+        }),
+      },
+    };
+    const prisma = {
+      $transaction: vi.fn(async (work: (db: typeof tx) => Promise<unknown>) => {
+        try {
+          return await work(tx);
+        } catch (error) {
+          deleted = false;
+          throw error;
+        }
+      }),
+    };
+    const audit = { record: vi.fn() };
+    const service = new PagesService(prisma as never, audit as never);
+
+    await expect(service.deleteBlock('ideas', block.id)).rejects.toMatchObject({
+      response: { code: 'CONFLICT', mode: 'tree', revision: '1' },
+    });
+    expect(tx.page.updateMany).toHaveBeenCalledWith({
+      where: expect.objectContaining({ draftTreeRevision: 0n }),
+      data: expect.objectContaining({ draftTreeRevision: { increment: 1 } }),
+    });
+    expect(deleted).toBe(false);
+    expect(audit.record).not.toHaveBeenCalled();
+  });
+
   it('rejects duplicating a limit-one block before any write', async () => {
     const block = { id: 42, type: 'hero', key: 'hero', sortOrder: 0 };
     const tx = {
