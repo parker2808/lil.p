@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- Stage A #210 sync with main `6825ee58` (2026-11-16): retain the freeze worksheet and C1 tarball rehearsal history; the runtime guard and probe kit remain unchanged. Production drain, migration and deploy remain HOLD.
+
 - Stage A #210 (2026-11-16 12:48 ICT): coordinator's read-only Render connector saw direct API health 200, a configured single instance and the earlier live deploy; no authenticated before/after instance drain evidence or freeze probes. The worksheet now uses coordinator-run Render GET API requests rather than a missing local CLI and calls out that the API build filter can auto-deploy on #210 merge. Stage A HOLD.
 
 - Stage A #210 sync with main `26fca2d3` (2026-11-16): retain the C1 dependency-rights audit alongside the release-owner worksheet; freeze behavior and the 33-probe kit remain unchanged. Production drain, probes, migration and deploy remain HOLD pending separate authorization.
@@ -66,6 +68,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - Stage A #210 main reconciliation (2026-11-15): preserved the C1 root-export guard, #214 rollout probe and Stage A histories after main `59677dfa`; re-audited all ten main page/SEO/block/version write routes and four D2 #199 `db064d88` builder writes against the non-read `/api/admin/pages` guard. No mutation route escapes that prefix; live drain and migration remain blocked pending separate authorization.
 - Pre-D2 Stage A page-write freeze (2026-11-15): a separate API branch blocks all admin-page mutations in production before service access, with unchanged public/read routes and an admin-only sanitized instance identity. The reported forward-only approval sets the safety policy, not separate authorization for #210 deploy/probes/drain → #199 migration/verification → D2-aware reopen/verification → #202; confirm each production action's grant and evidence before proceeding. Render auto-deploy stays on as configured and other API-bearing merges to `main` pause until reopen; no Render production drain proof or D2 migration is included here. See `docs/specs/2026-11-15-cms-pre-d2-write-freeze.md`.
 - Stage A follow-up: boot the actual AppModule with stubbed DB/page services to catch removal of its write-freeze middleware; bespoke route tests alone cannot prove the production registration. Live ingress and old-instance drain remain unverified.
+- 2026-11-16 C1 tarball rehearsal at #208 `4227e3e`: standalone core and all four consumer builds passed, but the fixture unit gate used a monorepo-relative `packages/cms-core/dist` path and failed when the package came from its tarball. Resolving through installed `./react` retained both client/server directive assertions and passed 9/9 fixture tests in the disposable tarball consumer (Node 22). Rerun all C1 checks on final main after the stack lands; no repository created.
 - 2026-11-16 C1 dependency-rights audit (docs only): #208 `539c4f1c` filtered package has no runtime dependencies; frozen peer installs React/React DOM 19.3.1 and Zod 4.6.7 carry MIT license files. No observed peer-license conflict with a private `UNLICENSED` core; ownership/notices, final-main history and consumer/hosted installer evidence remain separate gates. The extraction runbook records exact final-main steps. No repository, package, credential or deployment created.
 
 - 2026-11-16: The shared MarkdownEditor preview callback uses an independent 500ms timer per editor. #260's unit run `43767645840` observed only two callbacks when the test waited for the second body; a focused test fix waits for all three rendered bodies and all three callback invocations without relaxing the count. The fix is based on `main`, with no V06 runtime changes; exact-head CI remains the merge gate.
@@ -281,6 +284,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Synced Stage A #210 with main `6825ee58` after #273, preserving the freeze worksheet and C1 tarball fixture history. No freeze runtime, probes, or production action changed.
+
 - 2026-11-16: Corrected Stage A rollout docs to distinguish the reported forward-only policy approval from separate production authorization: keep Render auto-deploy on as configured, keep other API-bearing merges off `main` until reopen, and authorize each #210 → #199 → reopen → #202 action only after its preceding freeze/drain/migration/health gate passes. No runtime or production action.
 
 - 2026-11-16: Replaced unavailable Render CLI inventory examples with coordinator-run read-only Render API requests in Stage A worksheet; retained privately approved origin for post-merge probes and no-production-write gate. No runtime change.
@@ -301,6 +306,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-15: Reconciled Stage A page-write freeze with main and documented current/D2 mutation-route coverage without changing guard behavior or running production migrations.
 - 2026-11-15: Added real-AppModule HTTP regression for the pre-D2 page write freeze, with stubbed services and no DB access; no production rollout or migration.
 - 2026-11-15: Prepared the production-default pre-D2 admin-page write freeze, future-path/override HTTP regressions and nonsecret instance identity; documented the no-deploy old-instance drain gate. No schema, golden, production DB or deployment change.
+- 2026-11-16: Resolve the neutral fixture's client/server directive checks against the installed core package instead of assuming a sibling workspace build; retain both ESM and CJS assertions. No package/runtime behavior or export-map change.
 - 2026-11-16: Recorded the scoped C1 peer-license audit and final-main consumer/hosted checklist; regenerated Graphify for this docs-only change. No package/runtime/golden change or release authorization.
 
 - 2026-11-16: Make the three-editor Write/Preview unit test await every debounced preview and retain its exact three-call assertion; no editor behavior, API, or threshold changes.
