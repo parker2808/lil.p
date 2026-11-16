@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A green source-branch all-host image manifest is not combined-head evidence; carry its reviewed source/tested-merge provenance into the verification cut and recheck exact-head shard artifacts before changing a matrix row.
+
 - 2026-11-16: A props hash and registry count do not prove that each host painted: require viewport-intersecting bounds and visible text inside the host, crop the actual host for the PNG, and provide real disposable media for data-dependent CV before claiming all-20 visual coverage.
 - 2026-11-16: An all-host editor-origin draft/render gate needs an immutable version snapshot and a manifest tying each locale/theme/viewport public-preview image to the same saved draft revision; post-publish route parity alone cannot establish this provenance.
 - 2026-11-16: On a docs-only base sync, preserve both branches' release caveats and historical lessons, regenerate the generated Graphify report from the combined tree, and gate the new exact head rather than reusing earlier branch CI.
