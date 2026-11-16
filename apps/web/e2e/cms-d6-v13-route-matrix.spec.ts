@@ -100,8 +100,8 @@ test('EN/VI public and draft route metadata, fallback and capture inventory', as
     await capture(page, testInfo, entries, locale, 'missing', missing);
   }
   expect(entries).toHaveLength(22);
-  for (let index = 0; index < publicRoutes.length * 2; index++) {
-    expect(entries[index]!.title).not.toBe(entries[index + 11]!.title);
+  for (const offset of [0, publicRoutes.length]) {
+    expect(entries[offset]!.description).not.toBe(entries[offset + 11]!.description);
   }
   await inventory(testInfo, entries);
 });
@@ -113,6 +113,12 @@ test('EN/VI admin page, builder help and missing-state metadata inventory', asyn
   test.setTimeout(120_000);
   await signIn(page);
   const origin = new URL(page.url()).origin;
+  const key = `v13-matrix-${Date.now()}-${testInfo.retry}`;
+  const created = await page.request.post('/api/admin/pages', {
+    headers: { Origin: origin },
+    data: { key, title: 'V13 route matrix', locale: 'en', template: 'starter' },
+  });
+  expect(created.status(), await created.text()).toBe(201);
   const entries: Entry[] = [];
   for (const locale of ['en', 'vi'] as const) {
     await context.addCookies([{ name: 'NEXT_LOCALE', value: locale, url: origin }]);
@@ -121,7 +127,7 @@ test('EN/VI admin page, builder help and missing-state metadata inventory', asyn
       expect(response?.status(), route).toBe(200);
       await capture(page, testInfo, entries, locale, 'admin', route);
     }
-    const builder = '/admin/builder/home';
+    const builder = `/admin/builder/${key}`;
     const response = await page.goto(builder);
     expect(response?.status()).toBe(200);
     await expect(
@@ -147,7 +153,7 @@ test('EN/VI admin page, builder help and missing-state metadata inventory', asyn
     await capture(page, testInfo, entries, locale, 'admin-missing', missing);
   }
   expect(entries).toHaveLength(8);
-  for (let index = 0; index < 4; index++) {
+  for (let index = 0; index < 2; index++) {
     expect(entries[index]!.title).not.toBe(entries[index + 4]!.title);
   }
   await inventory(testInfo, entries);

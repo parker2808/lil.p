@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: The demo site intentionally shares an EN/VI SEO title, so verify localized homepage descriptions rather than inventing title differences. A guarded builder can paint under HTTP 404 when the E2E route flag is set only at runtime; set it for the shared E2E build too, then require HTTP 200 on a created custom-page builder.
+
 - 2026-11-16: Public/admin 404 and admin pages need not emit a description tag; an unconditional Playwright `getAttribute` waits until timeout. Inventory the absent tag as null, but continue requiring a nonempty description on every tested public/preview content route.
 
 - 2026-11-16: A localized metadata subset can pass while another route/state lacks reviewable evidence; attach a route/locale/state inventory beside the actual browser screenshots and review it against the existing historical, invalid-preview and builder suites before scoring V13.
