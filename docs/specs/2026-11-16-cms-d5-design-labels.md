@@ -1,0 +1,7 @@
+# D5 builder component labels: design review and correction
+
+Review source: D5 head `24fc51b296ff188a259695c18dd4608187121479`, CI `43759739138`, Playwright report provenance `ba9874503e55fb41fd0176cba7dc0bbbf81bea56`. The D5 manifest contains 197 screenshots and 24 EN/VI × light/dark × neutral/lil.p × 390/768/1440 tuples, with zero axe violations and quantitative target/focus contrast checks. This is scoped browser evidence, not manual screen-reader acceptance.
+
+P2: `vi-light-neutral-768-properties.png` and `vi-dark-lilp-390-field-error.png` show the English type name “Heading” inside otherwise Vietnamese Properties; previously the all-20 host browser test allowed the raw type as an alternative to its localized name. The same fallback applied to host canvas/Layers labels. Use the existing `BLOCK_EDITOR_META` translation keys for host names, preserve the underlying component type, and use the existing starter field labels for starter components. Require exact localized names in browser/unit tests.
+
+The existing D5 gallery covers empty, saved, field error, keyboard focus, saving and conflict states, with palette/Layers/Properties sheets at compact widths. It does not show publish/restore dialogs: D5 tree publishing is deliberately disabled. The refreshed D2+D5+D6 combined-head captures and CI must be reviewed separately for those dialogs and same-revision public/preview evidence. Manual VoiceOver/NVDA review remains open.

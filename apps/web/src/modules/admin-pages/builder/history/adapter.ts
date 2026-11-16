@@ -72,6 +72,14 @@ function compositionOperation(
       index: command.destination.index,
     };
   if (command.type === 'remove') return { kind: 'delete', nodeId: command.id };
+  if (command.type === 'duplicate') {
+    let index = 0;
+    return {
+      kind: 'duplicate',
+      nodeId: command.id,
+      allocateId: () => command.ids[index++]!,
+    };
+  }
   const item = outline(history.document).find((entry) => entry.id === command.id);
   if (!item?.parentId) return undefined;
   const parent = findNode(history.document, item.parentId);

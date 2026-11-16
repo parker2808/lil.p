@@ -1,7 +1,5 @@
 # CMS core
 
-The package has no root `"."` export; import documented subpaths instead.
-
 `@parker2808/cms-core` exports independently built ESM/CJS subpaths:
 `./contracts`, `./engine`, `./react`, and `./react/server`. B4 provides generic Zod
 page/block/locale/snapshot contracts, `defineBlock`, `createRegistry`, and the
@@ -41,6 +39,7 @@ The semantic `heading` renderer is core-owned: do not pass `components.heading`.
 D5 adds `applyTreeOperation`, `createTreeHistory`/`commitTreeHistory`/`undoTreeHistory`/`redoTreeHistory` and `DraftAutosave` to `./tree`. Supply the host's explicit D1 component registry for edits, history and autosave; core never imports host definitions. Autosave uses decimal-string D2 revisions, keeps local edits through 409 and uncertain saves, and treats a legacy-mode `tree: null` as blocked review rather than an empty builder. Remote reload requires explicit `discardLocalEdits: true`. D6's 20-definition gate is described in [the D6 spec](../../docs/specs/2026-11-11-cms-d6-route-parity.md); see also [D5 core logic](../../docs/specs/2026-11-11-cms-d5-core-logic.md).
 
 D3 adds opt-in `renderTree({ input, createElement, labels, registry?, components?, resolveMedia? })` to `./react/server`. Both draft preview and public SSR use the same bounded draft reader; hosts separately call `validateTreeForPublish` when publishing. Invalid trees produce a localized typed fallback without partial output, while thrown host renderers return `RENDER_FAILED`. Core owns semantic headings: `components.heading` is rejected to prevent duplicate H1 elements. Heading level changes across breakpoints are allowed while editing drafts, but publishing or SSR rejects them with `HEADING_RULE` because each node has one semantic heading tag. Responsive rows and columns are covered by the `CMS_TREE_BROWSER=1` browser matrix; legacy block rendering remains the default until D2 dispatch and D6 route parity. See the [D3 spec](../../docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md).
+D3 adds opt-in `renderTree({ input, createElement, labels, registry?, components?, resolveMedia? })` to `./react/server`. Draft preview and public SSR share the bounded draft reader; hosts separately call `validateTreeForPublish`. Invalid trees produce a typed localized fallback, while thrown host renderers return `RENDER_FAILED`. Core owns semantic headings and rejects `components.heading`; publish and SSR reject heading-level changes across breakpoints with `HEADING_RULE`. Legacy rendering remains the default until D2/D6 route integration. See the [D3 spec](../../docs/specs/2026-11-11-cms-d3-shared-ssr-renderer.md).
 
 Build and check the browser gzip budgets with `pnpm build` from this package (or
 `pnpm --filter @parker2808/cms-core build` from the monorepo).

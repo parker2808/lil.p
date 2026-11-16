@@ -1,5 +1,7 @@
 import { adminPageSchema, pageKeySchema, qk } from '@portfolio/contracts';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+import { getTranslations } from 'next-intl/server';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -46,6 +48,9 @@ export default async function AdminPageEditorPage({
 
 export async function generateMetadata({ params }: { params: Promise<{ key: string }> }) {
   const { key } = await params;
-  const name = key.charAt(0).toUpperCase() + key.slice(1);
-  return { title: `Edit ${name} page` };
+  const locale = (await cookies()).get('NEXT_LOCALE')?.value === 'vi' ? 'vi' : 'en';
+  const t = await getTranslations({ locale, namespace: 'admin.pages' });
+  const name =
+    pageKeySchema.safeParse(key).success && t.has(`names.${key}`) ? t(`names.${key}`) : key;
+  return { title: t('editPageTitle', { name }) };
 }
