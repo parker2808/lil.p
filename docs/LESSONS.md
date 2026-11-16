@@ -140,6 +140,9 @@
 - 2026-11-15: Restacking D5 UI on a newer core/main must carry both the D2 revision-aware restore and the pure engine's lossless legacy snapshot reader; update legacy restore test transactions to model the conditional revision claim, and verify the host Docker build order and CI shard lists together.
 
 - 2026-11-15: Restacking pure D5 tree state on the integrated D base requires preserving host-registry validation and the typed legacy restore/reload protections alongside main's independent fixture and package-local gates.
+
+- 2026-11-16: Audit an extracted package's complete peer list against the frozen installed manifests and license files, not just its own `UNLICENSED` field; an MIT-compatible private tarball still needs final-head notice, history and hosted-distribution review.
+
 - 2026-11-16: When several editors schedule independent preview timers, waiting for one rendered preview does not prove the others have completed; await all three rendered bodies and retain the exact callback-count assertion.
 
 - 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
@@ -641,3 +644,6 @@
 - 2026-11-16: When reconciling D5 host Properties with D6 translated labels, retain both data-preserving invalid-input behavior and exact accessible names; an optional localized heading with empty required English text must remain local until the user provides valid content, not auto-save fabricated defaults.
 - 2026-11-16: Independently streamed SSR may assign different numeric React Suspense `<template id="B:N">` IDs without changing host content; normalize only those request-local IDs while retaining a full markup comparison. An axe-only JS context must match the no-script host's computed palette and wait for color transitions before enforcing unwaived WCAG AA, especially in dark OS mode.
 - 2026-11-16: A screenshot of `main` cannot prove a hidden or empty component painted; seed the missing public dependency and assert a visible, localized link to the exact disposable media before capturing the component itself, then restore profile data in `finally`.
+
+- 2026-11-16: A four-consumer tarball rehearsal can pass builds but fail a fixture test that inspects `../../../packages/cms-core/dist`; resolve package artifacts via the installed subpath export so the same directive assertions cover workspace and tarball installs.
+- 2026-11-16: A landing branch that contains D5/D6 but not D2 must preserve both branches' docs while syncing current main; a draft PR and green CI do not authorize merging it before the separately approved freeze/migration sequence.

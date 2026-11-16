@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #274 landing preparation: #202 merged into D-base `d3cc08f7`; sync main `6825ee58` without importing unmerged #199. Draft landing stays blocked until #210/#199 are separately authorized, D2 is integrated, and the final tree/CI/review are verified.
+
 - 2026-11-16 V13 final pre-deploy evidence: extend the existing EN/VI route matrix to the admin index and all five built-in page editors with exact localized titles, visible actions and capture inventory. Complementary historical metadata and editor empty/error/conflict gates already exist; exact-head CI and independent raw-image review are pending. Manual screen-reader inspection belongs to V16 and production parity to the post-deploy worksheet; do not infer either from this gate.
 
 - 2026-11-16 V13 route/state matrix: registered EN/VI public/draft five-route metadata plus localized public/admin 404 and admin editor/builder captures with a 30-image CI inventory. Runs `43796922246` and `43799733836` exposed missing descriptions and identical seeded EN/VI home titles; `43803678290` found the builder proxy's missing allowlist entry. Exact-head `43805811458` passed 17/17, but independent review of artifact `14199056215` found a notes skeleton capture and overlapping builder action labels. Wait for real notes content and wrap the builder actions; gate both with browser assertions. After merging D6 `1f8fcf09`, new five-shard CI and raw-image review remain required. Manual accessibility, production parity and exhaustive conflict/error states remain GAP. See `docs/specs/2026-11-16-cms-d6-v13-route-matrix.md`.
@@ -72,6 +74,11 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-16 D5→D6 integration: preserve D5 invalid/raw property drafts, blur-separated undo and localized schema labels alongside D6 version publish/restore and component registry. The 95 focused builder unit tests pass locally; prior #202 run `43776914010` failed only `/vi` mobile Lighthouse TBT (307/325ms versus 300ms), not a combined-head pass. Exact-head API and five web shards plus independent review remain required; V03/V14 and deploy signoff remain separate.
 - 2026-11-16 V16 D6 version-dialog gate: register EN/VI × light/dark real-API keyboard publish and Restore confirmation tests (trap, Escape/Cancel/confirm return, ARIA, polite status, unwaived axe). CI `43769180422` found the History sheet missing `aria-modal`; CI `43770356436` found focus was not returned after dismissing the controlled Restore alertdialog. Scope modal semantics and explicit nested-dialog focus return, then rerun. Publish has no confirmation dialog in D6; manual VoiceOver/NVDA and public-route V16 remain GAP even if CI passes. See `docs/specs/2026-11-16-cms-d6-v16-version-dialog.md`.
 - D5 V16 automated follow-up checks EN/VI keyboard trap/return for the delete dialog and compact Properties sheet, live deletion/local-draft status, and the disabled Publish reason. D5 has no publish/restore-version dialog; its integrated D6 dialog capture/a11y review and manual spoken VoiceOver/NVDA check remain GAP.
+
+- 2026-11-16 C1 tarball rehearsal at #208 `4227e3e`: standalone core and all four consumer builds passed, but the fixture unit gate used a monorepo-relative `packages/cms-core/dist` path and failed when the package came from its tarball. Resolving through installed `./react` retained both client/server directive assertions and passed 9/9 fixture tests in the disposable tarball consumer (Node 22). Rerun all C1 checks on final main after the stack lands; no repository created.
+
+- 2026-11-16 C1 dependency-rights audit (docs only): #208 `539c4f1c` filtered package has no runtime dependencies; frozen peer installs React/React DOM 19.3.1 and Zod 4.6.7 carry MIT license files. No observed peer-license conflict with a private `UNLICENSED` core; ownership/notices, final-main history and consumer/hosted installer evidence remain separate gates. The extraction runbook records exact final-main steps. No repository, package, credential or deployment created.
+
 - 2026-11-16: The shared MarkdownEditor preview callback uses an independent 500ms timer per editor. #260's unit run `43767645840` observed only two callbacks when the test waited for the second body; a focused test fix waits for all three rendered bodies and all three callback invocations without relaxing the count. The fix is based on `main`, with no V06 runtime changes; exact-head CI remains the merge gate.
 
 - C1 retained-history identity review (2026-11-15): the local #208 `4df25c52` filtered rehearsal has 86 commits across two anonymized author/committer pairs. At 20:46 ICT, the coordinator under Parker approval `t250u` and delegated rule `12:26` decided to keep both reviewed identities unchanged: no rewrite or `.mailmap`, preserving provenance in Parker's own private destination. Re-audit the final integrated tree and stop on any new pair before a private push; see the C1 runbook.
@@ -428,6 +435,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Prepare draft #274 landing after #202 merged into D-base, preserving D5/D6 and main's C1 fixture history. #199 D2 is not an ancestor; sync it only after the authorized #210 → #199 main sequence. No production operation or landing approval.
+
 - 2026-11-16: Complete V13 pre-deploy admin page route/locale inventory for the index and five built-in editors, keeping existing public/preview, builder and missing assertions and separate editor-state and historical-preview suites intact.
 
 - 2026-11-16: Merge D6 V05 all-20 evidence into the V13 branch, retain both histories, and repair the V13 notes screenshot timing and builder action overflow found by independent raw-image review; require new exact-head CI and image review.
@@ -613,6 +622,11 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 - 2026-11-15: Prepared D6 scratch integration on the ordered main → D2 → D5 UI → D6 stack, retaining main's routing and D2/D5 behaviors while strengthening the all-20 real API/browser gate. The public-builder-byte scan excludes only the gated `r3-loading-test` fixture that imports an admin-only keyboard specimen; real public custom-page manifests stay mandatory. No golden-contract changes, production deployment or PR branch update.
 - 2026-11-11: Integrated D5 Properties, history shortcuts and draft autosave into the gated D4 host, with explicit custom-page activation and local recovery. No public page, legacy editor, tree publish, production DB, migration or golden behavior changed.
+
+- 2026-11-16: Resolve the neutral fixture's client/server directive checks against the installed core package instead of assuming a sibling workspace build; retain both ESM and CJS assertions. No package/runtime behavior or export-map change.
+
+- 2026-11-16: Recorded the scoped C1 peer-license audit and final-main consumer/hosted checklist; regenerated Graphify for this docs-only change. No package/runtime/golden change or release authorization.
+
 - 2026-11-16: Make the three-editor Write/Preview unit test await every debounced preview and retain its exact three-call assertion; no editor behavior, API, or threshold changes.
 
 - 2026-11-15: Recorded the coordinator's 20:46 ICT C1 decision to retain the two reviewed identity pairs without a rewrite or `.mailmap`; final-history audit remains required. Docs only, no private push.
