@@ -1,11 +1,19 @@
 # Lessons
 
+- 2026-11-16: Separate SSR requests can allocate different React Suspense template IDs despite identical host markup; normalize just those per-request IDs, and compare settled dark CTA colors with the no-JS capture before unwaived axe rather than testing a transient theme transition.
 - 2026-11-16: Axe cannot inject into a Playwright context created with `javaScriptEnabled: false`; retain no-JS host paint/capture there, and audit the identical SSR main in a separate page whose scripts are disabled only for navigation and enabled for axe.
 - 2026-11-16: Switching a stalled Playwright full-page capture to CDP did not by itself unblock the no-JS all-20 matrix; log font readiness, CDP attachment, layout size, screenshot and crop boundaries separately before choosing another capture path.
 
 - 2026-11-16: A no-JS full-page Playwright screenshot can stall before producing any artifact even after successful SSR assertions; capture the measured full content rectangle via Chromium protocol and verify PNG dimensions before reviewing any visual gate.
 
 - 2026-11-16: A no-JS all-host visual test can consume its entire four-minute case and then a shard's 20-minute budget on retries; split by viewport and balance registered specs across all shards, keeping each public/preview pair, raw screenshots and unwaived axe intact.
+- 2026-11-16: Next SSR can serialize the complete locale catalog in its RSC scripts, including preview-only notices on a valid public page. Assert notice isolation inside parsed server-rendered `.public-site main#content` and hydrated visible DOM, not across the entire HTML response; keep raw diagnostic exclusion across the full response.
+
+- 2026-11-16: A starter page's empty prose fails the real publish gate even when SEO exists; populate visible EN/VI copy before publishing the snapshot that an invalid-draft preview test must preserve.
+
+- 2026-11-16: When a D6 restack conflicts only in narrative docs and a generated graph report, retain both review histories while keeping the report's prior source commit explicit; old green source CI cannot score the new merge head.
+
+- 2026-11-16: A tree-backed page without explicit SEO must derive title from the same validated, locale-resolved H1 rendered in public and preview; never show raw server issue text in a translated invalid-block notice or reuse the empty-page label.
 - 2026-11-16: When merging D5 documentation into D6, preserve the historical D5 publishing limitation only in its scoped section; the current integrated builder description must reflect the D6 admin publish, version history and draft-only restore controls.
 
 - 2026-11-16: When a gallery PR restacks over new D6 no-JS and revision tests, preserve both histories and the narrow hydrated-palette evidence claim; an AST-complete Graphify attempt that stalls before report generation is not a fresh provenance claim.
@@ -598,5 +606,7 @@
 - 2026-11-16: Test actual keyboard Tab/Shift+Tab boundaries and focus return in existing dialogs, but never claim D5 publish/restore-version dialogs or manual spoken screen-reader acceptance when that UI exists only on the integrated D6 branch.
 - 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
 - 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
+- 2026-11-16: For invalid-preview evidence, seed a corrupted draft row only in a guarded disposable database after publishing a valid snapshot; compare real preview API, SSR/hydrated browser and unchanged public routes instead of trusting mocked render tests.
+- 2026-11-16: A legacy CMS page sits inside SiteShell `main#content`, not the tree-only `main.cms-core`; parse the actual semantic main from the raw SSR response before asserting preview notice isolation, rather than silently accepting an absent node.
 - 2026-11-16: When reconciling D5 host Properties with D6 translated labels, retain both data-preserving invalid-input behavior and exact accessible names; an optional localized heading with empty required English text must remain local until the user provides valid content, not auto-save fabricated defaults.
 - 2026-11-16: Independently streamed SSR may assign different numeric React Suspense `<template id="B:N">` IDs without changing host content; normalize only those request-local IDs while retaining a full markup comparison. An axe-only JS context must match the no-script host's computed palette and wait for color transitions before enforcing unwaived WCAG AA, especially in dark OS mode.

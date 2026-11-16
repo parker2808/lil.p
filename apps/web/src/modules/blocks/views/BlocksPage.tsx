@@ -134,7 +134,13 @@ export async function BlocksPage({
       invalidBlocks={'invalidBlocks' in preview ? preview.invalidBlocks : []}
       draft={draft.isEnabled}
       context={{ locale, searchParams }}
-      labels={{ error: t('error'), retry: t('retry'), empty: t('empty'), unknown: t('empty') }}
+      labels={{
+        error: t('error'),
+        retry: t('retry'),
+        empty: t('empty'),
+        unknown: t('unknownBlock'),
+        unknownHelp: t('unknownBlockHelp'),
+      }}
       registry={BLOCK_RENDERERS}
     />
   );
