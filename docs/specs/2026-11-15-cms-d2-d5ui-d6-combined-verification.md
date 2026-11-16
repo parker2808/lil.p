@@ -1,6 +1,6 @@
 # D2 → D5 UI → D6 combined verification (DO NOT MERGE)
 
-**Latest scored cut (2026-11-16):** #208 code `dc505019`, run `43749231048` green API + five web shards; docs head `53e5a27c` run `43750653955` succeeded. The matrix at the end scores 15/28 class-A PASS, 13/28 GAP and 3/3 class-B DEFERRED-post-deploy. Subsequent verification code `44c72c17` contains D2 `26ace408`, D5 `24fc51b2` and D6 `59af4538`; run `43760845210` was cancelled after a docs push, so it does **not** establish five-shard acceptance. The next normal merge adds D6 `1b2037d2` (#254 reviewed keyboard publish) and requires fresh exact-head CI; source #202's 17/17 checks are not combined proof. The integration-only historical metadata fixture reads the persisted revision after legacy edits instead of assuming zero; prior `b3f7c626` run `43756398220` failed W3 with the correct CAS 409. J07 no-JS all-20 source #249 `a6b21162`/`43755891578` has scoped ACCEPT; V06 still lacks all-host breakpoint-override/manual signoff. V13 D5 #257 `76ff4939`/`43758340508` covers localized SSR/admin validation only; V13 all-route/state and V05 same-revision editor→public→preview remain GAP. V12 pre-deploy log safety has scoped combined API review, while per-instance Render logs remain post-deploy. V16's PASS is an automated gate with manual SR limitations, not full WCAG signoff. #208 is DO NOT MERGE.
+**Historical scored cut (2026-11-16):** #208 code `dc505019`, run `43749231048` green API + five web shards; docs head `53e5a27c` run `43750653955` succeeded. The matrix at the end scores 15/28 class-A PASS, 13/28 GAP and 3/3 class-B DEFERRED-post-deploy. Subsequent verification code `44c72c17` contains D2 `26ace408`, D5 `24fc51b2` and D6 `59af4538`; run `43760845210` was cancelled after a docs push, so it does **not** establish five-shard acceptance. The next normal merge adds D6 `1b2037d2` (#254 reviewed keyboard publish) and requires fresh exact-head CI; source #202's 17/17 checks are not combined proof. The integration-only historical metadata fixture reads the persisted revision after legacy edits instead of assuming zero; prior `b3f7c626` run `43756398220` failed W3 with the correct CAS 409. J07 no-JS all-20 source #249 `a6b21162`/`43755891578` has scoped ACCEPT; V06 still lacks all-host breakpoint-override/manual signoff. V13 D5 #257 `76ff4939`/`43758340508` covers localized SSR/admin validation only; V13 all-route/state and V05 same-revision editor→public→preview remain GAP. V12 pre-deploy log safety has scoped combined API review, while per-instance Render logs remain post-deploy. V16's PASS is an automated gate with manual SR limitations, not full WCAG signoff. #208 is DO NOT MERGE.
 
 ## 2026-11-15 exact-head integration cut — reviewed CI checkpoint
 
@@ -397,3 +397,23 @@ Normal merges add #263 EN/VI D5 delete/compact-Properties dialog keyboard and li
 ### Current integration failure — `5936f75d` / `43772762149` (2026-11-16 ICT)
 
 D2 `26ace408`, D5 `f8a53d2c` and D6 `26662811` are merged only on verification branch #208. Exact-head API, unit, build and W1–W4 passed; W5 failed at `cms-d6-v05-revision-chain.spec.ts:150` on both attempts because post-reload/mobile Properties expected `Title (EN)` after D5 renamed the accessible field to `Title · English`. The adjacent scroll-to-title locator also still used the parenthesized label. Correct both locators to the localized labels without modifying revision, immutable snapshot or public/version-preview assertions. The dependent aggregate web job also failed. This run is **not** combined green; no matrix row is promoted until a fresh exact-head API + W1–W5 run and review. #208 DO NOT MERGE; Stage A HOLD.
+
+### Latest scored cut — `4425657d` / `43790500467` (2026-11-16 ICT)
+
+The code cut includes D2 `aeb3c2d` (not later D2 `2c4bf185`), D5 `c6ddcbf` and D6 `bebe5656` (not later D6 `b5f78c30`). API, unit, build and W1–W5 passed, with tested merge `9a683a928c8a7422891cd02c3d749ee5c7e6f254`. SHA-matched artifacts: Playwright `14192902736`, W1–W5 blobs `14192152124`/`14192885984`/`14192421333`/`14192990799`/`14192377655`, API inventory `14192496122`, unit inventory `14192032082`. The row-by-row job/artifact provenance, scoped reasons and remaining owners are in #208 comment `6905640320`. This supersedes the historical score above **only for this exact head**: 16/28 class-A PASS, 12/28 GAP, 3/3 class-B DEFERRED-post-deploy. #208 must not merge; Stage A HOLD.
+
+| Row | Class | Score                | Row | Class | Score            | Row | Class | Score                |
+| --- | ----- | -------------------- | --- | ----- | ---------------- | --- | ----- | -------------------- |
+| J01 | A     | PASS                 | J02 | A     | PASS             | J03 | A     | PASS                 |
+| J04 | A     | PASS                 | J05 | A     | PASS             | J06 | A     | PASS                 |
+| J07 | A     | GAP                  | J08 | A     | PASS             | J09 | B     | DEFERRED-post-deploy |
+| V01 | A     | PASS                 | V02 | A     | PASS (automated) | V03 | A     | GAP                  |
+| V04 | A     | PASS                 | V05 | A     | GAP              | V06 | A     | GAP                  |
+| V07 | A     | PASS                 | V08 | A     | PASS             | V09 | A     | GAP                  |
+| V10 | A     | GAP                  | V11 | A     | PASS             | V12 | A     | GAP                  |
+| V13 | A     | GAP                  | V14 | A     | GAP              | V15 | A     | PASS                 |
+| V16 | A     | PASS (automated)     | V17 | A     | GAP              | V18 | B     | DEFERRED-post-deploy |
+| V19 | B     | DEFERRED-post-deploy | V20 | A     | GAP              | V21 | A     | GAP                  |
+| V22 | A     | PASS                 | —   | —     | —                | —   | —     | —                    |
+
+V16 manual spoken VoiceOver/NVDA is a documented limitation, not a manual acceptance claim. J07/V12 source subsets are not promoted to full-row PASS. The successor normal-merges D2 `2c4bf185` and D6 `b5f78c30` into #208; its combined CI, raw-artifact review and any changed row score remain **pending**, and unmerged #264 is not part of this scored cut.
