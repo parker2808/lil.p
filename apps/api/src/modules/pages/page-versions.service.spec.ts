@@ -141,6 +141,7 @@ describe('PageVersionsService', () => {
     expect(prisma.pageBlock.deleteMany).not.toHaveBeenCalled();
     expect(prisma.pageBlock.createMany).not.toHaveBeenCalled();
     expect(prisma.page.update).not.toHaveBeenCalled();
+    expect(prisma.page.updateMany).not.toHaveBeenCalled();
     expect(audit.record).not.toHaveBeenCalled();
   });
 
