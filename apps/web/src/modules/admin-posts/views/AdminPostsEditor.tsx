@@ -5,7 +5,7 @@ import { Alert } from '@portfolio/ui/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@portfolio/ui/components/ui/tabs';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { z } from 'zod';
 
@@ -73,6 +73,7 @@ export function AdminPostsEditor({ postId }: { postId: number | null }) {
 
 function PostEditorForm({ initial }: { initial: PostFormValues }) {
   const t = useTranslations('admin.posts.editor');
+  const uiLocale = useLocale() === 'vi' ? 'vi' : 'en';
   const editorT = useTranslations('admin.editor');
   const contentT = useTranslations('content');
   const back = useAdminBack('posts');
@@ -156,7 +157,7 @@ function PostEditorForm({ initial }: { initial: PostFormValues }) {
         router.replace(`/admin/posts/${created.id}`);
       } catch (error) {
         if (error instanceof ApiError) {
-          setFieldErrors(mapFieldErrors(error));
+          setFieldErrors(mapFieldErrors(error, uiLocale));
         }
       }
       return;
@@ -236,7 +237,7 @@ function PostEditorForm({ initial }: { initial: PostFormValues }) {
                     setBaseline(JSON.stringify(toPostCreateInput(postToForm(result))));
                   } catch (error) {
                     if (error instanceof ApiError) {
-                      setFieldErrors(mapFieldErrors(error));
+                      setFieldErrors(mapFieldErrors(error, uiLocale));
                     }
                   }
                 });

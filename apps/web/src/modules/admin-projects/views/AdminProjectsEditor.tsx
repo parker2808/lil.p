@@ -10,7 +10,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@portfolio/ui/components/ui/tabs';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useMemo, useState } from 'react';
 import { z } from 'zod';
 
@@ -81,6 +81,7 @@ export function AdminProjectsEditor({ projectId }: { projectId: number | null })
 
 function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
   const t = useTranslations('admin.projects.editor');
+  const uiLocale = useLocale() === 'vi' ? 'vi' : 'en';
   const statusT = useTranslations('admin.projects.status');
   const editorT = useTranslations('admin.editor');
   const contentT = useTranslations('content');
@@ -180,7 +181,7 @@ function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
         router.replace(`/admin/projects/${created.id}`);
       } catch (error) {
         if (error instanceof ApiError) {
-          setFieldErrors(mapFieldErrors(error));
+          setFieldErrors(mapFieldErrors(error, uiLocale));
         }
       }
       return;
@@ -249,7 +250,7 @@ function ProjectEditorForm({ initial }: { initial: ProjectFormValues }) {
                     setBaseline(JSON.stringify(toCreateInput(projectToForm(result))));
                   } catch (error) {
                     if (error instanceof ApiError) {
-                      setFieldErrors(mapFieldErrors(error));
+                      setFieldErrors(mapFieldErrors(error, uiLocale));
                     }
                   }
                 });

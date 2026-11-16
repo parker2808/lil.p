@@ -111,9 +111,12 @@ export function BlockInspector({
   );
 }
 
-export function inspectorFieldErrors(error: unknown): Record<string, string> {
+export function inspectorFieldErrors(
+  error: unknown,
+  locale: 'en' | 'vi' = 'en',
+): Record<string, string> {
   if (error instanceof ApiError) {
-    return mapFieldErrors(error);
+    return mapFieldErrors(error, locale);
   }
   return {};
 }
