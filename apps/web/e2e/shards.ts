@@ -34,6 +34,7 @@ export const SPECS = [
   'admin-vi-core.spec.ts',
   'admin-vi-editors.spec.ts',
   'metadata.spec.ts',
+  'cms-d6-v13-route-matrix.spec.ts',
   'projects-filters.spec.ts',
   'project-cards.spec.ts',
   'ux-targets.spec.ts',
