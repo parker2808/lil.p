@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A props hash and registry count do not prove that each host painted: require viewport-intersecting bounds and visible text inside the host, crop the actual host for the PNG, and provide real disposable media for data-dependent CV before claiming all-20 visual coverage.
+
 - 2026-11-16: An all-host editor-origin draft/render gate needs an immutable version snapshot and a manifest tying each locale/theme/viewport public-preview image to the same saved draft revision; post-publish route parity alone cannot establish this provenance.
 
 - 2026-11-16: A no-JS dark shell can inherit the light translucent card-glass token even while its main/card tokens are dark; axe on a JS-capable inspection context can miss this when streamed SSR siblings stay hidden. Compare painted per-card colors and visible block text in both contexts before unwaived axe.
@@ -623,3 +625,4 @@
 - 2026-11-16: A legacy CMS page sits inside SiteShell `main#content`, not the tree-only `main.cms-core`; parse the actual semantic main from the raw SSR response before asserting preview notice isolation, rather than silently accepting an absent node.
 - 2026-11-16: When reconciling D5 host Properties with D6 translated labels, retain both data-preserving invalid-input behavior and exact accessible names; an optional localized heading with empty required English text must remain local until the user provides valid content, not auto-save fabricated defaults.
 - 2026-11-16: Independently streamed SSR may assign different numeric React Suspense `<template id="B:N">` IDs without changing host content; normalize only those request-local IDs while retaining a full markup comparison. An axe-only JS context must match the no-script host's computed palette and wait for color transitions before enforcing unwaived WCAG AA, especially in dark OS mode.
+- 2026-11-16: A screenshot of `main` cannot prove a hidden or empty component painted; seed the missing public dependency and assert a visible, localized link to the exact disposable media before capturing the component itself, then restore profile data in `finally`.

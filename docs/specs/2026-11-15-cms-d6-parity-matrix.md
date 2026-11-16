@@ -67,21 +67,21 @@ instead of exhausting the 20-minute shard job; CI lists each case as it runs.
 Each file checks EN/VI × light/dark ×
 neutral/lil.p × 390/768/1440, yielding 24 page tuples and 120 type tuples per
 shard, 480 type tuples and 960 attached public/preview PNGs overall
-(the empty CV uses host-context images rather than visible block images).
+with all 20 component types captured directly).
 Every page tuple checks raw initial HTML block type, props hash and nonempty
-text for nonempty fixtures; equal hydrated published/preview block type, props
-hash and text; paired block PNGs (host-context PNGs for empty CV) with at most
+text; equal hydrated published/preview block type, props
+hash and text; paired component PNGs with at most
 0.5% differing pixels (per-channel difference >10), allowing rasterization
 noise rather than falsely claiming byte-perfect pixels; and all WCAG
 2/2.1/2.2 AA axe violations (including moderate/minor), without waivers. A
 per-locale/theme manifest records six tuples (four manifests per shard). The animation-only hero canvas is
 excluded from pixel captures; it is not evidence of canvas parity.
 
-The seeded profile has no resume asset: `cv-download` must remain empty on
-both initial SSR and hydration. Its zero-size wrapper cannot yield a block
-screenshot; the paired PNGs instead capture the visible host context and are
-named `empty-host-context`. The gate asserts the wrapper is empty and hidden.
-This proves the empty-state contract, **not** a visible CV download. Admin
+The matrix uploads a disposable PDF, links it to both EN/VI profile resumes,
+asserts the localized CV link targets that exact uploaded file and captures the
+visible component on public and version-preview routes. A `finally` block
+restores the prior profile IDs and deletes the fixture media. This replaces the
+old empty-wrapper/host-context capture, which could not prove V09 paint. Admin
 collection E2E creates education rows before the
 matrix; those writes now expire the `education` public fetch tag before
 returning, preventing a stale public render versus an uncached draft render.
