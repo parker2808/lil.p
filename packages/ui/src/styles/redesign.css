@@ -495,6 +495,9 @@ html:root {
   border-top: 1px solid var(--border-strong);
   padding-top: 24px;
 }
+.public-site .cms-tree__column .redesign-stat-band {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
+}
 .public-site .redesign-stat-item {
   border-right: 1px solid var(--border);
   padding-right: 16px;
@@ -530,6 +533,12 @@ html:root {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.public-site .cms-tree__column .project-card-result {
+  overflow: visible;
+  overflow-wrap: break-word;
+  text-overflow: clip;
+  white-space: normal;
 }
 .public-site .redesign-domain-card {
   box-shadow: none;
