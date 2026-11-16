@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 C1 dependency-rights audit (docs only): #208 `539c4f1c` filtered package has no runtime dependencies; frozen peer installs React/React DOM 19.3.1 and Zod 4.6.7 carry MIT license files. No observed peer-license conflict with a private `UNLICENSED` core; ownership/notices, final-main history and consumer/hosted installer evidence remain separate gates. The extraction runbook records exact final-main steps. No repository, package, credential or deployment created.
+
 - 2026-11-16: The shared MarkdownEditor preview callback uses an independent 500ms timer per editor. #260's unit run `43767645840` observed only two callbacks when the test waited for the second body; a focused test fix waits for all three rendered bodies and all three callback invocations without relaxing the count. The fix is based on `main`, with no V06 runtime changes; exact-head CI remains the merge gate.
 
 - C1 retained-history identity review (2026-11-15): the local #208 `4df25c52` filtered rehearsal has 86 commits across two anonymized author/committer pairs. At 20:46 ICT, the coordinator under Parker approval `t250u` and delegated rule `12:26` decided to keep both reviewed identities unchanged: no rewrite or `.mailmap`, preserving provenance in Parker's own private destination. Re-audit the final integrated tree and stop on any new pair before a private push; see the C1 runbook.
@@ -260,6 +262,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Recorded the scoped C1 peer-license audit and final-main consumer/hosted checklist; regenerated Graphify for this docs-only change. No package/runtime/golden change or release authorization.
 
 - 2026-11-16: Make the three-editor Write/Preview unit test await every debounced preview and retain its exact three-call assertion; no editor behavior, API, or threshold changes.
 
