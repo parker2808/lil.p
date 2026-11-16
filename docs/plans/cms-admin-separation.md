@@ -1,0 +1,5 @@
+# Goal B: independent CMS admin — pointer
+
+Parker's 2026-11-16 Goal B asks for a separate CMS admin site **and its own new database**, not an admin UI that still writes to lil.p's database. The implementation plan is proposed in the private [`parker2808/cms-core` PR #2](https://github.com/parker2808/cms-core/pull/2). It proposes an independent CMS API, admin web app, new TiDB Starter instance, reviewed read-only export/import, published-only lil.p consumer with cache invalidation, and staged retirement of old CMS writes. The package-only C3 consumer switch remains a distinct gate.
+
+**Status: planning only.** No database, service, secret, export, migration, deploy, public-read switch or production write is authorized or performed by this docs change. Keep lil.p's non-CMS data and API in its existing database. Before execution, obtain a reviewed schema/auth/media boundary, fresh free-tier quota evidence, source/target digest plan, independent P0–P3 review and explicit authorization for each production stage. Only 1125a5b3 merges.

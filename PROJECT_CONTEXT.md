@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 Goal B: plan an independent CMS backend/admin and **new** database, not a second admin writing to lil.p's database. Private cms-core plan is linked from `docs/plans/cms-admin-separation.md`; C3 packaging stays separate. No prod export/provision/migration/deploy authorized by this pointer.
+
 - 2026-11-16 CI throughput: ten green D6/#208 five-shard runs had median web build-to-aggregate 926 seconds, with shard 5 consistently critical (median 823 seconds); one D6 spec alone took 392 seconds in run `43821569457`. Main `5ea13342` five-shard baseline `43856042888` took 891 seconds build-to-aggregate. Main already caches pnpm/Next/Playwright and shares one build artifact. Eight free shards now include the integrated D6 visual/SSR pins, one worker and MySQL per shard, and retain every required gate. Compare exact-head post-change CI before claiming a final-main speedup. See `docs/specs/2026-11-16-ci-web-e2e-throughput.md`.
 
 - 2026-11-16 C1 tarball rehearsal at #208 `4227e3e`: standalone core and all four consumer builds passed, but the fixture unit gate used a monorepo-relative `packages/cms-core/dist` path and failed when the package came from its tarball. Resolving through installed `./react` retained both client/server directive assertions and passed 9/9 fixture tests in the disposable tarball consumer (Node 22). Rerun all C1 checks on final main after the stack lands; no repository created.
@@ -489,6 +491,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Add a docs-only Goal B pointer to the private independent-admin plan; explicitly separate the new CMS database and existing lil.p non-CMS data. No runtime or production change.
 
 - 2026-11-16: Merge integrated CMS stack into eight-shard CI PR, preserving both documentation histories and all D6 specs/pins; reserve separate shard for the measured 392-second D5 design spec and account for four editor-host specs in load estimates. No assertions, retry/timeout thresholds, or build/cache gates removed.
 
