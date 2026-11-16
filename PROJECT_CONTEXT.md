@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V05 all-20 follow-up: extend the four existing editor-origin shard groups with exact saved-revision/snapshot equality and EN/VI × light/dark × 390/768/1440 public/version-preview captures for each host. Require exact-head five-shard CI and independent raw-image review; invalid-property states, empty CV and production remain separate gaps. See `docs/specs/2026-11-16-cms-d6-v05-revision-chain.md`.
+
 - 2026-11-16 V03/V14 raw review on #264 `f2aabedc`/CI `43788335192` found no-JS dark 390px process cards with near-white text on pale glass (~1.61:1) despite axe returning zero. Align the no-JS dark card-glass token with hydrated dark, reveal the same streamed SSR siblings in the axe inspection context and compare visible block text/card paints before unwaived axe. Prior green head is not signoff; exact-new-head CI and independent image review remain required.
 - 2026-11-16 V03/V14 follow-up: CI `43784478603` exposed request-local Suspense `B:N` IDs in independently rendered SSR mains and transient 1.08:1 CTA contrast in a dark 390px axe inspection context. Preserve byte-exact remaining SSR markup, no-JS visitor captures, painted-color equivalence and unwaived axe while normalizing only those IDs and waiting for the inspection context's palette/transition to settle. Restack on D6 `bebe5656` (#255); exact-head five-shard CI and raw-image review remain required.
 - 2026-11-16 V03/V14 all-20 SSR intersection: draft real-host no-JS matrix checks 20 registry defaults in four five-host pages at EN/VI × light/dark × three widths × neutral/branded host × public/preview. CI `43769497764` exceeded the 20-minute shard budget; viewport splitting still stalled on first full-page Playwright screenshot in `43773289505`. Chromium protocol now captures the measured full content rectangle with verified PNG dimensions, retaining all 12 registered specs, raw crops and axe checks. CI `43779665584` showed all crops finish, then axe hangs in the JS-disabled context. Compare identical SSR main markup in a JS-enabled inspection context before unwaived axe; keep no-JS paint/capture on the original context. CV receives disposable local media. Exact-head CI and independent image review remain required; no production claim. See `docs/specs/2026-11-16-cms-d6-all20-real-host-ssr.md`.
@@ -421,6 +423,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Added all-20 host V05 revision/snapshot and 24-capture per-type public/version-preview matrix to the existing four editor-origin CI shards; no runtime or API change. Exact-head CI/review pending.
 
 - 2026-11-16: Align no-script dark card glass with hydrated dark and require axe inspection of the same visible streamed block text and card colors; retain unwaived WCAG and original screenshot/SSR assertions. Exact-new-head CI pending.
 - 2026-11-16: Normalize only request-local Suspense template IDs for strict SSR main comparison; match settled dark host/CTA colors against the real no-JS visitor before unwaived axe. Restacked on merged V13 without altering golden contracts; exact-head CI pending.

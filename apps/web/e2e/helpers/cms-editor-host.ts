@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 
 import { BLOCK_REGISTRY, resolveBlockLocale } from '@portfolio/contracts';
 import { expect, test } from '@playwright/test';
@@ -147,6 +148,12 @@ export function registerEditorHostJourney(shard: number): void {
         savedHost.id,
         draft.revision,
       );
+      const afterCapture = await page.request.get(draftPath);
+      expect(afterCapture.status()).toBe(200);
+      expect(await afterCapture.json()).toMatchObject({
+        revision: draft.revision,
+        tree: draft.tree,
+      });
       const visibleEdit = [
         'hero',
         'page-header',
@@ -191,8 +198,21 @@ export function registerEditorHostJourney(shard: number): void {
         data: { expectedRevision: draft.revision },
       });
       expect(published.status(), `${definition.type}: ${await published.text()}`).toBe(200);
+      const version = (await published.json()).publishedVersion as number;
+      expect(version).toBe(1);
+      const snapshot = await page.request.get(`/api/admin/pages/${key}/versions/${version}`);
+      expect(snapshot.status(), await snapshot.text()).toBe(200);
+      expect((await snapshot.json()).snapshot.tree).toEqual(draft.tree);
+      const renderEntries: Array<{
+        locale: 'en' | 'vi';
+        theme: 'light' | 'dark';
+        width: 390 | 768 | 1440;
+        surface: 'public' | 'preview';
+        screenshotSha256: string;
+        hostPropsHash: string;
+      }> = [];
 
-      for (const locale of ['en', 'vi']) {
+      for (const locale of ['en', 'vi'] as const) {
         const preview = await page.request.get(
           `/api/admin/preview/pages/${key}?locale=${locale}&version=1`,
         );
@@ -203,21 +223,69 @@ export function registerEditorHostJourney(shard: number): void {
         expect(publicBody.tree).toEqual(draft.tree);
         expect(publicBody.seo.lang).toBe(locale);
         expect(await preview.json()).toEqual({ ...publicBody, invalidBlocks: [] });
-        await page.goto(`/${locale}/${key}`);
-        const host = page.locator(`[data-host-block-type="${definition.type}"]`);
-        await expect(host).toHaveCount(1);
-        const publishedHash = await host.getAttribute('data-host-props-hash');
-        expect(publishedHash).toMatch(/^[a-f0-9]{64}$/);
-        expect(publishedHash).toBe(draftRender.get(locale)?.hash);
         const editedText = draftRender.get(locale)?.editedText;
-        if (editedText) await expect(host).toContainText(editedText);
-        await page.goto(`/api/draft?path=${encodeURIComponent(`/${locale}/${key}`)}`);
-        await page.goto(`/${locale}/${key}?v=1`);
-        await expect(host).toHaveCount(1);
-        expect(await host.getAttribute('data-host-props-hash')).toBe(publishedHash);
-        if (editedText) await expect(host).toContainText(editedText);
-        await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(`/${locale}/${key}`)}`);
+        const path = `/${locale}/${key}`;
+        for (const theme of ['light', 'dark'] as const) {
+          await page.evaluate((value) => localStorage.setItem('theme', value), theme);
+          await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
+          for (const surface of ['public', 'preview'] as const) {
+            if (surface === 'preview') {
+              await page.goto(`/api/draft?path=${encodeURIComponent(path)}`);
+            }
+            await page.goto(surface === 'public' ? path : `${path}?v=${version}`);
+            await expect(page.locator('html')).toHaveAttribute('lang', locale);
+            await expect(page.locator('html')).toHaveClass(new RegExp(`\\b${theme}\\b`));
+            const host = page.locator(`[data-host-block-type="${definition.type}"]`);
+            await expect(host).toHaveCount(1);
+            const hostPropsHash = await host.getAttribute('data-host-props-hash');
+            expect(hostPropsHash).toMatch(/^[a-f0-9]{64}$/);
+            expect(hostPropsHash).toBe(draftRender.get(locale)?.hash);
+            if (editedText) await expect(host).toContainText(editedText);
+            for (const width of [390, 768, 1440] as const) {
+              await page.setViewportSize({ width, height: 900 });
+              const hostBox = await host.boundingBox();
+              if (hostBox && hostBox.width > 0 && hostBox.height > 0) {
+                await host.scrollIntoViewIfNeeded();
+              }
+              const image = await page.screenshot({ animations: 'disabled' });
+              await testInfo.attach(
+                `${definition.type}-${locale}-${theme}-${width}-${surface}.png`,
+                {
+                  body: image,
+                  contentType: 'image/png',
+                },
+              );
+              renderEntries.push({
+                locale,
+                theme,
+                width,
+                surface,
+                screenshotSha256: createHash('sha256').update(image).digest('hex'),
+                hostPropsHash: hostPropsHash!,
+              });
+            }
+            if (surface === 'preview') {
+              await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
+            }
+          }
+        }
       }
+      expect(renderEntries).toHaveLength(24);
+      await testInfo.attach(`${definition.type}-v05-revision-chain.json`, {
+        body: Buffer.from(
+          JSON.stringify({
+            sourceHead: process.env.E2E_SOURCE_HEAD_SHA ?? null,
+            checkoutSha: execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(),
+            ciRunId: process.env.GITHUB_RUN_ID ?? null,
+            componentType: definition.type,
+            draftRevision: draft.revision,
+            publishedVersion: version,
+            treeSha256: createHash('sha256').update(JSON.stringify(draft.tree)).digest('hex'),
+            entries: renderEntries,
+          }),
+        ),
+        contentType: 'application/json',
+      });
       if (definition.type === 'hero') {
         const current = await (await page.request.get(draftPath)).json();
         const nextTree = structuredClone(draft.tree);
