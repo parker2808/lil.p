@@ -132,8 +132,16 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
               viewport: { width, height: 900 },
               storageState: { cookies, origins: [] },
             });
+            const axeContext = await browser.newContext({
+              colorScheme: theme,
+              viewport: { width, height: 900 },
+              storageState: { cookies, origins: [] },
+            });
             try {
               const visitor = await context.newPage();
+              const axePage = await axeContext.newPage();
+              const axeSession = await axeContext.newCDPSession(axePage);
+              await axeSession.send('Emulation.setScriptExecutionDisabled', { value: true });
               const publicImages = new Map<string, Buffer>();
               const publicHashes = new Map<string, string>();
               const publicText = new Map<string, string>();
@@ -153,6 +161,7 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                 await expect(visitor.locator('html')).toHaveAttribute('lang', locale);
                 const main = visitor.locator('#content > main.cms-core-host:visible');
                 await expect(main).toHaveCount(1);
+                const ssrMarkup = await main.evaluate((element) => element.outerHTML);
                 await expect(main).toHaveAttribute('data-brand', brand);
                 await expect(main).toHaveCSS('color-scheme', theme);
                 const accent = await main.evaluate((element) =>
@@ -308,10 +317,21 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                   }
                 }
                 console.log(`[all20-ssr] ${label}: axe-start`);
-                const axe = await new AxeBuilder({ page: visitor })
+                await axeContext.addCookies(await context.cookies());
+                const axeResponse = await axePage.goto(url.href);
+                expect(axeResponse?.status(), `${label} axe SSR response`).toBe(200);
+                const axeMain = axePage.locator('#content > main.cms-core-host:visible');
+                await expect(axeMain).toHaveCount(1);
+                expect(
+                  await axeMain.evaluate((element) => element.outerHTML),
+                  `${label} identical unhydrated SSR main for axe`,
+                ).toBe(ssrMarkup);
+                await axeSession.send('Emulation.setScriptExecutionDisabled', { value: false });
+                const axe = await new AxeBuilder({ page: axePage })
                   .include('#content > main.cms-core-host')
                   .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
                   .analyze();
+                await axeSession.send('Emulation.setScriptExecutionDisabled', { value: true });
                 await testInfo.attach(`${label}-axe.json`, {
                   body: JSON.stringify(axe.violations),
                   contentType: 'application/json',
@@ -329,6 +349,7 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                 });
               }
             } finally {
+              await axeContext.close();
               await context.close();
             }
           }
