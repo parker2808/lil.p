@@ -1,0 +1,25 @@
+{
+  "contractVersion": 1,
+  "publishedVersion": 1,
+  "page": {
+    "key": "home",
+    "seo": {
+      "title": "Home",
+      "description": null,
+      "lang": "en"
+    },
+    "blocks": [
+      {
+        "id": 1,
+        "type": "prose",
+        "key": "body",
+        "layout": "ONE",
+        "surface": "PLAIN",
+        "props": {
+          "body": "English body"
+        },
+        "lang": "en"
+      }
+    ]
+  }
+}

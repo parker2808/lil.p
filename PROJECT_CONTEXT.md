@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- 2026-11-16 Goal B Page consumer draft: opt-in published-only CMS fetch and separate signed webhook are code-only behind default `CMS_PAGE_READ_SOURCE=legacy`; authenticated preview/admin and non-Page paths remain unchanged. B4 follow-up validates the host tree before caching and retries a partially failed invalidation. Before production switch, implement shared durable replay/version state, cold-instance last-good, exact CMS API parity and a reviewed Page-only cutover/rollback. A separate free-tier CMS database is proposed for shared state; no lil.p production schema, migration, credentials or deployment change in this PR. See `docs/specs/2026-11-16-cms-public-reader.md`.
+- 2026-11-16 Goal B Page consumer draft: opt-in published-only CMS fetch and separate signed webhook are code-only behind default `CMS_PAGE_READ_SOURCE=legacy`; authenticated preview/admin and non-Page paths remain unchanged. B4 follow-up validates the host tree before caching and retries a partially failed invalidation. Four EN/VI tree/legacy response fixtures now gate the strict reader and public render path; B2 must match the same fixtures before integration. Before production switch, implement shared durable replay/version state, cold-instance last-good, exact CMS API parity and a reviewed Page-only cutover/rollback. A separate free-tier CMS database is proposed for shared state; no lil.p production schema, migration, credentials or deployment change in this PR. See `docs/specs/2026-11-16-cms-public-reader.md`.
 
 - 2026-11-16 Goal B: plan an independent CMS backend/admin and **new** database, not a second admin writing to lil.p's database. Private cms-core plan is linked from `docs/plans/cms-admin-separation.md`; C3 packaging stays separate. No prod export/provision/migration/deploy authorized by this pointer.
 
@@ -493,6 +493,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Added four shared B2/B4 public Page response vectors and EN/VI contract tests for strict CMS reads, host tree publication validation, and public route rendering. The flag stays off pending B2 API parity and durable shared state.
 
 - 2026-11-16: Fixed B4 CMS webhook delivery completion to follow both locale invalidations and reject changed payloads; validated published trees against the host registry before last-good storage. Added retry and malformed-tree regression tests. Shared durable state remains a production blocker.
 
