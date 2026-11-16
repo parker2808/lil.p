@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 #199 main sync after #271: retain the D2 release/drain gates alongside C1 license history, without touching Prisma schema or migration; exact merged-head API and five-shard CI remain required before consideration. No production action.
+- D2 #199 Graphify P3 (2026-11-16): re-extracted code topology from reviewed head `aeb3c2d62787a5d0ea2ec22ab97f5c62c7249181`; the docs-only follow-up changes report provenance, not migration, API behavior or goldens. Release still HOLD on Stage A drain and separate approvals.
 - Stage A #210 sync with main `26fca2d3` (2026-11-16): retain the C1 dependency-rights audit alongside the release-owner worksheet; freeze behavior and the 33-probe kit remain unchanged. Production drain, probes, migration and deploy remain HOLD pending separate authorization.
 - Stage A #210 read-only worksheet (2026-11-16): checked tracked Render Docker startup migration and Vercel `/api` rewrite, and documented authenticated Render/Vercel inventory, before/after instance-set comparison, two-ingress probes and separate D2-aware reopen. No live inventory, HTTP probe, migration, DB access or deployment; Stage A HOLD pending release-owner evidence and authorization.
 - Stage A #210 after main `676c5a20`: retain the production write freeze, read/health access and independent timer regression from main. Exact-head CI and independent review remain required; production old-writer drain, migration and rollout are not authorized.
@@ -125,6 +127,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - 2026-11-16 V17/V21 raw inventory: tracked migration/seed page writers and raw fixture variants are gated in tests; V17 still requires authorized read-only production inventory and final-head route/golden comparison. V21 requires final integrated-head evidence; see `docs/specs/2026-11-16-cms-d2-v17-v21-raw-inventory.md`.
 - 2026-11-16 V17/V21 combined artifact follow-up: unit/API CI emit source-byte and canonical disposable-DB JSON byte/hash manifests with head/merge provenance. Review these on the integrated #208 head and final main before closing the code evidence; production inventory stays deferred. No runtime/schema/golden change.
 - 2026-11-16 V12 split: pre-deploy route-template logging, request-ID fingerprinting, stack-free 500 logging and retry-exhausted revalidation warning redaction now have unit tests; disposable-DB populated draft/version/preview and denied-mutation tests capture and reject content/token/PII markers in logs. New exact-head CI and independent review pending. Authorized read-only Render log audit is DEFERRED until after deploy; no operational signoff or production calls here.
+
 - 2026-11-16 D2 reopen decision: #210 pre-D2 remains always frozen. D2 opens writes by default only after read-only startup verification of the applied migration and both columns; explicit `CMS_PAGE_WRITE_FREEZE=1` or failed check freezes. No Render env change is assumed or available. **Complete Stage A instance/in-flight-request drain before D2 deploy**, because a successful D2 startup can open writes automatically. The coordinator owns authorized Render inventory, migration verification and authenticated ingress write checks; CI cannot certify production drain or approval.
 - 2026-11-16 D2 runbook reconciliation: the older general deploy checklist also requires drain before the D2 image starts; its former separate env-based reopen step is superseded. Do not claim an unauthenticated 503 probe proves a D2 authenticated write reopened.
 
@@ -536,6 +539,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Reconciled #199 with main `26fca2d` after docs #271, retaining both D2 and C1 histories; regenerated Graphify from the combined tree. No Prisma schema/migration or production change.
+- 2026-11-16: Refreshed D2 #199 Graphify from source code commit `aeb3c2d6` and recorded the provenance-only follow-up explicitly; no runtime or schema changes.
 - 2026-11-16: Restacked Stage A #210 onto main `26fca2d3` while preserving both documentation histories and regenerating Graphify; no freeze behavior, probe logic or production action changed.
 - 2026-11-16: Added a docs-only Stage A drain evidence worksheet with verified read-only CLI commands, explicit STOP conditions and forward-only failure path; tracked-config inventory only, no production action.
 - 2026-11-16: Restack #210 onto main `676c5a20`, preserving the production 503 page-write freeze and main's MarkdownEditor callback-count test. No release or data operation; exact-head CI pending.

@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-16: On a docs-only base sync, preserve both branches' release caveats and historical lessons, regenerate the generated Graphify report from the combined tree, and gate the new exact head rather than reusing earlier branch CI.
 - 2026-11-16: A docs/test-only main merge can conflict with Stage A release notes despite nonoverlapping runtime code; retain both sets of notes and independently verify the write-freeze behavior before interpreting exact-head CI.
 - 2026-11-15: Anonymous 503s on direct and rewritten page mutations show the HTTP freeze at sampled ingresses, not fleet-wide drain; compare pre-deploy instance IDs to an authoritative active roster and fail closed when identity, shutdown or in-flight evidence is missing.
 - 2026-11-16: No-JS responsive SSR retains hidden host variants; only a painted variant's resolved grid tracks can establish the current layout, while text wrapping and actual host/document width need independent assertions.
@@ -193,7 +194,6 @@
 - 2026-11-15: An additive D2 schema lets a pre-D2 Prisma client alter a tree page's published pointer without bumping the draft revision. Parker approved forward-only recovery, not evidence of an old-writer drain; because the `main` API deploy runs the migration on startup, prove the page-write pause and complete Render drain before merging/deploying D2. A MySQL trigger cannot serve as a TiDB fence.
 - 2026-11-15: Restacking pure D5 tree state on the integrated D base requires preserving host-registry validation and the typed legacy restore/reload protections alongside main's independent fixture and package-local gates.
 - 2026-11-16: Audit an extracted package's complete peer list against the frozen installed manifests and license files, not just its own `UNLICENSED` field; an MIT-compatible private tarball still needs final-head notice, history and hosted-distribution review.
-
 - 2026-11-16: When several editors schedule independent preview timers, waiting for one rendered preview does not prove the others have completed; await all three rendered bodies and retain the exact callback-count assertion.
 
 - 2026-11-15: A Playwright artifact from a PR can be built on GitHub's synthetic merge checkout; record both the source PR head and tested merge SHA in artifact names and manifests before attributing evidence to a head.
