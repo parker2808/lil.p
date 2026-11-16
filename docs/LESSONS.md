@@ -2,7 +2,7 @@
 
 - 2026-11-16: A configured single Render instance and one successful direct health GET cannot prove fleet drain; capture complete pre/post instance rosters through the authorized API before merging a code-bearing freeze branch. Keep Render auto-deploy on for the staged merges and keep other API-bearing merges off `main` until reopen.
 
-- 2026-11-16: An already approved forward-only rollout does not need new approval at every probe or reopen; gate each automatic deploy and next merge on the preceding stage's verified 503/200, complete old-instance drain, and migration evidence.
+- 2026-11-16: A coordinator's paraphrase of forward-only policy approval is not proof of authorization for each production merge, deploy, mutation probe, migration or reopen; confirm the separate grant and preceding 503/200, drain and migration evidence. Auto-deploy being ON does not authorize a merge.
 
 - 2026-11-16: A docs/test-only main merge can conflict with Stage A release notes despite nonoverlapping runtime code; retain both sets of notes and independently verify the write-freeze behavior before interpreting exact-head CI.
 

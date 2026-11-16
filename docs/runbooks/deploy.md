@@ -35,18 +35,26 @@ probe substitutes for the complete pre-/post-deploy Render instance roster.
 This is a **forward-only** exception to ordinary rolling deploys. The required
 release order is **#210 Stage A freeze and old-instance drain → #199 D2 migration
 and verification → D2-aware reopen and verification → #202**. The existing
-forward-only rollout approval covers this sequence; the merge chain and
-coordinator advance only when the preceding stage is verified. Do not deploy
-an API image predating Stage A after D2 migrates. Keep Render auto-deploy ON:
-merging #210 and #199 to `main` triggers their API deploys. Keep `main` quiet
+forward-only policy approval sets the safety requirements for this sequence,
+but does not itself establish authorization for #210 production merge/deploy,
+mutation probes, #199 migration or D2-aware reopen and verification. Obtain
+separate release-owner authorization before each production action; the merge
+chain and coordinator advance only when the preceding stage is verified. Do
+not deploy an API image predating Stage A after D2 migrates. Keep Render
+auto-deploy ON as configured: merging #210 and #199 to `main` triggers their
+API deploys, but the configuration does not authorize those merges. Keep
+`main` quiet
 until reopen: any other `apps/api/**` or `packages/contracts/**` merge in this
 window could also deploy. Review the exact commit and instance roster at each
 stage before merging the next.
 
 1. Before Stage A, inventory every Render API instance ID and commit using the
    authenticated Render instance inventory and startup logs. Confirm the Stage A
-   image has no D2 migration. Deploy Stage A with page writes frozen by default.
-2. The release owner may run the following from an authorized terminal (Node 22):
+   image has no D2 migration. After separate authorization, merge #210 to
+   deploy Stage A with page writes frozen by default.
+2. After the Stage A freeze is live and the mutation probes are separately
+   authorized, the release owner may run the following from an authorized
+   terminal (Node 22):
 
    ```sh
    node scripts/probe-stage-a-d2.mjs --render-url https://<actual-render-host>
@@ -75,8 +83,9 @@ stage before merging the next.
    identity signal. If inventory, identity or ingress mapping is missing, **do
    not migrate**. Repeat the public probe after drain. Never rely on health,
    elapsed time or a Render “Live” label alone.
-4. After the full old-instance drain and 503/200 probes pass, merge #199 to
-   deploy the reviewed **D2-aware image containing the Stage A guard**. Its
+4. Only after the full old-instance drain and 503/200 probes pass and separate
+   #199 merge/migration authorization is confirmed, merge #199 to deploy the
+   reviewed **D2-aware image containing the Stage A guard**. Its
    startup runs `prisma migrate deploy` while all earlier instances remain frozen. Check migration logs,
    `/api/health` returning `{status:"ok",db:"ok"}` via both ingresses, and
    rerun the probe. Health does **not** prove D2 schema: the release owner must
@@ -84,8 +93,9 @@ stage before merging the next.
    and `page.draftTreeRevision` plus the Prisma migration history. Do not add a
    public schema endpoint or publish data. Keep freeze on until every Stage A
    instance has drained and the D2 migration/data gates pass.
-5. Reopen writes through the reviewed D2-aware unfreeze release after the
-   migration/data and instance gates pass:
+5. After separate reopen and verification authorization, reopen writes through
+   the reviewed D2-aware unfreeze release once the migration/data and instance
+   gates pass:
    verify that every instance runs that reviewed commit, then perform a
    controlled authenticated save/restore/publish/activation CAS check on an
    approved disposable record through both ingresses, followed by an authorized
