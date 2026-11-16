@@ -1,5 +1,13 @@
 # Lessons
 
+- 2026-11-16: A no-JS dark shell can inherit the light translucent card-glass token even while its main/card tokens are dark; axe on a JS-capable inspection context can miss this when streamed SSR siblings stay hidden. Compare painted per-card colors and visible block text in both contexts before unwaived axe.
+- 2026-11-16: Separate SSR requests can allocate different React Suspense template IDs despite identical host markup; normalize just those per-request IDs, and compare settled dark CTA colors with the no-JS capture before unwaived axe rather than testing a transient theme transition.
+- 2026-11-16: Axe cannot inject into a Playwright context created with `javaScriptEnabled: false`; retain no-JS host paint/capture there, and audit the identical SSR main in a separate page whose scripts are disabled only for navigation and enabled for axe.
+- 2026-11-16: Switching a stalled Playwright full-page capture to CDP did not by itself unblock the no-JS all-20 matrix; log font readiness, CDP attachment, layout size, screenshot and crop boundaries separately before choosing another capture path.
+
+- 2026-11-16: A no-JS full-page Playwright screenshot can stall before producing any artifact even after successful SSR assertions; capture the measured full content rectangle via Chromium protocol and verify PNG dimensions before reviewing any visual gate.
+
+- 2026-11-16: A no-JS all-host visual test can consume its entire four-minute case and then a shard's 20-minute budget on retries; split by viewport and balance registered specs across all shards, keeping each public/preview pair, raw screenshots and unwaived axe intact.
 - 2026-11-16: No-JS responsive SSR keeps mobile/tablet/desktop host variants in the DOM. A hidden `auto-fit` grid can return an unresolved computed-style expression whose space-separated tokens are not painted tracks; assert exactly one laid-out variant and inspect that variant's computed grid and text without relaxing bounds.
 
 - 2026-11-16: Viewport-safe no-JS captures can still hide mid-word stat labels and ellipsized featured descriptions inside CMS columns; size nested stats to their container and assert readable labels and wrapping text in both public and historical preview.
@@ -593,6 +601,7 @@
 - 2026-11-16 V02: sau reload, Layers thu gọn Section dù draft/published tree còn nguyên; test keyboard phải mở Section bằng ArrowRight rồi mới xác nhận các node con hiện ra, không đồng nhất trạng thái UI thu gọn với mất dữ liệu.
 
 - 2026-11-16 V02: Alt+ArrowDown trên sibling cuối là no-op; phải assert order trước/sau một Alt+ArrowUp thật, dùng Tab/Shift+Tab thay Playwright `.focus()` để chứng minh keyboard reachability.
+- 2026-11-16: V03/V14 visual signoff needs the same registered hosts on real neutral and branded SSR URLs with scripts off; a post-hydration brand flip or an empty CV placeholder cannot prove the all-20 intersection.
 - 2026-11-16: Audit the live version controls before testing “confirmation dialogs”: D6 Publish acts immediately, whereas Restore alone has a Radix alertdialog; record the absent UI separately from keyboard/ARIA/axe evidence and keep manual screen-reader signoff open.
 - 2026-11-16: A focus-trapping Radix Sheet can render `role="dialog"` with a title but omit `aria-modal`; verify computed DOM semantics, then explicitly mark the scoped modal sheet rather than weakening browser assertions.
 - 2026-11-16: Controlled Radix alertdialogs without an AlertDialogTrigger need explicit close-auto-focus return to their originating action; nested sheets also need focus return to their own trigger after a successful restore closes both layers.
@@ -611,3 +620,4 @@
 - 2026-11-16: For invalid-preview evidence, seed a corrupted draft row only in a guarded disposable database after publishing a valid snapshot; compare real preview API, SSR/hydrated browser and unchanged public routes instead of trusting mocked render tests.
 - 2026-11-16: A legacy CMS page sits inside SiteShell `main#content`, not the tree-only `main.cms-core`; parse the actual semantic main from the raw SSR response before asserting preview notice isolation, rather than silently accepting an absent node.
 - 2026-11-16: When reconciling D5 host Properties with D6 translated labels, retain both data-preserving invalid-input behavior and exact accessible names; an optional localized heading with empty required English text must remain local until the user provides valid content, not auto-save fabricated defaults.
+- 2026-11-16: Independently streamed SSR may assign different numeric React Suspense `<template id="B:N">` IDs without changing host content; normalize only those request-local IDs while retaining a full markup comparison. An axe-only JS context must match the no-script host's computed palette and wait for color transitions before enforcing unwaived WCAG AA, especially in dark OS mode.
