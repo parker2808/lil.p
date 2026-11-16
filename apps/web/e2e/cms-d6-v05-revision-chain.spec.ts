@@ -73,7 +73,7 @@ test('V05 editor nested Properties persist one revision into EN/VI preview and p
 
   for (const locale of ['en', 'vi'] as const) {
     for (const property of ['title', 'eyebrow'] as const) {
-      const label = `${property === 'title' ? 'Title' : 'Eyebrow'} · ${locale === 'en' ? 'English' : 'Vietnamese'}`;
+      const label = `${property === 'title' ? 'Title' : 'Eyebrow'} (${locale.toUpperCase()})`;
       const field = inspector.getByRole('textbox', { name: label, exact: true });
       await expect(field).toHaveCount(1);
       await field.fill(copy[locale][property]);
@@ -146,7 +146,7 @@ test('V05 editor nested Properties persist one revision into EN/VI preview and p
           : page.getByRole('dialog', { name: properties });
       if (width !== 1440) await trigger.click();
       for (const property of ['title', 'eyebrow'] as const) {
-        const label = `${property === 'title' ? (locale === 'en' ? 'Title' : 'Tiêu đề') : locale === 'en' ? 'Eyebrow' : 'Dòng dẫn'} · ${locale === 'en' ? 'English' : 'Tiếng Việt'}`;
+        const label = `${property === 'title' ? (locale === 'en' ? 'Title' : 'Tiêu đề') : locale === 'en' ? 'Eyebrow' : 'Dòng dẫn'} (${locale.toUpperCase()})`;
         await expect(panel.getByRole('textbox', { name: label, exact: true })).toHaveValue(
           copy[locale][property],
         );
@@ -163,7 +163,7 @@ test('V05 editor nested Properties persist one revision into EN/VI preview and p
         sha256: createHash('sha256').update(inspectorImage).digest('hex'),
       });
       if (width !== 1440) {
-        const titleLabel = locale === 'en' ? 'Title · English' : 'Tiêu đề · Tiếng Việt';
+        const titleLabel = locale === 'en' ? 'Title (EN)' : 'Tiêu đề (VI)';
         const titleField = panel.getByRole('textbox', { name: titleLabel, exact: true });
         await titleField.scrollIntoViewIfNeeded();
         await expect(titleField).toBeInViewport();

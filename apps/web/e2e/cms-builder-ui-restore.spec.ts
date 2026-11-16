@@ -216,13 +216,13 @@ test('UI publish, edit, restore and republish preserves EN/VI preview/public par
   await palette.getByRole('button', { name: 'Section', exact: true }).click();
   await palette.getByRole('button', { name: 'Page header', exact: true }).click();
   const inspector = page.getByRole('complementary', { name: 'Properties' });
-  const englishTitle = inspector.getByRole('textbox', { name: 'Title · English', exact: true });
+  const englishTitle = inspector.getByRole('textbox', { name: 'Title (EN)', exact: true });
   const vietnameseTitle = inspector.getByRole('textbox', {
-    name: 'Title · Vietnamese',
+    name: 'Title (VI)',
     exact: true,
   });
   const vietnameseEyebrowField = inspector.getByRole('textbox', {
-    name: 'Eyebrow · Vietnamese',
+    name: 'Eyebrow (VI)',
     exact: true,
   });
   await expect(englishTitle).toHaveCount(1);

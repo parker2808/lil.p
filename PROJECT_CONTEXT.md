@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- #208 head `c791c449` CI `43785034108` failed W2/W3 at obsolete D5-style accessible labels in the revision-chain and restored UI tests after D6 host field labels were integrated. Verification-only tests now target D6 exact EN/VI field names without changing state, publish, restore, or parity assertions; a fresh exact-head run is required.
+
 - #208 verification-only refresh merges D6 `6f8f74d3` after D-base `a6f053ce`; builder imports, host field labels and bilingual optional-heading behavior were reconciled under Node 22 nonbuild checks. Exact combined-head CI and matrix review remain required; #208 must not merge or deploy.
 
 - 2026-11-16 #208 D6 #266 integration: preserve the EN/VI keyboard Restore alertdialog/History sheet focus and ARIA gate on D6 `d4cd367b`; Publish remains immediate, and manual VoiceOver/NVDA and public-route V16 are still open. Require fresh combined-head API/five-shard CI before scoring.
@@ -503,6 +505,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Corrected stale accessible-field locators in combined restore and V05 revision-chain browser fixtures after #208 W2/W3 integration failures; no runtime or persistence changes.
 
 - 2026-11-16: Reconciled D5/D6 builder/property test and documentation conflicts in the #208 verification checkout; held release scoring pending exact-head five-shard CI and independent artifact review.
 
