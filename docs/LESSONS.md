@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A props hash and registry count do not prove that each host painted: require viewport-intersecting bounds and visible text inside the host, crop the actual host for the PNG, and provide real disposable media for data-dependent CV before claiming all-20 visual coverage.
+- 2026-11-16: An all-host editor-origin draft/render gate needs an immutable version snapshot and a manifest tying each locale/theme/viewport public-preview image to the same saved draft revision; post-publish route parity alone cannot establish this provenance.
 - 2026-11-16: On a docs-only base sync, preserve both branches' release caveats and historical lessons, regenerate the generated Graphify report from the combined tree, and gate the new exact head rather than reusing earlier branch CI.
 - 2026-11-16: A docs/test-only main merge can conflict with Stage A release notes despite nonoverlapping runtime code; retain both sets of notes and independently verify the write-freeze behavior before interpreting exact-head CI.
 - 2026-11-15: Anonymous 503s on direct and rewritten page mutations show the HTTP freeze at sampled ingresses, not fleet-wide drain; compare pre-deploy instance IDs to an authoritative active roster and fail closed when identity, shutdown or in-flight evidence is missing.

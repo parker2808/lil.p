@@ -48,6 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-16 V05 all-20 follow-up: extend the four existing editor-origin shard groups with exact saved-revision/snapshot equality and EN/VI × light/dark × 390/768/1440 public/version-preview captures for each host. Require viewport-visible painted host content (including real CV media), exact-head five-shard CI and independent raw-image review; invalid-property states and production remain separate gaps. See `docs/specs/2026-11-16-cms-d6-v05-revision-chain.md`.
 - 2026-11-16 #199 main sync after #271: retain the D2 release/drain gates alongside C1 license history, without touching Prisma schema or migration; exact merged-head API and five-shard CI remain required before consideration. No production action.
 - D2 #199 Graphify P3 (2026-11-16): re-extracted code topology from reviewed head `aeb3c2d62787a5d0ea2ec22ab97f5c62c7249181`; the docs-only follow-up changes report provenance, not migration, API behavior or goldens. Release still HOLD on Stage A drain and separate approvals.
 - Stage A #210 sync with main `26fca2d3` (2026-11-16): retain the C1 dependency-rights audit alongside the release-owner worksheet; freeze behavior and the 33-probe kit remain unchanged. Production drain, probes, migration and deploy remain HOLD pending separate authorization.
@@ -539,6 +540,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Added all-20 host V05 revision/snapshot and 24-capture per-type public/version-preview matrix to the existing four editor-origin CI shards; now require viewport-visible painted host content including real CV media. No runtime or API change. Exact-head CI/review pending.
 - 2026-11-16: Reconciled #199 with main `26fca2d` after docs #271, retaining both D2 and C1 histories; regenerated Graphify from the combined tree. No Prisma schema/migration or production change.
 - 2026-11-16: Refreshed D2 #199 Graphify from source code commit `aeb3c2d6` and recorded the provenance-only follow-up explicitly; no runtime or schema changes.
 - 2026-11-16: Restacked Stage A #210 onto main `26fca2d3` while preserving both documentation histories and regenerating Graphify; no freeze behavior, probe logic or production action changed.
