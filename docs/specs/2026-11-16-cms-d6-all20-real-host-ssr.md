@@ -30,6 +30,11 @@ the same full content rectangle directly through Chromium's screenshot protocol
 and assert the PNG's width and height match measured layout dimensions. Keep a
 bounded height assertion to fail visibly on pathological layouts rather than
 silently timing out, while retaining all host crops and parity checks.
+CI `43777125938` still timed out in the capture phase after the CDP change;
+the first neutral/public 768px screenshot produced no artifact. Emit distinct
+font, CDP session, measured-layout, screenshot, attachment, crop and axe phase
+markers on the next exact-head run to identify the blocked operation before
+changing the capture implementation or attributing the failure to rendering.
 Check the neutral/brand accent at first paint and run unwaived WCAG A/AA axe
 against the content (including minor/moderate violations). Attach all JSON
 results and screenshot SHA-256 values to a provenance manifest. The preview

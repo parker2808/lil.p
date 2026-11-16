@@ -358,6 +358,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Added phase-level diagnostics to the V03/V14 all-20 no-JS visual gate after a second full-page capture timeout; all hosts, screenshot artifacts, axe checks and pixel thresholds remain required. Exact-head CI and raw-image review pending.
 - 2026-11-16: Switched stalled no-JS full-page visual captures to Chromium's full-content screenshot protocol with explicit image dimension assertions; no matrix tuples, host image pairs, axe checks or pixel thresholds removed. Exact-head CI pending.
 - 2026-11-16: Split the V03/V14 all-20 real-host no-JS/axe/visual matrix into 12 viewport-bounded specs across five CI shards after 12-tuple tests timed out; retain all 96 public/preview tuples (480 per-host pairs), raw PNGs, unwaived axe and independent image signoff.
 - 2026-11-16: Restore keyboard focus to the originating version-row action after Escape/Cancel and to Version history after successful nested Restore closes the sheet; preserve strict EN/VI dialog browser checks.

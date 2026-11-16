@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: Switching a stalled Playwright full-page capture to CDP did not by itself unblock the no-JS all-20 matrix; log font readiness, CDP attachment, layout size, screenshot and crop boundaries separately before choosing another capture path.
+
 - 2026-11-16: A no-JS full-page Playwright screenshot can stall before producing any artifact even after successful SSR assertions; capture the measured full content rectangle via Chromium protocol and verify PNG dimensions before reviewing any visual gate.
 
 - 2026-11-16: A no-JS all-host visual test can consume its entire four-minute case and then a shard's 20-minute budget on retries; split by viewport and balance registered specs across all shards, keeping each public/preview pair, raw screenshots and unwaived axe intact.

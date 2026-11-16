@@ -229,12 +229,17 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                 const banner = visitor.locator('[data-slot="draft-banner"]');
                 if (mode === 'preview') await expect(banner).toBeVisible();
                 else await expect(banner).toHaveCount(0);
-                console.log(`[all20-ssr] ${label}: capture`);
+                console.log(`[all20-ssr] ${label}: fonts-start`);
                 await expect
                   .poll(() => visitor.evaluate(() => document.fonts.status), { timeout: 5_000 })
                   .toBe('loaded');
+                console.log(`[all20-ssr] ${label}: fonts-loaded`);
                 const session = await context.newCDPSession(visitor);
+                console.log(`[all20-ssr] ${label}: cdp-attached`);
                 const { cssContentSize } = await session.send('Page.getLayoutMetrics');
+                console.log(
+                  `[all20-ssr] ${label}: layout ${cssContentSize.width}x${cssContentSize.height}`,
+                );
                 expect(cssContentSize.width, `${label} full-page width`).toBeGreaterThanOrEqual(
                   width,
                 );
@@ -244,6 +249,7 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                 expect(cssContentSize.height, `${label} bounded full-page height`).toBeLessThan(
                   20_000,
                 );
+                console.log(`[all20-ssr] ${label}: cdp-capture-start`);
                 const { data } = await session.send('Page.captureScreenshot', {
                   format: 'png',
                   captureBeyondViewport: true,
@@ -256,6 +262,7 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                     scale: 1,
                   },
                 });
+                console.log(`[all20-ssr] ${label}: cdp-capture-complete`);
                 const fullImage = Buffer.from(data, 'base64');
                 expect(fullImage.readUInt32BE(16), `${label} PNG width`).toBe(
                   Math.ceil(cssContentSize.width),
@@ -267,8 +274,10 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                   body: fullImage,
                   contentType: 'image/png',
                 });
+                console.log(`[all20-ssr] ${label}: page-attached`);
                 const screenshots = [];
                 for (const block of blocks) {
+                  console.log(`[all20-ssr] ${label}: crop-start ${block.type}`);
                   const image = await main
                     .locator(`[data-host-block-type="${block.type}"]`)
                     .screenshot({
@@ -276,6 +285,7 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                       style:
                         '[data-slot="draft-banner"], .site-header, .locale-toast, .hero-stage canvas { visibility: hidden !important; }',
                     });
+                  console.log(`[all20-ssr] ${label}: crop-complete ${block.type}`);
                   const name = `${label}-${block.type}.png`;
                   await testInfo.attach(name, { body: image, contentType: 'image/png' });
                   screenshots.push({
@@ -297,6 +307,7 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                     publicImages.set(block.type, image);
                   }
                 }
+                console.log(`[all20-ssr] ${label}: axe-start`);
                 const axe = await new AxeBuilder({ page: visitor })
                   .include('#content > main.cms-core-host')
                   .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
