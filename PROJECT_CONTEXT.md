@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- 2026-11-16 V13 F4 integration: add a guarded disposable-MySQL legacy draft fixture and real EN/VI API, SSR, hydrated browser and public-route assertions. CI `43776544095` exposed the starter's empty-body publish rejection; fill bilingual prose before publishing the immutable public baseline, then corrupt only the draft. Exact-head CI and independent review remain pending; full V13 remains GAP.
+- 2026-11-16 V13 F4 integration: add a guarded disposable-MySQL legacy draft fixture and real EN/VI API, SSR, hydrated browser and public-route assertions. CI `43776544095` exposed the starter's empty-body publish rejection; fill bilingual prose before publishing the immutable public baseline, then corrupt only the draft. CI `43778369699` reached the public route but caught a false positive from Next's serialized locale catalog containing preview-only strings: restrict notice isolation to parsed SSR main and hydrated DOM, retaining full-response raw diagnostic exclusion. Exact-head CI and independent review remain pending; full V13 remains GAP.
 
 - 2026-11-16 V13 F3/F4: D6 no-SEO tree metadata now takes the rendered EN/VI page-header H1/intro (or native heading H1) for public and authorized preview; invalid legacy preview blocks get localized recovery help without raw diagnostics. Exact-head browser CI and combined-head route/state review pending; full V13 remains GAP.
 

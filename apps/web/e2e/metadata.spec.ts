@@ -146,8 +146,15 @@ test('real invalid draft block is localized only in EN/VI preview, without diagn
     const previewResponse = await page.goto(path);
     expect(previewResponse?.status()).toBe(200);
     const previewHtml = await previewResponse!.text();
-    expect(previewHtml).toContain(notice);
-    expect(previewHtml).toContain(help);
+    const previewMain = await page.evaluate(
+      (html) =>
+        new DOMParser().parseFromString(html, 'text/html').querySelector('main.cms-core')
+          ?.innerHTML,
+      previewHtml,
+    );
+    expect(previewMain).toBeTruthy();
+    expect(previewMain).toContain(notice);
+    expect(previewMain).toContain(help);
     expect(previewHtml).not.toContain('f4-internal-legacy-type');
     expect(previewHtml).not.toContain('invalidBlocks');
     expect(previewHtml).not.toContain('issues');
@@ -159,7 +166,18 @@ test('real invalid draft block is localized only in EN/VI preview, without diagn
     await page.goto(`/api/draft?exit=1&path=${encodeURIComponent(path)}`);
     const publicResponse = await page.goto(path);
     expect(publicResponse?.status()).toBe(200);
-    expect(await publicResponse!.text()).not.toContain(notice);
+    const publicMain = await page.evaluate(
+      (html) =>
+        new DOMParser().parseFromString(html, 'text/html').querySelector('main.cms-core')
+          ?.innerHTML,
+      await publicResponse!.text(),
+    );
+    expect(publicMain).toBeTruthy();
+    expect(publicMain).not.toContain(notice);
+    expect(publicMain).not.toContain(help);
+    expect(publicMain).toContain(
+      locale === 'en' ? 'Published English body copy' : 'Nội dung công khai tiếng Việt',
+    );
     await expect(page.getByText(notice)).toHaveCount(0);
     await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', description);
     expect(await page.title()).toContain(title);

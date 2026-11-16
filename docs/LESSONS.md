@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: Next SSR can serialize the complete locale catalog in its RSC scripts, including preview-only notices on a valid public page. Assert notice isolation inside parsed server-rendered `main.cms-core` and hydrated visible DOM, not across the entire HTML response; keep raw diagnostic exclusion across the full response.
+
 - 2026-11-16: A starter page's empty prose fails the real publish gate even when SEO exists; populate visible EN/VI copy before publishing the snapshot that an invalid-draft preview test must preserve.
 
 - 2026-11-16: When a D6 restack conflicts only in narrative docs and a generated graph report, retain both review histories while keeping the report's prior source commit explicit; old green source CI cannot score the new merge head.
