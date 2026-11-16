@@ -464,6 +464,8 @@ For a future release, audit the **approved integrated** dependency graph, source
 
 Earlier #208 rehearsal results (26 allowlisted files, five JS subpaths, CSS, root rejection, clean redacted history scan and package-local checks) are an input to this checklist, **not** a substitute for running it on final `main`. The external package auth/build gates in step 5 cannot be declared PASS with an offline `file:` tarball; they stay separately authorized/open.
 
+At the later #208 `4227e3e` disposable rehearsal, standalone tests passed 62 (two optional browser checks skipped), and contracts → web → API → fixture builds passed against the 26-file tarball. The fixture unit test initially failed because it read monorepo-relative `packages/cms-core/dist`; resolving the installed `./react` entry and retaining the same JS/CJS client/server directive assertions made the isolated fixture test pass 9/9 on Node 22. This fixes a test path, not the package or runtime. On final main, repeat steps 1–5 with the approved exact SHA; production pre-D2 raw inventory cannot be certified from public page responses alone and remains a documented limitation, not a PASS.
+
 ## C1: distribution and cost/auth decision
 
 | Candidate                                          | Reproducible input and present tooling                                                                                                                           | Unverified gate before choosing                                                                                                                                                                                                                                                            |
