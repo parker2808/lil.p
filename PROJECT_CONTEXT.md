@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- Stage A #210 (2026-11-16 12:48 ICT): coordinator's read-only Render connector saw direct API health 200, a configured single instance and the earlier live deploy; no authenticated before/after instance drain evidence or freeze probes. The worksheet now uses coordinator-run Render GET API requests rather than a missing local CLI and calls out that the API build filter can auto-deploy on #210 merge. Stage A HOLD.
+
 - Stage A #210 sync with main `26fca2d3` (2026-11-16): retain the C1 dependency-rights audit alongside the release-owner worksheet; freeze behavior and the 33-probe kit remain unchanged. Production drain, probes, migration and deploy remain HOLD pending separate authorization.
 
 - Stage A #210 read-only worksheet (2026-11-16): checked tracked Render Docker startup migration and Vercel `/api` rewrite, and documented authenticated Render/Vercel inventory, before/after instance-set comparison, two-ingress probes and separate D2-aware reopen. No live inventory, HTTP probe, migration, DB access or deployment; Stage A HOLD pending release-owner evidence and authorization.
@@ -278,6 +280,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Replaced unavailable Render CLI inventory examples with coordinator-run read-only Render API requests in Stage A worksheet; retained privately approved origin for post-merge probes and no-production-write gate. No runtime change.
 
 - 2026-11-16: Restacked Stage A #210 onto main `26fca2d3` while preserving both documentation histories and regenerating Graphify; no freeze behavior, probe logic or production action changed.
 

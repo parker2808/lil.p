@@ -9,32 +9,58 @@ deploy or repeated 503 responses is not proof either.
 
 ## Read-only inventory worksheet (prepare before requesting a deploy)
 
-These commands are **read-only** and intended for the release owner's
-already-authorized Render/Vercel sessions. Do not paste credentials on the
-command line, in logs or in a PR. Never run a deploy, restart, migration,
-DB command or the mutation probes below merely to fill this worksheet.
+These requests are **read-only** and intended for the coordinator's
+already-authorized Render connector/API session and the release owner's Vercel
+session. There is no Render CLI on the operator Mac: do not install one or
+request a login to fill this worksheet. Do not paste credentials on the command
+line, in logs or in a PR. Never run a deploy, restart, migration, DB command or
+the mutation probes below merely to fill this worksheet.
+
+Coordinator-run via the authenticated Render API (the paths are request
+descriptions, **not** shell commands; use the approved service/workspace IDs in
+the connector, without publishing credentials or raw responses):
+
+1. `GET /v1/services/{serviceId}`: confirm workspace, region, branch, build
+   filter, auto-deploy setting, Docker configuration and configured instance
+   count. **Disable auto-deploy by separately approved action before any Stage A
+   merge**: the currently configured build filter includes `apps/api/**`, so a
+   code-bearing #210 merge can otherwise deploy before the drain inventory.
+2. `GET /v1/services/{serviceId}/deploys` (follow every pagination cursor),
+   then `GET /v1/services/{serviceId}/deploys/{deployId}` for the live and
+   adjacent deploys: record commit, status, timestamps and prior deactivation.
+3. `GET /v1/services/{serviceId}/instances` **before and after** the approved
+   Stage A deploy: capture complete sets B and A, verify each ID's deploy/image
+   association and compare `B ∩ A`. A configured count of one is not a
+   complete live-instance roster.
+4. `GET /v1/logs` scoped by the authorized workspace (`ownerId`), service
+   (`resource`), and a bounded `startTime`/`endTime`; follow `hasMore` with
+   `nextStartTime`/`nextEndTime`. Correlate shutdown and in-flight completion
+   per old instance; redact log contents before sharing. Logs alone cannot
+   attest to a complete fleet.
+
+The coordinator's read-only observation at 12:48 ICT, 2026-11-16 found the
+direct Render API health endpoint at HTTP 200, with one instance configured
+and the prior deploy still live. This is **not** a pre/post Stage A instance
+inventory, a drain proof, or permission to send writes. The approved direct
+origin stays in the coordinator's private worksheet; after the separately
+authorized #210 deploy, supply it as `--render-url` to
+`scripts/probe-stage-a-d2.mjs` for the direct leg alongside Vercel `/api`.
 
 ```sh
-# Set RENDER_SERVICE_ID, WINDOW_START, WINDOW_END and VERCEL_DEPLOYMENT
-# locally from the authorized dashboards; never print values in a PR.
-render services instances "$RENDER_SERVICE_ID"
-render deploys list "$RENDER_SERVICE_ID"
-# Review only a bounded window; logs can contain sensitive data.
-render logs --resources "$RENDER_SERVICE_ID" --start "$WINDOW_START" --end "$WINDOW_END"
-
 # Run from the already-linked, authorized Vercel project (or supply its name).
 vercel list --environment production
 vercel inspect "$VERCEL_DEPLOYMENT"
 ```
 
-Render [CLI instance/deploy/log commands](https://render.com/docs/cli-reference)
-and Vercel [list](https://vercel.com/docs/cli/list) /
-[inspect](https://vercel.com/docs/cli/inspect) are read-only; verify the
-CLI's active workspace/project **before** trusting the output. If the CLI is
-unavailable, use the corresponding authenticated dashboard views, not guessed
-API endpoints. Do not publish raw instance IDs, origins, headers or unredacted
-logs; keep the detailed worksheet in the release owner's private evidence
-channel and share only a redacted summary.
+Render API references: [service](https://api-docs.render.com/reference/retrieve-service),
+[deploys](https://api-docs.render.com/reference/list-deploys),
+[instances](https://api-docs.render.com/reference/list-instances),
+[logs](https://api-docs.render.com/reference/list-logs). Vercel
+[list](https://vercel.com/docs/cli/list) / [inspect](https://vercel.com/docs/cli/inspect)
+are read-only; verify the active workspace/project **before** trusting output.
+Do not publish raw instance IDs, origins, headers or unredacted logs; keep the
+detailed worksheet in the release owner's private evidence channel and share
+only a redacted summary.
 
 | Evidence point      | Release-owner record (private)                                                                                                                                                                                              | STOP if                                                                                                                             |
 | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
@@ -55,8 +81,9 @@ keep Stage A frozen rather than guessing from a timer, health check or green CI.
 `prisma migrate deploy` at startup; `apps/web/next.config.ts` rewrites
 `/api/:path*` to the configured API origin. These tracked files cannot reveal
 live Render instance IDs, active commits, Vercel alias or outside writers.
-Render/Vercel CLI production inventory and all HTTP probes remain
-**unexecuted**; Stage A stays **HOLD**.
+The coordinator's initial Render API observation is **not** a pre/post drain
+inventory; Vercel production inventory and mutation probes remain unexecuted.
+Stage A stays **HOLD**.
 
 ## Before the Stage A deploy
 

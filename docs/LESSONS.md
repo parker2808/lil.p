@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A configured single Render instance and one successful direct health GET cannot prove fleet drain; capture complete pre/post instance rosters through the authorized API and disable matching auto-deploy before merging a code-bearing freeze branch.
+
 - 2026-11-16: A docs/test-only main merge can conflict with Stage A release notes despite nonoverlapping runtime code; retain both sets of notes and independently verify the write-freeze behavior before interpreting exact-head CI.
 
 - 2026-11-15: Anonymous 503s on direct and rewritten page mutations show the HTTP freeze at sampled ingresses, not fleet-wide drain; compare pre-deploy instance IDs to an authoritative active roster and fail closed when identity, shutdown or in-flight evidence is missing.
