@@ -1,17 +1,17 @@
 # Graph Report - test-cms-v13-route-matrix  (2026-11-16)
 
 ## Corpus Check
-- 1723 files · ~747,765 words
+- 1723 files · ~747,847 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 40 file(s) not represented in the graph (top: (none) 18, .css 17, .example 1)
 
 ## Summary
-- 8145 nodes · 25259 edges · 340 communities (282 shown, 58 thin omitted)
-- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 2248 edges (avg confidence: 0.93)
+- 8145 nodes · 25260 edges · 339 communities (282 shown, 57 thin omitted)
+- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 2249 edges (avg confidence: 0.93)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `34d1c870`; `graphify update .` at `ddffea50` found no code-graph topology changes.
+- Built from commit: `47a373a8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -179,7 +179,7 @@
 - compilerOptions
 - web-e2e-shard
 - PageSkeleton.tsx
-- NotesBrowser.tsx
+- ContactFormBlock.tsx
 - skills.type.ts
 - steps
 - ci-ok
@@ -219,6 +219,7 @@
 - Ctrack Crystal | 01/2026 – Present
 - eslint.config.mjs
 - on
+- 2026-11-10-cms-stack-integration-plan.md
 - AuditRow.stories.tsx
 - @storybook/react
 - Spacing.stories.tsx
@@ -292,7 +293,6 @@
 - lint-typecheck
 - Duplicate block limit
 - D3 — shared server-side tree renderer
-- 2026-11-15-cms-d6-parity-matrix.md
 - tsconfig.build.json
 - Phase C — private CMS core distribution (draft-ahead specification)
 - D integration base — B7 + D1
@@ -314,7 +314,6 @@
 - media/loading.tsx
 - about/experience/new/loading.tsx
 - posts/[id]/loading.tsx
-- D6 V09/V10 UI restore gate
 - backup.sh
 - lint-staged
 - restore.sh
@@ -371,7 +370,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (340 total, 58 thin omitted)
+## Communities (339 total, 57 thin omitted)
 
 ### Community 0 - "ref_playwright_test"
 Cohesion: 0.03
@@ -415,7 +414,7 @@ Nodes (39): contactTopicsData, navItemsData, profileData, siteSettingsData, soci
 
 ### Community 10 - "block-renderers.constant.ts"
 Cohesion: 0.10
-Nodes (57): listPrinciples(), AboutIntroBlock(), AboutIntroSkeleton(), BlockHeading(), CaseGridBlock(), CaseGridSkeleton(), ContactFormSkeleton(), CtaBandSkeleton() (+49 more)
+Nodes (56): Loading(), listPrinciples(), AboutIntroBlock(), AboutIntroSkeleton(), BlockHeading(), CaseGridBlock(), CaseGridSkeleton(), ContactFormSkeleton() (+48 more)
 
 ### Community 11 - "CaseCard"
 Cohesion: 0.12
@@ -458,8 +457,8 @@ Cohesion: 0.08
 Nodes (23): AppModule, IS_PUBLIC_KEY, ROLES_KEY, AdapterCause, AllExceptionsFilter, RequestWithId, uniqueFieldFromPrisma(), controllerTag() (+15 more)
 
 ### Community 21 - "apiServer"
-Cohesion: 0.05
-Nodes (56): AdminAuditPage(), listEducation(), listExperience(), listMarqueeSkills(), listSkillsGrouped(), guardExperience(), guardSkillGroups(), guardSkills() (+48 more)
+Cohesion: 0.06
+Nodes (46): AdminAuditPage(), listEducation(), listExperience(), listMarqueeSkills(), listSkillsGrouped(), guardExperience(), guardSkillGroups(), guardSkills() (+38 more)
 
 ### Community 23 - "ref_zod"
 Cohesion: 0.06
@@ -483,7 +482,7 @@ Nodes (68): firstTreeHeading(), CMS core full verification — D6 → C gate, Co
 
 ### Community 28 - "ProjectsDetail.tsx"
 Cohesion: 0.08
-Nodes (38): generateStaticParams(), generateMetadata, generateStaticParams(), Page(), revalidate, Link, renderAppLink(), MarkdownSection (+30 more)
+Nodes (36): generateStaticParams(), generateMetadata, generateStaticParams(), Page(), revalidate, Link, MarkdownSection, splitMarkdownSections() (+28 more)
 
 ### Community 29 - "ui/package.json"
 Cohesion: 0.04
@@ -550,8 +549,8 @@ Cohesion: 0.10
 Nodes (10): AdminSkillCategoriesController, AdminSkillsController, toAdminCategory(), toAdminSkill(), SkillsService, skillCategoriesApi, skillsApi, AdminSkill (+2 more)
 
 ### Community 45 - "README.md"
-Cohesion: 0.05
-Nodes (24): D1 — versioned layout tree contract, Plan (8 lines), Capture matrix and design review, Commands and owner (replace proposed paths only after they exist), D6 — journey and release evidence manifest template, Journey steps (one row per mouse and keyboard run), Run header (fill every field), Verdict and rollback (+16 more)
+Cohesion: 0.04
+Nodes (26): B5 review — lossless snapshot reads, Plan, D1 — versioned layout tree contract, Plan (8 lines), Builder publish, history and restore (V10), D5 builder history gate — V07, D6 editor-origin visual and axe matrix, D6 parity matrix: isolated verification slice (+18 more)
 
 ### Community 46 - "Button"
 Cohesion: 0.09
@@ -642,8 +641,8 @@ Cohesion: 0.13
 Nodes (16): @tiptap/core@3.32.0, @tiptap/pm@3.32.0, @tiptap/suggestion@3.32.0, SlashItem, Callout, Commands, @tiptap/core, looksLikeMarkdown() (+8 more)
 
 ### Community 68 - "next"
-Cohesion: 0.11
-Nodes (25): copy, CraftPage(), generateMetadata(), revalidate, studyLabel(), generateStaticParams, GET(), revalidate (+17 more)
+Cohesion: 0.10
+Nodes (33): copy, CraftPage(), generateMetadata(), revalidate, studyLabel(), generateStaticParams, GET(), revalidate (+25 more)
 
 ### Community 69 - "PublicErrorState.tsx"
 Cohesion: 0.60
@@ -790,8 +789,8 @@ Cohesion: 0.06
 Nodes (33): MARKDOWN_CODE_LANGUAGES, highlight.js@^11.12.0, lowlight@^3.3.0, @tiptap/extension-code-block-lowlight@3.32.0, @tiptap/extension-file-handler@3.32.0, @tiptap/extension-heading@3.32.0, @tiptap/extension-image@3.32.0, @tiptap/extension-link@3.32.0 (+25 more)
 
 ### Community 106 - "PublicRouteSkeleton"
-Cohesion: 0.14
-Nodes (14): Loading(), Loading(), Loading(), Loading(), Loading(), Loading(), Loading(), Loading() (+6 more)
+Cohesion: 0.16
+Nodes (13): Loading(), Loading(), Loading(), Loading(), Loading(), Loading(), Loading(), dynamic (+5 more)
 
 ### Community 107 - "PropertiesPanel.tsx"
 Cohesion: 0.10
@@ -858,8 +857,8 @@ Cohesion: 0.16
 Nodes (15): BuilderStudy(), Choice, copy, dynamic, generateMetadata(), sampleLabels, catalog, Labels (+7 more)
 
 ### Community 123 - "ProjectsBrowser.tsx"
-Cohesion: 0.26
-Nodes (9): Labels, ProjectsBrowser(), ProjectsBrowserIsland(), ProjectsBrowserProps, ProjectsBrowserView(), parseView(), ProjectsView(), View (+1 more)
+Cohesion: 0.13
+Nodes (17): renderAppLink(), LazyNotesBrowser, NotesBrowser(), NotesBrowserContent(), useNotesSearch(), listPostsPageClient(), queryString(), Labels (+9 more)
 
 ### Community 124 - "lil.p"
 Cohesion: 0.10
@@ -958,8 +957,8 @@ Cohesion: 0.13
 Nodes (14): compilerOptions, esModuleInterop, forceConsistentCasingInFileNames, isolatedModules, lib, module, moduleResolution, noEmit (+6 more)
 
 ### Community 148 - "getSite"
-Cohesion: 0.12
-Nodes (28): Page(), generateMetadata, Page(), revalidate, generateMetadata, generateStaticParams(), Page(), revalidate (+20 more)
+Cohesion: 0.11
+Nodes (30): generateMetadata, Page(), revalidate, generateMetadata, Page(), revalidate, generateMetadata, generateStaticParams() (+22 more)
 
 ### Community 149 - "scripts/check-deps.mjs"
 Cohesion: 0.32
@@ -986,8 +985,8 @@ Cohesion: 0.33
 Nodes (5): apiRoot, legacySnapshot, OldReaderResult, runOldReader(), tree
 
 ### Community 155 - "next"
-Cohesion: 0.05
-Nodes (46): GET(), dynamic, generateMetadata, revalidate, generateMetadata, Page(), revalidate, dynamic (+38 more)
+Cohesion: 0.06
+Nodes (36): GET(), dynamic, generateMetadata, Page(), revalidate, dynamic, metadata, customPageKey() (+28 more)
 
 ### Community 156 - "cms-d6-v06-all20-overrides.spec.ts"
 Cohesion: 0.13
@@ -1013,9 +1012,9 @@ Nodes (13): web-e2e-shard, shard, actions, contents, fail-fast, matrix, if, name
 Cohesion: 0.18
 Nodes (5): Loading(), Loading(), Loading(), Loading(), Loading()
 
-### Community 163 - "NotesBrowser.tsx"
-Cohesion: 0.36
-Nodes (6): LazyNotesBrowser, NotesBrowser(), NotesBrowserContent(), useNotesSearch(), listPostsPageClient(), queryString()
+### Community 163 - "ContactFormBlock.tsx"
+Cohesion: 0.18
+Nodes (12): ContactFormBlock(), ChannelCards(), ChannelCardsView(), LazyContactForm, listContactTopics(), guardPublicText(), isPlaceholderText(), joinPublicList() (+4 more)
 
 ### Community 164 - "skills.type.ts"
 Cohesion: 0.15
@@ -1161,6 +1160,10 @@ Nodes (7): Ctrack Crystal | 01/2026 – Present, Languages, NOT Parker's, Overvi
 Cohesion: 0.25
 Nodes (8): on, pull_request, push, workflow_dispatch, paths-ignore, types, branches, paths-ignore
 
+### Community 203 - "2026-11-10-cms-stack-integration-plan.md"
+Cohesion: 0.18
+Nodes (7): Capture matrix and design review, Commands and owner (replace proposed paths only after they exist), D6 — journey and release evidence manifest template, Journey steps (one row per mouse and keyboard run), Run header (fill every field), Verdict and rollback, V16 automated builder accessibility subset
+
 ### Community 204 - "AuditRow.stories.tsx"
 Cohesion: 0.25
 Nodes (6): @storybook/react-vite@^10.0.0, Create, labels, meta, config, @storybook/react-vite
@@ -1250,8 +1253,8 @@ Cohesion: 0.33
 Nodes (5): Loading, meta, SIZES, Story, Variants
 
 ### Community 228 - "SiteShell.tsx"
-Cohesion: 0.13
-Nodes (13): SiteLayout(), DraftBanner(), DraftBannerView(), PreviewBridge(), refresh, PublicToaster(), SiteShell(), SkipLink() (+5 more)
+Cohesion: 0.12
+Nodes (14): SiteLayout(), DraftBanner(), DraftBannerView(), PreviewBridge(), refresh, PublicToaster(), SiteShell(), SkipLink() (+6 more)
 
 ### Community 229 - "Portfolio notes — CFW Back Office Portal (cfw-backoffice-portal)"
 Cohesion: 0.33
@@ -1274,7 +1277,7 @@ Cohesion: 0.33
 Nodes (5): Acceptance, CI label-run deduplication, Evidence and scope, Limitations, Plan (four steps)
 
 ### Community 234 - "B6b — neutral CMS core theme"
-Cohesion: 0.29
+Cohesion: 0.33
 Nodes (6): B6b — neutral CMS core theme, Contract and boundaries, Neutral review and coverage, Plan, Review follow-up: mandatory computed AA matrix, Verification
 
 ### Community 235 - "Typography.stories.tsx"
@@ -1310,7 +1313,7 @@ Cohesion: 0.06
 Nodes (28): IconKey, Callout(), meta, Note, Story, Warning, Amber, Blue (+20 more)
 
 ### Community 245 - "B6 — host-configurable React extraction"
-Cohesion: 0.29
+Cohesion: 0.33
 Nodes (6): B6 — host-configurable React extraction, Boundary evidence (Node 22), Gates after integration, Independent review follow-up (P1–P3), Main integration gate (2026-11-15), Plan
 
 ### Community 246 - "D4 main reconciliation — scratch handoff"
@@ -1493,18 +1496,14 @@ Nodes (3): meta, Story, Tones
 Cohesion: 0.05
 Nodes (66): Topbar(), navItemFor(), logout(), switchAdminLocale(), BlockRow(), emptyRow(), FIELDS, HeroStatField (+58 more)
 
-### Community 315 - "D6 V09/V10 UI restore gate"
-Cohesion: 0.12
-Nodes (8): B5 review — lossless snapshot reads, Plan, D6 V09/V10 UI restore gate, V09/V10 remaining restore tuples (2026-11-16), Measured GitHub Actions jobs (UTC, wall time), Web E2E shard throughput — 2026-11-15, Post-deploy parity design (not a deployment or PASS), V19 public-bundle guard (D6 stacked PR)
-
 ### Community 317 - "lint-staged"
 Cohesion: 0.67
 Nodes (3): lint-staged, *.{json,md,css,yml,yaml}, *.{ts,tsx,js,jsx,mjs,cjs}
 
 ## Knowledge Gaps
 - **17 isolated node(s):** `DATABASE_URL`, `./tsconfig.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json`, `../../tsconfig.base.json` (+12 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2481 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **58 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 2480 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+- **57 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -1517,7 +1516,7 @@ _Questions this graph is uniquely positioned to answer:_
   _17 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `ref_playwright_test` be split into smaller, more focused modules?**
   _Cohesion score 0.0324967824967825 - nodes in this community are weakly interconnected._
-- **Why does `next-intl` connect `ref_vitest` to `AdminPostsEditor.tsx`, `7. Open items`, `AdminSiteIndex.tsx`, `getQueryClient`, `block-renderers.constant.ts`, `ErrorState`, `Modules`, `admin-core/components/CommandPalette/CommandPalette.tsx`, `getSite`, `apiServer`, `AdminPagesEditor.tsx`, `next`, `ProjectsDetail.tsx`, `SiteHeader.tsx`, `AdminPostsIndex.tsx`, `AdminMediaIndex.tsx`, `ActionCards.tsx`, `Prose`, `NotesBrowser.tsx`, `cn`, `BuilderShell.tsx`, `Button`, `04-4-components-and-layout.md`, `Topbar.tsx`, `BuilderHost.tsx`, `[locale]/layout.tsx`, `BlockInspector.tsx`, `ref_node_path`, `next`, `PublicErrorState.tsx`, `BlocksPage.tsx`, `IconPicker.tsx`, `web/package.json`, `dependencies`, `AdminAboutExperienceEditor.tsx`, `AdminAuthLogin.tsx`, `SiteShell.tsx`, `PropertiesPanel.tsx`, `cms-u3-study/page.tsx`, `ProjectsBrowser.tsx`?**
+- **Why does `next-intl` connect `ref_vitest` to `AdminPostsEditor.tsx`, `7. Open items`, `AdminSiteIndex.tsx`, `getQueryClient`, `block-renderers.constant.ts`, `ErrorState`, `Modules`, `admin-core/components/CommandPalette/CommandPalette.tsx`, `getSite`, `apiServer`, `AdminPagesEditor.tsx`, `next`, `ProjectsDetail.tsx`, `SiteHeader.tsx`, `AdminPostsIndex.tsx`, `AdminMediaIndex.tsx`, `ActionCards.tsx`, `Prose`, `ContactFormBlock.tsx`, `cn`, `BuilderShell.tsx`, `Button`, `04-4-components-and-layout.md`, `Topbar.tsx`, `BuilderHost.tsx`, `[locale]/layout.tsx`, `BlockInspector.tsx`, `ref_node_path`, `next`, `PublicErrorState.tsx`, `BlocksPage.tsx`, `IconPicker.tsx`, `web/package.json`, `dependencies`, `AdminAboutExperienceEditor.tsx`, `AdminAuthLogin.tsx`, `SiteShell.tsx`, `PropertiesPanel.tsx`, `cms-u3-study/page.tsx`, `ProjectsBrowser.tsx`?**
   _High betweenness centrality (0.032) - this node is a cross-community bridge._
 - **Are the 12 inferred relationships involving `Button()` (e.g. with `4. Architecture at a glance` and `T12 · UI primitives matching Figma component sets`) actually correct?**
   _`Button()` has 12 INFERRED edges - model-reasoned connections that need verification._
