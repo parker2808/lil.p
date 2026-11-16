@@ -16,7 +16,7 @@ other tenant hosts keep neutral core tokens. Custom tree HTML is request-scoped
 (tagged API reads remain cacheable). It also checks nested no-script SSR, VI
 contact defaults and translated Properties labels; this does not by itself close
 the full V03/V14 visual matrix.
-The [V06 all-20 responsive gate](./docs/specs/2026-11-16-cms-d6-v06-all20-overrides.md) separately tests no-script EN/VI historical preview and current public layout/host overrides at 390/768/1440; its previous head passed CI `43767645840` attempt 2, but the merged V05 base needs new exact-head CI and independent capture review before V06 signoff.
+The [V06 all-20 responsive gate](./docs/specs/2026-11-16-cms-d6-v06-all20-overrides.md) separately tests no-script EN/VI historical preview and current public layout/host overrides at 390/768/1440. Raw review of head `b2f91937` exposed horizontal overflow in narrow nested columns despite green CI; the test now requires document and host bounds within each viewport. The scoped wrapping fix needs exact-new-head CI and independent capture review before V06 signoff.
 The real-host no-script sample also checks OS-driven dark first paint and
 separately authored VI tree copy on both neutral and branded tenants; it does
 so at 390/768/1440, asserting a painted CTA difference across actual tenant
@@ -122,6 +122,8 @@ The [D2 persistence draft](./docs/specs/2026-11-11-cms-d2-persistence-design.md#
 The [CMS core ADR](./docs/specs/2026-11-10-cms-core-adr.md) defines U → B → D → verification → C, the neutral default theme and screenshot-backed design gates. The [D1–D6 builder](./docs/specs/2026-11-10-cms-builder-phase-d-draft.md) and [C1–C3 distribution](./docs/specs/2026-11-10-cms-core-distribution-c-draft.md) handoffs remain draft implementation plans. Parker approved naming or linking the private `@parker2808/cms-core` repository and declaring it as a dependency; see the [narrow public-repo exception](./docs/specs/2026-11-10-agents-private-cms-core-exception.md). Private source and credentials remain excluded from this public repository.
 
 Published CMS tree hosts without an explicit `data-theme` inherit the site root's dark class; a host's explicit theme takes precedence. The [V09/V10 restore gate](./docs/specs/2026-11-15-cms-d6-v09-v10-ui-restore.md) checks public/preview painted content and WCAG AA in both modes; production parity still requires separate evidence.
+
+The [D6 V16 version-action gate](./docs/specs/2026-11-16-cms-d6-v16-version-dialog.md) tests keyboard/ARIA/axe behavior for Publish and the Restore confirmation in EN/VI and light/dark. The modal History sheet and Restore confirmation expose `aria-modal`; Publish currently has no confirmation dialog, and manual screen-reader signoff remains open.
 
 CMS draft handoff update (2026-11-11): B6b #193 `e12774e` exposes the opt-in neutral `@parker2808/cms-core/theme.css` with light/dark `--builder-*` tokens; D1 #194 `5c31773` exposes the typed `./tree` entry (`readTree`, `migrateTree`, `convertLegacySnapshot`) for the D2–D6 draft briefs. The [stack plan](./docs/specs/2026-11-10-cms-stack-integration-plan.md) preserves both manifest/tsup changes; B7 and D1 acceptance remain pending. This docs update neither imports the theme into the live app nor approves the D2 migration.
 

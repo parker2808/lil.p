@@ -296,6 +296,34 @@ for (const group of [0, 1, 2, 3]) {
             const screenshot = await visitor.screenshot({ fullPage: true, animations: 'disabled' });
             const screenshotName = `${locale}-group${group}-${width}-${preview ? 'preview-v1' : 'public-v2'}.png`;
             await testInfo.attach(screenshotName, { body: screenshot, contentType: 'image/png' });
+            const layout = await visitor.evaluate(() => ({
+              scrollWidth: document.documentElement.scrollWidth,
+              bodyWidth: document.body.scrollWidth,
+              overflowing: Array.from(
+                document.querySelectorAll(
+                  '#content > main.cms-core-host :is(.cms-tree__section, .cms-tree__row, .cms-tree__column, [data-host-block-type])',
+                ),
+              )
+                .filter((element) => {
+                  const rect = element.getBoundingClientRect();
+                  return rect.width && (rect.left < -1 || rect.right > innerWidth + 1);
+                })
+                .slice(0, 8)
+                .map((element) => ({
+                  node: element.getAttribute('data-node-id'),
+                  slot: element.getAttribute('data-slot'),
+                  tag: element.tagName,
+                })),
+            }));
+            expect(
+              layout.scrollWidth,
+              `${locale}/${width} document overflow: ${JSON.stringify(layout)}`,
+            ).toBeLessThanOrEqual(width);
+            expect(
+              layout.bodyWidth,
+              `${locale}/${width} body overflow: ${JSON.stringify(layout)}`,
+            ).toBeLessThanOrEqual(width);
+            expect(layout.overflowing, `${locale}/${width} host clipping`).toEqual([]);
             captures.push({
               width,
               locale,

@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: Full-page screenshots can silently widen past the requested browser viewport while layout/hash assertions pass; compare document scroll width and visible host bounds to the actual viewport, and size nested host content to its column rather than the window breakpoint.
+
 - 2026-11-16: A saved tree may preserve semantic props while changing JSON key order; compute SSR host hashes from the persisted API tree after the same tree parse as the renderer, not from the pre-save fixture object. CI `43765148714` exposed the false-negative in V06 without weakening its per-host hash assertion.
 - 2026-11-16: A no-script host-hash assertion must hash the renderer's serialized `{ props, lang }` envelope after locale resolution, not just localized props; CI `43762556788` exposed the mismatch without changing any production host behavior.
 - 2026-11-16: A base can advance again during a V05 restack; compare the remote feature SHA immediately before push and require combined-head CI instead of trusting the previous successful test-head run.
@@ -501,5 +503,8 @@
 - 2026-11-16 V02: sau reload, Layers thu gọn Section dù draft/published tree còn nguyên; test keyboard phải mở Section bằng ArrowRight rồi mới xác nhận các node con hiện ra, không đồng nhất trạng thái UI thu gọn với mất dữ liệu.
 
 - 2026-11-16 V02: Alt+ArrowDown trên sibling cuối là no-op; phải assert order trước/sau một Alt+ArrowUp thật, dùng Tab/Shift+Tab thay Playwright `.focus()` để chứng minh keyboard reachability.
+- 2026-11-16: Audit the live version controls before testing “confirmation dialogs”: D6 Publish acts immediately, whereas Restore alone has a Radix alertdialog; record the absent UI separately from keyboard/ARIA/axe evidence and keep manual screen-reader signoff open.
+- 2026-11-16: A focus-trapping Radix Sheet can render `role="dialog"` with a title but omit `aria-modal`; verify computed DOM semantics, then explicitly mark the scoped modal sheet rather than weakening browser assertions.
+- 2026-11-16: Controlled Radix alertdialogs without an AlertDialogTrigger need explicit close-auto-focus return to their originating action; nested sheets also need focus return to their own trigger after a successful restore closes both layers.
 - 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
 - 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
