@@ -52,6 +52,15 @@ The [reconciled Phase D draft](./docs/specs/2026-11-10-cms-builder-phase-d-draft
 
 Portfolio monorepo: Next.js public site + admin (`apps/web`), NestJS API (`apps/api`), design system (`packages/ui`), and shared zod contracts (`packages/contracts`).
 
+The [pre-D2 Stage A page-write freeze](./docs/specs/2026-11-15-cms-pre-d2-write-freeze.md)
+is a separate, production-default API guard; it does not ship D2 storage or
+authorize a deploy. Release owners must verify every old writer has drained
+before the later D2 migration, and keep the freeze until D2-aware unfreeze.
+The API test boots the production `AppModule` with stubbed services to catch a
+missing middleware registration. Its cold module bootstrap is a separate setup
+step; the 503 HTTP assertion retains the normal per-test timeout. This is not
+proof of live Render drain.
+
 The Round 3 integration branch contains the verified PR #169 head and all eleven earlier Round 3 branch tips. It is a review PR to `main`; the stacked PRs remain open. See the [integration handoff](./docs/specs/2026-11-03-r3-stack-integration.md) and [Round 3 audit](./docs/specs/2026-11-03-r3-12-real-flow-audit.md) for scope and checks.
 
 Layout and naming: [STRUCTURE.md](./STRUCTURE.md). Build plan: [docs/PLAN.md](./docs/PLAN.md).
@@ -303,7 +312,7 @@ After `git pull`, run `pnpm install`, `pnpm --filter @portfolio/contracts build`
 
 Live hosting is **Vercel (web) + Render (API) + TiDB Cloud (MySQL) + Cloudinary (media)**. First-time provisioning, every env var, and the admin bootstrap are in [docs/DEPLOY.md](./docs/DEPLOY.md) ([Tiếng Việt](./docs/DEPLOY.vi.md)). Rollback and secret rotation: [docs/runbooks/deploy.md](./docs/runbooks/deploy.md), [docs/runbooks/secrets.md](./docs/runbooks/secrets.md).
 
-The exceptional Stage A → D2 forward-only rollout uses the [release-owner probe and drain checklist](./docs/runbooks/deploy.md#stage-a--d2-page-write-rollout-release-owner-only). `scripts/probe-stage-a-d2.mjs` checks public health and unauthenticated page-write freeze across direct Render and Vercel ingress; it cannot certify old-instance drain or migration by itself. Never run it against production without release-owner authorization.
+The forward-only policy-approved Stage A → D2 sequence uses the [release-owner probe and drain checklist](./docs/runbooks/deploy.md#stage-a--d2-page-write-rollout-release-owner-only) and its [curl-only ingress/instance evidence sheet](./docs/runbooks/stage-a-drain-curl.md). Policy approval is not separate production authorization for #210 deploy/probes, #199 migration or D2-aware reopen and verification. `scripts/probe-stage-a-d2.mjs` checks public health and unauthenticated page-write freeze across direct Render and Vercel ingress; neither probe can certify old-instance drain or migration by itself. Run mutation probes only after separate authorization and after the Stage A freeze is live; the merge chain and coordinator verify each stage before proceeding.
 
 ### How a change reaches production
 
