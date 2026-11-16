@@ -12,7 +12,10 @@ async function getPage(...args: Parameters<typeof import('./pages.service').getP
 const page = {
   key: 'home',
   seo: { title: 'Published', description: null, lang: 'vi' },
-  tree: { schemaVersion: 1, root: { id: 'page-root', type: 'page', sections: [] } },
+  tree: {
+    schemaVersion: 1,
+    root: { id: 'page-root', type: 'page', responsive: { base: {} }, sections: [] },
+  },
 };
 
 describe('CMS published Page reader', () => {
@@ -97,6 +100,67 @@ describe('CMS published Page reader', () => {
     );
 
     await expect(getPage('home', 'vi')).resolves.toEqual(page);
+    await expect(getPage('home', 'vi')).resolves.toEqual(page);
+    expect(apiServer).not.toHaveBeenCalled();
+  });
+
+  it('rejects an unrenderable tree without saving it as last-good', async () => {
+    vi.stubEnv('CMS_PAGE_READ_SOURCE', 'cms');
+    vi.stubEnv('CMS_LEGACY_READ_FALLBACK_ENABLED', 'true');
+    vi.stubEnv('CMS_PUBLIC_API_ORIGIN', 'https://cms.example.test');
+    vi.mocked(draftMode).mockResolvedValue({ isEnabled: false } as never);
+    const invalid = {
+      ...page,
+      tree: {
+        schemaVersion: 1,
+        root: {
+          ...page.tree.root,
+          sections: [{ id: 'bad', type: 'unknown', responsive: { base: {} } }],
+        },
+      },
+    };
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ contractVersion: 1, publishedVersion: 5, page: invalid }),
+        })
+        .mockRejectedValueOnce(new DOMException('timeout', 'TimeoutError')),
+    );
+
+    await expect(getPage('home', 'vi')).rejects.toThrow('Published Page temporarily unavailable');
+    vi.stubEnv('CMS_LEGACY_READ_FALLBACK_ENABLED', 'false');
+    await expect(getPage('home', 'vi')).rejects.toThrow('Published Page temporarily unavailable');
+    expect(apiServer).not.toHaveBeenCalled();
+  });
+
+  it('keeps the prior validated snapshot after a malformed higher version', async () => {
+    vi.stubEnv('CMS_PAGE_READ_SOURCE', 'cms');
+    vi.stubEnv('CMS_PUBLIC_API_ORIGIN', 'https://cms.example.test');
+    vi.mocked(draftMode).mockResolvedValue({ isEnabled: false } as never);
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({ contractVersion: 1, publishedVersion: 4, page }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: async () => ({
+            contractVersion: 1,
+            publishedVersion: 5,
+            page: { ...page, tree: { broken: true } },
+          }),
+        })
+        .mockRejectedValueOnce(new DOMException('timeout', 'TimeoutError')),
+    );
+
+    await expect(getPage('home', 'vi')).resolves.toEqual(page);
+    await expect(getPage('home', 'vi')).rejects.toThrow('Published Page temporarily unavailable');
     await expect(getPage('home', 'vi')).resolves.toEqual(page);
     expect(apiServer).not.toHaveBeenCalled();
   });

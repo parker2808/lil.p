@@ -12,6 +12,8 @@ import {
 import { draftMode } from 'next/headers';
 import { cache } from 'react';
 import { z } from 'zod';
+import { readTree } from '@parker2808/cms-core/tree';
+import { HOST_TREE_REGISTRY } from '@portfolio/contracts';
 
 import { apiServer } from '@/modules/core/services/api-server.service';
 import { guardPublicText } from '@/modules/core/utils/placeholder.util';
@@ -87,6 +89,9 @@ async function getPublishedPage(key: PageKey, locale: Locale): Promise<PublicPag
     const parsed = cmsPublishedSchema.parse(await response.json());
     if (parsed.page.key !== key || parsed.page.seo.lang !== locale) {
       throw new Error('CMS published Page key or locale mismatch');
+    }
+    if ('tree' in parsed.page && !readTree(parsed.page.tree, HOST_TREE_REGISTRY).ok) {
+      throw new Error('Invalid published Page tree');
     }
     const page = guardPublicText(parsed.page);
     const previous = lastGood.get(cacheKey);

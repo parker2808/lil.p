@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 
 import { pageKeySchema, publicPagePathForKey } from '@portfolio/contracts';
 import { revalidatePath, revalidateTag } from 'next/cache';
@@ -11,7 +11,10 @@ const deliverySchema = z.strictObject({
   timestamp: z.number().int(),
   deliveryId: z.string().uuid(),
 });
-const seen = new Map<string, number>();
+const seen = new Map<
+  string,
+  { digest: string; state: 'in_progress' | 'failed' | 'completed'; timestamp: number }
+>();
 const latestVersion = new Map<string, number>();
 const windowMs = 5 * 60 * 1000;
 const replayMs = 10 * 60 * 1000;
@@ -63,20 +66,34 @@ export async function POST(request: Request): Promise<NextResponse> {
   if (!delivery.success || Math.abs(now - delivery.data.timestamp * 1000) > windowMs) {
     return NextResponse.json({ error: 'Invalid delivery' }, { status: 400 });
   }
-  for (const [id, timestamp] of seen) if (now - timestamp > replayMs) seen.delete(id);
-  if (seen.has(delivery.data.deliveryId)) {
+  for (const [id, entry] of seen) if (now - entry.timestamp > replayMs) seen.delete(id);
+  const digest = createHash('sha256').update(raw).digest('hex');
+  const existing = seen.get(delivery.data.deliveryId);
+  if (existing && existing.digest !== digest) {
+    return NextResponse.json({ error: 'Conflicting delivery' }, { status: 409 });
+  }
+  if (existing?.state === 'completed') {
     return NextResponse.json({ revalidated: false });
   }
-  seen.set(delivery.data.deliveryId, now);
+  if (existing?.state === 'in_progress') {
+    return NextResponse.json({ error: 'Delivery in progress' }, { status: 503 });
+  }
   const previousVersion = latestVersion.get(delivery.data.key) ?? 0;
   if (delivery.data.version < previousVersion) {
     return NextResponse.json({ revalidated: false });
   }
-  latestVersion.set(delivery.data.key, delivery.data.version);
+  seen.set(delivery.data.deliveryId, { digest, state: 'in_progress', timestamp: now });
   const path = publicPagePathForKey(delivery.data.key);
-  for (const locale of ['en', 'vi']) {
-    revalidateTag(`cms:page:${delivery.data.key}:${locale}`, { expire: 0 });
-    revalidatePath(`/${locale}${path === '/' ? '' : path}`);
+  try {
+    for (const locale of ['en', 'vi']) {
+      revalidateTag(`cms:page:${delivery.data.key}:${locale}`, { expire: 0 });
+      revalidatePath(`/${locale}${path === '/' ? '' : path}`);
+    }
+  } catch {
+    seen.set(delivery.data.deliveryId, { digest, state: 'failed', timestamp: now });
+    return NextResponse.json({ error: 'Invalidation failed' }, { status: 503 });
   }
+  latestVersion.set(delivery.data.key, delivery.data.version);
+  seen.set(delivery.data.deliveryId, { digest, state: 'completed', timestamp: now });
   return NextResponse.json({ revalidated: true, version: delivery.data.version });
 }

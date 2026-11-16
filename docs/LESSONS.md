@@ -723,3 +723,4 @@
 - 2026-11-16: A legacy published snapshot can contain unvalidated block type, key and props; public-read warning logs must use a fixed message rather than interpolate dropped-block details or request context.
 - 2026-11-16: Splitting an admin UI alone does not isolate CMS data; require a separate database/credential boundary and a reviewed read-only export plus forward-only cutover before retiring the original CMS writer.
 - 2026-11-16: A signed publish webhook cannot guarantee cross-instance replay safety using a process-local map; keep the new Page reader default-off and require durable atomic delivery/version state and cold-instance last-good before production cutover.
+- 2026-11-16: A delivery is complete only after every locale tag and path invalidates; reserve its digest while working, retry partial failures, and validate the actual host tree before storing a CMS response as last-good.

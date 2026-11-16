@@ -76,4 +76,41 @@ describe('CMS publish webhook', () => {
     expect(await response.json()).toEqual({ revalidated: false });
     expect(revalidateTag).toHaveBeenCalledTimes(2);
   });
+
+  it('retries the same delivery after a partial invalidation failure', async () => {
+    vi.stubEnv('CMS_PAGE_READ_SOURCE', 'cms');
+    vi.stubEnv('CMS_REVALIDATE_SECRET', 'unit-test-key');
+    const body = JSON.stringify({
+      key: 'projects',
+      version: 7,
+      timestamp: Math.floor(Date.now() / 1000),
+      deliveryId: crypto.randomUUID(),
+    });
+    vi.mocked(revalidatePath).mockImplementationOnce(() => {
+      throw new Error('cache unavailable');
+    });
+
+    expect((await POST(signed(body))).status).toBe(503);
+    const retried = await POST(signed(body));
+    expect(await retried.json()).toEqual({ revalidated: true, version: 7 });
+    expect(revalidateTag).toHaveBeenCalledWith('cms:page:projects:vi', { expire: 0 });
+    expect(revalidatePath).toHaveBeenCalledWith('/vi/projects');
+  });
+
+  it('rejects changed bytes for a reserved delivery ID', async () => {
+    vi.stubEnv('CMS_PAGE_READ_SOURCE', 'cms');
+    vi.stubEnv('CMS_REVALIDATE_SECRET', 'unit-test-key');
+    const payload = {
+      key: 'notes',
+      version: 8,
+      timestamp: Math.floor(Date.now() / 1000),
+      deliveryId: crypto.randomUUID(),
+    };
+    vi.mocked(revalidateTag).mockImplementationOnce(() => {
+      throw new Error('cache unavailable');
+    });
+    expect((await POST(signed(JSON.stringify(payload)))).status).toBe(503);
+    expect((await POST(signed(JSON.stringify({ ...payload, version: 9 })))).status).toBe(409);
+    expect((await POST(signed(JSON.stringify(payload)))).status).toBe(200);
+  });
 });

@@ -48,7 +48,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- 2026-11-16 Goal B Page consumer draft: opt-in published-only CMS fetch and separate signed webhook are code-only behind default `CMS_PAGE_READ_SOURCE=legacy`; authenticated preview/admin and non-Page paths remain unchanged. Before production switch, implement shared durable replay/version state, cold-instance last-good, exact CMS API parity and a reviewed Page-only cutover/rollback. No schema, migration, credentials or deployment in this PR. See `docs/specs/2026-11-16-cms-public-reader.md`.
+- 2026-11-16 Goal B Page consumer draft: opt-in published-only CMS fetch and separate signed webhook are code-only behind default `CMS_PAGE_READ_SOURCE=legacy`; authenticated preview/admin and non-Page paths remain unchanged. B4 follow-up validates the host tree before caching and retries a partially failed invalidation. Before production switch, implement shared durable replay/version state, cold-instance last-good, exact CMS API parity and a reviewed Page-only cutover/rollback. A separate free-tier CMS database is proposed for shared state; no lil.p production schema, migration, credentials or deployment change in this PR. See `docs/specs/2026-11-16-cms-public-reader.md`.
 
 - 2026-11-16 Goal B: plan an independent CMS backend/admin and **new** database, not a second admin writing to lil.p's database. Private cms-core plan is linked from `docs/plans/cms-admin-separation.md`; C3 packaging stays separate. No prod export/provision/migration/deploy authorized by this pointer.
 
@@ -493,6 +493,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-16: Fixed B4 CMS webhook delivery completion to follow both locale invalidations and reject changed payloads; validated published trees against the host registry before last-good storage. Added retry and malformed-tree regression tests. Shared durable state remains a production blocker.
 
 - 2026-11-16: Added a default-off, server-only CMS published Page adapter with validated versioned EN/VI DTO, bounded timeout/last-good and explicit approved legacy fallback, plus a raw-HMAC Page-only revalidation route and mocked contract tests; existing preview/admin, DB and non-Page reads are unchanged. Production remains blocked on durable shared replay and cold-start fallback.
 
