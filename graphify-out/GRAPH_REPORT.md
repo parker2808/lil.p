@@ -1,7 +1,7 @@
 # Graph Report - fix-cms-d6-v13-f4-integration  (2026-11-16)
 
 ## Corpus Check
-- 1691 files · ~717,179 words
+- 1691 files · ~717,379 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 40 file(s) not represented in the graph (top: (none) 18, .css 17, .example 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6653ae2d`
+- Built from commit: `2c97ae8c`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
