@@ -49,6 +49,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 7. Open items
 
 - 2026-11-16 #199 main sync after #271: retain the D2 release/drain gates alongside C1 license history, without touching Prisma schema or migration; exact merged-head API and five-shard CI remain required before consideration. No production action.
+- 2026-11-16 C1 tarball rehearsal at #208 `4227e3e`: standalone core and all four consumer builds passed, but the fixture unit gate used a monorepo-relative `packages/cms-core/dist` path and failed when the package came from its tarball. Resolving through installed `./react` retained both client/server directive assertions and passed 9/9 fixture tests in the disposable tarball consumer (Node 22). Rerun all C1 checks on final main after the stack lands; no repository created.
+
+- 2026-11-16 C1 dependency-rights audit (docs only): #208 `539c4f1c` filtered package has no runtime dependencies; frozen peer installs React/React DOM 19.3.1 and Zod 4.6.7 carry MIT license files. No observed peer-license conflict with a private `UNLICENSED` core; ownership/notices, final-main history and consumer/hosted installer evidence remain separate gates. The extraction runbook records exact final-main steps. No repository, package, credential or deployment created.
 
 - D2 #199 Graphify P3 (2026-11-16): re-extracted code topology from reviewed head `aeb3c2d62787a5d0ea2ec22ab97f5c62c7249181`; the docs-only follow-up changes report provenance, not migration, API behavior or goldens. Release still HOLD on Stage A drain and separate approvals.
 
@@ -289,7 +292,11 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-16: Synced #199 with main `6825ee58` after #273, retaining D2 and C1 histories; regenerated Graphify from the merged tree. No Prisma schema/migration or production change.
 - 2026-11-16: Reconciled #199 with main `26fca2d` after docs #271, retaining both D2 and C1 histories; regenerated Graphify from the combined tree. No Prisma schema/migration or production change.
+- 2026-11-16: Resolve the neutral fixture's client/server directive checks against the installed core package instead of assuming a sibling workspace build; retain both ESM and CJS assertions. No package/runtime behavior or export-map change.
+
+- 2026-11-16: Recorded the scoped C1 peer-license audit and final-main consumer/hosted checklist; regenerated Graphify for this docs-only change. No package/runtime/golden change or release authorization.
 
 - 2026-11-16: Refreshed D2 #199 Graphify from source code commit `aeb3c2d6` and recorded the provenance-only follow-up explicitly; no runtime or schema changes.
 
