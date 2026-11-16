@@ -83,8 +83,9 @@ export class AdminPagesController {
   publishBuilder(
     @Param('key') key: string,
     @Body(new ZodValidationPipe(builderPublishInputSchema)) body: BuilderPublishInput,
-  ) {
-    return this.builder!.publish(key, body);
+    @CurrentUser() user: RequestUser,
+  ): Promise<AdminPage> {
+    return this.versions.publishBuilder(key, body, user.id);
   }
 
   @Get()

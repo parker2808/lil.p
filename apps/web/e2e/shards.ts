@@ -17,6 +17,7 @@ export const SPECS = [
   'cms-u3-study.spec.ts',
   'cms-builder-canvas.spec.ts',
   'cms-builder-keyboard.spec.ts',
+  'cms-builder-keyboard-publish.spec.ts',
   'lighthouse.spec.ts',
   'ux-overlay.spec.ts',
   'admin-scroll.spec.ts',
@@ -33,6 +34,7 @@ export const SPECS = [
   'admin-vi-core.spec.ts',
   'admin-vi-editors.spec.ts',
   'metadata.spec.ts',
+  'cms-d6-v13-route-matrix.spec.ts',
   'projects-filters.spec.ts',
   'project-cards.spec.ts',
   'ux-targets.spec.ts',
@@ -61,6 +63,10 @@ export const SPECS = [
   'admin-collections-r3.spec.ts',
   'admin-editors-r3.spec.ts',
   'custom-public-pages.spec.ts',
+  'cms-tree-journey.spec.ts',
+  'cms-builder-ui-restore.spec.ts',
+  'cms-d6-v16-version-dialog.spec.ts',
+  'cms-d6-v05-revision-chain.spec.ts',
   'admin-page-create.spec.ts',
   'public-shell-indexes.spec.ts',
   'copy-email.spec.ts',
@@ -71,6 +77,39 @@ export const SPECS = [
   'cms-builder-v16-automated.spec.ts',
   'cms-builder-d5-design.spec.ts',
   'u0-capture.spec.ts',
+  'cms-tree-host-blocks.spec.ts',
+  'cms-d6-ssr-i18n.spec.ts',
+  'cms-d6-nojs-hosts.spec.ts',
+  'cms-d6-v06-all20-overrides.spec.ts',
+  'cms-d6-parity-matrix.spec.ts',
+  'cms-d6-visual-1.spec.ts',
+  'cms-d6-visual-2.spec.ts',
+  'cms-d6-visual-3.spec.ts',
+  'cms-d6-visual-4.spec.ts',
+  'cms-d6-all20-ssr-1.spec.ts',
+  'cms-d6-all20-ssr-1-768.spec.ts',
+  'cms-d6-all20-ssr-1-1440.spec.ts',
+  'cms-d6-all20-ssr-2.spec.ts',
+  'cms-d6-all20-ssr-2-768.spec.ts',
+  'cms-d6-all20-ssr-2-1440.spec.ts',
+  'cms-d6-all20-ssr-3.spec.ts',
+  'cms-d6-all20-ssr-3-768.spec.ts',
+  'cms-d6-all20-ssr-3-1440.spec.ts',
+  'cms-d6-all20-ssr-4.spec.ts',
+  'cms-d6-all20-ssr-4-768.spec.ts',
+  'cms-d6-all20-ssr-4-1440.spec.ts',
+  'cms-editor-host-1.spec.ts',
+  'cms-editor-host-2.spec.ts',
+  'cms-editor-host-3.spec.ts',
+  'cms-editor-host-4.spec.ts',
+  'public-header-responsive.spec.ts',
+] as const;
+
+const EDITOR_HOST_SPECS = [
+  'cms-editor-host-1.spec.ts',
+  'cms-editor-host-2.spec.ts',
+  'cms-editor-host-3.spec.ts',
+  'cms-editor-host-4.spec.ts',
 ] as const;
 
 /** Specs pinned for pixel baselines and Lighthouse scores. */
@@ -78,6 +117,23 @@ const PINNED: Record<string, number> = {
   'visual.spec.ts': 1,
   'lighthouse.spec.ts': 1,
   'admin-editors-r3.spec.ts': 4,
+  'cms-d6-visual-1.spec.ts': 1,
+  'cms-d6-visual-2.spec.ts': 2,
+  'cms-d6-visual-3.spec.ts': 3,
+  'cms-d6-visual-4.spec.ts': 5,
+  'cms-d6-all20-ssr-1.spec.ts': 1,
+  'cms-d6-all20-ssr-1-768.spec.ts': 2,
+  'cms-d6-all20-ssr-1-1440.spec.ts': 3,
+  'cms-d6-all20-ssr-2.spec.ts': 4,
+  'cms-d6-all20-ssr-2-768.spec.ts': 5,
+  'cms-d6-all20-ssr-2-1440.spec.ts': 1,
+  'cms-d6-all20-ssr-3.spec.ts': 2,
+  'cms-d6-all20-ssr-3-768.spec.ts': 3,
+  'cms-d6-all20-ssr-3-1440.spec.ts': 4,
+  'cms-d6-all20-ssr-4.spec.ts': 5,
+  'cms-d6-all20-ssr-4-768.spec.ts': 1,
+  'cms-d6-all20-ssr-4-1440.spec.ts': 2,
+  'public-header-responsive.spec.ts': 3,
   'cms-builder-d5-design.spec.ts': 5,
 };
 
@@ -122,14 +178,15 @@ function assign(): Map<string, number> {
     out.set(file, shard);
     load[shard - 1] = (load[shard - 1] ?? 0) + (WEIGHT[file] ?? 4);
   }
-  const rest = SPECS.filter((f) => !out.has(f)).sort(
-    (a, b) => (WEIGHT[b] ?? 4) - (WEIGHT[a] ?? 4) || SPECS.indexOf(a) - SPECS.indexOf(b),
-  );
+  const rest = SPECS.filter(
+    (f) => !out.has(f) && !EDITOR_HOST_SPECS.includes(f as (typeof EDITOR_HOST_SPECS)[number]),
+  ).sort((a, b) => (WEIGHT[b] ?? 4) - (WEIGHT[a] ?? 4) || SPECS.indexOf(a) - SPECS.indexOf(b));
   for (const file of rest) {
     const shard = load.indexOf(Math.min(...load)) + 1;
     out.set(file, shard);
     load[shard - 1] = (load[shard - 1] ?? 0) + (WEIGHT[file] ?? 4);
   }
+  EDITOR_HOST_SPECS.forEach((file, index) => out.set(file, index + 1));
   return out;
 }
 

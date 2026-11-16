@@ -7,11 +7,12 @@ import {
 } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { buildSnapshot, orderBlocks } from '@parker2808/cms-core/engine';
-import { readTree } from '@parker2808/cms-core/tree';
+import { readTree, validateTreeForPublish } from '@parker2808/cms-core/tree';
 import {
   BLOCK_REGISTRY,
   type CorePageKey,
   corePageKeySchema,
+  HOST_TREE_REGISTRY,
   type Locale,
   type PageKey,
   type PageSnapshot,
@@ -32,7 +33,8 @@ import {
 } from '../publishing/publish-rules.util';
 import { PublishingService } from '../publishing/publishing.service';
 import { pageTags, SITE_TAGS } from '../publishing/tags.util';
-import { storedTreeError } from './builder-draft.service';
+import { storedTreeError, treeValidationError } from './builder-draft.service';
+import type { BuilderPublishInput } from './dto/builder-draft.dto';
 import type { PageWithAllBlocks } from './entities/page.entity';
 import { pageWithAllBlocksInclude } from './entities/page.entity';
 import { toAdminPage } from './entities/page.mapper';
@@ -40,9 +42,10 @@ import {
   draftToPublicBlocks,
   hasSnapshotFormat,
   type InvalidSnapshotBlock,
+  isTreeRenderable,
   lintSnapshotFields,
   readPageSnapshot,
-  readRestorablePageSnapshot,
+  readRestorableSnapshot,
   readTreeVersionSnapshot,
   snapshotBlockCount,
   snapshotToPublicPage,
@@ -54,6 +57,7 @@ import {
   definitionOf,
   parsePageKey,
 } from './pages-rules.util';
+import { toTreePage, type TreePage, treeRoutesEnabled } from './tree-page.util';
 
 type Tx = Prisma.TransactionClient;
 
@@ -177,6 +181,102 @@ export class PageVersionsService {
     return result;
   }
 
+  async publishBuilder(rawKey: string, input: BuilderPublishInput, actorId: number | null) {
+    const key = parsePageKey(rawKey);
+    const result = await this.prisma.$transaction(
+      async (tx) => {
+        const page = await this.requirePage(tx, key);
+        if (
+          corePageKeySchema.safeParse(key).success ||
+          page.draftTree === null ||
+          page.draftTreeRevision.toString() !== input.expectedRevision
+        ) {
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Builder draft changed; reload before publishing',
+            mode: page.draftTree === null ? 'legacy' : 'tree',
+            revision: page.draftTreeRevision.toString(),
+          });
+        }
+        const parsed = validateTreeForPublish(page.draftTree, HOST_TREE_REGISTRY);
+        if (!parsed.ok) throw treeValidationError(parsed.code, parsed.nodeId);
+        if (!isTreeRenderable(parsed.value)) throw treeValidationError('UNKNOWN_TYPE');
+        if (!treeRoutesEnabled()) {
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Tree publishing is not enabled',
+            mode: 'tree',
+            revision: page.draftTreeRevision.toString(),
+          });
+        }
+        if (page.draftTreeRevision === 9223372036854775807n) {
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Builder revision limit reached',
+          });
+        }
+        const claimed = await tx.page.updateMany({
+          where: {
+            id: page.id,
+            draftTreeRevision: page.draftTreeRevision,
+            draftTree: { not: PrismaValue.DbNull },
+          },
+          data: { draftTreeRevision: { increment: 1 } },
+        });
+        if (claimed.count !== 1) {
+          const current = await this.requirePage(tx, key);
+          throw new ConflictException({
+            code: 'CONFLICT',
+            message: 'Builder draft changed; reload before publishing',
+            mode: current.draftTree === null ? 'legacy' : 'tree',
+            revision: current.draftTreeRevision.toString(),
+          });
+        }
+        const latest = await tx.pageVersion.aggregate({
+          where: { pageId: page.id },
+          _max: { version: true },
+        });
+        const version = (latest._max.version ?? 0) + 1;
+        const created = await tx.pageVersion.create({
+          data: {
+            pageId: page.id,
+            version,
+            snapshot: {
+              format: 'tree',
+              snapshotVersion: 1,
+              seo: {
+                seoTitleEn: page.seoTitleEn,
+                seoTitleVi: page.seoTitleVi,
+                seoDescriptionEn: page.seoDescriptionEn,
+                seoDescriptionVi: page.seoDescriptionVi,
+              },
+              tree: parsed.value,
+            } as Prisma.InputJsonValue,
+            note: input.note,
+            createdById: actorId,
+          },
+        });
+        const now = new Date();
+        await tx.page.update({
+          where: { id: page.id },
+          data: { publishedVersionId: created.id, publishedAt: now, updatedAt: now },
+        });
+        await this.audit?.record(tx, {
+          userId: actorId,
+          action: 'PUBLISH',
+          entityType: 'page',
+          entityId: key,
+          summary: `Published ${key} v${version}`,
+        });
+        return toAdminPage(await this.requirePage(tx, key));
+      },
+      { isolationLevel: PrismaValue.TransactionIsolationLevel.ReadCommitted },
+    );
+    this.events?.emit('content.published', { entity: 'page', key });
+    void this.publishing?.revalidate([...pageTags(key), ...SITE_TAGS]);
+    return result;
+  }
+
   async restore(rawKey: string, version: number) {
     const key = parsePageKey(rawKey);
     return this.prisma.$transaction(
@@ -205,7 +305,9 @@ export class PageVersionsService {
             message: `Version ${version} was not found`,
           });
         }
-        const snapshot = readRestorablePageSnapshot(row.snapshot);
+        const snapshot = hasSnapshotFormat(row.snapshot)
+          ? null
+          : readRestorableSnapshot(row.snapshot);
         if (!snapshot) {
           throw new BadRequestException({
             code: 'INVALID_BLOCKS',
@@ -256,20 +358,21 @@ export class PageVersionsService {
         });
       }
       if (page.draftTree !== null) {
-        const current = readTree(page.draftTree);
+        const current = readTree(page.draftTree, HOST_TREE_REGISTRY);
         if (!current.ok) throw storedTreeError();
       }
       const row = await tx.pageVersion.findUnique({
         where: { pageId_version: { pageId: page.id, version } },
       });
-      if (!row)
+      if (!row) {
         throw new NotFoundException({
           code: 'NOT_FOUND',
           message: `Version ${version} was not found`,
         });
+      }
       const snapshot = hasSnapshotFormat(row.snapshot)
         ? readTreeVersionSnapshot(row.snapshot)
-        : readRestorablePageSnapshot(row.snapshot);
+        : readRestorableSnapshot(row.snapshot);
       if (!snapshot) throw storedTreeError();
       if (page.draftTreeRevision === 9223372036854775807n) {
         throw new ConflictException({
@@ -338,7 +441,11 @@ export class PageVersionsService {
     return this.restore(rawKey, published.version);
   }
 
-  async getPreview(rawKey: string, locale: Locale, version?: number): Promise<PublicPagePreview> {
+  async getPreview(
+    rawKey: string,
+    locale: Locale,
+    version?: number,
+  ): Promise<PublicPagePreview | (TreePage & { invalidBlocks: [] })> {
     const key = parsePageKey(rawKey);
     const page = await this.requirePage(this.prisma, key);
 
@@ -352,7 +459,11 @@ export class PageVersionsService {
           message: `Version ${version} was not found`,
         });
       }
-      if (hasSnapshotFormat(row.snapshot)) throw storedTreeError();
+      if (hasSnapshotFormat(row.snapshot)) {
+        const snapshot = readTreeVersionSnapshot(row.snapshot);
+        if (!snapshot || !treeRoutesEnabled()) throw storedTreeError();
+        return { ...toTreePage(key, locale, snapshot.seo, snapshot.tree), invalidBlocks: [] };
+      }
       const snapshot = readPageSnapshot(row.snapshot);
       if (!snapshot) {
         return {
@@ -378,6 +489,11 @@ export class PageVersionsService {
     }
 
     if (page.draftTree !== null) {
+      if (treeRoutesEnabled()) {
+        const tree = readTree(page.draftTree, HOST_TREE_REGISTRY);
+        if (!tree.ok) throw storedTreeError();
+        return { ...toTreePage(key, locale, page, tree.value), invalidBlocks: [] };
+      }
       throw new ConflictException({
         code: 'CONFLICT',
         message: 'Tree preview pending D3',

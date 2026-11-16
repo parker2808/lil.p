@@ -1,3 +1,4 @@
+import { BLOCK_REGISTRY } from '@portfolio/contracts';
 import { describe, expect, it, vi } from 'vitest';
 
 import { BuilderDraftService } from './builder-draft.service';
@@ -65,6 +66,47 @@ function setup(revision = 0n) {
 }
 
 describe('builder draft revision contract', () => {
+  it.each(Object.values(BLOCK_REGISTRY))(
+    'accepts and reloads host type $type',
+    async (definition) => {
+      const { service } = setup();
+      const tree = {
+        schemaVersion: 1,
+        root: {
+          id: 'page-root',
+          type: 'page',
+          responsive: { base: {} },
+          sections: [
+            {
+              id: 'section',
+              type: 'section',
+              responsive: { base: {} },
+              content: [
+                {
+                  id: 'host-block',
+                  type: 'component',
+                  componentType: definition.type,
+                  responsive: { base: definition.defaults },
+                },
+              ],
+            },
+          ],
+        },
+      };
+      expect(await service.activate('ideas', { expectedRevision: '0', tree })).toMatchObject({
+        mode: 'tree',
+        revision: '1',
+        tree,
+      });
+      expect(await service.save('ideas', { expectedRevision: '1', tree })).toMatchObject({
+        mode: 'tree',
+        revision: '2',
+        tree,
+      });
+      expect(await service.get('ideas')).toMatchObject({ mode: 'tree', revision: '2', tree });
+    },
+  );
+
   it('reads legacy without converting blocks and serializes a large revision exactly', async () => {
     const { service } = setup(9007199254740993n);
     expect(await service.get('ideas')).toEqual({
@@ -145,19 +187,13 @@ describe('builder draft revision contract', () => {
     expect(page.draftTreeRevision).toBe(0n);
   });
 
-  it('blocks fixed pages and disabled publication without changing data', async () => {
+  it('blocks fixed pages without changing data', async () => {
     const { service, prisma } = setup();
     await expect(
       service.activate('home', { expectedRevision: '0', tree: emptyTree }),
     ).rejects.toMatchObject({ response: { code: 'CONFLICT' } });
     await service.activate('ideas', { expectedRevision: '0', tree: emptyTree });
-    await expect(service.publish('ideas', { expectedRevision: '1' })).rejects.toMatchObject({
-      response: { code: 'VALIDATION_FAILED', fieldErrors: { tree: expect.any(Array) } },
-    });
     await service.save('ideas', { expectedRevision: '1', tree: publishReadyTree });
-    await expect(service.publish('ideas', { expectedRevision: '2' })).rejects.toMatchObject({
-      response: { code: 'CONFLICT', message: 'Tree publishing is not enabled' },
-    });
     expect(prisma.page.updateMany).toHaveBeenCalledTimes(2);
   });
 

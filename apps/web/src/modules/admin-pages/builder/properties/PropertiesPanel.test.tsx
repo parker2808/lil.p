@@ -15,10 +15,22 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { useState } from 'react';
 
 import type { BuilderState } from '../canvas/commands';
+import { newNode } from '../palette/catalog';
 import { propertyFields } from './editor-model';
 import { PropertiesPanel, type PropertyDraft } from './PropertiesPanel';
 import { builderRegistry } from './registry';
 import { commitProperty } from '../history/adapter';
+
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) =>
+    ({
+      'admin.blocks.hero.ctaLabel': 'CTA label',
+      'admin.blocks.field.href': 'URL liên kết',
+      'admin.blocks.heading.title': 'Tiêu đề',
+    })[
+      key as 'admin.blocks.hero.ctaLabel' | 'admin.blocks.field.href' | 'admin.blocks.heading.title'
+    ] ?? key,
+}));
 
 const state = {
   selectedId: 'heading',
@@ -57,6 +69,152 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+it.each(Object.keys(BLOCK_REGISTRY))('renders Properties for host component %s', (kind) => {
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [
+          {
+            ...state.document.root.sections[0]!,
+            content: [
+              newNode(kind as Parameters<typeof newNode>[0], () => 'host') as Extract<
+                TreeNode,
+                { type: 'component' }
+              >,
+            ],
+          },
+        ],
+      },
+    },
+  };
+  render(<PropertiesPanel state={hostState} locale="en" onEdit={vi.fn()} />);
+  expect(screen.getByRole('group', { name: 'Breakpoint' })).toBeInTheDocument();
+  cleanup();
+});
+
+it('shows the translated host name in the Properties heading', () => {
+  const host = newNode('page-header', () => 'host') as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(
+    <PropertiesPanel
+      state={hostState}
+      locale="vi"
+      onEdit={vi.fn()}
+      componentLabels={{ 'page-header': 'Đầu trang' }}
+    />,
+  );
+  expect(screen.getByText('Đầu trang')).toBeInTheDocument();
+  expect(screen.queryByText('page-header')).toBeNull();
+});
+
+it('submits bilingual nested host values as one validated root property', () => {
+  const onEdit = vi.fn();
+  const host = newNode('hero', () => 'host') as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(<PropertiesPanel state={hostState} locale="en" onEdit={onEdit} />);
+  fireEvent.change(screen.getByRole('textbox', { name: 'CTA label (VI)' }), {
+    target: { value: 'Dự án' },
+  });
+  expect(onEdit).toHaveBeenCalledWith(
+    expect.objectContaining({
+      key: 'primaryCta',
+      value: { label: { en: 'View case studies', vi: 'Dự án' }, href: '/projects' },
+    }),
+    true,
+  );
+});
+
+it('translates nested labels in the VI inspector without changing stored paths', () => {
+  const host = newNode('hero', () => 'host') as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(<PropertiesPanel state={hostState} locale="vi" onEdit={vi.fn()} />);
+  expect(screen.getByLabelText('URL liên kết')).toBeInTheDocument();
+  expect(screen.queryByText('primaryCta href')).toBeNull();
+});
+
+it('uses translated heading and language names for optional nested VI fields', () => {
+  const host = {
+    ...newNode('cv-download', () => 'host'),
+    responsive: {
+      base: { heading: { title: { en: 'Section heading', vi: 'Tiêu đề mục' } } },
+    },
+  } as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(<PropertiesPanel state={hostState} locale="vi" onEdit={vi.fn()} />);
+  expect(
+    screen.getByRole('textbox', { name: 'Tiêu đề mục · Tiêu đề · Tiếng Anh' }),
+  ).toBeInTheDocument();
+  expect(
+    screen.getByRole('textbox', { name: 'Tiêu đề mục · Tiêu đề · Tiếng Việt' }),
+  ).toBeInTheDocument();
+});
+
+it('offers valid optional bilingual heading for a host with empty defaults', () => {
+  const onEdit = vi.fn();
+  const host = newNode('cv-download', () => 'host') as Extract<TreeNode, { type: 'component' }>;
+  const hostState: BuilderState = {
+    selectedId: 'host',
+    document: {
+      ...state.document,
+      root: {
+        ...state.document.root,
+        sections: [{ ...state.document.root.sections[0]!, content: [host] }],
+      },
+    },
+  };
+  render(<PropertiesPanel state={hostState} locale="en" onEdit={onEdit} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Add heading' }));
+  expect(onEdit).not.toHaveBeenCalled();
+  fireEvent.change(screen.getByRole('textbox', { name: 'Section heading · Tiêu đề · English' }), {
+    target: { value: 'Section heading' },
+  });
+  expect(onEdit).toHaveBeenCalledWith(
+    expect.objectContaining({
+      key: 'heading',
+      value: { title: { en: 'Section heading', vi: '' } },
+    }),
+    true,
+  );
+});
 it.each(['en', 'vi'] as const)(
   'ends the %s keyboard property history session on blur even within 600ms',
   (locale) => {
@@ -275,7 +433,16 @@ it.each(
       updated = result.value;
     });
     render(<PropertiesPanel state={initial} locale={locale} onEdit={onEdit} />);
-    const fields = propertyFields(definition.props, locale);
+    const fields = propertyFields(
+      definition.props,
+      locale,
+      (key) =>
+        ({
+          'admin.blocks.hero.ctaLabel': 'CTA label',
+          'admin.blocks.field.href': 'URL liên kết',
+          'admin.blocks.heading.title': 'Tiêu đề',
+        })[key] ?? key,
+    );
     const available = fields.find((field) => Object.hasOwn(base, field.path.split('.')[0]!));
     if (!available || definition.type === 'featured-case') {
       if (definition.type === 'featured-case') {
@@ -288,13 +455,15 @@ it.each(
       } else {
         fireEvent.click(
           screen.getByRole('button', {
-            name: locale === 'en' ? 'Add · Heading' : 'Thêm · Tiêu đề mục',
+            name: locale === 'en' ? 'Add heading' : 'Thêm tiêu đề',
           }),
         );
         fireEvent.change(
           screen.getByRole('textbox', {
             name:
-              locale === 'en' ? 'Heading · Title · English' : 'Tiêu đề mục · Tiêu đề · Tiếng Anh',
+              locale === 'en'
+                ? 'Section heading · Tiêu đề · English'
+                : 'Tiêu đề mục · Tiêu đề · Tiếng Anh',
           }),
           {
             target: { value: 'A new section' },
@@ -303,7 +472,7 @@ it.each(
       }
     } else {
       const field = available;
-      const name = `${field.label}${['localized-text', 'localized-textarea', 'markdown'].includes(field.kind) ? ` · ${locale === 'en' ? 'English' : 'Tiếng Anh'}` : ''}`;
+      const name = `${field.path.startsWith('heading.') ? `${locale === 'en' ? 'Section heading' : 'Tiêu đề mục'} · ` : ''}${field.label}${['localized-text', 'localized-textarea', 'markdown'].includes(field.kind) ? (field.path.startsWith('heading.') ? ` · ${locale === 'en' ? 'English' : 'Tiếng Anh'}` : ' (EN)') : ''}`;
       if (field.kind === 'switch') fireEvent.click(screen.getByRole('switch', { name }));
       else if (field.kind === 'select') {
         fireEvent.click(screen.getByRole('combobox', { name }));
@@ -334,7 +503,7 @@ it('preserves nested siblings while editing VI copy and clearing a desktop overr
   const initial = hostState('hero', base);
   const onEdit = vi.fn();
   render(<PropertiesPanel state={initial} locale="vi" onEdit={onEdit} />);
-  fireEvent.change(screen.getByRole('textbox', { name: 'Hành động chính · Nhãn · Tiếng Việt' }), {
+  fireEvent.change(screen.getByRole('textbox', { name: 'CTA label (VI)' }), {
     target: { value: 'Xem dự án' },
   });
   expect(onEdit).toHaveBeenCalledWith(
@@ -349,7 +518,7 @@ it('preserves nested siblings while editing VI copy and clearing a desktop overr
     true,
   );
   fireEvent.click(screen.getByRole('button', { name: 'Máy tính bàn' }));
-  fireEvent.change(screen.getByRole('textbox', { name: 'Hành động chính · Nhãn · Tiếng Việt' }), {
+  fireEvent.change(screen.getByRole('textbox', { name: 'CTA label (VI)' }), {
     target: { value: 'Desktop' },
   });
   expect(onEdit).toHaveBeenCalledWith(

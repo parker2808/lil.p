@@ -31,12 +31,16 @@ export async function ContactFormBlock({
 
   return (
     <>
-      <div className="relative flex flex-col gap-6" lang={block.lang}>
+      <div className="relative flex flex-col gap-6" lang={context.locale}>
         {site.settings.ambientEffects ? <Atmosphere variant="hero" enabled /> : null}
-        {props.eyebrow ? <Eyebrow>{props.eyebrow}</Eyebrow> : null}
-        <h1 className="font-heading text-title font-bold">{props.title}</h1>
+        {props.eyebrow ? <Eyebrow lang={block.lang}>{props.eyebrow}</Eyebrow> : null}
+        <h1 className="font-heading text-title font-bold" lang={block.lang}>
+          {props.title}
+        </h1>
         {props.intro ? (
-          <p className="text-prose text-muted-foreground max-w-prose">{props.intro}</p>
+          <p className="text-prose text-muted-foreground max-w-prose" lang={block.lang}>
+            {props.intro}
+          </p>
         ) : null}
         {!isPlaceholderText(site.settings.contactIntro) ? (
           <p className="text-prose text-muted-foreground max-w-prose">

@@ -45,6 +45,8 @@
   "states": {
     "loading": "Đang tải",
     "empty": "Chưa có nội dung",
+    "unknownBlock": "Không thể xem trước khối này",
+    "unknownBlockHelp": "Kiểm tra khối này trong trình chỉnh sửa, rồi thử xem trước lại.",
     "error": "Đã xảy ra lỗi",
     "errorDescription": "Không thể tải trang. Hãy thử lại hoặc trở về trang chủ.",
     "retry": "Thử lại",

@@ -104,8 +104,17 @@ export function propertyLabel(path: string, locale: 'en' | 'vi'): string {
     .join(' · ');
 }
 
-export function propertyFields(schema: ZodType, locale: 'en' | 'vi'): SchemaField[] {
-  return schemaToFields(schema, { labelFor: (path) => propertyLabel(path, locale) });
+export function propertyFields(
+  schema: ZodType,
+  locale: 'en' | 'vi',
+  translate?: (key: string) => string,
+): SchemaField[] {
+  return schemaToFields(schema, {
+    labelFor: (path, key) => {
+      const translated = key?.startsWith('admin.blocks.') ? translate?.(key) : undefined;
+      return translated && translated !== key ? translated : propertyLabel(path, locale);
+    },
+  });
 }
 
 export function propertyJson(schema: ZodType): JsonField {

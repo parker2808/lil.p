@@ -11,6 +11,7 @@ import { reorder } from '../../common/utils/reorder.util';
 import type { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
+import { PublishingService } from '../publishing/publishing.service';
 import { educationSelect } from './entities/education.entity';
 import { toAdminDto, toPublicEducation } from './entities/education.mapper';
 
@@ -19,6 +20,7 @@ export class EducationService {
   constructor(
     private readonly prisma: PrismaService,
     @Optional() private readonly audit?: AuditService,
+    @Optional() private readonly publishing?: PublishingService,
   ) {}
 
   async listPublic(locale: Locale): Promise<PublicEducation[]> {
@@ -46,6 +48,7 @@ export class EducationService {
       entityId: ids[0] ?? 0,
       summary: `Reordered ${ids.length} education rows`,
     });
+    await this.publishing?.revalidate(['education']);
     return this.listAdmin();
   }
 
@@ -64,6 +67,7 @@ export class EducationService {
       entityId: row.id,
       summary: `Created education ${row.school}`,
     });
+    await this.publishing?.revalidate(['education']);
     return toAdminDto(row);
   }
 
@@ -80,6 +84,7 @@ export class EducationService {
       entityId: id,
       summary: `Updated education ${row.school}`,
     });
+    await this.publishing?.revalidate(['education']);
     return toAdminDto(row);
   }
 
@@ -92,6 +97,7 @@ export class EducationService {
       entityId: id,
       summary: `Deleted education ${current.school}`,
     });
+    await this.publishing?.revalidate(['education']);
     return toAdminDto(current);
   }
 

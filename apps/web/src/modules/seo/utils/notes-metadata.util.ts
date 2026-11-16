@@ -14,8 +14,10 @@ export function notesMetadata(input: {
 
 export function buildNotesMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<Metadata> {
-  return buildPageMetadata('notes', params);
+  return buildPageMetadata('notes', params, searchParams);
 }

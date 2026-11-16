@@ -22,6 +22,7 @@ const revalidateSecret = process.env.REVALIDATE_SECRET ?? testRevalidateSecret()
 
 const sharedEnv = {
   ...process.env,
+  CMS_TREE_ROUTES: '1',
   API_HOST: '127.0.0.1',
   API_PORT: apiPort,
   API_URL: apiOrigin,
@@ -58,7 +59,7 @@ export default defineConfig({
   },
   reporter: process.env.CI
     ? process.env.E2E_SHARD
-      ? [['list'], ['github'], ['blob', { fileName: `report-${process.env.E2E_SHARD}.zip` }]]
+      ? [['github'], ['list'], ['blob', { fileName: `report-${process.env.E2E_SHARD}.zip` }]]
       : [['github'], ['html', { open: 'never' }]]
     : 'list',
   globalSetup: './e2e/global-setup.ts',

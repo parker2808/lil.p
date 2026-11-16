@@ -1,4 +1,6 @@
 import type { INestApplication } from '@nestjs/common';
+import { renderTree } from '@parker2808/cms-core/react/server';
+import { BLOCK_REGISTRY, HOST_TREE_REGISTRY } from '@portfolio/contracts';
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
@@ -23,6 +25,418 @@ describe('builder draft persistence over disposable MySQL', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let pageId: number;
+
+  it('round-trips every host definition through real authenticated draft and published EN/VI routes', async () => {
+    const admin = await adminAgent(app);
+    expect(Object.keys(BLOCK_REGISTRY)).toHaveLength(20);
+    expect(Object.keys(HOST_TREE_REGISTRY).sort()).toEqual(Object.keys(BLOCK_REGISTRY).sort());
+    const publicServer = request(app.getHttpServer());
+    const previous = process.env.CMS_TREE_ROUTES;
+    process.env.CMS_TREE_ROUTES = '1';
+    try {
+      for (const definition of Object.values(BLOCK_REGISTRY)) {
+        const key = `host-api-${definition.type}`;
+        const host = {
+          id: `host-${definition.type}`,
+          type: 'component',
+          componentType: definition.type,
+          responsive: { base: definition.defaults },
+        };
+        const heading = {
+          id: 'host-heading',
+          type: 'component',
+          componentType: 'heading',
+          responsive: { base: { text: 'Host route gate', level: 1 } },
+        };
+        const tree = {
+          schemaVersion: 1,
+          root: {
+            id: 'host-root',
+            type: 'page',
+            responsive: { base: {} },
+            sections: [
+              {
+                id: 'host-section',
+                type: 'section',
+                responsive: { base: {} },
+                content: definition.role === 'h1' ? [host] : [heading, host],
+              },
+            ],
+          },
+        };
+        const created = await admin
+          .post('/api/admin/pages')
+          .send({ key, title: definition.type, locale: 'en', template: 'empty' })
+          .expect(201);
+        expect(created.body.key).toBe(key);
+        await admin
+          .patch(`/api/admin/pages/${key}`)
+          .send({ seoTitleVi: `VI ${definition.type}` })
+          .expect(200);
+        const path = `/api/admin/pages/${key}/builder`;
+        const activated = await admin
+          .post(`${path}/activate`)
+          .send({ expectedRevision: '0', tree })
+          .expect(200);
+        expect(activated.body).toMatchObject({ mode: 'tree', revision: '1', tree });
+        const saved = await admin
+          .put(`${path}/draft`)
+          .send({ expectedRevision: '1', tree })
+          .expect(200);
+        expect(saved.body).toMatchObject({ mode: 'tree', revision: '2', tree });
+        expect((await admin.get(`${path}/draft`).expect(200)).body).toEqual(saved.body);
+        const published = await admin
+          .post(`${path}/publish`)
+          .send({ expectedRevision: '2' })
+          .expect(200);
+        expect(published.body.publishedVersion).toBe(1);
+        for (const locale of ['en', 'vi']) {
+          const preview = await admin
+            .get(`/api/admin/preview/pages/${key}?locale=${locale}&version=1`)
+            .expect(200);
+          const publicPage = await publicServer
+            .get(`/api/public/pages/${key}?locale=${locale}`)
+            .expect(200);
+          expect(preview.body, `${definition.type}/${locale}`).toEqual({
+            ...publicPage.body,
+            invalidBlocks: [],
+          });
+          expect(publicPage.body.tree).toEqual(tree);
+          expect(publicPage.body.seo.lang).toBe(locale);
+        }
+      }
+    } finally {
+      if (previous === undefined) delete process.env.CMS_TREE_ROUTES;
+      else process.env.CMS_TREE_ROUTES = previous;
+    }
+  }, 180_000);
+
+  it('saves, publishes, previews, restores and republishes a real tree without losing legacy rows', async () => {
+    const admin = await adminAgent(app);
+    const user = await userAgent(app);
+    const tree = {
+      schemaVersion: 1,
+      root: {
+        id: 'page-root',
+        type: 'page',
+        responsive: { base: {} },
+        sections: [
+          {
+            id: 'section',
+            type: 'section',
+            responsive: { base: {} },
+            content: [
+              {
+                id: 'heading',
+                type: 'component',
+                componentType: 'heading',
+                responsive: { base: { text: 'First published draft', level: 1 } },
+              },
+            ],
+          },
+        ],
+      },
+    };
+    await prisma.page.update({
+      where: { id: pageId },
+      data: { seoTitleEn: 'Ideas EN', seoTitleVi: 'Ý tưởng VI' },
+    });
+    await prisma.pageBlock.create({
+      data: {
+        pageId,
+        type: 'page-header',
+        key: 'original',
+        schemaVersion: 1,
+        props: { title: { en: 'Legacy heading', vi: 'Tiêu đề cũ' } },
+        layout: 'ONE',
+        surface: 'PLAIN',
+        isVisible: true,
+        sortOrder: 0,
+      },
+    });
+    const legacyRows = await prisma.pageBlock.findMany({ where: { pageId } });
+    const previous = process.env.CMS_TREE_ROUTES;
+    process.env.CMS_TREE_ROUTES = '1';
+    try {
+      const publish = '/api/admin/pages/ideas/builder/publish';
+      const draft = '/api/admin/pages/ideas/builder/draft';
+      await admin.post(publish).send({ expectedRevision: '0' }).expect(409);
+      await admin
+        .post('/api/admin/pages/ideas/builder/activate')
+        .send({ expectedRevision: '0', tree: emptyTree })
+        .expect(200);
+      expect(
+        (await admin.post(publish).send({ expectedRevision: '1' }).expect(400)).body,
+      ).toMatchObject({ code: 'VALIDATION_FAILED', fieldErrors: { tree: expect.any(Array) } });
+      await admin.put(draft).send({ expectedRevision: '1', tree }).expect(200);
+      expect(
+        (await admin.put(draft).send({ expectedRevision: '1', tree }).expect(409)).body,
+      ).toMatchObject({ code: 'CONFLICT', mode: 'tree', revision: '2' });
+      await user.post(publish).send({ expectedRevision: '2' }).expect(403);
+      const published = await admin
+        .post(publish)
+        .send({ expectedRevision: '2', note: 'Builder first' })
+        .expect(200);
+      expect(published.body.publishedVersion).toBe(1);
+      expect(
+        (await admin.post(publish).send({ expectedRevision: '2' }).expect(409)).body,
+      ).toMatchObject({ code: 'CONFLICT', revision: '3' });
+      const first = await prisma.pageVersion.findUniqueOrThrow({
+        where: { pageId_version: { pageId, version: 1 } },
+      });
+      expect(first.snapshot).toMatchObject({ format: 'tree', snapshotVersion: 1, tree });
+      expect(await prisma.pageBlock.findMany({ where: { pageId } })).toEqual(legacyRows);
+      for (const locale of ['en', 'vi']) {
+        const preview = await admin
+          .get(`/api/admin/preview/pages/ideas?locale=${locale}&version=1`)
+          .expect(200);
+        const publicPage = await request(app.getHttpServer())
+          .get(`/api/public/pages/ideas?locale=${locale}`)
+          .expect(200);
+        expect(preview.body).toEqual({ ...publicPage.body, invalidBlocks: [] });
+        expect(publicPage.body.seo).toMatchObject({
+          title: locale === 'vi' ? 'Ý tưởng VI' : 'Ideas EN',
+          lang: locale,
+        });
+      }
+      const nextTree = {
+        ...tree,
+        root: {
+          ...tree.root,
+          sections: [
+            {
+              ...tree.root.sections[0]!,
+              content: [
+                {
+                  ...tree.root.sections[0]!.content[0]!,
+                  responsive: { base: { text: 'Changed after publish', level: 1 } },
+                },
+              ],
+            },
+          ],
+        },
+      };
+      await admin.put(draft).send({ expectedRevision: '3', tree: nextTree }).expect(200);
+      expect(
+        (await admin.get('/api/admin/preview/pages/ideas?locale=en').expect(200)).body.tree,
+      ).toEqual(nextTree);
+      expect(
+        (await request(app.getHttpServer()).get('/api/public/pages/ideas').expect(200)).body.tree,
+      ).toEqual(tree);
+      expect(
+        (
+          await admin
+            .post('/api/admin/pages/ideas/versions/99/builder/restore')
+            .send({ expectedRevision: '4' })
+            .expect(404)
+        ).body.code,
+      ).toBe('NOT_FOUND');
+      const restored = await admin
+        .post('/api/admin/pages/ideas/versions/1/builder/restore')
+        .send({ expectedRevision: '4' })
+        .expect(200);
+      expect(restored.body).toMatchObject({ mode: 'tree', revision: '5', tree });
+      expect(
+        (await request(app.getHttpServer()).get('/api/public/pages/ideas').expect(200)).body.tree,
+      ).toEqual(tree);
+      await admin.put(draft).send({ expectedRevision: '5', tree: nextTree }).expect(200);
+      expect(
+        (await admin.post(publish).send({ expectedRevision: '6' }).expect(200)).body
+          .publishedVersion,
+      ).toBe(2);
+      const current = await prisma.page.findUniqueOrThrow({ where: { id: pageId } });
+      expect(current.draftTreeRevision).toBe(7n);
+      expect(current.draftTree).toEqual(nextTree);
+      expect(current.publishedVersionId).not.toBe(first.id);
+      expect(await prisma.pageBlock.findMany({ where: { pageId } })).toEqual(legacyRows);
+      expect(
+        (await admin.get('/api/admin/preview/pages/ideas?version=1').expect(200)).body.tree,
+      ).toEqual(tree);
+      expect(
+        (await request(app.getHttpServer()).get('/api/public/pages/ideas').expect(200)).body.tree,
+      ).toEqual(nextTree);
+      const legacyTree = {
+        ...nextTree,
+        root: {
+          ...nextTree.root,
+          sections: [
+            {
+              ...nextTree.root.sections[0]!,
+              content: [
+                ...nextTree.root.sections[0]!.content,
+                {
+                  id: 'unresolved',
+                  type: 'legacy-component',
+                  responsive: { base: { block: { type: 'unknown' } } },
+                },
+              ],
+            },
+          ],
+        },
+      };
+      await admin.put(draft).send({ expectedRevision: '7', tree: legacyTree }).expect(200);
+      expect(
+        (await admin.post(publish).send({ expectedRevision: '8' }).expect(400)).body,
+      ).toMatchObject({ code: 'VALIDATION_FAILED', fieldErrors: { tree: ['UNKNOWN_TYPE'] } });
+      expect(await prisma.pageVersion.count({ where: { pageId } })).toBe(2);
+      expect(
+        (await prisma.page.findUniqueOrThrow({ where: { id: pageId } })).publishedVersionId,
+      ).toBe(current.publishedVersionId);
+      expect(
+        (await request(app.getHttpServer()).get('/api/public/pages/ideas').expect(200)).body.tree,
+      ).toEqual(nextTree);
+      expect(await prisma.pageBlock.findMany({ where: { pageId } })).toEqual(legacyRows);
+    } finally {
+      if (previous === undefined) delete process.env.CMS_TREE_ROUTES;
+      else process.env.CMS_TREE_ROUTES = previous;
+    }
+  });
+
+  it('serves identical EN/VI preview and public tree snapshots only when opted in', async () => {
+    const admin = await adminAgent(app);
+    const tree = {
+      schemaVersion: 1,
+      root: {
+        id: 'page-root',
+        type: 'page',
+        responsive: { base: {} },
+        sections: [
+          {
+            id: 'section-one',
+            type: 'section',
+            responsive: { base: {} },
+            content: [
+              {
+                id: 'heading-one',
+                type: 'component',
+                componentType: 'heading',
+                responsive: { base: { level: 1, text: 'Hello' } },
+              },
+            ],
+          },
+        ],
+      },
+    };
+    const snapshot = {
+      format: 'tree',
+      snapshotVersion: 1,
+      seo: { ...seo, seoTitleVi: 'Ý tưởng' },
+      tree,
+    };
+    const version = await prisma.pageVersion.create({ data: { pageId, version: 1, snapshot } });
+    await prisma.page.update({ where: { id: pageId }, data: { publishedVersionId: version.id } });
+    await admin
+      .post('/api/admin/pages/ideas/builder/activate')
+      .send({ expectedRevision: '0', tree })
+      .expect(200);
+    expect(
+      (await admin.get('/api/admin/preview/pages/ideas?locale=en').expect(409)).body.code,
+    ).toBe('CONFLICT');
+    expect(
+      (await request(app.getHttpServer()).get('/api/public/pages/ideas').expect(400)).body.code,
+    ).toBe('INVALID_BLOCKS');
+    const previous = process.env.CMS_TREE_ROUTES;
+    process.env.CMS_TREE_ROUTES = '1';
+    try {
+      await request(app.getHttpServer()).get('/api/admin/preview/pages/ideas').expect(401);
+      for (const locale of ['en', 'vi']) {
+        const preview = await admin
+          .get(`/api/admin/preview/pages/ideas?locale=${locale}&version=1`)
+          .expect(200);
+        const publicPage = await request(app.getHttpServer())
+          .get(`/api/public/pages/ideas?locale=${locale}`)
+          .expect(200);
+        expect(preview.body).toEqual({ ...publicPage.body, invalidBlocks: [] });
+        expect(preview.body.seo.lang).toBe(locale);
+        const draft = await admin
+          .get(`/api/admin/preview/pages/ideas?locale=${locale}`)
+          .expect(200);
+        expect(draft.body.tree).toEqual(tree);
+        const render = (input: unknown) =>
+          renderTree({
+            input,
+            labels: { unsupported: 'Unsupported' },
+            createElement: (tag, props, ...children) => ({ tag, props, children }),
+          });
+        expect(render(preview.body.tree)).toEqual(render(publicPage.body.tree));
+        expect(render(publicPage.body.tree).ok).toBe(true);
+      }
+      const legacyNode = {
+        ...tree,
+        root: {
+          ...tree.root,
+          sections: [
+            {
+              ...tree.root.sections[0]!,
+              content: [
+                ...tree.root.sections[0]!.content,
+                {
+                  id: 'legacy-copy',
+                  type: 'legacy-component',
+                  responsive: { base: { block: { type: 'unknown' } } },
+                },
+              ],
+            },
+          ],
+        },
+      };
+      const unrenderable = await prisma.pageVersion.create({
+        data: { pageId, version: 5, snapshot: { ...snapshot, tree: legacyNode } },
+      });
+      await prisma.page.update({
+        where: { id: pageId },
+        data: { publishedVersionId: unrenderable.id },
+      });
+      expect(
+        (await request(app.getHttpServer()).get('/api/public/pages/ideas').expect(400)).body.code,
+      ).toBe('INVALID_BLOCKS');
+      expect(
+        (await admin.get('/api/admin/preview/pages/ideas?version=5').expect(400)).body.code,
+      ).toBe('INVALID_BLOCKS');
+      const invalid = await prisma.pageVersion.create({
+        data: { pageId, version: 2, snapshot: { ...snapshot, snapshotVersion: 99 } },
+      });
+      await prisma.page.update({ where: { id: pageId }, data: { publishedVersionId: invalid.id } });
+      expect(
+        (await request(app.getHttpServer()).get('/api/public/pages/ideas').expect(400)).body.code,
+      ).toBe('INVALID_BLOCKS');
+      expect(
+        (await admin.get('/api/admin/preview/pages/ideas?version=2').expect(400)).body.code,
+      ).toBe('INVALID_BLOCKS');
+      const missingFormat = await prisma.pageVersion.create({
+        data: { pageId, version: 4, snapshot: { seo: snapshot.seo, tree } },
+      });
+      await prisma.page.update({
+        where: { id: pageId },
+        data: { publishedVersionId: missingFormat.id },
+      });
+      expect(
+        (await request(app.getHttpServer()).get('/api/public/pages/ideas').expect(400)).body.code,
+      ).toBe('INVALID_BLOCKS');
+      expect(
+        (await admin.get('/api/admin/preview/pages/ideas?version=4').expect(400)).body.code,
+      ).toBe('INVALID_BLOCKS');
+      const viOnly = await prisma.pageVersion.create({
+        data: {
+          pageId,
+          version: 3,
+          snapshot: { ...snapshot, seo: { ...snapshot.seo, seoTitleEn: null } },
+        },
+      });
+      await prisma.page.update({ where: { id: pageId }, data: { publishedVersionId: viOnly.id } });
+      const viPublic = await request(app.getHttpServer())
+        .get('/api/public/pages/ideas?locale=vi')
+        .expect(200);
+      const viPreview = await admin
+        .get('/api/admin/preview/pages/ideas?locale=vi&version=3')
+        .expect(200);
+      expect(viPreview.body).toEqual({ ...viPublic.body, invalidBlocks: [] });
+      expect(viPublic.body.seo).toMatchObject({ title: 'Ý tưởng', lang: 'vi' });
+    } finally {
+      if (previous === undefined) delete process.env.CMS_TREE_ROUTES;
+      else process.env.CMS_TREE_ROUTES = previous;
+    }
+  });
 
   beforeAll(async () => {
     migrateTestDb();

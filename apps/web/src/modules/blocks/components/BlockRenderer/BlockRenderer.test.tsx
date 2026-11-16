@@ -2,6 +2,9 @@ import type { PublicBlock } from '@portfolio/contracts';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+import en from '../../../../../i18n/locales/en.json';
+import viStrings from '../../../../../i18n/locales/vi.json';
+
 import { BlockRenderer } from './BlockRenderer';
 
 const labels = { error: 'Failed', retry: 'Retry', empty: 'Empty' };
@@ -32,7 +35,34 @@ describe('BlockRenderer', () => {
       />,
     );
     expect(screen.getByText('Unknown block')).toBeInTheDocument();
-    expect(screen.getByText('nope')).toBeInTheDocument();
+    expect(screen.queryByText('nope')).not.toBeInTheDocument();
+  });
+
+  it.each([
+    ['en', en.states],
+    ['vi', viStrings.states],
+  ] as const)('shows sanitized %s preview help without raw diagnostics', (locale, states) => {
+    const rawIssue = 'Invalid path: internal.diagnostic=private';
+    const { container } = render(
+      <BlockRenderer
+        blocks={[]}
+        invalidBlocks={[{ id: 4, key: 'invalid', type: 'internal-type', issues: [rawIssue] }]}
+        draft
+        context={{ locale }}
+        labels={{
+          ...labels,
+          unknown: states.unknownBlock,
+          unknownHelp: states.unknownBlockHelp,
+        }}
+        registry={{}}
+      />,
+    );
+    expect(screen.getByText(states.unknownBlock)).toBeInTheDocument();
+    expect(screen.getByText(states.unknownBlockHelp)).toBeInTheDocument();
+    expect(container.querySelector('[role="status"]')).toHaveTextContent(states.unknownBlockHelp);
+    expect(container.textContent).not.toContain(states.empty);
+    expect(container.textContent).not.toContain(rawIssue);
+    expect(container.textContent).not.toContain('internal-type');
   });
 
   it('renders nothing for an unknown type', () => {

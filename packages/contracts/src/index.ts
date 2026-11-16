@@ -46,6 +46,7 @@ export { BLOCK_REGISTRY, blockTypeSchema } from './blocks/block-registry.constan
 export { defineBlock, isBlockAllowedOnPage } from './blocks/define-block.util';
 export type { ParseBlockResult, ParseBlockRow } from './blocks/resolve-block.util';
 export { isLocalizedPair, parseBlock, resolveBlockLocale } from './blocks/resolve-block.util';
+export { HOST_TREE_REGISTRY } from './blocks/tree-registry.constant';
 export type { ApiErrorBody, ErrorCode } from './common/api-error.schema';
 export { apiErrorSchema, errorCodeSchema } from './common/api-error.schema';
 export type { Paginated } from './common/list-params.schema';

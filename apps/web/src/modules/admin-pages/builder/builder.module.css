@@ -70,6 +70,8 @@
   display: flex;
   gap: 16px;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 .status,
 .hint {
@@ -83,6 +85,7 @@
   line-height: 1.25;
 }
 .headerActions button {
+  flex-shrink: 0;
   min-height: 44px;
   background: var(--builder-raised);
   color: var(--builder-muted);
@@ -700,7 +703,7 @@
   background: var(--builder-raised);
   border: 1px solid var(--builder-border);
 }
-@media (max-width: 1100px) {
+@media (max-width: 1440px) {
   .header {
     flex-wrap: wrap;
     gap: 6px;

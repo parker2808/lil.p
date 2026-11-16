@@ -7,6 +7,7 @@ import {
   type TreeNode,
   type TreeOperation,
 } from '@parker2808/cms-core/tree';
+import { BLOCK_REGISTRY } from '@portfolio/contracts';
 import { Button } from '@portfolio/ui/components/ui/button';
 import { Input } from '@portfolio/ui/components/ui/input';
 import {
@@ -19,6 +20,7 @@ import {
 import { Switch } from '@portfolio/ui/components/ui/switch';
 import { Textarea } from '@portfolio/ui/components/ui/textarea';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 import type { BuilderState } from '../canvas/commands';
 import { findNode } from '../canvas/model';
@@ -119,7 +121,15 @@ function Fields({
 }) {
   const schema = propertySchema(node);
   const text = copy[locale];
-  const descriptors = schema ? propertyFields(schema, locale) : [];
+  const translate = useTranslations();
+  const isHost = node.type === 'component' && node.componentType in BLOCK_REGISTRY;
+  const descriptors = schema
+    ? propertyFields(
+        schema,
+        locale,
+        isHost ? (key) => translate(key as Parameters<typeof translate>[0]) : undefined,
+      )
+    : [];
   const json = schema && propertyJson(schema);
   const effective =
     breakpoint === 'base' ? node.responsive.base : resolveResponsive(node.responsive, breakpoint);
@@ -186,7 +196,8 @@ function Fields({
     const initial = initialValue(schemaAt(json!, path)!);
     const value =
       path === key ? initial : setAt({ [key]: pending[key] ?? effective[key] }, path, initial);
-    setPending((previous) => ({ ...previous, [key]: value }));
+    if (schema!.safeParse({ ...effective, [key]: value }).success) edit(path, initial, false);
+    else setPending((previous) => ({ ...previous, [key]: value }));
   }
 
   function renderField(field: SchemaField) {
@@ -210,7 +221,11 @@ function Fields({
             className={styles.control}
             onClick={() => addGroup(missing)}
           >
-            {text.add} · {propertyLabel(missing, locale)}
+            {isHost && missing === 'heading'
+              ? locale === 'vi'
+                ? 'Thêm tiêu đề'
+                : 'Add heading'
+              : `${text.add} · ${propertyLabel(missing, locale)}`}
           </Button>
         ),
       };
@@ -221,8 +236,13 @@ function Fields({
     const languages: ('en' | 'vi' | undefined)[] = localized ? ['en', 'vi'] : [undefined];
     const controls = languages.map((language) => {
       const leaf = language ? `${path}.${language}` : path;
+      const languageLabel = language === 'en' ? text.english : text.vietnamese;
       const label = language
-        ? `${field.label} · ${language === 'en' ? text.english : text.vietnamese}`
+        ? isHost
+          ? path.startsWith('heading.')
+            ? `${locale === 'vi' ? 'Tiêu đề mục' : 'Section heading'} · ${field.label} · ${languageLabel}`
+            : `${field.label} (${language.toUpperCase()})`
+          : `${field.label} · ${languageLabel}`
         : field.label;
       const id = `builder-field-${node.id}-${breakpoint}-${leaf}`;
       const content = language ? valueAt(current, leaf) : value;

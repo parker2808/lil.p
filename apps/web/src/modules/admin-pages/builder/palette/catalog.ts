@@ -1,7 +1,17 @@
 import type { TreeNode } from '@parker2808/cms-core/tree';
+import { BLOCK_REGISTRY, type BlockType } from '@portfolio/contracts';
 
 export type PaletteKind =
-  'section' | 'row' | 'grid' | 'heading' | 'paragraph' | 'image' | 'button' | 'divider' | 'spacer';
+  | 'section'
+  | 'row'
+  | 'grid'
+  | 'heading'
+  | 'paragraph'
+  | 'image'
+  | 'button'
+  | 'divider'
+  | 'spacer'
+  | BlockType;
 export const paletteKinds: PaletteKind[] = [
   'section',
   'row',
@@ -12,6 +22,7 @@ export const paletteKinds: PaletteKind[] = [
   'button',
   'divider',
   'spacer',
+  ...(Object.keys(BLOCK_REGISTRY) as BlockType[]),
 ];
 
 export function newNode(kind: PaletteKind, id: () => string, locale: 'en' | 'vi' = 'en'): TreeNode {
@@ -73,6 +84,13 @@ export function newNode(kind: PaletteKind, id: () => string, locale: 'en' | 'vi'
         type: 'component',
         componentType: kind,
         responsive: responsive({ size: 'md' }),
+      };
+    default:
+      return {
+        id: nodeId,
+        type: 'component',
+        componentType: kind,
+        responsive: { base: structuredClone(BLOCK_REGISTRY[kind].defaults) },
       };
   }
 }

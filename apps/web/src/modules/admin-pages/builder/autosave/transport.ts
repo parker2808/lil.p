@@ -4,6 +4,7 @@ import {
   type DraftSnapshot,
   type TreeDocument,
 } from '@parker2808/cms-core/tree';
+import type { AdminPage } from '@portfolio/contracts';
 
 import { apiClient } from '@/modules/core/services/api-client.service';
 
@@ -67,5 +68,32 @@ export function readActiveBuilderDraft(key: string): Promise<DraftSnapshot> {
     response.mode === 'legacy' && response.tree === null && /^(0|[1-9]\d*)$/.test(response.revision)
       ? { revision: response.revision, tree: null }
       : verified(response),
+  );
+}
+
+export function publishBuilderDraft(
+  key: string,
+  expectedRevision: string,
+  note?: string,
+): Promise<AdminPage> {
+  return apiClient<AdminPage>(`/api/admin/pages/${encodeURIComponent(key)}/builder/publish`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ expectedRevision, ...(note ? { note } : {}) }),
+  });
+}
+
+export function restoreBuilderVersion(
+  key: string,
+  version: number,
+  expectedRevision: string,
+): Promise<BuilderDraftResponse> {
+  return apiClient<BuilderDraftResponse>(
+    `/api/admin/pages/${encodeURIComponent(key)}/versions/${version}/builder/restore`,
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ expectedRevision }),
+    },
   );
 }

@@ -14,8 +14,10 @@ export function homeMetadata(input: {
 
 export function buildHomeMetadata({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<Metadata> {
-  return buildPageMetadata('home', params);
+  return buildPageMetadata('home', params, searchParams);
 }
