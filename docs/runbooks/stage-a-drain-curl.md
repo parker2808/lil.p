@@ -1,11 +1,15 @@
 # Stage A curl and instance-drain checklist (release owner only)
 
-Parker's **forward-only rollout approval (“OK”, 2026-11-15 08:54 ICT)** covers
-the ordered #210 freeze/deploy, post-freeze probes and drain, #199 migration,
-D2 verification, D2-aware reopen and verification, then #202. The merge chain
-(1125a5b3) and coordinator execute each stage only after the preceding gate
-passes; no additional approval is required for these steps. **Do not send
-mutation probes until the Stage A freeze is live.** This checklist sends
+Parker's reported **forward-only policy approval (“OK”, 2026-11-15 08:54 ICT)**
+sets the required pause, old-instance drain, D2 verification and roll-forward
+recovery policy. It is not, by itself, an independently verified grant for the
+#210 production merge/deploy, mutation probes, #199 migration, D2-aware reopen
+or reopen verification. The release owner must confirm separate authorization
+for each production action before the merge chain (1125a5b3) and coordinator
+execute it; each stage also requires the preceding evidence gate to pass.
+Render auto-deploy remains ON, so an authorized `main` merge that matches its
+build filter can trigger a production deploy. **Do not send mutation probes
+until the authorized Stage A freeze is live.** This checklist sends
 unauthenticated requests with an invalid body, nonexistent page key and invalid
 numeric IDs. It must not send
 cookies, bearer tokens, real page keys or personal data. A successful HTTP
@@ -28,7 +32,8 @@ the connector, without publishing credentials or raw responses):
 1. `GET /v1/services/{serviceId}`: confirm workspace, region, branch, build
    filter, auto-deploy setting, Docker configuration and configured instance
    count. **Keep Render auto-deploy ON**: merging #210 and #199 to `main` with
-   `apps/api/**` changes triggers their deploys. Complete the pre-merge
+   `apps/api/**` changes triggers their deploys; this configuration is not
+   authorization to merge or deploy. Complete the pre-merge
    inventory before #210 and verify each stage before merging the next. Keep
    `main` quiet until reopen: another `apps/api/**` or `packages/contracts/**`
    merge during this window could also deploy an API image.
@@ -96,7 +101,8 @@ Stage A stays **HOLD**.
 
 1. Pin the reviewed pre-D2 Stage A image commit and confirm it includes the
    write-freeze middleware but **no D2 migration**. Keep auto-deploy on;
-   merge #210 to `main` only after the pre-merge inventory is complete.
+   merge #210 to `main` only with separate production authorization and after
+   the pre-merge inventory is complete.
 2. In the authenticated Render service view, record the **complete set** of
    active API instance IDs and their image commits before deploying. Also
    record the service ID, deploy ID and capture time, without copying session
@@ -188,8 +194,9 @@ read-availability checks here.
 ## Reopen and failure path
 
 After the D2 migration/data checks pass, keep writes frozen until the full
-roster contains only the reviewed D2-aware image. The merge chain then deploys
-the D2-aware reopen and performs controlled, authenticated
+roster contains only the reviewed D2-aware image. With separate production
+authorization, the merge chain then deploys the D2-aware reopen and performs
+controlled, authenticated
 save/restore/publish/activation CAS verification on an approved
 disposable record via **both** Render and Vercel ingress, with read-back; the
 unauthenticated sentinel probes above are **not** a reopen test. On any missing

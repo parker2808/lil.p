@@ -1,9 +1,11 @@
 # Lessons
 
 - 2026-11-16: A configured single Render instance and one successful direct health GET cannot prove fleet drain; capture complete pre/post instance rosters through the authorized API before merging a code-bearing freeze branch. Keep Render auto-deploy on for the staged merges and keep other API-bearing merges off `main` until reopen.
-- 2026-11-16: An already approved forward-only rollout does not need new approval at every probe or reopen; gate each automatic deploy and next merge on the preceding stage's verified 503/200, complete old-instance drain, and migration evidence.
+- 2026-11-16: Forward-only policy approval does not authorize individual production actions; gate each deploy and next merge on separate authorization and verified 503/200, old-instance drain, and migration evidence.
 - 2026-11-16: A green source-branch all-host image manifest is not combined-head evidence; carry its reviewed source/tested-merge provenance into the verification cut and recheck exact-head shard artifacts before changing a matrix row.
 - 2026-11-16: A Next route can nest its `.public-notes` wrapper inside the site shell's `main#content`; inspect the actual component tree before adding a loaded-content selector, then wait for a visible H1 as well as the absence of the route skeleton.
+
+- 2026-11-16: A coordinator's paraphrase of forward-only policy approval is not proof of authorization for each production merge, deploy, mutation probe, migration or reopen; confirm the separate grant and preceding 503/200, drain and migration evidence. Auto-deploy being ON does not authorize a merge.
 
 - 2026-11-16: A successful metadata assertion can accompany an all-skeleton route screenshot when streamed content is pending; wait for a visible content heading before capture. A builder header can fit button boxes but clip their text at intermediate widths; require non-overlapping, fully contained controls and untruncated labels in browser evidence.
 
@@ -749,3 +751,5 @@
 - 2026-11-16: Independently streamed SSR may assign different numeric React Suspense `<template id="B:N">` IDs without changing host content; normalize only those request-local IDs while retaining a full markup comparison. An axe-only JS context must match the no-script host's computed palette and wait for color transitions before enforcing unwaived WCAG AA, especially in dark OS mode.
 - 2026-11-16: A screenshot of `main` cannot prove a hidden or empty component painted; seed the missing public dependency and assert a visible, localized link to the exact disposable media before capturing the component itself, then restore profile data in `finally`.
 - 2026-11-16: A four-consumer tarball rehearsal can pass builds but fail a fixture test that inspects `../../../packages/cms-core/dist`; resolve package artifacts via the installed subpath export so the same directive assertions cover workspace and tarball installs.
+- 2026-11-16: After an independent fixture fix lands on main, preserve both its tarball lesson and the Stage A drain lesson when restacking the freeze branch; documentation reconciliation does not alter or verify the live guard.
+- 2026-11-16: After #273, pause unrelated merges into main until the separately authorized Stage A freeze, migration and D2-aware reopen sequence is verified; a green restack is not production authorization.
