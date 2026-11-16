@@ -713,3 +713,4 @@
 - 2026-11-16: For a pre-migration freeze, document the complete before/after instance roster and startup migration separately from HTTP probes; a read-only CLI snapshot or green CI cannot establish drained in-flight writers or authorize reopening.
 - 2026-11-16: After an independent fixture fix lands on main, preserve both its tarball lesson and the Stage A drain lesson when restacking the freeze branch; documentation reconciliation does not alter or verify the live guard.
 - 2026-11-16: After #273, pause unrelated merges into main until the separately authorized Stage A freeze, migration and D2-aware reopen sequence is verified; a green restack is not production authorization.
+- 2026-11-16: Coordinator production logs report main `b0de5340` LIVE with the `Page.draftTree` migration applied at 17:05:43 ICT; an unauthenticated admin POST returning 401 rather than freeze 503 signals only that this request was not frozen, not that authenticated writes are accepted.
