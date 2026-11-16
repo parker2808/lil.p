@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-16: A normal D5/D6 builder merge can silently drop imports in auto-merged files and retain obsolete localized field selectors; run integrated typecheck and focused Properties tests before trusting source-green checks.
 - 2026-11-16: A scoped D5 keyboard dialog gate and D6 single-fixture revision chain need a fresh combined-head run; preserve their source histories without promoting manual spoken SR or all-host design acceptance.
 - 2026-11-16: When D5 label localization and D6 restore/dark-banner work merge cleanly in runtime, retain both documentation histories and rerun the combined gates; separate source-green visual subsets are not a combined-head row verdict.
 - 2026-11-16: A combined D2/D6 historical metadata fixture must read the persisted builder revision after legacy publish and SEO edits before activation; a hardcoded zero masks the correct CAS boundary and fails exact-head CI.
@@ -29,6 +30,11 @@
 - 2026-11-15: A source-green builder restore gate must be rerun on the combined head; preserve both merge histories and label an interrupted Graphify refresh stale rather than fabricating current topology.
 - 2026-11-15: A paired public/preview gallery and zero-axe assertions do not establish a distinct neutral tenant SSR or complete no-JavaScript nested content; preserve those gaps when integrating D6 parity. A data-backed streaming notes fallback also needs readable, keyboard-sized links and an existing interactive marker before capture.
 - 2026-11-15: A combined D5/D6 merge must retain the D6 host-label argument on every canvas control, not just the inspector, and the D5 duplicate command must use the host registry; full typecheck catches a missed accessible-label call.
+- 2026-11-16: When merging D5 documentation into D6, preserve the historical D5 publishing limitation only in its scoped section; the current integrated builder description must reflect the D6 admin publish, version history and draft-only restore controls.
+
+- 2026-11-16: When a gallery PR restacks over new D6 no-JS and revision tests, preserve both histories and the narrow hydrated-palette evidence claim; an AST-complete Graphify attempt that stalls before report generation is not a fresh provenance claim.
+
+- 2026-11-16: A `--builder-accent` value change can pass while 476/480 neutral/branded host screenshots remain identical: host block renderers consume site palette tokens, so test computed painted text and actual image differences, not token presence alone.
 - 2026-11-16: A base can advance again during a V05 restack; compare the remote feature SHA immediately before push and require combined-head CI instead of trusting the previous successful test-head run.
 
 - 2026-11-16: Restacking a test PR after a visual fix requires preserving both the old test's artifact provenance and the base's contrast assertion; the old 17/17 run does not verify the combined head.
@@ -73,6 +79,28 @@
 - 2026-11-15: An incremental Graphify run can report no topology changes while retaining its earlier built-from SHA; record the verified code head separately rather than presenting the old graph as newly rebuilt.
 
 - 2026-11-15: When D2 raw legacy and D6 current nested-field tests overlap in core, retain both before graph regeneration; source-head success alone cannot prove combined host registry, restored snapshots or public bundle parity.
+- 2026-11-15: During rapid draft/public navigation, a transient host can make a global `main.cms-core-host` locator ambiguous; wait for exactly one visible direct host under the content landmark instead of selecting the first element.
+
+- 2026-11-15: A dark text token that passes against the page background may fail AA against an inset CMS card; measure against neutral and branded surfaces. Eagerly importing the notes client component increased unique public chunks by ~57 KiB gzip; keep it lazy with data-backed server suspense fallback and assert initial HTML rather than raising the bundle cap.
+
+- 2026-11-15: Real host pages may hydrate a decorative hero canvas after SSR; compare block SSR/hydration text and props hashes without treating that canvas as content, give retried API fixtures unique slugs, and run full (not severity-filtered) WCAG axe for each theme/viewport tuple.
+
+- 2026-11-15: Separate D6's real tree API publish/restore evidence from legacy UI version controls: the tree builder currently disables its publish action, so a green legacy UI journey cannot be reported as a tree UI journey; compare browser SSR/hydrated markup and preview/public pixels at the same locale and viewport.
+- 2026-11-15: An incremental Graphify run can report no topology changes while retaining its earlier built-from SHA; record the verified code head separately rather than presenting the old graph as newly rebuilt.
+- 2026-11-15: Derive public-route gzip budgets from the production chunk graph on the owning feature head, count shared chunks once, and attach the exact-head graph with a named published-tree catch-all subset to CI; a green package-size cap alone does not prove the public JS boundary.
+
+- 2026-11-15: Test host-only CMS blocks through authenticated activation, revision-checked save/read and publish before EN/VI preview/public SSR; a mocked editor GET or schema-only registry count cannot catch an API boundary dropping the host registry.
+- 2026-11-15: Keep public bundle leak checks strict for actual public routes, but exclude explicitly gated browser-test fixture routes that intentionally import admin controls; retain a mandatory assertion for the production catch-all page.
+- 2026-11-16: A D5 editor screenshot can attest to a saved draft revision but cannot prove editor→public→preview parity when the D5 publish endpoint intentionally returns CONFLICT; keep that combined D6 journey visibly GAP instead of substituting a mocked public response.
+
+- 2026-11-16: Filtering keyboard move destinations to valid slots prevents testing or announcing a rejected drop; expose an explicit Page-root attempt while retaining normal valid Arrow destinations, then verify unchanged server revision and restored keyboard focus.
+
+- 2026-11-15: Graphify freshness must name the integrated code head, not an intermediate branch commit; a docs-only report commit changes HEAD again, so document its exact source SHA and keep manual V16 screen-reader signoff separate from green automated V15 evidence.
+
+- 2026-11-15: A design capture that tabs through controls must restore its entry focus before continuing a keyboard-only edit; a fixed overlay escapes non-containing-block ancestor overflow, so stop clipping at the fixed backdrop while keeping strict 44px checks.
+
+- 2026-11-15: A scoped builder axe result cannot replace a full-page audit, and matching polite status text cannot prove what a screen reader actually speaks; record automated and manual V16 evidence separately.
+
 - 2026-11-15: A D2 tree-publish endpoint that always returns 409 cannot supply a genuine tree version for a restore test; gate the rejected publish and draft preservation honestly, and leave V10 version-restore coverage open until a real publication path exists.
 - 2026-11-15: When syncing a D4 study base into the D5 host, take D5's live host and history commands rather than reverting to the provisional study route; carry forward base locale/focus fixes and retain both branches' documentation histories.
 
@@ -650,3 +678,16 @@
 - 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
 - 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
 - 2026-11-16: When a combined browser journey reopens localized Properties after reload, update both value and scroll-to-field locators for the new accessible labels; earlier successful edits do not prove the later mobile assertions.
+- 2026-11-15: A core-wide focus selector can lose to the host's CSS cascade on canvas selection buttons even when keyboard focus is visible; assert computed painted contrast on each control and provide a scoped opaque canvas outline rather than weakening the ≥3:1 gate.
+- 2026-11-15: English API errors are not necessarily Vietnamese builder leaks: trace `ApiError` through activation catches, autosave HTTP-status handling and rendered EN/VI labels before changing contracts; audit new version actions separately.
+- 2026-11-15: When a study route is handed from a fixture component to the real builder host, update formerly registered browser specs against the actual editable panel; a fixture-only textbox can hide a deterministic shard failure despite a correctly mounted dialog.
+- 2026-11-15: Scope editor recovery claims to their storage boundary: a component-owned Map retains invalid partial inputs across remounts but not reloads; a stale 409 test must construct a real revision conflict when integration enables previously disabled publishing.
+- 2026-11-15: A focus outline may contrast with the parent while disappearing against the focused button itself; use two opaque paint stripes and assess each adjacent background separately at ≥3:1.
+- 2026-11-15: A publish-conflict regression needs an intervening server-side draft write and an old expectedRevision; asserting 409 with the current revision only tests a feature-disable fallback, not revision CAS.
+- 2026-11-15: An undo coalescing window is not an editing session boundary: end the history typing key when a Properties input blurs, without treating metadata-only history changes as document edits; clearing a responsive override must clear all descendant raw/error drafts, not just the validated pending value.
+- 2026-11-16: Layers reinitializes with only the Page expanded after a builder reload; expand each nested ancestor by keyboard before checking a reloaded heading in the accessible tree, while separately comparing the saved draft and revision.
+- 2026-11-16: A translated property field does not imply its component heading is translated; test canvas, Layers and Properties labels against host metadata and reject raw type fallbacks in Vietnamese captures.
+- 2026-11-16: Test actual keyboard Tab/Shift+Tab boundaries and focus return in existing dialogs, but never claim D5 publish/restore-version dialogs or manual spoken screen-reader acceptance when that UI exists only on the integrated D6 branch.
+- 2026-11-15: A clean redacted history scan cannot clear Git identity metadata; `.mailmap` changes attribution display but not stored objects, so decide on retention or an authorized rewrite before pushing extracted history.
+- 2026-11-15: After a private metadata-owner decision to retain reviewed identities, preserve provenance unchanged and compare the final filtered history to the reviewed identity inventory; stop on any new pair before a private push.
+- 2026-11-16: When reconciling D5 host Properties with D6 translated labels, retain both data-preserving invalid-input behavior and exact accessible names; an optional localized heading with empty required English text must remain local until the user provides valid content, not auto-save fabricated defaults.

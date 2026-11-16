@@ -5,8 +5,6 @@ import {
   type TreeNode,
 } from '@parker2808/cms-core/tree';
 
-import { builderRegistry } from '../properties/registry';
-
 import {
   findNode,
   insertNode,
@@ -16,6 +14,7 @@ import {
   type CompositionResult,
   type Destination,
 } from './model';
+import { builderRegistry } from '../properties/registry';
 export type BuilderState = { document: TreeDocument; selectedId: string };
 export type BuilderCommand =
   | { type: 'insert'; node: TreeNode; destination: Destination }

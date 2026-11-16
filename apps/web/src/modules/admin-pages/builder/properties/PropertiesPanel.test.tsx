@@ -15,11 +15,11 @@ import { useState } from 'react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 
 import type { BuilderState } from '../canvas/commands';
-import { commitProperty } from '../history/adapter';
 import { newNode } from '../palette/catalog';
 import { propertyFields } from './editor-model';
 import { PropertiesPanel, type PropertyDraft } from './PropertiesPanel';
 import { builderRegistry } from './registry';
+import { commitProperty } from '../history/adapter';
 
 vi.mock('next-intl', () => ({
   useTranslations: () => (key: string) =>
@@ -133,7 +133,7 @@ it('submits bilingual nested host values as one validated root property', () => 
     },
   };
   render(<PropertiesPanel state={hostState} locale="en" onEdit={onEdit} />);
-  fireEvent.change(screen.getByRole('textbox', { name: 'Primary action · Label · Vietnamese' }), {
+  fireEvent.change(screen.getByRole('textbox', { name: 'CTA label (VI)' }), {
     target: { value: 'Dự án' },
   });
   expect(onEdit).toHaveBeenCalledWith(
@@ -158,7 +158,7 @@ it('translates nested labels in the VI inspector without changing stored paths',
     },
   };
   render(<PropertiesPanel state={hostState} locale="vi" onEdit={vi.fn()} />);
-  expect(screen.getByLabelText('Hành động chính · URL liên kết')).toBeInTheDocument();
+  expect(screen.getByRole('combobox', { name: 'URL liên kết' })).toBeInTheDocument();
   expect(screen.queryByText('primaryCta href')).toBeNull();
 });
 
@@ -209,15 +209,18 @@ it('offers valid optional bilingual heading for a host with empty defaults', () 
   };
   updated = hostState;
   const { rerender } = render(<PropertiesPanel state={updated} locale="en" onEdit={onEdit} />);
-  fireEvent.click(screen.getByRole('button', { name: 'Add · Heading' }));
+  fireEvent.click(screen.getByRole('button', { name: 'Add heading' }));
   expect(onEdit).not.toHaveBeenCalled();
-  fireEvent.change(screen.getByRole('textbox', { name: 'Heading · Title · English' }), {
+  fireEvent.change(screen.getByRole('textbox', { name: 'Section heading · Tiêu đề · English' }), {
     target: { value: 'Section heading' },
   });
   rerender(<PropertiesPanel state={updated} locale="en" onEdit={onEdit} />);
-  fireEvent.change(screen.getByRole('textbox', { name: 'Heading · Title · Vietnamese' }), {
-    target: { value: 'Tiêu đề mục' },
-  });
+  fireEvent.change(
+    screen.getByRole('textbox', { name: 'Section heading · Tiêu đề · Vietnamese' }),
+    {
+      target: { value: 'Tiêu đề mục' },
+    },
+  );
   expect(onEdit).toHaveBeenCalledWith(
     expect.objectContaining({
       key: 'heading',
@@ -298,6 +301,7 @@ it.each(['en', 'vi'] as const)(
     expect(screen.queryByRole('alert')).toBeNull();
   },
 );
+
 it('uses localized labels and submits base, mobile and clear-override operations', () => {
   const onEdit = vi.fn();
   render(<PropertiesPanel state={state} locale="vi" onEdit={onEdit} />);
@@ -443,7 +447,16 @@ it.each(
       updated = result.value;
     });
     render(<PropertiesPanel state={initial} locale={locale} onEdit={onEdit} />);
-    const fields = propertyFields(definition.props, locale);
+    const fields = propertyFields(
+      definition.props,
+      locale,
+      (key) =>
+        ({
+          'admin.blocks.hero.ctaLabel': 'CTA label',
+          'admin.blocks.field.href': 'URL liên kết',
+          'admin.blocks.heading.title': 'Tiêu đề',
+        })[key] ?? key,
+    );
     const available = fields.find((field) => Object.hasOwn(base, field.path.split('.')[0]!));
     if (!available || definition.type === 'featured-case') {
       if (definition.type === 'featured-case') {
@@ -456,13 +469,15 @@ it.each(
       } else {
         fireEvent.click(
           screen.getByRole('button', {
-            name: locale === 'en' ? 'Add · Heading' : 'Thêm · Tiêu đề mục',
+            name: locale === 'en' ? 'Add heading' : 'Thêm tiêu đề',
           }),
         );
         fireEvent.change(
           screen.getByRole('textbox', {
             name:
-              locale === 'en' ? 'Heading · Title · English' : 'Tiêu đề mục · Tiêu đề · Tiếng Anh',
+              locale === 'en'
+                ? 'Section heading · Tiêu đề · English'
+                : 'Tiêu đề mục · Tiêu đề · Tiếng Anh',
           }),
           {
             target: { value: 'A new section' },
@@ -471,7 +486,7 @@ it.each(
       }
     } else {
       const field = available;
-      const name = `${field.label}${['localized-text', 'localized-textarea', 'markdown'].includes(field.kind) ? ` · ${locale === 'en' ? 'English' : 'Tiếng Anh'}` : ''}`;
+      const name = `${field.path.startsWith('heading.') ? `${locale === 'en' ? 'Section heading' : 'Tiêu đề mục'} · ` : ''}${field.label}${['localized-text', 'localized-textarea', 'markdown'].includes(field.kind) ? (field.path.startsWith('heading.') ? ` · ${locale === 'en' ? 'English' : 'Tiếng Anh'}` : ' (EN)') : ''}`;
       if (field.kind === 'switch') fireEvent.click(screen.getByRole('switch', { name }));
       else if (field.kind === 'select') {
         fireEvent.click(screen.getByRole('combobox', { name }));
@@ -502,7 +517,7 @@ it('preserves nested siblings while editing VI copy and clearing a desktop overr
   const initial = hostState('hero', base);
   const onEdit = vi.fn();
   render(<PropertiesPanel state={initial} locale="vi" onEdit={onEdit} />);
-  fireEvent.change(screen.getByRole('textbox', { name: 'Hành động chính · Nhãn · Tiếng Việt' }), {
+  fireEvent.change(screen.getByRole('textbox', { name: 'CTA label (VI)' }), {
     target: { value: 'Xem dự án' },
   });
   expect(onEdit).toHaveBeenCalledWith(
@@ -517,7 +532,7 @@ it('preserves nested siblings while editing VI copy and clearing a desktop overr
     true,
   );
   fireEvent.click(screen.getByRole('button', { name: 'Máy tính bàn' }));
-  fireEvent.change(screen.getByRole('textbox', { name: 'Hành động chính · Nhãn · Tiếng Việt' }), {
+  fireEvent.change(screen.getByRole('textbox', { name: 'CTA label (VI)' }), {
     target: { value: 'Desktop' },
   });
   expect(onEdit).toHaveBeenCalledWith(

@@ -17,10 +17,11 @@ import { useLocale, useTranslations } from 'next-intl';
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 
 import { useMe } from '@/modules/admin-core/hooks/use-me.hook';
-import { BLOCK_EDITOR_META } from '../constants/block-editor-meta.constant';
+import { BLOCK_EDITOR_META } from '@/modules/admin-pages/constants/block-editor-meta.constant';
+
 import { BuilderShell, builderNodeLabels } from './BuilderShell';
-import type { PropertyDraft } from './properties/PropertiesPanel';
 import { BuilderVersionActions } from './BuilderVersionActions';
+import type { PropertyDraft } from './properties/PropertiesPanel';
 import {
   activateBuilderDraft,
   readBuilderDraft,
