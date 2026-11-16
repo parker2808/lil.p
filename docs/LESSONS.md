@@ -1,6 +1,19 @@
 # Lessons
 
 - 2026-11-16: On a docs-only base sync, preserve both branches' release caveats and historical lessons, regenerate the generated Graphify report from the combined tree, and gate the new exact head rather than reusing earlier branch CI.
+- 2026-11-16: A configured single Render instance and one successful direct health GET cannot prove fleet drain; capture complete pre/post instance rosters through the authorized API before merging a code-bearing freeze branch. Keep Render auto-deploy on for the staged merges and keep other API-bearing merges off `main` until reopen.
+
+- 2026-11-16: A coordinator's paraphrase of forward-only policy approval is not proof of authorization for each production merge, deploy, mutation probe, migration or reopen; confirm the separate grant and preceding 503/200, drain and migration evidence. Auto-deploy being ON does not authorize a merge.
+
+- 2026-11-16: A docs/test-only main merge can conflict with Stage A release notes despite nonoverlapping runtime code; retain both sets of notes and independently verify the write-freeze behavior before interpreting exact-head CI.
+
+- 2026-11-15: Anonymous 503s on direct and rewritten page mutations show the HTTP freeze at sampled ingresses, not fleet-wide drain; compare pre-deploy instance IDs to an authoritative active roster and fail closed when identity, shutdown or in-flight evidence is missing.
+
+- 2026-11-15: A cold dynamic import and full Nest AppModule bootstrap inside a 5-second HTTP test can time out under parallel suite load without implicating the middleware; budget that setup separately and keep the request/assertion on the normal test deadline.
+
+- 2026-11-15: A broad pre-schema admin-pages write guard remains valid across D2 only after auditing both controller route tables, including SEO's shared PATCH and builder restore; preserve both histories in context conflicts and regenerate the graph from the combined tree.
+- 2026-11-16: Audit an extracted package's complete peer list against the frozen installed manifests and license files, not just its own `UNLICENSED` field; an MIT-compatible private tarball still needs final-head notice, history and hosted-distribution review.
+- 2026-11-16: When Stage A's permanent pre-D2 freeze meets D2's verified startup reopening, retain both test suites and spell out that an auto-deploy of #199 can open writes as soon as migration and column checks pass; the release owner must authorize that transition before merging.
 
 - 2026-11-16: A passing nested-snapshot test is not an independently diffable combined-head inventory; emit source-file byte hashes separately from normalized DB JSON byte hashes and pair each with tested-merge provenance, never claiming production inventory from disposable fixtures.
 
@@ -339,6 +352,8 @@
 - 2026-11-10: Shard assignment can move content-creating specs ahead of clean-seed pixel tests; pin the mutator outside the visual shard instead of weakening snapshots.
 - 2026-11-10: Placeholder opacity can defeat an AA text token; measure the computed input contrast, and give Layers depth visible guides on desktop and mobile.
 - 2026-11-10: A flag-gated localized fixture needs localized, gated metadata too; derive the title from the same EN/VI copy and test both disabled and enabled states.
+- 2026-11-15: Zero-downtime deploy health cannot prove all pre-migration writers are gone; freeze page mutations in a separate pre-schema release, enumerate old instances until drained, and retain a fail-closed guard across the migrating release.
+- 2026-11-15: A bespoke HTTP test module can pass even if the production AppModule drops a middleware; boot real module wiring with stubbed services and assert 503 before page publish access.
 - 2026-11-15: Unauthenticated 503 checks across direct API and Vercel ingress can detect a missing HTTP write freeze, but cannot prove old writers drained or D2 columns exist; require authenticated instance inventory and an authorized read-only schema check before migration or reopening. With locale-prefixed routing, accept only the expected same-origin root redirect and probe `/en` and `/vi` explicitly.
 - 2026-11-15: A 400 validation response never enters the exception filter's >=500 error-log branch; a spy with zero calls cannot prove log redaction. Label 400 checks HTTP-only, and require populated draft/version/preview response assertions to substantiate read capabilities.
 - 2026-11-15: A four-shard visual matrix can hit the job time limit even while three peers finish quickly; measure actual job and Playwright step durations and keep per-shard provenance validation synchronized with the matrix size. Register an incoming spec before pinning it to a new shard—otherwise silent skips mask an incomplete gate. A separate failing accessibility assertion is not a throughput failure.
@@ -352,3 +367,8 @@
 - 2026-11-16: Graphify's generated source SHA names the code snapshot, not the later docs-only commit; refresh extracted topology before claiming freshness and state that distinction explicitly.
 - 2026-11-16: A four-consumer tarball rehearsal can pass builds but fail a fixture test that inspects `../../../packages/cms-core/dist`; resolve package artifacts via the installed subpath export so the same directive assertions cover workspace and tarball installs.
 - 2026-11-16: When a docs-only D2 sync meets a C1 tarball fix, retain both decision histories and check Prisma schema/migration bytes against the pre-merge branch before reusing migration evidence.
+- 2026-11-15: When rebasing the pre-migration write freeze on five-shard main, preserve both Stage A drain instructions and newly registered keyboard/canvas E2E coverage; a clean merge of runtime files alone does not prove production instances have drained.
+- 2026-11-15: When restacking the Stage A freeze after a docs-only C1 merge, keep both histories; clean HTTP guards and a conflict-free runtime are not evidence that old production writers drained.
+- 2026-11-16: For a pre-migration freeze, document the complete before/after instance roster and startup migration separately from HTTP probes; a read-only CLI snapshot or green CI cannot establish drained in-flight writers or authorize reopening.
+- 2026-11-16: After an independent fixture fix lands on main, preserve both its tarball lesson and the Stage A drain lesson when restacking the freeze branch; documentation reconciliation does not alter or verify the live guard.
+- 2026-11-16: After #273, pause unrelated merges into main until the separately authorized Stage A freeze, migration and D2-aware reopen sequence is verified; a green restack is not production authorization.
