@@ -33,9 +33,23 @@ function hostPalette(element: Element) {
     primary: styles.getPropertyValue('--primary').trim(),
     primaryForeground: styles.getPropertyValue('--primary-foreground').trim(),
     subtleForeground: styles.getPropertyValue('--subtle-foreground').trim(),
+    cardGlass: styles.getPropertyValue('--card-glass').trim(),
     builderAccent: styles.getPropertyValue('--builder-accent').trim(),
     builderAccentText: styles.getPropertyValue('--builder-accent-text').trim(),
   };
+}
+
+function paintedCardStyles(element: Element) {
+  return Array.from(
+    element.querySelectorAll(
+      '[data-slot="feature-card"], [data-slot="process-flow"] li > div:last-child',
+    ),
+  ).map((card) => ({
+    background: getComputedStyle(card).backgroundColor,
+    text: Array.from(card.querySelectorAll('h3, p, span')).map(
+      (child) => getComputedStyle(child).color,
+    ),
+  }));
 }
 
 function treeFor(group: number, locale: 'en' | 'vi') {
@@ -343,6 +357,7 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                 }
                 console.log(`[all20-ssr] ${label}: axe-start`);
                 const ssrPalette = await main.evaluate(hostPalette);
+                const ssrCards = await main.evaluate(paintedCardStyles);
                 const ssrButtons = await main.locator('.redesign-button').evaluateAll((elements) =>
                   elements.map((element) => ({
                     color: getComputedStyle(element).color,
@@ -368,6 +383,44 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                   `${label} identical no-script host palette`,
                 ).toEqual(ssrPalette);
                 await axeSession.send('Emulation.setScriptExecutionDisabled', { value: false });
+                await axePage.evaluate(() => {
+                  for (const stream of document.querySelectorAll<HTMLElement>(
+                    'html body div[hidden][id^="S:"]',
+                  )) {
+                    stream.removeAttribute('hidden');
+                    stream.style.display = 'contents';
+                  }
+                });
+                const axeBlocks = await axeMain
+                  .locator('[data-host-block-type]')
+                  .evaluateAll((elements) =>
+                    elements.map((element) => {
+                      const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+                      const painted: string[] = [];
+                      while (walker.nextNode()) {
+                        const node = walker.currentNode;
+                        const parent = node.parentElement;
+                        const text = node.textContent?.trim();
+                        if (
+                          !text ||
+                          !parent?.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })
+                        )
+                          continue;
+                        const range = document.createRange();
+                        range.selectNodeContents(node);
+                        if (
+                          Array.from(range.getClientRects()).some(
+                            (rect) => rect.width > 0 && rect.height > 0,
+                          )
+                        )
+                          painted.push(text);
+                      }
+                      return painted.join(' ').replace(/\s+/g, ' ').trim();
+                    }),
+                  );
+                expect(axeBlocks, `${label} axe sees the same painted no-script blocks`).toEqual(
+                  snapshot.map((block) => block.text),
+                );
                 await expect
                   .poll(
                     () =>
@@ -390,6 +443,10 @@ export function registerAll20SsrMatrix(group: number, width: (typeof widths)[num
                   await axeMain.evaluate(hostPalette),
                   `${label} stable axe host palette`,
                 ).toEqual(ssrPalette);
+                expect(
+                  await axeMain.evaluate(paintedCardStyles),
+                  `${label} same painted card surfaces and text as no-script visitor`,
+                ).toEqual(ssrCards);
                 expect(
                   await axeMain.locator('.redesign-button').evaluateAll((elements) =>
                     elements.map((element) => ({

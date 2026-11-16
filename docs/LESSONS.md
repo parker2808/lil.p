@@ -1,5 +1,6 @@
 # Lessons
 
+- 2026-11-16: A no-JS dark shell can inherit the light translucent card-glass token even while its main/card tokens are dark; axe on a JS-capable inspection context can miss this when streamed SSR siblings stay hidden. Compare painted per-card colors and visible block text in both contexts before unwaived axe.
 - 2026-11-16: Separate SSR requests can allocate different React Suspense template IDs despite identical host markup; normalize just those per-request IDs, and compare settled dark CTA colors with the no-JS capture before unwaived axe rather than testing a transient theme transition.
 - 2026-11-16: Axe cannot inject into a Playwright context created with `javaScriptEnabled: false`; retain no-JS host paint/capture there, and audit the identical SSR main in a separate page whose scripts are disabled only for navigation and enabled for axe.
 - 2026-11-16: Switching a stalled Playwright full-page capture to CDP did not by itself unblock the no-JS all-20 matrix; log font readiness, CDP attachment, layout size, screenshot and crop boundaries separately before choosing another capture path.

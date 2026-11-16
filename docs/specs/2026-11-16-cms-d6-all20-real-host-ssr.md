@@ -54,6 +54,11 @@ Assert computed host colors and semantic tokens match the captured visitor,
 wait for any finite host transitions to finish, then reassert those colors
 before the unwaived WCAG analysis. This avoids evaluating an unrelated
 mid-transition light-to-dark palette in the accessibility context.
+The no-JS dark public shell must also inherit the hydrated dark card-glass
+surface, not the light translucent white glass that washes out process text.
+Expose the same streamed SSR siblings in the axe-only inspection context,
+assert identical painted block copy and per-card background/text colors to
+the primary no-JS visitor, then run unwaived axe on the visible content.
 Check the neutral/brand accent at first paint and run unwaived WCAG A/AA axe
 against the content (including minor/moderate violations). Attach all JSON
 results and screenshot SHA-256 values to a provenance manifest. The preview

@@ -47,3 +47,15 @@ it('inherits the root dark theme on public hosts without overriding explicit hos
   expect(host).toContain('.dark .cms-core-host:not([data-theme]) {');
   expect(host).toContain(".dark .cms-core-host[data-brand='lilp']:not([data-theme]) {");
 });
+
+it('uses the hydrated dark card-glass surface in the no-script dark shell', () => {
+  const host = readFileSync(resolve(root, 'apps/web/app/globals.css'), 'utf8');
+  const shared = readFileSync(resolve(root, 'packages/ui/src/styles/globals.css'), 'utf8');
+  const noScriptShell = host
+    .split('@media (scripting: none) and (prefers-color-scheme: dark) {')[1]
+    ?.split('  .cms-core.cms-core-host')[0];
+  const hydratedDark = shared.split('.dark {')[1]?.split('}')[0];
+  const cardGlass = hydratedDark?.match(/--card-glass:\s*([^;]+);/)?.[1];
+  expect(cardGlass).toBeDefined();
+  expect(noScriptShell).toContain(`--card-glass: ${cardGlass};`);
+});
