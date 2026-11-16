@@ -1,8 +1,8 @@
-// CI runs web-e2e in 5 shards, each with its own MySQL. Playwright's built-in
+// CI runs web-e2e in 8 shards, each with its own MySQL. Playwright's built-in
 // `--shard` cannot pin files together, so files are assigned here instead:
-// the pixel baseline and Lighthouse specs share shard 1, while the D6 visual
-// matrix's slowest group has a separate shard. Order inside a shard follows SPECS.
-export const SHARD_COUNT = 5;
+// the pixel baseline and Lighthouse specs share shard 1, while the longest D5
+// design spec has a dedicated shard. Order inside a shard follows SPECS.
+export const SHARD_COUNT = 8;
 
 export const SPECS = [
   'public.spec.ts',
@@ -120,21 +120,21 @@ const PINNED: Record<string, number> = {
   'cms-d6-visual-1.spec.ts': 1,
   'cms-d6-visual-2.spec.ts': 2,
   'cms-d6-visual-3.spec.ts': 3,
-  'cms-d6-visual-4.spec.ts': 5,
-  'cms-d6-all20-ssr-1.spec.ts': 1,
-  'cms-d6-all20-ssr-1-768.spec.ts': 2,
-  'cms-d6-all20-ssr-1-1440.spec.ts': 3,
+  'cms-d6-visual-4.spec.ts': 7,
+  'cms-d6-all20-ssr-1.spec.ts': 4,
+  'cms-d6-all20-ssr-1-768.spec.ts': 5,
+  'cms-d6-all20-ssr-1-1440.spec.ts': 6,
   'cms-d6-all20-ssr-2.spec.ts': 4,
   'cms-d6-all20-ssr-2-768.spec.ts': 5,
-  'cms-d6-all20-ssr-2-1440.spec.ts': 1,
-  'cms-d6-all20-ssr-3.spec.ts': 2,
-  'cms-d6-all20-ssr-3-768.spec.ts': 3,
-  'cms-d6-all20-ssr-3-1440.spec.ts': 4,
-  'cms-d6-all20-ssr-4.spec.ts': 5,
-  'cms-d6-all20-ssr-4-768.spec.ts': 1,
-  'cms-d6-all20-ssr-4-1440.spec.ts': 2,
+  'cms-d6-all20-ssr-2-1440.spec.ts': 6,
+  'cms-d6-all20-ssr-3.spec.ts': 5,
+  'cms-d6-all20-ssr-3-768.spec.ts': 6,
+  'cms-d6-all20-ssr-3-1440.spec.ts': 7,
+  'cms-d6-all20-ssr-4.spec.ts': 4,
+  'cms-d6-all20-ssr-4-768.spec.ts': 6,
+  'cms-d6-all20-ssr-4-1440.spec.ts': 7,
   'public-header-responsive.spec.ts': 3,
-  'cms-builder-d5-design.spec.ts': 5,
+  'cms-builder-d5-design.spec.ts': 8,
 };
 
 export function assertPinnedSpecs(pins: Readonly<Record<string, number>>): void {
@@ -151,25 +151,47 @@ export function assertPinnedSpecs(pins: Readonly<Record<string, number>>): void 
 assertPinnedSpecs(PINNED);
 assertPinnedSpecs(Object.fromEntries(EDITOR_HOST_SPECS.map((file, index) => [file, index + 1])));
 
-/** Baseline CI seconds per file from run 41382787431; unknown files count as 4. */
+/** Per-file CI seconds sampled from runs 43824115680 and 43821569457; unknown files count as 4. */
 const WEIGHT: Record<string, number> = {
-  'a11y.spec.ts': 63,
+  'cms-builder-d5-design.spec.ts': 392,
+  'cms-d6-visual-4.spec.ts': 107,
+  'cms-d6-v06-all20-overrides.spec.ts': 49,
+  'cms-d6-all20-ssr-4.spec.ts': 40,
+  'cms-d6-all20-ssr-2-768.spec.ts': 38,
+  'admin-editors-r3.spec.ts': 78,
   'lighthouse.spec.ts': 58,
-  'visual.spec.ts': 27,
-  'redesign.spec.ts': 10,
-  'cms-u2-patterns.spec.ts': 10,
-  'footer.spec.ts': 9,
+  'a11y.spec.ts': 48,
+  'admin-collections-r3.spec.ts': 45,
+  'admin-shell-insights.spec.ts': 31,
+  'visual.spec.ts': 30,
+  'brand-foundation.spec.ts': 18,
+  'cms-builder-keyboard.spec.ts': 17,
+  'cms-u1-controls.spec.ts': 16,
+  'redesign.spec.ts': 14,
+  'public-shell-indexes.spec.ts': 12,
+  'admin-page-create.spec.ts': 9,
   'navigation-progress.spec.ts': 8,
   'editor-split.spec.ts': 8,
   'split-js.spec.ts': 8,
-  'ux-overlay.spec.ts': 6,
-  'metadata.spec.ts': 6,
-  'admin-scroll.spec.ts': 6,
-  'admin-vi-editors.spec.ts': 6,
-  'admin-tables.spec.ts': 6,
-  'admin-vi-core.spec.ts': 6,
-  'admin-inbox.spec.ts': 6,
-  'ux-targets.spec.ts': 5,
+  'copy-email.spec.ts': 8,
+  'ux-overlay.spec.ts': 9,
+  'cms-d6-visual-1.spec.ts': 90,
+  'cms-d6-visual-2.spec.ts': 90,
+  'cms-d6-visual-3.spec.ts': 90,
+  'cms-d6-all20-ssr-1.spec.ts': 40,
+  'cms-d6-all20-ssr-1-768.spec.ts': 40,
+  'cms-d6-all20-ssr-1-1440.spec.ts': 40,
+  'cms-d6-all20-ssr-2.spec.ts': 40,
+  'cms-d6-all20-ssr-2-1440.spec.ts': 40,
+  'cms-d6-all20-ssr-3.spec.ts': 40,
+  'cms-d6-all20-ssr-3-768.spec.ts': 40,
+  'cms-d6-all20-ssr-3-1440.spec.ts': 40,
+  'cms-d6-all20-ssr-4-768.spec.ts': 40,
+  'cms-d6-all20-ssr-4-1440.spec.ts': 40,
+  'cms-editor-host-1.spec.ts': 60,
+  'cms-editor-host-2.spec.ts': 60,
+  'cms-editor-host-3.spec.ts': 60,
+  'cms-editor-host-4.spec.ts': 60,
 };
 
 function assign(): Map<string, number> {
@@ -179,15 +201,18 @@ function assign(): Map<string, number> {
     out.set(file, shard);
     load[shard - 1] = (load[shard - 1] ?? 0) + (WEIGHT[file] ?? 4);
   }
-  const rest = SPECS.filter(
-    (f) => !out.has(f) && !EDITOR_HOST_SPECS.includes(f as (typeof EDITOR_HOST_SPECS)[number]),
-  ).sort((a, b) => (WEIGHT[b] ?? 4) - (WEIGHT[a] ?? 4) || SPECS.indexOf(a) - SPECS.indexOf(b));
+  EDITOR_HOST_SPECS.forEach((file, index) => {
+    out.set(file, index + 1);
+    load[index] = (load[index] ?? 0) + (WEIGHT[file] ?? 4);
+  });
+  const rest = SPECS.filter((f) => !out.has(f)).sort(
+    (a, b) => (WEIGHT[b] ?? 4) - (WEIGHT[a] ?? 4) || SPECS.indexOf(a) - SPECS.indexOf(b),
+  );
   for (const file of rest) {
     const shard = load.indexOf(Math.min(...load)) + 1;
     out.set(file, shard);
     load[shard - 1] = (load[shard - 1] ?? 0) + (WEIGHT[file] ?? 4);
   }
-  EDITOR_HOST_SPECS.forEach((file, index) => out.set(file, index + 1));
   return out;
 }
 

@@ -227,7 +227,7 @@ jobs:
   web-e2e-shard:
     # Download only after upload-artifact has finalized in the build job;
     # listing artifacts early does not guarantee download-artifact can read one.
-    name: web-e2e shard ${{ matrix.shard }}/5
+    name: web-e2e shard ${{ matrix.shard }}/8
     needs: build-e2e
     if: (github.event.action != 'labeled' || github.event.label.name == 'ready-e2e') && (github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ready-e2e'))
     runs-on: ubuntu-latest
@@ -238,7 +238,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
     env:
       NODE_ENV: test
       API_PORT: 4000
@@ -356,7 +356,7 @@ jobs:
         if: always() && needs.web-e2e-shard.result != 'skipped'
         run: |
           mkdir -p playwright-report
-          for shard in 1 2 3 4 5; do
+          for shard in 1 2 3 4 5 6 7 8; do
             SHARD="$shard" node -e 'const { readFileSync } = require("node:fs"); const shard = process.env.SHARD; const p = JSON.parse(readFileSync(`all-blob-reports/provenance-shard-${shard}.json`)); if (p.shard !== Number(shard) || p.prHeadSha !== process.env.PR_HEAD_SHA || p.testedMergeSha !== process.env.TESTED_MERGE_SHA) process.exit(1)'
           done
           printf '{"prHeadSha":"%s","testedMergeSha":"%s"}\n' "$PR_HEAD_SHA" "$TESTED_MERGE_SHA" > playwright-report/provenance.json

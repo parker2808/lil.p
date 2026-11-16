@@ -1,5 +1,11 @@
 # Lessons
 
+- 2026-11-16: Measure build-to-aggregate and per-file Playwright timings before adding cache or workers; with cached build/browser and a shared per-shard database, redistributing complete specs across isolated runners is safer than parallelizing tests inside one database.
+
+- 2026-11-16: When restacking a balanced E2E plan on a larger spec registry, reserve loads for separately assigned editor-host groups and the slowest spec before greedy assignment; a clean textual merge alone does not guarantee balanced CI shards.
+
+- 2026-11-16: Audit an extracted package's complete peer list against the frozen installed manifests and license files, not just its own `UNLICENSED` field; an MIT-compatible private tarball still needs final-head notice, history and hosted-distribution review.
+
 - 2026-11-16: A D2→D6 merge can retain the happy-path restore while losing strict rejection of malformed legacy snapshots and admin recovery of opaque historical trees; compare the verification cut's negative tests, retain both validation paths and correlate request logs only by fingerprint.
 
 - 2026-11-16: Changed-file subtraction is not tree equivalence for a stacked landing: compare blob contents and provenance against combined verification, bring over API-returned CAS revisions after legacy SEO writes, and retain stronger landing-base waits and current UI labels where the combined branch is stale.

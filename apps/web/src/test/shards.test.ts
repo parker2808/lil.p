@@ -24,6 +24,7 @@ describe('web E2E shard registry', () => {
     );
     expect(assigned.every((specs) => specs.length > 0)).toBe(true);
     expect(assigned.flat().sort()).toEqual([...SPECS].sort());
+    expect(specsForShard(String(SHARD_COUNT))).toEqual(['cms-builder-d5-design.spec.ts']);
   });
 
   it('rejects pins for missing specs or invalid shards', () => {
@@ -33,6 +34,6 @@ describe('web E2E shard registry', () => {
     expect(() => assertPinnedSpecs({ [SPECS[0]]: SHARD_COUNT + 1 })).toThrow(
       `Pinned E2E shard must be 1..${SHARD_COUNT}`,
     );
-    expect(() => assertPinnedSpecs({ [SPECS[0]]: 5 })).not.toThrow();
+    expect(() => assertPinnedSpecs({ [SPECS[0]]: SHARD_COUNT })).not.toThrow();
   });
 });
