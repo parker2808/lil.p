@@ -1,5 +1,7 @@
 # Lessons
 
+- 2026-11-16: A successful metadata assertion can accompany an all-skeleton route screenshot when streamed content is pending; wait for a visible content heading before capture. A builder header can fit button boxes but clip their text at intermediate widths; require non-overlapping, fully contained controls and untruncated labels in browser evidence.
+
 - 2026-11-16: An admin builder can render its entire accessible UI yet return HTTP 404 when the proxy omits its section from the route allowlist; assert response status as well as the visible region, and preserve the unknown-section 404 contract.
 
 - 2026-11-16: Desktop builder has a visible named region but hides its mobile navigation; assert the accessible region for desktop route-state evidence instead of a hidden mobile-only navigation landmark.
@@ -9,6 +11,9 @@
 - 2026-11-16: Public/admin 404 and admin pages need not emit a description tag; an unconditional Playwright `getAttribute` waits until timeout. Inventory the absent tag as null, but continue requiring a nonempty description on every tested public/preview content route.
 
 - 2026-11-16: A localized metadata subset can pass while another route/state lacks reviewable evidence; attach a route/locale/state inventory beside the actual browser screenshots and review it against the existing historical, invalid-preview and builder suites before scoring V13.
+- 2026-11-16: A props hash and registry count do not prove that each host painted: require viewport-intersecting bounds and visible text inside the host, crop the actual host for the PNG, and provide real disposable media for data-dependent CV before claiming all-20 visual coverage.
+
+- 2026-11-16: An all-host editor-origin draft/render gate needs an immutable version snapshot and a manifest tying each locale/theme/viewport public-preview image to the same saved draft revision; post-publish route parity alone cannot establish this provenance.
 
 - 2026-11-16: A no-JS dark shell can inherit the light translucent card-glass token even while its main/card tokens are dark; axe on a JS-capable inspection context can miss this when streamed SSR siblings stay hidden. Compare painted per-card colors and visible block text in both contexts before unwaived axe.
 - 2026-11-16: Separate SSR requests can allocate different React Suspense template IDs despite identical host markup; normalize just those per-request IDs, and compare settled dark CTA colors with the no-JS capture before unwaived axe rather than testing a transient theme transition.

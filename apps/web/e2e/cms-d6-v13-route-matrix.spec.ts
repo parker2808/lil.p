@@ -71,6 +71,12 @@ test('EN/VI public and draft route metadata, fallback and capture inventory', as
           'content',
           /\/opengraph-image/,
         );
+        if (route === '/notes') {
+          await expect(page.locator('.public-route-skeleton')).toHaveCount(0);
+          const notes = page.locator('.public-notes main');
+          await expect(notes).toBeVisible();
+          await expect(notes.getByRole('heading', { level: 1 })).toBeVisible();
+        }
         await capture(page, testInfo, entries, locale, state, path);
         const title = entries.at(-1)!.title;
         expect(titles.has(title), path).toBe(false);
@@ -135,6 +141,36 @@ test('EN/VI admin page, builder help and missing-state metadata inventory', asyn
         name: locale === 'en' ? 'Page builder' : 'Trình dựng trang',
       }),
     ).toBeVisible();
+    const publish = page.getByRole('button', {
+      name: locale === 'en' ? 'Publish' : 'Xuất bản',
+      exact: true,
+    });
+    const history = page.getByRole('button', {
+      name: locale === 'en' ? 'Version history' : 'Lịch sử phiên bản',
+      exact: true,
+    });
+    await expect(publish).toBeVisible();
+    await expect(history).toBeVisible();
+    const publishBox = (await publish.boundingBox())!;
+    const historyBox = (await history.boundingBox())!;
+    const viewportWidth = page.viewportSize()!.width;
+    for (const box of [publishBox, historyBox]) {
+      expect(box.x, builder).toBeGreaterThanOrEqual(0);
+      expect(box.x + box.width, builder).toBeLessThanOrEqual(viewportWidth);
+    }
+    expect(
+      publishBox.x + publishBox.width <= historyBox.x ||
+        historyBox.x + historyBox.width <= publishBox.x ||
+        publishBox.y + publishBox.height <= historyBox.y ||
+        historyBox.y + historyBox.height <= publishBox.y,
+      builder,
+    ).toBe(true);
+    for (const button of [publish, history]) {
+      expect(
+        await button.evaluate((element) => element.scrollWidth <= element.clientWidth),
+        builder,
+      ).toBe(true);
+    }
     await capture(page, testInfo, entries, locale, 'builder', builder);
     const missing = '/admin/v13-route-does-not-exist';
     const notFound = await page.goto(missing);
