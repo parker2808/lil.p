@@ -492,6 +492,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 9. Changelog
 
+- 2026-11-18: Document Parker’s task-scoped full decision authority in AGENTS.md and link it from the README; all existing gates remain mandatory. No runtime change.
+
 - 2026-11-16: Add a docs-only Goal B pointer to the private independent-admin plan; explicitly separate the new CMS database and existing lil.p non-CMS data. No runtime or production change.
 
 - 2026-11-16: Merge integrated CMS stack into eight-shard CI PR, preserving both documentation histories and all D6 specs/pins; reserve separate shard for the measured 392-second D5 design spec and account for four editor-host specs in load estimates. No assertions, retry/timeout thresholds, or build/cache gates removed.
