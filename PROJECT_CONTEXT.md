@@ -48,7 +48,6 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- 2026-11-18: Full decision authority documentation PR is open; no merge or deployment.
 
 - 2026-11-16 Goal B: plan an independent CMS backend/admin and **new** database, not a second admin writing to lil.p's database. Private cms-core plan is linked from `docs/plans/cms-admin-separation.md`; C3 packaging stays separate. No prod export/provision/migration/deploy authorized by this pointer.
 
