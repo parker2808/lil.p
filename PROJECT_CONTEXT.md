@@ -48,6 +48,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
+- 2026-11-18: Full decision authority documentation PR is open; no merge or deployment.
+
 - 2026-11-16 Goal B: plan an independent CMS backend/admin and **new** database, not a second admin writing to lil.p's database. Private cms-core plan is linked from `docs/plans/cms-admin-separation.md`; C3 packaging stays separate. No prod export/provision/migration/deploy authorized by this pointer.
 
 - 2026-11-16 CI throughput: ten green D6/#208 five-shard runs had median web build-to-aggregate 926 seconds, with shard 5 consistently critical (median 823 seconds); one D6 spec alone took 392 seconds in run `43821569457`. Main `5ea13342` five-shard baseline `43856042888` took 891 seconds build-to-aggregate. Main already caches pnpm/Next/Playwright and shares one build artifact. Eight free shards now include the integrated D6 visual/SSR pins, one worker and MySQL per shard, and retain every required gate. Compare exact-head post-change CI before claiming a final-main speedup. See `docs/specs/2026-11-16-ci-web-e2e-throughput.md`.
@@ -491,6 +493,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 2026-11-18: Document Parker’s task-scoped full decision authority in AGENTS.md; all existing gates remain mandatory. No runtime change.
 
 - 2026-11-16: Add a docs-only Goal B pointer to the private independent-admin plan; explicitly separate the new CMS database and existing lil.p non-CMS data. No runtime or production change.
 
