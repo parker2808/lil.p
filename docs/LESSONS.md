@@ -1,5 +1,7 @@
 # Lessons
 
+- 24 Nov 2026: Keep Claude Code's repository permissions narrower than the task's human authorization; broad push and deploy denies prevent silent external actions while preserving read-only Git and local gate access.
+
 - 2026-11-16: Measure build-to-aggregate and per-file Playwright timings before adding cache or workers; with cached build/browser and a shared per-shard database, redistributing complete specs across isolated runners is safer than parallelizing tests inside one database.
 
 - 2026-11-16: When restacking a balanced E2E plan on a larger spec registry, reserve loads for separately assigned editor-host groups and the slowest spec before greedy assignment; a clean textual merge alone does not guarantee balanced CI shards.

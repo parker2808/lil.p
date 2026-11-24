@@ -6,7 +6,7 @@ Read `PROJECT_CONTEXT.md` in full and `docs/LESSONS.md` before starting. Append 
 
 When Parker assigns a task with “có toàn quyền quyết định” to a Grok Bot assistant or the Parker Telegram bot, it may assign T3 coding and review, choose next steps, coordinate bots and threads, merge, deploy, and re-test that task without asking again.
 At task start, check required permissions and access; ask Parker once, immediately, for exactly what is missing.
-Every existing gate and ban remains mandatory: green CI, review with no P0–P2 findings, privacy, PR #50 backups/rollback/startup logs, 08:00–23:00 ICT merges/deploys, pinned T3 threads, interview-senior-fe PR #27, no paid runners, same-PR README/help updates, and quiet hours. See [COMMON_RULES §3](<private-memory-repo>/rules/COMMON_RULES.md#3-merging-absolute).
+Every existing gate and ban remains mandatory: green CI, review with no P0–P2 findings, privacy, PR #50 backups/rollback/startup logs, pinned T3 threads, interview-senior-fe PR #27, no paid runners, and same-PR README/help updates. Work runs 24/7 under these safeguards, as Parker decided on 19 Nov 2026. See [COMMON_RULES §3](<private-memory-repo>/rules/COMMON_RULES.md#3-merging-absolute).
 
 ## Start and scope
 

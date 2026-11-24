@@ -1,0 +1,49 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(./**)",
+      "Grep(./**)",
+      "Glob(./**)",
+      "Bash(pnpm check:all*)",
+      "Bash(pnpm check:content*)",
+      "Bash(pnpm format:check*)",
+      "Bash(pnpm lint*)",
+      "Bash(pnpm typecheck*)",
+      "Bash(pnpm test*)",
+      "Bash(pnpm build*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git branch:*)"
+    ],
+    "deny": [
+      "Read(~/.t3/**)",
+      "Read(~/tg-fallback/**)",
+      "Read(~/.config/cms-core/db.env)",
+      "Read(./.env*)",
+      "Read(./**/.env*)",
+      "Read(./**/*token*)",
+      "Read(./**/*secret*)",
+      "Read(./**/*credential*)",
+      "Read(./**/*.pem)",
+      "Read(./**/*.key)",
+      "Grep(~/.t3/**)",
+      "Grep(~/tg-fallback/**)",
+      "Grep(~/.config/cms-core/db.env)",
+      "Grep(./.env*)",
+      "Grep(./**/.env*)",
+      "Grep(./**/*token*)",
+      "Grep(./**/*secret*)",
+      "Grep(./**/*credential*)",
+      "Grep(./**/*.pem)",
+      "Grep(./**/*.key)",
+      "Bash(git push:*)",
+      "Bash(vercel:*)",
+      "Bash(render deploy:*)",
+      "Bash(docker compose -f compose.prod.yml:*)",
+      "Bash(launchctl:*)"
+    ],
+    "ask": ["Bash(pnpm install:*)", "Bash(git commit:*)"]
+  }
+}

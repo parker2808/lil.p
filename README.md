@@ -571,6 +571,8 @@ pnpm prod:up | prod:seed | prod:backup | prod:down   # production-like stack
 
 The task-scoped [full decision authority rule](./AGENTS.md#full-decision-authority) applies only when Parker assigns it and keeps all existing review, privacy, CI, and deployment gates in force.
 
+Claude Code starts with [CLAUDE.md](./CLAUDE.md); [setup details](./docs/claude-setup.md) explain the repository permissions and local gate. Agent work runs 24/7 under the existing safeguards.
+
 ## Git hooks
 
 `pnpm install` sets up [Husky](https://typicode.github.io/husky/) (v9):
