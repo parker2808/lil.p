@@ -1,5 +1,7 @@
 # Lessons
 
+- 24 Nov 2026: Scope Claude Code permissions with exact Git forms and file-style secret names: wildcard `git diff/show/log` allows can read outside the repo (`--no-index`, `--output`), `*token*`/`*secret*` globs block legitimate source files and worktree slugs, and a blanket `~/.t3/**` deny blocks every T3 worktree. Allow only `git push [-u] origin <type>/*` and deny every tail after the branch; keep `git push` out of `ask` so allows are not overridden.
+
 - 2026-11-16: Measure build-to-aggregate and per-file Playwright timings before adding cache or workers; with cached build/browser and a shared per-shard database, redistributing complete specs across isolated runners is safer than parallelizing tests inside one database.
 
 - 2026-11-16: When restacking a balanced E2E plan on a larger spec registry, reserve loads for separately assigned editor-host groups and the slowest spec before greedy assignment; a clean textual merge alone does not guarantee balanced CI shards.
