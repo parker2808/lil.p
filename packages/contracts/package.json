@@ -20,7 +20,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@parker2808/cms-core": "workspace:*",
+    "@parker2808/cms-core": "file:../../vendor/cms-core/parker2808-cms-core-0.1.0.tgz",
     "zod": "^4.1.12"
   },
   "devDependencies": {
