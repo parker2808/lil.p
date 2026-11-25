@@ -132,7 +132,7 @@ The stacked [CMS U2 site/admin pattern spec](./docs/specs/2026-11-10-cms-u2-site
 
 The [CMS U0 route/control baseline](./docs/audits/2026-11-10-cms-u0-route-control-baseline.md) maps the current public/admin routes, redirect and role boundaries, control ownership, and existing behavior/visual tests before UI standardization. It records uncovered live/visual states separately from executed focused tests; U0 changes no runtime behavior.
 
-The [CMS core package](./packages/cms-core/README.md) runs its own dependency-boundary check in CI, independent of the monorepo root check, so extraction cannot silently drop this gate. Its React and theme tests import the package-local bundle measure, so the same tests run after extraction. The [C1 runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md) retains the final integration and authorization requirements. The [V17/V21 tracked raw inventory](./docs/specs/2026-11-16-cms-d2-v17-v21-raw-inventory.md) is not a production DB inventory.
+After C3, `@parker2808/cms-core` is the pinned `v0.1.0` release tarball under [vendor/cms-core](./vendor/cms-core/README.md); dependency-boundary and theme/tree browser gates run in the private `parker2808/cms-core` repository. The [C1 runbook](./docs/specs/2026-11-11-cms-core-extraction-runbook.md) retains the extraction history. The [V17/V21 tracked raw inventory](./docs/specs/2026-11-16-cms-d2-v17-v21-raw-inventory.md) is not a production DB inventory.
 
 ### CMS D5 history gate (V07)
 
@@ -274,7 +274,7 @@ The [CMS B1 golden HTTP suite](./docs/specs/2026-11-10-cms-b1-golden-http.md) fr
 
 [CMS B2 page allowance](./docs/specs/2026-11-10-cms-b2-page-allowance.md) reads built-in page keys and the explicit custom-page flag from each block definition in one shared predicate for Nest validation and the EN/VI admin Add Block dialog. Only page-header, prose and cta-band allow custom pages; existing HTTP contracts and errors remain unchanged. Per Parker's 2026-11-10 sequencing amendment, backend B2–B5 may proceed alongside U. U2/U3 are accepted on separate unmerged branches; React extraction B6 follows B4 approval and builder D follows B7. B4 now provides `createRegistry` with duplicate-type rejection.
 
-[CMS B3 package scaffold](./docs/specs/2026-11-10-cms-b3-package-skeleton.md), accepted at `814afcf`, adds independently built `./contracts`, `./engine`, and `./react` exports. `pnpm --filter @parker2808/cms-core build` measures and enforces the coordinator-approved browser budgets: combined contracts+engine ≤60 KiB gzip and React ≤35 KiB gzip (declared React/React DOM/Zod peers excluded). The initial empty scaffold measures 40 bytes combined and 34 bytes React; B4 remeasures after extraction. See [package usage and boundaries](./packages/cms-core/README.md). There is no `/help` route; admin table help lives in the Shortcuts dialog.
+[CMS B3 package scaffold](./docs/specs/2026-11-10-cms-b3-package-skeleton.md), accepted at `814afcf`, added independently built `./contracts`, `./engine`, and `./react` exports with coordinator-approved browser budgets (combined contracts+engine ≤60 KiB gzip; React ≤35 KiB gzip). Those gates now live with the private package release; lil.p consumes the pinned tarball in `vendor/cms-core/`. There is no `/help` route; admin table help lives in the Shortcuts dialog.
 
 [CMS B4 contracts and registry](./docs/specs/2026-11-10-cms-b4-contracts-registry.md) moves generic locale/page/block/snapshot contracts, `defineBlock`, duplicate-rejecting `createRegistry` and page allowance into `./contracts`, with all 20 definitions and their copy still [host-owned](./packages/contracts/README.md). Every core subpath supports ESM and CJS; React 19, React DOM 19 and Zod 4 remain declared, externalized peers. Browser gzip measures 864 bytes contracts+engine against 60 KiB and 34 bytes React against 35 KiB. Existing API contracts, locale behavior and the admin table Shortcuts dialog stay unchanged; B6 follows B4 approval, D follows B7.
 
@@ -414,10 +414,10 @@ Run these in order from the repo root. Every step is needed once per fresh clone
    docker compose ps
    ```
 
-4. **Build the shared contracts.** The API, the seed, and the web app import `packages/contracts/dist/`, which is not in git:
+4. **Build the shared contracts** (and their pinned dependencies, including the vendored `@parker2808/cms-core` tarball). The API, the seed, and the web app import `packages/contracts/dist/`, which is not in git:
 
    ```bash
-   pnpm --filter @portfolio/contracts build
+   pnpm --filter "@portfolio/contracts..." build
    ```
 
 5. **Create the tables and the admin user.** `db:migrate` applies every migration, including `20261027150000_portfolio_content`, which loads the real portfolio content (the same data production has):
@@ -452,7 +452,7 @@ pnpm dev
 pnpm db:down      # when done; data stays in the `db-data` volume
 ```
 
-After `git pull`, run `pnpm install`, `pnpm --filter @portfolio/contracts build`, and `pnpm db:migrate` if dependencies, contracts, or migrations changed.
+After `git pull`, run `pnpm install`, `pnpm --filter "@portfolio/contracts..." build`, and `pnpm db:migrate` if dependencies, contracts, or migrations changed.
 
 ### Changing the database schema
 
@@ -537,7 +537,7 @@ Commit source, config, and migrations. Everything a tool can regenerate, and eve
 | ----------------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | `.env`, `.env.*` (except `.env.example`)                                            | You, from `.env.example` (local) or the dashboards (production) |
 | `node_modules/`                                                                     | `pnpm install`                                                  |
-| `packages/contracts/dist/`, `apps/*/dist/`                                          | `pnpm --filter @portfolio/contracts build`, `pnpm build`        |
+| `packages/contracts/dist/`, `apps/*/dist/`                                          | `pnpm --filter "@portfolio/contracts..." build`, `pnpm build`   |
 | `apps/api/src/generated/` (Prisma client)                                           | `pnpm install` (postinstall) or `pnpm typecheck`                |
 | `apps/web/next-env.d.ts`, `.next/`                                                  | `pnpm dev`, `pnpm build`, or `pnpm typecheck` (`next typegen`)  |
 | `coverage/`, `test-results/`, `playwright-report/`, `storybook-static/`, `uploads/` | Test, Storybook, and runtime output                             |

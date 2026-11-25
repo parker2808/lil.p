@@ -1,9 +1,12 @@
 import { readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
 
 import { expect, it } from 'vitest';
 
 const root = resolve(import.meta.dirname, '../../../../..');
+const require = createRequire(import.meta.url);
+const coreThemePath = require.resolve('@parker2808/cms-core/theme.css');
 
 function color(css: string, selector: string, token: string) {
   const start =
@@ -24,7 +27,7 @@ function luminance(hex: string) {
 
 it('keeps dark host subtle text AA on neutral and branded card surfaces', () => {
   const host = readFileSync(resolve(root, 'apps/web/app/globals.css'), 'utf8');
-  const core = readFileSync(resolve(root, 'packages/cms-core/src/theme/theme.css'), 'utf8');
+  const core = readFileSync(coreThemePath, 'utf8');
   const foreground = luminance(
     color(host, ".cms-core-host[data-theme='dark']", 'subtle-foreground'),
   );
@@ -42,7 +45,7 @@ it('keeps dark host subtle text AA on neutral and branded card surfaces', () => 
 
 it('inherits the root dark theme on public hosts without overriding explicit host themes', () => {
   const host = readFileSync(resolve(root, 'apps/web/app/globals.css'), 'utf8');
-  const core = readFileSync(resolve(root, 'packages/cms-core/src/theme/theme.css'), 'utf8');
+  const core = readFileSync(coreThemePath, 'utf8');
   expect(core).toContain('.dark .cms-core:not([data-theme]),');
   expect(host).toContain('.dark .cms-core-host:not([data-theme]) {');
   expect(host).toContain(".dark .cms-core-host[data-brand='lilp']:not([data-theme]) {");

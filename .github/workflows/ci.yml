@@ -50,25 +50,17 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm check:all --static
-      - run: pnpm --filter @parker2808/cms-core check:deps
 
   unit:
     if: github.event.action != 'labeled'
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    env:
-      CMS_RAW_INVENTORY_DIR: ${{ github.workspace }}/cms-raw-inventory
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
       - run: pnpm --filter @portfolio/contracts... build
       - run: pnpm -r --if-present test
-      - name: Upload V17/V21 unit inventory
-        uses: actions/upload-artifact@v4
-        with:
-          name: cms-v17-v21-unit-${{ env.PR_HEAD_SHA }}-${{ env.TESTED_MERGE_SHA }}
-          path: ${{ env.CMS_RAW_INVENTORY_DIR }}/unit.json
-          if-no-files-found: error
+      # V17/V21 unit inventory is produced in parker2808/cms-core after the C3 package switch.
       - name: SchemaForm per-case performance evidence
         run: pnpm --filter @portfolio/web exec vitest run src/modules/admin-core/components/SchemaForm/SchemaForm.test.tsx --reporter=verbose
 
@@ -210,7 +202,7 @@ jobs:
         run: >-
           tar -I 'zstd -1 -T0' -cf e2e-build.tar.zst
           --exclude=apps/web/.next/cache --exclude=apps/web/.next/standalone
-          packages/cms-core/dist packages/contracts/dist apps/api/dist apps/web/.next
+          packages/contracts/dist apps/api/dist apps/web/.next
       - name: Record build provenance
         run: |
           test "$(git rev-parse HEAD)" = "$TESTED_MERGE_SHA"
@@ -306,12 +298,7 @@ jobs:
           while [ ! -f /tmp/pw-install.done ]; do sleep 1; done
           cat /tmp/pw-install.log | tail -5
           test "$(cat /tmp/pw-install.done)" = 0
-      - name: Required CMS theme computed AA matrix
-        if: matrix.shard == 1
-        run: CMS_THEME_BROWSER=1 node --test packages/cms-core/test/theme.test.mjs
-      - name: Required CMS tree responsive matrix
-        if: matrix.shard == 1
-        run: CMS_TREE_BROWSER=1 node --test packages/cms-core/test/tree-renderer.test.mjs
+      # CMS theme/tree browser matrices run in parker2808/cms-core after C3.
       - run: pnpm --filter @portfolio/web test:e2e
         env:
           E2E_SHARD: ${{ matrix.shard }}

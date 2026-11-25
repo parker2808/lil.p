@@ -21,14 +21,7 @@ if (!args.has('--static') && !args.has('--no-build')) steps.push(['build', 'pnpm
 if (!args.has('--static') && !args.has('--no-build'))
   steps.push(['public-builder-bytes', 'node scripts/check-public-builder-bytes.mjs']);
 if (!args.has('--static') && args.has('--e2e')) {
-  steps.push([
-    'cms-theme-browser',
-    'CMS_THEME_BROWSER=1 node --test packages/cms-core/test/theme.test.mjs',
-  ]);
-  steps.push([
-    'cms-tree-browser',
-    'CMS_TREE_BROWSER=1 node --test packages/cms-core/test/tree-renderer.test.mjs',
-  ]);
+  // Theme/tree browser matrices live in parker2808/cms-core after the C3 package switch.
   steps.push(['api-e2e', 'pnpm --filter @portfolio/api test:e2e']);
   steps.push(['web-e2e', 'pnpm --filter @portfolio/web test:e2e']);
   steps.push(['fixture-e2e', 'pnpm --filter @parker2808/cms-core-fixture test:e2e']);

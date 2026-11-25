@@ -11,7 +11,7 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 ## 2. Stack (confirmed)
 
 - pnpm 10 monorepo, Node 22. Prettier + Husky + commitlint (conventional commits) at root.
-- Web: Next.js 16.4.3, React 19.3.
+- Web: Next.js 16.4.5, React 19.3.
 - API: NestJS 11, Prisma 7 (mariadb adapter). JWT auth with `admin` / `user` roles. Swagger at `/api/docs` (off in production).
 - DB: MySQL 8.4 (Docker) locally, TiDB Cloud Serverless in production.
 - Editor: Tiptap (core + free extensions only), Markdown storage, shadcn toolbar.
@@ -48,9 +48,9 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 
 ## 7. Open items
 
-- 24 Nov 2026 Claude Code setup: `CLAUDE.md`, `.claude/settings.json` and `docs/claude-setup.md` define repository-scoped permissions. Feature-branch pushes (`chore|feat|fix|docs|test/*`) are allowed; pushes to `main`, force pushes, production deploys and bot-job restarts are denied. T3 worktrees under `~/.t3/worktrees` stay usable (only `~/.t3` userdata, runtime, caches and auth/token/secret files are denied). The globs are best-effort; branch protection and review are the real guard. No runtime behavior, production action, or merge is included.
+- 26 Nov 2026 C3 consumer switch (this PR): remove in-repo `packages/cms-core`; pin contracts/API/web/fixture to the verified `vendor/cms-core/parker2808-cms-core-0.1.0.tgz` release asset (`v0.1.0`, SHA-256 checked). Upgrade Next.js / `eslint-config-next` to 16.4.5 for the November 2026 advisories. Theme/tree browser matrices and core unit inventory now live in `parker2808/cms-core`. No production deploy, registry token, or Page-read cutover (#277 / P2) in this PR.
 
-- 24 Nov 2026 pre-existing build advisory (not fixed here): `apps/web` pins Next.js 16.4.3 and `next build` alternates between failing with `SecurityFatalError` ("Your version of Next.js is affected by a known security vulnerability") and passing; an immediate retry of the same command passes. Reproduced on untouched `origin/main` `8e30d30a` (run 1 fail, run 2 pass) and on this branch (`pnpm check:all` runs 1 and 3 failed at build, runs 2 and 4 passed), so it is not caused by this branch. Needs a separate reviewed Next.js security upgrade PR; do not upgrade inside docs/config PRs. A bare `pnpm check:all` can therefore need one rerun of the build step.
+- 24 Nov 2026 Claude Code setup: `CLAUDE.md`, `.claude/settings.json` and `docs/claude-setup.md` define repository-scoped permissions. Feature-branch pushes (`chore|feat|fix|docs|test/*`) are allowed; pushes to `main`, force pushes, production deploys and bot-job restarts are denied. T3 worktrees under `~/.t3/worktrees` stay usable (only `~/.t3` userdata, runtime, caches and auth/token/secret files are denied). The globs are best-effort; branch protection and review are the real guard. No runtime behavior, production action, or merge is included.
 
 - 2026-11-16 Goal B: plan an independent CMS backend/admin and **new** database, not a second admin writing to lil.p's database. Private cms-core plan is linked from `docs/plans/cms-admin-separation.md`; C3 packaging stays separate. No prod export/provision/migration/deploy authorized by this pointer.
 
@@ -495,6 +495,8 @@ Mandatory reading for every agent. Update §7 and §9 in every PR, including sta
 - R13, R14, R7, R8, R6 (after priority list). R15 unranked.
 
 ## 9. Changelog
+
+- 26 Nov 2026: C3 — consume pinned `@parker2808/cms-core` `v0.1.0` tarball from `vendor/cms-core/`, remove workspace `packages/cms-core`, update Docker/Render/CI/Vercel build checks, bump Next.js to 16.4.5, and fix README contracts build to `pnpm --filter "@portfolio/contracts..." build`. No production cutover.
 
 - 24 Nov 2026: Add Claude Code repository settings and setup documentation, and align AGENTS.md with Parker's 24/7 operating rule (merge/deploy time windows and quiet hours removed from the gate list). Docs/config only; no runtime change or deploy.
 

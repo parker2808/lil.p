@@ -2,8 +2,10 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 
-if (existsSync('packages/cms-core/dist/contracts.d.ts')) {
-  throw new Error('Vercel build regression must start without built CMS-core types');
+if (existsSync('packages/cms-core')) {
+  throw new Error(
+    'C3: in-repo packages/cms-core must stay removed; consumers use vendor/cms-core/*.tgz',
+  );
 }
 
 const { buildCommand } = JSON.parse(readFileSync('vercel.json', 'utf8'));

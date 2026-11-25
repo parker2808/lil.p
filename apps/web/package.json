@@ -13,7 +13,7 @@
     "test:visual:update": "sh e2e/visual-update.sh"
   },
   "dependencies": {
-    "@parker2808/cms-core": "workspace:*",
+    "@parker2808/cms-core": "file:../../vendor/cms-core/parker2808-cms-core-0.1.0.tgz",
     "@portfolio/contracts": "workspace:*",
     "@portfolio/ui": "workspace:*",
     "@tanstack/react-form": "^1.33.5",
@@ -23,7 +23,7 @@
     "github-slugger": "^2.0.0",
     "hast-util-to-jsx-runtime": "^2.3.6",
     "lucide-react": "^0.553.0",
-    "next": "16.4.3",
+    "next": "16.4.5",
     "next-intl": "^4.14.9",
     "next-themes": "^0.4.6",
     "react": "19.3.0",
@@ -54,7 +54,7 @@
     "@vitejs/plugin-react": "^5.1.1",
     "chrome-launcher": "^1.2.2",
     "eslint": "^9.39.1",
-    "eslint-config-next": "16.4.3",
+    "eslint-config-next": "16.4.5",
     "jsdom": "^27.2.0",
     "lighthouse": "^13.5.0",
     "typescript": "^5.9.3",

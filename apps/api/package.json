@@ -28,7 +28,7 @@
     "@nestjs/platform-express": "^11.1.9",
     "@nestjs/swagger": "^11.4.7",
     "@nestjs/throttler": "^6.7.1",
-    "@parker2808/cms-core": "workspace:*",
+    "@parker2808/cms-core": "file:../../vendor/cms-core/parker2808-cms-core-0.1.0.tgz",
     "@portfolio/contracts": "workspace:*",
     "@prisma/adapter-mariadb": "7",
     "@prisma/client": "7",

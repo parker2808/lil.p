@@ -13,7 +13,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@parker2808/cms-core": "workspace:*",
+    "@parker2808/cms-core": "file:../../vendor/cms-core/parker2808-cms-core-0.1.0.tgz",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zod": "^4.0.0"
